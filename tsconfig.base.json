@@ -14,7 +14,12 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@urgp/ui": ["libs/ui/src/index.ts"],
+      "@urgp/ui/*": ["ui/src/*"],
+      "@urgp/util": ["libs/util/src/index.ts"],
+      "@urgp/util/*": ["util/src/*"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
