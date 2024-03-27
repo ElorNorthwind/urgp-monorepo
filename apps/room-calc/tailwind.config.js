@@ -16,7 +16,10 @@
 //   plugins: [],
 // };
 
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { buildConfig } from '../../libs/util/src/tailwind.config';
+// // eslint-disable-next-line @nx/enforce-module-boundaries
+// import { buildConfig } from '../../libs/util/tailwind.config';
 
-export default buildConfig(__dirname);
+// export default buildConfig(__dirname);
+
+const buildConfig = require('../../libs/util/tailwind.config');
+module.exports = buildConfig(__dirname);

@@ -1,11 +1,5 @@
-import NxWelcome from './nx-welcome';
-
 export function App() {
-  return (
-    <div>
-      <NxWelcome title="room-calc" />
-    </div>
-  );
+  return <div> Hello there</div>;
 }
 
 export default App;
