@@ -9,7 +9,7 @@
     "cssVariables": true
   },
   "aliases": {
-    "components": "@urgp/libs/ui",
-    "utils": "@urgp/libs/util"
+    "components": "@urgp/ui",
+    "utils": "@urgp/util"
   }
 }
