@@ -6,6 +6,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  Input,
+  Label,
+  Separator,
 } from '@urgp/ui';
 
 import { Cat } from 'lucide-react';
@@ -17,9 +20,12 @@ export function App() {
         <CardTitle>Hello</CardTitle>
         <CardDescription>Is it me you're lookin for?</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-2">
         <p>Тут гуляют ваших мамок</p>
         <p>Если вдруг это не было сразу понятно...</p>
+        <Separator />
+        <Label htmlFor="ouch">Чтож это делается?</Label>
+        <Input placeholder="Безобразие!" id="ouch" />
       </CardContent>
       <CardFooter>
         <Button
