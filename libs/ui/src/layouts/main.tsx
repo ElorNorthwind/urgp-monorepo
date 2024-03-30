@@ -19,8 +19,8 @@ const MainLayout = React.forwardRef<
     <div className="bg-background border-accent absolute top-0 h-10 w-full border-b shadow-md">
       {header}
     </div>
-    <div className="flex min-h-full flex-grow justify-center ">
-      <div className="bg-background min-h-full w-full items-stretch pt-10 shadow-2xl lg:w-[1024px]">
+    <div className="flex min-h-full flex-grow justify-center pt-10">
+      <div className="bg-background min-h-full w-full items-stretch  p-6 shadow-2xl lg:w-[1024px]">
         {content}
       </div>
     </div>

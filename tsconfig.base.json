@@ -18,7 +18,8 @@
       "@urgp/ui": ["libs/ui/src/index.ts"],
       "@urgp/ui/*": ["ui/src/*"],
       "@urgp/util": ["libs/util/src/index.ts"],
-      "@urgp/util/*": ["util/src/*"]
+      "@urgp/util/*": ["util/src/*"],
+      "@urgp/room-calc/*": ["apps/room-calc/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

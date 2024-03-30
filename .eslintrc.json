@@ -24,7 +24,9 @@
     {
       "files": ["*.ts", "*.tsx"],
       "extends": ["plugin:@nx/typescript"],
-      "rules": {}
+      "rules": {
+        "@nx/enforce-module-boundaries": "off" // I kinda want by absolute imports...
+      }
     },
     {
       "files": ["*.js", "*.jsx"],

@@ -14,7 +14,7 @@ import { Cat } from 'lucide-react';
 
 const MainPageTestCard = (): JSX.Element => {
   return (
-    <Card className="w-1/3">
+    <Card className="w-28">
       <CardHeader>
         <CardTitle>Hello</CardTitle>
         <CardDescription>Is it me you're lookin' for?</CardDescription>
