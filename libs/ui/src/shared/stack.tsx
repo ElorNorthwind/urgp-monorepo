@@ -7,7 +7,9 @@ export interface FlexProps
       HTMLAttributes<HTMLDivElement>,
       HTMLDivElement
     >,
-    VariantProps<typeof flexVariants> {}
+    VariantProps<typeof flexVariants> {
+  noWrap?: boolean;
+}
 
 const flexVariants = cva('flex', {
   variants: {
@@ -27,10 +29,6 @@ const flexVariants = cva('flex', {
       center: 'items-center',
       end: 'items-end',
     },
-    wrap: {
-      wrap: 'flex-wrap',
-      nowrap: 'flex-nowrap',
-    },
     gap: {
       none: 'gap-0',
       s: 'gap-2',
@@ -42,7 +40,6 @@ const flexVariants = cva('flex', {
   defaultVariants: {
     justify: 'start',
     align: 'center',
-    wrap: 'wrap',
     gap: 'm',
   },
 });
@@ -64,10 +61,13 @@ const HStack = React.forwardRef<HTMLDivElement, Omit<FlexProps, 'direction'>>(
 );
 
 const VStack = React.forwardRef<HTMLDivElement, Omit<FlexProps, 'direction'>>(
-  ({ className, ...props }, ref) => (
+  ({ className, noWrap = false, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(flexVariants({ direction: 'column', className }))}
+      className={cn(
+        flexVariants({ direction: 'column', className }),
+        noWrap ? 'flex-nowrap' : 'flex-wrap',
+      )}
       {...props}
     />
   ),

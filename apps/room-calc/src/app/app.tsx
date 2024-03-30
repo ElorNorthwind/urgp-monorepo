@@ -30,12 +30,11 @@ export function App() {
           justify={'between'}
           className="w-full"
         >
-          <div className="bg-red-500">x</div>
           <p className="py-3">
             Тут гуляют ваших мамок, <br />
             Если вдруг это не было сразу понятно...
           </p>
-          <Label htmlFor="ouch" className="text-right">
+          <Label htmlFor="ouch" className="w-full text-left">
             Чтож это делается?
           </Label>
           <Input placeholder="Безобразие!" id="ouch" />
