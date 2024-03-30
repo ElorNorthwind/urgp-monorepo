@@ -22,8 +22,10 @@ export function App() {
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <Separator />
-        <p>Тут гуляют ваших мамок</p>
-        <p>Если вдруг это не было сразу понятно...</p>
+        <p className="py-3">
+          Тут гуляют ваших мамок, <br />
+          Если вдруг это не было сразу понятно...
+        </p>
         <Label htmlFor="ouch" className="text-right">
           Чтож это делается?
         </Label>
