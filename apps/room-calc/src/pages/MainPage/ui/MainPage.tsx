@@ -1,17 +1,4 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  HStack,
-  Input,
-  Label,
-  VStack,
-} from '@urgp/ui';
-import { Cat } from 'lucide-react';
+import { HStack, VStack } from '@urgp/ui';
 import { MainPageTestCard } from './MainPageCard';
 
 const MainPage = (): JSX.Element => {
