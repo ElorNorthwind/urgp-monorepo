@@ -6,9 +6,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  HStack,
   Input,
   Label,
   Separator,
+  VStack,
 } from '@urgp/ui';
 
 import { Cat } from 'lucide-react';
@@ -22,14 +24,22 @@ export function App() {
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <Separator />
-        <p className="py-3">
-          Тут гуляют ваших мамок, <br />
-          Если вдруг это не было сразу понятно...
-        </p>
-        <Label htmlFor="ouch" className="text-right">
-          Чтож это делается?
-        </Label>
-        <Input placeholder="Безобразие!" id="ouch" />
+        <VStack
+          gap={'none'}
+          align={'end'}
+          justify={'between'}
+          className="w-full"
+        >
+          <div className="bg-red-500">x</div>
+          <p className="py-3">
+            Тут гуляют ваших мамок, <br />
+            Если вдруг это не было сразу понятно...
+          </p>
+          <Label htmlFor="ouch" className="text-right">
+            Чтож это делается?
+          </Label>
+          <Input placeholder="Безобразие!" id="ouch" />
+        </VStack>
       </CardContent>
       <CardFooter>
         <Button
