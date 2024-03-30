@@ -4,3 +4,4 @@ export * from './shared/input';
 export * from './shared/label';
 export * from './shared/separator';
 export * from './shared/stack';
+export * from './layouts/main';
