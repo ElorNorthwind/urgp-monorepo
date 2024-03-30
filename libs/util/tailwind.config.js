@@ -7,7 +7,7 @@ module.exports = function buildConfig(appDir) {
     content: [
       join(
         appDir,
-        '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'
+        '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}',
       ),
       ...createGlobPatternsForDependencies(appDir),
     ],
@@ -66,6 +66,12 @@ module.exports = function buildConfig(appDir) {
         animation: {
           'accordion-down': 'accordion-down 0.2s ease-out',
           'accordion-up': 'accordion-up 0.2s ease-out',
+        },
+        height: {
+          screen: ['100vh /* fallback for Opera, IE and etc. */', '100dvh'],
+        },
+        minHeight: {
+          screen: ['100vh /* fallback for Opera, IE and etc. */', '100dvh'],
         },
       },
     },

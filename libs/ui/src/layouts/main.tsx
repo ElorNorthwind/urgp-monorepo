@@ -14,10 +14,7 @@ const MainLayout = React.forwardRef<
 >(({ className, header, content }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      'bg-secondary flex !min-h-[calc(100dvh)] min-h-screen flex-col',
-      className,
-    )}
+    className={cn('bg-secondary flex min-h-screen flex-col', className)}
   >
     <div className="bg-background border-accent absolute top-0 h-10 w-full border-b shadow-md">
       {header}
