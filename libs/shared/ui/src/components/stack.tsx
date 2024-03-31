@@ -1,11 +1,11 @@
 import { cn } from '@urgp/shared/util';
 import { VariantProps, cva } from 'class-variance-authority';
-import React, { HTMLAttributes, ReactNode } from 'react';
+import React, { HTMLAttributes } from 'react';
 
 export interface FlexProps
-  extends React.DetailedHTMLProps<
-      HTMLAttributes<HTMLDivElement>,
-      HTMLDivElement
+  extends Omit<
+      React.DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
+      'ref'
     >,
     VariantProps<typeof flexVariants> {
   noWrap?: boolean;
@@ -45,14 +45,21 @@ const flexVariants = cva('flex', {
 });
 
 const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn(flexVariants({ className }))} {...props} />
+  ({ className, noWrap = false, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        flexVariants({ className }),
+        noWrap ? 'flex-nowrap' : 'flex-wrap',
+      )}
+      {...props}
+    />
   ),
 );
 
 const HStack = React.forwardRef<HTMLDivElement, Omit<FlexProps, 'direction'>>(
   ({ className, ...props }, ref) => (
-    <div
+    <Flex
       ref={ref}
       className={cn(flexVariants({ direction: 'row', className }))}
       {...props}
@@ -61,13 +68,10 @@ const HStack = React.forwardRef<HTMLDivElement, Omit<FlexProps, 'direction'>>(
 );
 
 const VStack = React.forwardRef<HTMLDivElement, Omit<FlexProps, 'direction'>>(
-  ({ className, noWrap = false, ...props }, ref) => (
-    <div
+  ({ className, ...props }, ref) => (
+    <Flex
       ref={ref}
-      className={cn(
-        flexVariants({ direction: 'column', className }),
-        noWrap ? 'flex-nowrap' : 'flex-wrap',
-      )}
+      className={cn(flexVariants({ direction: 'column', className }))}
       {...props}
     />
   ),
