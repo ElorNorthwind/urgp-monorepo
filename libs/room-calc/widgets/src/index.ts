@@ -1,2 +1,2 @@
 export * from './FileInputCard';
-export * from './AdressSearchForm';
+export * from './AdressSearchCard';

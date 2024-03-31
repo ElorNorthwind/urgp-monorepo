@@ -8,12 +8,12 @@ import {
 import { cn } from '@urgp/shared/util';
 import { memo } from 'react';
 
-interface AdressSearchFormProps {
+interface AdressSearchCardProps {
   className?: string;
 }
 
-export const AdressSearchForm: React.FC = memo(
-  ({ className }: AdressSearchFormProps) => {
+export const AdressSearchCard: React.FC = memo(
+  ({ className }: AdressSearchCardProps) => {
     return (
       <Card className={cn('w-full', className)}>
         <CardHeader>
