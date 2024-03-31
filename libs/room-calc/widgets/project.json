@@ -1,0 +1,9 @@
+{
+  "name": "room-calc/widgets",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/room-calc/widgets/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project widgets --web",
+  "targets": {}
+}
