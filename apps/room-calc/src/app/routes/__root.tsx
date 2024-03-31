@@ -7,7 +7,7 @@ export const Route = createRootRoute({
   component: () => (
     <MainLayout
       header={
-        <div className="flex gap-4 px-4 py-2">
+        <div className="flex h-full items-center gap-4 px-6">
           <Calculator className="stroke-accent-foreground" />
           <Link to="/" className="[&.active]:font-bold">
             Главная

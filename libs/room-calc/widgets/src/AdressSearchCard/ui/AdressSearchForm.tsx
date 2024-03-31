@@ -15,6 +15,7 @@ import {
   Input,
 } from '@urgp/shared/ui';
 import { toast } from 'sonner';
+import { X } from 'lucide-react';
 
 const items = [
   { value: '1', label: 'ул. Ленина' },
@@ -111,9 +112,19 @@ export const AdressSearchForm: React.FC = memo(() => {
               </FormItem>
             )}
           />
+
+          <Button
+            variant="secondary"
+            type="reset"
+            className="flex-shrink place-self-end"
+            onClick={() => form.reset()}
+          >
+            <X />
+          </Button>
           <Button type="submit" className="flex-grow place-self-end">
             Поиск
           </Button>
+
           <FormMessage />
         </HStack>
       </form>
