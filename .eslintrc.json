@@ -23,10 +23,10 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nx/typescript"],
-      "rules": {
-        "@nx/enforce-module-boundaries": "off" // I kinda want by absolute imports...
-      }
+      "extends": ["plugin:@nx/typescript"]
+      // "rules": {
+      //   "@nx/enforce-module-boundaries": "off" // I kinda want by absolute imports...
+      // }
     },
     {
       "files": ["*.js", "*.jsx"],
