@@ -1,5 +1,6 @@
 import { cn } from '@urgp/shared/util';
 import React, { ReactElement } from 'react';
+import { Toaster } from '../components/sonner';
 
 interface MainLayoutProps {
   className?: string;
@@ -24,6 +25,7 @@ const MainLayout = React.forwardRef<
         {content}
       </div>
     </div>
+    <Toaster />
   </div>
 ));
 

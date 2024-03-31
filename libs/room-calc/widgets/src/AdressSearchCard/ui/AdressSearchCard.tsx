@@ -7,6 +7,7 @@ import {
 } from '@urgp/shared/ui';
 import { cn } from '@urgp/shared/util';
 import { memo } from 'react';
+import { AdressSearchForm } from './AdressSearchForm';
 
 interface AdressSearchCardProps {
   className?: string;
@@ -22,7 +23,9 @@ export const AdressSearchCard: React.FC = memo(
             Найти нужное здание в базе данных БТИ
           </CardDescription>
         </CardHeader>
-        <CardContent>Тут будет форма</CardContent>
+        <CardContent>
+          <AdressSearchForm />
+        </CardContent>
       </Card>
     );
   },
