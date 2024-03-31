@@ -9,7 +9,7 @@ import {
   HStack,
   Input,
   Label,
-} from '@urgp/ui';
+} from '@urgp/shared/ui';
 import { Cat } from 'lucide-react';
 
 const MainPageTestCard = (): JSX.Element => {

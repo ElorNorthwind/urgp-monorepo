@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
-import { MainPage } from '../../pages/MainPage';
+import { MainPage } from '@urgp/room-calc/pages';
 
 export const Route = createLazyFileRoute('/')({
   component: Index,

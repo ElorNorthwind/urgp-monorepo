@@ -1,6 +1,5 @@
-import { HStack, VStack } from '@urgp/ui';
-import { MainPageTestCard } from './MainPageCard';
-import { FileInputCard } from '@urgp/room-calc/widgets/FileInputCard';
+import { VStack } from '@urgp/shared/ui';
+import { FileInputCard } from '@urgp/room-calc/widgets';
 
 const MainPage = (): JSX.Element => {
   return (

@@ -16,14 +16,17 @@
     "baseUrl": ".",
     "paths": {
       "@urgp/room-calc/*": ["apps/room-calc/src/*"],
-      "@urgp/room-calc/widgets": ["libs/room-calc/widgets/src/index.ts"],
       "@urgp/room-calc/entities": ["libs/room-calc/entities/src/index.ts"],
       "@urgp/room-calc/features": ["libs/room-calc/features/src/index.ts"],
       "@urgp/room-calc/pages": ["libs/room-calc/pages/src/index.ts"],
-      "@urgp/ui": ["libs/ui/src/index.ts"],
-      "@urgp/ui/*": ["ui/src/*"],
-      "@urgp/util": ["libs/util/src/index.ts"],
-      "@urgp/util/*": ["util/src/*"]
+      "@urgp/room-calc/widgets": ["libs/room-calc/widgets/src/index.ts"],
+      "@urgp/shared/ui": ["libs/shared/ui/src/index.ts"],
+      "@urgp/shared/util": ["libs/shared/util/src/index.ts"]
+
+      // "@urgp/ui": ["libs/shared/ui/src/index.ts"],
+      // "@urgp/ui/*": ["ui/src/*"],
+      // "@urgp/util": ["libs/shared/util/src/index.ts"],
+      // "@urgp/util/*": ["util/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

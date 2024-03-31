@@ -1,4 +1,4 @@
-import { cn } from '@urgp/util';
+import { cn } from '@urgp/shared/util';
 import React, { ReactElement } from 'react';
 
 interface MainLayoutProps {

@@ -1,4 +1,4 @@
-import { cn } from '@urgp/util';
+import { cn } from '@urgp/shared/util';
 import { VariantProps, cva } from 'class-variance-authority';
 import React, { HTMLAttributes, ReactNode } from 'react';
 
