@@ -9,12 +9,12 @@ import {
 } from '@urgp/shared/ui';
 import { memo } from 'react';
 
-import classes from './FileInputCard.module.css';
+// import classes from './FileInputCard.module.css';
 import { cn } from '@urgp/shared/util';
 
 export const FileInputCard: React.FC = memo(() => {
   return (
-    <Card className={cn('w-full', classes['wavy'])}>
+    <Card className={cn('w-full')}>
       <CardHeader>
         <CardTitle>Расчет по файлу Excel</CardTitle>
         <CardDescription>

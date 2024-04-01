@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
+import svgr from 'vite-plugin-svgr';
 import { join } from 'path';
 
 export default defineConfig({
@@ -28,6 +29,7 @@ export default defineConfig({
       routeFileIgnorePrefix: '-',
       quoteStyle: 'single',
     }),
+    svgr({ include: '**/*.svg?react' }),
   ],
 
   // Uncomment this if you are using workers.
