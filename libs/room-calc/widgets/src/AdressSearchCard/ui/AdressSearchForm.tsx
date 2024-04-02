@@ -37,6 +37,7 @@ export const AdressSearchForm: React.FC = memo(() => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      streetId: '',
       buiuldingNum: '',
       housingNum: '',
       structureNum: '',
@@ -52,12 +53,12 @@ export const AdressSearchForm: React.FC = memo(() => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <HStack className="w-full items-end">
+        <div className="grid w-full grid-cols-5 items-end gap-6 md:grid-cols-10">
           <FormField
             control={form.control}
             name="streetId"
             render={({ field }) => (
-              <FormItem className="flex w-[350px] flex-col">
+              <FormItem className="col-span-5 flex flex-col">
                 {form.control.getFieldState('streetId').error ? (
                   <FormMessage />
                 ) : (
@@ -68,8 +69,10 @@ export const AdressSearchForm: React.FC = memo(() => {
                     items={items}
                     value={field.value}
                     onSelect={(newValue) => {
-                      form.clearErrors();
-                      form.setValue('streetId', newValue);
+                      form.clearErrors('streetId');
+                      form.setValue('streetId', newValue, {
+                        shouldDirty: true,
+                      });
                     }}
                   />
                 </FormControl>
@@ -80,7 +83,7 @@ export const AdressSearchForm: React.FC = memo(() => {
             control={form.control}
             name="buiuldingNum"
             render={({ field }) => (
-              <FormItem className="max-w-[80px]">
+              <FormItem className="">
                 <FormLabel>Дом</FormLabel>
                 <FormControl>
                   <Input {...field} />
@@ -92,7 +95,7 @@ export const AdressSearchForm: React.FC = memo(() => {
             control={form.control}
             name="housingNum"
             render={({ field }) => (
-              <FormItem className="max-w-[80px]">
+              <FormItem className="">
                 <FormLabel>Корпус</FormLabel>
                 <FormControl>
                   <Input {...field} />
@@ -104,7 +107,7 @@ export const AdressSearchForm: React.FC = memo(() => {
             control={form.control}
             name="structureNum"
             render={({ field }) => (
-              <FormItem className="max-w-[80px]">
+              <FormItem className="">
                 <FormLabel>Строение</FormLabel>
                 <FormControl>
                   <Input {...field} />
@@ -113,20 +116,25 @@ export const AdressSearchForm: React.FC = memo(() => {
             )}
           />
 
-          <Button
-            variant="secondary"
-            type="reset"
-            className="flex-shrink place-self-end"
-            onClick={() => form.reset()}
-          >
-            <X />
-          </Button>
-          <Button type="submit" className="flex-grow place-self-end">
+          <Button type="submit" className="col-span-2">
             Поиск
           </Button>
 
           <FormMessage />
-        </HStack>
+          {form.formState.isDirty && (
+            <Button
+              variant="ghost"
+              size="icon"
+              type="reset"
+              className="absolute top-6 right-6"
+              onClick={() => {
+                form.reset();
+              }}
+            >
+              <X />
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   );

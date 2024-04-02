@@ -16,7 +16,7 @@ interface AdressSearchCardProps {
 export const AdressSearchCard: React.FC = memo(
   ({ className }: AdressSearchCardProps) => {
     return (
-      <Card className={cn('w-full', className)}>
+      <Card className={cn('relative w-full', className)}>
         <CardHeader>
           <CardTitle>Поиск адреса через РСМ 2.0</CardTitle>
           <CardDescription>
