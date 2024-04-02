@@ -16,6 +16,7 @@ import {
 } from '@urgp/shared/ui';
 import { toast } from 'sonner';
 import { X } from 'lucide-react';
+import { getDirtyValues } from '@urgp/shared/util';
 
 const items = [
   { value: '1', label: 'ул. Ленина' },
@@ -27,7 +28,7 @@ const items = [
 
 const formSchema = z.object({
   //   streetId: z.number({ invalid_type_error: 'Необходимо выбрать улицу' }), // улица
-  streetId: z.string({ required_error: 'Нужно выбрать улицу' }).min(1), // улица
+  streetId: z.string().min(1, { message: 'Нужно выбрать улицу' }), // улица
   buiuldingNum: z.string().optional(), // дом
   housingNum: z.string().optional(), // корпус
   structureNum: z.string().optional(), // строение
@@ -46,7 +47,11 @@ export const AdressSearchForm: React.FC = memo(() => {
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     toast('Ушли такие вот данные:', {
-      description: JSON.stringify(data, null, 2),
+      description: JSON.stringify(
+        getDirtyValues(form.formState.dirtyFields, data),
+        null,
+        2,
+      ),
       action: <Button onClick={() => console.log(data.streetId)}>Окай</Button>,
     });
   }
