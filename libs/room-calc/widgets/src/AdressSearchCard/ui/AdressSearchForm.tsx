@@ -17,6 +17,7 @@ import {
 import { toast } from 'sonner';
 import { X } from 'lucide-react';
 import { getDirtyValues } from '@urgp/shared/util';
+import { useNavigate } from '@tanstack/react-router';
 
 const items = [
   { value: '1', label: 'ул. Ленина' },
@@ -45,15 +46,15 @@ export const AdressSearchForm: React.FC = memo(() => {
     },
   });
 
+  const navigate = useNavigate();
+
   function onSubmit(data: z.infer<typeof formSchema>) {
+    const dirtyFields = getDirtyValues(form.formState.dirtyFields, data);
     toast('Ушли такие вот данные:', {
-      description: JSON.stringify(
-        getDirtyValues(form.formState.dirtyFields, data),
-        null,
-        2,
-      ),
+      description: JSON.stringify(dirtyFields, null, 2),
       action: <Button onClick={() => console.log(data.streetId)}>Окай</Button>,
     });
+    navigate({ to: '/', search: dirtyFields });
   }
   return (
     <Form {...form}>
@@ -133,6 +134,7 @@ export const AdressSearchForm: React.FC = memo(() => {
               type="reset"
               className="absolute top-6 right-6"
               onClick={() => {
+                navigate({ to: '/' });
                 form.reset();
               }}
             >

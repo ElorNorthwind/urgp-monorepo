@@ -6,7 +6,10 @@
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
 
-    "module": "commonjs",
+    "module": "esnext",
+    "target": "es2015",
+    "types": ["vite/client"],
+
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,

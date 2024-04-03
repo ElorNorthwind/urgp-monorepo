@@ -1,9 +1,11 @@
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
+import { Provider } from 'react-redux';
 
 // Import the generated route tree
 import { routeTree } from './app/routeTree.gen';
+import { store } from '@urgp/shared/util';
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -22,6 +24,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>,
 );
