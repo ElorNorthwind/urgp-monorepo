@@ -17,13 +17,13 @@ export const AdressSearchCard: React.FC = memo(
   ({ className }: AdressSearchCardProps) => {
     return (
       <Card className={cn('relative w-full', className)}>
-        <CardHeader>
+        <CardHeader className="bg-accent/40">
           <CardTitle>Поиск адреса через РСМ 2.0</CardTitle>
           <CardDescription>
             Найти нужное здание в базе данных БТИ
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           <AdressSearchForm />
         </CardContent>
       </Card>
