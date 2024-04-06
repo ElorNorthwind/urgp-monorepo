@@ -20,7 +20,7 @@ export class EdoAuthService {
     private readonly cls: ClsService,
   ) {}
 
-  private async getDnsid(): Promise<string> {
+  async getDnsid(): Promise<string> {
     return firstValueFrom(
       this.httpService.get('/auth.php').pipe(
         catchError((error) => {

@@ -26,12 +26,12 @@ export class EdoSessionService {
       return this.sessions.find((session) => session.userid === userid);
     }
 
-    if (uprid && uprid !== process.env.EDO_DEFAULT_UPR) {
+    if (uprid && uprid !== process.env['EDO_DEFAULT_UPR']) {
       return undefined; // НУЖНО ИМПЛЕМЕНТИРОВАТЬ! Запрос к БД на получение дефолтного юзера для кнкретного Управления, а не хрен моржовый
     }
 
     return this.sessions.find(
-      (session) => session.userid === process.env.EDO_DEFAULT_USERID,
+      (session) => session.userid === process.env['EDO_DEFAULT_USERID'],
     );
   }
 

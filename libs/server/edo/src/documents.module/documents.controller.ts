@@ -3,7 +3,6 @@ import {
   Get,
   Param,
   ParseArrayPipe,
-  ParseBoolPipe,
   ParseIntPipe,
   Query,
   UsePipes,
@@ -11,8 +10,7 @@ import {
 import { EdoDocumentsService } from './documents.service';
 import { type EdoDocument } from './model/types/edo-document';
 import { EdoHtmlService } from './html.service';
-import { Observable, firstValueFrom, lastValueFrom, skip, toArray } from 'rxjs';
-import { ZodValidationPipe } from 'src/shared/pipes/ZodValidationPipe';
+import { Observable, firstValueFrom, toArray } from 'rxjs';
 import {
   GetDocumentsByUserDto,
   getDocumentsByUserSchema,
@@ -22,6 +20,7 @@ import {
   GetResolutionEditDataDto,
   getResolutionEditDataSchema,
 } from './model/dto/get-resoluton-edit-data.dts';
+import { ZodValidationPipe } from '@urgp/server/pipes';
 
 @Controller('edo/documents')
 export class EdoDocumentsController {

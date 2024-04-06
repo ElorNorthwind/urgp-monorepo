@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { EdoHttpService } from '../api.module/http.service';
-import { Observable, catchError, from, map, tap } from 'rxjs';
+import { Observable, catchError, map, tap } from 'rxjs';
 import { EdoDocumentListItem } from './model/types/edo-document-list-item';
 import { EdoDocument } from './model/types/edo-document';
 

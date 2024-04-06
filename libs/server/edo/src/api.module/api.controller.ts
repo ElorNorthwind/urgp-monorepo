@@ -28,6 +28,11 @@ export class EdoApiController {
     });
   }
 
+  @Get('dnsid')
+  async getDnsid(): Promise<string> {
+    return this.auth.getDnsid();
+  }
+
   @Get('sessions')
   getSessions(): EdoSession[] {
     return this.session.getAllSessions();

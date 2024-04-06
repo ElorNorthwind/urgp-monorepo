@@ -22,8 +22,27 @@ export type EdoAuthTokenRequest = {
 };
 
 export interface EdoClsStore extends ClsStore {
-  edo?: EdoSessonLookupRequest & { sessionIsNew?: boolean };
+  // edo?: EdoSessonLookupRequest & { sessionIsNew?: boolean };
+  edo?: {
+    password?: string;
+    groupid?: string;
+    uprid?: string;
+    userid?: string;
+    forceNewSession?: boolean;
+    sessionIsNew?: boolean;
+  };
 }
+
+export type EdoClsStoreTemp = {
+  edo?: {
+    password?: string;
+    groupid?: string;
+    uprid?: string;
+    userid?: string;
+    forceNewSession?: boolean;
+    sessionIsNew?: boolean;
+  };
+};
 
 export type EdoSessionAuthData = {
   dnsid: string;

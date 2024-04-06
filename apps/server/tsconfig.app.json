@@ -5,6 +5,8 @@
     "module": "commonjs",
     "types": ["node"],
     "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "incremental": true,
     "target": "es2021",
     "sourceMap": true
   },

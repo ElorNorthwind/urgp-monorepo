@@ -1,13 +1,13 @@
 import { Module, OnModuleInit, UnauthorizedException } from '@nestjs/common';
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { EdoHttpService } from './http.service';
-import { ClsService } from 'nestjs-cls';
 import { EDO_HTTP_OPTIONS } from './constants';
-import { EdoClsStore } from './types';
 import { EdoAuthService } from './auth.service';
 import { EdoApiController } from './api.controller';
 import { EdoSessionService } from './session.service';
 import * as iconv from 'iconv-lite';
+import { ClsService } from 'nestjs-cls';
+import { EdoClsStore, EdoClsStoreTemp } from './types';
 
 @Module({
   imports: [HttpModule.register(EDO_HTTP_OPTIONS)],
@@ -25,7 +25,7 @@ import * as iconv from 'iconv-lite';
 export class EdoApiModule implements OnModuleInit {
   constructor(
     private readonly httpService: EdoHttpService,
-    private readonly cls: ClsService<EdoClsStore>,
+    private readonly cls: ClsService<EdoClsStoreTemp>,
     private readonly auth: EdoAuthService,
   ) {}
 
@@ -63,7 +63,7 @@ export class EdoApiModule implements OnModuleInit {
         config.params.password = undefined;
 
         config.params.DNSID = session.dnsid;
-        config.headers.cookie = `auth_token=${session.authToken};`;
+        config.headers['cookie'] = `auth_token=${session.authToken};`;
         config.withCredentials = true;
 
         return config;
@@ -110,7 +110,7 @@ export class EdoApiModule implements OnModuleInit {
         const newConfig = response.config;
 
         newConfig.params.DNSID = session.dnsid;
-        newConfig.headers.cookie = `auth_token=${session.authToken};`;
+        newConfig.headers['cookie'] = `auth_token=${session.authToken};`;
         newConfig.withCredentials = true;
 
         return http.axiosRef.request(newConfig);

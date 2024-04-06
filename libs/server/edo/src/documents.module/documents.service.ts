@@ -69,7 +69,7 @@ export class EdoDocumentsService {
 
   async getDocumentsByUser(
     userid: number,
-    fullLinks: boolean = false,
+    fullLinks = false,
     skipNumners?: string,
   ): Promise<EdoDocument[]> {
     const docs$ = from(this.getDocumentListByUser(userid, skipNumners)).pipe(
@@ -90,7 +90,7 @@ export class EdoDocumentsService {
     ids: Array<number | EdoDocumentListItem>,
   ): Observable<EdoDocument> {
     const MAX_CONCURRENT_REQUESTS = parseInt(
-      process.env.EDO_MAX_CONCURRENT_REQUESTS || '10',
+      process.env['EDO_MAX_CONCURRENT_REQUESTS'] || '10',
     );
 
     const result$ = from(ids).pipe(
@@ -103,7 +103,7 @@ export class EdoDocumentsService {
 
   getTexts(ids: Array<number>): Observable<EdoDocument> {
     const MAX_CONCURRENT_REQUESTS = parseInt(
-      process.env.EDO_MAX_CONCURRENT_REQUESTS || '10',
+      process.env['EDO_MAX_CONCURRENT_REQUESTS'] || '10',
     );
 
     const result$ = from(ids).pipe(
