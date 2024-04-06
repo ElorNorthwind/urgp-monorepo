@@ -22,11 +22,6 @@
       "@urgp/room-calc/widgets": ["libs/room-calc/widgets/src/index.ts"],
       "@urgp/shared/ui": ["libs/shared/ui/src/index.ts"],
       "@urgp/shared/util": ["libs/shared/util/src/index.ts"]
-
-      // "@urgp/ui": ["libs/shared/ui/src/index.ts"],
-      // "@urgp/ui/*": ["ui/src/*"],
-      // "@urgp/util": ["libs/shared/util/src/index.ts"],
-      // "@urgp/util/*": ["util/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

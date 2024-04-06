@@ -13,16 +13,20 @@
       "restart": true,
       "sourceMaps": true,
       "trace": true,
-      "cwd": "${workspaceFolder}/apps/server"
+      "cwd": "${workspaceFolder}/apps/server",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     },
     {
       "name": "Launch Nest Server",
       "request": "launch",
       "type": "node",
+      "restart": true,
+      "sourceMaps": true,
       "runtimeExecutable": "npx",
       "runtimeArgs": ["nx", "serve", "server"],
       "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}/apps/server"
+      "cwd": "${workspaceFolder}/apps/server",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     }
   ]
 }
