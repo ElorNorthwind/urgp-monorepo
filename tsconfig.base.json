@@ -15,14 +15,16 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@urgp/llm": ["libs/server/llm/src/index.ts"],
       "@urgp/room-calc/*": ["apps/room-calc/src/*"],
       "@urgp/room-calc/entities": ["libs/room-calc/entities/src/index.ts"],
       "@urgp/room-calc/features": ["libs/room-calc/features/src/index.ts"],
       "@urgp/room-calc/pages": ["libs/room-calc/pages/src/index.ts"],
       "@urgp/room-calc/widgets": ["libs/room-calc/widgets/src/index.ts"],
+      "@urgp/rsm": ["libs/server/rsm/src/index.ts"],
       "@urgp/server/*": ["apps/server/src/*"],
-      "@urgp/server/edo": ["libs/server/edo/src/index.ts"],
       "@urgp/server/database": ["libs/server/database/src/index.ts"],
+      "@urgp/server/edo": ["libs/server/edo/src/index.ts"],
       "@urgp/server/pipes": ["libs/server/pipes/src/index.ts"],
       "@urgp/shared/ui": ["libs/shared/ui/src/index.ts"],
       "@urgp/shared/util": ["libs/shared/util/src/index.ts"]
