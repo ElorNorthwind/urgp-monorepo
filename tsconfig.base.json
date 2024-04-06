@@ -21,8 +21,9 @@
       "@urgp/room-calc/pages": ["libs/room-calc/pages/src/index.ts"],
       "@urgp/room-calc/widgets": ["libs/room-calc/widgets/src/index.ts"],
       "@urgp/server/*": ["apps/server/src/*"],
-      "@urgp/server/pipes": ["libs/server/pipes/src/index.ts"],
       "@urgp/server/edo": ["libs/server/edo/src/index.ts"],
+      "@urgp/server/database": ["libs/server/database/src/index.ts"],
+      "@urgp/server/pipes": ["libs/server/pipes/src/index.ts"],
       "@urgp/shared/ui": ["libs/shared/ui/src/index.ts"],
       "@urgp/shared/util": ["libs/shared/util/src/index.ts"]
     }

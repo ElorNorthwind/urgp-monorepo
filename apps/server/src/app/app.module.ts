@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ClsModule } from 'nestjs-cls';
 import { EdoModule } from '@urgp/server/edo';
+import { DatabaseModule } from '@urgp/server/database';
 // import { EdoModule } from './edo/edo.module';
 // import { DatabaseModule } from './database.module';
 // import { GptModule } from './gpt/gpt.module';
@@ -25,7 +26,7 @@ import { EdoModule } from '@urgp/server/edo';
       },
     }),
     EdoModule,
-    // DatabaseModule,
+    DatabaseModule,
     // GptModule,
     // RsmModule,
   ],

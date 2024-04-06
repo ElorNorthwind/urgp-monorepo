@@ -29,6 +29,7 @@
     "nestjs-cls": "^4.3.0",
     "next-themes": "^0.3.0",
     "node-html-parser": "^6.1.13",
+    "pg-promise": "^11.6.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.51.2",
