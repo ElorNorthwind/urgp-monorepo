@@ -18,6 +18,7 @@ import { toast } from 'sonner';
 import { X } from 'lucide-react';
 import { getDirtyValues } from '@urgp/shared/util';
 import { useNavigate } from '@tanstack/react-router';
+import { StreetsCombobox } from '@urgp/room-calc/entities';
 
 const items = [
   { value: '1', label: 'ул. Ленина' },
@@ -71,8 +72,7 @@ export const AdressSearchForm: React.FC = memo(() => {
                   <FormLabel>Улица</FormLabel>
                 )}
                 <FormControl>
-                  <Combobox
-                    items={items}
+                  <StreetsCombobox
                     value={field.value}
                     onSelect={(newValue) => {
                       form.clearErrors('streetId');
@@ -81,6 +81,16 @@ export const AdressSearchForm: React.FC = memo(() => {
                       });
                     }}
                   />
+                  {/* <Combobox
+                    items={items}
+                    value={field.value}
+                    onSelect={(newValue) => {
+                      form.clearErrors('streetId');
+                      form.setValue('streetId', newValue, {
+                        shouldDirty: true,
+                      });
+                    }}
+                  /> */}
                 </FormControl>
               </FormItem>
             )}

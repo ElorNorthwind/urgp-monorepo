@@ -4,9 +4,9 @@ import { Street } from '../model/types';
 const streetsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
     getStreets: build.query<Street[], string>({
-      query: (find) => ({
-        url: 'streets/',
-        params: { find },
+      query: (query) => ({
+        url: '/db/streets',
+        params: { query },
       }),
     }),
   }),

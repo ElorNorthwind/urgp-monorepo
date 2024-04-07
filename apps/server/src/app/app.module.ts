@@ -3,8 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { ClsModule } from 'nestjs-cls';
 import { EdoModule } from '@urgp/server/edo';
 import { DatabaseModule } from '@urgp/server/database';
-import { GptModule } from '@urgp/llm';
-import { RsmModule } from '@urgp/rsm';
+import { GptModule } from '@urgp/server/llm';
+import { RsmModule } from '@urgp/server/rsm';
 
 @Module({
   // dot env files

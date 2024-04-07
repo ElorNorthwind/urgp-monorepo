@@ -2,7 +2,9 @@
   "name": "@urgp/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start": "nx run-many --parallel --target=serve --projects=server,room-calc"
+  },
   "private": true,
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",

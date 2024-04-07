@@ -1,8 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { rtkApi } from '../api/rtkApi';
+import { setupListeners } from '@reduxjs/toolkit/query';
 
 export const store = configureStore({
-  reducer: {},
+  reducer: { [rtkApi.reducerPath]: rtkApi.reducer },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(rtkApi.middleware),
 });
+
+setupListeners(store.dispatch);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

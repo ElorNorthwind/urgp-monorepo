@@ -3,3 +3,4 @@ export * from './lib/getDirtyValues';
 export * from './api/rtkApi';
 export * from './config/store';
 export * from './env.d';
+export * from './lib/debounce';
