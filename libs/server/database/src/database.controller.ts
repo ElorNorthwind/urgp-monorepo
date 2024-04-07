@@ -7,19 +7,27 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { DatabaseService } from './database.service';
-import { CaseReply, DbCase, DbUser } from './models/types';
+import { CaseReply, DbCase, DbStreet, DbUser } from './models/types';
 import {
   getUsersByDepartment,
   GetUsersByDepartmentDto,
 } from './models/dto/get-users-by-department';
 import { GetUserByIdtDto, getUserById } from './models/dto/get-user-by-id';
 import { GetCasesDto, getCases } from './models/dto/get-cases';
-import { updateQuestions } from './models/dto/update-questions';
 import { ZodValidationPipe } from '@urgp/server/pipes';
+import { GetStreetsDto, getStreets } from './models/dto/get-streets';
 
 @Controller('db')
 export class DatabaseController {
   constructor(private readonly dbServise: DatabaseService) {}
+
+  @Get('/streets')
+  @UsePipes(new ZodValidationPipe(getStreets))
+  getDbStreets(@Query() getStreetsDto: GetStreetsDto): Promise<DbStreet[]> {
+    const { query, limit } = getStreetsDto;
+    if (!query) return this.dbServise.db.streets.all();
+    return this.dbServise.db.streets.byQuery({ query, limit });
+  }
 
   @Get('/users')
   @UsePipes(new ZodValidationPipe(getUsersByDepartment))

@@ -19,6 +19,12 @@ export type DbOperation = {
   date?: Date; // CreationDate
 };
 
+export type DbStreet = {
+  value: string; // value
+  label: string; // label
+  similarity?: string; // similarity
+};
+
 export type DbCase = {
   id: number; // CaseID
   edoId: number; // EDO_Case_ID

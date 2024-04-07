@@ -31,7 +31,7 @@ export class UsersRepository {
   private columnSelector: string;
 
   constructor(
-    private db: IDatabase<any>,
+    private db: IDatabase<unknown>,
     private pgp: IMain,
   ) {
     this.cs = new pgp.helpers.ColumnSet(columns, {

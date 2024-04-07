@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 // import * as pgPromise from 'pg-promise';
 import pgPromise from 'pg-promise';
-import { DbExtensions, QuestionsRepository, UsersRepository } from './repos';
+import {
+  DbExtensions,
+  QuestionsRepository,
+  StreetsRepository,
+  UsersRepository,
+} from './repos';
 import { CasesRepository } from './repos';
 
 type ExtendedProtocol = pgPromise.IDatabase<DbExtensions> & DbExtensions;
@@ -25,6 +30,7 @@ export class DatabaseService {
         obj.users = new UsersRepository(obj, pgPromise());
         obj.cases = new CasesRepository(obj, pgPromise());
         obj.questions = new QuestionsRepository(obj, pgPromise());
+        obj.streets = new StreetsRepository(obj, pgPromise());
       },
     };
 

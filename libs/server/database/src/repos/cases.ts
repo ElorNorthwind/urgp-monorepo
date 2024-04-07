@@ -93,7 +93,7 @@ export class CasesRepository {
   private operationsCs: ColumnSet<DbOperation>;
 
   constructor(
-    private db: IDatabase<any>,
+    private db: IDatabase<unknown>,
     private pgp: IMain,
   ) {
     this.casesCs = new pgp.helpers.ColumnSet(casesColumns, {
