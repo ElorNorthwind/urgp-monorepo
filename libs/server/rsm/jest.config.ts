@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'rsm',
+  // displayName: 'rsm',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {

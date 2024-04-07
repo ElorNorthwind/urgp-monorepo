@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { ClsModule } from 'nestjs-cls';
 import { EdoModule } from '@urgp/server/edo';
 import { DatabaseModule } from '@urgp/server/database';
+import { GptModule } from '@urgp/llm';
+import { RsmModule } from '@urgp/rsm';
 // import { EdoModule } from './edo/edo.module';
 // import { DatabaseModule } from './database.module';
 // import { GptModule } from './gpt/gpt.module';
@@ -27,8 +29,8 @@ import { DatabaseModule } from '@urgp/server/database';
     }),
     EdoModule,
     DatabaseModule,
-    // GptModule,
-    // RsmModule,
+    GptModule,
+    RsmModule,
   ],
 })
 export class AppModule {}
