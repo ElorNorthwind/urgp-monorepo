@@ -21,11 +21,10 @@ export class StreetsRepository {
   // Returns streets by query;
   byQuery({ query, limit = 20 }: GetStreetsDto): Promise<DbStreet[]> {
     return this.db.any(
-      `WITH myconstants (_query) as (values ($<query>))
-       SELECT id::varchar as value, label, (word_similarity(label, _query) * 100)::integer as similarity
-       FROM public.bti_streets, myconstants
-       WHERE label %> _query
-       ORDER BY word_similarity(label, _query) DESC
+      `SELECT id::varchar as value, label, (word_similarity(label, $<query>) * 100)::integer as similarity
+       FROM public.bti_streets
+       WHERE label %> $<query>
+       ORDER BY word_similarity(label, $<query>) DESC
        LIMIT $<limit>`,
       { query, limit },
     );
