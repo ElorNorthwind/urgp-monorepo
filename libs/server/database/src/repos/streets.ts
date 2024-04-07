@@ -23,7 +23,7 @@ export class StreetsRepository {
     return this.db.any(
       `SELECT id::varchar as value, label, (word_similarity(label, $<query>) * 100)::integer as similarity
        FROM public.bti_streets
-       WHERE label %> $<query>
+       WHERE label %> $<query> OR $<query> ~ label
        ORDER BY word_similarity(label, $<query>) DESC
        LIMIT $<limit>`,
       { query, limit },

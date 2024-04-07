@@ -2,7 +2,6 @@ import {
   Button,
   Command,
   CommandEmpty,
-  CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
@@ -10,20 +9,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@urgp/shared/ui';
-import { cn, debounce } from '@urgp/shared/util';
+import { cn, useDebounce } from '@urgp/shared/util';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { ReactNode, useState } from 'react';
 import { useStreets } from '../api/streetsApi';
-import { skipToken } from '@reduxjs/toolkit/query/react';
-
-// type ListItem = {
-//   value: string;
-//   label: string;
-//   // icon?: ReactNode; // to do - add something like that I guess
-
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   [x: string]: any;
-// };
 
 type StreetsComboboxFieldProps = {
   value: string;
@@ -47,9 +36,9 @@ function StreetsCombobox(props: StreetsComboboxFieldProps) {
   } = props;
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState<string>('');
-  //   const { data: items, isLoading } = useStreets(query ?? skipToken);
-  const { data: items } = useStreets(query, {
-    skip: query === '' || !query || query.length < 3,
+  const debouncedQuery = useDebounce(query, 300);
+  const { data: items } = useStreets(debouncedQuery, {
+    skip: debouncedQuery === '' || !debouncedQuery || debouncedQuery.length < 3,
   });
 
   return (
@@ -81,9 +70,6 @@ function StreetsCombobox(props: StreetsComboboxFieldProps) {
           <CommandInput
             placeholder={searchPlaceholder}
             onValueChange={(value) => {
-              //   const newQuery = value && value.length > 3 ? value : '';
-              //   value && value.length > 3;
-              //   debounce(setQuery(newQuery));
               setQuery(value);
             }}
             value={query}
@@ -94,13 +80,6 @@ function StreetsCombobox(props: StreetsComboboxFieldProps) {
                 ? emptySearchLabel
                 : 'Введите название для поиска...'}
             </CommandEmpty>
-            {/* <CommandGroup> */}
-            {/* {isLoading && (
-                <CommandItem value={''} key={'is_loading'}>
-                  <Check className={cn('mr-2 h-4 w-4 opacity-0')} />
-                  <p className="w-full truncate">Загрузка...</p>
-                </CommandItem>
-              )} */}
             {items &&
               query &&
               query.length > 3 &&
@@ -123,7 +102,6 @@ function StreetsCombobox(props: StreetsComboboxFieldProps) {
                   <p className="w-full truncate">{item.label}</p>
                 </CommandItem>
               ))}
-            {/* </CommandGroup> */}
           </CommandList>
         </Command>
       </PopoverContent>
