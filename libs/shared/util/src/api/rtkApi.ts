@@ -45,7 +45,8 @@ export const rtkApi = createApi({
   reducerPath: 'api',
   // ts-expect-error
   baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_API_URL || '/api',
+    // baseUrl: import.meta.env.VITE_API_URL || '/api',
+    baseUrl: '/api',
   }),
   endpoints: (builder) => ({}),
 });
