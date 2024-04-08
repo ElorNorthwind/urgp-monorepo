@@ -12,12 +12,12 @@ export class EdoSessionService {
   private edoSessions: EdoSessionInfo[] = [];
   private rsmSessions: RsmSessionInfo[] = [];
 
-  setSession({ userId, orgId, system, credentials }: ExternalSessionInfo) {
+  setSession({ userId, orgId, system, accessdata }: ExternalSessionInfo) {
     const newSession = {
       userId,
       system,
       orgId,
-      credentials,
+      accessdata,
       createdAt: new Date(),
     };
 

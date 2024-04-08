@@ -1,13 +1,13 @@
-export type EdoCredentials = {
+export type EdoAccessData = {
   dnsid: string;
   authToken: string;
 };
 
-export type RsmCredentials = {
+export type RsmAccessData = {
   rsmCookie: string;
 };
 
-export type ExternalCredentials = EdoCredentials | RsmCredentials;
+export type ExternalAccessData = EdoAccessData | RsmAccessData;
 
 export type ExternalSystem = 'EDO' | 'RSM';
 
@@ -19,12 +19,12 @@ type GeneralSessionInfo = {
 
 export type EdoSessionInfo = GeneralSessionInfo & {
   system: 'EDO';
-  credentials: EdoCredentials;
+  accessdata: EdoAccessData;
 };
 
 export type RsmSessionInfo = GeneralSessionInfo & {
   system: 'RSM';
-  credentials: RsmCredentials;
+  accessdata: RsmAccessData;
 };
 
 export type ExternalSessionInfo = EdoSessionInfo | RsmSessionInfo;
