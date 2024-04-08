@@ -1,0 +1,9 @@
+{
+  "name": "server/external-auth",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/server/external-auth/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project external-auth --web",
+  "targets": {}
+}

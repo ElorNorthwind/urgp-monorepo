@@ -7,7 +7,7 @@ import {
 } from './model/types';
 
 @Injectable()
-export class EdoSessionService {
+export class ExternalSessionService {
   // Возможно это надо хранить не в памяти, а где-нибудь в Reddis
   private edoSessions: EdoSessionInfo[] = [];
   private rsmSessions: RsmSessionInfo[] = [];
