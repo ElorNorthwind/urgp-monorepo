@@ -3,3 +3,7 @@ export type EdoCredentials = {
   password: string;
   groupid?: number;
 };
+export type RsmCredentials = {
+  login: string;
+  password: string;
+};
