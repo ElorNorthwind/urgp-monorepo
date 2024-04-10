@@ -1,4 +1,8 @@
-import { ExternalSystem } from '@urgp/server/database';
+import {
+  DbExternalCredentials,
+  ExternalSystem,
+  GetCredentialsDto,
+} from '@urgp/server/database';
 
 export type EdoTokenData = {
   dnsid: string;
@@ -10,6 +14,13 @@ export type RsmTokenData = {
 };
 
 export type ExternalTokenData = EdoTokenData | RsmTokenData;
+
+// move to a zod dto?
+export type ExternalAuthDataRequest = GetCredentialsDto & {
+  login?: string;
+  password?: string;
+  refresh?: boolean;
+};
 
 export type EternalAuthData = {
   system: ExternalSystem;

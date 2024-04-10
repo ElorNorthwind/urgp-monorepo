@@ -5,7 +5,7 @@ import {
   GetCredentialsDto,
   getCredentials,
 } from '@urgp/server/database';
-import { EternalAuthData } from '../model/types/token';
+import { EternalAuthData, ExternalAuthDataRequest } from '../model/types/token';
 import { ExternalTokenService } from './external-token.service';
 import { firstValueFrom } from 'rxjs';
 import { ExternalSessionService } from './external-session.service';
@@ -26,10 +26,10 @@ export class ExternalAuthService {
   }
 
   async getExternalAuthData(
-    dto: GetCredentialsDto,
-    refresh = false,
+    props: ExternalAuthDataRequest,
   ): Promise<EternalAuthData> {
-    const { system, userId, orgId } = getCredentials.parse(dto);
+    const { system, userId, orgId } = getCredentials.parse(props);
+    const { refresh, login, password } = props;
 
     // get existing session only if there is no flag to force a refresh of a session
     const session = refresh
@@ -39,11 +39,14 @@ export class ExternalAuthService {
     if (session) return { system, token: session.token, isOld: true };
 
     // no existing session found or there is a flag to refresh it
-    const credentials = await this.getExternalCredentials({
-      system,
-      userId,
-      orgId,
-    });
+    const credentials =
+      login && password && userId // use client credentials if provided
+        ? { login, password, userId, orgId }
+        : await this.getExternalCredentials({
+            system,
+            userId,
+            orgId,
+          });
 
     // get a fresh external token object
     const token = await firstValueFrom(
