@@ -3,8 +3,8 @@ import {
   EdoSessionInfo,
   ExternalSessionInfo,
   RsmSessionInfo,
-  ExternalSystem,
-} from './model/types';
+} from '../model/types/session';
+import { ExternalSystem } from '@urgp/server/database';
 
 @Injectable()
 export class ExternalSessionService {

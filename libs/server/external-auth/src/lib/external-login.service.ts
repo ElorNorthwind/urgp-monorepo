@@ -2,17 +2,17 @@ import { HttpService } from '@nestjs/axios';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { Observable, from, map } from 'rxjs';
 import { EDO_HTTP_OPTIONS } from '../config/request-config';
-import { EdoCredentials, RsmCredentials } from '../model/types';
-import { EdoTokenData, RsmTokenData } from '@urgp/server/sessions';
+import { EdoCredentials, RsmCredentials } from '../model/types/credentials';
 import { v4 as uuidv4 } from 'uuid';
 import puppeteer from 'puppeteer';
+import { EdoTokenData, RsmTokenData } from '../model/types/token';
 @Injectable()
 export class ExternalLoginService {
   constructor(private readonly httpService: HttpService) {}
 
   getEdoToken(credentials: EdoCredentials): Observable<EdoTokenData> {
     const re = /auth_token=(.*?);/i;
-    const dnsid = uuidv4();
+    const dnsid = uuidv4(); // who would have guessed?
 
     return from(
       this.httpService

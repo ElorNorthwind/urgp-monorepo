@@ -26,7 +26,6 @@
       "@urgp/server/llm": ["libs/server/llm/src/index.ts"],
       "@urgp/server/pipes": ["libs/server/pipes/src/index.ts"],
       "@urgp/server/rsm": ["libs/server/rsm/src/index.ts"],
-      "@urgp/server/sessions": ["libs/server/sessions/src/index.ts"],
       "@urgp/server/external-auth": ["libs/server/external-auth/src/index.ts"],
       "@urgp/shared/ui": ["libs/shared/ui/src/index.ts"],
       "@urgp/shared/util": ["libs/shared/util/src/index.ts"]

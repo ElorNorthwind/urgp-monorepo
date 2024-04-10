@@ -1,15 +1,4 @@
-export type EdoTokenData = {
-  dnsid: string;
-  authToken: string;
-};
-
-export type RsmTokenData = {
-  rsmCookie: string;
-};
-
-export type ExternalTokenData = EdoTokenData | RsmTokenData;
-
-export type ExternalSystem = 'EDO' | 'RSM';
+import { EdoTokenData, RsmTokenData } from './token';
 
 type GeneralSessionInfo = {
   userId?: number;

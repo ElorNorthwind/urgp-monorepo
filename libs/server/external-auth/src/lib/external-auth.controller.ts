@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ExternalLoginService } from './external-login.service';
 import { Observable } from 'rxjs';
-import { EdoTokenData, RsmTokenData } from '@urgp/server/sessions';
+import { EdoTokenData, RsmTokenData } from '../model/types/token';
 
 @Controller('ext/auth/') // ЭТОТ КОНТРОЛЛЕР НА САМОМ ДЕЛЕ НЕ НУЖЕН, ЧИСТО ТЕСТ ПАЦАНЫ
 export class ExternalAuthController {

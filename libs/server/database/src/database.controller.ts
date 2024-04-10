@@ -7,7 +7,13 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { DatabaseService } from './database.service';
-import { CaseReply, DbCase, DbStreet, DbUser } from './models/types';
+import {
+  CaseReply,
+  DbCase,
+  DbExternalCredentials,
+  DbStreet,
+  DbUser,
+} from './models/types';
 import {
   getUsersByDepartment,
   GetUsersByDepartmentDto,
@@ -16,10 +22,22 @@ import { GetUserByIdtDto, getUserById } from './models/dto/get-user-by-id';
 import { GetCasesDto, getCases } from './models/dto/get-cases';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import { GetStreetsDto, getStreets } from './models/dto/get-streets';
+import {
+  GetCredentialsDto,
+  getCredentials,
+} from './models/dto/get-credentials';
 
 @Controller('db')
 export class DatabaseController {
   constructor(private readonly dbServise: DatabaseService) {}
+
+  @Get('/credentials')
+  @UsePipes(new ZodValidationPipe(getCredentials))
+  getDbCredentials(
+    @Query() getCredentials: GetCredentialsDto,
+  ): Promise<DbExternalCredentials> {
+    return this.dbServise.db.users.credentials(getCredentials);
+  }
 
   @Get('/streets')
   @UsePipes(new ZodValidationPipe(getStreets))
