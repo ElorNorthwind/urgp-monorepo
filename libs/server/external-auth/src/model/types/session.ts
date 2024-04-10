@@ -1,19 +1,19 @@
 import { EdoTokenData, RsmTokenData } from './token';
 
 type GeneralSessionInfo = {
-  userId?: number;
+  userId: number;
   orgId?: number;
   createdAt?: Date;
 };
 
 export type EdoSessionInfo = GeneralSessionInfo & {
   system: 'EDO';
-  accessdata: EdoTokenData;
+  token: EdoTokenData;
 };
 
 export type RsmSessionInfo = GeneralSessionInfo & {
   system: 'RSM';
-  accessdata: RsmTokenData;
+  token: RsmTokenData;
 };
 
 export type ExternalSessionInfo = EdoSessionInfo | RsmSessionInfo;

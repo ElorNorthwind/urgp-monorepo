@@ -2,10 +2,13 @@ import { IDatabase, IMain, ColumnSet } from 'pg-promise';
 import { DbExternalCredentials, DbUser } from '../models/types';
 // import { Injectable } from '@nestjs/common';
 import { SelectRenamedColumns } from '../lib/select-renamed-columns';
-import { GetCredentialsDto } from '../models/dto/get-credentials';
+import {
+  GetCredentialsDto,
+  getCredentials,
+} from '../models/dto/get-credentials';
 
 const table = { table: 'users', schema: 'dev' };
-const columns = [
+const userColumns = [
   { name: 'UserID', prop: 'id', cnd: true },
   { name: 'EDO_ID', prop: 'edoId', cnd: true },
   { name: 'EDO_Password', prop: 'edoPassword', cnd: true },
@@ -13,6 +16,16 @@ const columns = [
   { name: 'upr_id', prop: 'uprId' },
   { name: 'OtdelID', prop: 'otdelId' },
 ];
+
+// const credentialsColumns = [
+//   { name: 'user_id', prop: 'userId' },
+//   { name: 'org_id', prop: 'orgId' },
+//   { name: 'login', prop: 'login' },
+//   { name: 'password', prop: 'password' },
+//   { name: 'system', prop: 'system' },
+//   { name: 'name', prop: 'name' },
+//   { name: 'group_id', prop: 'groupId' },
+// ];
 
 // @Injectable()
 export class UsersRepository {
@@ -35,7 +48,7 @@ export class UsersRepository {
     private db: IDatabase<unknown>,
     private pgp: IMain,
   ) {
-    this.cs = new pgp.helpers.ColumnSet(columns, {
+    this.cs = new pgp.helpers.ColumnSet(userColumns, {
       table,
     });
 
@@ -70,14 +83,9 @@ export class UsersRepository {
 
   // Returns user by his Id;
   credentials(dto: GetCredentialsDto): Promise<DbExternalCredentials> {
-    const { system = 'EDO', userId = null, orgId = 0 } = dto;
     return this.db.one(
       'SELECT * FROM public.find_credentials($<system>, $<userId>, $<orgId>)',
-      {
-        system,
-        userId,
-        orgId,
-      },
+      dto,
     );
   }
 }

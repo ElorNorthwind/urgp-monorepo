@@ -93,10 +93,11 @@ export type CaseReply = {
 export type ExternalSystem = 'EDO' | 'RSM';
 
 export type DbExternalCredentials = {
-  userId?: number;
+  userId: number;
   orgId?: number;
-  lonig: string;
+  login: string;
   password: string;
-  system: ExternalSystem;
+  system?: ExternalSystem;
   name?: string;
+  groupId?: number;
 };

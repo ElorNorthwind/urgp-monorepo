@@ -34,9 +34,9 @@ export class DatabaseController {
   @Get('/credentials')
   @UsePipes(new ZodValidationPipe(getCredentials))
   getDbCredentials(
-    @Query() getCredentials: GetCredentialsDto,
+    @Query() dto: GetCredentialsDto,
   ): Promise<DbExternalCredentials> {
-    return this.dbServise.db.users.credentials(getCredentials);
+    return this.dbServise.db.users.credentials(dto);
   }
 
   @Get('/streets')
