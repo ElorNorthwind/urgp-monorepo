@@ -1,8 +1,4 @@
-import {
-  DbExternalCredentials,
-  ExternalSystem,
-  GetCredentialsDto,
-} from '@urgp/server/database';
+import { ExternalSystem, GetCredentialsDto } from '@urgp/server/database';
 
 export type EdoTokenData = {
   dnsid: string;
@@ -24,7 +20,6 @@ export type ExternalAuthDataRequest = GetCredentialsDto & {
 
 export type EternalAuthData = {
   system: ExternalSystem;
-  // credentials?: DbExternalCredentials;
   token: ExternalTokenData;
   isOld?: boolean;
 };
