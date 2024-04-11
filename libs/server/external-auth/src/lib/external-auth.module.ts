@@ -14,6 +14,6 @@ import { ExternalAuthService } from './external-auth.service';
     ExternalSessionService,
     ExternalAuthService,
   ],
-  exports: [],
+  exports: [ExternalAuthService],
 })
 export class ExternalAuthModule {}

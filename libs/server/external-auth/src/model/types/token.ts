@@ -18,7 +18,7 @@ export type ExternalAuthDataRequest = GetCredentialsDto & {
   refresh?: boolean;
 };
 
-export type EternalAuthData = {
+export type ExternalAuthData = {
   system: ExternalSystem;
   token: ExternalTokenData;
   isOld?: boolean;

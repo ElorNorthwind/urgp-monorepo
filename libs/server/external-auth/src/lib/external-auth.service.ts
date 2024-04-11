@@ -1,11 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import {
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import {
   DatabaseService,
   DbExternalCredentials,
   GetCredentialsDto,
   getCredentials,
 } from '@urgp/server/database';
-import { EternalAuthData, ExternalAuthDataRequest } from '../model/types/token';
+import {
+  ExternalAuthData,
+  ExternalAuthDataRequest,
+} from '../model/types/token';
 import { ExternalTokenService } from './external-token.service';
 import { firstValueFrom } from 'rxjs';
 import { ExternalSessionService } from './external-session.service';
@@ -27,15 +35,15 @@ export class ExternalAuthService {
 
   async getExternalAuthData(
     props: ExternalAuthDataRequest,
-  ): Promise<EternalAuthData> {
+  ): Promise<ExternalAuthData> {
     const { system, userId, orgId } = getCredentials.parse(props);
     const { refresh, login, password } = props;
 
     // get existing session only if there is no flag to force a refresh of a session
-    const session = refresh
-      ? undefined
-      : this.sessions.getSession({ system, userId, orgId });
-
+    const session =
+      refresh === true
+        ? undefined
+        : this.sessions.getSession({ system, userId, orgId });
     if (session) return { system, token: session.token, isOld: true };
 
     // no existing session found or there is a flag to refresh it
@@ -47,6 +55,12 @@ export class ExternalAuthService {
             userId,
             orgId,
           });
+
+    if (!credentials?.login || !credentials?.password)
+      throw new HttpException(
+        `No ${system} credentials found for user ${userId} (${credentials.name || 'Unnamed'})`,
+        HttpStatus.UNAUTHORIZED,
+      );
 
     // get a fresh external token object
     const token = await firstValueFrom(
