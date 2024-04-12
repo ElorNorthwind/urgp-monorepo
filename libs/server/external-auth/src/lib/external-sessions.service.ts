@@ -7,7 +7,7 @@ import {
 } from '@urgp/server/database';
 
 @Injectable()
-export class ExternalSessionService {
+export class ExternalSessionsService {
   // Возможно это надо хранить не в памяти, а где-нибудь в Reddis
   private externalSessions: ExternalSessionInfo[] = [];
 
@@ -35,8 +35,10 @@ export class ExternalSessionService {
   getSession(dto: GetCredentialsDto) {
     const { system, userId, orgId } = dto; // dedided to parse it higher up in the chain... getCredentials.parse(dto);
     return this.externalSessions.find((session) => {
-      session.system === system &&
-        (session.userId === userId || (!userId && session.orgId === orgId));
+      return (
+        session.system === system &&
+        (session.userId === userId || (!userId && session.orgId === orgId))
+      );
     });
   }
 

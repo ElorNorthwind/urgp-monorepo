@@ -29,8 +29,8 @@ export class ExternalAuthController {
   @Get('edo')
   getEdoToken(): Promise<ExternalAuthData> {
     return this.auth.getExternalAuthData({
-      system: 'RSM',
-      userId: 10,
+      system: 'EDO',
+      userId: 22,
       orgId: 0,
     });
   }

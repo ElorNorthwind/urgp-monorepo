@@ -50,7 +50,7 @@
     "@babel/core": "^7.14.5",
     "@babel/preset-react": "^7.14.5",
     "@nestjs/schematics": "^10.0.1",
-    "@nestjs/testing": "^10.0.2",
+    "@nestjs/testing": "^10.3.7",
     "@nx-extend/shadcn-ui": "^1.0.2",
     "@nx/cypress": "^18.2.2",
     "@nx/eslint": "^18.2.2",

@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { ExternalTokenService } from './external-token.service';
 import { ExternalAuthController } from './external-auth.controller';
 import { DatabaseModule } from '@urgp/server/database';
-import { ExternalSessionService } from './external-session.service';
+import { ExternalSessionsService } from './external-sessions.service';
 import { ExternalAuthService } from './external-auth.service';
 
 @Module({
@@ -11,7 +11,7 @@ import { ExternalAuthService } from './external-auth.service';
   controllers: [ExternalAuthController],
   providers: [
     ExternalTokenService,
-    ExternalSessionService,
+    ExternalSessionsService,
     ExternalAuthService,
   ],
   exports: [ExternalAuthService],

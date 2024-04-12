@@ -1,5 +1,7 @@
 {
   "compileOnSave": false,
+  "esModuleInterop": true,
+  "allowSyntheticDefaultImports": true,
   "compilerOptions": {
     "rootDir": ".",
     "sourceMap": true,

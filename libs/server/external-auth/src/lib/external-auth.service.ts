@@ -16,7 +16,7 @@ import {
 } from '../model/types/token';
 import { ExternalTokenService } from './external-token.service';
 import { firstValueFrom } from 'rxjs';
-import { ExternalSessionService } from './external-session.service';
+import { ExternalSessionsService } from './external-sessions.service';
 import { ExternalSessionInfo } from '../model/types/session';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class ExternalAuthService {
   constructor(
     private readonly database: DatabaseService,
     private readonly tokenService: ExternalTokenService,
-    private readonly sessions: ExternalSessionService,
+    private readonly sessions: ExternalSessionsService,
   ) {}
 
   getExternalCredentials(
