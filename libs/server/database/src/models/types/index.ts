@@ -94,7 +94,7 @@ export type ExternalSystem = 'EDO' | 'RSM';
 
 export type DbExternalCredentials = {
   userId: number;
-  orgId?: number;
+  orgId?: number | null;
   login: string;
   password: string;
   system?: ExternalSystem;
