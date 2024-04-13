@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { ExternalSessionsService } from './external-sessions.service';
-import { ExternalSessionInfo } from '../model/types/session';
+import { ExternalSessionInfo } from '@urgp/server/entities';
 
 const rsmSession1 = {
   system: 'RSM',

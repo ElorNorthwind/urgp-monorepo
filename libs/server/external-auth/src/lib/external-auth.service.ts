@@ -1,18 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import {
-  DatabaseService,
-  DbExternalCredentials,
-  GetCredentialsDto,
-  getCredentials,
-} from '@urgp/server/database';
-import {
-  ExternalAuthData,
-  ExternalAuthDataRequest,
-} from '../model/types/token';
 import { ExternalTokenService } from './external-token.service';
 import { firstValueFrom } from 'rxjs';
 import { ExternalSessionsService } from './external-sessions.service';
-import { ExternalSessionInfo } from '../model/types/session';
+import { DatabaseService } from '@urgp/server/database';
+import {
+  AuthRequestDto,
+  ExternalCredentials,
+  ExternalSessionInfo,
+  ExternalSessionReturnValue,
+  FindSessionDto,
+  authRequestDto,
+  findSessionDto,
+} from '@urgp/server/entities';
 
 @Injectable()
 export class ExternalAuthService {
@@ -22,29 +21,34 @@ export class ExternalAuthService {
     private readonly sessions: ExternalSessionsService,
   ) {}
 
-  getExternalCredentials(
-    dto: GetCredentialsDto,
-  ): Promise<DbExternalCredentials> {
-    return this.database.db.users.credentials(dto);
+  getExternalCredentials(dto: FindSessionDto): Promise<ExternalCredentials> {
+    const parsedDto = findSessionDto.parse(dto);
+    return this.database.db.users.credentials(parsedDto);
   }
 
   async getExternalAuthData(
-    props: ExternalAuthDataRequest,
-  ): Promise<ExternalAuthData> {
-    const { system, userId, orgId } = getCredentials.parse(props);
-    const { refresh, login, password } = props;
+    dto: AuthRequestDto,
+  ): Promise<ExternalSessionReturnValue> {
+    const { system, userId, orgId, refresh, login, password, name } =
+      authRequestDto.parse(dto);
 
-    // get existing session only if there is no flag to force a refresh of a session
-    const session =
+    // check if there is an existing session and if a flag to refresh it is not send
+    const existingSession =
       refresh === true
         ? undefined
         : this.sessions.getSession({ system, userId, orgId });
-    if (session) return { system, token: session.token, isOld: true };
+
+    // return a session if it is found
+    if (existingSession)
+      return {
+        ...existingSession,
+        isOld: true,
+      };
 
     // no existing session found or there is a flag to refresh it
     const credentials =
       login && password && userId // use client credentials if provided
-        ? { login, password, userId, orgId }
+        ? { login, password, userId, orgId, name }
         : await this.getExternalCredentials({
             system,
             userId,
@@ -53,7 +57,7 @@ export class ExternalAuthService {
 
     if (!credentials?.login || !credentials?.password)
       throw new HttpException(
-        `No ${system} credentials found for user ${userId} (${credentials.name || 'Unnamed'})`,
+        `No ${system} credentials found for user ${userId} (${credentials?.name || 'Unnamed'})`,
         HttpStatus.UNAUTHORIZED,
       );
 
@@ -61,18 +65,18 @@ export class ExternalAuthService {
     const token = await firstValueFrom(
       this.tokenService.getExternalToken({
         system,
-        credentials,
+        ...credentials,
       }),
     );
 
     // save the fresh session
-    this.sessions.setSession({
+    const freshSession = this.sessions.setSession({
       system,
-      userId: credentials.userId,
-      orgId: credentials.orgId,
+      userId,
+      orgId,
       token,
     } as ExternalSessionInfo);
 
-    return { system, token, isOld: false };
+    return { ...freshSession, isOld: false };
   }
 }

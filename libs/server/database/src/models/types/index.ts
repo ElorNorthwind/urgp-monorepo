@@ -89,15 +89,3 @@ export type CaseReply = {
 //  WHERE table_schema = 'public'
 //    AND table_name   = 'cases'
 //      ;
-
-export type ExternalSystem = 'EDO' | 'RSM';
-
-export type DbExternalCredentials = {
-  userId: number;
-  orgId?: number | null;
-  login: string;
-  password: string;
-  system?: ExternalSystem;
-  name?: string;
-  groupId?: number;
-};

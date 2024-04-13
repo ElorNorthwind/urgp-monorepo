@@ -1,11 +1,7 @@
 import { IDatabase, IMain, ColumnSet } from 'pg-promise';
-import { DbExternalCredentials, DbUser } from '../models/types';
-// import { Injectable } from '@nestjs/common';
+import { DbUser } from '../models/types';
 import { SelectRenamedColumns } from '../lib/select-renamed-columns';
-import {
-  GetCredentialsDto,
-  getCredentials,
-} from '../models/dto/get-credentials';
+import { ExternalCredentials, FindSessionDto } from '@urgp/server/entities';
 
 const table = { table: 'users', schema: 'dev' };
 const userColumns = [
@@ -82,7 +78,7 @@ export class UsersRepository {
   }
 
   // Returns user by his Id;
-  credentials(dto: GetCredentialsDto): Promise<DbExternalCredentials> {
+  credentials(dto: FindSessionDto): Promise<ExternalCredentials> {
     return this.db.one(
       'SELECT * FROM public.find_credentials($<system>, $<userId>, $<orgId>)',
       dto,

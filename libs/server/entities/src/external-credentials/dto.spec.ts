@@ -21,9 +21,9 @@ describe('externalCredentials', () => {
     const rsmResult = externalCredentials.safeParse(rsmData);
     const edoResult = externalCredentials.safeParse(edoData);
     expect(rsmResult.success && rsmResult.data.login).toEqual('test');
-    expect(rsmResult.success && rsmResult.data.groupid).toBeUndefined();
+    expect(rsmResult.success && rsmResult.data.groupId).toBeUndefined();
     expect(edoResult.success && edoResult.data.login).toEqual('123');
-    expect(edoResult.success && edoResult.data.groupid).toEqual(21);
+    expect(edoResult.success && edoResult.data.groupId).toEqual(21);
   });
   it('should throw on bad input', async () => {
     const rsmResult = externalCredentials.safeParse({

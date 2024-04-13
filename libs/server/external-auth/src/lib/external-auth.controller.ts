@@ -1,12 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
 import { ExternalTokenService } from './external-token.service';
 import { Observable } from 'rxjs';
-import {
-  EdoTokenData,
-  ExternalAuthData,
-  RsmTokenData,
-} from '../model/types/token';
 import { ExternalAuthService } from './external-auth.service';
+import {
+  ExternalSessionReturnValue,
+  RsmSessionInfo,
+} from '@urgp/server/entities';
 
 @Controller('ext/auth/') // ЭТОТ КОНТРОЛЛЕР НА САМОМ ДЕЛЕ НЕ НУЖЕН, ЧИСТО ТЕСТ ПАЦАНЫ
 export class ExternalAuthController {
@@ -15,19 +14,8 @@ export class ExternalAuthController {
     private readonly auth: ExternalAuthService,
   ) {}
 
-  // @Get('edo')
-  // getEdoToken(): Observable<EdoTokenData> {
-  //   return this.auth.getExternalToken({
-  //     system: 'EDO',
-  //     credentials: {
-  //       login: process.env['EDO_DEFAULT_USERID'] || '',
-  //       password: process.env['EDO_DEFAULT_PASSWORD'] || '',
-  //     },
-  //   }) as Observable<EdoTokenData>;
-  // }
-
   @Get('edo')
-  getEdoToken(): Promise<ExternalAuthData> {
+  getEdoToken(): Promise<ExternalSessionReturnValue> {
     return this.auth.getExternalAuthData({
       system: 'EDO',
       userId: 22,
@@ -36,13 +24,11 @@ export class ExternalAuthController {
   }
 
   @Get('rsm')
-  getRsmToken(): Observable<RsmTokenData> {
-    return this.token.getExternalToken({
+  getRsmToken(): Promise<ExternalSessionReturnValue> {
+    return this.auth.getExternalAuthData({
       system: 'RSM',
-      credentials: {
-        login: process.env['RSM_LOGIN'] || '',
-        password: process.env['RSM_PASSWORD'] || '',
-      },
-    }) as Observable<RsmTokenData>;
+      userId: 10,
+      orgId: 0,
+    });
   }
 }

@@ -2,40 +2,28 @@ import { HttpService } from '@nestjs/axios';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { Observable, from, map } from 'rxjs';
 import { EDO_HTTP_OPTIONS } from '../config/request-config';
-import { EdoCredentials, RsmCredentials } from '../model/types/credentials';
 import { v4 as uuidv4 } from 'uuid';
 import puppeteer from 'puppeteer';
 import {
-  EdoTokenData,
-  ExternalTokenData,
-  RsmTokenData,
-} from '../model/types/token';
-import { DbExternalCredentials, ExternalSystem } from '@urgp/server/database';
+  EdoCredentials,
+  EdoToken,
+  ExternalCredentials,
+  ExternalToken,
+  RsmCredentials,
+  RsmToken,
+  externalCredentials,
+} from '@urgp/server/entities';
 @Injectable()
 export class ExternalTokenService {
   constructor(private readonly httpService: HttpService) {}
 
-  public getExternalToken({
-    system = 'EDO',
-    credentials,
-  }: {
-    system?: ExternalSystem;
-    credentials: Omit<DbExternalCredentials, 'userId'>;
-  }): Observable<ExternalTokenData> {
-    switch (system) {
+  public getExternalToken(dto: ExternalCredentials): Observable<ExternalToken> {
+    const credentials = externalCredentials.parse(dto);
+    switch (credentials.system) {
       case 'EDO':
-        return this.getEdoToken({
-          userid: Number(credentials.login),
-          password: credentials.password,
-          groupid: credentials.groupId,
-        });
+        return this.getEdoToken(credentials);
       case 'RSM':
-        return from(
-          this.getRsmToken({
-            login: credentials.login,
-            password: credentials.password,
-          }),
-        );
+        return from(this.getRsmToken(credentials));
       default:
         throw new HttpException(
           'Unknown external system',
@@ -44,7 +32,7 @@ export class ExternalTokenService {
     }
   }
 
-  private getEdoToken(credentials: EdoCredentials): Observable<EdoTokenData> {
+  private getEdoToken(credentials: EdoCredentials): Observable<EdoToken> {
     const re = /auth_token=(.*?);/i;
     const dnsid = uuidv4(); // who would have guessed?
 
@@ -53,10 +41,10 @@ export class ExternalTokenService {
         .post(
           '/auth.php',
           {
-            user_id: credentials.userid,
+            user_id: credentials.login,
             password: credentials.password,
             DNSID: dnsid,
-            groupid: credentials.groupid || 21,
+            groupid: credentials.groupId,
           },
           {
             ...EDO_HTTP_OPTIONS,
@@ -79,9 +67,7 @@ export class ExternalTokenService {
     );
   }
 
-  private async getRsmToken(
-    credentials: RsmCredentials,
-  ): Promise<RsmTokenData> {
+  private async getRsmToken(credentials: RsmCredentials): Promise<RsmToken> {
     const browser = await puppeteer.launch({ headless: 'shell' });
     const page = await browser.newPage();
     const ip = `http://10.15.179.52:5222`;

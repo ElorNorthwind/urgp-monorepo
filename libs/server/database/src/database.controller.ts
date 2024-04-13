@@ -7,13 +7,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { DatabaseService } from './database.service';
-import {
-  CaseReply,
-  DbCase,
-  DbExternalCredentials,
-  DbStreet,
-  DbUser,
-} from './models/types';
+import { CaseReply, DbStreet, DbUser } from './models/types';
 import {
   getUsersByDepartment,
   GetUsersByDepartmentDto,
@@ -23,20 +17,19 @@ import { GetCasesDto, getCases } from './models/dto/get-cases';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import { GetStreetsDto, getStreets } from './models/dto/get-streets';
 import {
-  GetCredentialsDto,
-  getCredentials,
-} from './models/dto/get-credentials';
+  ExternalCredentials,
+  FindSessionDto,
+  findSessionDto,
+} from '@urgp/server/entities';
 
 @Controller('db')
 export class DatabaseController {
   constructor(private readonly dbServise: DatabaseService) {}
 
   @Get('/credentials')
-  @UsePipes(new ZodValidationPipe(getCredentials))
-  getDbCredentials(
-    @Query() dto: GetCredentialsDto,
-  ): Promise<DbExternalCredentials> {
-    return this.dbServise.db.users.credentials(dto);
+  // @UsePipes(new ZodValidationPipe(findSessionDto))
+  getDbCredentials(@Query() dto: FindSessionDto): Promise<ExternalCredentials> {
+    return this.dbServise.db.users.credentials(findSessionDto.parse(dto));
   }
 
   @Get('/streets')

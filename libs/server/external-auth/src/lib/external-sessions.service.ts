@@ -1,39 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { EdoSessionInfo, ExternalSessionInfo } from '../model/types/session';
 import {
+  ExternalSessionInfo,
   ExternalSystem,
-  GetCredentialsDto,
-  getCredentials,
-} from '@urgp/server/database';
+  FindSessionDto,
+  externalSessionInfo,
+  findSessionDto,
+} from '@urgp/server/entities';
 
 @Injectable()
 export class ExternalSessionsService {
   // Возможно это надо хранить не в памяти, а где-нибудь в Reddis
   private externalSessions: ExternalSessionInfo[] = [];
 
-  setSession({ userId, orgId, system, token }: ExternalSessionInfo) {
-    const newSession = {
-      ...getCredentials.parse({
-        system,
-        userId,
-        orgId,
-      }),
-      token,
-      createdAt: new Date(),
-    };
+  setSession(sessiotInfo: ExternalSessionInfo) {
+    const newSession = externalSessionInfo.parse(sessiotInfo);
 
     this.externalSessions = [
       ...this.externalSessions.filter(
-        (session) => session.userId !== userId || session.system !== system,
+        (session) =>
+          session.userId !== newSession.userId ||
+          session.system !== newSession.system,
       ),
-      newSession as EdoSessionInfo,
+      newSession as ExternalSessionInfo,
     ];
 
     return newSession;
   }
 
-  getSession(dto: GetCredentialsDto) {
-    const { system, userId, orgId } = dto; // dedided to parse it higher up in the chain... getCredentials.parse(dto);
+  getSession(dto: FindSessionDto) {
+    const { system, userId, orgId } = findSessionDto.parse(dto);
     return this.externalSessions.find((session) => {
       return (
         session.system === system &&
