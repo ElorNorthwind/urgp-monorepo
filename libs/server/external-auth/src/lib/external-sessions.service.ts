@@ -32,7 +32,8 @@ export class ExternalSessionsService {
     return this.externalSessions.find((session) => {
       return (
         session.system === system &&
-        (session.userId === userId || (!userId && session.orgId === orgId))
+        (session.userId === userId ||
+          (!userId && orgId && session.orgId?.includes(orgId)))
       );
     });
   }

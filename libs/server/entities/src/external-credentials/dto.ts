@@ -16,24 +16,21 @@ const credentialsCommpn = z.object({
   name: z.string().nullable().optional(),
 });
 
-export const edoCredentials = z.object({
+export const edoCredentials = credentialsCommpn.extend({
   system: z.literal('EDO'),
   login: z
     .union([z.number(), z.string().regex(/^\d+$/)])
     .pipe(z.coerce.string()),
-  password: z.string(),
   groupId: z
     .union([z.number(), z.string()])
     .optional()
     .pipe(z.coerce.number().default(21)),
-  name: z.string().nullable().optional(),
 });
-export const rsmCredentials = z.object({
+
+export const rsmCredentials = credentialsCommpn.extend({
   system: z.literal('RSM'),
   login: z.string(),
-  password: z.string(),
   groupId: z.null().optional(),
-  name: z.string().nullable().optional(),
 });
 export const externalCredentials = z.union([edoCredentials, rsmCredentials]);
 
@@ -58,7 +55,7 @@ export type ExternalToken = z.input<typeof externalToken>;
 // Session - данные сохранённой сессии с токеном
 const generalSessionInfo = z.object({
   userId: z.number(),
-  orgId: z.number().nullable().default(null),
+  orgId: z.array(z.number()).nullable().default(null),
   createdAt: z.date().default(new Date()),
 });
 

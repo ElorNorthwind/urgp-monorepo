@@ -5,7 +5,7 @@ import { ExternalSessionInfo } from '@urgp/server/entities';
 const rsmSession1 = {
   system: 'RSM',
   userId: 1,
-  orgId: 0,
+  orgId: [0],
   token: {
     rsmCookie: 'initialAuthToken',
   },
@@ -14,7 +14,7 @@ const rsmSession1 = {
 const rsmSession2 = {
   system: 'RSM',
   userId: 1,
-  orgId: 0,
+  orgId: [0],
   token: {
     rsmCookie: 'updatedAuthToken',
   },
@@ -23,7 +23,7 @@ const rsmSession2 = {
 const edoSession1 = {
   system: 'EDO',
   userId: 1,
-  orgId: 0,
+  orgId: [0],
   token: {
     dnsid: 'some-uuid',
     authToken: 'initialAuthToken',
@@ -33,6 +33,7 @@ const edoSession1 = {
 const edoSessionAnotherUser = {
   system: 'EDO',
   userId: 2,
+  orgId: null,
   token: {
     dnsid: 'some-uuid',
     authToken: 'initialAuthToken',

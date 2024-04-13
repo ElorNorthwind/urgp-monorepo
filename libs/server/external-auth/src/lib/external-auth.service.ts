@@ -66,14 +66,14 @@ export class ExternalAuthService {
       this.tokenService.getExternalToken({
         system,
         ...credentials,
-      }),
+      } as ExternalCredentials),
     );
 
     // save the fresh session
     const freshSession = this.sessions.setSession({
       system,
       userId,
-      orgId,
+      orgId: [orgId],
       token,
     } as ExternalSessionInfo);
 

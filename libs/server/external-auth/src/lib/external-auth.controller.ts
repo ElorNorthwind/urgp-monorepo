@@ -3,6 +3,7 @@ import { ExternalTokenService } from './external-token.service';
 import { Observable } from 'rxjs';
 import { ExternalAuthService } from './external-auth.service';
 import {
+  AuthRequestDto,
   ExternalSessionReturnValue,
   RsmSessionInfo,
 } from '@urgp/server/entities';
@@ -20,7 +21,7 @@ export class ExternalAuthController {
       system: 'EDO',
       userId: 22,
       orgId: 0,
-    });
+    } as AuthRequestDto);
   }
 
   @Get('rsm')
@@ -28,7 +29,6 @@ export class ExternalAuthController {
     return this.auth.getExternalAuthData({
       system: 'RSM',
       userId: 10,
-      orgId: 0,
-    });
+    } as AuthRequestDto);
   }
 }
