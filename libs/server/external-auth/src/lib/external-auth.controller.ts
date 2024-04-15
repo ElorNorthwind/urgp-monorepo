@@ -29,6 +29,7 @@ export class ExternalAuthController {
     return this.auth.getExternalAuthData({
       system: 'RSM',
       userId: 10,
+      orgId: 0,
     } as AuthRequestDto);
   }
 }

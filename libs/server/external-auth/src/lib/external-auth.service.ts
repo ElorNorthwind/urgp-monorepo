@@ -73,7 +73,7 @@ export class ExternalAuthService {
     const freshSession = this.sessions.setSession({
       system,
       userId,
-      orgId: [orgId],
+      orgId: credentials.orgId || [orgId],
       token,
     } as ExternalSessionInfo);
 

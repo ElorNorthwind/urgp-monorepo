@@ -14,6 +14,10 @@ const credentialsCommpn = z.object({
   orgId: z.array(z.number()).nullable().default(null),
   password: z.string(),
   name: z.string().nullable().optional(),
+  groupId: z
+    .union([z.number(), z.string()])
+    .optional()
+    .pipe(z.coerce.number().default(21)),
 });
 
 export const edoCredentials = credentialsCommpn.extend({
@@ -21,18 +25,17 @@ export const edoCredentials = credentialsCommpn.extend({
   login: z
     .union([z.number(), z.string().regex(/^\d+$/)])
     .pipe(z.coerce.string()),
-  groupId: z
-    .union([z.number(), z.string()])
-    .optional()
-    .pipe(z.coerce.number().default(21)),
 });
 
 export const rsmCredentials = credentialsCommpn.extend({
   system: z.literal('RSM'),
   login: z.string(),
-  groupId: z.null().optional(),
 });
-export const externalCredentials = z.union([edoCredentials, rsmCredentials]);
+
+export const externalCredentials = z.discriminatedUnion('system', [
+  edoCredentials,
+  rsmCredentials,
+]);
 
 export type EdoCredentials = z.input<typeof edoCredentials>;
 export type RsmCredentials = z.input<typeof rsmCredentials>;
@@ -69,7 +72,10 @@ export const rsmSessionInfo = generalSessionInfo.extend({
   token: rsmToken,
 });
 
-export const externalSessionInfo = edoSessionInfo.or(rsmSessionInfo);
+export const externalSessionInfo = z.discriminatedUnion('system', [
+  edoSessionInfo,
+  rsmSessionInfo,
+]);
 
 export type EdoSessionInfo = z.input<typeof edoSessionInfo>;
 export type RsmSessionInfo = z.input<typeof rsmSessionInfo>;
