@@ -4,21 +4,22 @@ import { Observable, from, map } from 'rxjs';
 import { EDO_HTTP_OPTIONS } from '../config/request-config';
 import puppeteer from 'puppeteer';
 import {
-  EdoCredentials,
   EdoToken,
   ExternalCredentials,
+  ExternalCredentialsWithSystem,
   ExternalToken,
-  RsmCredentials,
   RsmToken,
-  externalCredentials,
+  externalCredentialsWithSystem,
 } from '@urgp/server/entities';
 
 @Injectable()
 export class ExternalTokenService {
   constructor(private readonly httpService: HttpService) {}
 
-  public getExternalToken(dto: ExternalCredentials): Observable<ExternalToken> {
-    const credentials = externalCredentials.parse(dto);
+  public getExternalToken(
+    dto: ExternalCredentialsWithSystem,
+  ): Observable<ExternalToken> {
+    const credentials = externalCredentialsWithSystem.parse(dto);
     switch (credentials.system) {
       case 'EDO':
         return this.getEdoToken(credentials);
@@ -32,7 +33,7 @@ export class ExternalTokenService {
     }
   }
 
-  private getEdoToken(credentials: EdoCredentials): Observable<EdoToken> {
+  private getEdoToken(credentials: ExternalCredentials): Observable<EdoToken> {
     const re = /auth_token=(.*?);/i;
     const dnsid = this.fakeDnsid();
 
@@ -77,7 +78,9 @@ export class ExternalTokenService {
     return result;
   }
 
-  private async getRsmToken(credentials: RsmCredentials): Promise<RsmToken> {
+  private async getRsmToken(
+    credentials: ExternalCredentials,
+  ): Promise<RsmToken> {
     const browser = await puppeteer.launch({ headless: 'shell' });
     const page = await browser.newPage();
     const ip = `http://10.15.179.52:5222`;

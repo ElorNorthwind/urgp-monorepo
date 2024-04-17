@@ -1,7 +1,11 @@
 import { IDatabase, IMain, ColumnSet } from 'pg-promise';
 import { DbUser } from '../models/types';
 import { SelectRenamedColumns } from '../lib/select-renamed-columns';
-import { ExternalCredentials, FindSessionDto } from '@urgp/server/entities';
+import {
+  ExternalCredentials,
+  ExternalLookup,
+  ExternalSessionInfo,
+} from '@urgp/server/entities';
 
 const table = { table: 'users', schema: 'dev' };
 const userColumns = [
@@ -78,7 +82,9 @@ export class UsersRepository {
   }
 
   // Returns user by his Id;
-  credentials(dto: FindSessionDto): Promise<ExternalCredentials> {
+  credentials(
+    dto: ExternalLookup,
+  ): Promise<ExternalCredentials & ExternalSessionInfo> {
     return this.db.one(
       'SELECT * FROM public.find_credentials($<system>, $<userId>, $<orgId>)',
       dto,

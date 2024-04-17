@@ -18,8 +18,8 @@ import { ZodValidationPipe } from '@urgp/server/pipes';
 import { GetStreetsDto, getStreets } from './models/dto/get-streets';
 import {
   ExternalCredentials,
-  FindSessionDto,
-  findSessionDto,
+  ExternalLookup,
+  externalLookup,
 } from '@urgp/server/entities';
 
 @Controller('db')
@@ -28,8 +28,8 @@ export class DatabaseController {
 
   @Get('/credentials')
   // @UsePipes(new ZodValidationPipe(findSessionDto))
-  getDbCredentials(@Query() dto: FindSessionDto): Promise<ExternalCredentials> {
-    return this.dbServise.db.users.credentials(findSessionDto.parse(dto));
+  getDbCredentials(@Query() dto: ExternalLookup): Promise<ExternalCredentials> {
+    return this.dbServise.db.users.credentials(externalLookup.parse(dto));
   }
 
   @Get('/streets')

@@ -1,19 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import {
-  ExternalSessionInfo,
+  ExternalFullSession,
+  ExternalFullSessionInput,
+  ExternalLookup,
   ExternalSystem,
-  FindSessionDto,
-  externalSessionInfo,
-  findSessionDto,
+  externalFullSession,
+  externalLookup,
 } from '@urgp/server/entities';
 
 @Injectable()
 export class ExternalSessionsService {
   // Возможно это надо хранить не в памяти, а где-нибудь в Reddis
-  private externalSessions: ExternalSessionInfo[] = [];
+  private externalSessions: ExternalFullSession[] = [];
 
-  setSession(sessiotInfo: ExternalSessionInfo) {
-    const newSession = externalSessionInfo.parse(sessiotInfo);
+  setSession(session: ExternalFullSessionInput) {
+    const newSession = externalFullSession.parse(session);
 
     this.externalSessions = [
       ...this.externalSessions.filter(
@@ -21,14 +22,14 @@ export class ExternalSessionsService {
           session.userId !== newSession.userId ||
           session.system !== newSession.system,
       ),
-      newSession as ExternalSessionInfo,
+      newSession,
     ];
 
     return newSession;
   }
 
-  getSession(dto: FindSessionDto) {
-    const { system, userId, orgId } = findSessionDto.parse(dto);
+  getSession(dto: ExternalLookup) {
+    const { system, userId, orgId } = externalLookup.parse(dto);
     return this.externalSessions.find((session) => {
       return (
         session.system === system &&
@@ -38,7 +39,7 @@ export class ExternalSessionsService {
     });
   }
 
-  getAllSessions(system?: ExternalSystem): ExternalSessionInfo[] {
+  getAllSessions(system?: ExternalSystem): ExternalFullSession[] {
     if (system)
       return this.externalSessions.filter(
         (session) => session.system === system,

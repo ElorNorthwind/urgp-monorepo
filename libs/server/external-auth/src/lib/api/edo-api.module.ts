@@ -4,17 +4,17 @@ import * as iconv from 'iconv-lite';
 import { EDO_HTTP_OPTIONS } from '../../config/request-config';
 import { EdoHttpService } from './edo-http-service';
 import { ExternalAuthService } from '../external-auth.service';
-import {
-  AuthRequestDto,
-  authRequestDto,
-  EdoSessionInfo,
-} from '@urgp/server/entities';
 import { DatabaseModule } from '@urgp/server/database';
 import { ExternalAuthModule } from '../external-auth.module';
 import { ExternalTokenService } from '../external-token.service';
 import { ExternalSessionsService } from '../external-sessions.service';
 import { EdoTestController } from './edo-api.controller';
 import { ResponseType } from 'axios';
+import {
+  ExternalAuthRequest,
+  ExternalFullSessionReturnValue,
+  externalAuthRequest,
+} from '@urgp/server/entities';
 
 @Module({
   imports: [
@@ -55,14 +55,17 @@ export class EdoApiModule implements OnModuleInit {
           return config;
         }
 
-        const authLookupParams: AuthRequestDto = authRequestDto.parse(
-          config?.params?.x_auth_lookup || { userId: 22 }, // NOT OKAY
+        const authLookupParams: ExternalAuthRequest = externalAuthRequest.parse(
+          config?.params?.x_auth_lookup || {}, // NOT OKAY
         );
 
-        const session: EdoSessionInfo = (await auth.getExternalAuthData({
+        const session = (await auth.getExternalAuthData({
           ...authLookupParams,
-          system: 'EDO',
-        })) as EdoSessionInfo;
+          lookup: { ...authLookupParams.lookup, system: 'EDO' },
+        })) as ExternalFullSessionReturnValue;
+
+        // an ugy hack
+        if (session.system !== 'EDO') throw new Error('Unexpected system');
 
         config.params.DNSID = session.token.dnsid;
         config.headers['cookie'] = `auth_token=${session.token.authToken};`;
@@ -99,19 +102,28 @@ export class EdoApiModule implements OnModuleInit {
           return response;
         }
 
-        const authLookupParams: AuthRequestDto = authRequestDto.parse(
+        const authLookupParams: ExternalAuthRequest = externalAuthRequest.parse(
           response?.config?.params?.x_auth_lookup || {},
         );
 
-        const session: EdoSessionInfo = (await auth.getExternalAuthData({
+        const session = (await auth.getExternalAuthData({
           ...authLookupParams,
+          lookup: { ...authLookupParams.lookup, system: 'EDO' },
           refresh: true,
-          system: 'EDO',
-        })) as EdoSessionInfo;
+        })) as ExternalFullSessionReturnValue;
+
+        // const session: EdoSessionInfo = (await auth.getExternalAuthData({
+        //   ...authLookupParams,
+        //   refresh: true,
+        //   system: 'EDO',
+        // })) as EdoSessionInfo;
 
         if (!session) throw new UnauthorizedException('Failed EDO login!');
 
         const newConfig = response.config;
+
+        // an ugy hack
+        if (session.system !== 'EDO') throw new Error('Unexpected system');
 
         newConfig.params.DNSID = session.token.dnsid;
         newConfig.headers['cookie'] = `auth_token=${session.token.authToken};`;

@@ -15,7 +15,10 @@ export class EdoTestController {
       .request<string>({
         method: 'get',
         url: '/document.card.linked.php',
-        params: { id },
+        params: {
+          id,
+          x_auth_lookup: { lookup: { system: 'EDO', userId: 22 } },
+        },
       })
       .pipe(
         tap(() => {

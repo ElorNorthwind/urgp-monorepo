@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ExternalAuthService } from './external-auth.service';
-import { AuthRequestDto, ExternalSessionInfo } from '@urgp/server/entities';
+import { ExternalSessionInfo } from '@urgp/server/entities';
 
 @Controller('ext/auth/') // ЭТОТ КОНТРОЛЛЕР НА САМОМ ДЕЛЕ НЕ НУЖЕН, ЧИСТО ТЕСТ ПАЦАНЫ
 export class ExternalAuthController {
@@ -8,19 +8,11 @@ export class ExternalAuthController {
 
   @Get('edo')
   getEdoToken(): Promise<ExternalSessionInfo> {
-    return this.auth.getExternalAuthData({
-      system: 'EDO',
-      userId: 22,
-      orgId: 0,
-    } as AuthRequestDto);
+    return this.auth.getExternalAuthData({ lookup: { system: 'EDO' } });
   }
 
   @Get('rsm')
   getRsmToken(): Promise<ExternalSessionInfo> {
-    return this.auth.getExternalAuthData({
-      system: 'RSM',
-      userId: 10,
-      orgId: 0,
-    } as AuthRequestDto);
+    return this.auth.getExternalAuthData({ lookup: { system: 'RSM' } });
   }
 }

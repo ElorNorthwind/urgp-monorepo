@@ -4,12 +4,14 @@ import { firstValueFrom } from 'rxjs';
 import { ExternalSessionsService } from './external-sessions.service';
 import { DatabaseService } from '@urgp/server/database';
 import {
-  AuthRequestDto,
+  ExternalAuthRequest,
   ExternalCredentials,
+  ExternalFullSessionInput,
+  ExternalFullSessionReturnValue,
+  ExternalLookup,
   ExternalSessionInfo,
-  FindSessionDto,
-  authRequestDto,
-  findSessionDto,
+  externalAuthRequest,
+  externalLookup,
 } from '@urgp/server/entities';
 
 @Injectable()
@@ -20,22 +22,25 @@ export class ExternalAuthService {
     private readonly sessions: ExternalSessionsService,
   ) {}
 
-  getExternalCredentials(dto: FindSessionDto): Promise<ExternalCredentials> {
-    const parsedDto = findSessionDto.parse(dto);
+  getExternalCredentials(
+    dto: ExternalLookup,
+  ): Promise<ExternalCredentials & ExternalSessionInfo> {
+    const parsedDto = externalLookup.parse(dto);
     return this.database.db.users.credentials(parsedDto);
   }
 
-  async getExternalAuthData(dto: AuthRequestDto): Promise<ExternalSessionInfo> {
-    const { system, userId, orgId, refresh, login, password, name } =
-      authRequestDto.parse(dto);
+  async getExternalAuthData(
+    dto: ExternalAuthRequest,
+  ): Promise<ExternalFullSessionReturnValue> {
+    const { lookup, credentials, refresh } = externalAuthRequest.parse(dto);
 
     // check if there is an existing session and if a flag to refresh it is not send
     const existingSession =
-      refresh === true
+      refresh === true || !lookup
         ? undefined
-        : this.sessions.getSession({ system, userId, orgId });
+        : this.sessions.getSession(lookup);
 
-    // return a session if it is found
+    // return an existing session if it is found
     if (existingSession)
       return {
         ...existingSession,
@@ -43,36 +48,41 @@ export class ExternalAuthService {
       };
 
     // no existing session found or there is a flag to refresh it
-    const credentials =
-      login && password && userId // use client credentials if provided
-        ? { login, password, userId, orgId, name }
-        : await this.getExternalCredentials({
-            system,
-            userId,
-            orgId,
-          });
+    const {
+      system = lookup?.system || 'EDO',
+      userId = lookup?.userId || null,
+      orgId = null,
+      login,
+      password,
+      groupId = 21,
+      name,
+    } = credentials
+      ? { ...credentials, userId: lookup?.userId || null }
+      : await this.getExternalCredentials(lookup || {});
 
+    // throw an error if no credentials are found
     if (!credentials?.login || !credentials?.password)
       throw new HttpException(
-        `No ${system} credentials found for user ${userId} (${credentials?.name || 'Unnamed'})`,
+        `No ${lookup?.system || 'EDO'} credentials found for user ${lookup?.userId} (${credentials?.name || 'Unnamed'})`,
         HttpStatus.UNAUTHORIZED,
       );
 
     // get a fresh external token object
     const token = await firstValueFrom(
       this.tokenService.getExternalToken({
-        system,
         ...credentials,
-      } as ExternalCredentials),
+        system: lookup?.system,
+      }),
     );
 
     // save the fresh session
     const freshSession = this.sessions.setSession({
       system,
       userId,
-      orgId: credentials.orgId || [orgId],
+      orgId,
       token,
-    } as ExternalSessionInfo);
+      credentials: { login, password, groupId, name },
+    } as ExternalFullSessionInput); // FIX ME
 
     return { ...freshSession, isFresh: true };
   }
