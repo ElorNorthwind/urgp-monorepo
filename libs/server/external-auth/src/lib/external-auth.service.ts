@@ -7,7 +7,6 @@ import {
   AuthRequestDto,
   ExternalCredentials,
   ExternalSessionInfo,
-  ExternalSessionReturnValue,
   FindSessionDto,
   authRequestDto,
   findSessionDto,
@@ -26,9 +25,7 @@ export class ExternalAuthService {
     return this.database.db.users.credentials(parsedDto);
   }
 
-  async getExternalAuthData(
-    dto: AuthRequestDto,
-  ): Promise<ExternalSessionReturnValue> {
+  async getExternalAuthData(dto: AuthRequestDto): Promise<ExternalSessionInfo> {
     const { system, userId, orgId, refresh, login, password, name } =
       authRequestDto.parse(dto);
 
@@ -42,7 +39,7 @@ export class ExternalAuthService {
     if (existingSession)
       return {
         ...existingSession,
-        isOld: true,
+        isFresh: false,
       };
 
     // no existing session found or there is a flag to refresh it
@@ -77,6 +74,6 @@ export class ExternalAuthService {
       token,
     } as ExternalSessionInfo);
 
-    return { ...freshSession, isOld: false };
+    return { ...freshSession, isFresh: true };
   }
 }

@@ -60,6 +60,7 @@ const generalSessionInfo = z.object({
   userId: z.number(),
   orgId: z.array(z.number()).nullable().default(null),
   createdAt: z.date().default(new Date()),
+  isFresh: z.boolean().default(false),
 });
 
 export const edoSessionInfo = generalSessionInfo.extend({
@@ -80,9 +81,6 @@ export const externalSessionInfo = z.discriminatedUnion('system', [
 export type EdoSessionInfo = z.input<typeof edoSessionInfo>;
 export type RsmSessionInfo = z.input<typeof rsmSessionInfo>;
 export type ExternalSessionInfo = z.input<typeof externalSessionInfo>;
-export type ExternalSessionReturnValue = ExternalSessionInfo & {
-  isOld: boolean;
-};
 
 // ========= ОПЕРАЦИИ =============
 
@@ -114,8 +112,8 @@ export type FindOrCreateSessionDto = z.input<typeof findOrCreateSessionDto>;
 // Логин по заданным креденшиалам и ID юзера
 export const createSessionFromCredentialsDto = z
   .object({
-    refresh: z.never().optional(),
-    userId: z.coerce.number(),
+    refresh: z.boolean().default(false),
+    // userId: z.coerce.number(),
     orgId: z.coerce.number().nullable().default(null),
     name: z.string().nullable().optional(),
   })

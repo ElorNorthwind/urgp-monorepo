@@ -1,22 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
-import { ExternalTokenService } from './external-token.service';
-import { Observable } from 'rxjs';
 import { ExternalAuthService } from './external-auth.service';
-import {
-  AuthRequestDto,
-  ExternalSessionReturnValue,
-  RsmSessionInfo,
-} from '@urgp/server/entities';
+import { AuthRequestDto, ExternalSessionInfo } from '@urgp/server/entities';
 
 @Controller('ext/auth/') // ЭТОТ КОНТРОЛЛЕР НА САМОМ ДЕЛЕ НЕ НУЖЕН, ЧИСТО ТЕСТ ПАЦАНЫ
 export class ExternalAuthController {
-  constructor(
-    private readonly token: ExternalTokenService,
-    private readonly auth: ExternalAuthService,
-  ) {}
+  constructor(private readonly auth: ExternalAuthService) {}
 
   @Get('edo')
-  getEdoToken(): Promise<ExternalSessionReturnValue> {
+  getEdoToken(): Promise<ExternalSessionInfo> {
     return this.auth.getExternalAuthData({
       system: 'EDO',
       userId: 22,
@@ -25,7 +16,7 @@ export class ExternalAuthController {
   }
 
   @Get('rsm')
-  getRsmToken(): Promise<ExternalSessionReturnValue> {
+  getRsmToken(): Promise<ExternalSessionInfo> {
     return this.auth.getExternalAuthData({
       system: 'RSM',
       userId: 10,

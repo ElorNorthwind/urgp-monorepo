@@ -1,4 +1,4 @@
-import {ResponseType} from "axios"
+import { ResponseType } from 'axios';
 
 export const EDO_HTTP_OPTIONS = {
   baseURL: 'https://mosedo.mos.ru',

@@ -9,11 +9,13 @@ import {
 describe('externalCredentials', () => {
   it('should distinguish between EDO and RSM credentials, coerce and provide defaults', async () => {
     const rsmData: RsmCredentials = {
+      userId: 1,
       system: 'RSM',
       login: 'test',
       password: 'test',
     };
     const edoData: EdoCredentials = {
+      userId: 1,
       system: 'EDO',
       login: 123,
       password: 'test',

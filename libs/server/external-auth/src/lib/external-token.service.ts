@@ -2,7 +2,6 @@ import { HttpService } from '@nestjs/axios';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { Observable, from, map } from 'rxjs';
 import { EDO_HTTP_OPTIONS } from '../config/request-config';
-import { v4 as uuidv4 } from 'uuid';
 import puppeteer from 'puppeteer';
 import {
   EdoCredentials,
@@ -13,6 +12,7 @@ import {
   RsmToken,
   externalCredentials,
 } from '@urgp/server/entities';
+
 @Injectable()
 export class ExternalTokenService {
   constructor(private readonly httpService: HttpService) {}
@@ -34,7 +34,7 @@ export class ExternalTokenService {
 
   private getEdoToken(credentials: EdoCredentials): Observable<EdoToken> {
     const re = /auth_token=(.*?);/i;
-    const dnsid = uuidv4(); // who would have guessed?
+    const dnsid = this.fakeDnsid();
 
     return from(
       this.httpService
@@ -65,6 +65,16 @@ export class ExternalTokenService {
           }),
         ),
     );
+  }
+
+  private fakeDnsid(keyLength = 23): string {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const variantLength = alphabet.length;
+    let result = '';
+    for (let i = 0; i < keyLength; i++) {
+      result += alphabet[Math.floor(Math.random() * variantLength)];
+    }
+    return result;
   }
 
   private async getRsmToken(credentials: RsmCredentials): Promise<RsmToken> {

@@ -5,7 +5,7 @@ import { EdoModule } from '@urgp/server/edo';
 import { DatabaseModule } from '@urgp/server/database';
 import { GptModule } from '@urgp/server/llm';
 import { RsmModule } from '@urgp/server/rsm';
-import { ExternalAuthModule } from '@urgp/server/external-auth';
+import { ExternalAuthModule, EdoApiModule } from '@urgp/server/external-auth';
 
 @Module({
   // dot env files
@@ -29,6 +29,7 @@ import { ExternalAuthModule } from '@urgp/server/external-auth';
     GptModule,
     RsmModule,
     ExternalAuthModule,
+    EdoApiModule,
   ],
 })
 export class AppModule {}

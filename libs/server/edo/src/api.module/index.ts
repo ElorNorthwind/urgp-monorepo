@@ -7,7 +7,7 @@ import { EdoApiController } from './api.controller';
 import { EdoSessionService } from './session.service';
 import * as iconv from 'iconv-lite';
 import { ClsService } from 'nestjs-cls';
-import { EdoClsStore, EdoClsStoreTemp } from './types';
+import { EdoClsStoreTemp } from './types';
 
 @Module({
   imports: [HttpModule.register(EDO_HTTP_OPTIONS)],
