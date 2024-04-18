@@ -27,6 +27,7 @@ export const externalLookup = z
       : session,
   );
 export type ExternalLookup = z.input<typeof externalLookup>;
+export type ExternalLookupResult = z.infer<typeof externalLookup>;
 
 // ========  Credentials - логин и пароль для входа в систему (из нашей БД или от клиента) ========
 export const externalCredentials = z.object({

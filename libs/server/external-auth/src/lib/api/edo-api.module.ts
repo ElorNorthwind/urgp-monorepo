@@ -1,4 +1,10 @@
-import { Module, OnModuleInit, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Module,
+  OnModuleInit,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { HttpModule, HttpService } from '@nestjs/axios';
 import * as iconv from 'iconv-lite';
 import { EDO_HTTP_OPTIONS } from '../../config/request-config';
@@ -10,11 +16,6 @@ import { ExternalTokenService } from '../external-token.service';
 import { ExternalSessionsService } from '../external-sessions.service';
 import { EdoTestController } from './edo-api.controller';
 import { ResponseType } from 'axios';
-import {
-  ExternalAuthRequest,
-  ExternalFullSessionReturnValue,
-  externalAuthRequest,
-} from '@urgp/server/entities';
 
 @Module({
   imports: [
@@ -47,7 +48,8 @@ export class EdoApiModule implements OnModuleInit {
   onModuleInit() {
     const auth = this.auth;
     const http = this.httpService;
-    // request interceptor
+
+    // ========= request interceptor =========
     http.axiosRef.interceptors.request.use(
       async function (config) {
         // Пропускаем запросы, сделанные в адрес страницы авторизации
@@ -55,27 +57,23 @@ export class EdoApiModule implements OnModuleInit {
           return config;
         }
 
-        const authLookupParams: ExternalAuthRequest = externalAuthRequest.parse(
-          config?.params?.x_auth_lookup || {}, // NOT OKAY
-        );
+        const session = await auth.getExternalAuthData({
+          ...config?.params?.x_external_auth,
+          system: 'EDO',
+        });
 
-        const session = (await auth.getExternalAuthData({
-          ...authLookupParams,
-          lookup: { ...authLookupParams.lookup, system: 'EDO' },
-        })) as ExternalFullSessionReturnValue;
-
-        // an ugy hack
-        if (session.system !== 'EDO') throw new Error('Unexpected system');
+        // an ugy hack to typecast it to EdoSession
+        if (session.system !== 'EDO')
+          throw new HttpException('Unexpected system', HttpStatus.BAD_REQUEST);
 
         config.params.DNSID = session.token.dnsid;
         config.headers['cookie'] = `auth_token=${session.token.authToken};`;
         config.withCredentials = true;
 
-        config.params.x_auth_lookup = {
-          ...config.params.x_auth_lookup,
-          isFresh: session.isFresh,
+        config.params.x_external_auth = {
+          ...config.params.x_external_auth,
+          refresh: !session.isFresh,
         };
-
         return config;
       },
 
@@ -84,7 +82,7 @@ export class EdoApiModule implements OnModuleInit {
       },
     );
 
-    // response interceptor
+    // ========= response interceptor =========
     http.axiosRef.interceptors.response.use(
       async function (response) {
         // автоматически рекодируем данные в UTF-8
@@ -97,33 +95,24 @@ export class EdoApiModule implements OnModuleInit {
         if (
           response?.config?.url?.includes('auth.php') || // уходили к странице авторизации
           !response.request?.res?.responseUrl?.includes('auth.php') || // не были перенаправлены на страницу авторизации
-          response?.config?.params?.x_auth_lookup?.isFresh // уже сделаны со "свежей" авторизацией, а не данными ранее сохранённой сессии
+          response?.config?.params?.x_external_auth?.refresh === false // уже сделаны со "свежей" авторизацией, а не данными ранее сохранённой сессии
         ) {
           return response;
         }
 
-        const authLookupParams: ExternalAuthRequest = externalAuthRequest.parse(
-          response?.config?.params?.x_auth_lookup || {},
-        );
-
-        const session = (await auth.getExternalAuthData({
-          ...authLookupParams,
-          lookup: { ...authLookupParams.lookup, system: 'EDO' },
+        const session = await auth.getExternalAuthData({
+          ...response?.config?.params?.x_external_auth,
+          system: 'EDO',
           refresh: true,
-        })) as ExternalFullSessionReturnValue;
-
-        // const session: EdoSessionInfo = (await auth.getExternalAuthData({
-        //   ...authLookupParams,
-        //   refresh: true,
-        //   system: 'EDO',
-        // })) as EdoSessionInfo;
+        });
 
         if (!session) throw new UnauthorizedException('Failed EDO login!');
 
-        const newConfig = response.config;
+        // an ugy hack to typecast it to EdoSession
+        if (session.system !== 'EDO')
+          throw new HttpException('Unexpected system', HttpStatus.BAD_REQUEST);
 
-        // an ugy hack
-        if (session.system !== 'EDO') throw new Error('Unexpected system');
+        const newConfig = response.config;
 
         newConfig.params.DNSID = session.token.dnsid;
         newConfig.headers['cookie'] = `auth_token=${session.token.authToken};`;

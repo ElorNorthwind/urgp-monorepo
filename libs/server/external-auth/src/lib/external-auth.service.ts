@@ -6,11 +6,11 @@ import { DatabaseService } from '@urgp/server/database';
 import {
   ExternalAuthRequest,
   ExternalCredentials,
-  ExternalFullSessionInput,
   ExternalFullSessionReturnValue,
   ExternalLookup,
   ExternalSessionInfo,
   externalAuthRequest,
+  externalFullSession,
   externalLookup,
 } from '@urgp/server/entities';
 
@@ -61,7 +61,7 @@ export class ExternalAuthService {
       : await this.getExternalCredentials(lookup || {});
 
     // throw an error if no credentials are found
-    if (!credentials?.login || !credentials?.password)
+    if (!login || !password)
       throw new HttpException(
         `No ${lookup?.system || 'EDO'} credentials found for user ${lookup?.userId} (${credentials?.name || 'Unnamed'})`,
         HttpStatus.UNAUTHORIZED,
@@ -70,20 +70,26 @@ export class ExternalAuthService {
     // get a fresh external token object
     const token = await firstValueFrom(
       this.tokenService.getExternalToken({
-        ...credentials,
+        login,
+        password,
+        groupId,
         system: lookup?.system,
       }),
     );
 
-    // save the fresh session
-    const freshSession = this.sessions.setSession({
+    const sessionObject = externalFullSession.parse({
       system,
       userId,
       orgId,
       token,
       credentials: { login, password, groupId, name },
-    } as ExternalFullSessionInput); // FIX ME
+    });
 
+    // return without saving a session if it was created with client credentials but no userId
+    if (!userId) return { ...sessionObject, isFresh: true };
+
+    // save the fresh session otherwise
+    const freshSession = this.sessions.setSession(sessionObject);
     return { ...freshSession, isFresh: true };
   }
 }
