@@ -1,44 +1,64 @@
 import { Test } from '@nestjs/testing';
 import { ExternalSessionsService } from './external-sessions.service';
-import { ExternalSessionInfo } from '@urgp/server/entities';
+import { ExternalFullSession } from '@urgp/server/entities';
 
 const rsmSession1 = {
   system: 'RSM',
   userId: 1,
   orgId: [0],
+  credentials: {
+    login: 'some-login',
+    password: 'pwd',
+    groupId: 21,
+  },
   token: {
     rsmCookie: 'initialAuthToken',
   },
-} as ExternalSessionInfo;
+} as ExternalFullSession;
 
 const rsmSession2 = {
   system: 'RSM',
   userId: 1,
   orgId: [0],
+  credentials: {
+    login: 'some-login',
+    password: 'pwd',
+    groupId: 21,
+  },
   token: {
     rsmCookie: 'updatedAuthToken',
   },
-} as ExternalSessionInfo;
+} as ExternalFullSession;
 
 const edoSession1 = {
   system: 'EDO',
   userId: 1,
   orgId: [0],
+  credentials: {
+    login: 'some-login',
+    password: 'pwd',
+    groupId: 21,
+  },
   token: {
     dnsid: 'some-uuid',
     authToken: 'initialAuthToken',
   },
-} as ExternalSessionInfo;
+} as ExternalFullSession;
 
 const edoSessionAnotherUser = {
   system: 'EDO',
   userId: 2,
   orgId: null,
+  credentials: {
+    login: 'some-login',
+    password: 'pwd',
+    groupId: 21,
+  },
   token: {
     dnsid: 'some-uuid',
     authToken: 'initialAuthToken',
   },
-} as ExternalSessionInfo;
+} as ExternalFullSession;
 
 describe('External-session service', () => {
   let sessions: ExternalSessionsService;
