@@ -57,10 +57,15 @@ export class EdoApiModule implements OnModuleInit {
           return config;
         }
 
-        const session = await auth.getExternalAuthData({
-          ...config?.params?.x_external_auth,
-          system: 'EDO',
-        });
+        // default system to RSM
+        config.params.x_external_auth = config.params.x_external_auth && {
+          ...config.params.x_external_auth,
+          lookup: { ...config.params?.x_external_auth?.lookup, system: 'EDO' },
+        };
+
+        const session = await auth.getExternalAuthData(
+          config?.params?.x_external_auth || { lookup: { system: 'EDO' } },
+        );
 
         // an ugy hack to typecast it to EdoSession
         if (session.system !== 'EDO')
@@ -102,7 +107,10 @@ export class EdoApiModule implements OnModuleInit {
 
         const session = await auth.getExternalAuthData({
           ...response?.config?.params?.x_external_auth,
-          system: 'EDO',
+          lookup: {
+            ...response?.config?.params?.x_external_auth?.lookup,
+            system: 'EDO',
+          },
           refresh: true,
         });
 

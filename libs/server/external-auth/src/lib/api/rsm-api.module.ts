@@ -100,7 +100,10 @@ export class RsmApiModule implements OnModuleInit {
 
         const session = await auth.getExternalAuthData({
           ...response?.config?.params?.x_external_auth,
-          system: 'RSM',
+          lookup: {
+            ...response?.config?.params?.x_external_auth?.lookup,
+            system: 'RSM',
+          },
           refresh: true,
         });
 

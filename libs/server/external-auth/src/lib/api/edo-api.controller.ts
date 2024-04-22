@@ -17,7 +17,7 @@ export class EdoTestController {
         url: '/document.card.linked.php',
         params: {
           id,
-          x_external_auth: { lookup: { system: 'EDO', userId: 22 } },
+          // x_external_auth: { lookup: { system: 'EDO', userId: 22 } },
         },
       })
       .pipe(
