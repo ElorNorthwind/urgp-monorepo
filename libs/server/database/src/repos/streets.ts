@@ -12,8 +12,8 @@ export class StreetsRepository {
   // Returns all user records;
   all(): Promise<DbStreet[]> {
     return this.db.any(
-      `SELECT id::varchar as value, label
-       FROM public.bti_streets
+      `SELECT value, label
+       FROM public.streets
        ORDER BY label Asc`,
     );
   }
@@ -21,8 +21,8 @@ export class StreetsRepository {
   // Returns streets by query;
   byQuery({ query, limit = 20 }: GetStreetsDto): Promise<DbStreet[]> {
     return this.db.any(
-      `SELECT id::varchar as value, label, (word_similarity(label, $<query>) * 100)::integer as similarity
-       FROM public.bti_streets
+      `SELECT value, label, (word_similarity(label, $<query>) * 100)::integer as similarity
+       FROM public.streets
        WHERE label %> $<query> OR $<query> ~ label
        ORDER BY word_similarity(label, $<query>) DESC
        LIMIT $<limit>`,

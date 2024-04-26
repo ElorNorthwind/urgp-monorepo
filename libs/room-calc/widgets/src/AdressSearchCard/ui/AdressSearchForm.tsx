@@ -31,7 +31,7 @@ const items = [
 const formSchema = z.object({
   //   streetId: z.number({ invalid_type_error: 'Необходимо выбрать улицу' }), // улица
   streetId: z.string().min(1, { message: 'Нужно выбрать улицу' }), // улица
-  buiuldingNum: z.string().optional(), // дом
+  buildingNum: z.string().optional(), // дом
   housingNum: z.string().optional(), // корпус
   structureNum: z.string().optional(), // строение
 });
@@ -41,7 +41,7 @@ export const AdressSearchForm: React.FC = memo(() => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       streetId: '',
-      buiuldingNum: '',
+      buildingNum: '',
       housingNum: '',
       structureNum: '',
     },
@@ -97,7 +97,7 @@ export const AdressSearchForm: React.FC = memo(() => {
           />
           <FormField
             control={form.control}
-            name="buiuldingNum"
+            name="buildingNum"
             render={({ field }) => (
               <FormItem className="">
                 <FormLabel>Дом</FormLabel>
