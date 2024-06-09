@@ -1,7 +1,7 @@
 {
-  "name": "room-calc/pages",
+  "name": "client/pages",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/room-calc/pages/src",
+  "sourceRoot": "libs/client/pages/src",
   "projectType": "library",
   "tags": [],
   "// targets": "to see all targets run: nx show project pages --web",

@@ -9,7 +9,7 @@ import {
 import { cn } from '@urgp/shared/util';
 import { memo } from 'react';
 import { AdressSearchForm } from './AdressSearchForm';
-import { useStreets } from '@urgp/room-calc/entities';
+import { useStreets } from '@urgp/client/entities';
 
 interface AdressSearchCardProps {
   className?: string;

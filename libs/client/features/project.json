@@ -1,7 +1,7 @@
 {
-  "name": "room-calc/features",
+  "name": "client/features",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/room-calc/features/src",
+  "sourceRoot": "libs/client/features/src",
   "projectType": "library",
   "tags": [],
   "// targets": "to see all targets run: nx show project features --web",

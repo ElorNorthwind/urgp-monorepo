@@ -1,5 +1,5 @@
 import { VStack } from '@urgp/shared/ui';
-import { AdressSearchCard, FileInputCard } from '@urgp/room-calc/widgets';
+import { AdressSearchCard, FileInputCard } from '@urgp/client/widgets';
 
 const MainPage = (): JSX.Element => {
   return (
