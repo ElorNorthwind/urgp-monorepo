@@ -11,6 +11,7 @@ export * from './components/dialog';
 export * from './components/popover';
 export * from './components/combobox';
 export * from './components/sonner';
+export * from './components/select';
 
 // export layouts
 export * from './layouts/main';
