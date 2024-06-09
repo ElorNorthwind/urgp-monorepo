@@ -1,11 +1,20 @@
 import { cn } from '@urgp/shared/util';
-import React, { memo, useState } from 'react';
-import { MapContainer, Marker, Polygon, Popup, TileLayer } from 'react-leaflet';
+import React, { memo, useEffect, useState } from 'react';
+import {
+  MapContainer,
+  Marker,
+  Polygon,
+  Popup,
+  TileLayer,
+  useMap,
+} from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css';
 import { Card } from '@urgp/shared/ui';
 import { BasemapSelector } from './BasemapSelector';
-import { LatLngExpression } from 'leaflet';
+import { LatLngBounds, LatLngExpression, LatLngTuple } from 'leaflet';
+import { FitBounds } from './FitBounds';
+// import AntPath from 'react-leaflet-ant-path';
 
 type MapProps = {
   className?: string;
@@ -21,6 +30,19 @@ const okoPolygon: LatLngExpression[] = [
   [55.75034891281206, 37.53482894636892],
   [55.75008875878669, 37.5339275626566],
   [55.74981559519313, 37.53351731750604],
+];
+
+const icityPolygon: LatLngExpression[] = [
+  [55.75551245545475, 37.52913881118852],
+  [55.755322328566734, 37.52871084613656],
+  [55.75492939672853, 37.528845992995514],
+  [55.75428295186464, 37.52954425176367],
+  [55.75399141440121, 37.53071552453727],
+  [55.754042116725174, 37.531166014065974],
+  [55.754980097833226, 37.53163902807134],
+  [55.75536035401856, 37.53136873435355],
+  [55.755563155801525, 37.530580377678376],
+  [55.75551245545475, 37.52913881118852],
 ];
 
 export const basemapDict = {
@@ -42,12 +64,26 @@ export const Map: React.FC<MapProps> = memo(({ className }: MapProps) => {
       className={cn(className)}
     >
       <TileLayer url={basemapDict[basemap]} className="z-0" />
-      <Marker position={[55.74938, 37.534092]}>
+      {/* <Marker position={[55.74938, 37.534092]}>
         <Popup>
           A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>
-      </Marker>
-      <Polygon positions={okoPolygon} />
+      </Marker> */}
+      <Polygon
+        positions={okoPolygon}
+        pathOptions={{ color: 'blue' }}
+        // className="hover:opacity-75"
+      >
+        <Popup>
+          <h2>Это ОКО</h2> <br /> ко ко ко
+        </Popup>
+      </Polygon>
+      <Polygon positions={icityPolygon} pathOptions={{ color: 'red' }}>
+        <Popup>
+          <h2>Это iCity</h2> <br /> впереди только боль
+        </Popup>
+      </Polygon>
+      {/* <AntPath></AntPath> */}
       <Card className="absolute right-2 bottom-2 z-[1000] select-none p-2">
         huh
       </Card>
@@ -56,6 +92,7 @@ export const Map: React.FC<MapProps> = memo(({ className }: MapProps) => {
         onBasemapChange={(e) => setBasemap(e)}
         className="absolute right-2 top-2 z-[1000] w-[120px]"
       />
+      <FitBounds />
     </MapContainer>
   );
 });
