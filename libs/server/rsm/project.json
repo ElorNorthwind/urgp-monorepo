@@ -1,5 +1,5 @@
 {
-  "name": "rsm",
+  "name": "server/rsm",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/server/rsm/src",
   "projectType": "library",
