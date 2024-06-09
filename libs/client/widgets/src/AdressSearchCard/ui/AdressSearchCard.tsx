@@ -2,14 +2,12 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@urgp/shared/ui';
 import { cn } from '@urgp/shared/util';
 import { memo } from 'react';
 import { AdressSearchForm } from './AdressSearchForm';
-import { useStreets } from '@urgp/client/entities';
 
 interface AdressSearchCardProps {
   className?: string;
@@ -17,7 +15,6 @@ interface AdressSearchCardProps {
 
 export const AdressSearchCard: React.FC = memo(
   ({ className }: AdressSearchCardProps) => {
-    // const { data, error, isLoading } = useStreets('Черта');
     return (
       <Card className={cn('relative w-full', className)}>
         <CardHeader className="bg-accent/40">
