@@ -14,6 +14,7 @@ import { Card } from '@urgp/shared/ui';
 import { BasemapSelector } from './BasemapSelector';
 import { LatLngBounds, LatLngExpression, LatLngTuple } from 'leaflet';
 import { FitBounds } from './FitBounds';
+import { MigrationView } from './MigrationView';
 // import AntPath from 'react-leaflet-ant-path';
 
 type MapProps = {
@@ -93,6 +94,7 @@ export const Map: React.FC<MapProps> = memo(({ className }: MapProps) => {
         className="absolute right-2 top-2 z-[1000] w-[120px]"
       />
       <FitBounds />
+      <MigrationView />
     </MapContainer>
   );
 });

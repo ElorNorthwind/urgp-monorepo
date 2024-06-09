@@ -8,10 +8,23 @@ import { LatLngBounds, LatLngTuple, polyline } from 'leaflet';
 // @ts-ignore
 import { AntPath } from 'leaflet-ant-path';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import arc from 'arc';
+// const start = { y: 55.755824, x: 37.531088 };
+// const end = { y: 55.750535, x: 37.536535 };
+const start = { x: 55.74938, y: 37.534092 };
+const end = { x: 55.754892, y: 37.530067 };
+const generator = new arc.GreatCircle(start, end, { name: 'shiet' });
+const line = generator.Arc(100, { offset: 10 });
+
+// const generator
+
 export const FitBounds: React.FC = memo(() => {
   const map = useMap();
 
   useEffect(() => {
+    console.log(line);
     const bounds = new LatLngBounds(
       [55.755824, 37.531088] as LatLngTuple,
       [55.750535, 37.536535] as LatLngTuple,
@@ -19,6 +32,7 @@ export const FitBounds: React.FC = memo(() => {
     map.fitBounds(bounds);
 
     const antPolyline = new AntPath(
+      // line.geometries[0].coords,
       [
         // [55.74938, 37.534092],
         // [55.754892, 37.530067],

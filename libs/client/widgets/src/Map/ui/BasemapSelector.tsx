@@ -33,7 +33,11 @@ export const BasemapSelector: React.FC<BasemapSelectorProps> = memo(
         </SelectTrigger>
         <SelectContent>
           {Object.keys(basemapDict).map((key) => {
-            return <SelectItem value={key}>{key}</SelectItem>;
+            return (
+              <SelectItem key={key} value={key}>
+                {key}
+              </SelectItem>
+            );
           })}
         </SelectContent>
       </Select>
