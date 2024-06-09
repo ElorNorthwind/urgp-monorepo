@@ -6,7 +6,7 @@ import Logo from '../assets/fancy_logo.svg?react';
 
 interface MainLayoutProps {
   className?: string;
-  header: ReactElement;
+  header?: ReactElement;
   content: ReactElement;
 }
 
@@ -19,9 +19,11 @@ const MainLayout = React.forwardRef<
     ref={ref}
     className={cn('bg-muted/40 flex min-h-screen flex-col', className)}
   >
-    <div className="bg-background border-foreground/20 absolute top-0 h-16 w-full border-b shadow-sm">
-      {header}
-    </div>
+    {header && (
+      <div className="bg-background border-foreground/20 absolute top-0 h-16 w-full border-b shadow-sm">
+        {header}
+      </div>
+    )}
     <div className="background flex min-h-full flex-grow justify-center pt-16">
       <div className="min-h-full w-full items-stretch p-6 lg:w-[1024px]">
         {content}

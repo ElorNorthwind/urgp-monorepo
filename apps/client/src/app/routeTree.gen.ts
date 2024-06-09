@@ -16,10 +16,22 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
+const MapLazyImport = createFileRoute('/map')()
+const BticalcLazyImport = createFileRoute('/bticalc')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const MapLazyRoute = MapLazyImport.update({
+  path: '/map',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/map.lazy').then((d) => d.Route))
+
+const BticalcLazyRoute = BticalcLazyImport.update({
+  path: '/bticalc',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/bticalc.lazy').then((d) => d.Route))
 
 const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
@@ -43,11 +55,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
+    '/bticalc': {
+      preLoaderRoute: typeof BticalcLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/map': {
+      preLoaderRoute: typeof MapLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([IndexLazyRoute, AboutLazyRoute])
+export const routeTree = rootRoute.addChildren([
+  IndexLazyRoute,
+  AboutLazyRoute,
+  BticalcLazyRoute,
+  MapLazyRoute,
+])
 
 /* prettier-ignore-end */

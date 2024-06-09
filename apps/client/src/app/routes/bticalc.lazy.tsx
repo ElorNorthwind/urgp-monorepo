@@ -1,12 +1,13 @@
 import { Link, createLazyFileRoute } from '@tanstack/react-router';
+import { BtiCalcPage } from '@urgp/client/pages';
 import { MainLayout } from '@urgp/shared/ui';
 import { Calculator } from 'lucide-react';
 
-export const Route = createLazyFileRoute('/about')({
-  component: About,
+export const Route = createLazyFileRoute('/bticalc')({
+  component: BtiCalc,
 });
 
-function About() {
+function BtiCalc() {
   return (
     <MainLayout
       header={
@@ -20,7 +21,7 @@ function About() {
           </Link>
         </div>
       }
-      content={<div>Страница описания</div>}
+      content={<BtiCalcPage />}
     />
   );
 }
