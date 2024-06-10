@@ -1,4 +1,4 @@
-import { curve, Curve, CurveOptions } from 'leaflet';
+import { curve, CurveOptions } from 'leaflet';
 import '@elfalem/leaflet-curve';
 import { CurvePathDataElement } from '@elfalem/leaflet-curve';
 
@@ -12,7 +12,7 @@ export function createCurve(
   const r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2));
   const theta = Math.atan2(offsetY, offsetX);
 
-  const thetaOffset = 3.14 / -10;
+  const thetaOffset = 3.14 / Math.max(offsetX, offsetY);
 
   const r2 = r / 2 / Math.cos(thetaOffset);
   const theta2 = theta + thetaOffset;

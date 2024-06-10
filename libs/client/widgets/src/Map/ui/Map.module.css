@@ -3,7 +3,7 @@
   stroke-linecap: round;
   stroke-dasharray: 10;
   stroke-dashoffset: 1000;
-  animation: dash 10s linear infinite;
+  animation: dash 15s linear infinite;
 }
 @keyframes dash {
   from {
