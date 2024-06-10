@@ -1,0 +1,9 @@
+{
+  "name": "server/renovation",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/server/renovation/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project server/renovation --web",
+  "targets": {}
+}

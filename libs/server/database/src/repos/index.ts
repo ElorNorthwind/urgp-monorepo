@@ -2,6 +2,7 @@ import { CasesRepository } from './cases';
 import { UsersRepository } from './users';
 import { QuestionsRepository } from './questions';
 import { StreetsRepository } from './streets';
+import { RenovationRepository } from './renovation';
 
 // Database Interface Extensions:
 interface DbExtensions {
@@ -9,6 +10,7 @@ interface DbExtensions {
   cases: CasesRepository;
   questions: QuestionsRepository;
   streets: StreetsRepository;
+  renovation: RenovationRepository;
 }
 
 export {
@@ -17,4 +19,5 @@ export {
   CasesRepository,
   QuestionsRepository,
   StreetsRepository,
+  RenovationRepository,
 };

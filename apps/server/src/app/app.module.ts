@@ -10,6 +10,7 @@ import {
   EdoApiModule,
   RsmApiModule,
 } from '@urgp/server/external-auth';
+import { RenovationModule } from '@urgp/server/renovation';
 
 @Module({
   // dot env files
@@ -35,6 +36,7 @@ import {
     ExternalAuthModule,
     EdoApiModule,
     RsmApiModule,
+    RenovationModule,
   ],
 })
 export class AppModule {}

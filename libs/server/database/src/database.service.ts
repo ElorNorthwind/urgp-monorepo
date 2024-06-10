@@ -4,6 +4,7 @@ import pgPromise from 'pg-promise';
 import {
   DbExtensions,
   QuestionsRepository,
+  RenovationRepository,
   StreetsRepository,
   UsersRepository,
 } from './repos';
@@ -31,6 +32,7 @@ export class DatabaseService {
         obj.cases = new CasesRepository(obj, pgPromise());
         obj.questions = new QuestionsRepository(obj, pgPromise());
         obj.streets = new StreetsRepository(obj, pgPromise());
+        obj.renovation = new RenovationRepository(obj, pgPromise());
       },
     };
 
