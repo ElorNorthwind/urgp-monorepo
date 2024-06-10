@@ -7,7 +7,10 @@ import {
   Popup,
   TileLayer,
   useMap,
+  GeoJSON,
 } from 'react-leaflet';
+
+import { GeoJsonObject } from 'geojson';
 
 import 'leaflet/dist/leaflet.css';
 import { Card } from '@urgp/shared/ui';
@@ -15,6 +18,7 @@ import { BasemapSelector } from './BasemapSelector';
 import { LatLngBounds, LatLngExpression, LatLngTuple } from 'leaflet';
 import { FitBounds } from './FitBounds';
 import { MigrationView } from './MigrationView';
+import { useOldBuildings } from '@urgp/client/entities';
 // import AntPath from 'react-leaflet-ant-path';
 
 type MapProps = {
@@ -55,6 +59,7 @@ export const basemapDict = {
 
 export const Map: React.FC<MapProps> = memo(({ className }: MapProps) => {
   const [basemap, setBasemap] = useState<keyof typeof basemapDict>('carto');
+  const { data: oldBuildings } = useOldBuildings();
 
   return (
     <MapContainer
@@ -65,11 +70,15 @@ export const Map: React.FC<MapProps> = memo(({ className }: MapProps) => {
       className={cn(className)}
     >
       <TileLayer url={basemapDict[basemap]} className="z-0" />
-      {/* <Marker position={[55.74938, 37.534092]}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker> */}
+      {oldBuildings && (
+        <GeoJSON
+          data={oldBuildings as GeoJsonObject}
+          style={{
+            color: '#de984e',
+            // className: 'bg-slate-200',
+          }}
+        ></GeoJSON>
+      )}
       <MigrationView />
       <Polygon
         positions={okoPolygon}

@@ -8,6 +8,7 @@
   },
   "private": true,
   "dependencies": {
+    "@elfalem/leaflet-curve": "^0.9.2",
     "@hookform/resolvers": "^3.3.4",
     "@nestjs/axios": "^3.0.2",
     "@nestjs/common": "^10.0.2",
@@ -22,7 +23,6 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@reduxjs/toolkit": "^2.2.3",
     "@tanstack/react-router": "^1.26.1",
-    "arc": "^0.1.4",
     "axios": "^1.6.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",

@@ -5,7 +5,8 @@ import { DatabaseService } from '@urgp/server/database';
 export class RenovationService {
   constructor(private readonly dbServise: DatabaseService) {}
 
-  public getOldHousesGeoJson() {
-    return this.dbServise.db.renovation.oldBuildingsGeoJson();
+  public async getOldHousesGeoJson() {
+    const resp = await this.dbServise.db.renovation.oldBuildingsGeoJson();
+    return resp[0].geojson;
   }
 }
