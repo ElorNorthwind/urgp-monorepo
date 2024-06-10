@@ -4,7 +4,7 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 
 export default defineConfig({
   root: __dirname,
-  cacheDir: '../../../node_modules/.vite/libs/room-calc/entities',
+  cacheDir: '../../../node_modules/.vite/libs/client/entities',
 
   plugins: [nxViteTsPaths()],
 
@@ -20,7 +20,7 @@ export default defineConfig({
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     coverage: {
-      reportsDirectory: '../../../coverage/libs/room-calc/entities',
+      reportsDirectory: '../../../coverage/libs/client/entities',
       provider: 'v8',
     },
   },

@@ -8,7 +8,7 @@ import { join } from 'path';
 
 export default defineConfig({
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/apps/room-calc',
+  cacheDir: '../../node_modules/.vite/apps/client',
 
   server: {
     port: 4200,
@@ -45,7 +45,7 @@ export default defineConfig({
   // },
 
   build: {
-    outDir: '../../dist/apps/room-calc',
+    outDir: '../../dist/apps/client',
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
@@ -62,7 +62,7 @@ export default defineConfig({
 
     reporters: ['default'],
     coverage: {
-      reportsDirectory: '../../coverage/apps/room-calc',
+      reportsDirectory: '../../coverage/apps/client',
       provider: 'v8',
     },
   },
