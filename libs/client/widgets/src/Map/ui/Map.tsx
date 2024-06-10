@@ -70,6 +70,7 @@ export const Map: React.FC<MapProps> = memo(({ className }: MapProps) => {
           A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>
       </Marker> */}
+      <MigrationView />
       <Polygon
         positions={okoPolygon}
         pathOptions={{ color: 'blue' }}
@@ -79,7 +80,11 @@ export const Map: React.FC<MapProps> = memo(({ className }: MapProps) => {
           <h2>Это ОКО</h2> <br /> ко ко ко
         </Popup>
       </Polygon>
-      <Polygon positions={icityPolygon} pathOptions={{ color: 'red' }}>
+      <Polygon
+        positions={icityPolygon}
+        pathOptions={{ color: 'red' }}
+        className="z-10"
+      >
         <Popup>
           <h2>Это iCity</h2> <br /> впереди только боль
         </Popup>
@@ -94,7 +99,6 @@ export const Map: React.FC<MapProps> = memo(({ className }: MapProps) => {
         className="absolute right-2 top-2 z-[1000] w-[120px]"
       />
       <FitBounds />
-      <MigrationView />
     </MapContainer>
   );
 });
