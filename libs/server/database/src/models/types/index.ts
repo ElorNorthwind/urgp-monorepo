@@ -82,10 +82,24 @@ export type CaseReply = {
   lastId?: number;
 };
 
-// Выборка данных по столбцам БД:
-//
-// SELECT *
-//   FROM information_schema.columns
-//  WHERE table_schema = 'public'
-//    AND table_name   = 'cases'
-//      ;
+type RenovationOldHouseTerms = {
+  firstResetlementStart: Date | null;
+  firstResetlementEnd: Date | null;
+  secontResetlementEnd: Date | null;
+  demolitionEnd: Date | null;
+};
+
+export type DbRenovationOldHouse = {
+  id: number;
+  okrug: string;
+  district: string;
+  address: string;
+  termsReason: string;
+  type: string;
+  terms: {
+    plan: RenovationOldHouseTerms;
+    actual: RenovationOldHouseTerms;
+  };
+  newBuilgings: string;
+  movesTo: string;
+};

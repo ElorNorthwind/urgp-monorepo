@@ -1,4 +1,6 @@
 import { IDatabase, IMain } from 'pg-promise';
+import { GetRenovationOldHousesDto } from '../models/dto/get-renovation-old-houses';
+import { DbRenovationOldHouse } from '../models/types';
 
 type geodata = { geojson: any };
 
@@ -19,6 +21,41 @@ export class RenovationRepository {
       ) as geojson
       FROM
       renovation.buildings_old AS t WHERE t.outline IS NOT NULL;`,
+    );
+  }
+
+  // Returns old houses for renovation;
+  getOldHouses(
+    dto: GetRenovationOldHousesDto,
+  ): Promise<DbRenovationOldHouse[]> {
+    const { limit = 100, page = 1, okrug, district } = dto;
+    const offset = (page - 1) * limit;
+    const where = [];
+    if (okrug) {
+      where.push(`okrug = '${okrug}'`);
+    }
+    if (district) {
+      where.push(`district = '${district}'`);
+    }
+    const whereSql = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
+    return this.db.any(
+      `SELECT id, okrug, district, adress, terms_reason as termsReason, type, new_buildings as newBuildings, moves_to as movesTo,
+      json_build_object('plan', 
+        json_build_object(
+          'firstResetlementStart', plan_first_resettlement_start,
+          'firstResetlementEnd', plan_first_resettlement_end,
+          'secontResetlementEnd', plan_second_resettlement_end,
+          'demolitionEnd', plan_demolition_end),
+        'actual',
+        json_build_object(
+          'firstResetlementStart', actual_first_resettlement_start,
+          'firstResetlementEnd', actual_first_resettlement_end,
+          'secontResetlementEnd', actual_second_resettlement_end,
+          'demolitionEnd', actual_demolition_end)
+      ) as terms
+      FROM renovation.buildings_old_full_view
+      ${whereSql} 
+      LIMIT ${limit} OFFSET ${offset}`,
     );
   }
 }
