@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@urgp/shared/ui';
+} from '@urgp/client/shared';
 import { cn } from '@urgp/shared/util';
 import { memo } from 'react';
 import { AdressSearchForm } from './AdressSearchForm';

@@ -1,5 +1,5 @@
 import { Link, createLazyFileRoute } from '@tanstack/react-router';
-import { MainLayout } from '@urgp/shared/ui';
+import { MainLayout } from '@urgp/client/shared';
 import { Calculator } from 'lucide-react';
 
 export const Route = createLazyFileRoute('/about')({

@@ -13,7 +13,7 @@ import {
 import { GeoJsonObject } from 'geojson';
 
 import 'leaflet/dist/leaflet.css';
-import { Card } from '@urgp/shared/ui';
+import { Card } from '@urgp/client/shared';
 import { BasemapSelector } from './BasemapSelector';
 import { LatLngBounds, LatLngExpression, LatLngTuple } from 'leaflet';
 import { FitBounds } from './FitBounds';

@@ -8,7 +8,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@urgp/shared/ui';
+} from '@urgp/client/shared';
 import { cn, useDebounce } from '@urgp/shared/util';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { ReactNode, useState } from 'react';

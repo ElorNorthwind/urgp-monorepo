@@ -1,4 +1,4 @@
-import { Card, HStack, MainLayout, VStack } from '@urgp/shared/ui';
+import { Card, HStack, MainLayout, VStack } from '@urgp/client/shared';
 import { Link } from '@tanstack/react-router';
 import { Calculator, Map } from 'lucide-react';
 

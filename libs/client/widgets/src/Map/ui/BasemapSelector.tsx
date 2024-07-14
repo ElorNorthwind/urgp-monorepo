@@ -9,7 +9,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@urgp/shared/ui';
+} from '@urgp/client/shared';
 import { basemapDict } from './Map';
 
 type BasemapSelectorProps = {

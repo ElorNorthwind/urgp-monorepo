@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
   Input,
-} from '@urgp/shared/ui';
+} from '@urgp/client/shared';
 import { memo } from 'react';
 
 // import classes from './FileInputCard.module.css';

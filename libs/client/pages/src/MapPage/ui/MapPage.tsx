@@ -1,5 +1,5 @@
 import { Map } from '@urgp/client/widgets';
-import { Card } from '@urgp/shared/ui';
+import { Card } from '@urgp/client/shared';
 
 const MapPage = (): JSX.Element => {
   return (

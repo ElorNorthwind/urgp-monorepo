@@ -17,11 +17,12 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@urgp/client/*": ["apps/client/src/*"],
       "@urgp/client/entities": ["libs/client/entities/src/index.ts"],
       "@urgp/client/features": ["libs/client/features/src/index.ts"],
       "@urgp/client/pages": ["libs/client/pages/src/index.ts"],
+      "@urgp/client/shared": ["libs/client/shared/src/index.ts"],
       "@urgp/client/widgets": ["libs/client/widgets/src/index.ts"],
-      "@urgp/client/*": ["apps/client/src/*"],
       "@urgp/server/*": ["apps/server/src/*"],
       "@urgp/server/database": ["libs/server/database/src/index.ts"],
       "@urgp/server/edo": ["libs/server/edo/src/index.ts"],
@@ -29,10 +30,8 @@
       "@urgp/server/external-auth": ["libs/server/external-auth/src/index.ts"],
       "@urgp/server/llm": ["libs/server/llm/src/index.ts"],
       "@urgp/server/pipes": ["libs/server/pipes/src/index.ts"],
-      "@urgp/server/rsm": ["libs/server/rsm/src/index.ts"],
       "@urgp/server/renovation": ["libs/server/renovation/src/index.ts"],
-      "@urgp/shared/ui": ["libs/shared/ui/src/index.ts"],
-      "@urgp/shared/util": ["libs/shared/util/src/index.ts"]
+      "@urgp/server/rsm": ["libs/server/rsm/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

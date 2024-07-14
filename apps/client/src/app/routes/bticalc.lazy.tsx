@@ -1,6 +1,6 @@
 import { Link, createLazyFileRoute } from '@tanstack/react-router';
 import { BtiCalcPage } from '@urgp/client/pages';
-import { MainLayout } from '@urgp/shared/ui';
+import { MainLayout } from '@urgp/client/shared';
 import { Calculator } from 'lucide-react';
 
 export const Route = createLazyFileRoute('/bticalc')({

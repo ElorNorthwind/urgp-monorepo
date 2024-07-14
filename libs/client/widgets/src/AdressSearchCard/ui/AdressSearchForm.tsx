@@ -13,7 +13,7 @@ import {
   FormMessage,
   HStack,
   Input,
-} from '@urgp/shared/ui';
+} from '@urgp/client/shared';
 import { toast } from 'sonner';
 import { X } from 'lucide-react';
 import { getDirtyValues } from '@urgp/shared/util';
