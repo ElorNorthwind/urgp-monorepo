@@ -2,8 +2,11 @@ import { Controller, Get, Query, UsePipes } from '@nestjs/common';
 import { RenovationService } from './renovation.service';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
+  getOldAppartments,
+  GetOldAppartmentsDto,
   getOldBuldings,
   GetOldBuldingsDto,
+  OldAppartment,
   OldBuilding,
 } from '@urgp/shared/entities';
 
@@ -19,8 +22,16 @@ export class RenovationController {
   @Get('old-buildings')
   @UsePipes(new ZodValidationPipe(getOldBuldings))
   getOldBuldings(
-    @Query() getRenovationOldHousesDto: GetOldBuldingsDto,
+    @Query() getOldHousesDto: GetOldBuldingsDto,
   ): Promise<OldBuilding[]> {
-    return this.renovation.getOldBuildings(getRenovationOldHousesDto);
+    return this.renovation.getOldBuildings(getOldHousesDto);
+  }
+
+  @Get('old-apartments')
+  @UsePipes(new ZodValidationPipe(getOldAppartments))
+  getOldAppartments(
+    @Query() getOldAppartmentsDto: GetOldAppartmentsDto,
+  ): Promise<OldAppartment[]> {
+    return this.renovation.getOldAppartments(getOldAppartmentsDto);
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
-import { GetOldBuldingsDto } from '@urgp/shared/entities';
+import { GetOldAppartmentsDto, GetOldBuldingsDto } from '@urgp/shared/entities';
 
 @Injectable()
 export class RenovationService {
@@ -13,5 +13,8 @@ export class RenovationService {
 
   public async getOldBuildings(dto: GetOldBuldingsDto) {
     return this.dbServise.db.renovation.getOldBuildings(dto);
+  }
+  public async getOldAppartments(dto: GetOldAppartmentsDto) {
+    return this.dbServise.db.renovation.getOldAppartments(dto);
   }
 }

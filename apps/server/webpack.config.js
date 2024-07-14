@@ -1,4 +1,5 @@
 const { NxWebpackPlugin } = require('@nx/webpack');
+const CopyPlugin = require('copy-webpack-plugin');
 const { join } = require('path');
 
 module.exports = {
@@ -16,5 +17,24 @@ module.exports = {
       outputHashing: 'none',
       sourceMap: true,
     }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: '../../libs/shared/entities/src/repos/sql/',
+          to: join(__dirname, '../../dist/apps/server/sql'),
+        },
+      ],
+    }),
   ],
+  // module: {
+  //   rules: [
+  //     {
+  //       test: /\.sql/,
+  //       type: 'asset/resource',
+  //     },
+  //   ],
+  // },
+  // resolve: {
+  //   extensions: ['.sql'],
+  // },
 };
