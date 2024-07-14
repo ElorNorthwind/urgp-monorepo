@@ -13,14 +13,14 @@ export class RenovationController {
 
   @Get('old-geojson')
   getOldGeoJson(): Promise<unknown[]> | unknown[] {
-    return this.renovation.getOldHousesGeoJson();
+    return this.renovation.getOldBuildingsGeoJson();
   }
 
-  @Get('old-houses')
+  @Get('old-buildings')
   @UsePipes(new ZodValidationPipe(getOldBuldings))
-  getOldHouses(
+  getOldBuldings(
     @Query() getRenovationOldHousesDto: GetOldBuldingsDto,
   ): Promise<OldBuilding[]> {
-    return this.renovation.getOldHouses(getRenovationOldHousesDto);
+    return this.renovation.getOldBuildings(getRenovationOldHousesDto);
   }
 }
