@@ -1,4 +1,4 @@
-import { rtkApi } from '@urgp/shared/util';
+import { rtkApi } from '@urgp/client/shared';
 import { Street } from '../model/types';
 
 const streetsApi = rtkApi.injectEndpoints({

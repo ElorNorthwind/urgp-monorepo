@@ -1,4 +1,4 @@
-@import '../../../../../libs/shared/util/global.css';
+@import '../../../../../libs/client/shared/src/config/global.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

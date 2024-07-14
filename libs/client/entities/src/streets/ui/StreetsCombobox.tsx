@@ -9,7 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@urgp/client/shared';
-import { cn, useDebounce } from '@urgp/shared/util';
+import { cn, useDebounce } from '@urgp/client/shared';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { ReactNode, useState } from 'react';
 import { useStreets } from '../api/streetsApi';

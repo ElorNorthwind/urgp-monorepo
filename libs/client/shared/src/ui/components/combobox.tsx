@@ -1,4 +1,4 @@
-import { cn } from '@urgp/shared/util';
+import { cn } from '@urgp/client/shared';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { Button } from './button';

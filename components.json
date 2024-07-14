@@ -3,13 +3,13 @@
   "style": "default",
   "rsc": false,
   "tailwind": {
-    "config": "libs/shared/util/tailwind.config.js",
-    "css": "libs/shared/util/global.css",
+    "config": "libs/client/shared/src/config/tailwind.config.js",
+    "css": "libs/client/shared/src/config/global.css",
     "baseColor": "neutral",
     "cssVariables": true
   },
   "aliases": {
-    "components": "@urgp/shared/ui/components",
-    "utils": "@urgp/shared/util"
+    "components": "@urgp/client/shared/src/ui/components",
+    "utils": "@urgp/client/shared"
   }
 }

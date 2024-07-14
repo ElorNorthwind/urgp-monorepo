@@ -10,7 +10,7 @@ import {
 import { memo } from 'react';
 
 // import classes from './FileInputCard.module.css';
-import { cn } from '@urgp/shared/util';
+import { cn } from '@urgp/client/shared';
 
 export const FileInputCard: React.FC = memo(() => {
   return (

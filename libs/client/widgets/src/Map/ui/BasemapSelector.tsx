@@ -1,4 +1,4 @@
-import { cn } from '@urgp/shared/util';
+import { cn } from '@urgp/client/shared';
 import React, { memo } from 'react';
 
 import 'leaflet/dist/leaflet.css';

@@ -16,7 +16,7 @@ import {
 } from '@urgp/client/shared';
 import { toast } from 'sonner';
 import { X } from 'lucide-react';
-import { getDirtyValues } from '@urgp/shared/util';
+import { getDirtyValues } from '@urgp/client/shared';
 import { useNavigate } from '@tanstack/react-router';
 import { StreetsCombobox } from '@urgp/client/entities';
 

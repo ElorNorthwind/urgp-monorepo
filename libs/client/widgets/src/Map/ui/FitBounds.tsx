@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { LatLngBounds, LatLngTuple, polyline } from 'leaflet';
 
 import classes from './Map.module.css';
-import { cn } from '@urgp/shared/util';
+import { cn } from '@urgp/client/shared';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

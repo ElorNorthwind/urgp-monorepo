@@ -1,4 +1,4 @@
-import { cn } from '@urgp/shared/util';
+import { cn } from '@urgp/client/shared';
 import React, { ReactElement } from 'react';
 import { Toaster } from '../components/sonner';
 
