@@ -2,9 +2,9 @@ import { rtkApi } from '@urgp/client/shared';
 
 import { GeoJsonObject } from 'geojson';
 
-const renovationOldBuildingsApi = rtkApi.injectEndpoints({
+const oldBuildingsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    getOldBuildings: build.query<GeoJsonObject, void>({
+    getGeoJson: build.query<GeoJsonObject, void>({
       query: () => ({
         url: '/renovation/old-geojson',
         // params: { query },
@@ -14,5 +14,4 @@ const renovationOldBuildingsApi = rtkApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const useOldBuildings =
-  renovationOldBuildingsApi.useGetOldBuildingsQuery;
+export const useOldBuildingsGeoJson = oldBuildingsApi.useGetGeoJsonQuery;

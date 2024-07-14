@@ -81,25 +81,3 @@ export type CaseReply = {
   lastDate?: Date;
   lastId?: number;
 };
-
-type RenovationOldHouseTerms = {
-  firstResetlementStart: Date | null;
-  firstResetlementEnd: Date | null;
-  secontResetlementEnd: Date | null;
-  demolitionEnd: Date | null;
-};
-
-export type DbRenovationOldHouse = {
-  id: number;
-  okrug: string;
-  district: string;
-  address: string;
-  termsReason: string;
-  type: string;
-  terms: {
-    plan: RenovationOldHouseTerms;
-    actual: RenovationOldHouseTerms;
-  };
-  newBuilgings: string;
-  movesTo: string;
-};

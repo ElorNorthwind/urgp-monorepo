@@ -2,7 +2,7 @@ import { CasesRepository } from './cases';
 import { UsersRepository } from './users';
 import { QuestionsRepository } from './questions';
 import { StreetsRepository } from './streets';
-import { RenovationRepository } from './renovation';
+import { RenovationRepository } from '@urgp/shared/entities';
 
 // Database Interface Extensions:
 interface DbExtensions {

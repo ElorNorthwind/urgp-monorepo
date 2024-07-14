@@ -1,7 +1,8 @@
 import { IDatabase, IMain } from 'pg-promise';
-import { GetRenovationOldHousesDto } from '../models/dto/get-renovation-old-houses';
-import { DbRenovationOldHouse } from '../models/types';
+import { GetOldBuldingsDto } from '../model/dto/getOldBuildings';
+import { OldBuilding } from '../model/types/oldBuildings';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type geodata = { geojson: any };
 
 // @Injectable()
@@ -25,9 +26,7 @@ export class RenovationRepository {
   }
 
   // Returns old houses for renovation;
-  getOldHouses(
-    dto: GetRenovationOldHousesDto,
-  ): Promise<DbRenovationOldHouse[]> {
+  getOldHouses(dto: GetOldBuldingsDto): Promise<OldBuilding[]> {
     const { limit = 100, page = 1, okrug, district } = dto;
     const offset = (page - 1) * limit;
     const where = [];

@@ -18,7 +18,7 @@ import { BasemapSelector } from './BasemapSelector';
 import { LatLngBounds, LatLngExpression, LatLngTuple } from 'leaflet';
 import { FitBounds } from './FitBounds';
 import { MigrationView } from './MigrationView';
-import { useOldBuildings } from '@urgp/client/entities';
+import { useOldBuildingsGeoJson } from '@urgp/client/entities';
 // import AntPath from 'react-leaflet-ant-path';
 
 type MapProps = {
@@ -59,7 +59,7 @@ export const basemapDict = {
 
 export const Map: React.FC<MapProps> = memo(({ className }: MapProps) => {
   const [basemap, setBasemap] = useState<keyof typeof basemapDict>('carto');
-  const { data: oldBuildings } = useOldBuildings();
+  const { data: buildingsGeoJson } = useOldBuildingsGeoJson();
 
   return (
     <MapContainer
@@ -70,9 +70,9 @@ export const Map: React.FC<MapProps> = memo(({ className }: MapProps) => {
       className={cn(className)}
     >
       <TileLayer url={basemapDict[basemap]} className="z-0" />
-      {oldBuildings && (
+      {buildingsGeoJson && (
         <GeoJSON
-          data={oldBuildings as GeoJsonObject}
+          data={buildingsGeoJson as GeoJsonObject}
           style={{
             color: '#de984e',
             // className: 'bg-slate-200',
