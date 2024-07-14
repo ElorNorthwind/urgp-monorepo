@@ -1,5 +1,5 @@
 {
-  "name": "entities",
+  "name": "shared/entities",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/entities/src",
   "projectType": "library",

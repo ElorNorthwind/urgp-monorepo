@@ -23,7 +23,7 @@
       "@urgp/client/pages": ["libs/client/pages/src/index.ts"],
       "@urgp/client/shared": ["libs/client/shared/src/index.ts"],
       "@urgp/client/widgets": ["libs/client/widgets/src/index.ts"],
-      "@urgp/entities": ["libs/entities/src/index.ts"],
+      "@urgp/shared/entities": ["libs/shared/entities/src/index.ts"],
       "@urgp/server/*": ["apps/server/src/*"],
       "@urgp/server/database": ["libs/server/database/src/index.ts"],
       "@urgp/server/edo": ["libs/server/edo/src/index.ts"],
