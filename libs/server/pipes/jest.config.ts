@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'pipes',
+  // displayName: 'pipes',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
