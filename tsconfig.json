@@ -1,0 +1,12 @@
+// This file exist only to make the shadcn-ui cli happy ¯\_(ツ)_/¯
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@urgp/client/shared": ["libs/client/shared/src/index.ts"],
+      "@urgp/client/shared/*": ["libs/client/shared/src/*"]
+      // "@od/shadcn-ui": ["libs/shadcn-ui/src/index.ts"],
+      // "@od/shadcn-ui/*": ["libs/shadcn-ui/src/*"]
+    }
+  }
+}

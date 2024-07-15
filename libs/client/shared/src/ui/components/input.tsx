@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { cn } from '@urgp/client/shared';
+import { cn } from '../../lib/cn';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface InputProps
