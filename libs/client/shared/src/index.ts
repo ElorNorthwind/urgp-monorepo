@@ -12,6 +12,8 @@ export * from './ui/components/popover';
 export * from './ui/components/combobox';
 export * from './ui/components/sonner';
 export * from './ui/components/select';
+export * from './ui/components/table';
+export * from './ui/components/data-table';
 
 // export layouts
 export * from './ui/layouts/main';

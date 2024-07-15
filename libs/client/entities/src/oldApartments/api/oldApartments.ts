@@ -6,7 +6,7 @@ const oldApartmentsApi = rtkApi.injectEndpoints({
     getOldAppartments: build.query<OldAppartment[], GetOldAppartmentsDto>({
       query: (query) => ({
         url: '/renovation/old-apartments',
-        params: { query },
+        params: { ...query },
       }),
     }),
   }),

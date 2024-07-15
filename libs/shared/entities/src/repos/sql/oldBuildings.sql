@@ -106,7 +106,7 @@ WITH old_dates_ranked AS (
 		COUNT(*) FILTER (WHERE deviation = 'Без отклонений') AS deviation_none,
 		COUNT(*) FILTER (WHERE deviation = 'Требует внимания') AS deviation_attention,
 		COUNT(*) FILTER (WHERE deviation = 'Риск') AS deviation_risk
-		FROM renovation.appartment_classified -- УВЫ зависимость от иного представления
+		FROM renovation.apartments_classified -- УВЫ зависимость от иного представления
 		GROUP BY old_apart_building_id
 )
 
@@ -116,8 +116,8 @@ SELECT
 	o.district, 
 	o.adress, 
 	o.relocation_type as "relocationTypeId", 
-	t.type as relocationType,
-	COALESCE(at.total, 0) as "totalAppartments",
+	t.type as "relocationType",
+	COALESCE(at.total, 0) as "totalApartments",
 	o.terms_reason as "termsReason", 
 	od.terms as terms,
 	nc.new_building_constructions as "newBuildingConstructions",
@@ -173,4 +173,4 @@ LEFT JOIN (
 ) as nm ON nm.old_building_id = o.id
 LEFT JOIN appartment_totals at ON at.building_id = o.id
 ${conditions:raw}
-LIMIT ${limit} OFFSET ${offset};
+LIMIT ${limit:raw} OFFSET ${offset:raw};

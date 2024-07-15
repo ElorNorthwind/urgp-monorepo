@@ -16,12 +16,18 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
+const OldbuildingsLazyImport = createFileRoute('/oldbuildings')()
 const MapLazyImport = createFileRoute('/map')()
 const BticalcLazyImport = createFileRoute('/bticalc')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const OldbuildingsLazyRoute = OldbuildingsLazyImport.update({
+  path: '/oldbuildings',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/oldbuildings.lazy').then((d) => d.Route))
 
 const MapLazyRoute = MapLazyImport.update({
   path: '/map',
@@ -63,6 +69,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MapLazyImport
       parentRoute: typeof rootRoute
     }
+    '/oldbuildings': {
+      preLoaderRoute: typeof OldbuildingsLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -73,6 +83,7 @@ export const routeTree = rootRoute.addChildren([
   AboutLazyRoute,
   BticalcLazyRoute,
   MapLazyRoute,
+  OldbuildingsLazyRoute,
 ])
 
 /* prettier-ignore-end */

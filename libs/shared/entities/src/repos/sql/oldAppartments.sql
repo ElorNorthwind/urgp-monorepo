@@ -137,11 +137,11 @@ WITH connections AS (
 		CASE 
 			WHEN cl.status_id = 13 THEN 'Без отклонений'::varchar
 			WHEN d.actual_first_resettlement_start IS NULL THEN 'Без отклонений'::varchar
-			WHEN (d.actual_first_resettlement_start + (cl.next_step_term::text || 'month')::interval)::date <= NOW()::date THEN 'Риск'::varchar
-			WHEN (d.actual_first_resettlement_start + (cl.next_step_term::text || 'month')::interval)::date <= (NOW()::date + '7 days'::interval) THEN 'Требует внимания'::varchar
+			WHEN (d.actual_first_resettlement_start + (cl.next_step_term::text || 'days')::interval)::date <= NOW()::date THEN 'Риск'::varchar
+			WHEN (d.actual_first_resettlement_start + (cl.next_step_term::text || 'days')::interval)::date <= (NOW()::date + '7 days'::interval) THEN 'Требует внимания'::varchar
 			ELSE 'Без отклонений'::varchar
 		END as deviation,
-        (d.actual_first_resettlement_start + (cl.next_step_term::text || 'month')::interval)::date as "nextStepTerm",
+        (d.actual_first_resettlement_start + (cl.next_step_term::text || 'days')::interval)::date as "nextStepTerm",
 		json_build_object(
             'resettlementStart', d.actual_first_resettlement_start,
             'order', c.order_date,

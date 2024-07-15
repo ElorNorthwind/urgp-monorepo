@@ -58,7 +58,7 @@ export type OldBuilding = {
   adress: string;
   relocationTypeId: number;
   relocationType: string;
-  totalAppartments: number;
+  totalApartments: number;
   termsReason: string | null;
   terms: { plan: OldBuildingTerms; actual: OldBuildingTerms };
   appartments: AppartmentCounts;
