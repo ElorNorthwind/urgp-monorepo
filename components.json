@@ -9,7 +9,7 @@
     "cssVariables": true
   },
   "aliases": {
-    "components": "@urgp/client/shared/src/ui/components",
-    "utils": "@urgp/client/shared"
+    "components": "libs/client/shared/src/ui/components",
+    "utils": "libs/client/shared"
   }
 }
