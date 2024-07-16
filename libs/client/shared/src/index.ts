@@ -14,6 +14,8 @@ export * from './ui/components/sonner';
 export * from './ui/components/select';
 export * from './ui/components/table';
 export * from './ui/components/data-table';
+export * from './ui/components/badge';
+export * from './ui/components/facet-filter';
 
 // export layouts
 export * from './ui/layouts/main';

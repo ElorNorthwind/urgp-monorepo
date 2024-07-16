@@ -3,3 +3,4 @@ export * from './streets/model/types';
 export * from './streets/ui/StreetsCombobox';
 export * from './oldBuildings/api/oldBuildings';
 export * from './oldBuildings/ui/columns';
+export * from './oldBuildings/ui/oldBuildingsFilter';

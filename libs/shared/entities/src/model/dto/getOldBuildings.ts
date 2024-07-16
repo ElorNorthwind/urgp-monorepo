@@ -22,6 +22,7 @@ export const getOldBuldings = z
         'notStarted',
       ])
       .array(),
+    adress: z.string(),
   })
   .partial();
 
