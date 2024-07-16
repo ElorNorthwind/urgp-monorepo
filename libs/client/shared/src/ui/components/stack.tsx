@@ -45,11 +45,14 @@ const flexVariants = cva('flex', {
 });
 
 const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
-  ({ className, noWrap = false, ...props }, ref) => (
+  (
+    { className, noWrap = false, justify, align, gap, direction, ...props },
+    ref,
+  ) => (
     <div
       ref={ref}
       className={cn(
-        flexVariants({ className }),
+        flexVariants({ justify, align, gap, direction, className }),
         noWrap ? 'flex-nowrap' : 'flex-wrap',
       )}
       {...props}
@@ -58,20 +61,24 @@ const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
 );
 
 const HStack = React.forwardRef<HTMLDivElement, Omit<FlexProps, 'direction'>>(
-  ({ className, ...props }, ref) => (
+  ({ className, justify, align, gap, ...props }, ref) => (
     <Flex
       ref={ref}
-      className={cn(flexVariants({ direction: 'row', className }))}
+      className={cn(
+        flexVariants({ direction: 'row', justify, align, gap, className }),
+      )}
       {...props}
     />
   ),
 );
 
 const VStack = React.forwardRef<HTMLDivElement, Omit<FlexProps, 'direction'>>(
-  ({ className, ...props }, ref) => (
+  ({ className, justify, align, gap, ...props }, ref) => (
     <Flex
       ref={ref}
-      className={cn(flexVariants({ direction: 'column', className }))}
+      className={cn(
+        flexVariants({ direction: 'column', justify, align, gap, className }),
+      )}
       {...props}
     />
   ),

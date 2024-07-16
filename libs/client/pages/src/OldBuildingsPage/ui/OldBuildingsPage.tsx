@@ -12,7 +12,7 @@ const OldBuildingsPage = (): JSX.Element => {
   } = useOldBuldings({ limit, page, okrug });
 
   return (
-    <div className=" w-full p-2">
+    <div className="w-full p-2">
       {/* <Card className="w-full p-4"> */}
       <DataTable
         columns={oldBuildingsColumns}

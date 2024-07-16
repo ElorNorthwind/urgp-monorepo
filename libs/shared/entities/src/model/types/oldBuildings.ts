@@ -1,13 +1,13 @@
 type OldBuildingTerms = {
-  firstResetlementStart: Date | null;
-  firstResetlementEnd: Date | null;
-  secontResetlementEnd: Date | null;
-  demolitionEnd: Date | null;
+  firstResetlementStart: string | null;
+  firstResetlementEnd: string | null;
+  secontResetlementEnd: string | null;
+  demolitionEnd: string | null;
 };
 
 type NewBuildingTerms = {
-  commissioning: Date | null;
-  settlement: Date | null;
+  commissioning: string | null;
+  settlement: string | null;
 };
 
 type NewBuilding = {

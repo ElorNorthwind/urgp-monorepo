@@ -34,7 +34,7 @@
     "leaflet": "^1.9.4",
     "leaflet-ant-path": "^1.3.0",
     "leaflet.migration": "^2.3.8",
-    "lucide-react": "^0.343.0",
+    "lucide-react": "^0.408.0",
     "nestjs-cls": "^4.3.0",
     "next-themes": "^0.3.0",
     "node-html-parser": "^6.1.13",
