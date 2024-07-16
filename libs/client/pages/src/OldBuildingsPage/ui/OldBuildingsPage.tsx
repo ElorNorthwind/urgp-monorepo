@@ -1,6 +1,6 @@
 import { oldBuildingsColumns, useOldBuldings } from '@urgp/client/entities';
 import { getRouteApi } from '@tanstack/react-router';
-import { Card, DataTable } from '@urgp/client/shared';
+import { DataTable } from '@urgp/client/shared';
 
 const OldBuildingsPage = (): JSX.Element => {
   const { limit, page, okrug } = getRouteApi('/oldbuildings').useSearch();

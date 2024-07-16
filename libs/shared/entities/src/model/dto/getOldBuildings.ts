@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const getOldBuldings = z
   .object({
-    limit: z.coerce.number().min(1).max(500).default(100),
+    limit: z.coerce.number().min(1).max(500).default(100).or(z.literal('ALL')),
     page: z.coerce.number().min(1).default(1),
     okrug: z.coerce.string(),
     district: z.coerce.string(),

@@ -49,6 +49,7 @@ type AppartmentLitigationInfo = {
 
 export type OldAppartment = {
   id: number;
+  kpuNum: string;
   oldApartBuildingId: number;
   okrug: string;
   district: string;

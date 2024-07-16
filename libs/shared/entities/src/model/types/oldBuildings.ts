@@ -59,9 +59,12 @@ export type OldBuilding = {
   relocationTypeId: number;
   relocationType: string;
   totalApartments: number;
+  buildingDeviation: string;
+  buildingRelocationStartAge: string;
+  buildingRelocationStatus: string;
   termsReason: string | null;
   terms: { plan: OldBuildingTerms; actual: OldBuildingTerms };
-  appartments: AppartmentCounts;
   newBuildingConstructions: NewBuilding[] | null;
   newBuildingMovements: NewBuilding[] | null;
+  appartments: AppartmentCounts;
 };

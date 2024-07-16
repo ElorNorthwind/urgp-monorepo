@@ -19,7 +19,11 @@ WITH old_dates_ranked AS (
 					'firstResetlementEnd', min(control_date) FILTER (WHERE date_type = 2 AND rank = 1),
 					'secontResetlementEnd', min(control_date) FILTER (WHERE date_type = 3 AND rank = 1),
 					'demolitionEnd', min(control_date) FILTER (WHERE date_type = 4 AND rank = 1))
-           ) as terms
+           ) as terms,
+	CASE 
+		WHEN min(control_date) FILTER (WHERE date_type = 1 AND rank = 1) IS NOT NULL THEN NOW() - min(control_date) FILTER (WHERE date_type = 1 AND rank = 1)
+		ELSE null
+	END as age
 	FROM old_dates_ranked
 	GROUP BY building_id
 ), new_dates_ranked AS (
@@ -103,6 +107,7 @@ WITH old_dates_ranked AS (
 		COUNT(*) FILTER (WHERE difficulty_id = 4) AS difficulty_litigation,
 		COUNT(*) FILTER (WHERE difficulty_id = 5) AS difficulty_mfr,
 		-- классификаторы отклонений
+		COUNT(*) FILTER (WHERE deviation = 'Работа завершена') AS deviation_done,
 		COUNT(*) FILTER (WHERE deviation = 'Без отклонений') AS deviation_none,
 		COUNT(*) FILTER (WHERE deviation = 'Требует внимания') AS deviation_attention,
 		COUNT(*) FILTER (WHERE deviation = 'Риск') AS deviation_risk
@@ -118,6 +123,27 @@ SELECT
 	o.relocation_type as "relocationTypeId", 
 	t.type as "relocationType",
 	COALESCE(at.total, 0) as "totalApartments",
+	CASE
+		WHEN at.deviation_risk > 0 THEN 'Есть риски'::text
+		WHEN at.deviation_attention > 0 THEN 'Требует внимания'::text
+		ELSE 'Без отклонений'::text
+	END AS "buildingDeviation",
+	CASE
+		WHEN od.terms->'actual'->>'demolitionEnd' IS NOT NULL THEN 'Завершено'
+		WHEN od.terms->'actual'->>'firstResetlementStart' IS NULL THEN 'Не начато'
+		WHEN od.age < '1 month' THEN 'Менее месяца'
+		WHEN od.age < '2 month' THEN 'От 1 до 2 месяцев'
+		WHEN od.age < '5 month' THEN 'От 2 до 5 месяцев'
+		WHEN od.age < '8 month' THEN 'От 5 до 8 месяцев'
+		ELSE 'Более 8 месяцев'
+	END as "buildingRelocationStartAge",
+	CASE
+		WHEN od.terms->'actual'->>'demolitionEnd' IS NOT NULL THEN 'Завершено'
+		WHEN od.terms->'actual'->>'secontResetlementEnd' IS NOT NULL THEN 'Снос'
+		WHEN od.terms->'actual'->>'firstResetlementEnd' IS NOT NULL THEN 'Отселение'
+		WHEN od.terms->'actual'->>'firstResetlementStart' IS NULL THEN 'Не начато'
+		ELSE 'Переселение'
+	END as "buildingRelocationStatus",
 	o.terms_reason as "termsReason", 
 	od.terms as terms,
 	nc.new_building_constructions as "newBuildingConstructions",

@@ -26,7 +26,7 @@ WITH connections AS (
 	max(reject_date) as reject_date,
 	max(inspection_date) FILTER (WHERE reject_date IS NOT NULL AND inspection_date > reject_date) as reinspection_date,
 	max(rd_date) as rd_date,
-	max(COALESCE(contract_date, rd_date)) FILTER (WHERE contract_status LIKE 'Проект') as contract_project_date,
+	max(COALESCE(contract_date, rd_date)) FILTER (WHERE LOWER(contract_status) LIKE '%проект%') as contract_project_date,
 	max(contract_prelimenary_signing_date) as contract_prelimenary_signing_date,
 	max(contract_date) FILTER (WHERE contract_status NOT LIKE 'Проект') as contract_date
 	,json_agg(json_build_object(
@@ -113,6 +113,7 @@ WITH connections AS (
 ), full_data AS (
 	SELECT 
 		o.id,
+        o.kpu_num as "kpuNum",
 		o.building_id as "oldApartBuildingId",
 		b.okrug,
 		b.district,
@@ -135,7 +136,7 @@ WITH connections AS (
         cl.difficulty,
         cl.status,
 		CASE 
-			WHEN cl.status_id = 13 THEN 'Без отклонений'::varchar
+			WHEN cl.status_id IN (1, 13) THEN 'Работа завершена'::varchar
 			WHEN d.actual_first_resettlement_start IS NULL THEN 'Без отклонений'::varchar
 			WHEN (d.actual_first_resettlement_start + (cl.next_step_term::text || 'days')::interval)::date <= NOW()::date THEN 'Риск'::varchar
 			WHEN (d.actual_first_resettlement_start + (cl.next_step_term::text || 'days')::interval)::date <= (NOW()::date + '7 days'::interval) THEN 'Требует внимания'::varchar
@@ -158,7 +159,7 @@ WITH connections AS (
             'contract', c.contract_date
 		) as dates,
 		c.orders,	
-		l.cases as litigationCases
+		l.cases as "litigationCases"
 
 	 FROM
 	renovation.apartments_old_temp o
@@ -171,7 +172,7 @@ WITH connections AS (
             WHEN c.contract_date IS NOT NULL THEN 13 -- 'Договор - заключен'
             WHEN c.contract_prelimenary_signing_date IS NOT NULL THEN 12 -- 'Договор - назначено'
             WHEN c.contract_project_date IS NOT NULL THEN 11 -- 'Договор - проект'
-            WHEN c.rd_date IS NOT NULL THEN 8 -- 'Распоряжение - издано'
+            WHEN c.rd_date IS NOT NULL AND (l.final_result = 'Ведётся' OR l.decision_date IS NULL OR l.decision_date < c.rd_date) THEN 8 -- 'Распоряжение - издано'
             WHEN l.final_result <> 'Ведётся' AND l.decision_date IS NOT NULL THEN 10 -- 'Суд - решение'
             WHEN l.last_claim_date IS NOT NULL THEN 9 -- 'Суд - разбирательства'
             WHEN c.accept_date IS NOT NULL THEN 7 -- 'Распоряжение - в работе'
@@ -186,7 +187,7 @@ WITH connections AS (
         AND 
 
         CASE
-            WHEN c.reject_date IS NOT NULL THEN 5 -- 'МФР'
+            WHEN c.mfr_date IS NOT NULL THEN 5 -- 'МФР'
             WHEN l.last_claim_date IS NOT NULL THEN 4 -- 'Суд'
             WHEN c.reject_date IS NOT NULL THEN 3 -- 'Переподбор'
             WHEN old_apart_status LIKE '%аренда%' OR old_apart_status LIKE '%федеральная%' THEN 2 -- 'Проблемный'
