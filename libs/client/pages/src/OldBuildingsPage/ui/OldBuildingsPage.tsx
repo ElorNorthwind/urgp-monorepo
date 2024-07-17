@@ -5,6 +5,7 @@ import {
 } from '@urgp/client/entities';
 import { getRouteApi } from '@tanstack/react-router';
 import { DataTable, HStack, VStack } from '@urgp/client/shared';
+import { AreaFacetFilter } from '@urgp/client/widgets';
 
 const OldBuildingsPage = (): JSX.Element => {
   const {
@@ -29,6 +30,11 @@ const OldBuildingsPage = (): JSX.Element => {
   return (
     <VStack gap="s" align="start" className="relative w-full p-2">
       <OldBuildingsFilter />
+      {/* <AreaFacetFilter
+        title="Район"
+        selectedValues={[]}
+        setSelectedValues={() => 1}
+      /> */}
       {/* <Card className="w-full p-4"> */}
       <DataTable
         columns={oldBuildingsColumns}

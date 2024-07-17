@@ -14,25 +14,40 @@ import {
   PopoverTrigger,
   Separator,
 } from '@urgp/client/shared';
-import { CheckIcon, LucideProps, PlusCircleIcon } from 'lucide-react';
-import React from 'react';
+import { areas, areasFlat } from '@urgp/shared/entities';
+import { CheckIcon, PlusCircleIcon } from 'lucide-react';
+
 type Option = {
   value: string;
+  group: string;
   label: string;
-  icon?: React.ForwardRefExoticComponent<
-    Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
-  >;
+  //   icon?: React.ForwardRefExoticComponent<
+  //     Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
+  //   >;
 };
-interface FacetFilterProps extends React.HTMLAttributes<HTMLDivElement> {
-  options: Option[];
+interface AreaFacetFilterProps extends React.HTMLAttributes<HTMLDivElement> {
+  //   options: Option[];
   selectedValues: string[];
   setSelectedValues: (value: string[]) => void;
   title?: string;
 }
 
-function FacetFilter(props: FacetFilterProps): JSX.Element {
-  const { options, selectedValues, className, title, setSelectedValues } =
-    props;
+function AreaFacetFilter(props: AreaFacetFilterProps): JSX.Element {
+  const { selectedValues, className, title, setSelectedValues } = props;
+
+  const options: Option[] = Object.keys(areasFlat).reduce((acc, curr) => {
+    return [
+      ...acc,
+      ...areasFlat[curr as keyof typeof areasFlat].map(
+        (item) =>
+          ({
+            value: item,
+            group: curr,
+            label: item,
+          }) as Option,
+      ),
+    ];
+  }, [] as Option[]);
 
   return (
     <div className={cn('flex items-center space-x-2', className)}>
@@ -97,10 +112,6 @@ function FacetFilter(props: FacetFilterProps): JSX.Element {
                         } else {
                           setSelectedValues([...selectedValues, option.value]);
                         }
-                        // const filterValues = Array.from(selectedValues);
-                        // column?.setFilterValue(
-                        //   filterValues.length ? filterValues : undefined,
-                        // );
                       }}
                     >
                       <div
@@ -113,15 +124,7 @@ function FacetFilter(props: FacetFilterProps): JSX.Element {
                       >
                         <CheckIcon className={cn('h-4 w-4')} />
                       </div>
-                      {option.icon && (
-                        <option.icon className="text-muted-foreground mr-2 h-4 w-4" />
-                      )}
                       <span>{option.label}</span>
-                      {/* {facets?.get(option.value) && (
-                          <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-                            {facets.get(option.value)}
-                          </span>
-                        )} */}
                     </CommandItem>
                   );
                 })}
@@ -147,4 +150,4 @@ function FacetFilter(props: FacetFilterProps): JSX.Element {
   );
 }
 
-export { FacetFilter };
+export { AreaFacetFilter };
