@@ -13,21 +13,16 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as OldbuildingsImport } from './routes/oldbuildings'
 
 // Create Virtual Routes
 
-const OldbuildingsLazyImport = createFileRoute('/oldbuildings')()
 const MapLazyImport = createFileRoute('/map')()
 const BticalcLazyImport = createFileRoute('/bticalc')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
-
-const OldbuildingsLazyRoute = OldbuildingsLazyImport.update({
-  path: '/oldbuildings',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/oldbuildings.lazy').then((d) => d.Route))
 
 const MapLazyRoute = MapLazyImport.update({
   path: '/map',
@@ -44,6 +39,11 @@ const AboutLazyRoute = AboutLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
+const OldbuildingsRoute = OldbuildingsImport.update({
+  path: '/oldbuildings',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
@@ -55,6 +55,10 @@ declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
       preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/oldbuildings': {
+      preLoaderRoute: typeof OldbuildingsImport
       parentRoute: typeof rootRoute
     }
     '/about': {
@@ -69,10 +73,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MapLazyImport
       parentRoute: typeof rootRoute
     }
-    '/oldbuildings': {
-      preLoaderRoute: typeof OldbuildingsLazyImport
-      parentRoute: typeof rootRoute
-    }
   }
 }
 
@@ -80,10 +80,10 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
+  OldbuildingsRoute,
   AboutLazyRoute,
   BticalcLazyRoute,
   MapLazyRoute,
-  OldbuildingsLazyRoute,
 ])
 
 /* prettier-ignore-end */

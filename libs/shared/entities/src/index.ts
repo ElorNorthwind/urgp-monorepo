@@ -5,5 +5,3 @@ export * from './model/dto/getOldBuildings';
 export * from './model/dto/getOldAppartments';
 
 export * from './repos/renovation';
-
-export * from './config/areas';

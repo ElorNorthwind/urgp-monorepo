@@ -30,14 +30,16 @@ export class RenovationRepository {
 
   // Returns old houses for renovation;
   getOldBuildings(dto: GetOldBuldingsDto): Promise<OldBuilding[]> {
-    const { limit = 100, page = 1, okrug, district } = dto;
+    const { limit = 100, page = 1, okrug, districts } = dto;
     const offset = limit === 'ALL' ? 0 : (page - 1) * limit;
     const where = [];
     if (okrug) {
       where.push(`okrug = '${okrug}'`);
     }
-    if (district) {
-      where.push(`district = '${district}'`);
+    if (districts && districts.length > 0) {
+      where.push(
+        `district = ANY(ARRAY['${districts.split(',').join("','")}'])`,
+      );
     }
 
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
@@ -51,14 +53,16 @@ export class RenovationRepository {
 
   // Returns old houses for renovation;
   getOldAppartments(dto: GetOldAppartmentsDto): Promise<OldAppartment[]> {
-    const { limit = 100, page = 1, okrug, district, buildingId } = dto;
+    const { limit = 100, page = 1, okrug, districts, buildingId } = dto;
     const offset = limit === 'ALL' ? 0 : (page - 1) * limit;
     const where = [];
     if (okrug) {
       where.push(`okrug = '${okrug}'`);
     }
-    if (district) {
-      where.push(`district = '${district}'`);
+    if (districts && districts.length > 0) {
+      where.push(
+        `district = ANY(ARRAY['${districts.split(',').join("','")}'])`,
+      );
     }
     if (buildingId) {
       where.push(`"oldApartBuildingId" = '${buildingId}'`);
