@@ -1,16 +1,19 @@
 import { IDatabase, IMain } from 'pg-promise';
-import { GetOldBuldingsDto } from '../model/dto/getOldBuildings';
-import { OldBuilding } from '../model/types/oldBuildings';
 import path = require('path');
 import pgPromise = require('pg-promise');
-import { GetOldAppartmentsDto } from '../model/dto/getOldAppartments';
-import { OldAppartment } from '../model/types/oldAppartments';
+import {
+  GetOldAppartmentsDto,
+  GetOldBuldingsDto,
+  OldAppartment,
+  OldBuilding,
+} from '@urgp/shared/entities';
 
-// Helper for linking to external query files:
-function sql(file: string) {
-  const fullPath = path.join(__dirname, file);
-  return new pgPromise.QueryFile(fullPath, { minify: true });
-}
+import { renovation } from './sql/sql';
+// // Helper for linking to external query files:
+// function sql(file: string) {
+//   const fullPath = path.join(__dirname, file);
+//   return new pgPromise.QueryFile(fullPath, { minify: true });
+// }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type geodata = { geojson: any };
@@ -24,8 +27,7 @@ export class RenovationRepository {
 
   // Returns geojson of old buildings;
   getOldBuildingsGeoJson(): Promise<geodata[]> {
-    const sqlOldBuldingsGeoJson = sql('./sql/oldBuildingsGeoJson.sql');
-    return this.db.any(sqlOldBuldingsGeoJson);
+    return this.db.any(renovation.getOldBuldingsGeoJson);
   }
 
   // Returns old houses for renovation;
@@ -37,14 +39,11 @@ export class RenovationRepository {
       where.push(`okrug = '${okrug}'`);
     }
     if (districts && districts.length > 0) {
-      where.push(
-        `district = ANY(ARRAY['${districts.split(',').join("','")}'])`,
-      );
+      where.push(`district = ANY(ARRAY['${districts.join("','")}'])`);
     }
 
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
-    const sqlOldBuldings = sql('./sql/oldBuildings.sql');
-    return this.db.any(sqlOldBuldings, {
+    return this.db.any(renovation.oldBuildings, {
       limit,
       offset,
       conditions,
@@ -60,17 +59,14 @@ export class RenovationRepository {
       where.push(`okrug = '${okrug}'`);
     }
     if (districts && districts.length > 0) {
-      where.push(
-        `district = ANY(ARRAY['${districts.split(',').join("','")}'])`,
-      );
+      where.push(`district = ANY(ARRAY['${districts.join("','")}'])`);
     }
     if (buildingId) {
       where.push(`"oldApartBuildingId" = '${buildingId}'`);
     }
 
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
-    const sqlOldBuldings = sql('./sql/oldAppartments.sql');
-    return this.db.any(sqlOldBuldings, {
+    return this.db.any(renovation.oldApartments, {
       limit,
       offset,
       conditions,

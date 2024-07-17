@@ -20,8 +20,8 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: '../../libs/shared/entities/src/repos/sql/',
-          to: join(__dirname, '../../dist/apps/server/sql'),
+          from: '../../libs/server/database/src/repos/sql/renovation',
+          to: join(__dirname, '../../dist/apps/server/sql/renovation'),
         },
       ],
     }),

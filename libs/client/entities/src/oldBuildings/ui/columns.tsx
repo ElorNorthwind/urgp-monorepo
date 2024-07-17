@@ -76,19 +76,29 @@ export const oldBuildingsColumns = [
     },
   }),
   columnHelper.accessor('terms.actual.firstResetlementStart', {
-    header: 'Сроки',
-    cell: ({ cell }) => {
+    header: 'Старт',
+    cell: ({ cell, row }) => {
       const date = cell.getValue();
-      return <span>{date && new Date(date).toLocaleDateString('ru-RU')}</span>;
+      const planDate = row.original.terms.plan.firstResetlementStart;
+      return (
+        <VStack gap="none" align={'start'}>
+          <div className="text-muted-foreground min-w-[50px] text-xs opacity-70">
+            {planDate ? new Date(planDate).toLocaleDateString('ru-RU') : ' '}
+          </div>
+          <div className="min-w-[50px] text-xs">
+            {date ? new Date(date).toLocaleDateString('ru-RU') : ' '}
+          </div>
+        </VStack>
+      );
     },
   }),
   columnHelper.accessor((row) => row.totalApartments.toString(), {
-    header: 'Всего кв.',
+    header: 'Квартир',
     cell: (info) => {
       return info.row.original.totalApartments > 0 ? (
-        <span>{info.getValue()}</span>
+        <div className=" min-w-[30px]">{info.getValue()}</div>
       ) : (
-        <span className="text-muted-foreground">-</span>
+        <div className="text-muted-foreground  min-w-[30px] ">-</div>
       );
     },
   }),
@@ -104,11 +114,11 @@ export const oldBuildingsColumns = [
       return (
         <HStack
           gap="s"
-          align={'center'}
+          align={'start'}
           justify={'start'}
-          className="w-[200px] flex-nowrap text-right"
+          className="w-[200px] flex-nowrap"
         >
-          <div className="w-[40px]">
+          <div className="w-[30px] text-right">
             {donePercent > 0 ? donePercent + '%' : '-'}
           </div>
           <div className="w-[150px] ">

@@ -27,13 +27,13 @@ type Option = {
 };
 interface AreaFacetFilterProps extends React.HTMLAttributes<HTMLDivElement> {
   //   options: Option[];
-  selectedValues: string[];
+  selectedValues: string[] | undefined;
   setSelectedValues: (value: string[]) => void;
   title?: string;
 }
 
 function AreaFacetFilter(props: AreaFacetFilterProps): JSX.Element {
-  const { selectedValues, className, title, setSelectedValues } = props;
+  const { selectedValues = [], className, title, setSelectedValues } = props;
 
   const options: Option[] = Object.keys(areasFlat).reduce((acc, curr) => {
     return [
@@ -79,7 +79,7 @@ function AreaFacetFilter(props: AreaFacetFilterProps): JSX.Element {
                       .map((option) => (
                         <Badge
                           variant="secondary"
-                          key={option.value}
+                          key={option.group + '_' + option.value}
                           className="rounded-sm px-1 font-normal"
                         >
                           {option.label}
@@ -101,7 +101,7 @@ function AreaFacetFilter(props: AreaFacetFilterProps): JSX.Element {
                   const isSelected = selectedValues.includes(option.value);
                   return (
                     <CommandItem
-                      key={option.value}
+                      key={option.group + '_' + option.value}
                       onSelect={() => {
                         if (isSelected) {
                           setSelectedValues(

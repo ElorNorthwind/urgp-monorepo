@@ -1,7 +1,5 @@
-export * from './model/types/oldAppartments';
-export * from './model/types/oldBuildings';
+export * from './oldApartments/dto';
+export * from './oldApartments/types';
 
-export * from './model/dto/getOldBuildings';
-export * from './model/dto/getOldAppartments';
-
-export * from './repos/renovation';
+export * from './oldBuildings/dto';
+export * from './oldBuildings/types';
