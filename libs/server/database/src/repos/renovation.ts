@@ -8,11 +8,12 @@ import {
   OldBuilding,
 } from '@urgp/shared/entities';
 
-// Helper for linking to external query files:
-function sql(file: string) {
-  const fullPath = path.join(__dirname, file);
-  return new pgPromise.QueryFile(fullPath, { minify: true });
-}
+import { renovation } from './sql/sql';
+// // Helper for linking to external query files:
+// function sql(file: string) {
+//   const fullPath = path.join(__dirname, file);
+//   return new pgPromise.QueryFile(fullPath, { minify: true });
+// }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type geodata = { geojson: any };
@@ -26,8 +27,7 @@ export class RenovationRepository {
 
   // Returns geojson of old buildings;
   getOldBuildingsGeoJson(): Promise<geodata[]> {
-    const sqlOldBuldingsGeoJson = sql('./sql/oldBuildingsGeoJson.sql');
-    return this.db.any(sqlOldBuldingsGeoJson);
+    return this.db.any(renovation.getOldBuldingsGeoJson);
   }
 
   // Returns old houses for renovation;
@@ -45,8 +45,7 @@ export class RenovationRepository {
     }
 
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
-    const sqlOldBuldings = sql('./sql/oldBuildings.sql');
-    return this.db.any(sqlOldBuldings, {
+    return this.db.any(renovation.oldBuildings, {
       limit,
       offset,
       conditions,
@@ -71,8 +70,7 @@ export class RenovationRepository {
     }
 
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
-    const sqlOldBuldings = sql('./sql/oldAppartments.sql');
-    return this.db.any(sqlOldBuldings, {
+    return this.db.any(renovation.oldApartments, {
       limit,
       offset,
       conditions,
