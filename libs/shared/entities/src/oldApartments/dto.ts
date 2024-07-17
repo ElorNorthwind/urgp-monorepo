@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { getOldBuldings } from './getOldBuildings';
+import { getOldBuldings } from '../oldBuildings/dto';
 
 export const getOldAppartments = getOldBuldings
   .extend({
