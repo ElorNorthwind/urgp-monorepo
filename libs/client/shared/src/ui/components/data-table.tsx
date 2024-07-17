@@ -33,15 +33,12 @@ export function DataTable<TData, TValue>({
   return (
     <div className="relative w-full rounded-md border">
       <Table className="">
-        <TableHeader>
+        <TableHeader className="bg-primary-foreground sticky top-0 z-10 rounded-md bg-clip-padding">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead
-                    key={header.id}
-                    className="bg-primary-foreground sticky top-0"
-                  >
+                  <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(

@@ -1,5 +1,5 @@
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
-import { HStack, VStack } from '@urgp/client/shared';
+import { HStack, Progress, VStack } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
 import {
   CircleAlert,
@@ -93,6 +93,29 @@ export const oldBuildingsColumns = [
     },
   }),
   columnHelper.accessor((row) => row.appartments.status.contract.toString(), {
-    header: 'Разбивка по квартирам',
+    header: 'Прогресс',
+    cell: (props) => {
+      const donePercent = Math.round(
+        (props.row.original.appartments.status.contract /
+          (props.row.original.appartments.total -
+            props.row.original.appartments.status.empty)) *
+          100,
+      );
+      return (
+        <HStack
+          gap="s"
+          align={'center'}
+          justify={'start'}
+          className="w-[200px] flex-nowrap text-right"
+        >
+          <div className="w-[40px]">
+            {donePercent > 0 ? donePercent + '%' : '-'}
+          </div>
+          <div className="w-[150px] ">
+            <Progress value={donePercent} className="h-4 border" />
+          </div>
+        </HStack>
+      );
+    },
   }),
 ];
