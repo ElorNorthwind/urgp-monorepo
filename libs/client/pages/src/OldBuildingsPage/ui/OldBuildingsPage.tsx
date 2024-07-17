@@ -4,7 +4,7 @@ import {
   useOldBuldings,
 } from '@urgp/client/entities';
 import { getRouteApi } from '@tanstack/react-router';
-import { DataTable } from '@urgp/client/shared';
+import { DataTable, HStack, VStack } from '@urgp/client/shared';
 
 const OldBuildingsPage = (): JSX.Element => {
   const {
@@ -27,7 +27,7 @@ const OldBuildingsPage = (): JSX.Element => {
   } = useOldBuldings({ limit, page, okrug });
 
   return (
-    <div className="w-full p-2">
+    <VStack gap="s" align="start" className="relative w-full p-2">
       <OldBuildingsFilter />
       {/* <Card className="w-full p-4"> */}
       <DataTable
@@ -36,7 +36,7 @@ const OldBuildingsPage = (): JSX.Element => {
         isLoading={isLoading || isFetching}
       />
       {/* </Card> */}
-    </div>
+    </VStack>
   );
 };
 

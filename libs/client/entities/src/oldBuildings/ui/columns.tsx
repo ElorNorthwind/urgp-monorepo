@@ -33,7 +33,7 @@ export const oldBuildingsColumns = [
       return (
         <VStack gap={'none'} justify={'center'} align={'start'} className="">
           <div className="whitespace-nowrap text-xs">{props.getValue()}</div>
-          <div className="whitespace-nowrap text-xs">
+          <div className="text-muted-foreground whitespace-nowrap text-xs">
             {props.row.original.buildingRelocationStartAge}
           </div>
         </VStack>

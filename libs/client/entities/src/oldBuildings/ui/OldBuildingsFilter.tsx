@@ -1,12 +1,12 @@
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { FacetFilter } from '@urgp/client/shared';
+import { getRouteApi, Route, useNavigate } from '@tanstack/react-router';
+import { debounce, FacetFilter, useDebounce } from '@urgp/client/shared';
 import {
   CheckIcon,
   HouseIcon,
   LucideProps,
   PlusCircleIcon,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 function OldBuildingsFilter(
   props: React.HTMLAttributes<HTMLDivElement>,
@@ -14,6 +14,18 @@ function OldBuildingsFilter(
   const { className } = props;
 
   const [selectedValues, setSelectedItems] = useState<string[]>([]);
+
+  const { status } = getRouteApi('/oldbuildings').useSearch();
+  const navigate = useNavigate({ from: '/oldbuildings' });
+
+  useEffect(() => {
+    navigate({
+      search: (prev: any) => ({
+        ...prev,
+        status: selectedValues.length > 0 ? selectedValues : undefined,
+      }),
+    });
+  }, [selectedValues, navigate]);
 
   const options = useMemo(() => {
     return [
