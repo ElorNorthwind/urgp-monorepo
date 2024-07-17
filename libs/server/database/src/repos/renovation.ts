@@ -39,9 +39,7 @@ export class RenovationRepository {
       where.push(`okrug = '${okrug}'`);
     }
     if (districts && districts.length > 0) {
-      where.push(
-        `district = ANY(ARRAY['${districts.split(',').join("','")}'])`,
-      );
+      where.push(`district = ANY(ARRAY['${districts.join("','")}'])`);
     }
 
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
@@ -61,9 +59,7 @@ export class RenovationRepository {
       where.push(`okrug = '${okrug}'`);
     }
     if (districts && districts.length > 0) {
-      where.push(
-        `district = ANY(ARRAY['${districts.split(',').join("','")}'])`,
-      );
+      where.push(`district = ANY(ARRAY['${districts.join("','")}'])`);
     }
     if (buildingId) {
       where.push(`"oldApartBuildingId" = '${buildingId}'`);

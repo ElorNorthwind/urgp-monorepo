@@ -5,7 +5,13 @@ export const getOldBuldings = z
     limit: z.coerce.number().min(1).max(500).default(100).or(z.literal('ALL')),
     page: z.coerce.number().min(1).default(1),
     okrug: z.string(),
-    districts: z.string(),
+    districts: z
+      .string()
+      .transform((value) => value.split(','))
+      .pipe(z.string().array())
+      .or(z.string().array()),
+
+    // z.string().array(),
     relocationType: z.number().array(),
     status: z.number().array(),
     dificulty: z.number().array(),

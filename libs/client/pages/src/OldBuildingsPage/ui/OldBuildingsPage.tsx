@@ -3,17 +3,24 @@ import {
   OldBuildingsFilter,
   useOldBuldings,
 } from '@urgp/client/entities';
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import {
+  getRouteApi,
+  useLoaderData,
+  useNavigate,
+  useRouteContext,
+} from '@tanstack/react-router';
 import { Button, DataTable, HStack, VStack } from '@urgp/client/shared';
 import { AreaFacetFilter } from '@urgp/client/widgets';
 import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
+import { GetOldBuldingsDto } from '@urgp/shared/entities';
 
 const OldBuildingsPage = (): JSX.Element => {
   const {
     limit,
     page,
     okrug,
+    districts,
     relocationType,
     status,
     dificulty,
@@ -21,16 +28,16 @@ const OldBuildingsPage = (): JSX.Element => {
     relocationAge,
     relocationStatus,
     adress,
-  } = getRouteApi('/oldbuildings').useSearch();
+  } = getRouteApi('/oldbuildings').useSearch() as GetOldBuldingsDto;
 
-  const [districts, setDistricts] = useState<string[]>([]);
+  // const [districts, setDistricts] = useState<string[]>([]);
   const navigate = useNavigate({ from: '/oldbuildings' });
 
   useEffect(() => {
     navigate({
-      search: (prev: any) => ({
+      search: (prev: GetOldBuldingsDto) => ({
         ...prev,
-        districts: districts.length > 0 ? districts : undefined,
+        districts: districts && districts.length > 0 ? districts : undefined,
       }),
     });
   }, [districts, navigate]);
@@ -39,7 +46,7 @@ const OldBuildingsPage = (): JSX.Element => {
     data: buildings,
     isLoading,
     isFetching,
-  } = useOldBuldings({ limit, page, okrug, districts: districts.join(',') });
+  } = useOldBuldings({ limit, page, okrug, districts });
 
   return (
     <VStack gap="s" align="start" className="relative w-full p-2">
@@ -48,12 +55,26 @@ const OldBuildingsPage = (): JSX.Element => {
         <AreaFacetFilter
           title="Район"
           selectedValues={districts}
-          setSelectedValues={(value) => setDistricts(value)}
+          setSelectedValues={(value) =>
+            navigate({
+              search: (prev: GetOldBuldingsDto) => ({
+                ...prev,
+                districts: value && value.length > 0 ? value : undefined,
+              }),
+            })
+          }
         />
-        {districts.length > 0 && (
+        {districts && districts.length > 0 && (
           <Button
             variant="ghost"
-            onClick={() => setDistricts([])}
+            onClick={() =>
+              navigate({
+                search: (prev: GetOldBuldingsDto) => ({
+                  ...prev,
+                  districts: undefined,
+                }),
+              })
+            }
             className="h-8 px-2 lg:px-3"
           >
             Сброс
@@ -62,10 +83,13 @@ const OldBuildingsPage = (): JSX.Element => {
         )}
       </HStack>
       {/* <Card className="w-full p-4"> */}
+
+      {/* {isLoading && 'Loading...'}
+      {isFetching && 'Fetching...'} */}
       <DataTable
         columns={oldBuildingsColumns}
         data={buildings || []}
-        isLoading={isLoading || isFetching}
+        isFetching={isLoading || isFetching}
       />
       {/* </Card> */}
     </VStack>
