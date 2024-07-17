@@ -1,10 +1,12 @@
 import { IDatabase, IMain } from 'pg-promise';
-import { GetOldBuldingsDto } from '../model/dto/getOldBuildings';
-import { OldBuilding } from '../model/types/oldBuildings';
 import path = require('path');
 import pgPromise = require('pg-promise');
-import { GetOldAppartmentsDto } from '../model/dto/getOldAppartments';
-import { OldAppartment } from '../model/types/oldAppartments';
+import {
+  GetOldAppartmentsDto,
+  GetOldBuldingsDto,
+  OldAppartment,
+  OldBuilding,
+} from '@urgp/shared/entities';
 
 // Helper for linking to external query files:
 function sql(file: string) {

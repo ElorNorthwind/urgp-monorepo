@@ -20,7 +20,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: '../../libs/shared/entities/src/repos/sql/',
+          from: '../../libs/server/database/src/repos/sql/',
           to: join(__dirname, '../../dist/apps/server/sql'),
         },
       ],

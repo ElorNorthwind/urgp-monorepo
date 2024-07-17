@@ -12,6 +12,6 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*.ts", "../../shared/entities/src/repos/renovation.ts"],
+  "include": ["src/**/*.ts", "src/repos/renovation.ts"],
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }
