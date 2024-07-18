@@ -1,23 +1,11 @@
-import {
-  oldBuildingsApi,
-  oldBuildingsColumns,
-  useOldBuldings,
-} from '@urgp/client/entities';
-import {
-  getRouteApi,
-  Link,
-  useLoaderData,
-  useNavigate,
-  useRouteContext,
-} from '@tanstack/react-router';
+import { oldBuildingsColumns, useOldBuldings } from '@urgp/client/entities';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
   Button,
   DataTable,
   HStack,
   onBottomReached,
-  rtkApi,
   ScrollArea,
-  store,
   VStack,
 } from '@urgp/client/shared';
 import { AreaFacetFilter } from '@urgp/client/widgets';
@@ -28,13 +16,12 @@ import {
   useRef,
   useState,
 } from 'react';
-import { X } from 'lucide-react';
+import { LoaderCircle, X } from 'lucide-react';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
 
 const OldBuildingsPage = (): JSX.Element => {
   const {
     limit,
-    page,
     okrug,
     districts,
     relocationType,
@@ -46,43 +33,32 @@ const OldBuildingsPage = (): JSX.Element => {
     adress,
   } = getRouteApi('/oldbuildings').useSearch() as GetOldBuldingsDto;
 
-  // const [districts, setDistricts] = useState<string[]>([]);
   const navigate = useNavigate({ from: '/oldbuildings' });
+  const [offset, setOffset] = useState(0);
+
+  const {
+    currentData: buildings,
+    isLoading,
+    isFetching,
+  } = useOldBuldings({ limit, offset, okrug, districts });
 
   useEffect(() => {
+    onBottomReached({
+      callback: () => setOffset(buildings?.length || 0),
+      containerRefElement: containerRef.current,
+      disabled:
+        isFetching ||
+        (buildings && buildings.length >= buildings[0].totalCount),
+      margin: 1500,
+    });
+
     navigate({
       search: (prev: GetOldBuldingsDto) => ({
         ...prev,
         districts: districts && districts.length > 0 ? districts : undefined,
       }),
     });
-  }, [districts, navigate]);
-
-  const {
-    data,
-    currentData: buildings,
-    isUninitialized,
-    isSuccess,
-    isLoading,
-    isFetching,
-  } = useOldBuldings({ limit, page, okrug, districts });
-
-  // const [buildings] = useLazyOldBuildings({ limit, page, okrug, districts })
-
-  // const onScroll = useCallback(() => {
-  //   console.log(document.body.scrollTop);
-  //   onBottomReached({
-  //     callback: () => console.log('bottom'),
-  //     containerRefElement: document.body,
-  //     disabled: false,
-  //     margin: 100,
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   window.addEventListener('scroll', onScroll);
-  //   return window.removeEventListener('scroll', onScroll);
-  // }, [onScroll]);
+  }, [buildings, districts, isFetching, navigate]);
 
   const containerRef = useRef() as MutableRefObject<HTMLDivElement>;
   return (
@@ -91,66 +67,62 @@ const OldBuildingsPage = (): JSX.Element => {
       align="start"
       className="relative  w-full overflow-auto  p-2"
     >
-      {/* <OldBuildingsFilter /> */}
-      <HStack>
-        {/* <Link
-          from="/oldbuildings"
-          to="/oldbuildings"
-          search={(prev: GetOldBuldingsDto) => ({ ...prev, page: 1 })}
-        >
-          1
-        </Link>
-        <Link
-          from="/oldbuildings"
-          to="/oldbuildings"
-          search={(prev: GetOldBuldingsDto) => ({ ...prev, page: 2 })}
-        >
-          2
-        </Link> */}
-        <AreaFacetFilter
-          title="Район"
-          selectedValues={districts}
-          setSelectedValues={(value) =>
-            navigate({
-              search: (prev: GetOldBuldingsDto) => ({
-                ...prev,
-                districts: value && value.length > 0 ? value : undefined,
-              }),
-            })
-          }
-        />
-        {districts && districts.length > 0 && (
-          <Button
-            variant="ghost"
-            onClick={() =>
+      <HStack justify={'between'} className="w-full pr-2">
+        <HStack>
+          <AreaFacetFilter
+            title="Район"
+            selectedValues={districts}
+            setSelectedValues={(value) =>
               navigate({
                 search: (prev: GetOldBuldingsDto) => ({
                   ...prev,
-                  districts: undefined,
+                  districts: value && value.length > 0 ? value : undefined,
                 }),
               })
             }
-            className="h-8 px-2 lg:px-3"
-          >
-            Сброс
-            <X className="ml-2 h-4 w-4" />
-          </Button>
-        )}
+          />
+          {districts && districts.length > 0 && (
+            <Button
+              variant="ghost"
+              onClick={() =>
+                navigate({
+                  search: (prev: GetOldBuldingsDto) => ({
+                    ...prev,
+                    districts: undefined,
+                  }),
+                })
+              }
+              className="h-8 px-2 lg:px-3"
+            >
+              Сброс
+              <X className="ml-2 h-4 w-4" />
+            </Button>
+          )}
+        </HStack>
+        <HStack gap="s">
+          {buildings && buildings.length > 0 && (
+            <>
+              {isFetching && (
+                <LoaderCircle className="stroke-muted-foreground animate-spin" />
+              )}
+              <div className="text-muted-foreground">
+                {buildings.length} из {buildings[0].totalCount}
+              </div>
+            </>
+          )}
+        </HStack>
       </HStack>
-      {/* <Card className="w-full p-4"> */}
-
-      {/* {isLoading && 'Loading...'}
-      {isFetching && 'Fetching...'} */}
       <ScrollArea
         className="relative h-[calc(100vh-4rem)] w-full overflow-auto rounded-md border "
         ref={containerRef}
         onScroll={(e) => {
-          console.log(containerRef?.current?.scrollTop);
           onBottomReached({
-            callback: () => console.log('bottom'),
+            callback: () => setOffset(buildings?.length || 0),
             containerRefElement: containerRef.current,
-            disabled: false,
-            margin: 100,
+            disabled:
+              isFetching ||
+              (buildings && buildings.length >= buildings[0].totalCount),
+            margin: 1500,
           });
         }}
       >
@@ -160,7 +132,6 @@ const OldBuildingsPage = (): JSX.Element => {
           isFetching={isLoading || isFetching}
         />
       </ScrollArea>
-      {/* </Card> */}
     </VStack>
   );
 };

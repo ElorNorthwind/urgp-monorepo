@@ -63,7 +63,7 @@ export const Route = createFileRoute('/oldbuildings')({
   component: OldBuildings,
   // validateSearch: getOldBuldings,
   validateSearch: (search) => {
-    return getOldBuldings.parse(search);
+    return getOldBuldings.omit({ offset: true }).parse(search);
   },
 
   // loaderDeps: ({ search: dto }) => dto,

@@ -21,7 +21,7 @@ export const oldBuildingsApi = rtkApi.injectEndpoints({
 
       // Only have one cache entry because the arg always maps to one string
       serializeQueryArgs: ({ queryArgs, endpointDefinition, endpointName }) => {
-        return { ...queryArgs, page: undefined };
+        return { ...queryArgs, offset: undefined };
       },
       // Always merge incoming data to the cache entry
       merge: (currentCache, newItems) => {
@@ -29,7 +29,7 @@ export const oldBuildingsApi = rtkApi.injectEndpoints({
       },
       // Refetch when the page arg changes
       forceRefetch({ currentArg, previousArg }) {
-        return currentArg?.page !== previousArg?.page;
+        return currentArg?.offset !== previousArg?.offset;
       },
 
       // serializeQueryArgs: (endpoint) => {

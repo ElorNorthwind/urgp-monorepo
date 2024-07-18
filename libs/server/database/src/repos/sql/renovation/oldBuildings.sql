@@ -177,7 +177,8 @@ SELECT
 			'attention', COALESCE(at.deviation_attention, 0),
 			'risk', COALESCE(at.deviation_risk, 0)
 		)
-	) as appartments
+	) as appartments,
+	COUNT(*) OVER() as "totalCount"
 FROM renovation.buildings_old o
 LEFT JOIN old_dates_flat od ON od.building_id = o.id
 LEFT JOIN renovation.relocation_types t ON t.id = o.relocation_type

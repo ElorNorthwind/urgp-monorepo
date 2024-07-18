@@ -67,4 +67,5 @@ export type OldBuilding = {
   newBuildingConstructions: NewBuilding[] | null;
   newBuildingMovements: NewBuilding[] | null;
   appartments: AppartmentCounts;
+  totalCount: number;
 };
