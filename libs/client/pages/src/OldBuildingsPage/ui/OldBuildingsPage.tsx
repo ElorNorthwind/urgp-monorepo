@@ -1,17 +1,33 @@
 import {
+  oldBuildingsApi,
   oldBuildingsColumns,
-  OldBuildingsFilter,
   useOldBuldings,
 } from '@urgp/client/entities';
 import {
   getRouteApi,
+  Link,
   useLoaderData,
   useNavigate,
   useRouteContext,
 } from '@tanstack/react-router';
-import { Button, DataTable, HStack, VStack } from '@urgp/client/shared';
+import {
+  Button,
+  DataTable,
+  HStack,
+  onBottomReached,
+  rtkApi,
+  ScrollArea,
+  store,
+  VStack,
+} from '@urgp/client/shared';
 import { AreaFacetFilter } from '@urgp/client/widgets';
-import { useEffect, useState } from 'react';
+import {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { X } from 'lucide-react';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
 
@@ -43,15 +59,54 @@ const OldBuildingsPage = (): JSX.Element => {
   }, [districts, navigate]);
 
   const {
-    data: buildings,
+    data,
+    currentData: buildings,
+    isUninitialized,
+    isSuccess,
     isLoading,
     isFetching,
   } = useOldBuldings({ limit, page, okrug, districts });
 
+  // const [buildings] = useLazyOldBuildings({ limit, page, okrug, districts })
+
+  // const onScroll = useCallback(() => {
+  //   console.log(document.body.scrollTop);
+  //   onBottomReached({
+  //     callback: () => console.log('bottom'),
+  //     containerRefElement: document.body,
+  //     disabled: false,
+  //     margin: 100,
+  //   });
+  // }, []);
+
+  // useEffect(() => {
+  //   window.addEventListener('scroll', onScroll);
+  //   return window.removeEventListener('scroll', onScroll);
+  // }, [onScroll]);
+
+  const containerRef = useRef() as MutableRefObject<HTMLDivElement>;
   return (
-    <VStack gap="s" align="start" className="relative w-full p-2">
+    <VStack
+      gap="s"
+      align="start"
+      className="relative  w-full overflow-auto  p-2"
+    >
       {/* <OldBuildingsFilter /> */}
       <HStack>
+        {/* <Link
+          from="/oldbuildings"
+          to="/oldbuildings"
+          search={(prev: GetOldBuldingsDto) => ({ ...prev, page: 1 })}
+        >
+          1
+        </Link>
+        <Link
+          from="/oldbuildings"
+          to="/oldbuildings"
+          search={(prev: GetOldBuldingsDto) => ({ ...prev, page: 2 })}
+        >
+          2
+        </Link> */}
         <AreaFacetFilter
           title="Район"
           selectedValues={districts}
@@ -86,11 +141,25 @@ const OldBuildingsPage = (): JSX.Element => {
 
       {/* {isLoading && 'Loading...'}
       {isFetching && 'Fetching...'} */}
-      <DataTable
-        columns={oldBuildingsColumns}
-        data={buildings || []}
-        isFetching={isLoading || isFetching}
-      />
+      <ScrollArea
+        className="relative h-[calc(100vh-4rem)] w-full overflow-auto rounded-md border "
+        ref={containerRef}
+        onScroll={(e) => {
+          console.log(containerRef?.current?.scrollTop);
+          onBottomReached({
+            callback: () => console.log('bottom'),
+            containerRefElement: containerRef.current,
+            disabled: false,
+            margin: 100,
+          });
+        }}
+      >
+        <DataTable
+          columns={oldBuildingsColumns}
+          data={buildings || []}
+          isFetching={isLoading || isFetching}
+        />
+      </ScrollArea>
       {/* </Card> */}
     </VStack>
   );

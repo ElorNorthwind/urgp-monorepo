@@ -33,41 +33,29 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="relative w-full rounded-md border">
-      <Table className="">
-        <TableHeader className="sticky top-0 z-10 bg-clip-padding text-center backdrop-blur-md backdrop-brightness-95">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody className="relative">
-          {isFetching && (
-            <VStack
-              align="center"
-              justify="center"
-              className="absolute inset-0 z-10 bg-white bg-opacity-90" // backdrop-blur backdrop-brightness-110"
-            >
-              <HStack>
-                <LoaderCircle className="stroke-muted-foreground h-10 w-10 animate-spin" />
-                <div className="text-2xl">Загрузка...</div>
-              </HStack>
-            </VStack>
-          )}
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+    // <div className="relative w-full overflow-clip rounded-md border">
+    <Table className="">
+      <TableHeader className="sticky top-0 z-10 bg-clip-padding text-center backdrop-blur-md backdrop-brightness-95">
+        {table.getHeaderGroups().map((headerGroup) => (
+          <TableRow key={headerGroup.id}>
+            {headerGroup.headers.map((header) => {
+              return (
+                <TableHead key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </TableHead>
+              );
+            })}
+          </TableRow>
+        ))}
+      </TableHeader>
+      <TableBody className="relative">
+        {table.getRowModel().rows?.length
+          ? table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
@@ -79,15 +67,28 @@ export function DataTable<TData, TValue>({
                 ))}
               </TableRow>
             ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                {isFetching ? '' : 'Нет данных'}
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+          : !isFetching && (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  Нет данных
+                </TableCell>
+              </TableRow>
+            )}
+        {isFetching && (
+          <TableRow>
+            <TableCell colSpan={columns.length} className="h-24 text-center">
+              <HStack className="h-full" align="center" justify="center">
+                <LoaderCircle className="stroke-muted-foreground h-10 w-10 animate-spin" />
+                <div className="text-2xl">Загрузка...</div>
+              </HStack>
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+    // </div>
   );
 }

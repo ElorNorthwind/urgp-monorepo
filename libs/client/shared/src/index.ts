@@ -17,6 +17,7 @@ export * from './ui/components/data-table';
 export * from './ui/components/badge';
 export * from './ui/components/facet-filter';
 export * from './ui/components/progress';
+export * from './ui/components/scroll-area';
 
 // export layouts
 export * from './ui/layouts/main';
@@ -25,6 +26,7 @@ export * from './ui/layouts/main';
 export * from './lib/cn';
 export * from './lib/getDirtyValues';
 export * from './lib/debounce';
+export * from './lib/onBottomReached';
 
 // export api
 export * from './api/rtkApi';
