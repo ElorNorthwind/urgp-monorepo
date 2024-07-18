@@ -32,7 +32,7 @@ export class RenovationRepository {
 
   // Returns old houses for renovation;
   getOldBuildings(dto: GetOldBuldingsDto): Promise<OldBuilding[]> {
-    const { limit = 100, offset = 0, okrug, districts } = dto;
+    const { limit = 500, offset = 0, okrug, districts } = dto;
     const where = [];
     if (okrug) {
       where.push(`okrug = '${okrug}'`);
@@ -51,7 +51,7 @@ export class RenovationRepository {
 
   // Returns old houses for renovation;
   getOldAppartments(dto: GetOldAppartmentsDto): Promise<OldAppartment[]> {
-    const { limit = 100, offset = 0, okrug, districts, buildingId } = dto;
+    const { limit = 500, offset = 0, okrug, districts, buildingId } = dto;
     const where = [];
     if (okrug) {
       where.push(`okrug = '${okrug}'`);

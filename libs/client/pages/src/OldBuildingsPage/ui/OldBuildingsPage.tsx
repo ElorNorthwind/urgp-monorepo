@@ -48,7 +48,7 @@ const OldBuildingsPage = (): JSX.Element => {
       containerRefElement: containerRef.current,
       disabled:
         isFetching ||
-        (buildings && buildings.length >= buildings[0].totalCount),
+        (buildings && buildings?.length >= buildings?.[0].totalCount),
       margin: 1500,
     });
 
