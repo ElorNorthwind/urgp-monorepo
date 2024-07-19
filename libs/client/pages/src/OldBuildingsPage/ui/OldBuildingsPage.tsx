@@ -11,13 +11,13 @@ const OldBuildingsPage = (): JSX.Element => {
     limit,
     okrug,
     districts,
-    relocationType,
-    status,
-    dificulty,
-    deviation,
-    relocationAge,
-    relocationStatus,
-    adress,
+    // relocationType,
+    // status,
+    // dificulty,
+    // deviation,
+    // relocationAge,
+    // relocationStatus,
+    // adress,
   } = getRouteApi('/oldbuildings').useSearch() as GetOldBuldingsDto;
 
   const navigate = useNavigate({ from: '/oldbuildings' });

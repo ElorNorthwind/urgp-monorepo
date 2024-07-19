@@ -16,14 +16,7 @@ import {
 import { HStack } from './stack';
 import { LoaderCircle } from 'lucide-react';
 import { ScrollArea } from './scroll-area';
-import {
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { onBottomReached } from '../../lib/onBottomReached';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '../../lib/cn';
 import { useVirtualizer } from '@tanstack/react-virtual';
 
@@ -126,7 +119,6 @@ export function VirtualDataTable<TData, TValue>({
                     )}
                     style={{
                       display: 'flex',
-                      // width: `max(${Math.floor((header.getSize() / table.getTotalSize()) * 100)}%, ${header.getSize()}px)`,
                       width: `${Math.floor((header.getSize() / table.getTotalSize()) * 100)}%`,
                       minWidth: `${header.getSize()}px`,
                     }}
@@ -175,7 +167,6 @@ export function VirtualDataTable<TData, TValue>({
                         )}
                         style={{
                           display: 'flex',
-                          // width: `max(${Math.floor((cell.column.getSize() / table.getTotalSize()) * 100)}%, ${cell.column.getSize()}px)`,
                           width: `${Math.floor((cell.column.getSize() / table.getTotalSize()) * 100)}%`,
                           minWidth: `${cell.column.getSize()}px`,
                         }}
