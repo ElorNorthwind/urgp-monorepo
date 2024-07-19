@@ -1,5 +1,9 @@
 import { oldBuildingsColumns, useOldBuldings } from '@urgp/client/entities';
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import {
+  getRouteApi,
+  useLoaderData,
+  useNavigate,
+} from '@tanstack/react-router';
 import {
   Button,
   DataTable,
@@ -41,6 +45,8 @@ const OldBuildingsPage = (): JSX.Element => {
     isLoading,
     isFetching,
   } = useOldBuldings({ limit, offset, okrug, districts });
+
+  // const loaderData = useLoaderData({ from: '/oldbuildings' });
 
   useEffect(() => {
     onBottomReached({
