@@ -1,26 +1,8 @@
 import { oldBuildingsColumns, useOldBuldings } from '@urgp/client/entities';
-import {
-  getRouteApi,
-  useLoaderData,
-  useNavigate,
-} from '@tanstack/react-router';
-import {
-  Button,
-  DataTable,
-  HStack,
-  onBottomReached,
-  ScrollArea,
-  VirtualDataTable,
-  VStack,
-} from '@urgp/client/shared';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import { Button, HStack, VirtualDataTable, VStack } from '@urgp/client/shared';
 import { AreaFacetFilter } from '@urgp/client/widgets';
-import {
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useState } from 'react';
 import { LoaderCircle, X } from 'lucide-react';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
 
@@ -58,13 +40,8 @@ const OldBuildingsPage = (): JSX.Element => {
     });
   }, [buildings, districts, isFetching, navigate]);
 
-  const containerRef = useRef() as MutableRefObject<HTMLDivElement>;
   return (
-    <VStack
-      gap="s"
-      align="start"
-      className="relative  w-full overflow-auto  p-2"
-    >
+    <VStack gap="s" align="start" className="relative w-full p-2">
       <HStack justify={'between'} className="w-full pr-2">
         <HStack>
           <AreaFacetFilter
