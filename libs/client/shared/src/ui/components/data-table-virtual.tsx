@@ -15,7 +15,13 @@ import {
 import { HStack } from './stack';
 import { LoaderCircle } from 'lucide-react';
 import { ScrollArea } from './scroll-area';
-import { MutableRefObject, useCallback, useEffect, useRef } from 'react';
+import {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { onBottomReached } from '../../lib/onBottomReached';
 import { cn } from '../../lib/cn';
 
@@ -45,17 +51,21 @@ export function VirtualDataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
   });
   const { rows } = table.getRowModel();
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const onCallbackOnBottomReached = useCallback(
     (containerRefElement?: HTMLDivElement | null) => {
-      if (containerRefElement && callbackFn) {
+      if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
+        setIsScrolled(scrollTop > 0);
         if (
           scrollHeight - scrollTop - clientHeight < callbackMargin &&
           !isFetching &&
           data.length < (totalCount ?? 0)
         ) {
-          callbackFn();
+          if (callbackFn) {
+            callbackFn();
+          }
         }
       }
     },
@@ -69,15 +79,17 @@ export function VirtualDataTable<TData, TValue>({
 
   return (
     <ScrollArea
-      className={cn(
-        'relative w-full overflow-auto rounded-md border ',
-        className,
-      )}
+      className={cn('relative overflow-auto rounded-md border ', className)}
       ref={tableContainerRef}
       onScroll={(e) => onCallbackOnBottomReached(e.target as HTMLDivElement)}
     >
       <Table className="">
-        <TableHeader className="sticky top-0 z-10 bg-clip-padding text-center backdrop-blur-md backdrop-brightness-95">
+        <TableHeader
+          className={cn(
+            'sticky top-0 z-10',
+            isScrolled && 'shadow backdrop-blur-md',
+          )}
+        >
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {

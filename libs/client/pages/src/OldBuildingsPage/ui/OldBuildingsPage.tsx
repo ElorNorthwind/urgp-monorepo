@@ -111,7 +111,7 @@ const OldBuildingsPage = (): JSX.Element => {
         </HStack>
       </HStack>
       <VirtualDataTable
-        className="h-[calc(100vh-4rem)]"
+        className="h-[calc(100vh-4rem)] w-full"
         columns={oldBuildingsColumns}
         data={buildings || []}
         isFetching={isLoading || isFetching}
