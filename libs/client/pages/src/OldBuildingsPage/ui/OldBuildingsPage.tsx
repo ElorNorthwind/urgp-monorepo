@@ -10,6 +10,7 @@ import {
   HStack,
   onBottomReached,
   ScrollArea,
+  VirtualDataTable,
   VStack,
 } from '@urgp/client/shared';
 import { AreaFacetFilter } from '@urgp/client/widgets';
@@ -49,15 +50,6 @@ const OldBuildingsPage = (): JSX.Element => {
   // const loaderData = useLoaderData({ from: '/oldbuildings' });
 
   useEffect(() => {
-    onBottomReached({
-      callback: () => setOffset(buildings?.length || 0),
-      containerRefElement: containerRef.current,
-      disabled:
-        isFetching ||
-        (buildings && buildings?.length >= buildings?.[0].totalCount),
-      margin: 1500,
-    });
-
     navigate({
       search: (prev: GetOldBuldingsDto) => ({
         ...prev,
@@ -118,26 +110,15 @@ const OldBuildingsPage = (): JSX.Element => {
           )}
         </HStack>
       </HStack>
-      <ScrollArea
-        className="relative h-[calc(100vh-4rem)] w-full overflow-auto rounded-md border "
-        ref={containerRef}
-        onScroll={(e) => {
-          onBottomReached({
-            callback: () => setOffset(buildings?.length || 0),
-            containerRefElement: containerRef.current,
-            disabled:
-              isFetching ||
-              (buildings && buildings.length >= buildings[0].totalCount),
-            margin: 1500,
-          });
-        }}
-      >
-        <DataTable
-          columns={oldBuildingsColumns}
-          data={buildings || []}
-          isFetching={isLoading || isFetching}
-        />
-      </ScrollArea>
+      <VirtualDataTable
+        className="h-[calc(100vh-4rem)]"
+        columns={oldBuildingsColumns}
+        data={buildings || []}
+        isFetching={isLoading || isFetching}
+        totalCount={buildings?.[0].totalCount ?? 0}
+        callbackFn={() => setOffset(buildings?.length || 0)}
+        callbackMargin={1500}
+      />
     </VStack>
   );
 };
