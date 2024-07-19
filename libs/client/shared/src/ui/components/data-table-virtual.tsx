@@ -2,6 +2,7 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  Row,
   useReactTable,
 } from '@tanstack/react-table';
 import {
@@ -24,6 +25,7 @@ import {
 } from 'react';
 import { onBottomReached } from '../../lib/onBottomReached';
 import { cn } from '../../lib/cn';
+import { useVirtualizer } from '@tanstack/react-virtual';
 
 interface VirtualDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -49,8 +51,27 @@ export function VirtualDataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    defaultColumn: {
+      size: 200, //starting column size
+      // minSize: 50, //enforced during column resizing
+      // maxSize: 500, //enforced during column resizing
+    },
   });
+
   const { rows } = table.getRowModel();
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    estimateSize: () => 73, //estimate row height for accurate scrollbar dragging
+    getScrollElement: () => tableContainerRef.current,
+    // measure dynamic row height, except in firefox because it measures table border height incorrectly
+    measureElement:
+      typeof window !== 'undefined' &&
+      navigator.userAgent.indexOf('Firefox') === -1
+        ? (element) => element?.getBoundingClientRect().height
+        : undefined,
+    overscan: 5,
+  });
+
   const [isScrolled, setIsScrolled] = useState(false);
 
   const onCallbackOnBottomReached = useCallback(
@@ -79,22 +100,37 @@ export function VirtualDataTable<TData, TValue>({
 
   return (
     <ScrollArea
-      className={cn('relative overflow-auto rounded-md border ', className)}
+      className={cn('relative overflow-auto rounded-md border', className)}
       ref={tableContainerRef}
       onScroll={(e) => onCallbackOnBottomReached(e.target as HTMLDivElement)}
     >
-      <Table className="">
+      <Table className="gri">
         <TableHeader
           className={cn(
-            'sticky top-0 z-10',
+            'sticky top-0 z-10 grid',
             isScrolled && 'shadow backdrop-blur-md',
           )}
         >
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow
+              key={headerGroup.id}
+              style={{ display: 'flex' }}
+              className=""
+            >
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className={cn(
+                      'items-center justify-items-center overflow-y-clip',
+                    )}
+                    style={{
+                      display: 'flex',
+                      // width: `max(${Math.floor((header.getSize() / table.getTotalSize()) * 100)}%, ${header.getSize()}px)`,
+                      width: `${Math.floor((header.getSize() / table.getTotalSize()) * 100)}%`,
+                      minWidth: `${header.getSize()}px`,
+                    }}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -107,36 +143,68 @@ export function VirtualDataTable<TData, TValue>({
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="relative">
+        <TableBody
+          style={{
+            display: 'grid',
+            height: `${rowVirtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
+            position: 'relative', //needed for absolute positioning of rows
+          }}
+        >
           {table.getRowModel().rows?.length
-            ? table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+            ? rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                const row = rows[virtualRow.index] as Row<TData>;
+                return (
+                  <TableRow
+                    key={row.id}
+                    className="overflow-y-clip"
+                    data-state={row.getIsSelected() && 'selected'}
+                    data-index={virtualRow.index} //needed for dynamic row height measurement
+                    ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
+                    style={{
+                      display: 'flex',
+                      position: 'absolute',
+                      transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scroll
+                      width: '100%',
+                    }}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        className={cn(
+                          'items-center justify-items-center overflow-y-clip',
+                        )}
+                        style={{
+                          display: 'flex',
+                          // width: `max(${Math.floor((cell.column.getSize() / table.getTotalSize()) * 100)}%, ${cell.column.getSize()}px)`,
+                          width: `${Math.floor((cell.column.getSize() / table.getTotalSize()) * 100)}%`,
+                          minWidth: `${cell.column.getSize()}px`,
+                        }}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                );
+              })
             : !isFetching && (
-                <TableRow>
+                <TableRow className="flex hover:bg-white/0">
                   <TableCell
                     colSpan={columns.length}
-                    className="h-24 text-center"
+                    className="h-24 w-full text-center"
                   >
                     Нет данных
                   </TableCell>
                 </TableRow>
               )}
           {isFetching && (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+            <TableRow className="flex hover:bg-white/0">
+              <TableCell
+                colSpan={columns.length}
+                className="h-24 w-full text-center"
+              >
                 <HStack className="h-full" align="center" justify="center">
                   <LoaderCircle className="stroke-muted-foreground h-10 w-10 animate-spin" />
                   <div className="text-2xl">Загрузка...</div>

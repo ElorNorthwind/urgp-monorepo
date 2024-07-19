@@ -98,7 +98,7 @@ const OldBuildingsPage = (): JSX.Element => {
           )}
         </HStack>
         <HStack gap="s">
-          {buildings && buildings.length > 0 && (
+          {buildings && buildings.length > 0 && buildings[0].totalCount && (
             <>
               {isFetching && (
                 <LoaderCircle className="stroke-muted-foreground animate-spin" />

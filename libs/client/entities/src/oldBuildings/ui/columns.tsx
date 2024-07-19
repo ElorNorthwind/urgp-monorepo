@@ -1,4 +1,4 @@
-import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
+import { createColumnHelper } from '@tanstack/react-table';
 import { HStack, Progress, VStack } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
 import {
@@ -13,6 +13,7 @@ const columnHelper = createColumnHelper<OldBuilding>();
 export const oldBuildingsColumns = [
   columnHelper.accessor('district', {
     header: 'Район',
+    size: 120,
     cell: (props) => {
       return (
         <VStack gap={'none'} justify={'center'} align={'start'} className="">
@@ -26,9 +27,11 @@ export const oldBuildingsColumns = [
   }),
   columnHelper.accessor('adress', {
     header: 'Адрес',
+    size: 320,
   }),
   columnHelper.accessor('relocationType', {
     header: 'Тип переселения',
+    size: 180,
     cell: (props) => {
       return (
         <VStack gap={'none'} justify={'center'} align={'start'} className="">
@@ -43,8 +46,7 @@ export const oldBuildingsColumns = [
 
   columnHelper.accessor('buildingDeviation', {
     header: 'Статус',
-    size: 500,
-    maxSize: 500,
+    size: 180,
     cell: (props) => {
       const icon = {
         'Без отклонений': (
@@ -77,6 +79,7 @@ export const oldBuildingsColumns = [
   }),
   columnHelper.accessor('terms.actual.firstResetlementStart', {
     header: 'Старт',
+    size: 100,
     cell: ({ cell, row }) => {
       const date = cell.getValue();
       const planDate = row.original.terms.plan.firstResetlementStart;
@@ -94,6 +97,7 @@ export const oldBuildingsColumns = [
   }),
   columnHelper.accessor((row) => row.totalApartments.toString(), {
     header: 'Квартир',
+    size: 100,
     cell: (info) => {
       return info.row.original.totalApartments > 0 ? (
         <div className=" min-w-[30px]">{info.getValue()}</div>
@@ -104,6 +108,7 @@ export const oldBuildingsColumns = [
   }),
   columnHelper.accessor((row) => row.appartments.status.contract.toString(), {
     header: 'Прогресс',
+    size: 220,
     cell: (props) => {
       const donePercent = Math.round(
         (props.row.original.appartments.status.contract /
