@@ -2,6 +2,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "noEmit": false,
     "paths": {
       "@urgp/client/shared": ["libs/client/shared/src/index.ts"],
       "@urgp/client/shared/*": ["libs/client/shared/src/*"]
