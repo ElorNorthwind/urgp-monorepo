@@ -30,18 +30,22 @@ const OldBuildingsPage = (): JSX.Element => {
     currentData: buildings,
     isLoading,
     isFetching,
-  } = useOldBuldings({ limit, offset, okrug, districts });
+  } = useOldBuldings({ limit, offset, okrug, districts, relocationType });
 
   // const loaderData = useLoaderData({ from: '/oldbuildings' });
 
-  useEffect(() => {
-    navigate({
-      search: (prev: GetOldBuldingsDto) => ({
-        ...prev,
-        districts: districts && districts.length > 0 ? districts : undefined,
-      }),
-    });
-  }, [buildings, districts, isFetching, navigate]);
+  // useEffect(() => {
+  //   navigate({
+  //     search: (prev: GetOldBuldingsDto) => ({
+  //       ...prev,
+  //       districts: districts && districts.length > 0 ? districts : undefined,
+  //       relocationType:
+  //         relocationType && relocationType.length > 0
+  //           ? relocationType
+  //           : undefined,
+  //     }),
+  //   });
+  // }, [buildings, districts, relocationType, isFetching, navigate]);
 
   return (
     <VStack gap="s" align="start" className="relative w-full p-2">
@@ -65,7 +69,7 @@ const OldBuildingsPage = (): JSX.Element => {
               navigate({
                 search: (prev: GetOldBuldingsDto) => ({
                   ...prev,
-                  relocationType: value,
+                  relocationType: value && value.length > 0 ? value : undefined,
                 }),
               })
             }

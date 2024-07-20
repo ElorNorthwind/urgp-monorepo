@@ -1,8 +1,6 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "noEmit": false,
-    "composite": true,
     "allowJs": false,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true

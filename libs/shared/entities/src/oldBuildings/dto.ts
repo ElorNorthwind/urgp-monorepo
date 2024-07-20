@@ -4,16 +4,27 @@ export const getOldBuldings = z
   .object({
     limit: z.coerce.number().min(1).default(500).or(z.literal('ALL')),
     offset: z.coerce.number().min(0).default(0),
-    // page: z.coerce.number().min(1).default(1),
     okrug: z.string(),
     districts: z
       .string()
       .transform((value) => value.split(','))
       .pipe(z.string().array())
       .or(z.string().array()),
+    relocationType: z
+      .string()
+      .transform((value) => value.split(','))
+      .pipe(
+        z.array(
+          z
+            .string()
+            .transform((value) => Number(value))
+            .pipe(z.number()),
+        ),
+      )
+      .or(z.number().array()),
 
-    // z.string().array(),
-    relocationType: z.number().array(),
+    // relocationType: z.array(z.number().int());
+
     status: z.number().array(),
     dificulty: z.number().array(),
     deviation: z.enum(['done', 'normal', 'attention', 'risk']).array(),

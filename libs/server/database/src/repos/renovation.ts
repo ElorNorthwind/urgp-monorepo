@@ -32,13 +32,16 @@ export class RenovationRepository {
 
   // Returns old houses for renovation;
   getOldBuildings(dto: GetOldBuldingsDto): Promise<OldBuilding[]> {
-    const { limit = 500, offset = 0, okrug, districts } = dto;
+    const { limit = 500, offset = 0, okrug, districts, relocationType } = dto;
     const where = [];
     if (okrug) {
       where.push(`okrug = '${okrug}'`);
     }
     if (districts && districts.length > 0) {
       where.push(`district = ANY(ARRAY['${districts.join("','")}'])`);
+    }
+    if (relocationType && relocationType.length > 0) {
+      where.push(`o.relocation_type = ANY(ARRAY[${relocationType.join(',')}])`);
     }
 
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
