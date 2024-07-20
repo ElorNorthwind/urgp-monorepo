@@ -1,7 +1,10 @@
 import { oldBuildingsColumns, useOldBuldings } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { Button, HStack, VirtualDataTable, VStack } from '@urgp/client/shared';
-import { AreaFacetFilter } from '@urgp/client/widgets';
+import {
+  AreaFacetFilter,
+  RelocationTypeFacetFilter,
+} from '@urgp/client/widgets';
 import { useEffect, useState } from 'react';
 import { LoaderCircle, X } from 'lucide-react';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
@@ -11,7 +14,7 @@ const OldBuildingsPage = (): JSX.Element => {
     limit,
     okrug,
     districts,
-    // relocationType,
+    relocationType,
     // status,
     // dificulty,
     // deviation,
@@ -56,6 +59,18 @@ const OldBuildingsPage = (): JSX.Element => {
               })
             }
           />
+          <RelocationTypeFacetFilter
+            selectedValues={relocationType || []}
+            setSelectedValues={(value) =>
+              navigate({
+                search: (prev: GetOldBuldingsDto) => ({
+                  ...prev,
+                  relocationType: value,
+                }),
+              })
+            }
+          />
+
           {districts && districts.length > 0 && (
             <Button
               variant="ghost"

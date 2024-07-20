@@ -33,7 +33,12 @@ interface AreaFacetFilterProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 function AreaFacetFilter(props: AreaFacetFilterProps): JSX.Element {
-  const { selectedValues = [], className, title, setSelectedValues } = props;
+  const {
+    selectedValues = [],
+    className,
+    title = 'Район',
+    setSelectedValues,
+  } = props;
 
   const options: Option[] = Object.keys(areasFlat).reduce((acc, curr) => {
     return [

@@ -14,21 +14,24 @@ import {
   CommandSeparator,
 } from './command';
 
-type Option = {
-  value: string;
+type Option<TValue extends string | number> = {
+  value: TValue;
   label: string;
   icon?: React.ForwardRefExoticComponent<
     Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
   >;
 };
-interface FacetFilterProps extends React.HTMLAttributes<HTMLDivElement> {
-  options: Option[];
-  selectedValues: string[];
-  setSelectedValues: (value: string[]) => void;
+interface FacetFilterProps<TValue extends string | number>
+  extends React.HTMLAttributes<HTMLDivElement> {
+  options: Option<TValue>[];
+  selectedValues: TValue[];
+  setSelectedValues: (value: TValue[]) => void;
   title?: string;
 }
 
-function FacetFilter(props: FacetFilterProps): JSX.Element {
+function FacetFilter<TValue extends string | number>(
+  props: FacetFilterProps<TValue>,
+): JSX.Element {
   const { options, selectedValues, className, title, setSelectedValues } =
     props;
 
@@ -74,7 +77,7 @@ function FacetFilter(props: FacetFilterProps): JSX.Element {
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="min-w-[200px] p-0" align="start">
           <Command>
             <CommandInput placeholder={title} />
             <CommandList>

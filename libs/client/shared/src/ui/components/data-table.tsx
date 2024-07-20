@@ -28,7 +28,7 @@ interface DataTableProps<TData, TValue> {
   className?: string;
 }
 
-export function VirtualDataTable<TData, TValue>({
+export function DataTable<TData, TValue>({
   columns,
   data,
   isFetching = false,
