@@ -24,7 +24,7 @@ export const oldBuildingsColumns = [
 
   columnHelper.accessor('relocationType', {
     header: 'Тип переселения',
-    size: 180,
+    size: 200,
     cell: (props) => {
       return <RelocationTypeCell {...props} />;
     },

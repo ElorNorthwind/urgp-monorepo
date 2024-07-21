@@ -125,6 +125,7 @@ WITH old_dates_ranked AS (
 		CASE
 			WHEN at.deviation_risk > 0 THEN 'Есть риски'::text
 			WHEN at.deviation_attention > 0 THEN 'Требует внимания'::text
+			WHEN at.deviation_none + at.deviation_attention + at.deviation_risk = 0 AND at.deviation_done > 0 THEN 'Работа завершена'::text
 			ELSE 'Без отклонений'::text
 		END AS "buildingDeviation",
 		CASE

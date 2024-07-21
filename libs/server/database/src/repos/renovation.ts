@@ -51,19 +51,23 @@ export class RenovationRepository {
       where.push(`district = ANY(ARRAY['${districts.join("','")}'])`);
     }
     if (relocationType && relocationType.length > 0) {
-      where.push(`relocationType = ANY(ARRAY[${relocationType.join(',')}])`);
+      where.push(
+        `"relocationTypeId" = ANY(ARRAY[${relocationType.join(',')}])`,
+      );
     }
     if (deviation && deviation.length > 0) {
-      where.push(`buildingDeviation = ANY(ARRAY['${deviation.join("','")}'])`);
+      where.push(
+        `"buildingDeviation" = ANY(ARRAY['${deviation.join("','")}'])`,
+      );
     }
     if (relocationAge && relocationAge.length > 0) {
       where.push(
-        `buildingRelocationStartAge = ANY(ARRAY['${relocationAge.join("','")}'])`,
+        `"buildingRelocationStartAge" = ANY(ARRAY['${relocationAge.join("','")}'])`,
       );
     }
     if (relocationStatus && relocationStatus.length > 0) {
       where.push(
-        `buildingRelocationStatus = ANY(ARRAY['${relocationStatus.join("','")}'])`,
+        `"buildingRelocationStatus" = ANY(ARRAY['${relocationStatus.join("','")}'])`,
       );
     }
     if (adress && adress.length > 0) {
@@ -86,7 +90,7 @@ export class RenovationRepository {
       where.push(`okrug = '${okrug}'`);
     }
     if (districts && districts.length > 0) {
-      where.push(`district = ANY(ARRAY['${districts.join("','")}'])`);
+      where.push(`"district" = ANY(ARRAY['${districts.join("','")}'])`);
     }
     if (buildingId) {
       where.push(`"oldApartBuildingId" = '${buildingId}'`);

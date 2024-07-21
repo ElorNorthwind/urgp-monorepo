@@ -22,17 +22,17 @@ export const getOldBuldings = z
         ),
       )
       .or(z.number().array()),
-    deviation: z
-      .string()
-      .transform((value) => value.split(','))
-      .pipe(z.string().array())
-      .or(z.string().array()),
     relocationAge: z
       .string()
       .transform((value) => value.split(','))
       .pipe(z.string().array())
       .or(z.string().array()),
     relocationStatus: z
+      .string()
+      .transform((value) => value.split(','))
+      .pipe(z.string().array())
+      .or(z.string().array()),
+    deviation: z
       .string()
       .transform((value) => value.split(','))
       .pipe(z.string().array())

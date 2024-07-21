@@ -15,14 +15,14 @@ function RelocationStatusCell(
       gap="s"
       align={'center'}
       justify={'start'}
-      className="w-max flex-nowrap"
+      className="w-[180px] flex-nowrap"
     >
       {decoration?.icon && <decoration.icon className={decoration.className} />}
       <VStack gap="none" align={'start'}>
-        <div className="whitespace-nowrap text-xs">
+        <div className="truncate whitespace-nowrap text-xs">
           {props.row.original.buildingRelocationStatus}
         </div>
-        <div className="text-muted-foreground whitespace-nowrap text-xs">
+        <div className="text-muted-foreground truncate whitespace-nowrap text-xs">
           {props.row.original.buildingDeviation}
         </div>
       </VStack>

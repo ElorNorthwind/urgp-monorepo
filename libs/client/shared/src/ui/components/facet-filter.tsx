@@ -20,6 +20,7 @@ type Option<TValue extends string | number> = {
   icon?: React.ForwardRefExoticComponent<
     Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
   >;
+  className?: string;
 };
 interface FacetFilterProps<TValue extends string | number>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -120,7 +121,12 @@ function FacetFilter<TValue extends string | number>(
                         <CheckIcon className={cn('h-4 w-4')} />
                       </div>
                       {option.icon && (
-                        <option.icon className="text-muted-foreground mr-2 h-4 w-4" />
+                        <option.icon
+                          className={cn(
+                            'text-muted-foreground mr-2 h-4 w-4',
+                            option.className,
+                          )}
+                        />
                       )}
                       <span>{option.label}</span>
                       {/* {facets?.get(option.value) && (

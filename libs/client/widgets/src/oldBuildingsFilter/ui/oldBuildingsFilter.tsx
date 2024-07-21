@@ -2,7 +2,12 @@ import { Button, FacetFilter, HStack } from '@urgp/client/shared';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
 import { AreaFacetFilter } from './AreaFacetFilter';
-import { relocationTypes } from '@urgp/client/entities';
+import {
+  relocationAge,
+  relocationDeviations,
+  relocationStatus,
+  relocationTypes,
+} from '@urgp/client/entities';
 
 type OldBuildingsFilterProps = {
   filters: GetOldBuldingsDto;
@@ -27,7 +32,7 @@ const OldBuildingsFilter = ({
 
       <FacetFilter
         options={relocationTypes}
-        title={'Тип переселения'}
+        title={'Тип'}
         selectedValues={filters.relocationType}
         setSelectedValues={(value) =>
           setFilters({
@@ -36,11 +41,78 @@ const OldBuildingsFilter = ({
         }
       />
 
-      {(filters?.districts || filters?.relocationType) && (
+      <FacetFilter
+        options={relocationAge}
+        title={'Срок'}
+        selectedValues={filters.relocationAge}
+        setSelectedValues={(value) =>
+          setFilters({
+            relocationAge: value && value.length > 0 ? value : undefined,
+          })
+        }
+      />
+
+      <FacetFilter
+        options={relocationStatus}
+        title={'Статус'}
+        selectedValues={filters.relocationStatus}
+        setSelectedValues={(value) =>
+          setFilters({
+            relocationStatus: value && value.length > 0 ? value : undefined,
+          })
+        }
+      />
+
+      <FacetFilter
+        options={relocationDeviations}
+        title={'Отклонения'}
+        selectedValues={filters.deviation}
+        setSelectedValues={(value) =>
+          setFilters({
+            deviation: value && value.length > 0 ? value : undefined,
+          })
+        }
+      />
+      <Button
+        variant={'secondary'}
+        onClick={() =>
+          setFilters({
+            districts: undefined,
+            relocationType: [1],
+            relocationAge: [
+              'Менее месяца',
+              'От 1 до 2 месяцев',
+              'От 2 до 5 месяцев',
+              'От 5 до 8 месяцев',
+              'Более 8 месяцев',
+            ],
+            relocationStatus: undefined,
+            deviation: ['Есть риски', 'Требует внимания', 'Без отклонений'],
+            adress: undefined,
+          })
+        }
+        className="h-8 px-2 lg:px-3"
+      >
+        В работе
+      </Button>
+
+      {(filters?.districts ||
+        filters?.relocationType ||
+        filters?.relocationAge ||
+        filters.relocationStatus ||
+        filters?.deviation ||
+        filters?.adress) && (
         <Button
           variant="ghost"
           onClick={() =>
-            setFilters({ districts: undefined, relocationType: undefined })
+            setFilters({
+              districts: undefined,
+              relocationType: undefined,
+              relocationAge: undefined,
+              relocationStatus: undefined,
+              deviation: undefined,
+              adress: undefined,
+            })
           }
           className="h-8 px-2 lg:px-3"
         >

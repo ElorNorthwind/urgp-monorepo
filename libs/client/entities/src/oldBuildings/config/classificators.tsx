@@ -82,33 +82,6 @@ export const relocationAge = [
   },
 ];
 
-export const relocationDeviations = [
-  {
-    value: 'Завершено',
-    label: 'Завершено',
-    icon: CircleCheck,
-    className: 'text-emerald-500',
-  },
-  {
-    value: 'Без отклонений',
-    label: 'Без отклонений',
-    icon: CircleEllipsis,
-    className: 'text-blue-500',
-  },
-  {
-    value: 'Требует внимания',
-    label: 'Требует внимания',
-    icon: CircleAlert,
-    className: 'text-yellow-500',
-  },
-  {
-    value: 'Есть риски',
-    label: 'Есть риски',
-    icon: CircleX,
-    className: 'text-red-500',
-  },
-];
-
 export const relocationStatus = [
   {
     value: 'Завершено',
@@ -134,5 +107,32 @@ export const relocationStatus = [
     value: 'Не начато',
     label: 'Не начато',
     icon: Scan,
+  },
+];
+
+export const relocationDeviations = [
+  {
+    value: 'Работа завершена',
+    label: 'Работа завершена',
+    icon: CircleCheck,
+    className: 'text-emerald-500',
+  },
+  {
+    value: 'Без отклонений',
+    label: 'Без отклонений',
+    icon: CircleEllipsis,
+    className: 'text-blue-500',
+  },
+  {
+    value: 'Требует внимания',
+    label: 'Требует внимания',
+    icon: CircleAlert,
+    className: 'text-yellow-500',
+  },
+  {
+    value: 'Есть риски',
+    label: 'Есть риски',
+    icon: CircleX,
+    className: 'text-red-500',
   },
 ];
