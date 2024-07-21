@@ -10,7 +10,10 @@ export function debounce(func, timeout = 300) {
   };
 }
 
-export function useDebounce(value: string, delay = 300): string {
+export function useDebounce(
+  value: string | unknown,
+  delay = 300,
+): string | unknown {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {

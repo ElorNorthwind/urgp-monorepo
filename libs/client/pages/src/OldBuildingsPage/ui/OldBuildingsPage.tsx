@@ -1,12 +1,18 @@
 import { oldBuildingsColumns, useOldBuldings } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import { HStack, VirtualDataTable, VStack } from '@urgp/client/shared';
+import {
+  HStack,
+  useDebounce,
+  VirtualDataTable,
+  VStack,
+} from '@urgp/client/shared';
 import { LoadedResultCounter, OldBuildingsFilter } from '@urgp/client/widgets';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
 
 const OldBuildingsPage = (): JSX.Element => {
   const filters = getRouteApi('/oldbuildings').useSearch() as GetOldBuldingsDto;
+  const debouncedFilters = useDebounce(filters, 200);
 
   const navigate = useNavigate({ from: '/oldbuildings' });
   const [offset, setOffset] = useState(0);
@@ -15,7 +21,10 @@ const OldBuildingsPage = (): JSX.Element => {
     currentData: buildings,
     isLoading,
     isFetching,
-  } = useOldBuldings({ ...filters, offset });
+  } = useOldBuldings({
+    ...(debouncedFilters as Partial<GetOldBuldingsDto>),
+    offset,
+  });
 
   const setFilters = useCallback(
     (value: Partial<GetOldBuldingsDto>) => {
