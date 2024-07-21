@@ -3,7 +3,6 @@ import { CellContext } from '@tanstack/react-table';
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
   VStack,
 } from '@urgp/client/shared';

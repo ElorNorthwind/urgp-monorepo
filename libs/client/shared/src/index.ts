@@ -20,6 +20,7 @@ export * from './ui/components/progress';
 export * from './ui/components/scroll-area';
 export * from './ui/components/data-table-virtual';
 export * from './ui/components/tooltip';
+export * from './ui/components/hover-card';
 
 // export layouts
 export * from './ui/layouts/main';

@@ -10,6 +10,7 @@ import {
 import { LoadedResultCounter, OldBuildingsFilter } from '@urgp/client/widgets';
 import { useCallback, useState } from 'react';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
+import { HoverCard } from '@radix-ui/react-hover-card';
 
 const OldBuildingsPage = (): JSX.Element => {
   const filters = getRouteApi('/oldbuildings').useSearch() as GetOldBuldingsDto;
@@ -49,6 +50,7 @@ const OldBuildingsPage = (): JSX.Element => {
           isFetching={isFetching}
         />
       </HStack>
+      {/* <HoverCard> */}
       <TooltipProvider>
         <VirtualDataTable
           className="h-[calc(100vh-4rem)] w-full"
@@ -60,6 +62,7 @@ const OldBuildingsPage = (): JSX.Element => {
           callbackMargin={1500}
         />
       </TooltipProvider>
+      {/* </HoverCard> */}
     </VStack>
   );
 };
