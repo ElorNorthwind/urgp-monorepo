@@ -15,7 +15,7 @@ import {
   Separator,
 } from '@urgp/client/shared';
 import { CheckIcon, PlusCircleIcon } from 'lucide-react';
-import { areasFlat } from './areas';
+import { areasFlat } from '../config/areas';
 
 type Option = {
   value: string;

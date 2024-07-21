@@ -1,13 +1,34 @@
 import { oldBuildingsColumns, useOldBuldings } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import { Button, HStack, VirtualDataTable, VStack } from '@urgp/client/shared';
 import {
-  AreaFacetFilter,
-  RelocationTypeFacetFilter,
-} from '@urgp/client/widgets';
+  Button,
+  FacetFilter,
+  HStack,
+  VirtualDataTable,
+  VStack,
+} from '@urgp/client/shared';
+import { AreaFacetFilter, LoadedResultCounter } from '@urgp/client/widgets';
 import { useEffect, useState } from 'react';
-import { LoaderCircle, X } from 'lucide-react';
+import { Blocks, Building2, House, LoaderCircle, X } from 'lucide-react';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
+
+const relocationTypes = [
+  {
+    value: 1,
+    label: 'Полное переселение',
+    icon: House,
+  },
+  {
+    value: 2,
+    label: 'Частичное отселение',
+    icon: Blocks,
+  },
+  {
+    value: 3,
+    label: 'Многоэтапное отселение',
+    icon: Building2,
+  },
+];
 
 const OldBuildingsPage = (): JSX.Element => {
   const {
@@ -63,7 +84,9 @@ const OldBuildingsPage = (): JSX.Element => {
               })
             }
           />
-          <RelocationTypeFacetFilter
+          <FacetFilter
+            options={relocationTypes}
+            title={'Тип переселения'}
             selectedValues={relocationType || []}
             setSelectedValues={(value) =>
               navigate({
@@ -93,25 +116,18 @@ const OldBuildingsPage = (): JSX.Element => {
             </Button>
           )}
         </HStack>
-        <HStack gap="s">
-          {buildings && buildings.length > 0 && buildings[0].totalCount && (
-            <>
-              {isFetching && (
-                <LoaderCircle className="stroke-muted-foreground animate-spin" />
-              )}
-              <div className="text-muted-foreground">
-                {buildings.length} из {buildings[0].totalCount}
-              </div>
-            </>
-          )}
-        </HStack>
+        <LoadedResultCounter
+          currentCount={buildings?.length}
+          totalCount={buildings?.[0]?.totalCount}
+          isFetching={isFetching}
+        />
       </HStack>
       <VirtualDataTable
         className="h-[calc(100vh-4rem)] w-full"
         columns={oldBuildingsColumns}
         data={buildings || []}
         isFetching={isLoading || isFetching}
-        totalCount={buildings?.[0].totalCount ?? 0}
+        totalCount={buildings?.[0]?.totalCount ?? 0}
         callbackFn={() => setOffset(buildings?.length || 0)}
         callbackMargin={1500}
       />

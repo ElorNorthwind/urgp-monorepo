@@ -24,7 +24,7 @@ type Option<TValue extends string | number> = {
 interface FacetFilterProps<TValue extends string | number>
   extends React.HTMLAttributes<HTMLDivElement> {
   options: Option<TValue>[];
-  selectedValues: TValue[];
+  selectedValues?: TValue[];
   setSelectedValues: (value: TValue[]) => void;
   title?: string;
 }
@@ -32,8 +32,13 @@ interface FacetFilterProps<TValue extends string | number>
 function FacetFilter<TValue extends string | number>(
   props: FacetFilterProps<TValue>,
 ): JSX.Element {
-  const { options, selectedValues, className, title, setSelectedValues } =
-    props;
+  const {
+    options,
+    selectedValues = [],
+    className,
+    title,
+    setSelectedValues,
+  } = props;
 
   return (
     <div className={cn('flex items-center space-x-2', className)}>

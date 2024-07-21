@@ -22,7 +22,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 
 interface VirtualDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  data?: TData[];
   totalCount: number;
   isFetching: boolean;
   callbackMargin?: number;
@@ -32,7 +32,7 @@ interface VirtualDataTableProps<TData, TValue> {
 
 export function VirtualDataTable<TData, TValue>({
   columns,
-  data,
+  data = [],
   isFetching = false,
   totalCount,
   callbackMargin = 1000,
