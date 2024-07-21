@@ -113,91 +113,93 @@ WITH old_dates_ranked AS (
 		COUNT(*) FILTER (WHERE deviation = 'Риск') AS deviation_risk
 		FROM renovation.apartments_classified -- УВЫ зависимость от иного представления
 		GROUP BY old_apart_building_id
+), full_data AS (
+	SELECT 
+		o.id, 
+		o.okrug, 
+		o.district, 
+		o.adress, 
+		o.relocation_type as "relocationTypeId", 
+		t.type as "relocationType",
+		COALESCE(at.total, 0) as "totalApartments",
+		CASE
+			WHEN at.deviation_risk > 0 THEN 'Есть риски'::text
+			WHEN at.deviation_attention > 0 THEN 'Требует внимания'::text
+			ELSE 'Без отклонений'::text
+		END AS "buildingDeviation",
+		CASE
+			WHEN od.terms->'actual'->>'demolitionEnd' IS NOT NULL THEN 'Завершено'
+			WHEN od.terms->'actual'->>'firstResetlementStart' IS NULL THEN 'Не начато'
+			WHEN od.age < '1 month' THEN 'Менее месяца'
+			WHEN od.age < '2 month' THEN 'От 1 до 2 месяцев'
+			WHEN od.age < '5 month' THEN 'От 2 до 5 месяцев'
+			WHEN od.age < '8 month' THEN 'От 5 до 8 месяцев'
+			ELSE 'Более 8 месяцев'
+		END as "buildingRelocationStartAge",
+		CASE
+			WHEN od.terms->'actual'->>'demolitionEnd' IS NOT NULL THEN 'Завершено'
+			WHEN od.terms->'actual'->>'secontResetlementEnd' IS NOT NULL THEN 'Снос'
+			WHEN od.terms->'actual'->>'firstResetlementEnd' IS NOT NULL THEN 'Отселение'
+			WHEN od.terms->'actual'->>'firstResetlementStart' IS NULL THEN 'Не начато'
+			ELSE 'Переселение'
+		END as "buildingRelocationStatus",
+		o.terms_reason as "termsReason", 
+		od.terms as terms,
+		nc.new_building_constructions as "newBuildingConstructions",
+		nm.new_building_movements as "newBuildingMovements",
+		json_build_object(
+			'total', COALESCE(at.total, 0),
+			'status', json_build_object(
+				'empty', COALESCE(at.empty, 0),
+				'notStarted', COALESCE(at.not_started, 0),
+				'mfr', COALESCE(at.mfr, 0),
+				'inspection', COALESCE(at.inspection, 0),
+				'rejected', COALESCE(at.rejected, 0),
+				'reinspection', COALESCE(at.reinspection, 0),
+				'accepted', COALESCE(at.accepted, 0),
+				'rd', COALESCE(at.rd, 0),
+				'litigations', COALESCE(at.litigations, 0),
+				'litigationsDone', COALESCE(at.litigations_done, 0),
+				'contractProject', COALESCE(at.contract_project, 0),
+				'contractPrelimenatySigning', COALESCE(at.contract_prelimenary_signing, 0),
+				'contract', COALESCE(at.contract, 0)
+			), 
+			'difficulty', json_build_object(
+				'normal', COALESCE(at.difficulty_normal, 0),
+				'problem', COALESCE(at.difficulty_problem, 0),
+				'rejected', COALESCE(at.difficulty_rejected, 0),
+				'litigation', COALESCE(at.difficulty_litigation, 0),
+				'mfr', COALESCE(at.difficulty_mfr, 0)
+			),
+			'deviation', json_build_object(
+				'none', COALESCE(at.deviation_none, 0),
+				'attention', COALESCE(at.deviation_attention, 0),
+				'risk', COALESCE(at.deviation_risk, 0)
+			)
+		) as appartments,
+		COUNT(*) OVER() as "totalCount"
+	FROM renovation.buildings_old o
+	LEFT JOIN old_dates_flat od ON od.building_id = o.id
+	LEFT JOIN renovation.relocation_types t ON t.id = o.relocation_type
+	LEFT JOIN (
+		SELECT old_building_id, 
+			   JSON_AGG(construction) as new_building_constructions,
+			   STRING_AGG(construction_adress, '; ') as new_building_construction_list
+		FROM constructions_ranked 
+		WHERE rank = 1
+		GROUP BY old_building_id
+	) as nc ON nc.old_building_id = o.id
+	LEFT JOIN (
+		SELECT old_building_id, 
+			   JSON_AGG(movement) as new_building_movements,
+			   STRING_AGG(movement_adress, '; ') as new_building_movement_list
+		FROM movements_ranked 
+		WHERE rank = 1
+		GROUP BY old_building_id
+	) as nm ON nm.old_building_id = o.id
+	LEFT JOIN appartment_totals at ON at.building_id = o.id
 )
 
-SELECT 
-	o.id, 
-	o.okrug, 
-	o.district, 
-	o.adress, 
-	o.relocation_type as "relocationTypeId", 
-	t.type as "relocationType",
-	COALESCE(at.total, 0) as "totalApartments",
-	CASE
-		WHEN at.deviation_risk > 0 THEN 'Есть риски'::text
-		WHEN at.deviation_attention > 0 THEN 'Требует внимания'::text
-		ELSE 'Без отклонений'::text
-	END AS "buildingDeviation",
-	CASE
-		WHEN od.terms->'actual'->>'demolitionEnd' IS NOT NULL THEN 'Завершено'
-		WHEN od.terms->'actual'->>'firstResetlementStart' IS NULL THEN 'Не начато'
-		WHEN od.age < '1 month' THEN 'Менее месяца'
-		WHEN od.age < '2 month' THEN 'От 1 до 2 месяцев'
-		WHEN od.age < '5 month' THEN 'От 2 до 5 месяцев'
-		WHEN od.age < '8 month' THEN 'От 5 до 8 месяцев'
-		ELSE 'Более 8 месяцев'
-	END as "buildingRelocationStartAge",
-	CASE
-		WHEN od.terms->'actual'->>'demolitionEnd' IS NOT NULL THEN 'Завершено'
-		WHEN od.terms->'actual'->>'secontResetlementEnd' IS NOT NULL THEN 'Снос'
-		WHEN od.terms->'actual'->>'firstResetlementEnd' IS NOT NULL THEN 'Отселение'
-		WHEN od.terms->'actual'->>'firstResetlementStart' IS NULL THEN 'Не начато'
-		ELSE 'Переселение'
-	END as "buildingRelocationStatus",
-	o.terms_reason as "termsReason", 
-	od.terms as terms,
-	nc.new_building_constructions as "newBuildingConstructions",
-	nm.new_building_movements as "newBuildingMovements",
-	json_build_object(
-		'total', COALESCE(at.total, 0),
-		'status', json_build_object(
-			'empty', COALESCE(at.empty, 0),
-			'notStarted', COALESCE(at.not_started, 0),
-			'mfr', COALESCE(at.mfr, 0),
-			'inspection', COALESCE(at.inspection, 0),
-			'rejected', COALESCE(at.rejected, 0),
-			'reinspection', COALESCE(at.reinspection, 0),
-			'accepted', COALESCE(at.accepted, 0),
-			'rd', COALESCE(at.rd, 0),
-			'litigations', COALESCE(at.litigations, 0),
-			'litigationsDone', COALESCE(at.litigations_done, 0),
-			'contractProject', COALESCE(at.contract_project, 0),
-			'contractPrelimenatySigning', COALESCE(at.contract_prelimenary_signing, 0),
-			'contract', COALESCE(at.contract, 0)
-		), 
-		'difficulty', json_build_object(
-			'normal', COALESCE(at.difficulty_normal, 0),
-			'problem', COALESCE(at.difficulty_problem, 0),
-			'rejected', COALESCE(at.difficulty_rejected, 0),
-			'litigation', COALESCE(at.difficulty_litigation, 0),
-			'mfr', COALESCE(at.difficulty_mfr, 0)
-		),
-		'deviation', json_build_object(
-			'none', COALESCE(at.deviation_none, 0),
-			'attention', COALESCE(at.deviation_attention, 0),
-			'risk', COALESCE(at.deviation_risk, 0)
-		)
-	) as appartments,
-	COUNT(*) OVER() as "totalCount"
-FROM renovation.buildings_old o
-LEFT JOIN old_dates_flat od ON od.building_id = o.id
-LEFT JOIN renovation.relocation_types t ON t.id = o.relocation_type
-LEFT JOIN (
-	SELECT old_building_id, 
-	       JSON_AGG(construction) as new_building_constructions,
-	       STRING_AGG(construction_adress, '; ') as new_building_construction_list
-	FROM constructions_ranked 
-	WHERE rank = 1
-	GROUP BY old_building_id
-) as nc ON nc.old_building_id = o.id
-LEFT JOIN (
-	SELECT old_building_id, 
-	       JSON_AGG(movement) as new_building_movements,
-	       STRING_AGG(movement_adress, '; ') as new_building_movement_list
-	FROM movements_ranked 
-	WHERE rank = 1
-	GROUP BY old_building_id
-) as nm ON nm.old_building_id = o.id
-LEFT JOIN appartment_totals at ON at.building_id = o.id
+SELECT * FROM full_data
 ${conditions:raw}
 LIMIT ${limit:raw} OFFSET ${offset:raw};
