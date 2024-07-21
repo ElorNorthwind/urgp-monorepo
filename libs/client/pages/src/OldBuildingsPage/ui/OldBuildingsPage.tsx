@@ -7,7 +7,11 @@ import {
   VirtualDataTable,
   VStack,
 } from '@urgp/client/shared';
-import { AreaFacetFilter, LoadedResultCounter } from '@urgp/client/widgets';
+import {
+  AreaFacetFilter,
+  LoadedResultCounter,
+  OldBuildingsFilter,
+} from '@urgp/client/widgets';
 import { useEffect, useState } from 'react';
 import { Blocks, Building2, House, LoaderCircle, X } from 'lucide-react';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
@@ -53,25 +57,11 @@ const OldBuildingsPage = (): JSX.Element => {
     isFetching,
   } = useOldBuldings({ limit, offset, okrug, districts, relocationType });
 
-  // const loaderData = useLoaderData({ from: '/oldbuildings' });
-
-  // useEffect(() => {
-  //   navigate({
-  //     search: (prev: GetOldBuldingsDto) => ({
-  //       ...prev,
-  //       districts: districts && districts.length > 0 ? districts : undefined,
-  //       relocationType:
-  //         relocationType && relocationType.length > 0
-  //           ? relocationType
-  //           : undefined,
-  //     }),
-  //   });
-  // }, [buildings, districts, relocationType, isFetching, navigate]);
-
   return (
     <VStack gap="s" align="start" className="relative w-full p-2">
       <HStack justify={'between'} className="w-full pr-2">
-        <HStack>
+        <OldBuildingsFilter />
+        {/* <HStack>
           <AreaFacetFilter
             title="Район"
             selectedValues={districts}
@@ -115,7 +105,7 @@ const OldBuildingsPage = (): JSX.Element => {
               <X className="ml-2 h-4 w-4" />
             </Button>
           )}
-        </HStack>
+        </HStack> */}
         <LoadedResultCounter
           currentCount={buildings?.length}
           totalCount={buildings?.[0]?.totalCount}
