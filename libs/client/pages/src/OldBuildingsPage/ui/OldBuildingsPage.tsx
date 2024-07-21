@@ -1,34 +1,12 @@
 import { oldBuildingsColumns, useOldBuldings } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import {
-  Button,
-  FacetFilter,
-  HStack,
-  VirtualDataTable,
-  VStack,
-} from '@urgp/client/shared';
-import {
-  AreaFacetFilter,
-  LoadedResultCounter,
-  OldBuildingsFilter,
-} from '@urgp/client/widgets';
-import { useEffect, useState } from 'react';
-import { Blocks, Building2, House, LoaderCircle, X } from 'lucide-react';
+import { HStack, VirtualDataTable, VStack } from '@urgp/client/shared';
+import { LoadedResultCounter, OldBuildingsFilter } from '@urgp/client/widgets';
+import { useCallback, useEffect, useState } from 'react';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
 
 const OldBuildingsPage = (): JSX.Element => {
-  const {
-    limit,
-    okrug,
-    districts,
-    relocationType,
-    // status,
-    // dificulty,
-    // deviation,
-    // relocationAge,
-    // relocationStatus,
-    // adress,
-  } = getRouteApi('/oldbuildings').useSearch() as GetOldBuldingsDto;
+  const filters = getRouteApi('/oldbuildings').useSearch() as GetOldBuldingsDto;
 
   const navigate = useNavigate({ from: '/oldbuildings' });
   const [offset, setOffset] = useState(0);
@@ -37,57 +15,24 @@ const OldBuildingsPage = (): JSX.Element => {
     currentData: buildings,
     isLoading,
     isFetching,
-  } = useOldBuldings({ limit, offset, okrug, districts, relocationType });
+  } = useOldBuldings({ ...filters, offset });
+
+  const setFilters = useCallback(
+    (value: Partial<GetOldBuldingsDto>) => {
+      navigate({
+        search: (prev: GetOldBuldingsDto) => ({
+          ...prev,
+          ...value,
+        }),
+      });
+    },
+    [navigate],
+  );
 
   return (
     <VStack gap="s" align="start" className="relative w-full p-2">
       <HStack justify={'between'} className="w-full pr-2">
-        <OldBuildingsFilter />
-        {/* <HStack>
-          <AreaFacetFilter
-            title="Район"
-            selectedValues={districts}
-            setSelectedValues={(value) =>
-              navigate({
-                search: (prev: GetOldBuldingsDto) => ({
-                  ...prev,
-                  districts: value && value.length > 0 ? value : undefined,
-                }),
-              })
-            }
-          />
-          <FacetFilter
-            options={relocationTypes}
-            title={'Тип переселения'}
-            selectedValues={relocationType || []}
-            setSelectedValues={(value) =>
-              navigate({
-                search: (prev: GetOldBuldingsDto) => ({
-                  ...prev,
-                  relocationType: value && value.length > 0 ? value : undefined,
-                }),
-              })
-            }
-          />
-
-          {districts && districts.length > 0 && (
-            <Button
-              variant="ghost"
-              onClick={() =>
-                navigate({
-                  search: (prev: GetOldBuldingsDto) => ({
-                    ...prev,
-                    districts: undefined,
-                  }),
-                })
-              }
-              className="h-8 px-2 lg:px-3"
-            >
-              Сброс
-              <X className="ml-2 h-4 w-4" />
-            </Button>
-          )}
-        </HStack> */}
+        <OldBuildingsFilter filters={filters} setFilters={setFilters} />
         <LoadedResultCounter
           currentCount={buildings?.length}
           totalCount={buildings?.[0]?.totalCount}
