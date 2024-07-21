@@ -2,7 +2,7 @@ import { Button, FacetFilter, HStack } from '@urgp/client/shared';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
 import { AreaFacetFilter } from './AreaFacetFilter';
-import { relocationTypes } from '../config/relocationTypes';
+import { relocationTypes } from '@urgp/client/entities';
 
 type OldBuildingsFilterProps = {
   filters: GetOldBuldingsDto;
