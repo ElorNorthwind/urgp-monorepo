@@ -12,7 +12,7 @@ const columnHelper = createColumnHelper<OldBuilding>();
 export const oldBuildingsColumns = [
   columnHelper.accessor('district', {
     header: 'Район',
-    size: 140,
+    size: 160,
     cell: (props) => {
       return <AreaCell {...props} />;
     },
@@ -54,14 +54,8 @@ export const oldBuildingsColumns = [
     cell: (props) => {
       return <ApartmentsCell {...props} />;
     },
-    // cell: (info) => {
-    //   return info.row.original.totalApartments > 0 ? (
-    //     <div className="min-w-[30px]">{info.getValue()}</div>
-    //   ) : (
-    //     <div className="text-muted-foreground  min-w-[30px] ">-</div>
-    //   );
-    // },
   }),
+
   columnHelper.accessor((row) => row.apartments.deviation.done.toString(), {
     header: 'Ход работы',
     size: 220,

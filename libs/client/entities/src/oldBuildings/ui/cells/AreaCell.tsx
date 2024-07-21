@@ -16,7 +16,7 @@ function AreaCell(props: CellContext<OldBuilding, string>): JSX.Element {
           gap={'none'}
           justify={'center'}
           align={'start'}
-          className="w-[120px] text-left"
+          className="w-[140px] text-left"
         >
           <div className="w-full truncate ">{props.row.original.okrug}</div>
           <div className="text-muted-foreground w-full truncate text-sm">
