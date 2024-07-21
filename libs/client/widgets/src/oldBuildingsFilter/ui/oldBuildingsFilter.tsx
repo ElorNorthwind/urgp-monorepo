@@ -36,7 +36,7 @@ const OldBuildingsFilter = ({
         }
       />
 
-      {filters && (
+      {(filters?.districts || filters?.relocationType) && (
         <Button
           variant="ghost"
           onClick={() =>
