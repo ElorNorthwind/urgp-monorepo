@@ -1,4 +1,4 @@
-import { Button, FacetFilter, HStack } from '@urgp/client/shared';
+import { Button, FacetFilter, HStack, Input } from '@urgp/client/shared';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
 import { AreaFacetFilter } from './AreaFacetFilter';
@@ -20,6 +20,20 @@ const OldBuildingsFilter = ({
 }: OldBuildingsFilterProps): JSX.Element => {
   return (
     <HStack>
+      <Input
+        type="search"
+        placeholder="Поиск по адресу"
+        className="h-8 w-40 px-2 lg:px-3"
+        value={filters.adress || ''}
+        onChange={(event) =>
+          setFilters({
+            adress:
+              event.target.value && event.target.value.length > 0
+                ? event.target.value
+                : undefined,
+          })
+        }
+      />
       <AreaFacetFilter
         title="Район"
         selectedValues={filters.districts}
@@ -29,7 +43,6 @@ const OldBuildingsFilter = ({
           })
         }
       />
-
       <FacetFilter
         options={relocationTypes}
         title={'Тип'}
@@ -91,7 +104,7 @@ const OldBuildingsFilter = ({
             adress: undefined,
           })
         }
-        className="h-8 px-2 lg:px-3"
+        className="h-8 bg-amber-100 px-2 hover:bg-amber-200 lg:px-3"
       >
         В работе
       </Button>

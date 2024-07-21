@@ -177,8 +177,7 @@ WITH old_dates_ranked AS (
 				'attention', COALESCE(at.deviation_attention, 0),
 				'risk', COALESCE(at.deviation_risk, 0)
 			)
-		) as appartments,
-		COUNT(*) OVER() as "totalCount"
+		) as appartments
 	FROM renovation.buildings_old o
 	LEFT JOIN old_dates_flat od ON od.building_id = o.id
 	LEFT JOIN renovation.relocation_types t ON t.id = o.relocation_type
@@ -201,6 +200,6 @@ WITH old_dates_ranked AS (
 	LEFT JOIN appartment_totals at ON at.building_id = o.id
 )
 
-SELECT * FROM full_data
+SELECT *, COUNT(*) OVER() as "totalCount" FROM full_data
 ${conditions:raw}
 LIMIT ${limit:raw} OFFSET ${offset:raw};

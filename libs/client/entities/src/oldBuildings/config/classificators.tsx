@@ -54,31 +54,31 @@ export const relocationAge = [
     value: 'Менее месяца',
     label: 'Менее месяца',
     icon: CalendarRange,
-    className: cn('text-yellow-400'),
+    className: cn('text-lime-500'),
   },
   {
     value: 'От 1 до 2 месяцев',
     label: 'От 1 до 2 месяцев',
     icon: CalendarRange,
-    className: cn('text-amber-500'),
+    className: cn('text-yellow-400'),
   },
   {
     value: 'От 2 до 5 месяцев',
     label: 'От 2 до 5 месяцев',
     icon: CalendarRange,
-    className: cn('text-orange-500'),
+    className: cn('text-amber-500'),
   },
   {
     value: 'От 5 до 8 месяцев',
     label: 'От 5 до 8 месяцев',
     icon: CalendarRange,
-    className: cn('text-rose-400'),
+    className: cn('text-orange-500'),
   },
   {
     value: 'Более 8 месяцев',
     label: 'Более 8 месяцев',
     icon: CalendarRange,
-    className: cn('text-red-500'),
+    className: cn('text-rose-600'),
   },
 ];
 

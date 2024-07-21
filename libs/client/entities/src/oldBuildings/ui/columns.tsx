@@ -11,7 +11,7 @@ const columnHelper = createColumnHelper<OldBuilding>();
 export const oldBuildingsColumns = [
   columnHelper.accessor('district', {
     header: 'Район',
-    size: 120,
+    size: 140,
     cell: (props) => {
       return <AreaCell {...props} />;
     },
@@ -19,7 +19,7 @@ export const oldBuildingsColumns = [
 
   columnHelper.accessor('adress', {
     header: 'Адрес',
-    size: 320,
+    size: 250,
   }),
 
   columnHelper.accessor('relocationType', {
