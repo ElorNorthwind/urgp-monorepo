@@ -16,24 +16,6 @@ import { useEffect, useState } from 'react';
 import { Blocks, Building2, House, LoaderCircle, X } from 'lucide-react';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
 
-const relocationTypes = [
-  {
-    value: 1,
-    label: 'Полное переселение',
-    icon: House,
-  },
-  {
-    value: 2,
-    label: 'Частичное отселение',
-    icon: Blocks,
-  },
-  {
-    value: 3,
-    label: 'Многоэтапное отселение',
-    icon: Building2,
-  },
-];
-
 const OldBuildingsPage = (): JSX.Element => {
   const {
     limit,

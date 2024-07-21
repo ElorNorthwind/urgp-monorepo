@@ -25,19 +25,33 @@ const OldBuildingsFilter = (): JSX.Element => {
   } = getRouteApi('/oldbuildings').useSearch() as GetOldBuldingsDto;
   const navigate = useNavigate({ from: '/oldbuildings' });
 
+  const setFilters = (value: Partial<GetOldBuldingsDto>) => {
+    navigate({
+      search: (prev: GetOldBuldingsDto) => ({
+        ...prev,
+        ...value,
+      }),
+    });
+  };
+
   return (
     <HStack>
       <AreaFacetFilter
         title="Район"
         selectedValues={districts}
         setSelectedValues={(value) =>
-          navigate({
-            search: (prev: GetOldBuldingsDto) => ({
-              ...prev,
-              districts: value && value.length > 0 ? value : undefined,
-            }),
+          setFilters({
+            districts: value && value.length > 0 ? value : undefined,
           })
         }
+        // setSelectedValues={(value) =>
+        //   navigate({
+        //     search: (prev: GetOldBuldingsDto) => ({
+        //       ...prev,
+        //       districts: value && value.length > 0 ? value : undefined,
+        //     }),
+        //   })
+        // }
       />
 
       <FacetFilter
@@ -45,13 +59,19 @@ const OldBuildingsFilter = (): JSX.Element => {
         title={'Тип переселения'}
         selectedValues={relocationType || []}
         setSelectedValues={(value) =>
-          navigate({
-            search: (prev: GetOldBuldingsDto) => ({
-              ...prev,
-              relocationType: value && value.length > 0 ? value : undefined,
-            }),
+          setFilters({
+            relocationType: value && value.length > 0 ? value : undefined,
           })
         }
+
+        // setSelectedValues={(value) =>
+        //   navigate({
+        //     search: (prev: GetOldBuldingsDto) => ({
+        //       ...prev,
+        //       relocationType: value && value.length > 0 ? value : undefined,
+        //     }),
+        //   })
+        // }
       />
 
       {(districts || relocationType) && (
