@@ -2,6 +2,7 @@ import { oldBuildingsColumns, useOldBuldings } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
   HStack,
+  TooltipProvider,
   useDebounce,
   VirtualDataTable,
   VStack,
@@ -48,15 +49,17 @@ const OldBuildingsPage = (): JSX.Element => {
           isFetching={isFetching}
         />
       </HStack>
-      <VirtualDataTable
-        className="h-[calc(100vh-4rem)] w-full"
-        columns={oldBuildingsColumns}
-        data={buildings || []}
-        isFetching={isLoading || isFetching}
-        totalCount={buildings?.[0]?.totalCount ?? 0}
-        callbackFn={() => setOffset(buildings?.length || 0)}
-        callbackMargin={1500}
-      />
+      <TooltipProvider>
+        <VirtualDataTable
+          className="h-[calc(100vh-4rem)] w-full"
+          columns={oldBuildingsColumns}
+          data={buildings || []}
+          isFetching={isLoading || isFetching}
+          totalCount={buildings?.[0]?.totalCount ?? 0}
+          callbackFn={() => setOffset(buildings?.length || 0)}
+          callbackMargin={1500}
+        />
+      </TooltipProvider>
     </VStack>
   );
 };

@@ -19,6 +19,7 @@ export * from './ui/components/facet-filter';
 export * from './ui/components/progress';
 export * from './ui/components/scroll-area';
 export * from './ui/components/data-table-virtual';
+export * from './ui/components/tooltip';
 
 // export layouts
 export * from './ui/layouts/main';

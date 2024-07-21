@@ -1,12 +1,10 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { HStack, Progress, VStack } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
-import {
-  CircleAlert,
-  CircleCheck,
-  CircleEllipsis,
-  CircleX,
-} from 'lucide-react';
+import { AreaCell } from './cells/AreaCell';
+import { RelocationTypeCell } from './cells/RelocationTypeCell';
+import { RelocationStatusCell } from './cells/RelocationStatusCell';
+import { TermsCell } from './cells/TermsCell';
 
 const columnHelper = createColumnHelper<OldBuilding>();
 
@@ -15,32 +13,20 @@ export const oldBuildingsColumns = [
     header: 'Район',
     size: 120,
     cell: (props) => {
-      return (
-        <VStack gap={'none'} justify={'center'} align={'start'} className="">
-          <div className="whitespace-nowrap ">{props.row.original.okrug}</div>
-          <div className="text-muted-foreground whitespace-nowrap text-sm">
-            {props.getValue()}
-          </div>
-        </VStack>
-      );
+      return <AreaCell {...props} />;
     },
   }),
+
   columnHelper.accessor('adress', {
     header: 'Адрес',
     size: 320,
   }),
+
   columnHelper.accessor('relocationType', {
     header: 'Тип переселения',
     size: 180,
     cell: (props) => {
-      return (
-        <VStack gap={'none'} justify={'center'} align={'start'} className="">
-          <div className="whitespace-nowrap text-xs">{props.getValue()}</div>
-          <div className="text-muted-foreground whitespace-nowrap text-xs">
-            {props.row.original.buildingRelocationStartAge}
-          </div>
-        </VStack>
-      );
+      return <RelocationTypeCell {...props} />;
     },
   }),
 
@@ -48,59 +34,25 @@ export const oldBuildingsColumns = [
     header: 'Статус',
     size: 180,
     cell: (props) => {
-      const icon = {
-        'Без отклонений': (
-          <CircleEllipsis className="mr-2 h-6 w-6 text-blue-500" />
-        ),
-        Завершено: <CircleCheck className="mr-2 h-6 w-6 text-emerald-500" />,
-        'Требует внимания': (
-          <CircleAlert className="mr-2 h-6 w-6 text-yellow-500" />
-        ),
-        'Есть риски': <CircleX className="mr-2 h-6 w-6 text-red-500" />,
-      }[props.getValue()];
-
-      return (
-        <HStack
-          gap="s"
-          align={'center'}
-          justify={'start'}
-          className="w-max flex-nowrap "
-        >
-          {icon && icon}
-          <VStack gap="none" align={'start'}>
-            <div className="whitespace-nowrap  text-xs">{props.getValue()}</div>
-            <div className="whitespace-nowrap  text-xs">
-              {props.row.original.buildingRelocationStatus}
-            </div>
-          </VStack>
-        </HStack>
-      );
+      return <RelocationStatusCell {...props} />;
     },
   }),
+
   columnHelper.accessor('terms.actual.firstResetlementStart', {
     header: 'Старт',
     size: 100,
-    cell: ({ cell, row }) => {
-      const date = cell.getValue();
-      const planDate = row.original.terms.plan.firstResetlementStart;
-      return (
-        <VStack gap="none" align={'start'}>
-          <div className="text-muted-foreground min-w-[50px] text-xs opacity-70">
-            {planDate ? new Date(planDate).toLocaleDateString('ru-RU') : ' '}
-          </div>
-          <div className="min-w-[50px] text-xs">
-            {date ? new Date(date).toLocaleDateString('ru-RU') : ' '}
-          </div>
-        </VStack>
-      );
+
+    cell: (props) => {
+      return <TermsCell {...props} />;
     },
   }),
+
   columnHelper.accessor((row) => row.totalApartments.toString(), {
     header: 'Квартир',
     size: 100,
     cell: (info) => {
       return info.row.original.totalApartments > 0 ? (
-        <div className=" min-w-[30px]">{info.getValue()}</div>
+        <div className="min-w-[30px]">{info.getValue()}</div>
       ) : (
         <div className="text-muted-foreground  min-w-[30px] ">-</div>
       );
