@@ -1,23 +1,7 @@
-import { CircleAlert, CircleX, TrendingUp } from 'lucide-react';
+import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  LabelList,
-  XAxis,
-  YAxis,
-} from 'recharts';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
   HStack,
   Tooltip,
   TooltipContent,
@@ -46,13 +30,8 @@ const chartConfig = {
     color: 'hsl(var(--chart-2))',
   },
 } satisfies ChartConfig;
-// const chartConfig = {
-//   apartments: {
-//     label: 'Квартиры',
-//   },
-// } satisfies ChartConfig;
 
-function ApartmentCell(props: CellContext<OldBuilding, string>): JSX.Element {
+function DeviationsCell(props: CellContext<OldBuilding, string>): JSX.Element {
   const chartData = [
     {
       name: 'Квартиры',
@@ -166,31 +145,6 @@ function ApartmentCell(props: CellContext<OldBuilding, string>): JSX.Element {
                 </div>
               </HStack>
             )}
-
-            {/* {
-    value: 'Работа завершена',
-    label: 'Работа завершена',
-    icon: CircleCheck,
-    className: 'text-emerald-500',
-  },
-  {
-    value: 'Без отклонений',
-    label: 'Без отклонений',
-    icon: CircleEllipsis,
-    className: 'text-blue-500',
-  },
-  {
-    value: 'Требует внимания',
-    label: 'Требует внимания',
-    icon: CircleAlert,
-    className: 'text-yellow-500',
-  },
-  {
-    value: 'Есть риски',
-    label: 'Есть риски',
-    icon: CircleX,
-    className: 'text-red-500',
-  }, */}
           </VStack>
         </TooltipContent>
       </TooltipPortal>
@@ -198,4 +152,4 @@ function ApartmentCell(props: CellContext<OldBuilding, string>): JSX.Element {
   );
 }
 
-export { ApartmentCell };
+export { DeviationsCell };

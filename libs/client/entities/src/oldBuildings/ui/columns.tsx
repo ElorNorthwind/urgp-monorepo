@@ -1,11 +1,11 @@
 import { createColumnHelper } from '@tanstack/react-table';
-import { HStack, Progress, VStack } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
 import { AreaCell } from './cells/AreaCell';
 import { RelocationTypeCell } from './cells/RelocationTypeCell';
 import { RelocationStatusCell } from './cells/RelocationStatusCell';
 import { TermsCell } from './cells/TermsCell';
-import { ApartmentCell } from './cells/AppartmentsCell';
+import { DeviationsCell } from './cells/DeviationsCell';
+import { ApartmentsCell } from './cells/ApartmentsCell';
 
 const columnHelper = createColumnHelper<OldBuilding>();
 
@@ -50,43 +50,23 @@ export const oldBuildingsColumns = [
 
   columnHelper.accessor((row) => row.totalApartments.toString(), {
     header: 'Квартир',
-    size: 100,
-    cell: (info) => {
-      return info.row.original.totalApartments > 0 ? (
-        <div className="min-w-[30px]">{info.getValue()}</div>
-      ) : (
-        <div className="text-muted-foreground  min-w-[30px] ">-</div>
-      );
-    },
-  }),
-  columnHelper.accessor((row) => row.apartments.status.contract.toString(), {
-    header: 'Прогресс',
-    size: 220,
+    size: 80,
     cell: (props) => {
-      return <ApartmentCell {...props} />;
+      return <ApartmentsCell {...props} />;
     },
-    // cell: (props) => {
-    //   const donePercent = Math.round(
-    //     (props.row.original.appartments.status.contract /
-    //       (props.row.original.appartments.total -
-    //         props.row.original.appartments.status.empty)) *
-    //       100,
-    //   );
-    //   return (
-    //     <HStack
-    //       gap="s"
-    //       align={'start'}
-    //       justify={'start'}
-    //       className="w-[200px] flex-nowrap"
-    //     >
-    //       <div className="w-[30px] text-right">
-    //         {donePercent > 0 ? donePercent + '%' : '-'}
-    //       </div>
-    //       <div className="w-[150px] ">
-    //         <Progress value={donePercent} className="h-4 border" />
-    //       </div>
-    //     </HStack>
+    // cell: (info) => {
+    //   return info.row.original.totalApartments > 0 ? (
+    //     <div className="min-w-[30px]">{info.getValue()}</div>
+    //   ) : (
+    //     <div className="text-muted-foreground  min-w-[30px] ">-</div>
     //   );
     // },
+  }),
+  columnHelper.accessor((row) => row.apartments.deviation.done.toString(), {
+    header: 'Ход работы',
+    size: 220,
+    cell: (props) => {
+      return <DeviationsCell {...props} />;
+    },
   }),
 ];
