@@ -45,6 +45,7 @@ type AppartmentCounts = {
     mfr: number;
   };
   deviation: {
+    done: number;
     none: number;
     attention: number;
     risk: number;
@@ -66,6 +67,6 @@ export type OldBuilding = {
   terms: { plan: OldBuildingTerms; actual: OldBuildingTerms };
   newBuildingConstructions: NewBuilding[] | null;
   newBuildingMovements: NewBuilding[] | null;
-  appartments: AppartmentCounts;
+  apartments: AppartmentCounts;
   totalCount: number;
 };

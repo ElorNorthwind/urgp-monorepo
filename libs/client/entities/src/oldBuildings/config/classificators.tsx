@@ -3,8 +3,6 @@ import {
   Blocks,
   Building2,
   CalendarCheck,
-  CalendarFold,
-  CalendarMinus2,
   CalendarRange,
   CalendarX,
   CheckCheck,

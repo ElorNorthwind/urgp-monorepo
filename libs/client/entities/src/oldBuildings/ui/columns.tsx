@@ -5,6 +5,7 @@ import { AreaCell } from './cells/AreaCell';
 import { RelocationTypeCell } from './cells/RelocationTypeCell';
 import { RelocationStatusCell } from './cells/RelocationStatusCell';
 import { TermsCell } from './cells/TermsCell';
+import { ApartmentCell } from './cells/AppartmentsCell';
 
 const columnHelper = createColumnHelper<OldBuilding>();
 
@@ -58,31 +59,34 @@ export const oldBuildingsColumns = [
       );
     },
   }),
-  columnHelper.accessor((row) => row.appartments.status.contract.toString(), {
+  columnHelper.accessor((row) => row.apartments.status.contract.toString(), {
     header: 'Прогресс',
     size: 220,
     cell: (props) => {
-      const donePercent = Math.round(
-        (props.row.original.appartments.status.contract /
-          (props.row.original.appartments.total -
-            props.row.original.appartments.status.empty)) *
-          100,
-      );
-      return (
-        <HStack
-          gap="s"
-          align={'start'}
-          justify={'start'}
-          className="w-[200px] flex-nowrap"
-        >
-          <div className="w-[30px] text-right">
-            {donePercent > 0 ? donePercent + '%' : '-'}
-          </div>
-          <div className="w-[150px] ">
-            <Progress value={donePercent} className="h-4 border" />
-          </div>
-        </HStack>
-      );
+      return <ApartmentCell {...props} />;
     },
+    // cell: (props) => {
+    //   const donePercent = Math.round(
+    //     (props.row.original.appartments.status.contract /
+    //       (props.row.original.appartments.total -
+    //         props.row.original.appartments.status.empty)) *
+    //       100,
+    //   );
+    //   return (
+    //     <HStack
+    //       gap="s"
+    //       align={'start'}
+    //       justify={'start'}
+    //       className="w-[200px] flex-nowrap"
+    //     >
+    //       <div className="w-[30px] text-right">
+    //         {donePercent > 0 ? donePercent + '%' : '-'}
+    //       </div>
+    //       <div className="w-[150px] ">
+    //         <Progress value={donePercent} className="h-4 border" />
+    //       </div>
+    //     </HStack>
+    //   );
+    // },
   }),
 ];
