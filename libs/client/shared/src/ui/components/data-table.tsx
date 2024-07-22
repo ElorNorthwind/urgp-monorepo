@@ -30,6 +30,7 @@ interface DataTableProps<TData, TValue> {
   onRowClick?: (row: Row<TData>) => void;
   onRowDoubleClick?: (row: Row<TData>) => void;
   compact?: boolean;
+  enableMultiRowSelection?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -43,12 +44,14 @@ export function DataTable<TData, TValue>({
   onRowClick,
   onRowDoubleClick,
   compact = false,
+  enableMultiRowSelection = true,
 }: DataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    enableMultiRowSelection,
   });
   const [isScrolled, setIsScrolled] = useState(false);
 

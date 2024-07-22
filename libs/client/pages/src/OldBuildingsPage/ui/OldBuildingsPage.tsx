@@ -60,8 +60,13 @@ const OldBuildingsPage = (): JSX.Element => {
       <TooltipProvider>
         <HStack gap="s" className="w-full">
           <VirtualDataTable
-            onRowDoubleClick={() => setCurrentAddress(null)}
-            onRowClick={(row) => setCurrentAddress(row?.original)}
+            // onRowDoubleClick={() => setCurrentAddress(null)}
+            onRowClick={(row) => {
+              row.toggleSelected();
+              setCurrentAddress(
+                row?.original?.id === currentAdress?.id ? null : row?.original,
+              );
+            }}
             className={cn(
               'h-[calc(100vh-4.8rem)] transition-all',
               currentAdress ? 'w-[calc(100%-520px-0.5rem)]' : 'w-full',
@@ -72,6 +77,7 @@ const OldBuildingsPage = (): JSX.Element => {
             totalCount={buildings?.[0]?.totalCount ?? 0}
             callbackFn={() => setOffset(buildings?.length || 0)}
             callbackMargin={3000}
+            enableMultiRowSelection={false}
           />
 
           <Card

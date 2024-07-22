@@ -31,6 +31,7 @@ interface VirtualDataTableProps<TData, TValue> {
   onRowClick?: (row: Row<TData>) => void;
   onRowDoubleClick?: (row: Row<TData>) => void;
   compact?: boolean;
+  enableMultiRowSelection?: boolean;
 }
 
 export function VirtualDataTable<TData, TValue>({
@@ -44,6 +45,7 @@ export function VirtualDataTable<TData, TValue>({
   onRowClick,
   onRowDoubleClick,
   compact = false,
+  enableMultiRowSelection = true,
 }: VirtualDataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const table = useReactTable({
@@ -55,6 +57,7 @@ export function VirtualDataTable<TData, TValue>({
       // minSize: 50, //enforced during column resizing
       // maxSize: 500, //enforced during column resizing
     },
+    enableMultiRowSelection,
   });
 
   const { rows } = table.getRowModel();
