@@ -58,7 +58,7 @@ const OldBuildingsPage = (): JSX.Element => {
           isFetching={isLoading || isFetching}
           totalCount={buildings?.[0]?.totalCount ?? 0}
           callbackFn={() => setOffset(buildings?.length || 0)}
-          callbackMargin={1500}
+          callbackMargin={3000}
         />
       </TooltipProvider>
       {/* </HoverCard> */}

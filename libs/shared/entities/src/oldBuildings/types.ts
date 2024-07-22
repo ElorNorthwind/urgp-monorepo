@@ -52,6 +52,50 @@ type AppartmentCounts = {
   };
 };
 
+type ProblematicApartmentList = {
+  id: number;
+  apartNum: string;
+  fio: string;
+  apartStatus: string;
+  newAdress: string | null;
+  statusId: number;
+  status: string;
+  difficultyId: number;
+  difficulty: string;
+  dates: {
+    resettlementStart: string | null;
+    order: string | null;
+    mfr: string | null;
+    inspection: string | null;
+    accept: string | null;
+    reject: string | null;
+    reinspection: string | null;
+    litigationClaim: string | null;
+    litigationDecision: string | null;
+    rd: string | null;
+    contractProject: string | null;
+    contractNotification: string | null;
+    contractPrelimenatySigning: string | null;
+    contract: string | null;
+  };
+  terms: {
+    resettlementStart: number | null;
+    order: number | null;
+    mfr: number | null;
+    inspection: number | null;
+    accept: number | null;
+    reject: number | null;
+    reinspection: number | null;
+    litigationClaim: number | null;
+    litigationDecision: number | null;
+    rd: number | null;
+    contractProject: number | null;
+    contractNotification: number | null;
+    contractPrelimenatySigning: number | null;
+    contract: number | null;
+  };
+};
+
 export type OldBuilding = {
   id: number;
   okrug: string;
