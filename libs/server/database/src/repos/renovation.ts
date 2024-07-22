@@ -71,7 +71,7 @@ export class RenovationRepository {
       );
     }
     if (adress && adress.length > 0) {
-      where.push(`adress LIKE '%${adress}%'`);
+      where.push(`LOWER(adress) LIKE LOWER('%${adress}%')`);
     }
 
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';

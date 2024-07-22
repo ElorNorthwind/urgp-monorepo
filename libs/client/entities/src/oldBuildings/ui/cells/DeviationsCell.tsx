@@ -72,7 +72,7 @@ function DeviationsCell(props: CellContext<OldBuilding, string>): JSX.Element {
   return (
     <Tooltip>
       <TooltipTrigger className="h-10 w-full">
-        <div className="relative flex h-6 w-[200px] justify-start overflow-clip rounded bg-slate-50 p-0 align-middle">
+        <div className="w-min-[220px] relative flex h-6 w-full justify-start overflow-clip rounded bg-slate-50 p-0 align-middle">
           {chartData.map(
             (item) =>
               item.value > 0 && (

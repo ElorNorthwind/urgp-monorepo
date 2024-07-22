@@ -33,7 +33,7 @@ export const oldBuildingsColumns = [
 
   columnHelper.accessor('buildingDeviation', {
     header: 'Статус',
-    size: 180,
+    size: 140,
     cell: (props) => {
       return <RelocationStatusCell {...props} />;
     },
@@ -41,7 +41,7 @@ export const oldBuildingsColumns = [
 
   columnHelper.accessor('terms.actual.firstResetlementStart', {
     header: 'Старт',
-    size: 100,
+    size: 80,
 
     cell: (props) => {
       return <TermsCell {...props} />;

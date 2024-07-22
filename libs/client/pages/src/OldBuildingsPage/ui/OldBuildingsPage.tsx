@@ -10,7 +10,6 @@ import {
 import { LoadedResultCounter, OldBuildingsFilter } from '@urgp/client/widgets';
 import { useCallback, useState } from 'react';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
-import { HoverCard } from '@radix-ui/react-hover-card';
 
 const OldBuildingsPage = (): JSX.Element => {
   const filters = getRouteApi('/oldbuildings').useSearch() as GetOldBuldingsDto;
