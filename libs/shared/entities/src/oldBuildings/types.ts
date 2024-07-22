@@ -52,7 +52,7 @@ type AppartmentCounts = {
   };
 };
 
-type ProblematicApartmentList = {
+type ProblematicApartment = {
   id: number;
   apartNum: string;
   fio: string;
@@ -62,6 +62,7 @@ type ProblematicApartmentList = {
   status: string;
   difficultyId: number;
   difficulty: string;
+  deviation: string;
   dates: {
     resettlementStart: string | null;
     order: string | null;
@@ -113,4 +114,5 @@ export type OldBuilding = {
   newBuildingMovements: NewBuilding[] | null;
   apartments: AppartmentCounts;
   totalCount: number;
+  problematicAparts: ProblematicApartment[];
 };

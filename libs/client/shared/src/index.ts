@@ -22,6 +22,7 @@ export * from './ui/components/data-table-virtual';
 export * from './ui/components/tooltip';
 export * from './ui/components/hover-card';
 export * from './ui/components/chart';
+export * from './ui/components/sheet';
 
 // export layouts
 export * from './ui/layouts/main';
