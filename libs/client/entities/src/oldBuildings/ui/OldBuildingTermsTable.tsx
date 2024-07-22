@@ -11,7 +11,7 @@ import {
 import { OldBuilding } from '@urgp/shared/entities';
 import { useCallback } from 'react';
 
-type OldBuildingCardProps = {
+type OldBuildingTermsTableProps = {
   building: OldBuilding | null;
   className?: string;
   caption?: string;
@@ -20,7 +20,7 @@ const OldBuildingTermsTable = ({
   building,
   className,
   caption,
-}: OldBuildingCardProps): JSX.Element => {
+}: OldBuildingTermsTableProps): JSX.Element => {
   const formatDate = useCallback((date: string | null | undefined) => {
     return date ? new Date(date).toLocaleDateString('ru-RU') : ' ';
   }, []);
@@ -52,7 +52,7 @@ const OldBuildingTermsTable = ({
       </TableHeader>
       <TableBody>
         <TableRow className="text-muted-foreground">
-          <TableCell compact className="text-right text-xs font-bold">
+          <TableCell compact className="text-right text-xs">
             План:
           </TableCell>
           <TableCell compact className="text-center text-xs">
@@ -69,7 +69,7 @@ const OldBuildingTermsTable = ({
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell compact className="text-right text-xs font-bold">
+          <TableCell compact className="text-right text-xs">
             Факт:
           </TableCell>
           <TableCell compact className="text-center text-xs">

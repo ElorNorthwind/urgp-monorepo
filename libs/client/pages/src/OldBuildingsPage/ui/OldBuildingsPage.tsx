@@ -5,10 +5,6 @@ import {
 } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
   cn,
   HStack,
   TooltipProvider,
@@ -19,7 +15,6 @@ import {
 import { LoadedResultCounter, OldBuildingsFilter } from '@urgp/client/widgets';
 import { useCallback, useState } from 'react';
 import { GetOldBuldingsDto, OldBuilding } from '@urgp/shared/entities';
-import { X } from 'lucide-react';
 
 const OldBuildingsPage = (): JSX.Element => {
   const filters = getRouteApi('/oldbuildings').useSearch() as GetOldBuldingsDto;
@@ -61,9 +56,11 @@ const OldBuildingsPage = (): JSX.Element => {
           isFetching={isFetching}
         />
       </HStack>
-      {/* <HoverCard> */}
       <TooltipProvider>
-        <HStack gap="s" className="w-full overflow-clip">
+        <HStack
+          gap="s"
+          className="h-[calc(100vh-3.5rem)] w-full overflow-hidden"
+        >
           <VirtualDataTable
             // onRowDoubleClick={() => setCurrentAddress(null)}
             onRowClick={(row) => {
@@ -73,7 +70,7 @@ const OldBuildingsPage = (): JSX.Element => {
               );
             }}
             className={cn(
-              'h-[calc(100vh-3.5rem)] transition-all',
+              'h-full transition-all',
               currentAdress ? 'w-[calc(100%-520px-0.5rem)]' : 'w-[calc(100%)]',
             )}
             columns={oldBuildingsColumns}
@@ -87,12 +84,11 @@ const OldBuildingsPage = (): JSX.Element => {
           <OldBuildingsCard
             building={currentAdress}
             onClose={() => setCurrentAddress(null)}
-            className="h-[calc(100vh-3.5rem)]"
+            className="h-full"
             width={520}
           />
         </HStack>
       </TooltipProvider>
-      {/* </HoverCard> */}
     </VStack>
   );
 };

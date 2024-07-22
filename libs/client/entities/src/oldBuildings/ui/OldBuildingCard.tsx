@@ -10,9 +10,8 @@ import {
 } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
-import { TermsCell } from './cells/TermsCell';
-import { CellContext } from '@tanstack/react-table';
 import { OldBuildingTermsTable } from './OldBuildingTermsTable';
+import { ProblematicApartsTable } from '../ProblematicApartsTable';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
@@ -28,28 +27,42 @@ const OldBuildingsCard = ({
 }: OldBuildingCardProps): JSX.Element => {
   return (
     <Card
-      className={cn('relative overflow-hidden transition-all', className)}
+      className={cn(
+        'relative overflow-hidden transition-all',
+        building ? '' : 'hidden',
+        className,
+      )}
       style={{ width: building ? width : 0 }}
     >
-      <CardHeader>
+      <CardHeader className="pb-0">
         <CardTitle>{building?.adress}</CardTitle>
         <CardDescription>
           {building?.okrug + ' ' + building?.district}
         </CardDescription>
       </CardHeader>
       {building && (
-        <CardContent>
+        <CardContent className="pt-0">
           <VStack>
             <OldBuildingTermsTable
               building={building}
-              className="w-full p-0"
+              className="w-full"
               caption="Сроки отселения здания"
             />
-
-            <div className="w-full">
-              {JSON.stringify(building.problematicAparts)}
-            </div>
+            <ProblematicApartsTable
+              building={building}
+              className="w-full"
+              caption="Проблемные квартиры"
+            />
           </VStack>
+          {onClose && (
+            <Button
+              variant="link"
+              className="group absolute top-2 right-2 rounded-full p-2"
+              onClick={() => onClose()}
+            >
+              <X className="stroke-muted-foreground opacity-50 group-hover:opacity-100" />
+            </Button>
+          )}
         </CardContent>
       )}
     </Card>
