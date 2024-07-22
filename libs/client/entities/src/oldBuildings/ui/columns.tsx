@@ -6,7 +6,6 @@ import { RelocationStatusCell } from './cells/RelocationStatusCell';
 import { TermsCell } from './cells/TermsCell';
 import { DeviationsCell } from './cells/DeviationsCell';
 import { ApartmentsCell } from './cells/ApartmentsCell';
-import { AdressCell } from './cells/AdressCell';
 
 const columnHelper = createColumnHelper<OldBuilding>();
 
@@ -37,7 +36,7 @@ export const oldBuildingsColumns = [
 
   columnHelper.accessor('buildingDeviation', {
     header: 'Статус',
-    size: 160,
+    size: 180,
     cell: (props) => {
       return <RelocationStatusCell {...props} />;
     },

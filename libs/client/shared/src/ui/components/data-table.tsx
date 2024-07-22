@@ -28,6 +28,7 @@ interface DataTableProps<TData, TValue> {
   callbackFn?: () => void;
   className?: string;
   onRowClick?: (row: Row<TData>) => void;
+  onRowDoubleClick?: (row: Row<TData>) => void;
   compact?: boolean;
 }
 
@@ -40,6 +41,7 @@ export function DataTable<TData, TValue>({
   callbackFn,
   className,
   onRowClick,
+  onRowDoubleClick,
   compact = false,
 }: DataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
@@ -113,6 +115,7 @@ export function DataTable<TData, TValue>({
             ? table.getRowModel().rows.map((row) => (
                 <TableRow
                   onClick={() => onRowClick(row)}
+                  onDoubleClick={() => onRowDoubleClick(row)}
                   className={cn(onRowClick && 'cursor-pointer')}
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}

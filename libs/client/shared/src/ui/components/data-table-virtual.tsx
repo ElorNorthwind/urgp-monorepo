@@ -29,6 +29,7 @@ interface VirtualDataTableProps<TData, TValue> {
   callbackFn?: () => void;
   className?: string;
   onRowClick?: (row: Row<TData>) => void;
+  onRowDoubleClick?: (row: Row<TData>) => void;
   compact?: boolean;
 }
 
@@ -41,6 +42,7 @@ export function VirtualDataTable<TData, TValue>({
   callbackFn,
   className,
   onRowClick,
+  onRowDoubleClick,
   compact = false,
 }: VirtualDataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
@@ -155,6 +157,7 @@ export function VirtualDataTable<TData, TValue>({
                       onRowClick && 'cursor-pointer',
                     )}
                     onClick={() => onRowClick(row)}
+                    onDoubleClick={() => onRowDoubleClick(row)}
                     data-state={row.getIsSelected() && 'selected'}
                     data-index={virtualRow.index} //needed for dynamic row height measurement
                     ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
