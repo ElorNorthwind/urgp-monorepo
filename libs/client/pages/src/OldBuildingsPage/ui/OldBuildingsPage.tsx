@@ -1,4 +1,8 @@
-import { oldBuildingsColumns, useOldBuldings } from '@urgp/client/entities';
+import {
+  OldBuildingsCard,
+  oldBuildingsColumns,
+  useOldBuldings,
+} from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
   Button,
@@ -15,6 +19,7 @@ import {
 import { LoadedResultCounter, OldBuildingsFilter } from '@urgp/client/widgets';
 import { useCallback, useState } from 'react';
 import { GetOldBuldingsDto, OldBuilding } from '@urgp/shared/entities';
+import { X } from 'lucide-react';
 
 const OldBuildingsPage = (): JSX.Element => {
   const filters = getRouteApi('/oldbuildings').useSearch() as GetOldBuldingsDto;
@@ -58,7 +63,7 @@ const OldBuildingsPage = (): JSX.Element => {
       </HStack>
       {/* <HoverCard> */}
       <TooltipProvider>
-        <HStack gap="s" className="w-full">
+        <HStack gap="s" className="w-full overflow-clip">
           <VirtualDataTable
             // onRowDoubleClick={() => setCurrentAddress(null)}
             onRowClick={(row) => {
@@ -68,8 +73,8 @@ const OldBuildingsPage = (): JSX.Element => {
               );
             }}
             className={cn(
-              'h-[calc(100vh-4.8rem)] transition-all',
-              currentAdress ? 'w-[calc(100%-520px-0.5rem)]' : 'w-full',
+              'h-[calc(100vh-3.5rem)] transition-all',
+              currentAdress ? 'w-[calc(100%-520px-0.5rem)]' : 'w-[calc(100%)]',
             )}
             columns={oldBuildingsColumns}
             data={buildings || []}
@@ -79,23 +84,12 @@ const OldBuildingsPage = (): JSX.Element => {
             callbackMargin={3000}
             enableMultiRowSelection={false}
           />
-
-          <Card
-            className={cn(
-              'h-[calc(100vh-4.8rem)] overflow-hidden transition-all',
-              currentAdress ? 'w-[520px]' : 'w-0',
-            )}
-          >
-            <CardHeader>{currentAdress?.adress}</CardHeader>
-            <CardContent>
-              {currentAdress && (
-                <div className="w-full">
-                  {JSON.stringify(currentAdress.problematicAparts)}
-                </div>
-              )}
-              <Button onClick={() => setCurrentAddress(null)}>X</Button>
-            </CardContent>
-          </Card>
+          <OldBuildingsCard
+            building={currentAdress}
+            onClose={() => setCurrentAddress(null)}
+            className="h-[calc(100vh-3.5rem)]"
+            width={520}
+          />
         </HStack>
       </TooltipProvider>
       {/* </HoverCard> */}
