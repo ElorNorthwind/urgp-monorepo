@@ -22,9 +22,9 @@ export const oldBuildingsColumns = [
   columnHelper.accessor('adress', {
     header: 'Адрес',
     size: 250,
-    cell: (props) => {
-      return <AdressCell {...props} />;
-    },
+    // cell: (props) => {
+    //   return <AdressCell {...props} />;
+    // },
   }),
 
   columnHelper.accessor('relocationType', {
@@ -37,7 +37,7 @@ export const oldBuildingsColumns = [
 
   columnHelper.accessor('buildingDeviation', {
     header: 'Статус',
-    size: 140,
+    size: 160,
     cell: (props) => {
       return <RelocationStatusCell {...props} />;
     },

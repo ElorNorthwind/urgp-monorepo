@@ -35,7 +35,7 @@ function AdressCell(props: CellContext<OldBuilding, string>): JSX.Element {
         </SheetHeader>
         <ScrollArea className="h-full w-full overflow-clip">
           {aparts.map((apart) => (
-            <HStack>
+            <HStack key={apart.id}>
               <div>{apart.apartNum}</div>
               <div>{apart.fio}</div>
               <div>{apart.status}</div>
@@ -45,32 +45,6 @@ function AdressCell(props: CellContext<OldBuilding, string>): JSX.Element {
         </ScrollArea>
       </SheetContent>
     </Sheet>
-  );
-
-  return (
-    <Dialog>
-      <DialogTrigger className="h-full ">
-        {props.row.original.adress}
-      </DialogTrigger>
-      <DialogContent className="w-[800px]">
-        <DialogHeader>
-          <DialogTitle>{props.row.original.adress}</DialogTitle>
-          <DialogDescription>
-            Список проблемных квартир адреса
-          </DialogDescription>
-        </DialogHeader>
-        <ScrollArea className="max-h-[400px] w-full">
-          {aparts.map((apart) => (
-            <HStack>
-              <div>{apart.apartNum}</div>
-              <div>{apart.fio}</div>
-              <div>{apart.status}</div>
-              <div>{apart.difficulty}</div>
-            </HStack>
-          ))}
-        </ScrollArea>
-      </DialogContent>
-    </Dialog>
   );
 }
 

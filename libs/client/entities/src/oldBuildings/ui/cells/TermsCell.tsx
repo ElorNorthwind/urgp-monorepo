@@ -31,10 +31,10 @@ function TermsCell(
           justify={'center'}
           className="w-[80px]"
         >
-          <div className="text-muted-foreground w-full text-xs opacity-70">
+          <div className="text-muted-foreground flex w-full place-content-center text-xs opacity-70">
             {formatDate(props.row.original.terms.plan.firstResetlementStart)}
           </div>
-          <div className="w-full text-xs">
+          <div className="flex w-full place-content-center text-xs">
             {formatDate(props.row.original.terms.actual.firstResetlementStart)}
           </div>
         </VStack>
