@@ -51,7 +51,8 @@ export const oldBuildingsColumns = [
       return <TermsCell {...props} />;
     },
     meta: {
-      headerStyle: 'justify-center',
+      headerClass: 'justify-center',
+      cellClass: 'justify-center',
     },
   }),
 
@@ -62,7 +63,8 @@ export const oldBuildingsColumns = [
       return <ApartmentsCell {...props} />;
     },
     meta: {
-      headerStyle: 'justify-center',
+      headerClass: 'justify-center',
+      cellClass: 'justify-center',
     },
   }),
 
@@ -73,7 +75,7 @@ export const oldBuildingsColumns = [
       return <DeviationsCell {...props} />;
     },
     meta: {
-      headerStyle: 'justify-center',
+      headerClass: 'justify-center',
     },
   }),
 ];

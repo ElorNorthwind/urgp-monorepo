@@ -117,7 +117,7 @@ export function VirtualDataTable<TData, TValue>({
                     key={header.id}
                     className={cn(
                       'items-center overflow-y-clip text-center align-middle',
-                      (header.column.columnDef.meta as any)?.headerStyle,
+                      header?.column?.columnDef?.meta?.headerClass,
                     )}
                     style={{
                       display: 'flex',
@@ -171,6 +171,7 @@ export function VirtualDataTable<TData, TValue>({
                         key={cell.id}
                         className={cn(
                           'items-center justify-items-center overflow-y-clip',
+                          cell?.column?.columnDef?.meta?.cellClass,
                         )}
                         style={{
                           display: 'flex',
