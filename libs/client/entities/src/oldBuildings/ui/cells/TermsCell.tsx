@@ -25,11 +25,16 @@ function TermsCell(
   return (
     <Tooltip>
       <TooltipTrigger>
-        <VStack gap="none" align={'start'}>
-          <div className="text-muted-foreground min-w-[50px] text-xs opacity-70">
+        <VStack
+          gap="none"
+          align={'center'}
+          justify={'center'}
+          className="w-[80px]"
+        >
+          <div className="text-muted-foreground w-full text-xs opacity-70">
             {formatDate(props.row.original.terms.plan.firstResetlementStart)}
           </div>
-          <div className="min-w-[50px] text-xs">
+          <div className="w-full text-xs">
             {formatDate(props.row.original.terms.actual.firstResetlementStart)}
           </div>
         </VStack>

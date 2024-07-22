@@ -46,6 +46,9 @@ export const oldBuildingsColumns = [
     cell: (props) => {
       return <TermsCell {...props} />;
     },
+    meta: {
+      headerStyle: 'justify-center',
+    },
   }),
 
   columnHelper.accessor((row) => row.totalApartments.toString(), {
@@ -54,6 +57,9 @@ export const oldBuildingsColumns = [
     cell: (props) => {
       return <ApartmentsCell {...props} />;
     },
+    meta: {
+      headerStyle: 'justify-center',
+    },
   }),
 
   columnHelper.accessor((row) => row.apartments.deviation.done.toString(), {
@@ -61,6 +67,9 @@ export const oldBuildingsColumns = [
     size: 220,
     cell: (props) => {
       return <DeviationsCell {...props} />;
+    },
+    meta: {
+      headerStyle: 'justify-center',
     },
   }),
 ];
