@@ -52,6 +52,8 @@ const OldBuildingsPage = (): JSX.Element => {
       {/* <HoverCard> */}
       <TooltipProvider>
         <VirtualDataTable
+          compact
+          onRowClick={(row) => console.log(row.original.adress)}
           className="h-[calc(100vh-4rem)] w-full"
           columns={oldBuildingsColumns}
           data={buildings || []}

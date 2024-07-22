@@ -28,6 +28,8 @@ interface VirtualDataTableProps<TData, TValue> {
   callbackMargin?: number;
   callbackFn?: () => void;
   className?: string;
+  onRowClick?: (row: Row<TData>) => void;
+  compact?: boolean;
 }
 
 export function VirtualDataTable<TData, TValue>({
@@ -38,6 +40,8 @@ export function VirtualDataTable<TData, TValue>({
   callbackMargin = 1000,
   callbackFn,
   className,
+  onRowClick,
+  compact = false,
 }: VirtualDataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const table = useReactTable({
@@ -54,7 +58,7 @@ export function VirtualDataTable<TData, TValue>({
   const { rows } = table.getRowModel();
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
-    estimateSize: () => 73, //estimate row height for accurate scrollbar dragging
+    estimateSize: () => (compact ? 73 : 57), //estimate row height for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
     // measure dynamic row height, except in firefox because it measures table border height incorrectly
     measureElement:
@@ -97,7 +101,7 @@ export function VirtualDataTable<TData, TValue>({
       ref={tableContainerRef}
       onScroll={(e) => onCallbackOnBottomReached(e.target as HTMLDivElement)}
     >
-      <Table className="gri">
+      <Table className="grid">
         <TableHeader
           className={cn(
             'sticky top-0 z-10 grid',
@@ -105,14 +109,11 @@ export function VirtualDataTable<TData, TValue>({
           )}
         >
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow
-              key={headerGroup.id}
-              style={{ display: 'flex' }}
-              className=""
-            >
+            <TableRow key={headerGroup.id} style={{ display: 'flex' }}>
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead
+                    compact={compact}
                     key={header.id}
                     className={cn(
                       'items-center overflow-y-clip text-center align-middle',
@@ -149,7 +150,11 @@ export function VirtualDataTable<TData, TValue>({
                 return (
                   <TableRow
                     key={row.id}
-                    className="overflow-y-clip"
+                    className={cn(
+                      'overflow-y-clip',
+                      onRowClick && 'cursor-pointer',
+                    )}
+                    onClick={() => onRowClick(row)}
                     data-state={row.getIsSelected() && 'selected'}
                     data-index={virtualRow.index} //needed for dynamic row height measurement
                     ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
@@ -162,6 +167,7 @@ export function VirtualDataTable<TData, TValue>({
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
+                        compact={compact}
                         key={cell.id}
                         className={cn(
                           'items-center justify-items-center overflow-y-clip',

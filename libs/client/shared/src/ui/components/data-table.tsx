@@ -2,6 +2,7 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  Row,
   useReactTable,
 } from '@tanstack/react-table';
 import {
@@ -26,6 +27,8 @@ interface DataTableProps<TData, TValue> {
   callbackMargin?: number;
   callbackFn?: () => void;
   className?: string;
+  onRowClick?: (row: Row<TData>) => void;
+  compact?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -36,6 +39,8 @@ export function DataTable<TData, TValue>({
   callbackMargin = 1000,
   callbackFn,
   className,
+  onRowClick,
+  compact = false,
 }: DataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const table = useReactTable({
@@ -86,7 +91,7 @@ export function DataTable<TData, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} compact={compact}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -103,11 +108,13 @@ export function DataTable<TData, TValue>({
           {table.getRowModel().rows?.length
             ? table.getRowModel().rows.map((row) => (
                 <TableRow
+                  onClick={() => onRowClick(row)}
+                  className={cn(onRowClick && 'cursor-pointer')}
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} compact={compact}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
