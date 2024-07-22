@@ -37,7 +37,7 @@ const OldBuildingsCard = ({
       <CardHeader className="pb-0">
         <CardTitle>{building?.adress}</CardTitle>
         <CardDescription>
-          {building?.okrug + ' ' + building?.district}
+          {building?.okrug + ', район ' + building?.district}
         </CardDescription>
       </CardHeader>
       {building && (
