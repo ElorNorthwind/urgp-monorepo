@@ -1,6 +1,7 @@
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { CellContext } from '@tanstack/react-table';
 import {
+  formatDate,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -13,10 +14,6 @@ import { OldBuildingTermsTable } from '../OldBuildingTermsTable';
 function TermsCell(
   props: CellContext<OldBuilding, string | null>,
 ): JSX.Element {
-  const formatDate = useCallback((date: string | null) => {
-    return date ? new Date(date).toLocaleDateString('ru-RU') : ' ';
-  }, []);
-
   return (
     <Tooltip>
       <TooltipTrigger>

@@ -1,5 +1,6 @@
 import {
   cn,
+  formatDate,
   Table,
   TableBody,
   TableCell,
@@ -21,9 +22,6 @@ const OldBuildingTermsTable = ({
   className,
   caption,
 }: OldBuildingTermsTableProps): JSX.Element => {
-  const formatDate = useCallback((date: string | null | undefined) => {
-    return date ? new Date(date).toLocaleDateString('ru-RU') : ' ';
-  }, []);
   return (
     <VStack gap="s" className={cn('w-full', className)}>
       {caption && (

@@ -1,10 +1,14 @@
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
   cn,
+  formatDate,
   HStack,
   ScrollArea,
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -43,24 +47,68 @@ const ProblematicApartsTable = ({
         </h3>
       )}
       <ScrollArea className="relative w-full flex-1 rounded border">
-        {/* h-[calc(100vh-380px)] */}
-        <Table className={'w-full'}>
-          <TableHeader>
-            <TableRow className="sticky top-0 bg-slate-50 text-center text-xs hover:bg-slate-50">
-              {/* <TableHead compact className="w-[20px] text-center"></TableHead> */}
-              <TableHead compact className="max-w-[160px]">
-                Житель
-              </TableHead>
-              <TableHead compact className="">
-                Статус
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {building?.problematicAparts.map((apart) => (
-              <TableRow className="text-left text-xs" key={apart.id}>
-                <TableCell compact className="truncate">
-                  <HStack gap="s">
+        <Accordion type="single" collapsible>
+          {building?.problematicAparts.map((apart) => {
+            const referenceTerms = [
+              {
+                label: 'Осмотр',
+                date: apart.dates.inspection,
+                term: apart.terms.inspection,
+              },
+              {
+                label: 'Отказ',
+                date: apart.dates.reject,
+                term: apart.terms.reject,
+              },
+              {
+                label: 'Переподбор',
+                date: apart.dates.reinspection,
+                term: apart.terms.reinspection,
+              },
+              {
+                label: 'Согласие',
+                date: apart.dates.accept,
+                term: apart.terms.accept,
+              },
+              {
+                label: 'Суд. иск',
+                date: apart.dates.litigationClaim,
+                term: apart.terms.litigationClaim,
+              },
+              {
+                label: 'Суд. решение',
+                date: apart.dates.litigationDecision,
+                term: apart.terms.litigationDecision,
+              },
+              { label: 'РД', date: apart.dates.rd, term: apart.terms.rd },
+              {
+                label: 'Уведомление',
+                date: apart.dates.contractNotification,
+                term: apart.terms.contractNotification,
+              },
+              {
+                label: 'Подписание',
+                date: apart.dates.contractPrelimenatySigning,
+                term: apart.terms.contractPrelimenatySigning,
+              },
+              {
+                label: 'Договор',
+                date: apart.dates.contract,
+                term: apart.terms.contract,
+              },
+            ];
+
+            return (
+              <AccordionItem
+                value={apart.id.toString()}
+                key={apart.id}
+                className="group "
+              >
+                <AccordionTrigger
+                  className="data-[state=open]:bg-muted group-hover:bg-muted/50 py-2 px-4 text-left text-xs group-hover:no-underline"
+                  key={apart.id}
+                >
+                  <HStack gap="s" className="w-[160px] truncate">
                     {apart.deviation === 'Риск' ? (
                       <CircleX className="text-red-500" />
                     ) : (
@@ -73,17 +121,78 @@ const ProblematicApartsTable = ({
                       </div>
                     </VStack>
                   </HStack>
-                </TableCell>
-                <TableCell compact className="truncate">
-                  <div>{apart.status}</div>
-                  <div className="text-muted-foreground">
-                    {apart.difficulty}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                  <VStack
+                    gap="none"
+                    align={'start'}
+                    className="flex-1 truncate"
+                  >
+                    <div>{apart.status}</div>
+                    <div className="text-muted-foreground">
+                      {apart.difficulty}
+                    </div>
+                  </VStack>
+                </AccordionTrigger>
+                <AccordionContent className="flex place-content-center border-t p-0">
+                  <Table className="w-full">
+                    <TableHeader className="border-muted-foreground/25 border-t-2">
+                      <TableRow className=" bg-yellow-50 text-center text-xs hover:bg-yellow-50">
+                        <TableHead
+                          compact
+                          className="text-primary flex-1 text-left"
+                        >
+                          Этап
+                        </TableHead>
+                        <TableHead
+                          compact
+                          className="text-primary flex-1 text-center"
+                        >
+                          Дата
+                        </TableHead>
+                        <TableHead
+                          compact
+                          className="text-primary flex-1 text-center"
+                        >
+                          Дней от старта
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody className="border-muted-foreground/25 border-b-2 bg-yellow-50/25">
+                      {referenceTerms
+                        .filter((term) => term.date)
+                        .map((term) => {
+                          return (
+                            <TableRow
+                              className="hover:bg-yellow-50/25"
+                              key={term.label}
+                            >
+                              <TableCell
+                                compact
+                                className="py-2 text-left text-xs"
+                              >
+                                {term.label}
+                              </TableCell>
+                              <TableCell
+                                compact
+                                className="py-2 text-center text-xs"
+                              >
+                                {formatDate(term.date)}
+                              </TableCell>
+                              <TableCell
+                                compact
+                                className="py-2 text-center text-xs"
+                              >
+                                {term.term}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                    </TableBody>
+                  </Table>
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
       </ScrollArea>
       {/* </div> */}
     </VStack>
