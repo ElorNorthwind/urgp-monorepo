@@ -37,6 +37,11 @@ export const getOldBuldings = z
       .transform((value) => value.split(','))
       .pipe(z.string().array())
       .or(z.string().array()),
+    MFRInvolvment: z
+      .string()
+      .transform((value) => value.split(','))
+      .pipe(z.string().array())
+      .or(z.string().array()),
     adress: z.string(),
     status: z.number().array(),
     dificulty: z.number().array(),

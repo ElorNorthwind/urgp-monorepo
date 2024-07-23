@@ -3,6 +3,7 @@ import { GetOldBuldingsDto } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
 import { AreaFacetFilter } from './AreaFacetFilter';
 import {
+  MFRInvolvmentTypes,
   relocationAge,
   relocationDeviations,
   relocationStatus,
@@ -19,7 +20,7 @@ const OldBuildingsFilter = ({
   setFilters,
 }: OldBuildingsFilterProps): JSX.Element => {
   return (
-    <HStack>
+    <HStack gap="s">
       <Input
         type="search"
         placeholder="Поиск по адресу"
@@ -46,6 +47,7 @@ const OldBuildingsFilter = ({
       <FacetFilter
         options={relocationTypes}
         title={'Тип'}
+        noSearch
         selectedValues={filters.relocationType}
         setSelectedValues={(value) =>
           setFilters({
@@ -86,6 +88,19 @@ const OldBuildingsFilter = ({
           })
         }
       />
+
+      <FacetFilter
+        options={MFRInvolvmentTypes}
+        title={'Фонд'}
+        selectedValues={filters.MFRInvolvment}
+        optionsWidth={80}
+        noSearch
+        setSelectedValues={(value) =>
+          setFilters({
+            MFRInvolvment: value && value.length > 0 ? value : undefined,
+          })
+        }
+      />
       <Button
         variant={'secondary'}
         onClick={() =>
@@ -102,6 +117,7 @@ const OldBuildingsFilter = ({
             relocationStatus: undefined,
             deviation: ['Есть риски', 'Требует внимания', 'Без отклонений'],
             adress: undefined,
+            MFRInvolvment: ['Без МФР'],
           })
         }
         className="h-8 bg-amber-100 px-2 hover:bg-amber-200 lg:px-3"
@@ -114,7 +130,8 @@ const OldBuildingsFilter = ({
         filters?.relocationAge ||
         filters.relocationStatus ||
         filters?.deviation ||
-        filters?.adress) && (
+        filters?.adress ||
+        filters?.MFRInvolvment) && (
         <Button
           variant="ghost"
           onClick={() =>
@@ -125,6 +142,7 @@ const OldBuildingsFilter = ({
               relocationStatus: undefined,
               deviation: undefined,
               adress: undefined,
+              MFRInvolvment: undefined,
             })
           }
           className="h-8 px-2 lg:px-3"

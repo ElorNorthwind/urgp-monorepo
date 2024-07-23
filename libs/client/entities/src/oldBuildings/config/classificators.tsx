@@ -1,6 +1,8 @@
 import { cn } from '@urgp/client/shared';
 import {
   Blocks,
+  Bot,
+  BotOff,
   Building2,
   CalendarCheck,
   CalendarRange,
@@ -133,4 +135,9 @@ export const relocationDeviations = [
     icon: CircleX,
     className: 'text-red-500',
   },
+];
+
+export const MFRInvolvmentTypes = [
+  { value: 'С МФР', label: 'С МФР', icon: Bot },
+  { value: 'Без МФР', label: 'Без МФР', icon: BotOff },
 ];

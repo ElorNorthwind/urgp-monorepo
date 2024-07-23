@@ -42,6 +42,7 @@ export class RenovationRepository {
       relocationAge,
       relocationStatus,
       adress,
+      MFRInvolvment,
     } = dto;
     const where = [];
     if (okrug) {
@@ -73,8 +74,16 @@ export class RenovationRepository {
     if (adress && adress.length > 0) {
       where.push(`LOWER(adress) LIKE LOWER('%${adress}%')`);
     }
+    // Отдельный случай: фильтр должен работать строго при одной выбранной опции
+    if (MFRInvolvment && MFRInvolvment.length === 1) {
+      // console.log(MFRInvolvment[0]);
+      where.push(
+        `(apartments->'difficulty'->>'mfr')::int ${MFRInvolvment[0] === 'С МФР' ? '>' : '='} 0`,
+      );
+    }
 
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
+    // console.log(conditions);
     return this.db.any(renovation.oldBuildings, {
       limit,
       offset,

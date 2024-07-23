@@ -28,6 +28,8 @@ interface FacetFilterProps<TValue extends string | number>
   selectedValues?: TValue[];
   setSelectedValues: (value: TValue[]) => void;
   title?: string;
+  optionsWidth?: number;
+  noSearch?: boolean;
 }
 
 function FacetFilter<TValue extends string | number>(
@@ -39,6 +41,8 @@ function FacetFilter<TValue extends string | number>(
     className,
     title,
     setSelectedValues,
+    optionsWidth = 200,
+    noSearch = false,
   } = props;
 
   return (
@@ -83,9 +87,13 @@ function FacetFilter<TValue extends string | number>(
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="min-w-[200px] p-0" align="start">
+        <PopoverContent
+          className="p-0"
+          align="start"
+          style={{ minWidth: optionsWidth }}
+        >
           <Command>
-            <CommandInput placeholder={title} />
+            {!noSearch && <CommandInput placeholder={title} />}
             <CommandList>
               <CommandEmpty>Не найдено.</CommandEmpty>
               <CommandGroup>
