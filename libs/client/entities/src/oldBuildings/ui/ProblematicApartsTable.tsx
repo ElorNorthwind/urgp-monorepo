@@ -36,19 +36,19 @@ const ProblematicApartsTable = ({
     );
   }
   return (
-    <>
+    <VStack gap="s" className={cn('max-h-[calc(100%-8rem)] w-full', className)}>
       {caption && (
-        <TableCaption className="text-primary text w-full py-2 pl-1 pb-0 text-left">
+        <h3 className=" text text-primary/40 m-0 w-full p-0 text-left">
           {caption}
-        </TableCaption>
+        </h3>
       )}
-
-      <ScrollArea className="relative h-[calc(100vh-380px)] w-full">
-        <Table className={cn(className)}>
+      <ScrollArea className="relative w-full flex-1 rounded border">
+        {/* h-[calc(100vh-380px)] */}
+        <Table className={'w-full'}>
           <TableHeader>
-            <TableRow className="sticky top-0 bg-slate-50 text-center text-xs">
-              <TableHead compact className="w-[20px] text-center"></TableHead>
-              <TableHead compact className="max-w-[150px]">
+            <TableRow className="sticky top-0 bg-slate-50 text-center text-xs hover:bg-slate-50">
+              {/* <TableHead compact className="w-[20px] text-center"></TableHead> */}
+              <TableHead compact className="max-w-[160px]">
                 Житель
               </TableHead>
               <TableHead compact className="">
@@ -59,20 +59,20 @@ const ProblematicApartsTable = ({
           <TableBody>
             {building?.problematicAparts.map((apart) => (
               <TableRow className="text-left text-xs" key={apart.id}>
-                <TableCell compact className="flex justify-center align-middle">
-                  {apart.deviation === 'Риск' ? (
-                    <CircleX className="text-red-500" />
-                  ) : (
-                    <CircleAlert className="text-yellow-500" />
-                  )}
-                </TableCell>
                 <TableCell compact className="truncate">
-                  <div className="w-[150px] truncate">
-                    {'кв.' + apart.apartNum}
-                  </div>
-                  <div className="text-muted-foreground w-[150px] truncate">
-                    {apart.fio}
-                  </div>
+                  <HStack gap="s">
+                    {apart.deviation === 'Риск' ? (
+                      <CircleX className="text-red-500" />
+                    ) : (
+                      <CircleAlert className="text-yellow-500" />
+                    )}
+                    <VStack gap="none" align={'start'}>
+                      <div className="flex-1 truncate">{apart.fio}</div>
+                      <div className="text-muted-foreground flex-1 truncate">
+                        {'кв.' + apart.apartNum}
+                      </div>
+                    </VStack>
+                  </HStack>
                 </TableCell>
                 <TableCell compact className="truncate">
                   <div>{apart.status}</div>
@@ -85,7 +85,8 @@ const ProblematicApartsTable = ({
           </TableBody>
         </Table>
       </ScrollArea>
-    </>
+      {/* </div> */}
+    </VStack>
   );
 };
 

@@ -11,7 +11,8 @@ import {
 import { OldBuilding } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
 import { OldBuildingTermsTable } from './OldBuildingTermsTable';
-import { ProblematicApartsTable } from '../ProblematicApartsTable';
+import { Separator } from '@radix-ui/react-separator';
+import { ProblematicApartsTable } from './ProblematicApartsTable';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
@@ -34,26 +35,24 @@ const OldBuildingsCard = ({
       )}
       style={{ width: building ? width : 0 }}
     >
-      <CardHeader className="pb-0">
+      <CardHeader className="bg-accent/40 pb-3">
         <CardTitle>{building?.adress}</CardTitle>
         <CardDescription>
           {building?.okrug + ', район ' + building?.district}
         </CardDescription>
       </CardHeader>
       {building && (
-        <CardContent className="pt-0">
-          <VStack>
-            <OldBuildingTermsTable
-              building={building}
-              className="w-full"
-              caption="Сроки отселения здания"
-            />
-            <ProblematicApartsTable
-              building={building}
-              className="w-full"
-              caption="Проблемные квартиры"
-            />
-          </VStack>
+        <CardContent className="flex h-[calc(100%-5.7rem)] flex-col gap-3 overflow-hidden pt-2">
+          <OldBuildingTermsTable
+            building={building}
+            className="w-full flex-shrink "
+            caption="Сроки отселения здания"
+          />
+          <ProblematicApartsTable
+            building={building}
+            className="w-full flex-grow "
+            caption="Проблемные квартиры"
+          />
           {onClose && (
             <Button
               variant="link"

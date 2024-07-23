@@ -76,7 +76,6 @@ export class RenovationRepository {
     }
     // Отдельный случай: фильтр должен работать строго при одной выбранной опции
     if (MFRInvolvment && MFRInvolvment.length === 1) {
-      // console.log(MFRInvolvment[0]);
       where.push(
         `(apartments->'difficulty'->>'mfr')::int ${MFRInvolvment[0] === 'С МФР' ? '>' : '='} 0`,
       );

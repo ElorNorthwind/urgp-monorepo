@@ -1,7 +1,4 @@
-import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 import {
-  ChartConfig,
-  ChartContainer,
   cn,
   HStack,
   Tooltip,
