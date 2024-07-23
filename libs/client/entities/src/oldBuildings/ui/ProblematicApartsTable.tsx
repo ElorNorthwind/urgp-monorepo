@@ -133,61 +133,67 @@ const ProblematicApartsTable = ({
                   </VStack>
                 </AccordionTrigger>
                 <AccordionContent className="flex place-content-center border-t p-0">
-                  <Table className="w-full">
-                    <TableHeader className="border-muted-foreground/25 border-t-2">
-                      <TableRow className=" bg-yellow-50 text-center text-xs hover:bg-yellow-50">
-                        <TableHead
-                          compact
-                          className="text-primary flex-1 text-left"
-                        >
-                          Этап
-                        </TableHead>
-                        <TableHead
-                          compact
-                          className="text-primary flex-1 text-center"
-                        >
-                          Дата
-                        </TableHead>
-                        <TableHead
-                          compact
-                          className="text-primary flex-1 text-center"
-                        >
-                          Дней от старта
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody className="border-muted-foreground/25 border-b-2 bg-yellow-50/25">
-                      {referenceTerms
-                        .filter((term) => term.date)
-                        .map((term) => {
-                          return (
-                            <TableRow
-                              className="hover:bg-yellow-50/25"
-                              key={term.label}
-                            >
-                              <TableCell
-                                compact
-                                className="py-2 text-left text-xs"
+                  {referenceTerms.filter((term) => term.date).length > 0 ? (
+                    <Table className="w-full">
+                      <TableHeader className="border-muted-foreground/25 border-t-2">
+                        <TableRow className=" bg-amber-50 text-center text-xs hover:bg-amber-50">
+                          <TableHead
+                            compact
+                            className="text-primary flex-1 text-left"
+                          >
+                            Этап
+                          </TableHead>
+                          <TableHead
+                            compact
+                            className="text-primary flex-1 text-center"
+                          >
+                            Дата
+                          </TableHead>
+                          <TableHead
+                            compact
+                            className="text-primary flex-1 text-center"
+                          >
+                            Дней от старта
+                          </TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody className="border-muted-foreground/25 border-b-2 bg-amber-50/25">
+                        {referenceTerms
+                          .filter((term) => term.date)
+                          .map((term) => {
+                            return (
+                              <TableRow
+                                className="hover:bg-amber-50/25"
+                                key={term.label}
                               >
-                                {term.label}
-                              </TableCell>
-                              <TableCell
-                                compact
-                                className="py-2 text-center text-xs"
-                              >
-                                {formatDate(term.date)}
-                              </TableCell>
-                              <TableCell
-                                compact
-                                className="py-2 text-center text-xs"
-                              >
-                                {term.term}
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                    </TableBody>
-                  </Table>
+                                <TableCell
+                                  compact
+                                  className="py-2 text-left text-xs"
+                                >
+                                  {term.label}
+                                </TableCell>
+                                <TableCell
+                                  compact
+                                  className="py-2 text-center text-xs"
+                                >
+                                  {formatDate(term.date)}
+                                </TableCell>
+                                <TableCell
+                                  compact
+                                  className="py-2 text-center text-xs"
+                                >
+                                  {term.term}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                      </TableBody>
+                    </Table>
+                  ) : (
+                    <div className="border-muted-foreground/25 flex h-9 w-full items-center justify-center border-y-2 bg-amber-50">
+                      Работа не проводилась
+                    </div>
+                  )}
                 </AccordionContent>
               </AccordionItem>
             );
