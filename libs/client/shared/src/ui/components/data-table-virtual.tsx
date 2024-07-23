@@ -126,7 +126,7 @@ export function VirtualDataTable<TData, TValue>({
                     )}
                     style={{
                       display: 'flex',
-                      width: `${Math.floor((header.getSize() / table.getTotalSize()) * 100)}%`,
+                      width: `${Math.round((header.getSize() / table.getTotalSize()) * 100)}%`,
                       minWidth: `${header.getSize()}px`,
                     }}
                   >
@@ -181,7 +181,7 @@ export function VirtualDataTable<TData, TValue>({
                         )}
                         style={{
                           display: 'flex',
-                          width: `${Math.floor((cell.column.getSize() / table.getTotalSize()) * 100)}%`,
+                          width: `${Math.round((cell.column.getSize() / table.getTotalSize()) * 100)}%`,
                           minWidth: `${cell.column.getSize()}px`,
                         }}
                       >

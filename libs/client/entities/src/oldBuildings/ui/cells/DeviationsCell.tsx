@@ -69,28 +69,48 @@ function DeviationsCell(props: CellContext<OldBuilding, string>): JSX.Element {
     );
   }
 
+  const deviationPercent =
+    props.row.original.apartments.total > 0
+      ? Math.round(
+          (props.row.original.apartments.deviation.risk /
+            props.row.original.apartments.total) *
+            100,
+        )
+      : 0;
+
   return (
     <Tooltip>
       <TooltipTrigger className="h-10 w-full">
-        <div className="w-min-[220px] relative flex h-6 w-full justify-start overflow-clip rounded bg-slate-50 p-0 align-middle">
-          {chartData.map(
-            (item) =>
-              item.value > 0 && (
-                <div
-                  key={item.key}
-                  style={{
-                    width: `${item.percent}%`,
-                  }}
-                  className={cn(
-                    'm-0 flex h-full items-center justify-center text-xs font-bold text-white',
-                    item.class,
-                  )}
-                >
-                  {item.percent > 10 ? item.value : ' '}
-                </div>
-              ),
+        <HStack gap="s" className="w-full">
+          {props.row.original.apartments.deviation.risk > 0 ? (
+            <div className="flex w-[30px] items-center justify-end text-right align-middle text-sm text-red-500">
+              <b className="text-lg font-bold">{deviationPercent}</b>%
+            </div>
+          ) : (
+            <div className="text-muted-foreground flex w-[30px] items-center justify-end text-right align-middle text-sm">
+              <b className="mr-1 text-lg font-bold opacity-50">ок</b>
+            </div>
           )}
-        </div>
+          <div className="relative flex h-6 flex-1 justify-start overflow-clip rounded bg-slate-50 p-0 align-middle">
+            {chartData.map(
+              (item) =>
+                item.value > 0 && (
+                  <div
+                    key={item.key}
+                    style={{
+                      width: `${item.percent}%`,
+                    }}
+                    className={cn(
+                      'm-0 flex h-full items-center justify-center text-xs font-bold text-white',
+                      item.class,
+                    )}
+                  >
+                    {item.percent > 10 ? item.value : ' '}
+                  </div>
+                ),
+            )}
+          </div>
+        </HStack>
       </TooltipTrigger>
       <TooltipPortal>
         <TooltipContent>
