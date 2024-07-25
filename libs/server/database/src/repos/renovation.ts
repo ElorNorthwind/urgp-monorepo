@@ -83,7 +83,6 @@ export class RenovationRepository {
     }
 
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
-    console.log(noMFR);
     return this.db.any(renovation.oldBuildings, {
       limit,
       offset,

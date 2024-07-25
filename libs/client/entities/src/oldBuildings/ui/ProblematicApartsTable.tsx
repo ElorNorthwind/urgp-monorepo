@@ -82,6 +82,11 @@ const ProblematicApartsTable = ({
               },
               { label: 'РД', date: apart.dates.rd, term: apart.terms.rd },
               {
+                label: 'Проект договора',
+                date: apart.dates.contractProject,
+                term: apart.terms.contractProject,
+              },
+              {
                 label: 'Уведомление',
                 date: apart.dates.contractNotification,
                 term: apart.terms.contractNotification,
@@ -108,13 +113,17 @@ const ProblematicApartsTable = ({
                   className="data-[state=open]:bg-muted group-hover:bg-muted/50 py-2 px-4 text-left text-xs group-hover:no-underline"
                   key={apart.id}
                 >
-                  <HStack gap="s" className="w-[160px] truncate">
+                  <HStack gap="s" className="w-[200px] truncate">
                     {apart.deviation === 'Риск' ? (
                       <CircleX className="text-red-500" />
                     ) : (
                       <CircleAlert className="text-yellow-500" />
                     )}
-                    <VStack gap="none" align={'start'}>
+                    <VStack
+                      gap="none"
+                      align={'start'}
+                      className="w-[160px] truncate"
+                    >
                       <div className="flex-1 truncate">{apart.fio}</div>
                       <div className="text-muted-foreground flex-1 truncate">
                         {'кв.' + apart.apartNum}
