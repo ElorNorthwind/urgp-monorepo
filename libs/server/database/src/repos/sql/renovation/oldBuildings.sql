@@ -207,6 +207,7 @@
 
 
 SELECT *, COUNT(*) OVER() as "totalCount"
-FROM renovation.old_buildings_fe
+FROM ${view:raw} --renovation.old_buildings_fe
 ${conditions:raw}
+ORDER BY okrug, district, adress
 LIMIT ${limit:raw} OFFSET ${offset:raw};

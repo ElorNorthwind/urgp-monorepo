@@ -43,6 +43,7 @@ export class RenovationRepository {
       relocationStatus,
       adress,
       MFRInvolvment,
+      noMFR = false,
     } = dto;
     const where = [];
     if (okrug) {
@@ -82,11 +83,14 @@ export class RenovationRepository {
     }
 
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
-    // console.log(conditions);
+    console.log(noMFR);
     return this.db.any(renovation.oldBuildings, {
       limit,
       offset,
       conditions,
+      view: noMFR
+        ? 'renovation.old_buildings_no_mfr'
+        : 'renovation.old_buildings_fe',
     });
   }
 

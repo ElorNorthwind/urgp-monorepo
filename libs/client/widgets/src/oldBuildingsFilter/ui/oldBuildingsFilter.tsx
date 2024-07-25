@@ -1,4 +1,12 @@
-import { Button, FacetFilter, HStack, Input } from '@urgp/client/shared';
+import {
+  Button,
+  cn,
+  FacetFilter,
+  HStack,
+  Input,
+  Label,
+  Switch,
+} from '@urgp/client/shared';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
 import { AreaFacetFilter } from './AreaFacetFilter';
@@ -89,7 +97,7 @@ const OldBuildingsFilter = ({
         }
       />
 
-      <FacetFilter
+      {/* <FacetFilter
         options={MFRInvolvmentTypes}
         title={'Фонд'}
         selectedValues={filters.MFRInvolvment}
@@ -100,7 +108,24 @@ const OldBuildingsFilter = ({
             MFRInvolvment: value && value.length > 0 ? value : undefined,
           })
         }
-      />
+      /> */}
+      <div className="flex items-center space-x-2">
+        <Switch
+          id="show-mfr"
+          defaultChecked
+          checked={!filters.noMFR}
+          onCheckedChange={(e) => setFilters({ noMFR: e ? undefined : true })}
+        />
+        <Label
+          htmlFor="show-mfr"
+          className={cn(
+            'transition-opacity',
+            filters.noMFR ? 'line-through opacity-30' : '',
+          )}
+        >
+          МФР
+        </Label>
+      </div>
       <Button
         variant={'secondary'}
         onClick={() =>
@@ -117,7 +142,7 @@ const OldBuildingsFilter = ({
             relocationStatus: undefined,
             deviation: ['Есть риски', 'Требует внимания', 'Без отклонений'],
             adress: undefined,
-            MFRInvolvment: ['Без МФР'],
+            // MFRInvolvment: ['Без МФР'],
           })
         }
         className="h-8 bg-amber-100 px-2 hover:bg-amber-200 lg:px-3"

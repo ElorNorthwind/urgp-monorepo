@@ -24,6 +24,7 @@ export * from './ui/components/hover-card';
 export * from './ui/components/chart';
 export * from './ui/components/sheet';
 export * from './ui/components/accordion';
+export * from './ui/components/switch';
 
 // export layouts
 export * from './ui/layouts/main';

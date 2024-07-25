@@ -42,6 +42,10 @@ export const getOldBuldings = z
       .transform((value) => value.split(','))
       .pipe(z.string().array())
       .or(z.string().array()),
+    noMFR: z
+      .enum(['true', 'false'])
+      .transform((value) => value === 'true')
+      .or(z.boolean().default(false)),
     adress: z.string(),
     status: z.number().array(),
     dificulty: z.number().array(),

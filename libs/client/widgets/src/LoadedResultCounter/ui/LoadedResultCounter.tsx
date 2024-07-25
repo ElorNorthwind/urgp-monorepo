@@ -1,10 +1,5 @@
-import { oldBuildingsColumns, useOldBuldings } from '@urgp/client/entities';
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import { HStack, VirtualDataTable, VStack } from '@urgp/client/shared';
-import { OldBuildingsFilter } from '@urgp/client/widgets';
-import { useState } from 'react';
+import { HStack } from '@urgp/client/shared';
 import { LoaderCircle } from 'lucide-react';
-import { GetOldBuldingsDto } from '@urgp/shared/entities';
 
 type LoadedResultCounterProps = {
   currentCount?: number;
@@ -27,7 +22,8 @@ const LoadedResultCounter = ({
         <LoaderCircle className="stroke-muted-foreground animate-spin" />
       )}
       <div className="text-muted-foreground">
-        {currentCount} из {totalCount || 0}
+        {/* {currentCount} из {totalCount || 0} */}
+        {totalCount || 0}
       </div>
     </HStack>
   );
