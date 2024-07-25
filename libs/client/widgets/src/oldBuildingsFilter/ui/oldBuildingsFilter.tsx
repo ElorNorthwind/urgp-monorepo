@@ -5,18 +5,20 @@ import {
   HStack,
   Input,
   Label,
+  NestedFacetFilter,
   Switch,
 } from '@urgp/client/shared';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
-import { AreaFacetFilter } from './AreaFacetFilter';
+// import { AreaFacetFilter } from './AreaFacetFilter';
 import {
-  MFRInvolvmentTypes,
+  // MFRInvolvmentTypes,
   relocationAge,
   relocationDeviations,
   relocationStatus,
   relocationTypes,
 } from '@urgp/client/entities';
+import { areas } from '../config/areas';
 
 type OldBuildingsFilterProps = {
   filters: GetOldBuldingsDto;
@@ -43,7 +45,17 @@ const OldBuildingsFilter = ({
           })
         }
       />
-      <AreaFacetFilter
+      {/* <AreaFacetFilter
+        title="Район"
+        selectedValues={filters.districts}
+        setSelectedValues={(value) =>
+          setFilters({
+            districts: value && value.length > 0 ? value : undefined,
+          })
+        }
+      /> */}
+      <NestedFacetFilter
+        groups={areas}
         title="Район"
         selectedValues={filters.districts}
         setSelectedValues={(value) =>
