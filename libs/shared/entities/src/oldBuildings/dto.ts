@@ -4,7 +4,11 @@ export const getOldBuldings = z
   .object({
     limit: z.coerce.number().min(1).default(500).or(z.literal('ALL')),
     offset: z.coerce.number().min(0).default(0),
-    okrug: z.string(),
+    okrugs: z
+      .string()
+      .transform((value) => value.split(','))
+      .pipe(z.string().array())
+      .or(z.string().array()),
     districts: z
       .string()
       .transform((value) => value.split(','))

@@ -10,7 +10,6 @@ import {
 } from '@urgp/client/shared';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
-// import { AreaFacetFilter } from './AreaFacetFilter';
 import {
   // MFRInvolvmentTypes,
   relocationAge,
@@ -19,6 +18,7 @@ import {
   relocationTypes,
 } from '@urgp/client/entities';
 import { areas } from '../config/areas';
+import { useMemo } from 'react';
 
 type OldBuildingsFilterProps = {
   filters: GetOldBuldingsDto;
@@ -29,6 +29,12 @@ const OldBuildingsFilter = ({
   filters,
   setFilters,
 }: OldBuildingsFilterProps): JSX.Element => {
+  const filteredAreas = useMemo(() => {
+    return areas.filter((area) =>
+      filters.okrugs?.some((okrug) => okrug === area.value),
+    );
+  }, [filters.okrugs]);
+
   return (
     <HStack gap="s">
       <Input
@@ -45,17 +51,44 @@ const OldBuildingsFilter = ({
           })
         }
       />
-      {/* <AreaFacetFilter
-        title="Район"
-        selectedValues={filters.districts}
-        setSelectedValues={(value) =>
-          setFilters({
-            districts: value && value.length > 0 ? value : undefined,
-          })
+      <FacetFilter
+        options={areas}
+        title="АО"
+        selectedValues={filters.okrugs}
+        setSelectedValues={
+          (value) => {
+            const isValueSet = value && value.length > 0;
+
+            const allowedDistricts = areas
+              .filter((area) => value.some((okrug) => okrug === area.value))
+              .reduce((accumulator, current) => {
+                return [
+                  ...accumulator,
+                  ...current.items.map((item) => item.value),
+                ];
+              }, [] as string[]);
+
+            const filteredDistricts = filters.districts?.filter((district) => {
+              return allowedDistricts.some((allowed) => allowed === district);
+            });
+
+            const filterObject = {
+              okrugs: isValueSet ? value : undefined,
+            } as Partial<GetOldBuldingsDto>;
+
+            filterObject.districts = isValueSet
+              ? filteredDistricts && filteredDistricts.length > 0
+                ? filteredDistricts
+                : undefined
+              : filters?.districts;
+
+            setFilters(filterObject);
+          }
+          //
         }
-      /> */}
+      />
       <NestedFacetFilter
-        groups={areas}
+        groups={filters.okrugs ? filteredAreas : areas}
         title="Район"
         selectedValues={filters.districts}
         setSelectedValues={(value) =>
@@ -142,7 +175,8 @@ const OldBuildingsFilter = ({
         variant={'secondary'}
         onClick={() =>
           setFilters({
-            districts: undefined,
+            // okrugs: undefined,
+            // districts: undefined,
             relocationType: [1],
             relocationAge: [
               'Менее месяца',
@@ -151,9 +185,9 @@ const OldBuildingsFilter = ({
               'От 5 до 8 месяцев',
               'Более 8 месяцев',
             ],
-            relocationStatus: undefined,
+            // relocationStatus: undefined,
             deviation: ['Есть риски', 'Требует внимания', 'Без отклонений'],
-            adress: undefined,
+            // adress: undefined,
             // MFRInvolvment: ['Без МФР'],
           })
         }
@@ -162,7 +196,8 @@ const OldBuildingsFilter = ({
         В работе
       </Button>
 
-      {(filters?.districts ||
+      {(filters?.okrugs ||
+        filters?.districts ||
         filters?.relocationType ||
         filters?.relocationAge ||
         filters.relocationStatus ||
@@ -173,6 +208,7 @@ const OldBuildingsFilter = ({
           variant="ghost"
           onClick={() =>
             setFilters({
+              okrugs: undefined,
               districts: undefined,
               relocationType: undefined,
               relocationAge: undefined,
