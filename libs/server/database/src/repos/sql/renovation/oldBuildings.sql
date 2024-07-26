@@ -205,9 +205,24 @@
 -- ${conditions:raw}
 -- LIMIT ${limit:raw} OFFSET ${offset:raw};
 
-
-SELECT *, COUNT(*) OVER() as "totalCount"
-FROM ${view:raw} --renovation.old_buildings_fe
+WITH ao_ordering(o_okrug, rank) AS (
+	VALUES
+	('ЦАО',1),
+	('САО',2),
+	('СВАО',3),
+	('ВАО',4),
+	('ЮВАО',5),
+	('ЮАО',6),
+	('ЮЗАО',7),
+	('ЗАО',8),
+	('СЗАО',9),
+	('ЗелАО',10),
+	('ТАО',11),
+	('НАО',12)
+)
+SELECT b.*, COUNT(*) OVER() as "totalCount"
+FROM ${view:raw} b --renovation.old_buildings_fe
+LEFT JOIN ao_ordering o ON o.o_okrug = b.okrug
 ${conditions:raw}
-ORDER BY okrug, district, adress
+ORDER BY o.rank, district, adress
 LIMIT ${limit:raw} OFFSET ${offset:raw};

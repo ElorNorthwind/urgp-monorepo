@@ -1,6 +1,6 @@
 import { IDatabase, IMain } from 'pg-promise';
-import path = require('path');
-import pgPromise = require('pg-promise');
+// import path = require('path');
+// import pgPromise = require('pg-promise');
 import {
   GetOldAppartmentsDto,
   GetOldBuldingsDto,
@@ -35,7 +35,7 @@ export class RenovationRepository {
     const {
       limit = 500,
       offset = 0,
-      okrug,
+      okrugs,
       districts,
       relocationType,
       deviation,
@@ -46,8 +46,8 @@ export class RenovationRepository {
       noMFR = false,
     } = dto;
     const where = [];
-    if (okrug) {
-      where.push(`okrug = '${okrug}'`);
+    if (okrugs) {
+      where.push(`okrug = ANY(ARRAY['${okrugs.join("','")}'])`);
     }
     if (districts && districts.length > 0) {
       where.push(`district = ANY(ARRAY['${districts.join("','")}'])`);
@@ -95,10 +95,10 @@ export class RenovationRepository {
 
   // Returns old houses for renovation;
   getOldAppartments(dto: GetOldAppartmentsDto): Promise<OldAppartment[]> {
-    const { limit = 500, offset = 0, okrug, districts, buildingId } = dto;
+    const { limit = 500, offset = 0, okrugs, districts, buildingId } = dto;
     const where = [];
-    if (okrug) {
-      where.push(`okrug = '${okrug}'`);
+    if (okrugs) {
+      where.push(`okrug = ANY(ARRAY['${okrugs.join("','")}'])`);
     }
     if (districts && districts.length > 0) {
       where.push(`"district" = ANY(ARRAY['${districts.join("','")}'])`);
