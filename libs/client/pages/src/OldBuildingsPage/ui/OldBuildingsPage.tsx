@@ -44,7 +44,6 @@ const OldBuildingsPage = (): JSX.Element => {
 
   const setFilters = useCallback(
     (value: Partial<GetOldBuldingsDto>) => {
-      console.log(filters);
       navigate({
         search: (prev: GetOldBuldingsDto) => ({
           ...prev,

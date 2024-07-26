@@ -63,20 +63,20 @@ export const getOldBuldings = z
       //   } catch (error) {
       //     ctx.addIssue({
       //       code: z.ZodIssueCode.custom,
-      //       message: 'invalid json',
+      //       message: 'invalid object string: ' + value,
       //     });
       //     return z.never;
       //   }
       // })
       // .pipe(sortingOption)
-      // .or(z.pipe(sortingOption))
-      // .transform((value) => JSON.parse(value))
+      // .or(sortingOption)
       .or(
         z.object({
           id: z.string(),
           desc: z.boolean(),
         }),
       ),
+    // sorting: sortingOption,
     adress: z.string(),
     status: z.number().array(),
     dificulty: z.number().array(),

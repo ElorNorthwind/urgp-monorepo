@@ -9,6 +9,7 @@ import {
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
+import { Logger } from '@nestjs/common';
 // // Helper for linking to external query files:
 // function sql(file: string) {
 //   const fullPath = path.join(__dirname, file);
@@ -44,8 +45,10 @@ export class RenovationRepository {
       adress,
       MFRInvolvment,
       noMFR = false,
+      sorting,
     } = dto;
     const where = [];
+    console.log(JSON.stringify(sorting));
     if (okrugs) {
       where.push(`okrug = ANY(ARRAY['${okrugs.join("','")}'])`);
     }
