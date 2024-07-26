@@ -17,6 +17,7 @@ import { HStack } from './stack';
 import {
   ChevronDown,
   ChevronRight,
+  ChevronsDown,
   ChevronsUpDown,
   LoaderCircle,
 } from 'lucide-react';
@@ -153,19 +154,19 @@ export function VirtualDataTable<TData, TValue>({
                         )}
                     {header.column.getCanSort() && (
                       <Button
-                        variant="ghost"
+                        variant="link"
                         className="relative h-6 w-6 overflow-clip p-0"
                         onClick={() => header.column.toggleSorting()}
                       >
                         <ChevronsUpDown
                           className={cn(
-                            'text-muted-foreground/40 h-4 w-4 transition-transform ',
+                            'text-muted-foreground/40 hover:text-muted-foreground h-4 w-4 transition-transform',
                             header.column.getIsSorted()
                               ? 'scale-0'
                               : ' scale-100',
                           )}
                         />
-                        <ChevronDown
+                        <ChevronsDown
                           className={cn(
                             'absolute h-6 w-6 transition-transform',
                             header.column.getIsSorted() === 'asc'
