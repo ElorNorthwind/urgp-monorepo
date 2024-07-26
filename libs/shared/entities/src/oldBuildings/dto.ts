@@ -1,5 +1,10 @@
 import { z } from 'zod';
 
+const sortingOption = z.object({
+  id: z.string(),
+  desc: z.boolean(),
+});
+
 export const getOldBuldings = z
   .object({
     limit: z.coerce.number().min(1).default(500).or(z.literal('ALL')),
@@ -50,6 +55,28 @@ export const getOldBuldings = z
       .enum(['true', 'false'])
       .transform((value) => value === 'true')
       .or(z.boolean().default(false)),
+    sorting: z
+      .string()
+      // .transform((value, ctx) => {
+      //   try {
+      //     return JSON.parse(value);
+      //   } catch (error) {
+      //     ctx.addIssue({
+      //       code: z.ZodIssueCode.custom,
+      //       message: 'invalid json',
+      //     });
+      //     return z.never;
+      //   }
+      // })
+      // .pipe(sortingOption)
+      // .or(z.pipe(sortingOption))
+      // .transform((value) => JSON.parse(value))
+      .or(
+        z.object({
+          id: z.string(),
+          desc: z.boolean(),
+        }),
+      ),
     adress: z.string(),
     status: z.number().array(),
     dificulty: z.number().array(),

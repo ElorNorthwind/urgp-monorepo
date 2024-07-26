@@ -1,8 +1,11 @@
 import {
   ColumnDef,
+  ColumnSort,
   flexRender,
   getCoreRowModel,
+  OnChangeFn,
   Row,
+  SortingState,
   useReactTable,
 } from '@tanstack/react-table';
 import {
@@ -33,8 +36,12 @@ interface VirtualDataTableProps<TData, TValue> {
   onRowDoubleClick?: (row: Row<TData>) => void;
   compact?: boolean;
   enableMultiRowSelection?: boolean;
-  sorting?: { id: string; desc: boolean }[];
-  setSorting?: (value: { id: string; desc: boolean }[]) => void;
+  sorting?: ColumnSort[];
+  setSorting?: (sorting: ColumnSort[]) => void;
+
+  //   // get table row selection and setter from store or any other source
+  // const rowSelection: RowSelectionState = ...
+  // const myCustomRowSelectionSetter: (rowSelection: RowSelectionState) => void = ...
 }
 
 export function VirtualDataTable<TData, TValue>({
@@ -67,7 +74,15 @@ export function VirtualDataTable<TData, TValue>({
     state: {
       sorting,
     },
-    onSortingChange: setSorting,
+    // onSortingChange: setSorting,
+
+    onSortingChange: (updaterOrValue) => {
+      if (typeof updaterOrValue === 'function') {
+        setSorting(updaterOrValue(table.getState().sorting));
+      } else {
+        setSorting(updaterOrValue);
+      }
+    },
   });
 
   const { rows } = table.getRowModel();
@@ -143,7 +158,7 @@ export function VirtualDataTable<TData, TValue>({
                     {header.column.getCanSort() ? (
                       <Button
                         variant="link"
-                        className="group relative overflow-clip pr-8 hover:no-underline"
+                        className="text-muted-foreground hover:text-primary group relative overflow-clip pr-8 hover:no-underline"
                         onClick={() => header.column.toggleSorting()}
                       >
                         {header.isPlaceholder

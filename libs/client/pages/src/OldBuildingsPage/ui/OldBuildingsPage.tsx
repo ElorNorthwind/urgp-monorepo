@@ -23,16 +23,15 @@ const OldBuildingsPage = (): JSX.Element => {
   const navigate = useNavigate({ from: '/oldbuildings' });
   const [offset, setOffset] = useState(0);
 
-  const [sorting, setSortting] = useState(
-    [] as { id: string; desc: boolean }[],
-  );
-
   const [currentAdress, setCurrentAddress] = useState<OldBuilding | null>(null);
 
-  // for debug only. Cos Im THAT bad
-  useEffect(() => {
-    console.log(JSON.stringify(sorting, null, 2));
-  }, [sorting]);
+  // // for debug only. Cos Im THAT bad
+  // const [sorting, setSortting] = useState(
+  //   [] as { id: string; desc: boolean }[],
+  // );
+  // useEffect(() => {
+  //   console.log(JSON.stringify(sorting, null, 2));
+  // }, [sorting]);
 
   const {
     currentData: buildings,
@@ -45,6 +44,7 @@ const OldBuildingsPage = (): JSX.Element => {
 
   const setFilters = useCallback(
     (value: Partial<GetOldBuldingsDto>) => {
+      console.log(filters);
       navigate({
         search: (prev: GetOldBuldingsDto) => ({
           ...prev,
@@ -89,8 +89,16 @@ const OldBuildingsPage = (): JSX.Element => {
             callbackFn={() => setOffset(buildings?.length || 0)}
             callbackMargin={3000}
             enableMultiRowSelection={false}
-            sorting={sorting}
-            setSorting={setSortting}
+            sorting={
+              filters?.sorting
+                ? [filters.sorting as { id: string; desc: boolean }]
+                : []
+            }
+            setSorting={(value) => {
+              setFilters({
+                sorting: value && value.length > 0 ? value[0] : undefined,
+              });
+            }}
           />
           <OldBuildingsCard
             building={currentAdress}
