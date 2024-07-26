@@ -14,13 +14,7 @@ import {
   TableRow,
 } from './table';
 import { HStack } from './stack';
-import {
-  ChevronDown,
-  ChevronRight,
-  ChevronsDown,
-  ChevronsUpDown,
-  LoaderCircle,
-} from 'lucide-react';
+import { ChevronDown, ChevronsUpDown, LoaderCircle } from 'lucide-react';
 import { ScrollArea } from './scroll-area';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '../../lib/cn';
@@ -146,29 +140,29 @@ export function VirtualDataTable<TData, TValue>({
                       minWidth: `${header.getSize()}px`,
                     }}
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                    {header.column.getCanSort() && (
+                    {header.column.getCanSort() ? (
                       <Button
                         variant="link"
-                        className="relative h-6 w-6 overflow-clip p-0"
+                        className="group relative overflow-clip pr-8 hover:no-underline"
                         onClick={() => header.column.toggleSorting()}
                       >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
                         <ChevronsUpDown
                           className={cn(
-                            'text-muted-foreground/40 hover:text-muted-foreground h-4 w-4 transition-transform',
+                            'text-muted-foreground/40 group-hover:text-muted-foreground absolute right-3 h-4 w-4 transition-transform',
                             header.column.getIsSorted()
                               ? 'scale-0'
-                              : ' scale-100',
+                              : 'scale-100',
                           )}
                         />
-                        <ChevronsDown
+                        <ChevronDown
                           className={cn(
-                            'absolute h-6 w-6 transition-transform',
+                            'text-primary/60 group-hover:text-primary absolute right-2 h-6 w-6 transition-transform',
                             header.column.getIsSorted() === 'asc'
                               ? 'translate-y-0 rotate-180 scale-100'
                               : header.column.getIsSorted() === 'desc'
@@ -177,6 +171,11 @@ export function VirtualDataTable<TData, TValue>({
                           )}
                         />
                       </Button>
+                    ) : header.isPlaceholder ? null : (
+                      flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )
                     )}
                   </TableHead>
                 );
