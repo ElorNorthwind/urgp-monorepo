@@ -14,11 +14,17 @@ import {
   TableRow,
 } from './table';
 import { HStack } from './stack';
-import { LoaderCircle } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronRight,
+  ChevronsUpDown,
+  LoaderCircle,
+} from 'lucide-react';
 import { ScrollArea } from './scroll-area';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '../../lib/cn';
 import { useVirtualizer } from '@tanstack/react-virtual';
+import { Button } from './button';
 
 interface VirtualDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -32,6 +38,8 @@ interface VirtualDataTableProps<TData, TValue> {
   onRowDoubleClick?: (row: Row<TData>) => void;
   compact?: boolean;
   enableMultiRowSelection?: boolean;
+  sorting?: { id: string; desc: boolean }[];
+  setSorting?: (value: { id: string; desc: boolean }[]) => void;
 }
 
 export function VirtualDataTable<TData, TValue>({
@@ -46,6 +54,8 @@ export function VirtualDataTable<TData, TValue>({
   onRowDoubleClick,
   compact = false,
   enableMultiRowSelection = true,
+  sorting,
+  setSorting,
 }: VirtualDataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const table = useReactTable({
@@ -58,6 +68,11 @@ export function VirtualDataTable<TData, TValue>({
       // maxSize: 500, //enforced during column resizing
     },
     enableMultiRowSelection,
+    manualSorting: true, //use pre-sorted row model instead of sorted row model
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
   });
 
   const { rows } = table.getRowModel();
@@ -136,6 +151,32 @@ export function VirtualDataTable<TData, TValue>({
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
+                    {header.column.getCanSort() && (
+                      <Button
+                        variant="ghost"
+                        className="relative h-6 w-6 overflow-clip p-0"
+                        onClick={() => header.column.toggleSorting()}
+                      >
+                        <ChevronsUpDown
+                          className={cn(
+                            'text-muted-foreground/40 h-4 w-4 transition-transform ',
+                            header.column.getIsSorted()
+                              ? 'scale-0'
+                              : ' scale-100',
+                          )}
+                        />
+                        <ChevronDown
+                          className={cn(
+                            'absolute h-6 w-6 transition-transform',
+                            header.column.getIsSorted() === 'asc'
+                              ? 'translate-y-0 rotate-180 scale-100'
+                              : header.column.getIsSorted() === 'desc'
+                                ? 'translate-y-0 scale-100'
+                                : 'text-muted-foreground/40 scale-0',
+                          )}
+                        />
+                      </Button>
+                    )}
                   </TableHead>
                 );
               })}

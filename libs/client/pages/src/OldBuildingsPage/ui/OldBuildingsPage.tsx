@@ -13,7 +13,7 @@ import {
   VStack,
 } from '@urgp/client/shared';
 import { LoadedResultCounter, OldBuildingsFilter } from '@urgp/client/widgets';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { GetOldBuldingsDto, OldBuilding } from '@urgp/shared/entities';
 
 const OldBuildingsPage = (): JSX.Element => {
@@ -23,7 +23,16 @@ const OldBuildingsPage = (): JSX.Element => {
   const navigate = useNavigate({ from: '/oldbuildings' });
   const [offset, setOffset] = useState(0);
 
+  const [sorting, setSortting] = useState(
+    [] as { id: string; desc: boolean }[],
+  );
+
   const [currentAdress, setCurrentAddress] = useState<OldBuilding | null>(null);
+
+  // for debug only. Cos Im THAT bad
+  useEffect(() => {
+    console.log(JSON.stringify(sorting, null, 2));
+  }, [sorting]);
 
   const {
     currentData: buildings,
@@ -80,6 +89,8 @@ const OldBuildingsPage = (): JSX.Element => {
             callbackFn={() => setOffset(buildings?.length || 0)}
             callbackMargin={3000}
             enableMultiRowSelection={false}
+            sorting={sorting}
+            setSorting={setSortting}
           />
           <OldBuildingsCard
             building={currentAdress}

@@ -12,7 +12,7 @@ const columnHelper = createColumnHelper<OldBuilding>();
 export const oldBuildingsColumns = [
   columnHelper.accessor('district', {
     header: 'Район',
-    size: 160,
+    size: 150,
     cell: (props) => {
       return <AreaCell {...props} />;
     },
@@ -40,6 +40,7 @@ export const oldBuildingsColumns = [
     cell: (props) => {
       return <RelocationStatusCell {...props} />;
     },
+    enableSorting: false,
   }),
 
   columnHelper.accessor('terms.actual.firstResetlementStart', {
@@ -57,7 +58,7 @@ export const oldBuildingsColumns = [
 
   columnHelper.accessor((row) => row.totalApartments.toString(), {
     header: 'Квартир',
-    size: 80,
+    size: 90,
     cell: (props) => {
       return <ApartmentsCell {...props} />;
     },
@@ -65,6 +66,7 @@ export const oldBuildingsColumns = [
       headerClass: 'justify-center',
       cellClass: 'justify-center',
     },
+    enableSorting: true,
   }),
 
   columnHelper.accessor((row) => row.apartments.deviation.done.toString(), {
