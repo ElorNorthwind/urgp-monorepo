@@ -17,7 +17,6 @@ export const oldBuildingsApi = rtkApi.injectEndpoints({
           params: { ...query },
         };
       },
-
       // Only have one cache entry because the arg always maps to one string
       serializeQueryArgs: ({ queryArgs, endpointDefinition, endpointName }) => {
         return { ...queryArgs, offset: undefined };

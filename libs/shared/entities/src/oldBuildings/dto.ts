@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-const sortingOption = z.object({
-  id: z.string(),
-  desc: z.boolean(),
-});
+// const sortingOption = z.object({
+//   id: z.string(),
+//   desc: z.boolean(),
+// });
 
 export const getOldBuldings = z
   .object({
@@ -55,28 +55,23 @@ export const getOldBuldings = z
       .enum(['true', 'false'])
       .transform((value) => value === 'true')
       .or(z.boolean().default(false)),
-    sorting: z
-      .string()
-      // .transform((value, ctx) => {
-      //   try {
-      //     return JSON.parse(value);
-      //   } catch (error) {
-      //     ctx.addIssue({
-      //       code: z.ZodIssueCode.custom,
-      //       message: 'invalid object string: ' + value,
-      //     });
-      //     return z.never;
-      //   }
-      // })
-      // .pipe(sortingOption)
-      // .or(sortingOption)
-      .or(
-        z.object({
-          id: z.string(),
-          desc: z.boolean(),
-        }),
-      ),
-    // sorting: sortingOption,
+    // sorting: z
+    //   .string()
+    //   .transform((value, ctx) => {
+    //     try {
+    //       return JSON.parse(value);
+    //     } catch (error) {
+    //       ctx.addIssue({
+    //         code: z.ZodIssueCode.custom,
+    //         message: 'invalid object string: ' + value,
+    //       });
+    //       return z.never;
+    //     }
+    //   })
+    //   .pipe(sortingOption)
+    //   .or(sortingOption),
+    sortingKey: z.string(),
+    sortingDirection: z.string(),
     adress: z.string(),
     status: z.number().array(),
     dificulty: z.number().array(),

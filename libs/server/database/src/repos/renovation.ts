@@ -45,10 +45,11 @@ export class RenovationRepository {
       adress,
       MFRInvolvment,
       noMFR = false,
-      sorting,
+      sortingKey,
+      sortingDirection = 'asc',
     } = dto;
     const where = [];
-    console.log(JSON.stringify(sorting));
+    // console.log(JSON.stringify(sorting));
     if (okrugs) {
       where.push(`okrug = ANY(ARRAY['${okrugs.join("','")}'])`);
     }

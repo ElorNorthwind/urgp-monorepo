@@ -89,14 +89,25 @@ const OldBuildingsPage = (): JSX.Element => {
             callbackMargin={3000}
             enableMultiRowSelection={false}
             sorting={
-              filters?.sorting
-                ? [filters.sorting as { id: string; desc: boolean }]
+              filters?.sortingKey
+                ? [
+                    {
+                      id: filters.sortingKey,
+                      desc: filters.sortingDirection === 'desc',
+                    } as { id: string; desc: boolean },
+                  ]
                 : []
             }
             setSorting={(value) => {
-              setFilters({
-                sorting: value && value.length > 0 ? value[0] : undefined,
-              });
+              value && value.length > 0
+                ? setFilters({
+                    sortingKey: value[0].id,
+                    sortingDirection: value[0].desc ? 'desc' : 'asc',
+                  })
+                : setFilters({
+                    sortingKey: undefined,
+                    sortingDirection: undefined,
+                  });
             }}
           />
           <OldBuildingsCard
