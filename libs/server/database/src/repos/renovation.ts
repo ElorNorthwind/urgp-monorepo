@@ -16,31 +16,31 @@ import { Logger } from '@nestjs/common';
 //   return new pgPromise.QueryFile(fullPath, { minify: true });
 // }
 
-const oldBuildingsSorting = {
+const oldBuildingsSorting: Record<string, Record<string, string>> = {
   district: {
     asc: 'o.rank, district, adress',
     desc: 'o.rank DESC, district DESC, adress DESC',
   },
   adress: { asc: 'adress', desc: 'adress DESC' },
   age: {
-    asc: 'a.rank, terms=>actual=>>firstResetlementStart, adress',
-    desc: 'a.rank DESC, terms=>actual=>>firstResetlementStart DESC, adress',
+    asc: `a.rank, terms->'actual'->>'firstResetlementStart', adress`,
+    desc: `a.rank DESC, terms->'actual'->>'firstResetlementStart' DESC, adress`,
   },
   status: {
-    asc: 'b.status, o.rank, district, adress',
-    desc: 'b.status DESC, o.rank, district, adress',
+    asc: 's.rank, o.rank, district, adress',
+    desc: 's.rank DESC, o.rank, district, adress',
   },
   date: {
-    asc: 'terms=>actual=>>firstResetlementStart NULLS LAST, adress',
-    desc: 'terms=>actual=>>firstResetlementStart DESC NULLS FIRST, adress',
+    asc: `terms->'actual'->>'firstResetlementStart' NULLS LAST, adress`,
+    desc: `terms->'actual'->>'firstResetlementStart' DESC NULLS LAST, adress`,
   },
   total: {
-    asc: '"totalApartments", adress',
-    desc: '"totalApartments" DESC, adress',
+    asc: '"totalApartments" NULLS LAST, adress',
+    desc: '"totalApartments" DESC NULLS LAST, adress',
   },
   risk: {
-    asc: 'apartments=>deviation=>>risk / "totalApartments", adress',
-    desc: 'apartments=>deviation=>>risk / "totalApartments" DESC, adress',
+    asc: `CASE WHEN "totalApartments" = 0 THEN null ELSE CAST(apartments->'deviation'->>'risk' as  decimal) / "totalApartments" END NULLS LAST, adress`,
+    desc: `CASE WHEN "totalApartments" = 0 THEN null ELSE CAST(apartments->'deviation'->>'risk' as  decimal) / "totalApartments" END DESC NULLS LAST, adress`,
   },
 };
 
@@ -77,7 +77,15 @@ export class RenovationRepository {
       sortingDirection = 'asc',
     } = dto;
     const where = [];
-    console.log(sortingKey, sortingDirection);
+
+    console.log(sortingDirection, sortingKey);
+
+    const ordering = sortingKey
+      ? oldBuildingsSorting?.[sortingKey as string]?.[
+          sortingDirection as string
+        ] || 'o.rank, district, adress'
+      : 'o.rank, district, adress';
+
     if (okrugs) {
       where.push(`okrug = ANY(ARRAY['${okrugs.join("','")}'])`);
     }
@@ -119,6 +127,7 @@ export class RenovationRepository {
       limit,
       offset,
       conditions,
+      ordering,
       view: noMFR
         ? 'renovation.old_buildings_no_mfr'
         : 'renovation.old_buildings_fe',

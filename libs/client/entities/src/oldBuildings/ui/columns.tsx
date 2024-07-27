@@ -47,19 +47,23 @@ export const oldBuildingsColumns = [
     // enableSorting: false,
   }),
 
-  columnHelper.accessor('terms.actual.firstResetlementStart', {
-    id: 'date',
-    header: 'Старт',
-    size: 90,
+  columnHelper.accessor(
+    (row) => (row.terms.actual.firstResetlementStart || '-').toString(),
+    {
+      // terms.actual.firstResetlementStart'
+      id: 'date',
+      header: 'Старт',
+      size: 90,
 
-    cell: (props) => {
-      return <TermsCell {...props} />;
+      cell: (props) => {
+        return <TermsCell {...props} />;
+      },
+      meta: {
+        headerClass: 'justify-center',
+        cellClass: 'justify-center',
+      },
     },
-    meta: {
-      headerClass: 'justify-center',
-      cellClass: 'justify-center',
-    },
-  }),
+  ),
 
   columnHelper.accessor((row) => row.totalApartments.toString(), {
     id: 'total',

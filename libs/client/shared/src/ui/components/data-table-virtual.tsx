@@ -17,7 +17,12 @@ import {
   TableRow,
 } from './table';
 import { HStack } from './stack';
-import { ChevronDown, ChevronsUpDown, LoaderCircle } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronsUpDown,
+  ChevronUp,
+  LoaderCircle,
+} from 'lucide-react';
 import { ScrollArea } from './scroll-area';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '../../lib/cn';
@@ -175,7 +180,7 @@ export function VirtualDataTable<TData, TValue>({
                               : 'scale-100',
                           )}
                         />
-                        <ChevronDown
+                        <ChevronUp
                           className={cn(
                             'text-primary/60 group-hover:text-primary absolute right-2 h-6 w-6 transition-transform',
                             header.column.getIsSorted() === 'asc'
