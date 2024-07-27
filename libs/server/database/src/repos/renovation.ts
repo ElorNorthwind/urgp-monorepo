@@ -31,8 +31,8 @@ const oldBuildingsSorting: Record<string, Record<string, string>> = {
     desc: 's.rank DESC, o.rank, district, adress',
   },
   date: {
-    asc: `terms->'actual'->>'firstResetlementStart' NULLS LAST, adress`,
-    desc: `terms->'actual'->>'firstResetlementStart' DESC NULLS LAST, adress`,
+    asc: `COALESCE(terms->'actual'->>'firstResetlementStart', terms->'plan'->>'firstResetlementStart') NULLS LAST, adress`,
+    desc: `COALESCE(terms->'actual'->>'firstResetlementStart', terms->'plan'->>'firstResetlementStart') DESC NULLS LAST, adress`,
   },
   total: {
     asc: '"totalApartments" NULLS LAST, adress',
@@ -77,8 +77,6 @@ export class RenovationRepository {
       sortingDirection = 'asc',
     } = dto;
     const where = [];
-
-    console.log(sortingDirection, sortingKey);
 
     const ordering = sortingKey
       ? oldBuildingsSorting?.[sortingKey as string]?.[

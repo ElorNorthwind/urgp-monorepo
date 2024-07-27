@@ -3,6 +3,7 @@ import {
   ColumnSort,
   flexRender,
   getCoreRowModel,
+  InitialTableState,
   OnChangeFn,
   Row,
   SortingState,
@@ -43,7 +44,7 @@ interface VirtualDataTableProps<TData, TValue> {
   enableMultiRowSelection?: boolean;
   sorting?: ColumnSort[];
   setSorting?: (sorting: ColumnSort[]) => void;
-
+  initialState?: InitialTableState;
   //   // get table row selection and setter from store or any other source
   // const rowSelection: RowSelectionState = ...
   // const myCustomRowSelectionSetter: (rowSelection: RowSelectionState) => void = ...
@@ -63,6 +64,7 @@ export function VirtualDataTable<TData, TValue>({
   enableMultiRowSelection = true,
   sorting,
   setSorting,
+  initialState,
 }: VirtualDataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const table = useReactTable({
@@ -79,8 +81,6 @@ export function VirtualDataTable<TData, TValue>({
     state: {
       sorting,
     },
-    // onSortingChange: setSorting,
-
     onSortingChange: (updaterOrValue) => {
       if (typeof updaterOrValue === 'function') {
         setSorting(updaterOrValue(table.getState().sorting));
@@ -88,6 +88,7 @@ export function VirtualDataTable<TData, TValue>({
         setSorting(updaterOrValue);
       }
     },
+    initialState,
   });
 
   const { rows } = table.getRowModel();

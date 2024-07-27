@@ -101,6 +101,14 @@ const OldBuildingsPage = (): JSX.Element => {
                     sortingDirection: undefined,
                   });
             }}
+            initialState={{
+              sorting: [
+                {
+                  id: 'district',
+                  desc: false,
+                },
+              ],
+            }}
           />
           <OldBuildingsCard
             building={currentAdress}
