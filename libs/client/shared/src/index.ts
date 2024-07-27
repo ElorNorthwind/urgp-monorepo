@@ -36,6 +36,7 @@ export * from './lib/getDirtyValues';
 export * from './lib/debounce';
 export * from './lib/onBottomReached';
 export * from './lib/formatDate';
+export * from './lib/getDatesInterval';
 
 // export api
 export * from './api/rtkApi';

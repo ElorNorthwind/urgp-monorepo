@@ -51,12 +51,12 @@ const ProblematicApartsTable = ({
           {building?.problematicAparts.map((apart) => {
             const referenceTerms = [
               {
-                label: 'Осмотр',
+                label: 'Направлен смотровой',
                 date: apart.dates.inspection,
                 term: apart.terms.inspection,
               },
               {
-                label: 'Отказ',
+                label: 'Получен отказ',
                 date: apart.dates.reject,
                 term: apart.terms.reject,
               },
@@ -80,7 +80,11 @@ const ProblematicApartsTable = ({
                 date: apart.dates.litigationDecision,
                 term: apart.terms.litigationDecision,
               },
-              { label: 'РД', date: apart.dates.rd, term: apart.terms.rd },
+              {
+                label: 'Издано РД',
+                date: apart.dates.rd,
+                term: apart.terms.rd,
+              },
               {
                 label: 'Проект договора',
                 date: apart.dates.contractProject,

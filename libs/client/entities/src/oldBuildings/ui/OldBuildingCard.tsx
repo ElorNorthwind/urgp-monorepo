@@ -13,6 +13,7 @@ import { X } from 'lucide-react';
 import { OldBuildingTermsTable } from './OldBuildingTermsTable';
 import { Separator } from '@radix-ui/react-separator';
 import { ProblematicApartsTable } from './ProblematicApartsTable';
+import { OldBuildingTermsChart } from './OldBuildingsTermsChart';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
@@ -48,6 +49,7 @@ const OldBuildingsCard = ({
             className="w-full flex-shrink "
             caption="Сроки отселения здания"
           />
+          <OldBuildingTermsChart terms={building.terms} className="w-full" />
           <ProblematicApartsTable
             building={building}
             className="w-full flex-grow "

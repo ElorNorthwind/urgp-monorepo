@@ -11,6 +11,7 @@ import {
 } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
 import { useCallback } from 'react';
+import { OldBuildingTermsChart } from './OldBuildingsTermsChart';
 
 type OldBuildingTermsTableProps = {
   building: OldBuilding | null;
@@ -85,6 +86,16 @@ const OldBuildingTermsTable = ({
                 {formatDate(building?.terms.actual.demolitionEnd)}
               </TableCell>
             </TableRow>
+            {building?.terms && (
+              <TableRow>
+                <TableCell colSpan={5} className="p-0">
+                  <OldBuildingTermsChart
+                    terms={building.terms}
+                    className="w-full"
+                  />
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>
