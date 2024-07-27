@@ -95,9 +95,9 @@ const OldBuildingTermsChart = ({
 
   return (
     <div className="flex w-full flex-col gap-0 p-2">
-      <div className="border-primary flex w-full flex-row justify-start gap-0 border-b border-l pt-1 pr-1 align-middle">
+      <div className="flex w-full flex-row justify-start gap-0 border-b border-l p-1 align-middle">
         {days
-          .filter((day) => day.plan > 0)
+          .filter((day) => day.plan > 0 || day.value === 'empty')
           .map((day) => (
             <div
               key={day.value}
@@ -105,7 +105,7 @@ const OldBuildingTermsChart = ({
                 day.actualClass,
                 'opacity-50',
                 'flex h-[1.25rem] items-center justify-center text-xs text-white',
-                // 'first:rounded-l last:rounded-r',
+                'last:rounded-r [&:nth-child(2)]:rounded-l',
               )}
               style={{ width: (day.plan / maxValue) * 100 + '%' }}
             >
@@ -115,9 +115,9 @@ const OldBuildingTermsChart = ({
             </div>
           ))}
       </div>
-      <div className="border-primary flex w-full flex-row items-center justify-start gap-0 border-l pb-1 pr-1 align-middle">
+      <div className=" flex w-full flex-row items-center justify-start gap-0 border-l p-1 align-middle">
         {days
-          .filter((day) => day.actual > 0)
+          .filter((day) => day.actual > 0 || day.value === 'empty')
           .map((day) => (
             <div
               key={day.value}
@@ -125,9 +125,9 @@ const OldBuildingTermsChart = ({
                 day.actualClass,
                 'relative flex h-[1.25rem] items-center justify-center text-xs text-white',
                 day.isOngoing &&
-                  "after:bg-striped after:absolute after:inset-0 after:opacity-20 after:content-['']",
+                  " after:bg-striped overflow-hidden after:absolute after:inset-0 after:opacity-20 after:content-['']",
                 // 'after:animate-background after:bg-[length:200%_15%] after:bg-[left_0%_bottom_0%] after:bg-repeat-x',
-                // 'first:rounded-l last:rounded-r',
+                'last:rounded-r [&:nth-child(2)]:rounded-l',
               )}
               style={{ width: (day.actual / maxValue) * 100 + '%' }}
             >
