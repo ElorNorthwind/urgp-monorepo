@@ -26,6 +26,7 @@ export * from './ui/components/sheet';
 export * from './ui/components/accordion';
 export * from './ui/components/switch';
 export * from './ui/components/facet-filter-nested';
+export * from './ui/components/tabs';
 
 // export layouts
 export * from './ui/layouts/main';

@@ -25,15 +25,17 @@ const OldBuildingTermsChart = ({
   const minDate = dayjs(terms.plan.firstResetlementStart).isBefore(
     dayjs(terms.actual.firstResetlementStart),
   )
-    ? dayjs(terms.actual.firstResetlementStart)
-    : dayjs(terms.plan.firstResetlementStart);
+    ? dayjs(terms.plan.firstResetlementStart)
+    : dayjs(terms.actual.firstResetlementStart);
 
   const days = [
     {
       value: 'empty',
       label: '',
-      plan: minDate.diff(dayjs(terms.plan.firstResetlementStart), 'days'),
-      actual: minDate.diff(dayjs(terms.actual.firstResetlementStart), 'days'),
+      plan: dayjs(terms.plan.firstResetlementStart).diff(minDate, 'days'),
+      actual: dayjs(terms.actual.firstResetlementStart).diff(minDate, 'days'),
+      //   plan: minDate.diff(dayjs(terms.plan.firstResetlementStart), 'days'),
+      //   actual: minDate.diff(dayjs(terms.actual.firstResetlementStart), 'days'),
       actualClass: cn('bg-none'),
       isOngoing: false,
     },
@@ -49,7 +51,10 @@ const OldBuildingTermsChart = ({
         'days',
       ),
       actualClass: cn('bg-sky-600'),
-      isOngoing: !terms.actual.firstResetlementEnd,
+      isOngoing:
+        !terms.actual.firstResetlementEnd &&
+        !terms.actual.secontResetlementEnd &&
+        !terms.actual.demolitionEnd,
     },
     {
       value: 'secondResetlement',
@@ -63,7 +68,8 @@ const OldBuildingTermsChart = ({
         'days',
       ),
       actualClass: cn('bg-rose-600'),
-      isOngoing: !terms.actual.secontResetlementEnd,
+      isOngoing:
+        !terms.actual.secontResetlementEnd && !terms.actual.demolitionEnd,
     },
     {
       value: 'demolition',
@@ -117,8 +123,10 @@ const OldBuildingTermsChart = ({
               key={day.value}
               className={cn(
                 day.actualClass,
-                'flex h-[1.25rem] items-center justify-center text-xs text-white',
-                day.isOngoing && 'animate-[pulse_1s_ease-in-out_infinite]',
+                'relative flex h-[1.25rem] items-center justify-center text-xs text-white',
+                day.isOngoing &&
+                  "after:bg-striped after:absolute after:inset-0 after:opacity-20 after:content-['']",
+                // 'after:animate-background after:bg-[length:200%_15%] after:bg-[left_0%_bottom_0%] after:bg-repeat-x',
                 // 'first:rounded-l last:rounded-r',
               )}
               style={{ width: (day.actual / maxValue) * 100 + '%' }}
@@ -126,7 +134,7 @@ const OldBuildingTermsChart = ({
               {day.value === 'empty' || day.actual / maxValue < 0.06
                 ? ''
                 : day.isOngoing
-                  ? '...'
+                  ? ''
                   : day.actual}
             </div>
           ))}

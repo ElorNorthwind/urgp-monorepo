@@ -62,16 +62,31 @@ module.exports = function buildConfig(appDir) {
             from: { height: 'var(--radix-accordion-content-height)' },
             to: { height: '0' },
           },
+          background: {
+            '0%, 100%': { backgroundPosition: 'left 0% bottom 0%' },
+            '50%': { backgroundPosition: 'left 200% bottom 0%' },
+          },
+          bg: {
+            to: {
+              backgroundPosition: '0 -200%',
+            },
+          },
         },
         animation: {
           'accordion-down': 'accordion-down 0.2s ease-out',
           'accordion-up': 'accordion-up 0.2s ease-out',
+          background: 'background 1s linear infinite',
         },
         height: {
           screen: ['100vh /* fallback for Opera, IE and etc. */', '100dvh'],
         },
         minHeight: {
           screen: ['100vh /* fallback for Opera, IE and etc. */', '100dvh'],
+        },
+
+        backgroundImage: {
+          striped:
+            'repeating-linear-gradient(135deg, rgba(0,0,0,1) 0px, rgba(0,0,0,1) 5px, rgba(255,255,255,0) 5px, rgba(255,255,255,0) 10px);',
         },
       },
     },
