@@ -34,7 +34,7 @@ const OldBuildingsCard = ({
   return (
     <Card
       className={cn(
-        'relative overflow-hidden transition-all',
+        'relative flex flex-col overflow-hidden transition-all',
         building ? '' : 'hidden',
         className,
       )}
@@ -47,7 +47,7 @@ const OldBuildingsCard = ({
         </CardDescription>
       </CardHeader>
       {building && (
-        <CardContent className="flex h-[calc(100%-5.7rem)] flex-col gap-3 overflow-hidden pt-2">
+        <CardContent className="flex flex-1 flex-col gap-3 overflow-hidden pt-2">
           <Tabs defaultValue="terms" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="terms">Сроки отселения</TabsTrigger>
@@ -69,10 +69,10 @@ const OldBuildingsCard = ({
               <div>{JSON.stringify(building.newBuildingMovements)}</div> */}
             </TabsContent>
           </Tabs>
+          <h3>Проблемные квартиры</h3>
           <ProblematicApartsTable
             building={building}
-            className="w-full flex-grow "
-            caption="Проблемные квартиры"
+            className="w-full flex-grow"
           />
           {onClose && (
             <Button

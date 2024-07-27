@@ -95,7 +95,7 @@ const OldBuildingTermsChart = ({
 
   return (
     <div className="flex w-full flex-col gap-0 p-2">
-      <div className="flex w-full flex-row justify-start gap-0 border-b border-l p-1 align-middle">
+      <div className="flex w-full flex-row justify-start gap-0 border-b border-l pl-1 pb-1 align-middle">
         {days
           .filter((day) => day.plan > 0 || day.value === 'empty')
           .map((day) => (
@@ -115,7 +115,7 @@ const OldBuildingTermsChart = ({
             </div>
           ))}
       </div>
-      <div className=" flex w-full flex-row items-center justify-start gap-0 border-l p-1 align-middle">
+      <div className="flex w-full flex-row items-center justify-start gap-0 border-l pl-1 pt-1 align-middle">
         {days
           .filter((day) => day.actual > 0 || day.value === 'empty')
           .map((day) => (
