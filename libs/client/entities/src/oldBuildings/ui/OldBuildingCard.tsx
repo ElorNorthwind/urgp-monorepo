@@ -10,14 +10,11 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-  VStack,
 } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
 import { OldBuildingTermsTable } from './OldBuildingTermsTable';
-import { Separator } from '@radix-ui/react-separator';
 import { ProblematicApartsTable } from './ProblematicApartsTable';
-import { OldBuildingTermsChart } from './OldBuildingsTermsChart';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;

@@ -1,16 +1,4 @@
-import {
-  cn,
-  formatDate,
-  getDatesInterval,
-  HStack,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-  VStack,
-} from '@urgp/client/shared';
+import { cn } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
 import dayjs from 'dayjs';
 
@@ -91,7 +79,8 @@ const OldBuildingTermsChart = ({
     days.reduce((acc, day) => acc + day.actual, 0),
   );
 
-  if (maxValue === 0) return <></>;
+  if (maxValue === 0)
+    return <div className="flex w-full place-items-center">Нет данных</div>;
 
   return (
     <div className="flex w-full flex-col gap-1 p-2">
