@@ -66,7 +66,10 @@ const OldBuildingsCard = ({
               <div>{JSON.stringify(building.newBuildingMovements)}</div> */}
             </TabsContent>
           </Tabs>
-          <h3>Проблемные квартиры</h3>
+          {building?.problematicAparts &&
+            building?.problematicAparts?.length > 0 && (
+              <h3>Проблемные квартиры</h3>
+            )}
           <ProblematicApartsTable
             building={building}
             className="w-full flex-grow"
