@@ -20,7 +20,7 @@ function RelocationTypeCell(
       {decoration?.icon && <decoration.icon className={decoration.className} />}
       <VStack gap={'none'} justify={'center'} align={'start'} className="">
         <div className="truncate whitespace-nowrap text-xs">
-          {props.getValue()}
+          {props.row.original.relocationType}
         </div>
         <div className="text-muted-foreground truncate whitespace-nowrap text-xs">
           {props.row.original.buildingRelocationStartAge}

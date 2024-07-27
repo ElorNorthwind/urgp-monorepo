@@ -11,6 +11,7 @@ const columnHelper = createColumnHelper<OldBuilding>();
 
 export const oldBuildingsColumns = [
   columnHelper.accessor('district', {
+    id: 'district',
     header: 'Район',
     size: 150,
     cell: (props) => {
@@ -19,33 +20,37 @@ export const oldBuildingsColumns = [
   }),
 
   columnHelper.accessor('adress', {
+    id: 'adress',
     header: 'Адрес',
-    size: 250,
+    size: 240,
     // cell: (props) => {
     //   return <AdressCell {...props} />;
     // },
   }),
 
-  columnHelper.accessor('relocationType', {
-    header: 'Тип переселения',
+  columnHelper.accessor('buildingRelocationStartAge', {
+    id: 'age',
+    header: 'Тип и срок',
     size: 210,
     cell: (props) => {
       return <RelocationTypeCell {...props} />;
     },
   }),
 
-  columnHelper.accessor('buildingDeviation', {
+  columnHelper.accessor('buildingRelocationStatus', {
+    id: 'status',
     header: 'Статус',
     size: 180,
     cell: (props) => {
       return <RelocationStatusCell {...props} />;
     },
-    enableSorting: false,
+    // enableSorting: false,
   }),
 
   columnHelper.accessor('terms.actual.firstResetlementStart', {
+    id: 'date',
     header: 'Старт',
-    size: 80,
+    size: 90,
 
     cell: (props) => {
       return <TermsCell {...props} />;
@@ -57,6 +62,7 @@ export const oldBuildingsColumns = [
   }),
 
   columnHelper.accessor((row) => row.totalApartments.toString(), {
+    id: 'total',
     header: 'Квартир',
     size: 90,
     cell: (props) => {
@@ -70,6 +76,7 @@ export const oldBuildingsColumns = [
   }),
 
   columnHelper.accessor((row) => row.apartments.deviation.done.toString(), {
+    id: 'risk',
     header: 'Ход работы',
     size: 220,
     cell: (props) => {

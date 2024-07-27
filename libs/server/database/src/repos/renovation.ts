@@ -16,6 +16,34 @@ import { Logger } from '@nestjs/common';
 //   return new pgPromise.QueryFile(fullPath, { minify: true });
 // }
 
+const oldBuildingsSorting = {
+  district: {
+    asc: 'o.rank, district, adress',
+    desc: 'o.rank DESC, district DESC, adress DESC',
+  },
+  adress: { asc: 'adress', desc: 'adress DESC' },
+  age: {
+    asc: 'a.rank, terms=>actual=>>firstResetlementStart, adress',
+    desc: 'a.rank DESC, terms=>actual=>>firstResetlementStart DESC, adress',
+  },
+  status: {
+    asc: 'b.status, o.rank, district, adress',
+    desc: 'b.status DESC, o.rank, district, adress',
+  },
+  date: {
+    asc: 'terms=>actual=>>firstResetlementStart NULLS LAST, adress',
+    desc: 'terms=>actual=>>firstResetlementStart DESC NULLS FIRST, adress',
+  },
+  total: {
+    asc: '"totalApartments", adress',
+    desc: '"totalApartments" DESC, adress',
+  },
+  risk: {
+    asc: 'apartments=>deviation=>>risk / "totalApartments", adress',
+    desc: 'apartments=>deviation=>>risk / "totalApartments" DESC, adress',
+  },
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type geodata = { geojson: any };
 
@@ -49,7 +77,7 @@ export class RenovationRepository {
       sortingDirection = 'asc',
     } = dto;
     const where = [];
-    // console.log(JSON.stringify(sorting));
+    console.log(sortingKey, sortingDirection);
     if (okrugs) {
       where.push(`okrug = ANY(ARRAY['${okrugs.join("','")}'])`);
     }

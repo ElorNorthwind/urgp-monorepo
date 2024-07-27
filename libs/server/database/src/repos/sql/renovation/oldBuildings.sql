@@ -219,10 +219,27 @@ WITH ao_ordering(o_okrug, rank) AS (
 	('ЗелАО',10),
 	('ТАО',11),
 	('НАО',12)
+), age_ordering(o_age, rank) AS (
+	VALUES
+    ('Не начато', 0),
+    ('Менее месяца', 1),
+    ('От 1 до 2 месяцев', 2),
+    ('От 2 до 5 месяцев', 3),
+    ('От 5 до 8 месяцев', 4),
+    ('Более 8 месяцев', 5),
+    ('Завершено', 6)
+), status_ordering(o_status, rank) AS (
+    ('Не начато', 0),
+    ('Переселение', 1),
+    ('Отселение', 2),
+    ('Снос', 3),
+    ('Завершено', 4),
 )
 SELECT b.*, COUNT(*) OVER() as "totalCount"
 FROM ${view:raw} b --renovation.old_buildings_fe
 LEFT JOIN ao_ordering o ON o.o_okrug = b.okrug
+LEFT JOIN age_ordering a ON a.o_age = b."buildingRelocationStartAge"
+LEFT JOIN status_ordering s ON s.o_status = b."buildingRelocationStatus"
 ${conditions:raw}
 ORDER BY o.rank, district, adress
 LIMIT ${limit:raw} OFFSET ${offset:raw};

@@ -13,7 +13,7 @@ import {
   VStack,
 } from '@urgp/client/shared';
 import { LoadedResultCounter, OldBuildingsFilter } from '@urgp/client/widgets';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { GetOldBuldingsDto, OldBuilding } from '@urgp/shared/entities';
 
 const OldBuildingsPage = (): JSX.Element => {
@@ -24,14 +24,6 @@ const OldBuildingsPage = (): JSX.Element => {
   const [offset, setOffset] = useState(0);
 
   const [currentAdress, setCurrentAddress] = useState<OldBuilding | null>(null);
-
-  // // for debug only. Cos Im THAT bad
-  // const [sorting, setSortting] = useState(
-  //   [] as { id: string; desc: boolean }[],
-  // );
-  // useEffect(() => {
-  //   console.log(JSON.stringify(sorting, null, 2));
-  // }, [sorting]);
 
   const {
     currentData: buildings,
