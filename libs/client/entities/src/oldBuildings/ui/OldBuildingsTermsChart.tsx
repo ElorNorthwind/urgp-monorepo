@@ -94,8 +94,8 @@ const OldBuildingTermsChart = ({
   if (maxValue === 0) return <></>;
 
   return (
-    <div className="flex w-full flex-col gap-0 p-2">
-      <div className="flex w-full flex-row justify-start gap-0 border-b border-l pl-1 pb-1 align-middle">
+    <div className="flex w-full flex-col gap-1 p-2">
+      <div className="flex w-full flex-row justify-start gap-0 align-middle">
         {days
           .filter((day) => day.plan > 0 || day.value === 'empty')
           .map((day) => (
@@ -109,13 +109,13 @@ const OldBuildingTermsChart = ({
               )}
               style={{ width: (day.plan / maxValue) * 100 + '%' }}
             >
-              {day.value === 'empty' || day.plan / maxValue < 0.06
+              {day.value === 'empty' || day.plan / maxValue < 0.07
                 ? ''
                 : day.plan}
             </div>
           ))}
       </div>
-      <div className="flex w-full flex-row items-center justify-start gap-0 border-l pl-1 pt-1 align-middle">
+      <div className="flex w-full flex-row items-center justify-start gap-0 align-middle">
         {days
           .filter((day) => day.actual > 0 || day.value === 'empty')
           .map((day) => (
@@ -125,13 +125,12 @@ const OldBuildingTermsChart = ({
                 day.actualClass,
                 'relative flex h-[1.25rem] items-center justify-center text-xs text-white',
                 day.isOngoing &&
-                  " after:bg-striped overflow-hidden after:absolute after:inset-0 after:opacity-20 after:content-['']",
-                // 'after:animate-background after:bg-[length:200%_15%] after:bg-[left_0%_bottom_0%] after:bg-repeat-x',
+                  "after:bg-striped overflow-hidden after:absolute after:inset-0 after:opacity-20 after:content-['']",
                 'last:rounded-r [&:nth-child(2)]:rounded-l',
               )}
               style={{ width: (day.actual / maxValue) * 100 + '%' }}
             >
-              {day.value === 'empty' || day.actual / maxValue < 0.06
+              {day.value === 'empty' || day.actual / maxValue < 0.07
                 ? ''
                 : day.isOngoing
                   ? ''
