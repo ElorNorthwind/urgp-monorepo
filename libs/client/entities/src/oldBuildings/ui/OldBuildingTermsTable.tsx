@@ -10,7 +10,6 @@ import {
   VStack,
 } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
-import { useCallback } from 'react';
 import { OldBuildingTermsChart } from './OldBuildingsTermsChart';
 
 type OldBuildingTermsTableProps = {

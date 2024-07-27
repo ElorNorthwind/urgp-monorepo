@@ -10,11 +10,13 @@ const OldBuildingTermsChart = ({
   terms,
   className,
 }: OldBuildingTermsChartProps): JSX.Element => {
-  const minDate = dayjs(terms.plan.firstResetlementStart).isBefore(
-    dayjs(terms.actual.firstResetlementStart),
-  )
-    ? dayjs(terms.plan.firstResetlementStart)
-    : dayjs(terms.actual.firstResetlementStart);
+  const minDate = terms.actual.firstResetlementStart
+    ? dayjs(terms.plan.firstResetlementStart).isBefore(
+        dayjs(terms.actual.firstResetlementStart),
+      )
+      ? dayjs(terms.plan.firstResetlementStart)
+      : dayjs(terms.actual.firstResetlementStart)
+    : dayjs(terms.plan.firstResetlementStart || undefined);
 
   const days = [
     {
@@ -75,15 +77,19 @@ const OldBuildingTermsChart = ({
     },
   ];
   const maxValue = Math.max(
-    days.reduce((acc, day) => acc + day.plan, 0),
-    days.reduce((acc, day) => acc + day.actual, 0),
+    days.reduce((acc, day) => acc + day.plan, 0) || 0,
+    days.reduce((acc, day) => acc + day.actual, 0) || 0,
   );
 
   if (maxValue === 0)
-    return <div className="flex w-full place-items-center">Нет данных</div>;
+    return (
+      <div className={cn('flex w-full place-items-center', className)}>
+        Нет данных
+      </div>
+    );
 
   return (
-    <div className="flex w-full flex-col gap-1 p-2">
+    <div className={cn('flex w-full flex-col gap-1 p-2', className)}>
       <div className="flex w-full flex-row justify-start gap-0 align-middle">
         {days
           .filter((day) => day.plan > 0 || day.value === 'empty')
@@ -96,7 +102,7 @@ const OldBuildingTermsChart = ({
                 'flex h-[1.25rem] items-center justify-center text-xs text-white',
                 'last:rounded-r [&:nth-child(2)]:rounded-l',
               )}
-              style={{ width: (day.plan / maxValue) * 100 + '%' }}
+              style={{ width: Math.round((day.plan / maxValue) * 100) + '%' }}
             >
               {day.value === 'empty' || day.plan / maxValue < 0.07
                 ? ''
@@ -117,7 +123,7 @@ const OldBuildingTermsChart = ({
                   "after:bg-striped overflow-hidden after:absolute after:inset-0 after:opacity-20 after:content-['']",
                 'last:rounded-r [&:nth-child(2)]:rounded-l',
               )}
-              style={{ width: (day.actual / maxValue) * 100 + '%' }}
+              style={{ width: Math.round((day.actual / maxValue) * 100) + '%' }}
             >
               {day.value === 'empty' || day.actual / maxValue < 0.07
                 ? ''

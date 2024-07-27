@@ -222,7 +222,9 @@ export function VirtualDataTable<TData, TValue>({
                       onRowClick && 'cursor-pointer',
                     )}
                     onClick={() => onRowClick(row)}
-                    onDoubleClick={() => onRowDoubleClick(row)}
+                    onDoubleClick={
+                      onRowDoubleClick ? () => onRowDoubleClick(row) : undefined
+                    }
                     data-state={row.getIsSelected() && 'selected'}
                     data-index={virtualRow.index} //needed for dynamic row height measurement
                     ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
