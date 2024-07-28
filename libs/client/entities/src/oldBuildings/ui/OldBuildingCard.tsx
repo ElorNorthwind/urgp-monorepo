@@ -15,6 +15,8 @@ import { OldBuilding } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
 import { OldBuildingTermsTable } from './OldBuildingTermsTable';
 import { ProblematicApartsTable } from './ProblematicApartsTable';
+import { NewBuildingsTable } from './NewBuildingsTable';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
@@ -57,13 +59,20 @@ const OldBuildingsCard = ({
               />
             </TabsContent>
             <TabsContent value="newBuildings">
-              <Card>
-                <CardHeader>
-                  <CardTitle>TBD</CardTitle>
-                </CardHeader>
-              </Card>
-              {/* <div>{JSON.stringify(building.newBuildingConstructions)}</div>
-              <div>{JSON.stringify(building.newBuildingMovements)}</div> */}
+              <ScrollArea className="flex w-full flex-col gap-1">
+                <NewBuildingsTable
+                  buildings={building.newBuildingMovements}
+                  className="max-h-[200px] w-full"
+                  heading="Переселяется в"
+                  emptyText="Не определены адреса переселения"
+                />
+                <NewBuildingsTable
+                  buildings={building.newBuildingConstructions}
+                  className="max-h-[200px] w-full"
+                  heading="Строится на месте сноса"
+                  emptyText="Нет площадок на месте сноса"
+                />
+              </ScrollArea>
             </TabsContent>
           </Tabs>
           {building?.problematicAparts &&
