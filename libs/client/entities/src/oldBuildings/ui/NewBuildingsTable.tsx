@@ -58,50 +58,18 @@ const NewBuildingsTable = ({
                   {building.adress}
                 </TableCell>
                 <TableCell compact className="w-[60px] text-center text-xs">
-                  <VStack
-                    gap="none"
-                    align={'center'}
-                    justify={'center'}
-                    className="w-[60px]"
-                  >
-                    <div className="text-muted-foreground flex w-full place-content-center text-xs opacity-70">
-                      {building.terms.plan.commissioning
-                        ? dayjs(building.terms.plan.commissioning).format(
-                            'DD.MM.YYYY',
-                          )
-                        : ' '}
-                    </div>
-                    <div className="flex w-full place-content-center text-xs">
-                      {building.terms.actual.commissioning
-                        ? dayjs(building.terms.actual.commissioning).format(
-                            'DD.MM.YYYY',
-                          )
-                        : ' '}
-                    </div>
-                  </VStack>
+                  {building.terms.actual.commissioning
+                    ? dayjs(building.terms.actual.commissioning).format(
+                        'DD.MM.YYYY',
+                      )
+                    : ' '}
                 </TableCell>
                 <TableCell compact className="w-[60px] text-center text-xs">
-                  <VStack
-                    gap="none"
-                    align={'center'}
-                    justify={'center'}
-                    className="w-[80px]"
-                  >
-                    <div className="text-muted-foreground flex w-full place-content-center text-xs opacity-70">
-                      {building.terms.plan.settlement
-                        ? dayjs(building.terms.plan.settlement).format(
-                            'DD.MM.YYYY',
-                          )
-                        : ' '}
-                    </div>
-                    <div className="flex w-full place-content-center text-xs">
-                      {building.terms.actual.settlement
-                        ? dayjs(building.terms.actual.settlement).format(
-                            'DD.MM.YYYY',
-                          )
-                        : ' '}
-                    </div>
-                  </VStack>
+                  {building.terms.actual.settlement
+                    ? dayjs(building.terms.actual.settlement).format(
+                        'DD.MM.YYYY',
+                      )
+                    : ' '}
                 </TableCell>
               </TableRow>
             );
