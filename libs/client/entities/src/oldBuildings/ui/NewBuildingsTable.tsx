@@ -39,7 +39,7 @@ const NewBuildingsTable = ({
       <Table className="w-full">
         <TableHeader>
           <TableRow className="sticky top-0 z-10 bg-slate-50 text-center text-xs hover:bg-slate-50">
-            <TableHead compact className="min-w-[200px] text-right font-bold">
+            <TableHead compact className="min-w-[200px] text-left font-bold">
               {heading}
             </TableHead>
             <TableHead compact className="min-w-[60px] text-center">
@@ -54,7 +54,7 @@ const NewBuildingsTable = ({
           {buildings.map((building) => {
             return (
               <TableRow className="" key={building.id}>
-                <TableCell compact className="text-right text-xs">
+                <TableCell compact className="text-left text-xs">
                   {building.adress}
                 </TableCell>
                 <TableCell compact className="w-[60px] text-center text-xs">

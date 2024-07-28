@@ -14,6 +14,9 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as OldbuildingsImport } from './routes/oldbuildings'
+import { Route as RenovationRouteImport } from './routes/renovation/route'
+import { Route as RenovationIndexImport } from './routes/renovation/index'
+import { Route as RenovationOldbuildingsImport } from './routes/renovation/oldbuildings'
 
 // Create Virtual Routes
 
@@ -44,10 +47,25 @@ const OldbuildingsRoute = OldbuildingsImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const RenovationRouteRoute = RenovationRouteImport.update({
+  path: '/renovation',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const RenovationIndexRoute = RenovationIndexImport.update({
+  path: '/',
+  getParentRoute: () => RenovationRouteRoute,
+} as any)
+
+const RenovationOldbuildingsRoute = RenovationOldbuildingsImport.update({
+  path: '/oldbuildings',
+  getParentRoute: () => RenovationRouteRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -55,6 +73,10 @@ declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
       preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/renovation': {
+      preLoaderRoute: typeof RenovationRouteImport
       parentRoute: typeof rootRoute
     }
     '/oldbuildings': {
@@ -73,6 +95,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MapLazyImport
       parentRoute: typeof rootRoute
     }
+    '/renovation/oldbuildings': {
+      preLoaderRoute: typeof RenovationOldbuildingsImport
+      parentRoute: typeof RenovationRouteImport
+    }
+    '/renovation/': {
+      preLoaderRoute: typeof RenovationIndexImport
+      parentRoute: typeof RenovationRouteImport
+    }
   }
 }
 
@@ -80,6 +110,10 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
+  RenovationRouteRoute.addChildren([
+    RenovationOldbuildingsRoute,
+    RenovationIndexRoute,
+  ]),
   OldbuildingsRoute,
   AboutLazyRoute,
   BticalcLazyRoute,

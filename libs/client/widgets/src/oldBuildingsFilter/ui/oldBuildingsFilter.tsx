@@ -17,8 +17,8 @@ import {
   relocationStatus,
   relocationTypes,
 } from '@urgp/client/entities';
-import { areas } from '../config/areas';
 import { useMemo } from 'react';
+import { areas } from '../config/areas';
 
 type OldBuildingsFilterProps = {
   filters: GetOldBuldingsDto;
