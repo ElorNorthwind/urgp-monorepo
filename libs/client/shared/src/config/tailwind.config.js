@@ -66,16 +66,16 @@ module.exports = function buildConfig(appDir) {
             '0%, 100%': { backgroundPosition: 'left 0% bottom 0%' },
             '50%': { backgroundPosition: 'left 200% bottom 0%' },
           },
-          bg: {
-            to: {
-              backgroundPosition: '0 -200%',
-            },
+          backgroundLinear: {
+            '0%': { backgroundPosition: '0px 50%' },
+            '100%': { backgroundPosition: '100px 50%' },
           },
         },
         animation: {
           'accordion-down': 'accordion-down 0.2s ease-out',
           'accordion-up': 'accordion-up 0.2s ease-out',
-          background: 'background 1s linear infinite',
+          background: 'background 2s linear infinite',
+          linear: 'backgroundLinear 3s linear infinite',
         },
         height: {
           screen: ['100vh /* fallback for Opera, IE and etc. */', '100dvh'],

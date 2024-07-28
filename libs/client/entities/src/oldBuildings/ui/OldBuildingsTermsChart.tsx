@@ -119,9 +119,9 @@ const OldBuildingTermsChart = ({
               className={cn(
                 day.actualClass,
                 'relative flex h-[1.25rem] items-center justify-center text-xs text-white',
-                day.isOngoing &&
-                  "after:bg-striped overflow-hidden after:absolute after:inset-0 after:opacity-20 after:content-['']",
                 'last:rounded-r [&:nth-child(2)]:rounded-l',
+                day.isOngoing &&
+                  "after:bg-striped after:animate-linear overflow-hidden bg-opacity-80 after:absolute after:inset-0 after:bg-[length:226px_auto] after:opacity-20 after:content-['']",
               )}
               style={{ width: Math.round((day.actual / maxValue) * 100) + '%' }}
             >
