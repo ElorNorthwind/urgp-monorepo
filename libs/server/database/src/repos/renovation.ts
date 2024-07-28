@@ -4,12 +4,14 @@ import { IDatabase, IMain } from 'pg-promise';
 import {
   GetOldAppartmentsDto,
   GetOldBuldingsDto,
+  OkrugTotals,
   OldAppartment,
   OldBuilding,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
-import { Logger } from '@nestjs/common';
+// import { Logger } from '@nestjs/common';
+
 // // Helper for linking to external query files:
 // function sql(file: string) {
 //   const fullPath = path.join(__dirname, file);
@@ -152,5 +154,9 @@ export class RenovationRepository {
       offset,
       conditions,
     });
+  }
+
+  getOkrugTotalHouses(): Promise<OkrugTotals[]> {
+    return this.db.any(renovation.okrugTotalHouses);
   }
 }

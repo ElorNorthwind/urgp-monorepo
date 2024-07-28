@@ -6,6 +6,7 @@ import {
   GetOldAppartmentsDto,
   getOldBuldings,
   GetOldBuldingsDto,
+  OkrugTotals,
   OldAppartment,
   OldBuilding,
 } from '@urgp/shared/entities';
@@ -33,5 +34,10 @@ export class RenovationController {
     @Query() getOldAppartmentsDto: GetOldAppartmentsDto,
   ): Promise<OldAppartment[]> {
     return this.renovation.getOldAppartments(getOldAppartmentsDto);
+  }
+
+  @Get('okrug-totals')
+  getOkrugTotals(): Promise<OkrugTotals[]> {
+    return this.renovation.getOkrugTotals();
   }
 }

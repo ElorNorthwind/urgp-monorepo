@@ -17,4 +17,7 @@ export class RenovationService {
   public async getOldAppartments(dto: GetOldAppartmentsDto) {
     return this.dbServise.db.renovation.getOldAppartments(dto);
   }
+  public async getOkrugTotals() {
+    return this.dbServise.db.renovation.getOkrugTotalHouses();
+  }
 }

@@ -1,6 +1,5 @@
 import {
   cn,
-  formatDate,
   Table,
   TableBody,
   TableCell,
@@ -10,7 +9,6 @@ import {
   VStack,
 } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
-import { OldBuildingTermsChart } from './OldBuildingsTermsChart';
 import { HousePlug } from 'lucide-react';
 import dayjs from 'dayjs';
 
