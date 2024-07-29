@@ -27,6 +27,7 @@ export * from './ui/components/accordion';
 export * from './ui/components/switch';
 export * from './ui/components/facet-filter-nested';
 export * from './ui/components/tabs';
+export * from './ui/components/skeleton';
 
 // export layouts
 export * from './ui/layouts/main';

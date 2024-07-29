@@ -12,9 +12,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   cn,
+  Skeleton,
 } from '@urgp/client/shared';
 import { OkrugTotals } from '@urgp/shared/entities';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
@@ -59,6 +60,42 @@ const OkrugTotalsChart = ({
   );
 
   const [showNotStarted, setShowNotStarted] = useState(true);
+
+  if (isLoading) {
+    return (
+      <Card className={cn(className)}>
+        <CardHeader className="space-y-0 overflow-clip pb-2">
+          <CardDescription>
+            <Skeleton className="mb-1 h-4 w-16" />
+          </CardDescription>
+          <CardTitle className="flex w-full flex-row flex-wrap justify-start gap-12 text-2xl tabular-nums">
+            <div className="flex flex-col justify-start gap-1">
+              <Skeleton className="h-10 w-24" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+            <div className="flex flex-col justify-start gap-1">
+              <Skeleton className="h-8 w-20" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+            <div className="flex flex-col justify-start gap-1">
+              <Skeleton className="h-8  w-20" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+
+            <div className="flex flex-col justify-start gap-1">
+              <Skeleton className="h-8  w-20" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="relative">
+          {/* <LoaderCircle className="stroke-muted-foreground absolute inset-0 z-10 m-auto h-16 w-16 animate-spin" /> */}
+          <Skeleton className="min-h-[430px] w-full" />
+          <Skeleton className="mx-auto mt-2 h-6 w-80" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className={cn(className)}>

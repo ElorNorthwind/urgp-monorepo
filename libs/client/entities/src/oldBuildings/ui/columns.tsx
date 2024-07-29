@@ -68,7 +68,7 @@ export const oldBuildingsColumns = [
   columnHelper.accessor((row) => row.totalApartments.toString(), {
     id: 'total',
     header: 'Квартир',
-    size: 90,
+    size: 100,
     cell: (props) => {
       return <ApartmentsCell {...props} />;
     },

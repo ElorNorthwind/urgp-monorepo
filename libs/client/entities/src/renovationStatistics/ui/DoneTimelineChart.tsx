@@ -11,6 +11,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   cn,
+  Skeleton,
 } from '@urgp/client/shared';
 import { DoneTimelinePoint } from '@urgp/shared/entities';
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
@@ -37,6 +38,24 @@ const DoneTimelineChart = ({
   className,
   isLoading = false,
 }: DoneTimelineChartProps): JSX.Element => {
+  if (isLoading)
+    return (
+      <Card className={cn(className)}>
+        <CardHeader className="space-y-0 pb-2">
+          <CardTitle>
+            <Skeleton className="h-8 w-44" />
+          </CardTitle>
+          <CardDescription className="pt-2">
+            <Skeleton className="h-6 w-80" />
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="min-h-[430px] w-full" />
+          <Skeleton className="mx-auto mt-2 h-6 w-60" />
+        </CardContent>
+      </Card>
+    );
+
   return (
     <Card className={cn(className)}>
       <CardHeader className="space-y-0 pb-2">
