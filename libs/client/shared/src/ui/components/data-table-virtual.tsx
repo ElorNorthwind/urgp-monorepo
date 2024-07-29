@@ -4,9 +4,7 @@ import {
   flexRender,
   getCoreRowModel,
   InitialTableState,
-  OnChangeFn,
   Row,
-  SortingState,
   useReactTable,
 } from '@tanstack/react-table';
 import {
@@ -17,18 +15,13 @@ import {
   TableHeader,
   TableRow,
 } from './table';
-import { HStack } from './stack';
-import {
-  ChevronDown,
-  ChevronsUpDown,
-  ChevronUp,
-  LoaderCircle,
-} from 'lucide-react';
+import { ChevronsUpDown, ChevronUp } from 'lucide-react';
 import { ScrollArea } from './scroll-area';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '../../lib/cn';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Button } from './button';
+import { Skeleton } from './skeleton';
 
 interface VirtualDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -67,9 +60,34 @@ export function VirtualDataTable<TData, TValue>({
   initialState,
 }: VirtualDataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
+
+  const tableData = useMemo(
+    () =>
+      isFetching && (!data || data.length === 0) ? Array(10).fill({}) : data,
+    [isFetching, data],
+  );
+
+  const tableColumns = useMemo(
+    () =>
+      isFetching && (!data || data.length === 0)
+        ? columns.map((column, index) => ({
+            size: column.size,
+            header: column.header,
+            id: index.toString(),
+            meta: column.meta,
+            accessorFn: () => '',
+            accessorKey: '',
+            cell: () => {
+              return <Skeleton className="h-12 w-full" />;
+            },
+          }))
+        : columns,
+    [isFetching, data, columns],
+  );
+
   const table = useReactTable({
-    data,
-    columns,
+    data: tableData,
+    columns: tableColumns,
     getCoreRowModel: getCoreRowModel(),
     defaultColumn: {
       size: 200, //starting column size
@@ -268,7 +286,7 @@ export function VirtualDataTable<TData, TValue>({
                   </TableCell>
                 </TableRow>
               )}
-          {isFetching && (
+          {/* {isFetching && (
             <TableRow className="flex hover:bg-white/0">
               <TableCell
                 colSpan={columns.length}
@@ -280,7 +298,7 @@ export function VirtualDataTable<TData, TValue>({
                 </HStack>
               </TableCell>
             </TableRow>
-          )}
+          )} */}
         </TableBody>
       </Table>
     </ScrollArea>

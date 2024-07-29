@@ -68,6 +68,7 @@ const OldBuildingsPage = (): JSX.Element => {
           )}
           columns={oldBuildingsColumns}
           data={buildings || []}
+          // isFetching={true}
           isFetching={isLoading || isFetching}
           totalCount={buildings?.[0]?.totalCount ?? 0}
           callbackFn={() => setOffset(buildings?.length || 0)}
