@@ -159,7 +159,8 @@ export function VirtualDataTable<TData, TValue>({
         <TableHeader
           className={cn(
             'sticky top-0 z-10 grid',
-            isScrolled && 'shadow backdrop-blur-md ',
+            isScrolled &&
+              'supports-[not(backdrop-filter:blur(12px))]:bg-muted-foreground/50 shadow backdrop-blur-md',
           )}
         >
           {table.getHeaderGroups().map((headerGroup) => (
