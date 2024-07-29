@@ -64,9 +64,11 @@ const OkrugTotalsChart = ({
     <Card className={cn(className)}>
       <CardHeader className="space-y-0 overflow-clip pb-2">
         <CardDescription>Домов:</CardDescription>
-        <CardTitle className="flex w-full flex-row justify-start gap-12 text-4xl tabular-nums">
+        <CardTitle className="flex w-full flex-row flex-wrap justify-start gap-12 text-2xl tabular-nums">
           <div className="flex flex-col gap-0">
-            <div className="text-muted-foreground">{totals.total}</div>
+            <div className="text-muted-foreground text-4xl ">
+              {totals.total}
+            </div>
             <div className="text-muted-foreground relative top-[-.25rem] font-sans text-sm font-normal tracking-normal">
               всего
             </div>
@@ -91,10 +93,14 @@ const OkrugTotalsChart = ({
               {totals.notStarted}
               <Button
                 variant={'ghost'}
-                className="ml-2 p-2"
+                className="ml-2 h-6 w-6 p-0"
                 onClick={() => setShowNotStarted((value) => !value)}
               >
-                {showNotStarted ? <EyeOff /> : <Eye />}
+                {showNotStarted ? (
+                  <EyeOff className="h-max w-max" />
+                ) : (
+                  <Eye className="h-max w-max" />
+                )}
               </Button>
             </div>
             <div className="text-muted-foreground relative top-[-.25rem] font-sans text-sm font-normal tracking-normal">
@@ -104,7 +110,10 @@ const OkrugTotalsChart = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={okrugChartConfig} className="">
+        <ChartContainer
+          config={okrugChartConfig}
+          className="min-h-[450px] max-w-full"
+        >
           <BarChart accessibilityLayer data={okrugs}>
             <CartesianGrid vertical={false} />
             <XAxis
@@ -112,7 +121,8 @@ const OkrugTotalsChart = ({
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value.slice(0, 5)}
+              interval={0}
             />
             <ChartTooltip
               // defaultIndex={2}

@@ -1,5 +1,4 @@
 import {
-  Button,
   Card,
   CardContent,
   CardDescription,
@@ -13,10 +12,8 @@ import {
   ChartTooltipContent,
   cn,
 } from '@urgp/client/shared';
-import { DoneTimelinePoint, OkrugTotals } from '@urgp/shared/entities';
-import { Eye, EyeOff } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
+import { DoneTimelinePoint } from '@urgp/shared/entities';
+import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
 
 const timelineChartConfig = {
   fast: {
@@ -44,10 +41,15 @@ const DoneTimelineChart = ({
     <Card className={cn(className)}>
       <CardHeader className="space-y-0 pb-2">
         <CardTitle>Ход переселения</CardTitle>
-        <CardDescription>Число семей, отработанных ежемесячно</CardDescription>
+        <CardDescription className="h-16">
+          Число семей, отработанных ежемесячно
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={timelineChartConfig} className="">
+        <ChartContainer
+          config={timelineChartConfig}
+          className="min-h-[450px] max-w-full"
+        >
           <AreaChart accessibilityLayer data={timeline}>
             <CartesianGrid vertical={false} />
             <XAxis

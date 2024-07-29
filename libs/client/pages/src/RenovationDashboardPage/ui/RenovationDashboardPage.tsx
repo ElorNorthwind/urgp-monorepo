@@ -19,17 +19,17 @@ const RenovationDashboardPage = (): JSX.Element => {
   } = useDoneTimeline();
 
   return (
-    <div className="chart-wrapper mx-auto flex max-w-4xl flex-col flex-wrap items-start justify-center gap-6 p-6 sm:flex-row sm:p-8">
-      <div className="grid w-full gap-6 sm:grid-cols-2">
+    <div className="chart-wrapper mx-auto flex max-w-[100rem] flex-col flex-wrap items-start justify-center gap-6  p-6 sm:flex-row sm:p-8">
+      <div className="grid w-full gap-6 xl:grid-cols-[minmax(500px,_1fr)_minmax(200px,_1.5fr)]">
         <OkrugTotalsChart
           okrugs={okrugs || []}
           isLoading={isOkrugsLoading || isOkrugsFetching}
-          className="col-span-2"
+          className=""
         />
         <DoneTimelineChart
           timeline={timeline || []}
           isLoading={isTimelineLoading || isTimelineFetching}
-          className="col-span-2"
+          className=""
         />
       </div>
     </div>
