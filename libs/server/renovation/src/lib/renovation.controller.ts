@@ -2,6 +2,7 @@ import { Controller, Get, Query, UsePipes } from '@nestjs/common';
 import { RenovationService } from './renovation.service';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
+  DoneTimelinePoint,
   getOldAppartments,
   GetOldAppartmentsDto,
   getOldBuldings,
@@ -39,5 +40,10 @@ export class RenovationController {
   @Get('okrug-totals')
   getOkrugTotals(): Promise<OkrugTotals[]> {
     return this.renovation.getOkrugTotals();
+  }
+
+  @Get('done-timeline')
+  getDoneTimeline(): Promise<DoneTimelinePoint[]> {
+    return this.renovation.getDoneTimeline();
   }
 }

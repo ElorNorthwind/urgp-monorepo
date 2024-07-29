@@ -2,6 +2,7 @@ import { IDatabase, IMain } from 'pg-promise';
 // import path = require('path');
 // import pgPromise = require('pg-promise');
 import {
+  DoneTimelinePoint,
   GetOldAppartmentsDto,
   GetOldBuldingsDto,
   OkrugTotals,
@@ -158,5 +159,9 @@ export class RenovationRepository {
 
   getOkrugTotalHouses(): Promise<OkrugTotals[]> {
     return this.db.any(renovation.okrugTotalHouses);
+  }
+
+  getDoneTimeline(): Promise<DoneTimelinePoint[]> {
+    return this.db.any(renovation.doneTimeline);
   }
 }

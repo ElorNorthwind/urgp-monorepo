@@ -61,8 +61,8 @@ const OkrugTotalsChart = ({
   const [showNotStarted, setShowNotStarted] = useState(true);
 
   return (
-    <Card className={cn('lg:max-w-2xl', className)}>
-      <CardHeader className="space-y-0 pb-2">
+    <Card className={cn(className)}>
+      <CardHeader className="space-y-0 overflow-clip pb-2">
         <CardDescription>Домов:</CardDescription>
         <CardTitle className="flex w-full flex-row justify-start gap-12 text-4xl tabular-nums">
           <div className="flex flex-col gap-0">

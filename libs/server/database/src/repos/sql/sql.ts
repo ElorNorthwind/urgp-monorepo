@@ -12,4 +12,5 @@ export const renovation = {
   getOldBuldingsGeoJson: sql('sql/renovation/oldBuildingsGeoJson.sql'),
   oldApartments: sql('sql/renovation/oldApartments.sql'),
   okrugTotalHouses: sql('sql/renovation/okrugTotalHouses.sql'),
+  doneTimeline: sql('sql/renovation/doneTimeline.sql'),
 };

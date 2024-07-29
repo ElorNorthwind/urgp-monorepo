@@ -5,3 +5,12 @@ export type OkrugTotals = {
   inProgress: number;
   notStarted: number;
 };
+
+export type DoneTimelinePoint = {
+  year: number;
+  month: number;
+  period: string;
+  fullPeriod: string;
+  fast: number;
+  slow: number;
+};
