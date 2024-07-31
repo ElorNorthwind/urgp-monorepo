@@ -64,8 +64,6 @@ export function VirtualDataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     defaultColumn: {
       size: 200, //starting column size
-      // minSize: 50, //enforced during column resizing
-      // maxSize: 500, //enforced during column resizing
     },
     enableMultiRowSelection,
     manualSorting: true, //use pre-sorted row model instead of sorted row model
@@ -147,9 +145,10 @@ export function VirtualDataTable<TData, TValue>({
                     compact={compact}
                     key={header.id}
                     className={cn(
-                      'items-center overflow-y-clip text-center align-middle',
+                      'text-muted-foreground items-center text-center align-middle',
                       header?.column?.columnDef?.meta?.headerClass,
                     )}
+                    // onClick={() => header.column.toggleSorting()}
                     style={{
                       display: 'flex',
                       width: `${Math.round((header.getSize() / table.getTotalSize()) * 100)}%`,
@@ -159,7 +158,9 @@ export function VirtualDataTable<TData, TValue>({
                     {header.column.getCanSort() ? (
                       <Button
                         variant="link"
-                        className="text-muted-foreground hover:text-primary group relative overflow-clip pr-8 hover:no-underline"
+                        className={cn(
+                          'hover:text-primary group flex max-w-fit p-0 text-inherit hover:no-underline',
+                        )}
                         onClick={() => header.column.toggleSorting()}
                       >
                         {header.isPlaceholder
@@ -170,7 +171,7 @@ export function VirtualDataTable<TData, TValue>({
                             )}
                         <ChevronsUpDown
                           className={cn(
-                            'text-muted-foreground/40 group-hover:text-muted-foreground absolute right-3 h-4 w-4 transition-transform',
+                            'text-muted-foreground/40 group-hover:text-muted-foreground ml-1 h-4 w-4 transition-transform',
                             header.column.getIsSorted()
                               ? 'scale-0'
                               : 'scale-100',
@@ -178,11 +179,11 @@ export function VirtualDataTable<TData, TValue>({
                         />
                         <ChevronUp
                           className={cn(
-                            'text-primary/60 group-hover:text-primary absolute right-2 h-6 w-6 transition-transform',
+                            'text-primary/60 group-hover:text-primary mr-[-1.5rem] h-6 w-6 -translate-x-[80%] transition-transform',
                             header.column.getIsSorted() === 'asc'
-                              ? 'translate-y-0 rotate-180 scale-100'
+                              ? 'rotate-180 scale-100'
                               : header.column.getIsSorted() === 'desc'
-                                ? 'translate-y-0 scale-100'
+                                ? 'scale-100'
                                 : 'text-muted-foreground/40 scale-0',
                           )}
                         />

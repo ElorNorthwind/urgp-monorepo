@@ -60,7 +60,7 @@ export const oldBuildingsColumns = [
       },
       meta: {
         headerClass: 'justify-center',
-        cellClass: 'justify-center',
+        cellClass: 'justify-center text-center',
       },
     },
   ),
@@ -68,13 +68,13 @@ export const oldBuildingsColumns = [
   columnHelper.accessor((row) => row.totalApartments.toString(), {
     id: 'total',
     header: 'Квартир',
-    size: 100,
+    size: 80,
     cell: (props) => {
       return <ApartmentsCell {...props} />;
     },
     meta: {
       headerClass: 'justify-center',
-      cellClass: 'justify-center',
+      cellClass: 'justify-center text-center',
     },
     enableSorting: true,
   }),
