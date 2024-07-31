@@ -41,13 +41,9 @@ const DoneTimelineChart = ({
   if (isLoading)
     return (
       <Card className={cn(className)}>
-        <CardHeader className="space-y-0 pb-2">
-          <CardTitle>
-            <Skeleton className="h-8 w-44" />
-          </CardTitle>
-          <CardDescription className="pt-2">
-            <Skeleton className="h-6 w-80" />
-          </CardDescription>
+        <CardHeader className="gap-2 space-y-0 pb-2">
+          <Skeleton className="h-8 w-44" />
+          <Skeleton className="h-6 w-80" />
         </CardHeader>
         <CardContent>
           <Skeleton className="min-h-[430px] w-full" />

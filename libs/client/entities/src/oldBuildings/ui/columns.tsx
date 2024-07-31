@@ -31,7 +31,7 @@ export const oldBuildingsColumns = [
   columnHelper.accessor('buildingRelocationStartAge', {
     id: 'age',
     header: 'Тип и срок',
-    size: 210,
+    size: 215,
     cell: (props) => {
       return <RelocationTypeCell {...props} />;
     },

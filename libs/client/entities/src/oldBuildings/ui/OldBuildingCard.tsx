@@ -33,8 +33,8 @@ const OldBuildingsCard = ({
   return (
     <Card
       className={cn(
-        'relative flex flex-col overflow-hidden transition-all',
-        building ? '' : 'hidden',
+        'relative flex flex-col overflow-hidden',
+        building ? '' : '',
         className,
       )}
       style={{ width: building ? width : 0 }}

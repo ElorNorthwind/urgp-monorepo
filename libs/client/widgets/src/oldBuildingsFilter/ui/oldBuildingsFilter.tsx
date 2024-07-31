@@ -90,6 +90,7 @@ const OldBuildingsFilter = ({
       <NestedFacetFilter
         groups={filters.okrugs ? filteredAreas : areas}
         title="Район"
+        selectAllToggle
         selectedValues={filters.districts}
         setSelectedValues={(value) =>
           setFilters({

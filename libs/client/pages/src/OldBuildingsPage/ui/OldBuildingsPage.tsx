@@ -63,7 +63,7 @@ const OldBuildingsPage = (): JSX.Element => {
             );
           }}
           className={cn(
-            'bg-background h-full transition-all',
+            'bg-background h-full transition-all ease-in-out',
             currentAdress ? 'w-[calc(100%-520px-0.5rem)]' : 'w-[calc(100%)]',
           )}
           columns={oldBuildingsColumns}
@@ -107,7 +107,7 @@ const OldBuildingsPage = (): JSX.Element => {
         <OldBuildingsCard
           building={currentAdress}
           onClose={() => setCurrentAddress(null)}
-          className="h-full"
+          className="h-full transition-all ease-in-out"
           width={520}
         />
       </HStack>

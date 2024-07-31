@@ -14,6 +14,7 @@ import {
   CommandSeparator,
 } from './command';
 import { useMemo } from 'react';
+import { useCommandState } from 'cmdk';
 
 type Option<TValue extends string | number> = {
   value: TValue;
@@ -30,7 +31,31 @@ interface NestedFacetFilterProps<TValue extends string | number>
   selectedValues?: TValue[];
   setSelectedValues: (value: TValue[]) => void;
   title?: string;
+  selectAllToggle?: boolean;
 }
+
+// function SelectAllToggle<TValue extends string | number>({
+//   selected,
+//   setSelectedValues,
+// }: {
+//   selected: TValue[];
+//   setSelectedValues: (value: TValue[]) => void;
+// }): JSX.Element {
+//   const state = useCommandState((state) => state);
+//   return (
+//     <CommandGroup forceMount>
+//       <CommandItem
+//         forceMount
+//         // value="doNotFilter-selectAllToggle"
+//         onSelect={() => setSelectedValues([])}
+//         className={cn('justify-center text-center')}
+//       >
+//         {selected.length} / {state.filtered.items.values()}
+//         {JSON.stringify(state.filtered.items)}
+//       </CommandItem>
+//     </CommandGroup>
+//   );
+// }
 
 function NestedFacetFilter<TValue extends string | number>(
   props: NestedFacetFilterProps<TValue>,
@@ -41,6 +66,7 @@ function NestedFacetFilter<TValue extends string | number>(
     className,
     title,
     setSelectedValues,
+    selectAllToggle = false,
   } = props;
 
   const taggedGroups = useMemo(() => {
@@ -112,6 +138,12 @@ function NestedFacetFilter<TValue extends string | number>(
           >
             <CommandInput placeholder={title} />
             <CommandList>
+              {/* {selectAllToggle && (
+                <SelectAllToggle
+                  selected={selectedValues}
+                  setSelectedValues={setSelectedValues}
+                />
+              )} */}
               <CommandEmpty>Не найдено.</CommandEmpty>
               {taggedGroups.map((group) => {
                 return (
@@ -168,7 +200,7 @@ function NestedFacetFilter<TValue extends string | number>(
                   <CommandGroup>
                     <CommandItem
                       onSelect={() => setSelectedValues([])}
-                      className="justify-center text-center"
+                      className={cn('justify-center text-center')}
                     >
                       Сбросить фильтр
                     </CommandItem>

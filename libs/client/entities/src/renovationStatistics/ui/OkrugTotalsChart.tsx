@@ -15,7 +15,7 @@ import {
   Skeleton,
 } from '@urgp/client/shared';
 import { OkrugTotals } from '@urgp/shared/entities';
-import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
@@ -65,9 +65,7 @@ const OkrugTotalsChart = ({
     return (
       <Card className={cn(className)}>
         <CardHeader className="space-y-0 overflow-clip pb-2">
-          <CardDescription>
-            <Skeleton className="mb-1 h-4 w-16" />
-          </CardDescription>
+          <Skeleton className="mb-1 h-4 w-16" />
           <CardTitle className="flex w-full flex-row flex-wrap justify-start gap-12 text-2xl tabular-nums">
             <div className="flex flex-col justify-start gap-1">
               <Skeleton className="h-10 w-24" />
