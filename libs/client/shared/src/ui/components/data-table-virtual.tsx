@@ -151,16 +151,19 @@ export function VirtualDataTable<TData, TValue>({
 
   return (
     <ScrollArea
-      className={cn('relative overflow-auto rounded-md border', className)}
+      className={cn(
+        'relative overflow-auto rounded-md border',
+        className,
+        isScrolled && 'supports-[-moz-appearance:none]:rounded-none',
+      )}
       ref={tableContainerRef}
       onScroll={(e) => onCallbackOnBottomReached(e.target as HTMLDivElement)}
     >
       <Table className="grid">
         <TableHeader
           className={cn(
-            'sticky top-0 z-10 grid',
-            isScrolled &&
-              'supports-[not(backdrop-filter:blur(12px))]:bg-muted-foreground/50 shadow backdrop-blur-md',
+            'supports-[-moz-appearance:none]:bg-primary-foreground/20 sticky top-0 z-10 grid',
+            isScrolled && 'shadow backdrop-blur-md',
           )}
         >
           {table.getHeaderGroups().map((headerGroup) => (
