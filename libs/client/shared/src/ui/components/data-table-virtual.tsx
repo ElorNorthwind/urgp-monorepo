@@ -17,7 +17,7 @@ import {
 } from './table';
 import { ChevronsUpDown, ChevronUp } from 'lucide-react';
 import { ScrollArea } from './scroll-area';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '../../lib/cn';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Button } from './button';
@@ -38,9 +38,6 @@ interface VirtualDataTableProps<TData, TValue> {
   sorting?: ColumnSort[];
   setSorting?: (sorting: ColumnSort[]) => void;
   initialState?: InitialTableState;
-  //   // get table row selection and setter from store or any other source
-  // const rowSelection: RowSelectionState = ...
-  // const myCustomRowSelectionSetter: (rowSelection: RowSelectionState) => void = ...
 }
 
 export function VirtualDataTable<TData, TValue>({
@@ -61,33 +58,9 @@ export function VirtualDataTable<TData, TValue>({
 }: VirtualDataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
 
-  const tableData = useMemo(
-    () =>
-      isFetching && (!data || data.length === 0) ? Array(10).fill({}) : data,
-    [isFetching, data],
-  );
-
-  const tableColumns = useMemo(
-    () =>
-      isFetching && (!data || data.length === 0)
-        ? columns.map((column, index) => ({
-            size: column.size,
-            header: column.header,
-            id: index.toString(),
-            meta: column.meta,
-            accessorFn: () => '',
-            accessorKey: '',
-            cell: () => {
-              return <Skeleton className="h-12 w-full" />;
-            },
-          }))
-        : columns,
-    [isFetching, data, columns],
-  );
-
   const table = useReactTable({
-    data: tableData,
-    columns: tableColumns,
+    data,
+    columns,
     getCoreRowModel: getCoreRowModel(),
     defaultColumn: {
       size: 200, //starting column size
@@ -111,7 +84,7 @@ export function VirtualDataTable<TData, TValue>({
 
   const { rows } = table.getRowModel();
   const rowVirtualizer = useVirtualizer({
-    count: rows.length,
+    count: isFetching ? rows.length + 10 : rows.length, // make some skeleton rows on fetching
     estimateSize: () => (compact ? 73 : 57), //estimate row height for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
     // measure dynamic row height, except in firefox because it measures table border height incorrectly
@@ -233,21 +206,13 @@ export function VirtualDataTable<TData, TValue>({
             position: 'relative', //needed for absolute positioning of rows
           }}
         >
-          {table.getRowModel().rows?.length
-            ? rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                const row = rows[virtualRow.index] as Row<TData>;
+          {table.getRowModel().rows?.length || isFetching ? (
+            rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              if (virtualRow.index >= data.length) {
                 return (
                   <TableRow
-                    key={row.id}
-                    className={cn(
-                      'overflow-y-clip',
-                      onRowClick && 'cursor-pointer',
-                    )}
-                    onClick={() => onRowClick(row)}
-                    onDoubleClick={
-                      onRowDoubleClick ? () => onRowDoubleClick(row) : undefined
-                    }
-                    data-state={row.getIsSelected() && 'selected'}
+                    key={'skeleton_' + virtualRow.index}
+                    className={cn('overflow-y-clip')}
                     data-index={virtualRow.index} //needed for dynamic row height measurement
                     ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
                     style={{
@@ -257,52 +222,81 @@ export function VirtualDataTable<TData, TValue>({
                       width: '100%',
                     }}
                   >
-                    {row.getVisibleCells().map((cell) => (
+                    {table.getVisibleFlatColumns().map((column, index) => (
                       <TableCell
                         compact={compact}
-                        key={cell.id}
+                        key={'skeleton_col_' + index}
                         className={cn(
                           'items-center justify-items-center overflow-y-clip',
-                          cell?.column?.columnDef?.meta?.cellClass,
                         )}
                         style={{
                           display: 'flex',
-                          width: `${Math.round((cell.column.getSize() / table.getTotalSize()) * 100)}%`,
-                          minWidth: `${cell.column.getSize()}px`,
+                          width: `${Math.round((column.getSize() / table.getTotalSize()) * 100)}%`,
+                          minWidth: `${column.getSize()}px`,
                         }}
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
+                        <Skeleton className="h-10 w-full" />
                       </TableCell>
                     ))}
                   </TableRow>
                 );
-              })
-            : !isFetching && (
-                <TableRow className="flex hover:bg-white/0">
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 w-full text-center"
-                  >
-                    Нет данных
-                  </TableCell>
+              }
+
+              const row = rows[virtualRow.index] as Row<TData>;
+              return (
+                <TableRow
+                  key={row.id}
+                  className={cn(
+                    'overflow-y-clip',
+                    onRowClick && 'cursor-pointer',
+                  )}
+                  onClick={() => onRowClick(row)}
+                  onDoubleClick={
+                    onRowDoubleClick ? () => onRowDoubleClick(row) : undefined
+                  }
+                  data-state={row.getIsSelected() && 'selected'}
+                  data-index={virtualRow.index} //needed for dynamic row height measurement
+                  ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
+                  style={{
+                    display: 'flex',
+                    position: 'absolute',
+                    transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scroll
+                    width: '100%',
+                  }}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      compact={compact}
+                      key={cell.id}
+                      className={cn(
+                        'items-center justify-items-center overflow-y-clip',
+                        cell?.column?.columnDef?.meta?.cellClass,
+                      )}
+                      style={{
+                        display: 'flex',
+                        width: `${Math.round((cell.column.getSize() / table.getTotalSize()) * 100)}%`,
+                        minWidth: `${cell.column.getSize()}px`,
+                      }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
                 </TableRow>
-              )}
-          {/* {isFetching && (
+              );
+            })
+          ) : (
             <TableRow className="flex hover:bg-white/0">
               <TableCell
                 colSpan={columns.length}
                 className="h-24 w-full text-center"
               >
-                <HStack className="h-full" align="center" justify="center">
-                  <LoaderCircle className="stroke-muted-foreground h-10 w-10 animate-spin" />
-                  <div className="text-2xl">Загрузка...</div>
-                </HStack>
+                Нет данных
               </TableCell>
             </TableRow>
-          )} */}
+          )}
         </TableBody>
       </Table>
     </ScrollArea>
