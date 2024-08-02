@@ -17,7 +17,7 @@ import {
   VStack,
 } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
-import { Cat, CircleAlert, CircleX } from 'lucide-react';
+import { Cat, CircleAlert, CircleDollarSign, CircleX } from 'lucide-react';
 
 type ProblematicApartsTableProps = {
   building: OldBuilding | null;
@@ -184,7 +184,9 @@ const ProblematicApartsTable = ({
                 key={apart.id}
               >
                 <HStack gap="s" className="w-full truncate">
-                  {apart.deviation === 'Риск' ? (
+                  {apart.stageId === 12 ? (
+                    <CircleDollarSign className="h-8 w-8 text-violet-500" />
+                  ) : apart.deviation === 'Риск' ? (
                     <CircleX className="h-8 w-8 text-red-500" />
                   ) : (
                     <CircleAlert className="h-8 w-8 text-yellow-500" />

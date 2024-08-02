@@ -155,7 +155,7 @@ const OldBuildingsFilter = ({
           })
         }
       /> */}
-      <div className="flex items-center space-x-2">
+      {/* <div className="flex items-center space-x-2">
         <Switch
           id="show-mfr"
           defaultChecked
@@ -171,7 +171,7 @@ const OldBuildingsFilter = ({
         >
           МФР
         </Label>
-      </div>
+      </div> */}
       <Button
         variant={'secondary'}
         onClick={() =>
@@ -207,8 +207,7 @@ const OldBuildingsFilter = ({
         filters?.relocationAge ||
         filters.relocationStatus ||
         filters?.deviation ||
-        filters?.adress ||
-        filters?.MFRInvolvment) && (
+        filters?.adress) && (
         <Button
           variant="ghost"
           onClick={() =>
@@ -220,7 +219,6 @@ const OldBuildingsFilter = ({
               relocationStatus: undefined,
               deviation: undefined,
               adress: undefined,
-              MFRInvolvment: undefined,
             })
           }
           className="h-8 px-2 lg:px-3"

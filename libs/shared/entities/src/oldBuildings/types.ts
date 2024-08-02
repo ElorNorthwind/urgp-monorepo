@@ -77,12 +77,7 @@ type ApartmentCounts = {
   deviation: {
     done: number;
     none: number;
-    attention: number;
-    risk: number;
-  };
-  deviationNoMFR: {
-    done: number;
-    none: number;
+    mfr: number;
     attention: number;
     risk: number;
   };

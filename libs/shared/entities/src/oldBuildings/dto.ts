@@ -46,15 +46,15 @@ export const getOldBuldings = z
       .transform((value) => value.split(','))
       .pipe(z.string().array())
       .or(z.string().array()),
-    MFRInvolvment: z
-      .string()
-      .transform((value) => value.split(','))
-      .pipe(z.string().array())
-      .or(z.string().array()),
-    noMFR: z
-      .enum(['true', 'false'])
-      .transform((value) => value === 'true')
-      .or(z.boolean().default(false)),
+    // MFRInvolvment: z
+    //   .string()
+    //   .transform((value) => value.split(','))
+    //   .pipe(z.string().array())
+    //   .or(z.string().array()),
+    // noMFR: z
+    //   .enum(['true', 'false'])
+    //   .transform((value) => value === 'true')
+    //   .or(z.boolean().default(false)),
     // sorting: z
     //   .string()
     //   .transform((value, ctx) => {

@@ -44,7 +44,8 @@ SELECT
 	terms, 
 	new_building_constructions as "newBuildingConstructions", 
 	new_building_movements as "newBuildingMovements", 
-	apartments, 
+	jsonb_build_object('total', apartments->'total', 
+					   'deviation', apartments->'deviationMFR') as apartments,
 	problematic_aparts as "problematicAparts", 
 	COUNT(*) OVER() AS "totalCount" 
 FROM renovation.old_buildings_full b

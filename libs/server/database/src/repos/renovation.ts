@@ -42,8 +42,12 @@ const oldBuildingsSorting: Record<string, Record<string, string>> = {
     desc: 'total_apartments DESC, adress',
   },
   risk: {
-    asc: `CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviation'->>'risk' as  decimal) / total_apartments END NULLS LAST, adress`,
-    desc: `CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviation'->>'risk' as  decimal) / total_apartments END DESC NULLS LAST, adress`,
+    asc: `CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'risk' as decimal) / total_apartments END NULLS LAST, 
+          CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'attention' as decimal) / total_apartments END NULLS LAST, 
+          adress`,
+    desc: `CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'risk' as decimal) / total_apartments END DESC NULLS LAST, 
+           CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'attention' as decimal) / total_apartments END DESC NULLS LAST,
+           adress`,
   },
 };
 
@@ -74,8 +78,8 @@ export class RenovationRepository {
       relocationAge,
       relocationStatus,
       adress,
-      MFRInvolvment,
-      noMFR = false,
+      // MFRInvolvment,
+      // noMFR = false,
       sortingKey,
       sortingDirection = 'asc',
     } = dto;

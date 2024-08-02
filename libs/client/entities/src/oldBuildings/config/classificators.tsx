@@ -10,6 +10,7 @@ import {
   CheckCheck,
   CircleAlert,
   CircleCheck,
+  CircleDollarSign,
   CircleEllipsis,
   CircleX,
   Construction,
@@ -116,6 +117,12 @@ export const relocationDeviations = [
     label: 'Работа завершена',
     icon: CircleCheck,
     className: 'text-emerald-500',
+  },
+  {
+    value: 'В работе у МФР',
+    label: 'В работе у МФР',
+    icon: CircleDollarSign,
+    className: 'text-violet-500',
   },
   {
     value: 'Без отклонений',

@@ -46,6 +46,17 @@ function DeviationsCell(props: CellContext<OldBuilding, string>): JSX.Element {
       class: cn('bg-sky-400'),
     },
     {
+      value: props.row.original.apartments.deviation.mfr,
+      percent: Math.round(
+        (props.row.original.apartments.deviation.mfr /
+          props.row.original.apartments.total) *
+          100,
+      ),
+      key: 'mfr',
+      label: 'в работе у МФР',
+      class: cn('bg-violet-400'),
+    },
+    {
       value: props.row.original.apartments.deviation.done,
       percent: Math.round(
         (props.row.original.apartments.deviation.done /

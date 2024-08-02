@@ -68,6 +68,7 @@ export const oldBuildingsColumns = [
   columnHelper.accessor((row) => row.totalApartments.toString(), {
     id: 'total',
     header: 'Квартир',
+    sortDescFirst: true,
     size: 80,
     cell: (props) => {
       return <ApartmentsCell {...props} />;
@@ -83,6 +84,7 @@ export const oldBuildingsColumns = [
     id: 'risk',
     header: 'Ход работы',
     size: 220,
+    sortDescFirst: true,
     cell: (props) => {
       return <DeviationsCell {...props} />;
     },
