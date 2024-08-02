@@ -20,31 +20,67 @@ type NewBuilding = {
   priority: number;
 };
 
-type AppartmentCounts = {
+type NewApartment = {
+  unom: number | null;
+  unkv: number | null;
+  adress: string | null;
+  num: string | null;
+  areaZhil: number | null;
+  areaObsh: number | null;
+  areaZhp: number | null;
+  roomCount: number | null;
+  status: 'Предоставление' | 'Согласие' | 'Отказ' | 'Осмотр';
+};
+
+type StageInfo = {
+  date: string | null;
+  days: number | null;
+  id: number | null;
+};
+
+type ApartmentCounts = {
   total: number;
   status: {
-    empty: number;
-    notStarted: number;
-    mfr: number;
+    order: number;
+    problem: number;
+    free: number;
     inspection: number;
-    rejected: number;
+    reject: number;
     reinspection: number;
-    accepted: number;
+    accept: number;
     rd: number;
-    litigations: number;
-    litigationsDone: number;
     contractProject: number;
-    contractPrelimenatySigning: number;
+    contractNotification: number;
+    contractPrelimenarySigning: number;
+    mfr: number;
+    claimStart: number;
+    claimSubmit: number;
+    claimWon: number;
+    claimLost: number;
+    lostInspection: number;
+    lostAccept: number;
+    lostRd: number;
+    lostContractProject: number;
+    lostContractPrelimenarySigning: number;
+    fsspList: number;
+    fsspInstitute: number;
+    wonRd: number;
+    wonContractProject: number;
     contract: number;
   };
   difficulty: {
-    normal: number;
     problem: number;
     rejected: number;
     litigation: number;
     mfr: number;
   };
   deviation: {
+    done: number;
+    none: number;
+    attention: number;
+    risk: number;
+  };
+  deviationNoMFR: {
     done: number;
     none: number;
     attention: number;
@@ -57,43 +93,37 @@ type ProblematicApartment = {
   apartNum: string;
   fio: string;
   apartStatus: string;
-  newAdress: string | null;
-  statusId: number;
-  status: string;
-  difficultyId: number;
-  difficulty: string;
+  newAdress: NewApartment[] | null;
+  stageId: number;
+  stage: string;
+  action: string;
+  problems: string;
   deviation: string;
-  dates: {
-    resettlementStart: string | null;
-    order: string | null;
-    mfr: string | null;
-    inspection: string | null;
-    accept: string | null;
-    reject: string | null;
-    reinspection: string | null;
-    litigationClaim: string | null;
-    litigationDecision: string | null;
-    rd: string | null;
-    contractProject: string | null;
-    contractNotification: string | null;
-    contractPrelimenatySigning: string | null;
-    contract: string | null;
-  };
-  terms: {
-    resettlementStart: number | null;
-    order: number | null;
-    mfr: number | null;
-    inspection: number | null;
-    accept: number | null;
-    reject: number | null;
-    reinspection: number | null;
-    litigationClaim: number | null;
-    litigationDecision: number | null;
-    rd: number | null;
-    contractProject: number | null;
-    contractNotification: number | null;
-    contractPrelimenatySigning: number | null;
-    contract: number | null;
+  stages: {
+    resettlementStart: StageInfo;
+    order: StageInfo;
+    inspection: StageInfo;
+    reject: StageInfo;
+    reinspection: StageInfo;
+    accept: StageInfo;
+    rd: StageInfo;
+    contractProject: StageInfo;
+    contractNotification: StageInfo;
+    contractPrelimenarySigning: StageInfo;
+    claimStart: StageInfo;
+    claimSubmit: StageInfo;
+    claimWon: StageInfo;
+    claimLost: StageInfo;
+    lostInspection: StageInfo;
+    lostAccept: StageInfo;
+    lostRd: StageInfo;
+    lostContractProject: StageInfo;
+    lostContractPrelimenarySigning: StageInfo;
+    fsspList: StageInfo;
+    fsspInstitute: StageInfo;
+    wonRd: StageInfo;
+    wonContractProject: StageInfo;
+    contract: StageInfo;
   };
 };
 
@@ -112,7 +142,7 @@ export type OldBuilding = {
   terms: { plan: OldBuildingTerms; actual: OldBuildingTerms };
   newBuildingConstructions: NewBuilding[] | null;
   newBuildingMovements: NewBuilding[] | null;
-  apartments: AppartmentCounts;
-  totalCount: number;
+  apartments: ApartmentCounts;
   problematicAparts: ProblematicApartment[];
+  totalCount: number;
 };

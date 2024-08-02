@@ -130,8 +130,8 @@ export const relocationDeviations = [
     className: 'text-yellow-500',
   },
   {
-    value: 'Есть риски',
-    label: 'Есть риски',
+    value: 'Наступили риски',
+    label: 'Наступили риски',
     icon: CircleX,
     className: 'text-red-500',
   },

@@ -38,12 +38,12 @@ const oldBuildingsSorting: Record<string, Record<string, string>> = {
     desc: `COALESCE(terms->'actual'->>'firstResetlementStart', terms->'plan'->>'firstResetlementStart') DESC NULLS LAST, adress`,
   },
   total: {
-    asc: '"totalApartments" NULLS LAST, adress',
-    desc: '"totalApartments" DESC NULLS LAST, adress',
+    asc: 'total_apartments, adress',
+    desc: 'total_apartments DESC, adress',
   },
   risk: {
-    asc: `CASE WHEN "totalApartments" = 0 THEN null ELSE CAST(apartments->'deviation'->>'risk' as  decimal) / "totalApartments" END NULLS LAST, adress`,
-    desc: `CASE WHEN "totalApartments" = 0 THEN null ELSE CAST(apartments->'deviation'->>'risk' as  decimal) / "totalApartments" END DESC NULLS LAST, adress`,
+    asc: `CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviation'->>'risk' as  decimal) / total_apartments END NULLS LAST, adress`,
+    desc: `CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviation'->>'risk' as  decimal) / total_apartments END DESC NULLS LAST, adress`,
   },
 };
 
@@ -95,33 +95,29 @@ export class RenovationRepository {
     }
     if (relocationType && relocationType.length > 0) {
       where.push(
-        `"relocationTypeId" = ANY(ARRAY[${relocationType.join(',')}])`,
+        `relocation_type_id = ANY(ARRAY[${relocationType.join(',')}])`,
       );
     }
     if (deviation && deviation.length > 0) {
-      where.push(
-        `"buildingDeviation" = ANY(ARRAY['${deviation.join("','")}'])`,
-      );
+      where.push(`building_deviation = ANY(ARRAY['${deviation.join("','")}'])`);
     }
     if (relocationAge && relocationAge.length > 0) {
-      where.push(
-        `"buildingRelocationStartAge" = ANY(ARRAY['${relocationAge.join("','")}'])`,
-      );
+      where.push(`relocation_age = ANY(ARRAY['${relocationAge.join("','")}'])`);
     }
     if (relocationStatus && relocationStatus.length > 0) {
       where.push(
-        `"buildingRelocationStatus" = ANY(ARRAY['${relocationStatus.join("','")}'])`,
+        `relocation_status = ANY(ARRAY['${relocationStatus.join("','")}'])`,
       );
     }
     if (adress && adress.length > 0) {
       where.push(`LOWER(adress) LIKE LOWER('%${adress}%')`);
     }
-    // Отдельный случай: фильтр должен работать строго при одной выбранной опции
-    if (MFRInvolvment && MFRInvolvment.length === 1) {
-      where.push(
-        `(apartments->'difficulty'->>'mfr')::int ${MFRInvolvment[0] === 'С МФР' ? '>' : '='} 0`,
-      );
-    }
+    // // Отдельный случай: фильтр должен работать строго при одной выбранной опции
+    // if (MFRInvolvment && MFRInvolvment.length === 1) {
+    //   where.push(
+    //     `(apartments->'difficulty'->>'mfr')::int ${MFRInvolvment[0] === 'С МФР' ? '>' : '='} 0`,
+    //   );
+    // }
 
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
     return this.db.any(renovation.oldBuildings, {
@@ -129,9 +125,6 @@ export class RenovationRepository {
       offset,
       conditions,
       ordering,
-      view: noMFR
-        ? 'renovation.old_buildings_no_mfr'
-        : 'renovation.old_buildings_fe',
     });
   }
 

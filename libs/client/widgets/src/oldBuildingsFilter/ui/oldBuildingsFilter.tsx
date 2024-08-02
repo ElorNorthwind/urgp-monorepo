@@ -187,7 +187,11 @@ const OldBuildingsFilter = ({
               'Более 8 месяцев',
             ],
             // relocationStatus: undefined,
-            deviation: ['Есть риски', 'Требует внимания', 'Без отклонений'],
+            deviation: [
+              'Наступили риски',
+              'Требует внимания',
+              'Без отклонений',
+            ],
             // adress: undefined,
             // MFRInvolvment: ['Без МФР'],
           })
