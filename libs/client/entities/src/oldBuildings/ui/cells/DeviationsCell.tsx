@@ -53,7 +53,7 @@ function DeviationsCell(props: CellContext<OldBuilding, string>): JSX.Element {
           100,
       ),
       key: 'done',
-      label: 'работе завершена',
+      label: 'работа завершена',
       class: cn('bg-emerald-500'),
     },
   ];

@@ -56,11 +56,11 @@ const ProblematicApartsTable = ({
       <Accordion type="single" collapsible>
         {building?.problematicAparts.map((apart) => {
           const referenceTerms = [
-            {
-              label: 'Создано КПУ',
-              date: apart.stages.order.date,
-              days: apart.stages.order.days,
-            },
+            // {
+            //   label: 'Создано КПУ',
+            //   date: apart.stages.order.date,
+            //   days: apart.stages.order.days,
+            // },
             {
               label: 'На осмотре',
               date: apart.stages.inspection.date,

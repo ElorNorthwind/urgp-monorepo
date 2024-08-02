@@ -13,7 +13,7 @@ const OldBuildingsPage = (): JSX.Element => {
   const filters = getRouteApi(
     '/renovation/oldbuildings',
   ).useSearch() as GetOldBuldingsDto;
-  const debouncedFilters = useDebounce(filters, 200);
+  const debouncedFilters = useDebounce({ ...filters, noMFR: undefined }, 200);
 
   const navigate = useNavigate({ from: '/renovation/oldbuildings' });
   const [offset, setOffset] = useState(0);
@@ -67,7 +67,24 @@ const OldBuildingsPage = (): JSX.Element => {
             currentAdress ? 'w-[calc(100%-520px-0.5rem)]' : 'w-[calc(100%)]',
           )}
           columns={oldBuildingsColumns}
-          data={buildings || []}
+          // Костыль пока не выделил МФР в какой то отдельный риск
+          data={
+            (filters.noMFR
+              ? ((buildings || []).map((b) => ({
+                  ...b,
+                  apartments: {
+                    ...b.apartments,
+                    deviation: b.apartments.deviationNoMFR,
+                  },
+                  problematicAparts:
+                    b?.problematicAparts?.length > 0
+                      ? b.problematicAparts.filter(
+                          (ap) => !ap.problems.includes('МФР'),
+                        )
+                      : b.problematicAparts,
+                })) as OldBuilding[])
+              : buildings) || []
+          }
           // isFetching={true}
           isFetching={isLoading || isFetching}
           totalCount={buildings?.[0]?.totalCount ?? 0}
