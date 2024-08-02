@@ -1,12 +1,9 @@
 import {
   Button,
-  cn,
   FacetFilter,
   HStack,
   Input,
-  Label,
   NestedFacetFilter,
-  Switch,
 } from '@urgp/client/shared';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
 import { X } from 'lucide-react';

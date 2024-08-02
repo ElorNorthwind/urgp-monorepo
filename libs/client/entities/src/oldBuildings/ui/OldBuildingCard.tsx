@@ -6,6 +6,9 @@ import {
   CardHeader,
   CardTitle,
   cn,
+  HStack,
+  Label,
+  Switch,
   Tabs,
   TabsContent,
   TabsList,
@@ -17,6 +20,7 @@ import { OldBuildingTermsTable } from './OldBuildingTermsTable';
 import { ProblematicApartsTable } from './ProblematicApartsTable';
 import { NewBuildingsTable } from './NewBuildingsTable';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { useState } from 'react';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
@@ -30,6 +34,7 @@ const OldBuildingsCard = ({
   onClose,
   width = 520,
 }: OldBuildingCardProps): JSX.Element => {
+  const [showMFR, setShowMFR] = useState(true);
   return (
     <Card
       className={cn(
@@ -77,11 +82,33 @@ const OldBuildingsCard = ({
           </Tabs>
           {building?.problematicAparts &&
             building?.problematicAparts?.length > 0 && (
-              <h3>Проблемные квартиры</h3>
+              <HStack>
+                <h3>Проблемные квартиры</h3>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="show-mfr"
+                    defaultChecked
+                    checked={showMFR}
+                    onCheckedChange={(e) => {
+                      setShowMFR(e);
+                    }}
+                  />
+                  <Label
+                    htmlFor="show-mfr"
+                    className={cn(
+                      'transition-opacity',
+                      !showMFR ? 'line-through opacity-30' : '',
+                    )}
+                  >
+                    МФР
+                  </Label>
+                </div>
+              </HStack>
             )}
           <ProblematicApartsTable
             building={building}
             className="w-full flex-grow"
+            showMFR={showMFR}
           />
           {onClose && (
             <Button
