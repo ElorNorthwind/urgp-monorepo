@@ -118,12 +118,12 @@ export const relocationDeviations = [
     icon: CircleCheck,
     className: 'text-emerald-500',
   },
-  {
-    value: 'В работе у МФР',
-    label: 'В работе у МФР',
-    icon: CircleDollarSign,
-    className: 'text-violet-500',
-  },
+  // {
+  //   value: 'В работе у МФР',
+  //   label: 'В работе у МФР',
+  //   icon: CircleDollarSign,
+  //   className: 'text-violet-500',
+  // },
   {
     value: 'Без отклонений',
     label: 'Без отклонений',
