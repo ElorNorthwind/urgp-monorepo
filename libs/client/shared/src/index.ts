@@ -41,7 +41,7 @@ export * from './lib/formatDate';
 export * from './lib/getDatesInterval';
 
 // export api
-export * from './api/rtkApi';
+export * from './store/rtkApi';
 
 // export config
 export * from './config/env.d';

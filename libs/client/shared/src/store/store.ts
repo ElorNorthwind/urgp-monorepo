@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { rtkApi } from '../api/rtkApi';
+import { rtkApi } from './rtkApi';
 import authReducer from '../store/auth/authSlice';
 
 export const store = configureStore({

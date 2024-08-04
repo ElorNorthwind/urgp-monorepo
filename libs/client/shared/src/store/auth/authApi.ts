@@ -1,5 +1,5 @@
 import { AuthUserDto, UserTokens } from '@urgp/shared/entities';
-import { rtkApi } from '../../api/rtkApi';
+import { rtkApi } from '../rtkApi';
 
 export const authApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
