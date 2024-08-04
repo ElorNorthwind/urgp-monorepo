@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Post,
-  Query,
   Req,
   UnauthorizedException,
   UseGuards,
@@ -12,10 +11,14 @@ import {
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import { AuthService } from './auth.service';
 import {
+  authUser,
   AuthUserDto,
+  changePassword,
   ChangeUserPasswordDto,
+  createUser,
   CreateUserDto,
   RequestWithAccessToken,
+  RequestWithLocalAccessData,
   RequestWithRefreshToken,
   User,
   UserAccessTokenInfo,
@@ -23,6 +26,7 @@ import {
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from './guards/accessToken.guard';
 import { RefreshTokenGuard } from './guards/refreshToken.guard';
+import { LocalAuthGuard } from './guards/localAuth.guart';
 
 @Controller('auth')
 export class AuthController {
@@ -33,15 +37,25 @@ export class AuthController {
     // return process.env['JWT_REFRESH_SECRET'] || 'oops';
     return this.auth.testEnv();
   }
-
   @Post('signup')
+  @UsePipes(new ZodValidationPipe(createUser))
   signup(@Body() dto: CreateUserDto) {
     return this.auth.signUp(dto);
   }
 
+  // @Get('old-buildings')
+  // @UsePipes(new ZodValidationPipe(getOldBuldings))
+  // getOldBuldings(
+  //   @Query() getOldHousesDto: GetOldBuldingsDto,
+  // ): Promise<OldBuilding[]> {
+  //   return this.renovation.getOldBuildings(getOldHousesDto);
+  // }
+
+  @UseGuards(LocalAuthGuard)
   @Post('signin')
-  signin(@Body() dto: AuthUserDto) {
-    return this.auth.signIn(dto);
+  @UsePipes(new ZodValidationPipe(authUser))
+  signin(@Req() req: RequestWithLocalAccessData) {
+    return this.auth.signIn(req.user);
   }
 
   @UseGuards(AccessTokenGuard)
@@ -53,17 +67,14 @@ export class AuthController {
 
   @UseGuards(AccessTokenGuard)
   @Post('change-password')
+  @UsePipes(new ZodValidationPipe(changePassword))
   changePassword(
     @Req() req: RequestWithAccessToken,
     @Body() dto: ChangeUserPasswordDto,
   ) {
+    // Это надо вывести в библиотеку CASL
     const id = req.user['sub'];
     const roles = req.user['roles'];
-
-    console.log(dto.id + ' ' + id);
-    console.log(id === dto.id);
-
-    // Это надо вывести в библиотеку CASL
     if (!roles.includes('admin') && id !== dto.id) {
       throw new UnauthorizedException('Unauthorized operation');
     }
@@ -77,6 +88,7 @@ export class AuthController {
   refreshTokens(@Req() req: RequestWithRefreshToken) {
     const id = req.user['sub'];
     const tokenVersion = req.user['tokenVersion'];
+    console.log(id, tokenVersion);
     return this.auth.refreshTokens(id, tokenVersion);
   }
 }

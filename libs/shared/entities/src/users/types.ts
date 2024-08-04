@@ -3,12 +3,11 @@ export type User = {
   login: string;
   fio: string;
   roles: string[];
+  tokenVersion: number;
 };
 
 export type UserWithCredentials = User & {
   password: string;
-  salt: string;
-  tokenVersion: number;
 };
 
 export type UserTokens = {
@@ -24,6 +23,10 @@ export type UserAccessTokenInfo = {
 export type UserRefreshTokenInfo = {
   sub: number;
   tokenVersion: number;
+};
+
+export type RequestWithLocalAccessData = Request & {
+  user: User;
 };
 
 export type RequestWithAccessToken = Request & {

@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
+import { UserAccessTokenInfo } from '@urgp/shared/entities';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-type JwtPayload = {
-  sub: string;
-  login: string;
-  roles: string[];
-};
+// type JwtPayload = {
+//   sub: string;
+//   login: string;
+//   roles: string[];
+// };
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -18,7 +19,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  validate(payload: JwtPayload) {
+  validate(payload: UserAccessTokenInfo) {
     return payload;
   }
 }

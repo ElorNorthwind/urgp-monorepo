@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import {
@@ -14,7 +15,6 @@ import {
   UserWithCredentials,
 } from '@urgp/shared/entities';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '@urgp/server/users';
 import { ConfigService } from '@nestjs/config';
 import * as argon2 from 'argon2';
 
@@ -30,6 +30,29 @@ export class AuthService {
       this.configService.get<string>('TEST_ENV') || 'env file not found :('
     );
   }
+  async validateUser(dto: AuthUserDto): Promise<User> {
+    const user: UserWithCredentials =
+      await this.dbServise.db.renovationUsers.getByLogin({
+        login: dto.login,
+      });
+    if (!user)
+      throw new BadRequestException(
+        this.configService.get<string>('NODE_ENV') === 'production'
+          ? 'Invalid login or password'
+          : 'User does not exist',
+      );
+
+    const { password, ...result } = user;
+    const passwordMatches = await argon2.verify(password, dto.password);
+    if (!passwordMatches)
+      throw new BadRequestException(
+        this.configService.get<string>('NODE_ENV') === 'production'
+          ? 'Invalid login or password'
+          : 'Wrong password',
+      );
+
+    return result;
+  }
 
   async signUp(dto: CreateUserDto): Promise<UserTokens> {
     // Check if user exists
@@ -37,7 +60,7 @@ export class AuthService {
       login: dto.login,
     });
     if (userExists) {
-      throw new BadRequestException('User already exists');
+      throw new UnauthorizedException('User already exists');
     }
 
     // Hash password
@@ -47,24 +70,12 @@ export class AuthService {
         ...dto,
         password: hash,
       });
-    console.log(JSON.stringify(newUser));
     const tokens = await this.getTokens(newUser);
     return tokens;
   }
 
-  async signIn(dto: AuthUserDto) {
-    // Check if user exists
-    const user: UserWithCredentials =
-      await this.dbServise.db.renovationUsers.getByLogin({
-        login: dto.login,
-      });
-
-    if (!user) throw new BadRequestException('User does not exist');
-    const passwordMatches = await argon2.verify(user.password, dto.password);
-
-    if (!passwordMatches)
-      throw new BadRequestException('Password is incorrect');
-
+  async signIn(user: User) {
+    // const user = await this.validateUser(dto);
     const tokens = await this.getTokens(user);
     return tokens;
   }
@@ -78,12 +89,12 @@ export class AuthService {
     return argon2.hash(data);
   }
 
-  async getTokens(user: UserWithCredentials) {
+  async getTokens(user: User) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub: user.id,
-          login: user.login,
+          fio: user.fio,
           roles: user.roles,
         },
         {
@@ -110,10 +121,9 @@ export class AuthService {
   }
 
   async refreshTokens(id: number, tokenVersion: number) {
-    const user: UserWithCredentials =
-      await this.dbServise.db.renovationUsers.getById({ id });
+    const user: User = await this.dbServise.db.renovationUsers.getById({ id });
     if (!user || user.tokenVersion !== tokenVersion)
-      throw new ForbiddenException('Access Denied');
+      throw new UnauthorizedException('Access Denied');
 
     const tokens = await this.getTokens(user);
     return tokens;
