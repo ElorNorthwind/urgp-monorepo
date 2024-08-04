@@ -5,6 +5,7 @@ import {
   Post,
   Query,
   Req,
+  UnauthorizedException,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { ZodValidationPipe } from '@urgp/server/pipes';
 import { AuthService } from './auth.service';
 import {
   AuthUserDto,
+  ChangeUserPasswordDto,
   CreateUserDto,
   RequestWithAccessToken,
   RequestWithRefreshToken,
@@ -46,6 +48,27 @@ export class AuthController {
   @Get('logout')
   logout(@Req() req: RequestWithAccessToken) {
     this.auth.logout(req.user['sub']);
+    return 'ok';
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Post('change-password')
+  changePassword(
+    @Req() req: RequestWithAccessToken,
+    @Body() dto: ChangeUserPasswordDto,
+  ) {
+    const id = req.user['sub'];
+    const roles = req.user['roles'];
+
+    console.log(dto.id + ' ' + id);
+    console.log(id === dto.id);
+
+    // Это надо вывести в библиотеку CASL
+    if (!roles.includes('admin') && id !== dto.id) {
+      throw new UnauthorizedException('Unauthorized operation');
+    }
+
+    this.auth.changePassword(id, dto.password);
     return 'ok';
   }
 

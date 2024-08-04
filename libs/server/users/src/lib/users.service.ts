@@ -7,7 +7,7 @@ export class UsersService {
   constructor(private readonly dbServise: DatabaseService) {}
 
   public getUserByLogin(dto: GetUserByLoginDto): Promise<User> {
-    return this.dbServise.db.renovationUsers.getUserByLogin(dto);
+    return this.dbServise.db.renovationUsers.getByLogin(dto);
   }
 
   public async getAll(): Promise<User[]> {

@@ -8,7 +8,7 @@ import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
 import { UsersModule } from '@urgp/server/users';
 
 @Module({
-  imports: [JwtModule.register({}), UsersModule, DatabaseModule],
+  imports: [JwtModule.register({}), DatabaseModule],
   providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
   controllers: [AuthController],
 })

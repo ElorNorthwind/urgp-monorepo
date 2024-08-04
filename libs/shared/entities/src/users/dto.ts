@@ -23,6 +23,11 @@ export const authUser = z.object({
   password: z.string().min(3),
 });
 
+export const changePassword = z.object({
+  id: z.coerce.number(),
+  password: z.string().min(3),
+});
+
 // export const getUserTokens = z.object({
 //   id: z.coerce.number(),
 //   login: z.string(),
@@ -36,3 +41,4 @@ export type GetUserByLoginDto = z.infer<typeof getUserByLogin>;
 export type UpdateUserDto = z.infer<typeof updateUser>;
 export type DeleteUserDto = z.infer<typeof deleteUser>;
 export type AuthUserDto = z.infer<typeof authUser>;
+export type ChangeUserPasswordDto = z.infer<typeof changePassword>;

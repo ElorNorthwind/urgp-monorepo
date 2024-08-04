@@ -21,13 +21,13 @@ export class RenovationUsersRepository {
     private pgp: IMain,
   ) {}
 
-  getUserByLogin(dto: GetUserByLoginDto): Promise<UserWithCredentials | null> {
+  getByLogin(dto: GetUserByLoginDto): Promise<UserWithCredentials | null> {
     // const query = this.pgp.as.format(users.getByLogin, { login: dto.login });
     // console.log(query);
 
     return this.db.oneOrNone(users.getByLogin, { login: dto.login });
   }
-  getUserById(dto: GetUserByIdDto): Promise<UserWithCredentials | null> {
+  getById(dto: GetUserByIdDto): Promise<UserWithCredentials | null> {
     return this.db.oneOrNone(users.getById, { id: dto.id });
   }
 
@@ -40,5 +40,9 @@ export class RenovationUsersRepository {
 
   incrementTokenVersion(id: number): Promise<number> {
     return this.db.one(users.incrementTokenVersion, { id });
+  }
+
+  changePassword(id: number, password: string): Promise<null> {
+    return this.db.none(users.changePassword, { id, password });
   }
 }

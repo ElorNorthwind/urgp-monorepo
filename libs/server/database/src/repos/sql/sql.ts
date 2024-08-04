@@ -17,7 +17,8 @@ export const renovation = {
 
 export const users = {
   getByLogin: sql('sql/users/getByLogin.sql'),
-  getById: sql('sql/users/getById.sql'),
+  getById: sql('sql/users/getUserById.sql'),
   create: sql('sql/users/create.sql'),
   incrementTokenVersion: sql('sql/users/incrementTokenVersion.sql'),
+  changePassword: sql('sql/users/changePassword.sql'),
 };
