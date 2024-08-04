@@ -23,6 +23,10 @@ module.exports = {
           from: '../../libs/server/database/src/repos/sql/renovation',
           to: join(__dirname, '../../dist/apps/server/sql/renovation'),
         },
+        {
+          from: '../../libs/server/database/src/repos/sql/users',
+          to: join(__dirname, '../../dist/apps/server/sql/users'),
+        },
       ],
     }),
   ],

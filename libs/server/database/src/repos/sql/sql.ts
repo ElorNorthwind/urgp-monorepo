@@ -14,3 +14,10 @@ export const renovation = {
   okrugTotalHouses: sql('sql/renovation/okrugTotalHouses.sql'),
   doneTimeline: sql('sql/renovation/doneTimeline.sql'),
 };
+
+export const users = {
+  getByLogin: sql('sql/users/getByLogin.sql'),
+  getById: sql('sql/users/getById.sql'),
+  create: sql('sql/users/create.sql'),
+  incrementTokenVersion: sql('sql/users/incrementTokenVersion.sql'),
+};

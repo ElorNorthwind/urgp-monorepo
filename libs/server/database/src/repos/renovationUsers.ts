@@ -6,6 +6,14 @@ import {
   ExternalLookup,
   ExternalSessionInfo,
 } from '@urgp/server/entities';
+import {
+  CreateUserDto,
+  GetUserByIdDto,
+  GetUserByLoginDto,
+  User,
+  UserWithCredentials,
+} from '@urgp/shared/entities';
+import { users } from './sql/sql';
 
 export class RenovationUsersRepository {
   constructor(
@@ -13,8 +21,24 @@ export class RenovationUsersRepository {
     private pgp: IMain,
   ) {}
 
-  //   // Returns all user records;
-  //   all(): Promise<DbUser[]> {
-  //     return this.db.any(this.columnSelector);
-  //   }
+  getUserByLogin(dto: GetUserByLoginDto): Promise<UserWithCredentials | null> {
+    // const query = this.pgp.as.format(users.getByLogin, { login: dto.login });
+    // console.log(query);
+
+    return this.db.oneOrNone(users.getByLogin, { login: dto.login });
+  }
+  getUserById(dto: GetUserByIdDto): Promise<UserWithCredentials | null> {
+    return this.db.oneOrNone(users.getById, { id: dto.id });
+  }
+
+  create(dto: CreateUserDto): Promise<UserWithCredentials> {
+    // const query = this.pgp.as.format(users.create, dto);
+    // console.log(query);
+
+    return this.db.one(users.create, dto);
+  }
+
+  incrementTokenVersion(id: number): Promise<number> {
+    return this.db.one(users.incrementTokenVersion, { id });
+  }
 }

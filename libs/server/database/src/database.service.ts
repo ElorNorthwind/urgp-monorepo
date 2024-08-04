@@ -5,6 +5,7 @@ import {
   DbExtensions,
   QuestionsRepository,
   RenovationRepository,
+  RenovationUsersRepository,
   StreetsRepository,
   UsersRepository,
 } from './repos';
@@ -33,6 +34,7 @@ export class DatabaseService {
         obj.questions = new QuestionsRepository(obj, pgPromise());
         obj.streets = new StreetsRepository(obj, pgPromise());
         obj.renovation = new RenovationRepository(obj, pgPromise());
+        obj.renovationUsers = new RenovationUsersRepository(obj, pgPromise());
       },
     };
 
