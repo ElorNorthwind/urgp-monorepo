@@ -5,11 +5,22 @@ import {
   Post,
   Query,
   Req,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import { AuthService } from './auth.service';
-import { AuthUserDto, CreateUserDto, User } from '@urgp/shared/entities';
+import {
+  AuthUserDto,
+  CreateUserDto,
+  RequestWithAccessToken,
+  RequestWithRefreshToken,
+  User,
+  UserAccessTokenInfo,
+  UserRefreshTokenInfo,
+} from '@urgp/shared/entities';
+import { AccessTokenGuard } from './guards/accessToken.guard';
+import { RefreshTokenGuard } from './guards/refreshToken.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -31,8 +42,18 @@ export class AuthController {
     return this.auth.signIn(dto);
   }
 
-  // @Get('logout')
-  // logout(@Req() req: Request) {
-  //   this.auth.logout(req.user['sub']);
-  // }
+  @UseGuards(AccessTokenGuard)
+  @Get('logout')
+  logout(@Req() req: RequestWithAccessToken) {
+    this.auth.logout(req.user['sub']);
+    return 'ok';
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @Get('refresh')
+  refreshTokens(@Req() req: RequestWithRefreshToken) {
+    const id = req.user['sub'];
+    const tokenVersion = req.user['tokenVersion'];
+    return this.auth.refreshTokens(id, tokenVersion);
+  }
 }

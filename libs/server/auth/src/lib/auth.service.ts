@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import {
   AuthUserDto,
@@ -116,6 +120,24 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  // async refreshTokens(id: string, userTokenVersion: number) {
+  async refreshTokens(id: number, tokenVersion: number) {
+    const user: UserWithCredentials =
+      await this.dbServise.db.renovationUsers.getUserById({ id });
+    if (!user || user.tokenVersion !== tokenVersion)
+      throw new ForbiddenException('Access Denied');
+
+    // const refreshTokenMatches = await argon2.verify(
+    //   user.refreshToken,
+    //   refreshToken,
+    // );
+    // if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
+
+    const tokens = await this.getTokens(user);
+    // await this.updateRefreshToken(user.id, tokens.refreshToken);
+    return tokens;
   }
 }
 
