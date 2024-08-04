@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 
 // Import the generated route tree
 import { routeTree } from './app/routeTree.gen';
-import { store } from './app/config/store';
+import { store } from '@urgp/client/shared';
 
 // Create a new router instance
 const router = createRouter({ routeTree });

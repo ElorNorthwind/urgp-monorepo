@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { rtkApi } from '../api/rtkApi';
-import { authReducer } from '@urgp/client/features';
+import authReducer from '../store/auth/authSlice';
 
 export const store = configureStore({
   reducer: { [rtkApi.reducerPath]: rtkApi.reducer, auth: authReducer },

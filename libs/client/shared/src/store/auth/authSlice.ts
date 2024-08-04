@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '@urgp/shared/entities';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { RootState } from '@urgp/client/app/config/store';
+import { RootState } from '../store';
 
 type UserState = {
   user: User | null;

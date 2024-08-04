@@ -45,4 +45,6 @@ export * from './api/rtkApi';
 
 // export config
 export * from './config/env.d';
-export * from './comfig/store';
+export * from './store/store';
+export * from './store/auth/authApi';
+export * from './store/auth/authSlice';
