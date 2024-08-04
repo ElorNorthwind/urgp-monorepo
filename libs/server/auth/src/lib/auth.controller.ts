@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   Req,
+  Res,
   UnauthorizedException,
   UseGuards,
   UsePipes,
@@ -27,6 +28,7 @@ import {
 import { AccessTokenGuard } from './guards/accessToken.guard';
 import { RefreshTokenGuard } from './guards/refreshToken.guard';
 import { LocalAuthGuard } from './guards/localAuth.guart';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -54,7 +56,11 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   @UsePipes(new ZodValidationPipe(authUser))
-  signin(@Req() req: RequestWithLocalAccessData) {
+  signin(
+    @Req() req: RequestWithLocalAccessData,
+    // @Res({ passthrough: true }) response: Response,
+  ) {
+    // response.cookie('Authorization', `Bearer test`, { domain: 'localhost' });
     return this.auth.signIn(req.user);
   }
 
