@@ -33,7 +33,6 @@
       "@urgp/server/pipes": ["libs/server/pipes/src/index.ts"],
       "@urgp/server/renovation": ["libs/server/renovation/src/index.ts"],
       "@urgp/server/rsm": ["libs/server/rsm/src/index.ts"],
-      "@urgp/server/users": ["libs/server/users/src/index.ts"],
       "@urgp/server/auth": ["libs/server/auth/src/index.ts"]
     }
   },
