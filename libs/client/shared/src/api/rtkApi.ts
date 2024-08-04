@@ -42,11 +42,10 @@ export const rtkApi = createApi({
   //   baseQuery: axiosBaseQuery({
   //     baseUrl: process.env.API_URL || '/api',
   //   }),
-  reducerPath: '/api',
+  reducerPath: 'api',
   // ts-expect-error
   baseQuery: fetchBaseQuery({
-    // baseUrl: import.meta.env.VITE_API_URL || '/api',
-    baseUrl: 'http://localhost:8000/api',
+    baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
   }),
   endpoints: (builder) => ({}),
 });

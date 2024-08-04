@@ -26,6 +26,7 @@
     "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx",
-    "tailwind.config.js"
+    "tailwind.config.js",
+    "src/config/store.ts"
   ]
 }

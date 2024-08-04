@@ -1,9 +1,21 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { User } from '@urgp/shared/entities';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { RootState } from '@urgp/client/app/config/store';
 
-const initialState = {
+type UserState = {
+  user: User | null;
+  accessToken: string | null;
+  refreshToken: string | null;
+  error: string | null;
+  loading: boolean;
+  success: boolean;
+};
+
+const initialState: UserState = {
   loading: false,
-  userInfo: {}, // for user object
-  accessToken: null, // for storing the JWT
+  user: null, // for user object
+  accessToken: null as string | null, // for storing the JWT
   refreshToken: null, // for storing the JWT
   error: null,
   success: false, // for monitoring the registration process.
@@ -12,10 +24,27 @@ const initialState = {
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    setCredentials: (
+      state,
+      {
+        payload: { user, accessToken, refreshToken },
+      }: PayloadAction<{
+        user: User;
+        accessToken: string;
+        refreshToken: string;
+      }>,
+    ) => {
+      state.user = user;
+      state.accessToken = accessToken;
+      state.refreshToken = refreshToken;
+    },
+  },
   //   extraReducers: {},
 });
 
+export const { setCredentials } = authSlice.actions;
+export const selectCurrentUser = (state: RootState) => state.auth.user;
 export default authSlice.reducer;
 
 // import { createSlice, PayloadAction } from "@reduxjs/toolkit";

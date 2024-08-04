@@ -1,11 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { rtkApi } from '../api/rtkApi';
 import { setupListeners } from '@reduxjs/toolkit/query';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-// import authReducer from 'libs/client/features/src/auth/authSlice';
+import { rtkApi } from '../api/rtkApi';
+import { authReducer } from '@urgp/client/features';
 
 export const store = configureStore({
-  reducer: { [rtkApi.reducerPath]: rtkApi.reducer },
+  reducer: { [rtkApi.reducerPath]: rtkApi.reducer, auth: authReducer },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(rtkApi.middleware),
 });

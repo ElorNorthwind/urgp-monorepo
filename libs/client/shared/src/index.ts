@@ -44,5 +44,5 @@ export * from './lib/getDatesInterval';
 export * from './api/rtkApi';
 
 // export config
-export * from './config/store';
 export * from './config/env.d';
+export * from './comfig/store';
