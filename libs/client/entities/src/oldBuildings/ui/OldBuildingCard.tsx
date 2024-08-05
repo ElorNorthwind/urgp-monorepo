@@ -121,6 +121,7 @@ const OldBuildingsCard = ({
             building={building}
             className="w-full flex-grow"
             showMFR={showMFR}
+            setSelectedAppartmentId={setAppartmentDetails}
           />
           {onClose && (
             <Button

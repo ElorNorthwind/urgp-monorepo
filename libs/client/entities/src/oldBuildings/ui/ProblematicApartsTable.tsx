@@ -1,9 +1,11 @@
+import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
   Badge,
+  Button,
   cn,
   formatDate,
   HStack,
@@ -14,16 +16,26 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TooltipContent,
+  TooltipTrigger,
+  Tooltip,
   VStack,
 } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
-import { Cat, CircleAlert, CircleDollarSign, CircleX } from 'lucide-react';
+import {
+  Cat,
+  CircleAlert,
+  CircleDollarSign,
+  CircleX,
+  Newspaper,
+} from 'lucide-react';
 
 type ProblematicApartsTableProps = {
   building: OldBuilding | null;
   className?: string;
   caption?: string;
   showMFR?: boolean;
+  setSelectedAppartmentId?: (value: number | null) => void;
 };
 
 const problemBadgeStyles = {
@@ -36,6 +48,7 @@ const ProblematicApartsTable = ({
   building,
   className,
   showMFR = true,
+  setSelectedAppartmentId,
 }: ProblematicApartsTableProps): JSX.Element => {
   if (
     !building?.problematicAparts ||
@@ -188,12 +201,34 @@ const ProblematicApartsTable = ({
                   key={apart.id}
                 >
                   <HStack gap="s" className="w-full truncate">
-                    {apart.stageId === 12 ? (
-                      <CircleDollarSign className="h-8 w-8 text-violet-500" />
-                    ) : apart.deviation === 'Риск' ? (
-                      <CircleX className="h-8 w-8 text-red-500" />
-                    ) : (
-                      <CircleAlert className="h-8 w-8 text-yellow-500" />
+                    {setSelectedAppartmentId && (
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Button
+                            variant="outline"
+                            className="p-2"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedAppartmentId(apart.id);
+                            }}
+                          >
+                            {/* <Newspaper /> */}
+                            {apart.stageId === 12 ? (
+                              <CircleDollarSign className="h-8 w-8 text-violet-500" />
+                            ) : apart.deviation === 'Риск' ? (
+                              <CircleX className="h-8 w-8 text-red-500" />
+                            ) : (
+                              <CircleAlert className="h-8 w-8 text-yellow-500" />
+                            )}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipPortal>
+                          <TooltipContent>
+                            <TooltipArrow />
+                            <span>Подробнее</span>
+                          </TooltipContent>
+                        </TooltipPortal>
+                      </Tooltip>
                     )}
                     <VStack
                       gap="none"
