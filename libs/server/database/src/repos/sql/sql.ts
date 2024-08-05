@@ -13,6 +13,8 @@ export const renovation = {
   oldApartments: sql('sql/renovation/oldApartments.sql'),
   okrugTotalHouses: sql('sql/renovation/okrugTotalHouses.sql'),
   doneTimeline: sql('sql/renovation/doneTimeline.sql'),
+  oldApartmentTimeline: sql('sql/renovation/oldApartmentTimeline.sql'),
+  oldApartmentDetails: sql('sql/renovation/oldApartmentDetails.sql'),
 };
 
 export const users = {

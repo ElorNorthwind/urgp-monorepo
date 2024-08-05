@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UsePipes } from '@nestjs/common';
+import { Controller, Get, Param, Query, UsePipes } from '@nestjs/common';
 import { RenovationService } from './renovation.service';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
@@ -8,6 +8,8 @@ import {
   getOldBuldings,
   GetOldBuldingsDto,
   OkrugTotals,
+  OldApartmentDetails,
+  OldApartmentTimeline,
   OldAppartment,
   OldBuilding,
 } from '@urgp/shared/entities';
@@ -46,4 +48,23 @@ export class RenovationController {
   getDoneTimeline(): Promise<DoneTimelinePoint[]> {
     return this.renovation.getDoneTimeline();
   }
+
+  @Get('old-apartment-timeline/:id')
+  getOldApartmentTimeline(
+    @Param('id') id: number,
+  ): Promise<OldApartmentTimeline[]> {
+    return this.renovation.getOldApartmentTimeline(id);
+  }
+  @Get('old-apartment-details/:id')
+  getOldApartmentDetails(
+    @Param('id') id: number,
+  ): Promise<OldApartmentDetails> {
+    return this.renovation.getOldApartmentsDetails(id);
+  }
 }
+
+// @Get(':id')
+// findOne(@Param() params: any): string {
+//   console.log(params.id);
+//   return `This action returns a #${params.id} cat`;
+// }

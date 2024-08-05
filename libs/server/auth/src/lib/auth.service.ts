@@ -14,7 +14,6 @@ import {
   UserWithCredentials,
 } from '@urgp/shared/entities';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '@urgp/server/users';
 import { ConfigService } from '@nestjs/config';
 import * as argon2 from 'argon2';
 

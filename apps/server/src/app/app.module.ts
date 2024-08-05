@@ -11,7 +11,6 @@ import {
   RsmApiModule,
 } from '@urgp/server/external-auth';
 import { RenovationModule } from '@urgp/server/renovation';
-import { UsersModule } from '@urgp/server/users';
 import { AuthModule } from '@urgp/server/auth';
 
 @Module({
@@ -39,7 +38,6 @@ import { AuthModule } from '@urgp/server/auth';
     EdoApiModule,
     RsmApiModule,
     RenovationModule,
-    UsersModule,
     AuthModule,
   ],
 })
