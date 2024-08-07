@@ -19,10 +19,14 @@ export type UserAccessTokenInfo = {
   sub: number;
   login: string;
   roles: string[];
+  iat: number;
+  exp: number;
 };
 export type UserRefreshTokenInfo = {
   sub: number;
   tokenVersion: number;
+  iat: number;
+  exp: number;
 };
 
 export type RequestWithLocalAccessData = Request & {
@@ -33,7 +37,7 @@ export type RequestWithAccessToken = Request & {
   user: UserAccessTokenInfo;
 };
 export type RequestWithRefreshToken = Request & {
-  user: UserRefreshTokenInfo;
+  user: User & { exp: number }; // we get the full user info from bd
 };
 
 // {

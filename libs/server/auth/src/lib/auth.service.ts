@@ -17,6 +17,15 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as argon2 from 'argon2';
+import { Response } from 'express';
+
+const cookieOptions = {
+  httpOnly: true,
+  sameSite: 'lax',
+  secure: false, // we don't have https :(
+  maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+  domain: process.env['DOMAIN'] || 'localhost',
+} as const;
 
 @Injectable()
 export class AuthService {
@@ -30,7 +39,8 @@ export class AuthService {
       this.configService.get<string>('TEST_ENV') || 'env file not found :('
     );
   }
-  async validateUser(dto: AuthUserDto): Promise<User> {
+
+  public async validateUser(dto: AuthUserDto): Promise<User> {
     const user: UserWithCredentials =
       await this.dbServise.db.renovationUsers.getByLogin({
         login: dto.login,
@@ -54,7 +64,7 @@ export class AuthService {
     return result;
   }
 
-  async signUp(dto: CreateUserDto): Promise<UserTokens> {
+  public async signUp(res: Response, dto: CreateUserDto): Promise<void> {
     // Check if user exists
     const userExists = await this.dbServise.db.renovationUsers.getByLogin({
       login: dto.login,
@@ -70,26 +80,19 @@ export class AuthService {
         ...dto,
         password: hash,
       });
-    const tokens = await this.getTokens(newUser);
-    return tokens;
+    await this.setAuthCookies(res, newUser);
   }
 
-  async signIn(user: User) {
-    // const user = await this.validateUser(dto);
-    const tokens = await this.getTokens(user);
-    return tokens;
-  }
-
-  async logout(userId: number) {
+  public async logoutAllDevices(userId: number) {
     return await this.dbServise.db.renovationUsers.incrementTokenVersion(
       userId,
     );
   }
-  hashData(data: string) {
+  private hashData(data: string) {
     return argon2.hash(data);
   }
 
-  async getTokens(user: User) {
+  private async getTokens(user: User) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
@@ -120,17 +123,20 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(id: number, tokenVersion: number) {
-    const user: User = await this.dbServise.db.renovationUsers.getById({ id });
-    if (!user || user.tokenVersion !== tokenVersion)
-      throw new UnauthorizedException('Access Denied');
-
-    const tokens = await this.getTokens(user);
-    return tokens;
+  public async setAuthCookies(res: Response, user: User) {
+    const { accessToken, refreshToken } = await this.getTokens(user);
+    res.cookie('id', accessToken, cookieOptions);
+    res.cookie('rid', refreshToken, cookieOptions);
   }
-  async changePassword(id: number, password: string) {
+
+  public async clearAuthCookies(res: Response) {
+    res.clearCookie('id', cookieOptions);
+    res.clearCookie('rid', cookieOptions);
+  }
+
+  public async changePassword(id: number, password: string) {
     const hash = await this.hashData(password);
     this.dbServise.db.renovationUsers.changePassword(id, hash);
-    this.logout(id);
+    this.logoutAllDevices(id);
   }
 }
