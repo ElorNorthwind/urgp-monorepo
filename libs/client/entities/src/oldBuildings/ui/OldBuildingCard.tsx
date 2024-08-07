@@ -8,14 +8,6 @@ import {
   cn,
   HStack,
   Label,
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
   Switch,
   Tabs,
   TabsContent,
@@ -137,16 +129,6 @@ const OldBuildingsCard = ({
             apartmentId={appartmentDetails}
             setApartmentId={setAppartmentDetails}
           />
-          <Button
-            variant="outline"
-            onClick={() =>
-              appartmentDetails
-                ? setAppartmentDetails(null)
-                : setAppartmentDetails(895799)
-            }
-          >
-            ding
-          </Button>
         </CardContent>
       )}
     </Card>
