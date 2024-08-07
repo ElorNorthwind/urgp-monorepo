@@ -6,6 +6,8 @@ import {
   GetOldAppartmentsDto,
   GetOldBuldingsDto,
   OkrugTotals,
+  OldApartmentDetails,
+  OldApartmentTimeline,
   OldAppartment,
   OldBuilding,
 } from '@urgp/shared/entities';
@@ -160,5 +162,11 @@ export class RenovationRepository {
 
   getDoneTimeline(): Promise<DoneTimelinePoint[]> {
     return this.db.any(renovation.doneTimeline);
+  }
+  getOldApartmentsTimeline(id: number): Promise<OldApartmentTimeline[]> {
+    return this.db.any(renovation.oldApartmentTimeline, { id });
+  }
+  getOldApartmentsDetails(id: number): Promise<OldApartmentDetails> {
+    return this.db.one(renovation.oldApartmentDetails, { id });
   }
 }

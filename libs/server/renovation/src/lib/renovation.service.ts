@@ -23,4 +23,10 @@ export class RenovationService {
   public async getDoneTimeline() {
     return this.dbServise.db.renovation.getDoneTimeline();
   }
+  public async getOldApartmentTimeline(id: number) {
+    return this.dbServise.db.renovation.getOldApartmentsTimeline(id);
+  }
+  public async getOldApartmentsDetails(id: number) {
+    return this.dbServise.db.renovation.getOldApartmentsDetails(id);
+  }
 }

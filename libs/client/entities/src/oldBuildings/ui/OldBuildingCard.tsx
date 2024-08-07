@@ -21,6 +21,7 @@ import { ProblematicApartsTable } from './ProblematicApartsTable';
 import { NewBuildingsTable } from './NewBuildingsTable';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { useState } from 'react';
+import { OldApartmentDetailsSheet } from '../../oldApartments/ui/OldApartmentDetailsSheet';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
@@ -34,7 +35,10 @@ const OldBuildingsCard = ({
   onClose,
   width = 520,
 }: OldBuildingCardProps): JSX.Element => {
-  const [showMFR, setShowMFR] = useState(true);
+  const [showMFR, setShowMFR] = useState<boolean>(true);
+  const [appartmentDetails, setAppartmentDetails] = useState<number | null>(
+    null,
+  );
   return (
     <Card
       className={cn(
@@ -109,6 +113,7 @@ const OldBuildingsCard = ({
             building={building}
             className="w-full flex-grow"
             showMFR={showMFR}
+            setSelectedAppartmentId={setAppartmentDetails}
           />
           {onClose && (
             <Button
@@ -119,6 +124,11 @@ const OldBuildingsCard = ({
               <X className="stroke-muted-foreground opacity-50 group-hover:opacity-100" />
             </Button>
           )}
+
+          <OldApartmentDetailsSheet
+            apartmentId={appartmentDetails}
+            setApartmentId={setAppartmentDetails}
+          />
         </CardContent>
       )}
     </Card>
