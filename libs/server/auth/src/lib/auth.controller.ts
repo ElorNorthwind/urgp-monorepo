@@ -13,15 +13,11 @@ import { ZodValidationPipe } from '@urgp/server/pipes';
 import { AuthService } from './auth.service';
 import {
   authUser,
-  AuthUserDto,
   changePassword,
   ChangeUserPasswordDto,
   createUser,
   CreateUserDto,
   RequestWithUserData,
-  User,
-  UserAccessTokenInfo,
-  UserRefreshTokenInfo,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from './guards/accessToken.guard';
 import { RefreshTokenGuard } from './guards/refreshToken.guard';

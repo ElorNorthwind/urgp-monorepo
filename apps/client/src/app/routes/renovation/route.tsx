@@ -1,10 +1,6 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 import { Toaster, TooltipProvider } from '@urgp/client/shared';
-import {
-  OptionsNavbar,
-  RenovationNavbar,
-  UserMenu,
-} from '@urgp/client/widgets';
+import { RenovationNavbar, UserMenu } from '@urgp/client/widgets';
 
 export const Route = createFileRoute('/renovation')({
   component: () => (
@@ -13,7 +9,6 @@ export const Route = createFileRoute('/renovation')({
         <aside className="bg-background fixed inset-y-0 left-0 z-10 hidden w-14 flex-col justify-between border-r p-2 sm:flex">
           <RenovationNavbar />
           <UserMenu />
-          {/* <OptionsNavbar /> */}
         </aside>
         <main className="relative flex flex-1 flex-col gap-2 p-2 sm:pl-16">
           <Outlet />
