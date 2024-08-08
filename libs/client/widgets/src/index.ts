@@ -5,3 +5,4 @@ export * from './OldBuildingsFilter';
 export * from './LoadedResultCounter';
 export * from './RenovationNavbar';
 export * from './OptionsNavbar';
+export * from './LoginMenu';

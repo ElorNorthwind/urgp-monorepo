@@ -1,4 +1,12 @@
-import { Controller, Get, Param, Query, UsePipes } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  Req,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
 import { RenovationService } from './renovation.service';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
@@ -12,7 +20,9 @@ import {
   OldApartmentTimeline,
   OldAppartment,
   OldBuilding,
+  RequestWithUserData,
 } from '@urgp/shared/entities';
+import { AccessTokenGuard } from '@urgp/server/auth';
 
 @Controller('renovation')
 export class RenovationController {
@@ -44,6 +54,7 @@ export class RenovationController {
     return this.renovation.getOkrugTotals();
   }
 
+  @UseGuards(AccessTokenGuard)
   @Get('done-timeline')
   getDoneTimeline(): Promise<DoneTimelinePoint[]> {
     return this.renovation.getDoneTimeline();

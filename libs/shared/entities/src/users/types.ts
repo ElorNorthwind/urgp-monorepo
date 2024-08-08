@@ -29,16 +29,16 @@ export type UserRefreshTokenInfo = {
   exp: number;
 };
 
-export type RequestWithLocalAccessData = Request & {
+export type RequestWithUserData = Request & {
   user: User;
 };
 
-export type RequestWithAccessToken = Request & {
-  user: UserAccessTokenInfo;
-};
-export type RequestWithRefreshToken = Request & {
-  user: User & { exp: number }; // we get the full user info from bd
-};
+// export type RequestWithAccessToken = Request & {
+//   user: UserAccessTokenInfo;
+// };
+// export type RequestWithRefreshToken = Request & {
+//   user: User & { exp: number }; // we get the full user info from bd
+// };
 
 // {
 //   sub: user.id,

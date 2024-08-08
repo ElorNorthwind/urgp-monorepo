@@ -28,12 +28,11 @@ export class RefreshTokenStrategy extends PassportStrategy(
   }
 
   async validate(payload: UserRefreshTokenInfo) {
-    console.log('refresh strategy fired!');
     const user: User = await this.dbServise.db.renovationUsers.getById({
       id: payload.sub,
     });
     if (!user || user.tokenVersion !== payload.tokenVersion)
       throw new UnauthorizedException('Access Denied');
-    return { ...user, exp: payload.exp };
+    return { ...user, password: undefined }; // { ...user, exp: payload.exp };
   }
 }

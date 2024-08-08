@@ -14,6 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as OldbuildingsImport } from './routes/oldbuildings'
+import { Route as LoginImport } from './routes/login'
 import { Route as RenovationRouteImport } from './routes/renovation/route'
 import { Route as RenovationIndexImport } from './routes/renovation/index'
 import { Route as RenovationOldbuildingsImport } from './routes/renovation/oldbuildings'
@@ -47,6 +48,11 @@ const OldbuildingsRoute = OldbuildingsImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const LoginRoute = LoginImport.update({
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const RenovationRouteRoute = RenovationRouteImport.update({
   path: '/renovation',
   getParentRoute: () => rootRoute,
@@ -77,6 +83,10 @@ declare module '@tanstack/react-router' {
     }
     '/renovation': {
       preLoaderRoute: typeof RenovationRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
     '/oldbuildings': {
@@ -114,6 +124,7 @@ export const routeTree = rootRoute.addChildren([
     RenovationOldbuildingsRoute,
     RenovationIndexRoute,
   ]),
+  LoginRoute,
   OldbuildingsRoute,
   AboutLazyRoute,
   BticalcLazyRoute,

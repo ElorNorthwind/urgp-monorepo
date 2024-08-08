@@ -18,9 +18,7 @@ import {
   ChangeUserPasswordDto,
   createUser,
   CreateUserDto,
-  RequestWithAccessToken,
-  RequestWithLocalAccessData,
-  RequestWithRefreshToken,
+  RequestWithUserData,
   User,
   UserAccessTokenInfo,
   UserRefreshTokenInfo,
@@ -53,44 +51,45 @@ export class AuthController {
   @Post('login')
   @UsePipes(new ZodValidationPipe(authUser))
   async signin(
-    @Req() req: RequestWithLocalAccessData,
+    @Req() req: RequestWithUserData,
     @Res({ passthrough: true }) res: Response,
   ) {
     // response.cookie('Authorization', `Bearer test`, { domain: 'localhost' });
     await this.auth.setAuthCookies(res, req.user);
-    return 'login as ' + req.user.login;
+    // return [null, 'login as ' + req.user.login];
+    return req.user;
   }
 
   @Get('logout')
   logout(
-    @Req() req: RequestWithAccessToken,
+    @Req() req: RequestWithUserData,
     @Res({ passthrough: true }) res: Response,
   ) {
     this.auth.clearAuthCookies(res);
-    return 'loged out on this device';
+    return [null, 'loged out on this device'];
   }
 
   @UseGuards(AccessTokenGuard)
   @Get('logout-all-devices')
   logoutAllDevices(
-    @Req() req: RequestWithAccessToken,
+    @Req() req: RequestWithUserData,
     @Res({ passthrough: true }) res: Response,
   ) {
-    this.auth.logoutAllDevices(req.user.sub);
+    this.auth.logoutAllDevices(req.user.id);
     this.auth.clearAuthCookies(res);
-    return 'loged out on all devices';
+    return [null, 'loged out on all devices'];
   }
 
   @UseGuards(AccessTokenGuard)
   @Post('change-password')
   @UsePipes(new ZodValidationPipe(changePassword))
   changePassword(
-    @Req() req: RequestWithAccessToken,
+    @Req() req: RequestWithUserData,
     @Body() dto: ChangeUserPasswordDto,
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL
-    const id = req.user['sub'];
-    const roles = req.user['roles'];
+    const id = req.user.id;
+    const roles = req.user.roles;
     if (!roles.includes('admin') && id !== dto.id) {
       throw new UnauthorizedException('Unauthorized operation');
     }
@@ -103,13 +102,15 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   @Get('refresh')
   async refreshTokens(
-    @Req() req: RequestWithRefreshToken,
+    @Req() req: RequestWithUserData,
     @Res({ passthrough: true }) res: Response,
   ) {
     await this.auth.setAuthCookies(res, req.user);
-    return (
-      'tokens refreshed until ' +
-      new Date(req.user.exp * 1000).toLocaleString('ru-RU')
-    );
+    return req.user;
+    // return [
+    //   null,
+    //   'tokens refreshed until ' +
+    //     new Date(req.user.exp * 1000).toLocaleString('ru-RU'),
+    // ];
   }
 }

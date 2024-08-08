@@ -37,8 +37,10 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
 
   validate(payload: UserAccessTokenInfo) {
     if (payload.exp <= Date.now() / 1000) {
+      // console.log('token expired');
       throw new ForbiddenException('Token expired!');
     }
+    // console.log(JSON.stringify(payload, null, 2));
     return payload;
   }
 }

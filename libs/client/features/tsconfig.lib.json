@@ -10,7 +10,13 @@
       "@nx/react/typings/image.d.ts"
     ]
   },
-  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "../widgets/src/LoginMenu/ui/LoginMenu.tsx"
+  ],
   "exclude": [
     "vite.config.ts",
     "vitest.config.ts",

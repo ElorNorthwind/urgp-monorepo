@@ -11,7 +11,13 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   app.use(cookieParser());
-  app.enableCors();
+  app.enableCors({
+    origin: process.env['ORIGIN'] || 'http://localhost:4200',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+    credentials: true,
+  });
   const port = process.env.API_PORT || 3000;
   await app.listen(port);
   Logger.log(

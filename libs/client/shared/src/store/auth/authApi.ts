@@ -1,17 +1,26 @@
-import { AuthUserDto, UserTokens } from '@urgp/shared/entities';
+import { AuthUserDto, User, UserTokens } from '@urgp/shared/entities';
 import { rtkApi } from '../rtkApi';
 
 export const authApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    signin: build.mutation<UserTokens, AuthUserDto>({
+    login: build.mutation<User, AuthUserDto>({
       query: (credentials) => ({
-        url: '/auth/signin',
+        url: '/auth/login',
         method: 'POST',
         body: credentials,
       }),
+      // transformResponse: (response: { data: User }, meta, arg) => response.data,
+      // transformErrorResponse: (
+      //   response: { status: string | number },
+      //   meta,
+      //   arg,
+      // ) => response.status,
+      // transformErrorResponse: (response) => {
+      //   return response.data;
+      // },
     }),
   }),
   overrideExisting: false,
 });
 
-export const { useSigninMutation } = authApi;
+export const { useLoginMutation } = authApi;

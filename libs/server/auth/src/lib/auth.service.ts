@@ -24,7 +24,7 @@ const cookieOptions = {
   sameSite: 'lax',
   secure: false, // we don't have https :(
   maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
-  domain: process.env['DOMAIN'] || 'localhost',
+  domain: process.env['DOMAIN'] || '',
 } as const;
 
 @Injectable()
@@ -35,9 +35,7 @@ export class AuthService {
     private configService: ConfigService, // why tho?
   ) {}
   public testEnv(): string {
-    return (
-      this.configService.get<string>('TEST_ENV') || 'env file not found :('
-    );
+    return this.configService.get<string>('DOMAIN') || 'env file not found :(';
   }
 
   public async validateUser(dto: AuthUserDto): Promise<User> {
@@ -102,7 +100,7 @@ export class AuthService {
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-          expiresIn: '15m',
+          expiresIn: '5s',
         },
       ),
       this.jwtService.signAsync(

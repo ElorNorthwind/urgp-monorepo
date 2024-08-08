@@ -4,45 +4,31 @@ import { RootState } from '../store';
 
 type UserState = {
   user: User | null;
-  accessToken: string | null;
-  refreshToken: string | null;
-  error: string | null;
-  loading: boolean;
-  success: boolean;
 };
 
+const user = JSON.parse(localStorage.getItem('user')) as User;
+
 const initialState: UserState = {
-  user: null,
-  accessToken: null as string | null,
-  refreshToken: null,
-  // likely not needed here
-  loading: false,
-  error: null,
-  success: false,
+  user: user || null,
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials: (
-      state,
-      {
-        payload: { user, accessToken, refreshToken },
-      }: PayloadAction<{
-        user: User;
-        accessToken: string;
-        refreshToken: string;
-      }>,
-    ) => {
-      state.user = user;
-      state.accessToken = accessToken;
-      state.refreshToken = refreshToken;
+    setUser: (state, { payload }: PayloadAction<User>) => {
+      localStorage.setItem('user', JSON.stringify(payload));
+      state.user = payload;
+    },
+    clearUser: (state) => {
+      localStorage.removeItem('user');
+      state.user = null;
     },
   },
+
   //   extraReducers: {},
 });
 
-export const { setCredentials } = authSlice.actions;
+export const { setUser } = authSlice.actions;
 export const selectCurrentUser = (state: RootState) => state.auth.user;
 export default authSlice.reducer;
