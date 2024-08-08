@@ -6,10 +6,18 @@ type UserState = {
   user: User | null;
 };
 
-const user = JSON.parse(localStorage.getItem('user')) as User;
+const guestUser = {
+  id: 0,
+  login: 'guest',
+  fio: 'Гость',
+  roles: ['guest'],
+  tokenVersion: 0,
+};
+
+const initialUser = JSON.parse(localStorage.getItem('user')) || guestUser;
 
 const initialState: UserState = {
-  user: user || null,
+  user: initialUser,
 };
 
 const authSlice = createSlice({
@@ -22,13 +30,13 @@ const authSlice = createSlice({
     },
     clearUser: (state) => {
       localStorage.removeItem('user');
-      state.user = null;
+      state.user = guestUser;
     },
   },
 
   //   extraReducers: {},
 });
 
-export const { setUser } = authSlice.actions;
+export const { setUser, clearUser } = authSlice.actions;
 export const selectCurrentUser = (state: RootState) => state.auth.user;
 export default authSlice.reducer;

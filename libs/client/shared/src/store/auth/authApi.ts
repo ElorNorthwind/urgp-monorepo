@@ -19,8 +19,14 @@ export const authApi = rtkApi.injectEndpoints({
       //   return response.data;
       // },
     }),
+    logout: build.mutation<void, void>({
+      query: () => ({
+        url: '/auth/logout',
+        method: 'GET',
+      }),
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useLoginMutation } = authApi;
+export const { useLoginMutation, useLogoutMutation } = authApi;

@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from '@tanstack/react-router';
 import {
   Button,
+  clearUser,
   cn,
   Form,
   FormControl,
@@ -48,15 +49,7 @@ const LoginForm = ({ className }: LoginMenuProps): JSX.Element => {
   }
 
   const onSetGuest = () => {
-    dispatch(
-      setUser({
-        id: 0,
-        login: 'guest',
-        fio: 'Гость',
-        roles: ['guest'],
-        tokenVersion: 0,
-      }),
-    );
+    dispatch(clearUser());
     navigate({ to: '/renovation' });
   };
 

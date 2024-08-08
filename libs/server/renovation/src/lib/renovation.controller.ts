@@ -54,7 +54,6 @@ export class RenovationController {
     return this.renovation.getOkrugTotals();
   }
 
-  @UseGuards(AccessTokenGuard)
   @Get('done-timeline')
   getDoneTimeline(): Promise<DoneTimelinePoint[]> {
     return this.renovation.getDoneTimeline();
