@@ -8,10 +8,7 @@ import { DatabaseService } from '@urgp/server/database';
 import {
   AuthUserDto,
   CreateUserDto,
-  GetOldAppartmentsDto,
-  GetOldBuldingsDto,
   User,
-  UserTokens,
   UserWithCredentials,
 } from '@urgp/shared/entities';
 import { JwtService } from '@nestjs/jwt';
@@ -41,7 +38,7 @@ export class AuthService {
   public async validateUser(dto: AuthUserDto): Promise<User> {
     const user: UserWithCredentials =
       await this.dbServise.db.renovationUsers.getByLogin({
-        login: dto.login,
+        login: dto.login.toLowerCase(),
       });
     if (!user)
       throw new BadRequestException(
@@ -65,7 +62,7 @@ export class AuthService {
   public async signUp(res: Response, dto: CreateUserDto): Promise<void> {
     // Check if user exists
     const userExists = await this.dbServise.db.renovationUsers.getByLogin({
-      login: dto.login,
+      login: dto.login.toLowerCase(),
     });
     if (userExists) {
       throw new UnauthorizedException(
@@ -78,6 +75,7 @@ export class AuthService {
     const newUser: UserWithCredentials =
       await this.dbServise.db.renovationUsers.create({
         ...dto,
+        login: dto.login.toLowerCase(),
         password: hash,
       });
     await this.setAuthCookies(res, newUser);
