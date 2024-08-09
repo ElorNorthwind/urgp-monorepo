@@ -25,6 +25,12 @@ export const authUser = z.object({
 
 export const changePassword = z.object({
   id: z.coerce.number(),
+  oldPassword: z.string().min(3),
+  password: z.string().min(3),
+});
+
+export const resetPassword = z.object({
+  id: z.coerce.number(),
   password: z.string().min(3),
 });
 
@@ -42,3 +48,4 @@ export type UpdateUserDto = z.infer<typeof updateUser>;
 export type DeleteUserDto = z.infer<typeof deleteUser>;
 export type AuthUserDto = z.infer<typeof authUser>;
 export type ChangeUserPasswordDto = z.infer<typeof changePassword>;
+export type ResetUserPasswordDto = z.infer<typeof resetPassword>;

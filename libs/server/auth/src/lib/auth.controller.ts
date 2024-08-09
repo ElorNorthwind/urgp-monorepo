@@ -18,6 +18,8 @@ import {
   createUser,
   CreateUserDto,
   RequestWithUserData,
+  resetPassword,
+  ResetUserPasswordDto,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from './guards/accessToken.guard';
 import { RefreshTokenGuard } from './guards/refreshToken.guard';
@@ -79,20 +81,39 @@ export class AuthController {
   @UseGuards(AccessTokenGuard)
   @Post('change-password')
   @UsePipes(new ZodValidationPipe(changePassword))
-  changePassword(
+  async changePassword(
     @Req() req: RequestWithUserData,
     @Body() dto: ChangeUserPasswordDto,
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL
     const id = req.user.id;
+    if (id !== dto.id) {
+      throw new UnauthorizedException(
+        'Unauthorized operation: cannot change another user password',
+      );
+    }
+    await this.auth.changePassword(id, dto.oldPassword, dto.password);
+    return req.user.fio + ' password changed to ' + dto.password;
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Post('reset-password')
+  @UsePipes(new ZodValidationPipe(resetPassword))
+  resetPassword(
+    @Req() req: RequestWithUserData,
+    @Body() dto: ResetUserPasswordDto,
+  ) {
+    // Это надо вывести в отдельный гвард через библиотеку CASL
+
     const roles = req.user.roles;
-    if (!roles.includes('admin') && id !== dto.id) {
+    if (!roles.includes('admin')) {
       throw new UnauthorizedException('Unauthorized operation');
     }
 
-    this.auth.changePassword(id, dto.password);
+    const id = dto.id;
+    this.auth.resetPassword(id, dto.password);
     // return 'ok';
-    return req.user.login + ' password changed to ' + dto.password;
+    return dto.id.toString() + ' password changed to ' + dto.password;
   }
 
   @UseGuards(RefreshTokenGuard)

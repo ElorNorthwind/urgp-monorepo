@@ -46,8 +46,8 @@ export class AuthService {
     if (!user)
       throw new BadRequestException(
         this.configService.get<string>('NODE_ENV') === 'production'
-          ? 'Invalid login or password'
-          : 'User does not exist',
+          ? 'Неверный логин или пароль'
+          : 'Пользователь не существует',
       );
 
     const { password, ...result } = user;
@@ -55,8 +55,8 @@ export class AuthService {
     if (!passwordMatches)
       throw new BadRequestException(
         this.configService.get<string>('NODE_ENV') === 'production'
-          ? 'Invalid login or password'
-          : 'Wrong password',
+          ? 'Неверный логин или пароль'
+          : 'Неверный пароль',
       );
 
     return result;
@@ -68,7 +68,9 @@ export class AuthService {
       login: dto.login,
     });
     if (userExists) {
-      throw new UnauthorizedException('User already exists');
+      throw new UnauthorizedException(
+        'Пользователь с таким логином уже существует',
+      );
     }
 
     // Hash password
@@ -94,18 +96,18 @@ export class AuthService {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
-          sub: user.id,
+          id: user.id,
           fio: user.fio,
           roles: user.roles,
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-          expiresIn: '5s',
+          expiresIn: '15m',
         },
       ),
       this.jwtService.signAsync(
         {
-          sub: user.id,
+          id: user.id,
           tokenVersion: user.tokenVersion,
         },
         {
@@ -132,7 +134,22 @@ export class AuthService {
     res.clearCookie('rid', cookieOptions);
   }
 
-  public async changePassword(id: number, password: string) {
+  public async resetPassword(id: number, password: string) {
+    const hash = await this.hashData(password);
+    this.dbServise.db.renovationUsers.changePassword(id, hash);
+    this.logoutAllDevices(id);
+  }
+
+  public async changePassword(
+    id: number,
+    oldPassword: string,
+    password: string,
+  ) {
+    const user = await this.dbServise.db.renovationUsers.getById({ id });
+    const passwordMatches = await argon2.verify(user.password, oldPassword);
+    if (!passwordMatches) throw new ForbiddenException('Неверный пароль');
+
+    this.resetPassword(id, password);
     const hash = await this.hashData(password);
     this.dbServise.db.renovationUsers.changePassword(id, hash);
     this.logoutAllDevices(id);

@@ -29,7 +29,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
 
   async validate(payload: UserRefreshTokenInfo) {
     const user: User = await this.dbServise.db.renovationUsers.getById({
-      id: payload.sub,
+      id: payload.id,
     });
     if (!user || user.tokenVersion !== payload.tokenVersion)
       throw new UnauthorizedException('Access Denied');
