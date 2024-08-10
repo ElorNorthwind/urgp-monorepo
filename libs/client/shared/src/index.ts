@@ -42,11 +42,12 @@ export * from './lib/onBottomReached';
 export * from './lib/formatDate';
 export * from './lib/getDatesInterval';
 
-// export api
-export * from './store/rtkApi';
-
 // export config
 export * from './config/env.d';
+export * from './config/localStorageKeys';
+
+// export store
+export * from './store/rtkApi';
 export * from './store/store';
 export * from './store/auth/authApi';
 export * from './store/auth/authSlice';

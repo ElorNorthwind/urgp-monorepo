@@ -95,6 +95,7 @@ export class AuthService {
       this.jwtService.signAsync(
         {
           id: user.id,
+          login: user.login,
           fio: user.fio,
           roles: user.roles,
         },
@@ -135,7 +136,7 @@ export class AuthService {
   public async resetPassword(id: number, password: string) {
     const hash = await this.hashData(password);
     this.dbServise.db.renovationUsers.changePassword(id, hash);
-    this.logoutAllDevices(id);
+    // this.logoutAllDevices(id);
   }
 
   public async changePassword(

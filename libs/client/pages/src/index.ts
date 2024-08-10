@@ -4,3 +4,4 @@ export * from './MapPage';
 export * from './OldBuildingsPage';
 export * from './RenovationDashboardPage';
 export * from './LoginPage';
+export * from './SettingsPage';

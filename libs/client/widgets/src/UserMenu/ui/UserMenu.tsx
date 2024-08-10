@@ -8,6 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   selectCurrentUser,
@@ -17,7 +18,7 @@ import {
   TooltipTrigger,
   useLogoutMutation,
 } from '@urgp/client/shared';
-import { CircleUser, KeyRound, LogOut } from 'lucide-react';
+import { CircleUser, KeyRound, LogOut, PenLine, User } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 
 type UserMenuProps = {
@@ -32,44 +33,59 @@ const UserMenu = ({ className }: UserMenuProps): JSX.Element => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              className={cn('text-muted-foreground flex p-2', className)}
-              variant="ghost"
-              onClick={(e) => e.preventDefault()}
-            >
+      <DropdownMenuTrigger asChild>
+        <Button
+          className={cn('text-muted-foreground flex p-2', className)}
+          variant="ghost"
+          // onClick={(e) => e.preventDefault()}
+        >
+          <Tooltip>
+            <TooltipTrigger asChild>
               <CircleUser className="h-6 w-6" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipPortal>
-            <TooltipContent side="right" className="">
-              Меню пользователя
-            </TooltipContent>
-          </TooltipPortal>
-        </Tooltip>
+            </TooltipTrigger>
+            <TooltipPortal>
+              <TooltipContent side="right" className="">
+                Меню пользователя
+              </TooltipContent>
+            </TooltipPortal>
+          </Tooltip>
+        </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="mx-4">
-        <DropdownMenuLabel>{user?.fio || 'Гость'}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {!user || user?.fio === 'Гость' ? (
-          <DropdownMenuItem onSelect={() => navigate({ to: '/login' })}>
-            <KeyRound className="mr-2 h-4 w-4" />
-            <span>Войти</span>
-          </DropdownMenuItem>
-        ) : (
-          <DropdownMenuItem
-            onSelect={() => {
-              logout();
-              dispatch(clearUser());
-            }}
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Выйти</span>
-          </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
+      <DropdownMenuPortal>
+        <DropdownMenuContent className="mx-4">
+          <DropdownMenuLabel>{user?.fio || 'Гость'}</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {!user || user?.fio === 'Гость' ? (
+            <DropdownMenuItem onSelect={() => navigate({ to: '/login' })}>
+              <KeyRound className="mr-2 h-4 w-4" />
+              <span>Войти</span>
+            </DropdownMenuItem>
+          ) : (
+            <>
+              <DropdownMenuItem
+                onSelect={() => {
+                  navigate({
+                    to: '/renovation/settings/change-password',
+                  });
+                }}
+              >
+                <User className="mr-2 h-4 w-4" />
+                <span>Настройки</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={() => {
+                  logout();
+                  dispatch(clearUser());
+                  navigate({ to: '/login' });
+                }}
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Выйти</span>
+              </DropdownMenuItem>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
     </DropdownMenu>
   );
 };

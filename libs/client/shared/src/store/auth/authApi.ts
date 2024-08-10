@@ -1,4 +1,9 @@
-import { AuthUserDto, User } from '@urgp/shared/entities';
+import {
+  AuthUserDto,
+  changePassword,
+  ChangeUserPasswordDto,
+  User,
+} from '@urgp/shared/entities';
 import { rtkApi } from '../rtkApi';
 
 export const authApi = rtkApi.injectEndpoints({
@@ -10,6 +15,15 @@ export const authApi = rtkApi.injectEndpoints({
         body: credentials,
       }),
     }),
+
+    changePassword: build.mutation<string, ChangeUserPasswordDto>({
+      query: (dto) => ({
+        url: '/auth/change-password',
+        method: 'POST',
+        body: dto,
+      }),
+    }),
+
     logout: build.mutation<void, void>({
       query: () => ({
         url: '/auth/logout',
@@ -20,4 +34,8 @@ export const authApi = rtkApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const { useLoginMutation, useLogoutMutation } = authApi;
+export const {
+  useLoginMutation,
+  useLogoutMutation,
+  useChangePasswordMutation,
+} = authApi;

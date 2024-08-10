@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '@urgp/shared/entities';
 import { RootState } from '../store';
+import { lsKeys } from '../../config/localStorageKeys';
 
 type UserState = {
   user: User | null;
@@ -14,7 +15,8 @@ const guestUser = {
   tokenVersion: 0,
 };
 
-const initialUser = JSON.parse(localStorage.getItem('user')) || guestUser;
+const initialUser =
+  JSON.parse(localStorage.getItem(lsKeys.USER_KEY)) || guestUser;
 
 const initialState: UserState = {
   user: initialUser,
@@ -25,11 +27,11 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, { payload }: PayloadAction<User>) => {
-      localStorage.setItem('user', JSON.stringify(payload));
+      localStorage.setItem(lsKeys.USER_KEY, JSON.stringify(payload));
       state.user = payload;
     },
     clearUser: (state) => {
-      localStorage.removeItem('user');
+      localStorage.removeItem(lsKeys.USER_KEY);
       state.user = guestUser;
     },
   },

@@ -64,7 +64,7 @@ const ProblematicApartsTable = ({
   return (
     <ScrollArea
       className={cn(
-        'relative w-full overflow-y-auto overflow-x-clip rounded border',
+        'relative overflow-y-auto overflow-x-clip rounded border',
         className,
       )}
     >

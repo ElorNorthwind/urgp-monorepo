@@ -89,11 +89,11 @@ export class AuthController {
     const id = req.user.id;
     if (id !== dto.id) {
       throw new UnauthorizedException(
-        'Unauthorized operation: cannot change another user password',
+        'Операция не разрешена. Нельзя менять пароль для другого пользователя',
       );
     }
     await this.auth.changePassword(id, dto.oldPassword, dto.password);
-    return req.user.fio + ' password changed to ' + dto.password;
+    return [null, req.user.fio + ' password changed to ' + dto.password];
   }
 
   @UseGuards(AccessTokenGuard)
@@ -111,6 +111,7 @@ export class AuthController {
     }
 
     const id = dto.id;
+    this.auth.logoutAllDevices(id);
     this.auth.resetPassword(id, dto.password);
     // return 'ok';
     return dto.id.toString() + ' password changed to ' + dto.password;

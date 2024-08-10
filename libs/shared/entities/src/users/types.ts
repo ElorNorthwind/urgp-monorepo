@@ -1,12 +1,12 @@
 export type User = {
   id: number;
+  login: string;
   fio: string;
   roles: string[];
   tokenVersion: number;
 };
 
 export type UserWithCredentials = User & {
-  login: string;
   password: string;
 };
 

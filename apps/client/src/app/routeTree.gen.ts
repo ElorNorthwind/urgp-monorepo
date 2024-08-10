@@ -18,6 +18,9 @@ import { Route as LoginImport } from './routes/login'
 import { Route as RenovationRouteImport } from './routes/renovation/route'
 import { Route as RenovationIndexImport } from './routes/renovation/index'
 import { Route as RenovationOldbuildingsImport } from './routes/renovation/oldbuildings'
+import { Route as RenovationSettingsRouteImport } from './routes/renovation/settings/route'
+import { Route as RenovationSettingsIndexImport } from './routes/renovation/settings/index'
+import { Route as RenovationSettingsChangePasswordImport } from './routes/renovation/settings/change-password'
 
 // Create Virtual Routes
 
@@ -73,6 +76,22 @@ const RenovationOldbuildingsRoute = RenovationOldbuildingsImport.update({
   getParentRoute: () => RenovationRouteRoute,
 } as any)
 
+const RenovationSettingsRouteRoute = RenovationSettingsRouteImport.update({
+  path: '/settings',
+  getParentRoute: () => RenovationRouteRoute,
+} as any)
+
+const RenovationSettingsIndexRoute = RenovationSettingsIndexImport.update({
+  path: '/',
+  getParentRoute: () => RenovationSettingsRouteRoute,
+} as any)
+
+const RenovationSettingsChangePasswordRoute =
+  RenovationSettingsChangePasswordImport.update({
+    path: '/change-password',
+    getParentRoute: () => RenovationSettingsRouteRoute,
+  } as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -105,6 +124,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MapLazyImport
       parentRoute: typeof rootRoute
     }
+    '/renovation/settings': {
+      preLoaderRoute: typeof RenovationSettingsRouteImport
+      parentRoute: typeof RenovationRouteImport
+    }
     '/renovation/oldbuildings': {
       preLoaderRoute: typeof RenovationOldbuildingsImport
       parentRoute: typeof RenovationRouteImport
@@ -112,6 +135,14 @@ declare module '@tanstack/react-router' {
     '/renovation/': {
       preLoaderRoute: typeof RenovationIndexImport
       parentRoute: typeof RenovationRouteImport
+    }
+    '/renovation/settings/change-password': {
+      preLoaderRoute: typeof RenovationSettingsChangePasswordImport
+      parentRoute: typeof RenovationSettingsRouteImport
+    }
+    '/renovation/settings/': {
+      preLoaderRoute: typeof RenovationSettingsIndexImport
+      parentRoute: typeof RenovationSettingsRouteImport
     }
   }
 }
@@ -121,6 +152,10 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   RenovationRouteRoute.addChildren([
+    RenovationSettingsRouteRoute.addChildren([
+      RenovationSettingsChangePasswordRoute,
+      RenovationSettingsIndexRoute,
+    ]),
     RenovationOldbuildingsRoute,
     RenovationIndexRoute,
   ]),

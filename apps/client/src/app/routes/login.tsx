@@ -5,7 +5,7 @@ import { store } from '@urgp/client/shared';
 export const Route = createFileRoute('/login')({
   beforeLoad: async ({ location }) => {
     const user = store.getState().auth.user;
-    if (user && user.login !== 'guest') {
+    if (user && user.id !== 0) {
       throw redirect({
         to: '/renovation',
         search: {
