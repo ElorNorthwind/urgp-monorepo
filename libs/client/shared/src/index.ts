@@ -30,6 +30,8 @@ export * from './ui/components/tabs';
 export * from './ui/components/skeleton';
 export * from './ui/components/menubar';
 export * from './ui/components/dropdown-menu';
+export * from './ui/components/textarea';
+export * from './ui/components/calendar';
 
 // export layouts
 export * from './ui/layouts/main';

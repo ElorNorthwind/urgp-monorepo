@@ -8,7 +8,7 @@ import {
   GetOldBuldingsDto,
   Message,
   ReadMessageByIdDto,
-  ReatApartmentMessageDto,
+  ReadApartmentMessageDto,
   UpdateMessageDto,
 } from '@urgp/shared/entities';
 
@@ -44,7 +44,7 @@ export class RenovationService {
   }
 
   public async readApartmentMessages(
-    dto: ReatApartmentMessageDto,
+    dto: ReadApartmentMessageDto,
   ): Promise<ExtendedMessage[]> {
     return this.dbServise.db.renovation.readApartmentMessages(dto);
   }

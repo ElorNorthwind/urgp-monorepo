@@ -97,11 +97,6 @@ const ChangePasswordForm = ({
                 <FormControl>
                   <Input {...field} type="password" />
                 </FormControl>
-                {form.formState.errors.oldPassword && (
-                  <p className="text-sm text-red-500">
-                    {form.formState.errors.oldPassword.message}
-                  </p>
-                )}
               </FormItem>
             )}
           />

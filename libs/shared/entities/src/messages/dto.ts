@@ -27,7 +27,7 @@ export const messageDelete = z.object({
 });
 
 export type CreateMessageDto = z.infer<typeof messageCreate>;
-export type ReatApartmentMessageDto = z.infer<typeof messageApartmentRead>;
+export type ReadApartmentMessageDto = z.infer<typeof messageApartmentRead>;
 export type ReadMessageByIdDto = z.infer<typeof messageReabById>;
 export type UpdateMessageDto = z.infer<typeof messageUpdate>;
 export type DeleteMessageDto = z.infer<typeof messageDelete>;

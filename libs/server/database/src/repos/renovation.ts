@@ -15,7 +15,7 @@ import {
   OldAppartment,
   OldBuilding,
   ReadMessageByIdDto,
-  ReatApartmentMessageDto,
+  ReadApartmentMessageDto,
   UpdateMessageDto,
 } from '@urgp/shared/entities';
 
@@ -190,7 +190,7 @@ export class RenovationRepository {
   }
 
   readApartmentMessages(
-    dto: ReatApartmentMessageDto,
+    dto: ReadApartmentMessageDto,
   ): Promise<ExtendedMessage[]> {
     // const q = this.pgp.as.format(renovation.messageApartmentRead, {
     //   apartmentIds: dto.apartmentIds.join(','),

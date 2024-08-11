@@ -16,6 +16,7 @@ import {
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { OldApartmentTimeline } from '@urgp/shared/entities';
+import { MessageTab } from '../../messages';
 
 type OldApartmentDetailsSheetProps = {
   apartmentId: number | null;
@@ -187,6 +188,10 @@ const OldApartmentDetailsSheet = ({
               ))}
           </ScrollArea>
         )}
+        <MessageTab
+          apartmentId={apartmentId || 0}
+          className="absolute top-0 -left-[calc(500px+0.5rem)] w-[500px]"
+        />
       </SheetContent>
     </Sheet>
   );
