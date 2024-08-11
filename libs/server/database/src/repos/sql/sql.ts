@@ -15,6 +15,11 @@ export const renovation = {
   doneTimeline: sql('sql/renovation/doneTimeline.sql'),
   oldApartmentTimeline: sql('sql/renovation/oldApartmentTimeline.sql'),
   oldApartmentDetails: sql('sql/renovation/oldApartmentDetails.sql'),
+  messageCreate: sql('sql/renovation/messageCreate.sql'),
+  messageApartmentRead: sql('sql/renovation/messageApartmentRead.sql'),
+  messageByIdRead: sql('sql/renovation/messageByIdRead.sql'),
+  messageUpdate: sql('sql/renovation/messageUpdate.sql'),
+  messageDelete: sql('sql/renovation/messageDelete.sql'),
 };
 
 export const users = {

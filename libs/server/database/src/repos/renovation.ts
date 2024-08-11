@@ -2,14 +2,21 @@ import { IDatabase, IMain } from 'pg-promise';
 // import path = require('path');
 // import pgPromise = require('pg-promise');
 import {
+  CreateMessageDto,
+  DeleteMessageDto,
   DoneTimelinePoint,
+  ExtendedMessage,
   GetOldAppartmentsDto,
   GetOldBuldingsDto,
+  Message,
   OkrugTotals,
   OldApartmentDetails,
   OldApartmentTimeline,
   OldAppartment,
   OldBuilding,
+  ReadMessageByIdDto,
+  ReatApartmentMessageDto,
+  UpdateMessageDto,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -168,5 +175,41 @@ export class RenovationRepository {
   }
   getOldApartmentsDetails(id: number): Promise<OldApartmentDetails> {
     return this.db.one(renovation.oldApartmentDetails, { id });
+  }
+
+  createMessage(dto: CreateMessageDto): Promise<Message> {
+    const newMessage = {
+      authorId: dto.authorId,
+      apartmentId: dto.apartmentId || null,
+      buildingId: dto.buildingId || null,
+      messageContent: dto.messageContent,
+      validUntil: dto.validUntil || null,
+    };
+
+    return this.db.one(renovation.messageCreate, newMessage);
+  }
+
+  readApartmentMessages(
+    dto: ReatApartmentMessageDto,
+  ): Promise<ExtendedMessage[]> {
+    // const q = this.pgp.as.format(renovation.messageApartmentRead, {
+    //   apartmentIds: dto.apartmentIds.join(','),
+    // });
+    // console.log(q);
+    return this.db.any(renovation.messageApartmentRead, {
+      apartmentIds: dto.apartmentIds.join(','),
+    });
+  }
+
+  readMessageById(dto: ReadMessageByIdDto): Promise<Message> {
+    return this.db.one(renovation.messageByIdRead, dto);
+  }
+
+  updateMessage(dto: UpdateMessageDto): Promise<Message> {
+    return this.db.one(renovation.messageUpdate, dto);
+  }
+
+  deleteMessage(dto: DeleteMessageDto): Promise<boolean> {
+    return this.db.one(renovation.messageDelete, dto);
   }
 }

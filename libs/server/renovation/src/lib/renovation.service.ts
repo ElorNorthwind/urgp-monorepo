@@ -1,6 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
-import { GetOldAppartmentsDto, GetOldBuldingsDto } from '@urgp/shared/entities';
+import {
+  CreateMessageDto,
+  DeleteMessageDto,
+  ExtendedMessage,
+  GetOldAppartmentsDto,
+  GetOldBuldingsDto,
+  Message,
+  ReadMessageByIdDto,
+  ReatApartmentMessageDto,
+  UpdateMessageDto,
+} from '@urgp/shared/entities';
 
 @Injectable()
 export class RenovationService {
@@ -28,5 +38,26 @@ export class RenovationService {
   }
   public async getOldApartmentsDetails(id: number) {
     return this.dbServise.db.renovation.getOldApartmentsDetails(id);
+  }
+  public async createMessage(dto: CreateMessageDto): Promise<Message> {
+    return this.dbServise.db.renovation.createMessage(dto);
+  }
+
+  public async readApartmentMessages(
+    dto: ReatApartmentMessageDto,
+  ): Promise<ExtendedMessage[]> {
+    return this.dbServise.db.renovation.readApartmentMessages(dto);
+  }
+
+  public async readMessageById(dto: ReadMessageByIdDto): Promise<Message> {
+    return this.dbServise.db.renovation.readMessageById(dto);
+  }
+
+  public async updateMessage(dto: UpdateMessageDto): Promise<Message> {
+    return this.dbServise.db.renovation.updateMessage(dto);
+  }
+
+  public async deleteMessage(dto: DeleteMessageDto): Promise<boolean> {
+    return this.dbServise.db.renovation.deleteMessage(dto);
   }
 }
