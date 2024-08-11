@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from '@tanstack/react-router';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
   Button,
   clearUser,
@@ -32,6 +32,7 @@ const LoginForm = ({ className }: LoginMenuProps): JSX.Element => {
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { redirect } = getRouteApi('/login').useSearch();
   const [login, { isLoading, isError }] = useLoginMutation();
 
   async function onSubmit(data: AuthUserDto) {
@@ -39,7 +40,7 @@ const LoginForm = ({ className }: LoginMenuProps): JSX.Element => {
       .unwrap()
       .then((fulfilled) => {
         dispatch(setUser(fulfilled));
-        navigate({ to: '/renovation' });
+        navigate({ to: redirect ? redirect : '/renovation' });
       })
       .catch((rejected) =>
         toast.error('Не удалось войти', {

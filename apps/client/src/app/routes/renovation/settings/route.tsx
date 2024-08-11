@@ -7,7 +7,7 @@ export const Route = createFileRoute('/renovation/settings')({
     const user = store.getState().auth.user;
     if (!user || user.id === 0) {
       throw redirect({
-        to: '/renovation',
+        to: '/login',
         search: {
           // Use the current location to power a redirect after login
           // (Do not use `router.state.resolvedLocation` as it can
