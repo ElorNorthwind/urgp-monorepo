@@ -69,6 +69,7 @@ const OldBuildingsCard = ({
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="terms">Сроки отселения</TabsTrigger>
               <TabsTrigger value="newBuildings">Площадки</TabsTrigger>
+              {/* <TabsTrigger value="comments">Примечания</TabsTrigger> */}
             </TabsList>
             <TabsContent value="terms">
               <OldBuildingTermsTable
@@ -92,6 +93,11 @@ const OldBuildingsCard = ({
                 />
               </ScrollArea>
             </TabsContent>
+            {/* <TabsContent value="comments">
+              <ScrollArea className="flex w-full flex-col gap-1">
+                <div className="h-96">Tututu</div>
+              </ScrollArea>
+            </TabsContent> */}
           </Tabs>
           {building?.problematicAparts &&
             building?.problematicAparts?.length > 0 && (

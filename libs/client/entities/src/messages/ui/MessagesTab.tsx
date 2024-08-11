@@ -1,4 +1,4 @@
-import { cn, ScrollBar } from '@urgp/client/shared';
+import { cn, ScrollBar, Skeleton } from '@urgp/client/shared';
 import { ExtendedMessage } from '@urgp/shared/entities';
 import { MessageElement } from './MessageElement';
 import { useApartmentMessages } from '../api/messagesApi';
@@ -51,6 +51,7 @@ const MessageTab = ({
           }}
           className="pointer-events-auto"
         />
+        {/* {isLoading || isFetching ? <Skeleton className="h-11 w-full" /> : null} */}
         <ScrollBar orientation="vertical" />
       </ScrollArea>
       <CreateMessageForm

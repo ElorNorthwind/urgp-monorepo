@@ -1,5 +1,6 @@
 import {
   cn,
+  Separator,
   Sheet,
   SheetContent,
   SheetDescription,
@@ -68,9 +69,12 @@ const OldApartmentDetailsSheet = ({
     <Sheet open={!!apartmentId} onOpenChange={() => setApartmentId(null)}>
       <SheetContent
         side={'right'}
-        className={cn('flex h-screen flex-col', className)}
+        className={cn(
+          'border-nones flex h-screen flex-col gap-1 p-0',
+          className,
+        )}
       >
-        <SheetHeader>
+        <SheetHeader className="bg-slate-100 p-4">
           <SheetTitle className="flex items-center justify-start gap-2">
             {detailsIsLoading || detailsIsFetching ? (
               <Skeleton className="h-6 w-44" />
@@ -102,30 +106,11 @@ const OldApartmentDetailsSheet = ({
                 ` (${apartmentDetails?.type})`
             )}
           </SheetDescription>
+          <p className="bg-muted-foreground/10 truncate rounded px-2 text-center leading-snug">
+            {apartmentDetails?.status}
+          </p>
         </SheetHeader>
-        <p className="bg-muted-foreground/5 -mt-3 truncate rounded p-1 text-center">
-          {apartmentDetails?.status}
-        </p>
-
-        {/* <div className="text-muted-foreground">
-          {detailsIsLoading || detailsIsFetching ? (
-            <>
-              <Skeleton className="h-4 w-60" />
-              <Skeleton className="h-4 w-44" />
-            </>
-          ) : (
-            apartmentDetails && (
-              <div className="text-rose-500">
-                {apartmentDetails?.classificator.stage +
-                  ' c ' +
-                  dayjs(apartmentDetails?.classificator.stageDate).format(
-                    'DD.MM.YYYY',
-                  )}
-              </div>
-            )
-          )}
-        </div> */}
-        <h2 className="text-muted-foreground text-xl font-bold">
+        <h2 className="text-muted-foreground px-2 text-xl font-bold">
           {apartmentTimeline && apartmentTimeline?.length > 0
             ? 'История работы с делом'
             : 'Работа не проводилась'}
@@ -138,23 +123,30 @@ const OldApartmentDetailsSheet = ({
             <Skeleton className="mt-[-.8rem] h-4 w-36 " />
           </>
         ) : (
-          <ScrollArea className="relative w-full flex-grow overflow-y-auto overflow-x-clip pl-2">
+          <ScrollArea className="relative w-full flex-grow overflow-y-auto overflow-x-clip pl-4 pb-2">
             {coloredTimeline &&
               coloredTimeline.map((operation) => (
                 <div
                   className={cn(
-                    'group flex w-full flex-col border-l-2 pb-8 last:pb-2',
+                    'group flex w-full flex-col border-l-2 pb-10 last:pb-2',
 
                     operation.color === 'red'
                       ? 'border-red-500'
                       : operation.color === 'violet'
                         ? 'border-violet-500'
                         : operation.color === 'yellow'
-                          ? 'border-amber-500'
+                          ? 'border-orange-500'
                           : 'border-cyan-500',
                   )}
                   key={operation.npp}
                 >
+                  <div
+                    className={
+                      'truncate p-1 pl-4 text-xs font-light leading-none text-slate-400'
+                    }
+                  >
+                    {operation.group}
+                  </div>
                   <div className="flex-rows items-between text-muted-foreground flex w-full items-center gap-2 bg-slate-50 px-4">
                     <div
                       className={cn(
@@ -166,7 +158,7 @@ const OldApartmentDetailsSheet = ({
                           : operation.color === 'violet'
                             ? 'before:bg-violet-500'
                             : operation.color === 'yellow'
-                              ? 'before:bg-amber-500'
+                              ? 'before:bg-orange-500'
                               : 'before:bg-cyan-500',
                       )}
                     >
@@ -176,9 +168,11 @@ const OldApartmentDetailsSheet = ({
                       {operation.source}
                     </div>
                   </div>
-                  <div className={'p-2 pl-4 text-lg font-bold leading-none'}>
+
+                  <div className={'p-1 pl-4 text-lg font-bold leading-none'}>
                     {operation.type}
                   </div>
+
                   <div
                     className={
                       'text-muted-foreground px-4 text-sm leading-snug'
