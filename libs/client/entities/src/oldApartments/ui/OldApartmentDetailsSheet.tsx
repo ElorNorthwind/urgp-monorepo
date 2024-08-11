@@ -21,11 +21,13 @@ import { MessageTab } from '../../messages';
 type OldApartmentDetailsSheetProps = {
   apartmentId: number | null;
   setApartmentId: (value: number | null) => void;
+  refetch?: () => void;
   className?: string;
 };
 const OldApartmentDetailsSheet = ({
   apartmentId,
   setApartmentId,
+  refetch,
   className,
 }: OldApartmentDetailsSheetProps): JSX.Element => {
   const {
@@ -190,6 +192,7 @@ const OldApartmentDetailsSheet = ({
         )}
         <MessageTab
           apartmentId={apartmentId || 0}
+          refetchAll={refetch}
           className="absolute top-0 -left-[calc(500px+0.5rem)] w-[500px]"
         />
       </SheetContent>

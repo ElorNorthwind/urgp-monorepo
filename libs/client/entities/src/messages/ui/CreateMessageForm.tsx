@@ -10,7 +10,12 @@ import {
   selectCurrentUser,
   Textarea,
 } from '@urgp/client/shared';
-import { CreateMessageDto, messageCreate } from '@urgp/shared/entities';
+import {
+  CreateMessageDto,
+  CreateMessageFormValuesDto,
+  messageCreate,
+  messageCreateFormValues,
+} from '@urgp/shared/entities';
 import { useSelector } from 'react-redux';
 import { useCreateMessage } from '../api/messagesApi';
 import { useForm } from 'react-hook-form';
@@ -21,15 +26,17 @@ import { add } from 'date-fns';
 type CreateMessageFormProps = {
   apartmentId: number;
   className?: string;
+  refetch: () => void;
 };
 const CreateMessageForm = ({
   className,
   apartmentId,
+  refetch,
 }: CreateMessageFormProps): JSX.Element => {
   const user = useSelector(selectCurrentUser);
 
-  const form = useForm<Omit<CreateMessageDto, 'authorId' | 'apartmentId'>>({
-    resolver: zodResolver(messageCreate),
+  const form = useForm<CreateMessageFormValuesDto>({
+    resolver: zodResolver(messageCreateFormValues),
     defaultValues: {
       messageContent: '',
       validUntil: null,
@@ -38,14 +45,13 @@ const CreateMessageForm = ({
 
   const [createMessage, { isLoading, isError, error }] = useCreateMessage();
 
-  async function onSubmit(
-    data: Omit<CreateMessageDto, 'authorId' | 'apartmentId'>,
-  ) {
-    console.log('click');
+  async function onSubmit(data: CreateMessageFormValuesDto) {
     createMessage({ ...data, authorId: user?.id || 0, apartmentId })
       .unwrap()
       .then(() => {
-        toast.success('Сообщение успешно создано');
+        refetch();
+        form.reset();
+        toast.success('Сообщение создано');
       })
       .catch((rejected) =>
         toast.error('Не удалось создать сообщение', {
@@ -100,7 +106,7 @@ const CreateMessageForm = ({
           control={form.control}
           name="validUntil"
           render={({ field }) => (
-            <div className="bg-background absolute bottom-0 left-[-310px] rounded border p-2">
+            <div className="bg-background absolute bottom-0 left-[-310px] hidden rounded border p-2">
               <FormItem className="grid">
                 <FormLabel className="text-left">
                   {form.formState.errors.validUntil ? (

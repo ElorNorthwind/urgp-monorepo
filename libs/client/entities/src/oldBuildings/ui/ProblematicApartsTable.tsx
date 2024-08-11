@@ -21,17 +21,20 @@ import {
   Tooltip,
   VStack,
 } from '@urgp/client/shared';
-import { OldBuilding } from '@urgp/shared/entities';
+import { ExtendedMessage, OldBuilding } from '@urgp/shared/entities';
 import {
   Cat,
   CircleAlert,
   CircleDollarSign,
   CircleX,
+  MessageCircleDashed,
+  MessageCircleMore,
   Newspaper,
 } from 'lucide-react';
 
 type ProblematicApartsTableProps = {
   building: OldBuilding | null;
+  messages?: ExtendedMessage[] | null;
   className?: string;
   caption?: string;
   showMFR?: boolean;
@@ -46,6 +49,7 @@ const problemBadgeStyles = {
 };
 const ProblematicApartsTable = ({
   building,
+  messages,
   className,
   showMFR = true,
   setSelectedAppartmentId,
@@ -206,13 +210,12 @@ const ProblematicApartsTable = ({
                         <TooltipTrigger>
                           <Button
                             variant="outline"
-                            className="p-2"
+                            className="relative p-2"
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedAppartmentId(apart.id);
                             }}
                           >
-                            {/* <Newspaper /> */}
                             {apart.stageId === 12 ? (
                               <CircleDollarSign className="h-8 w-8 text-violet-500" />
                             ) : apart.deviation === 'Риск' ? (
@@ -240,6 +243,16 @@ const ProblematicApartsTable = ({
                           {'кв.' + apart.apartNum}
                         </span>
                         <span className="px-1">{apart.fio}</span>
+                        {messages && messages?.length > 0 && (
+                          <Badge className="border-background absolute top-1 left-1 h-4 px-1 text-xs font-light">
+                            <MessageCircleMore className="text-background mr-1 h-3 w-3" />
+                            {
+                              messages.filter(
+                                (message) => message.apartmentId === apart.id,
+                              ).length
+                            }
+                          </Badge>
+                        )}
                         {(JSON.parse(apart.problems) as string[]).map(
                           (problem) => (
                             <Badge

@@ -22,6 +22,7 @@ import { NewBuildingsTable } from './NewBuildingsTable';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { useState } from 'react';
 import { OldApartmentDetailsSheet } from '../../oldApartments/ui/OldApartmentDetailsSheet';
+import { useApartmentMessages } from '../../messages';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
@@ -39,6 +40,14 @@ const OldBuildingsCard = ({
   const [appartmentDetails, setAppartmentDetails] = useState<number | null>(
     null,
   );
+
+  const { data: messages, refetch: refetchAll } = useApartmentMessages({
+    apartmentIds: [
+      0,
+      ...(building?.problematicAparts?.map((apart) => apart.id) || []),
+    ],
+  });
+
   return (
     <Card
       className={cn(
@@ -111,6 +120,7 @@ const OldBuildingsCard = ({
             )}
           <ProblematicApartsTable
             building={building}
+            messages={messages}
             className="w-full flex-grow"
             showMFR={showMFR}
             setSelectedAppartmentId={setAppartmentDetails}
@@ -127,6 +137,7 @@ const OldBuildingsCard = ({
 
           <OldApartmentDetailsSheet
             apartmentId={appartmentDetails}
+            refetch={refetchAll}
             setApartmentId={setAppartmentDetails}
           />
         </CardContent>
