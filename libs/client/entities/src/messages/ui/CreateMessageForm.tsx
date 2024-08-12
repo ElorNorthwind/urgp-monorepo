@@ -133,7 +133,7 @@ const CreateMessageForm = ({
           )}
         />
         <Button type="submit" className="w-full" disabled={isLoading}>
-          Отпаравить сообщение
+          Отправить сообщение
         </Button>
         {/* </div> */}
       </form>
