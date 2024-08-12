@@ -207,10 +207,10 @@ const ProblematicApartsTable = ({
                   <HStack gap="s" className="w-full truncate">
                     {setSelectedAppartmentId && (
                       <Tooltip>
-                        <TooltipTrigger>
-                          <Button
-                            variant="outline"
-                            className="relative p-2"
+                        <TooltipTrigger asChild>
+                          <div
+                            // variant="outline"
+                            className="hover:bg-muted-foreground/10 relative rounded border bg-white p-2"
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedAppartmentId(apart.id);
@@ -223,10 +223,10 @@ const ProblematicApartsTable = ({
                             ) : (
                               <CircleAlert className="h-8 w-8 text-yellow-500" />
                             )}
-                          </Button>
+                          </div>
                         </TooltipTrigger>
                         <TooltipPortal>
-                          <TooltipContent>
+                          <TooltipContent side="left">
                             <TooltipArrow />
                             <span>Подробнее</span>
                           </TooltipContent>
@@ -279,8 +279,7 @@ const ProblematicApartsTable = ({
                   messages?.filter(
                     (message) => message.apartmentId === apart.id,
                   ).length > 0 && (
-                    <Badge className="border-background absolute top-1 left-2 flex h-5 w-5 place-content-center truncate px-1 text-xs font-light">
-                      {/* <MessageCircleMore className="text-background mr-1 h-3 w-3" /> */}
+                    <Badge className="border-background pointer-events-none absolute top-1 left-2 flex h-5 w-5 select-none place-content-center truncate px-1 text-xs font-light">
                       {
                         messages.filter(
                           (message) => message.apartmentId === apart.id,

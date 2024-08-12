@@ -11,7 +11,7 @@ import {
 import { ConnectedPlots, OldBuilding } from '@urgp/shared/entities';
 import { HousePlug } from 'lucide-react';
 import dayjs from 'dayjs';
-import { DeviationsCell } from './cells/DeviationsCell';
+import { DeviationChart } from './DeviationChart';
 
 type NewBuildingsTableProps = {
   buildings: OldBuilding['newBuildingConstructions'] | null;
@@ -55,9 +55,13 @@ const NewBuildingsTable = ({
         </TableHeader>
         <TableBody>
           {buildings.map((building) => {
-            const filteredPlots = connectedPlots
-              ?.find((plot) => plot.newBuildingId === building.id)
-              ?.plots.filter((plot) => plot.id !== oldBuildingId);
+            const filteredPlots = connectedPlots?.find(
+              (plot) => plot.newBuildingId === building.id,
+            )?.plots;
+
+            // .filter((plot) => plot.id !== oldBuildingId);
+            // filteredPlots &&
+            //   filteredPlots?.sort((a, b) => (a.id === oldBuildingId ? 1 : -1));
 
             return (
               <>
@@ -81,33 +85,41 @@ const NewBuildingsTable = ({
                   </TableCell>
                 </TableRow>
                 {filteredPlots && filteredPlots.length > 0 && (
-                  <TableRow className="bg-amber-50 p-0 text-xs  hover:bg-amber-50 ">
-                    <TableCell colSpan={3} className="py-2">
-                      <h2 className="mb-1 text-base font-thin">
-                        Другие дома на участке:
+                  <TableRow className=" hover:bg-background bg-background p-0 text-xs">
+                    <TableCell
+                      colSpan={3}
+                      className="w-full gap-1 space-y-2 p-2"
+                    >
+                      <h2 className="border-muted-foreground/10 bg-muted-foreground/5 mb-1 rounded-t border-b py-1 text-center">
+                        Сносимые дома на участке:
                       </h2>
                       {filteredPlots.map((plot) => (
-                        <>
-                          <p className="-mb-1 mt-2 font-bold">{plot.adress}</p>
-                          <DeviationsCell
-                            className="py-0"
-                            row={{
-                              original: {
-                                // @ts-expect-error not how it should be done lol
-                                apartments: {
-                                  deviation: plot.aparts,
-                                  total:
-                                    plot.aparts.attention +
-                                    plot.aparts.done +
-                                    plot.aparts.mfr +
-                                    plot.aparts.none +
-                                    plot.aparts.risk,
-                                },
-                                adress: plot.adress,
-                              },
+                        <div className="">
+                          <p
+                            className={cn(
+                              'text-center font-bold leading-none',
+                              plot.id === oldBuildingId
+                                ? 'text-primary before:mr-1 before:content-["››"] after:ml-1 after:content-["‹‹"]'
+                                : 'text-muted-foreground',
+                            )}
+                          >
+                            {plot.adress}
+                          </p>
+                          <DeviationChart
+                            className="h-6 w-full"
+                            chartClassName="h-5"
+                            building={{
+                              adress: plot.adress,
+                              total:
+                                plot.aparts.attention +
+                                plot.aparts.done +
+                                plot.aparts.mfr +
+                                plot.aparts.none +
+                                plot.aparts.risk,
+                              apartments: plot.aparts,
                             }}
                           />
-                        </>
+                        </div>
                       ))}
                     </TableCell>
                   </TableRow>

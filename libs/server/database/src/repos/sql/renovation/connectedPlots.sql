@@ -1,5 +1,6 @@
 SELECT DISTINCT c.new_building_id as "newBuildingId", 
-                JSONB_AGG(JSONB_BUILD_OBJECT('id', f.id, 'adress', f.adress, 'aparts', f.apartments->'deviationMFR')) as plots
+                JSONB_AGG(JSONB_BUILD_OBJECT('id', f.id, 'adress', f.adress, 'aparts', f.apartments->'deviationMFR') 
+				ORDER BY CASE WHEN f.id = ${id} THEN 0 ELSE 1 END, f.adress) as plots
 FROM renovation.connection_building_construction c
 LEFT JOIN renovation.old_buildings_full f ON f.id = c.old_building_id
 WHERE new_building_id = ANY(

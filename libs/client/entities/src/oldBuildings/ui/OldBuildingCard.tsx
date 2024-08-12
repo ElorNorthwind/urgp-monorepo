@@ -16,15 +16,14 @@ import {
 } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
-import { OldBuildingTermsTable } from './OldBuildingTermsTable';
-import { ProblematicApartsTable } from './ProblematicApartsTable';
-import { NewBuildingsTable } from './NewBuildingsTable';
+import { OldBuildingTermsTable } from './components/OldBuildingTermsTable';
+import { ProblematicApartsTable } from './components/ProblematicApartsTable';
+import { NewBuildingsTable } from './components/NewBuildingsTable';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { useState } from 'react';
 import { OldApartmentDetailsSheet } from '../../oldApartments/ui/OldApartmentDetailsSheet';
 import { useApartmentMessages } from '../../messages';
 import { useConnectedPlots } from '../api/oldBuildingsApi';
-import { DeviationsCell } from './cells/DeviationsCell';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
@@ -85,15 +84,6 @@ const OldBuildingsCard = ({
             </TabsContent>
             <TabsContent value="newBuildings">
               <ScrollArea className="flex w-full flex-col gap-1">
-                <div className="rounded border px-4 py-0">
-                  {/* <h2 className="text-center">Прогресс по дому:</h2> */}
-                  <DeviationsCell
-                    // @ts-expect-error to refactor
-                    row={{
-                      original: building,
-                    }}
-                  />
-                </div>
                 <NewBuildingsTable
                   buildings={building.newBuildingMovements}
                   className="max-h-[200px] w-full"
