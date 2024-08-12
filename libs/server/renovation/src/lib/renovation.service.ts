@@ -10,6 +10,7 @@ import {
   ReadMessageByIdDto,
   ReadApartmentMessageDto,
   UpdateMessageDto,
+  ConnectedPlots,
 } from '@urgp/shared/entities';
 
 @Injectable()
@@ -59,5 +60,8 @@ export class RenovationService {
 
   public async deleteMessage(dto: DeleteMessageDto): Promise<boolean> {
     return this.dbServise.db.renovation.deleteMessage(dto);
+  }
+  public async getConnectedPlots(id: number): Promise<ConnectedPlots[]> {
+    return this.dbServise.db.renovation.getConnectedPlots(id);
   }
 }

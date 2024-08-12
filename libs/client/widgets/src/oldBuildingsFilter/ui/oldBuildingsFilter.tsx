@@ -183,7 +183,7 @@ const OldBuildingsFilter = ({
               'От 5 до 8 месяцев',
               'Более 8 месяцев',
             ],
-            // relocationStatus: undefined,
+            relocationStatus: ['Переселение'],
             deviation: [
               'Наступили риски',
               'Требует внимания',

@@ -16,6 +16,7 @@ import {
 import { RenovationService } from './renovation.service';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
+  ConnectedPlots,
   CreateMessageDto,
   DeleteMessageDto,
   DoneTimelinePoint,
@@ -151,5 +152,10 @@ export class RenovationController {
     }
 
     return this.renovation.deleteMessage(dto);
+  }
+
+  @Get('connected-plots/:id')
+  getConnectedPlots(@Param('id') id: number): Promise<ConnectedPlots[]> {
+    return this.renovation.getConnectedPlots(id);
   }
 }

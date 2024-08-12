@@ -1,5 +1,9 @@
 import { rtkApi } from '@urgp/client/shared';
-import { GetOldBuldingsDto, OldBuilding } from '@urgp/shared/entities';
+import {
+  ConnectedPlots,
+  GetOldBuldingsDto,
+  OldBuilding,
+} from '@urgp/shared/entities';
 
 import { GeoJsonObject } from 'geojson';
 
@@ -30,9 +34,19 @@ export const oldBuildingsApi = rtkApi.injectEndpoints({
         return currentArg?.offset !== previousArg?.offset;
       },
     }),
+
+    getConnetedPlots: build.query<ConnectedPlots[], number>({
+      query: (query) => ({
+        url: '/renovation/connected-plots/' + query.toString(),
+        method: 'GET',
+      }),
+    }),
   }),
   overrideExisting: false,
 });
 
-export const useOldBuildingsGeoJson = oldBuildingsApi.useGetGeoJsonQuery;
-export const useOldBuldings = oldBuildingsApi.useGetOldBuldingsQuery;
+export const {
+  useGetGeoJsonQuery: useOldBuildingsGeoJson,
+  useGetOldBuldingsQuery: useOldBuldings,
+  useGetConnetedPlotsQuery: useConnectedPlots,
+} = oldBuildingsApi;

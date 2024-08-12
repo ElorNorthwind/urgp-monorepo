@@ -20,6 +20,7 @@ export const renovation = {
   messageByIdRead: sql('sql/renovation/messageByIdRead.sql'),
   messageUpdate: sql('sql/renovation/messageUpdate.sql'),
   messageDelete: sql('sql/renovation/messageDelete.sql'),
+  connectedPlots: sql('sql/renovation/connectedPlots.sql'),
 };
 
 export const users = {

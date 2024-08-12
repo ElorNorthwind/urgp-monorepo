@@ -17,6 +17,7 @@ import {
   ReadMessageByIdDto,
   ReadApartmentMessageDto,
   UpdateMessageDto,
+  ConnectedPlots,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -211,5 +212,8 @@ export class RenovationRepository {
 
   deleteMessage(dto: DeleteMessageDto): Promise<boolean> {
     return this.db.one(renovation.messageDelete, dto);
+  }
+  getConnectedPlots(id: number): Promise<ConnectedPlots[]> {
+    return this.db.any(renovation.connectedPlots, { id });
   }
 }

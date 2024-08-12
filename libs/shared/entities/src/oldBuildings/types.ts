@@ -141,3 +141,20 @@ export type OldBuilding = {
   problematicAparts: ProblematicApartment[];
   totalCount: number;
 };
+
+type PlotInfo = {
+  id: number;
+  adress: string;
+  aparts: {
+    done: number;
+    none: number;
+    mfr: number;
+    attention: number;
+    risk: number;
+  };
+};
+
+export type ConnectedPlots = {
+  newBuildingId: number;
+  plots: PlotInfo[];
+};
