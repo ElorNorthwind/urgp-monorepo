@@ -256,7 +256,15 @@ const ProblematicApartsTable = ({
                                 ],
                               )}
                             >
-                              {problem}
+                              {problem === 'Проблемная'
+                                ? apart.apartStatus ===
+                                  'федеральная собственность'
+                                  ? 'Федеральная'
+                                  : apart.apartStatus
+                                      .slice(0, 1)
+                                      .toLocaleUpperCase() +
+                                    apart.apartStatus.slice(1)
+                                : problem}
                             </Badge>
                           ),
                         )}
