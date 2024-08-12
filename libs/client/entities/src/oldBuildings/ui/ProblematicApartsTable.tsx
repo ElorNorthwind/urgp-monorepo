@@ -198,7 +198,7 @@ const ProblematicApartsTable = ({
               <AccordionItem
                 value={apart.id.toString()}
                 key={apart.id}
-                className="group "
+                className="group relative"
               >
                 <AccordionTrigger
                   className="data-[state=open]:bg-muted group-hover:bg-muted/50 py-2 px-4 text-left text-xs group-hover:no-underline"
@@ -243,16 +243,7 @@ const ProblematicApartsTable = ({
                           {'кв.' + apart.apartNum}
                         </span>
                         <span className="px-1">{apart.fio}</span>
-                        {messages && messages?.length > 0 && (
-                          <Badge className="border-background absolute top-1 left-1 h-4 px-1 text-xs font-light">
-                            <MessageCircleMore className="text-background mr-1 h-3 w-3" />
-                            {
-                              messages.filter(
-                                (message) => message.apartmentId === apart.id,
-                              ).length
-                            }
-                          </Badge>
-                        )}
+
                         {(JSON.parse(apart.problems) as string[]).map(
                           (problem) => (
                             <Badge
@@ -276,6 +267,19 @@ const ProblematicApartsTable = ({
                     </VStack>
                   </HStack>
                 </AccordionTrigger>
+                {messages &&
+                  messages?.filter(
+                    (message) => message.apartmentId === apart.id,
+                  ).length > 0 && (
+                    <Badge className="border-background absolute top-1 left-2 flex h-5 w-5 place-content-center truncate px-1 text-xs font-light">
+                      {/* <MessageCircleMore className="text-background mr-1 h-3 w-3" /> */}
+                      {
+                        messages.filter(
+                          (message) => message.apartmentId === apart.id,
+                        ).length
+                      }
+                    </Badge>
+                  )}
                 <AccordionContent className="flex place-content-center border-t p-0">
                   {referenceTerms.filter((term) => term.date).length > 0 ? (
                     <Table className="w-full">
