@@ -85,7 +85,7 @@ const OldApartmentDetailsSheet = ({
                   target="_blank"
                   rel="noreferrer"
                   href={
-                    'http://10.15.179.52:5222/ObjectCard?ObjId=' +
+                    'http://webrsm.mlc.gov:5222/ObjectCard?ObjId=' +
                     apartmentId +
                     '&RegisterViewId=KursKpu&isVertical=true&useMasterPage=true'
                   }

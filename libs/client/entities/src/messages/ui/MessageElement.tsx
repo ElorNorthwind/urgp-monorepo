@@ -11,7 +11,7 @@ import { ExtendedMessage } from '@urgp/shared/entities';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
 import { useDeleteMessage } from '../api/messagesApi';
-import { Trash, Trash2, X } from 'lucide-react';
+import { Trash, Speech } from 'lucide-react';
 import { toast } from 'sonner';
 
 type MessageElementProps = {
@@ -38,16 +38,28 @@ const MessageElement = ({
   return (
     <Card
       className={cn(
-        'relative',
-        message.isBoss ? 'border-accent' : '',
+        'relative overflow-hidden',
+        message.authorId === user?.id ? 'bg-slate-200' : '',
         className,
       )}
       key={message.id}
     >
-      <CardHeader className="bg-accent/40 py-2 px-6">
-        <CardDescription className="bg-accent/40 flex flex-row items-center justify-between">
-          <div>{message.authorFio}</div>
-          <div>{dayjs(message.updatedAt).format('DD.MM.YYYY')}</div>
+      <CardHeader
+        className={cn(
+          ' py-2 px-6',
+          message.authorId === user?.id ? 'bg-slate-300' : 'bg-accent/40',
+        )}
+      >
+        <CardDescription className="flex flex-row items-center justify-between">
+          <div className="flex flex-row items-center justify-start gap-2">
+            {message.authorFio}
+          </div>
+          <div className="flex flex-row items-center justify-start gap-2">
+            {message.isBoss ? (
+              <Speech className="h-4 w-4 text-rose-500" />
+            ) : null}
+            {dayjs(message.updatedAt).format('DD.MM.YYYY')}
+          </div>
         </CardDescription>
       </CardHeader>
       <CardContent className="">
