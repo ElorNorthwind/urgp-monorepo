@@ -71,6 +71,7 @@ const DoneTimelineChart = ({
               dataKey="fullPeriod"
               tickLine={false}
               axisLine={false}
+              minTickGap={0}
               tickMargin={0}
               tickFormatter={(value) => value.slice(0, 3)}
             />

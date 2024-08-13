@@ -45,20 +45,6 @@ const OkrugTotalsChart = ({
   className,
   isLoading = false,
 }: OkrugTotalsChartProps): JSX.Element => {
-  const totals = useMemo(
-    () =>
-      okrugs?.reduce(
-        (acc, cur) => ({
-          total: acc.total + cur.total,
-          done: acc.done + cur.done,
-          inProgress: acc.inProgress + cur.inProgress,
-          notStarted: acc.notStarted + cur.notStarted,
-        }),
-        { total: 0, done: 0, inProgress: 0, notStarted: 0 },
-      ) ?? 0,
-    [okrugs],
-  );
-
   const [showNotStarted, setShowNotStarted] = useState(true);
 
   if (isLoading) {
@@ -97,52 +83,35 @@ const OkrugTotalsChart = ({
 
   return (
     <Card className={cn(className)}>
-      <CardHeader className="space-y-0 overflow-clip pb-2">
-        <CardDescription>Домов:</CardDescription>
-        <CardTitle className="flex w-full flex-row flex-wrap justify-start gap-12 text-2xl tabular-nums">
-          <div className="flex flex-col gap-0">
-            <div className="text-muted-foreground text-4xl ">
-              {totals.total}
+      <CardHeader className="space-y-0 pb-2">
+        <CardTitle className="flex flex-row items-center justify-between">
+          Данные по округам
+          <Button
+            variant={'ghost'}
+            className="h-6 py-0 px-1"
+            onClick={() => setShowNotStarted((value) => !value)}
+          >
+            <div
+              className="flex flex-row items-center gap-1"
+              style={{ color: 'hsl(var(--chart-1))' }}
+            >
+              {showNotStarted ? (
+                <>
+                  <EyeOff className="h-4 w-4" />
+                  <div className="hidden sm:block">скрыть неначатые</div>
+                </>
+              ) : (
+                <>
+                  <Eye className="h-4 w-4" />
+                  <div className="hidden sm:block">показать неначатые</div>
+                </>
+              )}
             </div>
-            <div className="text-muted-foreground relative top-[-.25rem] font-sans text-sm font-normal tracking-normal">
-              всего
-            </div>
-          </div>
-          <div className="flex flex-col gap-0">
-            <div style={{ color: 'hsl(var(--chart-2))' }}>{totals.done}</div>
-            <div className="text-muted-foreground relative top-[-.25rem] font-sans text-sm font-normal tracking-normal">
-              отселено
-            </div>
-          </div>
-          <div className="flex flex-col gap-0">
-            <div style={{ color: 'hsl(var(--chart-3))' }}>
-              {totals.inProgress}
-            </div>
-            <div className="text-muted-foreground relative top-[-.25rem] font-sans text-sm font-normal tracking-normal">
-              в работе
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-0">
-            <div style={{ color: 'hsl(var(--chart-1))' }}>
-              {totals.notStarted}
-              <Button
-                variant={'ghost'}
-                className="ml-2 h-6 w-6 p-0"
-                onClick={() => setShowNotStarted((value) => !value)}
-              >
-                {showNotStarted ? (
-                  <EyeOff className="h-max w-max" />
-                ) : (
-                  <Eye className="h-max w-max" />
-                )}
-              </Button>
-            </div>
-            <div className="text-muted-foreground relative top-[-.25rem] font-sans text-sm font-normal tracking-normal">
-              не начато
-            </div>
-          </div>
+          </Button>
         </CardTitle>
+        <CardDescription className="h-16">
+          Дома, включенные в программу Реновации
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer
