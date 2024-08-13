@@ -46,7 +46,7 @@ const DoneTimelineChart = ({
           <Skeleton className="h-6 w-80" />
         </CardHeader>
         <CardContent>
-          <Skeleton className="min-h-[430px] w-full" />
+          <Skeleton className="min-h-[320px] w-full" />
           <Skeleton className="mx-auto mt-2 h-6 w-60" />
         </CardContent>
       </Card>
@@ -63,7 +63,7 @@ const DoneTimelineChart = ({
       <CardContent>
         <ChartContainer
           config={timelineChartConfig}
-          className="min-h-[450px] max-w-full"
+          className="h-full w-full lg:h-[320px]"
         >
           <AreaChart accessibilityLayer data={timeline}>
             <CartesianGrid vertical={false} />

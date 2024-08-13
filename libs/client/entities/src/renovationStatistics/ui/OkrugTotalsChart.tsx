@@ -74,7 +74,7 @@ const OkrugTotalsChart = ({
         </CardHeader>
         <CardContent className="relative">
           {/* <LoaderCircle className="stroke-muted-foreground absolute inset-0 z-10 m-auto h-16 w-16 animate-spin" /> */}
-          <Skeleton className="min-h-[430px] w-full" />
+          <Skeleton className="min-h-[320px] w-full" />
           <Skeleton className="mx-auto mt-2 h-6 w-80" />
         </CardContent>
       </Card>
@@ -116,7 +116,7 @@ const OkrugTotalsChart = ({
       <CardContent>
         <ChartContainer
           config={okrugChartConfig}
-          className="min-h-[450px] max-w-full"
+          className="h-full w-full lg:h-[320px]"
         >
           <BarChart accessibilityLayer data={okrugs}>
             <CartesianGrid vertical={false} />
