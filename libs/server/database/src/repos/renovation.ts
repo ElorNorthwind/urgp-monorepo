@@ -18,6 +18,7 @@ import {
   ReadApartmentMessageDto,
   UpdateMessageDto,
   ConnectedPlots,
+  CityTotalDeviations,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -171,6 +172,10 @@ export class RenovationRepository {
   getDoneTimeline(): Promise<DoneTimelinePoint[]> {
     return this.db.any(renovation.doneTimeline);
   }
+  getCityTotalDeviations(): Promise<{ result: CityTotalDeviations }> {
+    return this.db.one(renovation.cityTotalDeviations);
+  }
+
   getOldApartmentsTimeline(id: number): Promise<OldApartmentTimeline[]> {
     return this.db.any(renovation.oldApartmentTimeline, { id });
   }

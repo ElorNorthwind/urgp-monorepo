@@ -16,6 +16,7 @@ import {
 import { RenovationService } from './renovation.service';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
+  CityTotalDeviations,
   ConnectedPlots,
   CreateMessageDto,
   DeleteMessageDto,
@@ -157,5 +158,11 @@ export class RenovationController {
   @Get('connected-plots/:id')
   getConnectedPlots(@Param('id') id: number): Promise<ConnectedPlots[]> {
     return this.renovation.getConnectedPlots(id);
+  }
+
+  @Get('total-deviations')
+  async getCityTotalDeviations(): Promise<CityTotalDeviations> {
+    const { result } = await this.renovation.getCityTotalDeviations();
+    return result;
   }
 }

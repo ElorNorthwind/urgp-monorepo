@@ -11,6 +11,7 @@ import {
   ReadApartmentMessageDto,
   UpdateMessageDto,
   ConnectedPlots,
+  CityTotalDeviations,
 } from '@urgp/shared/entities';
 
 @Injectable()
@@ -63,5 +64,11 @@ export class RenovationService {
   }
   public async getConnectedPlots(id: number): Promise<ConnectedPlots[]> {
     return this.dbServise.db.renovation.getConnectedPlots(id);
+  }
+
+  public async getCityTotalDeviations(): Promise<{
+    result: CityTotalDeviations;
+  }> {
+    return this.dbServise.db.renovation.getCityTotalDeviations();
   }
 }

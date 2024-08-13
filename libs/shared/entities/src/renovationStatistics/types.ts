@@ -14,3 +14,11 @@ export type DoneTimelinePoint = {
   fast: number;
   slow: number;
 };
+
+export type CityTotalDeviations = {
+  done: number;
+  none: number;
+  risk: number;
+  warning: number;
+  notStarted: number;
+};
