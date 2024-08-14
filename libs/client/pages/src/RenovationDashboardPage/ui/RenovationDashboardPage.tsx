@@ -3,11 +3,13 @@ import {
   DoneTimelineChart,
   OkrugTotalsChart,
   useDoneTimeline,
+  useLastUpdatedDate,
   useOkrugTotals,
   useTotalDeviations,
 } from '@urgp/client/entities';
 import { cn, Separator } from '@urgp/client/shared';
 import { DashboardNumberCard } from '@urgp/client/widgets';
+import { formatDate } from 'date-fns';
 import {
   CircleAlert,
   CircleCheck,
@@ -15,6 +17,7 @@ import {
   CirclePause,
   CircleX,
 } from 'lucide-react';
+import { useCallback } from 'react';
 
 const RenovationDashboardPage = (): JSX.Element => {
   const {
@@ -35,12 +38,35 @@ const RenovationDashboardPage = (): JSX.Element => {
     isFetching: isDeviationsFetching,
   } = useTotalDeviations();
 
+  const {
+    data: updatedDate,
+    isLoading: isUpdatedDateLoading,
+    isFetching: isUpdatedDateFetching,
+  } = useLastUpdatedDate();
+
   const navigate = useNavigate();
+
+  const numericHouses = useCallback((value: number) => {
+    const lastLetter = value.toString().slice(-1);
+    if (lastLetter === '1') {
+      return `дом`;
+    } else if (['2', '3', '4'].includes(lastLetter)) {
+      return `дома`;
+    } else {
+      return `домов`;
+    }
+  }, []);
 
   return (
     <div className="block space-y-6 p-10">
       <div className="space-y-0.5">
-        <h2 className="text-2xl font-bold tracking-tight">Дашборд</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold tracking-tight">Дашборд</h2>
+          <p className="text-muted-foreground text-right text-xs">
+            <p className="hidden md:block">Данные на</p>
+            {formatDate(updatedDate || new Date(), 'dd.MM.yyyy')}
+          </p>
+        </div>
         <p className="text-muted-foreground">
           Общие сведения о ходе выполнения программы Реновации
         </p>
@@ -52,7 +78,7 @@ const RenovationDashboardPage = (): JSX.Element => {
             label="Работа завершена"
             value={deviations?.done || 0}
             Icon={CircleCheck}
-            description="домов"
+            description={numericHouses(deviations?.done || 0)}
             accentClassName={cn('text-emerald-600')}
             className={'col-span-3 sm:col-span-2 lg:col-span-1'}
             isLoading={isDeviationsLoading || isDeviationsFetching}
@@ -67,7 +93,7 @@ const RenovationDashboardPage = (): JSX.Element => {
             label="В работе по плану"
             value={deviations?.none || 0}
             Icon={CircleEllipsis}
-            description="домов"
+            description={numericHouses(deviations?.none || 0)}
             accentClassName={cn('text-cyan-600')}
             isLoading={isDeviationsLoading || isDeviationsFetching}
             className={'col-span-3 sm:col-span-1'}
@@ -85,7 +111,7 @@ const RenovationDashboardPage = (): JSX.Element => {
             label="Требуют внимания"
             value={deviations?.warning || 0}
             Icon={CircleAlert}
-            description="домов"
+            description={numericHouses(deviations?.warning || 0)}
             accentClassName={cn('text-amber-600')}
             isLoading={isDeviationsLoading || isDeviationsFetching}
             className={'col-span-3 sm:col-span-1'}
@@ -103,7 +129,7 @@ const RenovationDashboardPage = (): JSX.Element => {
             label="Имеются риски"
             value={deviations?.risk || 0}
             Icon={CircleX}
-            description="домов"
+            description={numericHouses(deviations?.risk || 0)}
             accentClassName={cn('text-rose-600')}
             isLoading={isDeviationsLoading || isDeviationsFetching}
             className={'col-span-3 sm:col-span-1'}
@@ -121,7 +147,7 @@ const RenovationDashboardPage = (): JSX.Element => {
             label="Переселение не начато"
             value={deviations?.notStarted || 0}
             Icon={CirclePause}
-            description="домов"
+            description={numericHouses(deviations?.notStarted || 0)}
             accentClassName={cn('text-neutral-500')}
             isLoading={isDeviationsLoading || isDeviationsFetching}
             className={'col-span-3 sm:col-span-1'}

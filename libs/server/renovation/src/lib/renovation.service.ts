@@ -71,4 +71,10 @@ export class RenovationService {
   }> {
     return this.dbServise.db.renovation.getCityTotalDeviations();
   }
+
+  public async getLastUpdatedDate(): Promise<{
+    date: Date;
+  }> {
+    return this.dbServise.db.renovation.getLastUpdatedDate();
+  }
 }

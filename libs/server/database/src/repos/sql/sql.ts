@@ -22,6 +22,7 @@ export const renovation = {
   messageDelete: sql('sql/renovation/messageDelete.sql'),
   connectedPlots: sql('sql/renovation/connectedPlots.sql'),
   cityTotalDeviations: sql('sql/renovation/cityTotalDeviations.sql'),
+  lastUpdated: sql('sql/renovation/lastUpdated.sql'),
 };
 
 export const users = {

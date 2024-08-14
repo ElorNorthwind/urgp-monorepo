@@ -23,6 +23,12 @@ export const renovationStatisticsApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getLastUpdatedDate: build.query<Date, void>({
+      query: () => ({
+        url: '/renovation/last-updated-date',
+        method: 'GET',
+      }),
+    }),
   }),
 
   overrideExisting: false,
@@ -32,4 +38,5 @@ export const {
   useGetOkrugTotalsQuery: useOkrugTotals,
   useGetDoneTimelineQuery: useDoneTimeline,
   useGetTotalDeviationsQuery: useTotalDeviations,
+  useGetLastUpdatedDateQuery: useLastUpdatedDate,
 } = renovationStatisticsApi;

@@ -30,7 +30,11 @@ const DashboardNumberCard = ({
 }: DashboardNumberCardProps): JSX.Element => {
   return (
     <Card
-      className={cn(onClick && 'cursor-pointer', className)}
+      className={cn(
+        onClick &&
+          'hover:from-muted hover:to-background/25 cursor-pointer hover:bg-gradient-to-tl',
+        className,
+      )}
       onClick={onClick}
     >
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

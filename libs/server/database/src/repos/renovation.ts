@@ -172,6 +172,12 @@ export class RenovationRepository {
   getDoneTimeline(): Promise<DoneTimelinePoint[]> {
     return this.db.any(renovation.doneTimeline);
   }
+
+  getLastUpdatedDate(): Promise<{
+    date: Date;
+  }> {
+    return this.db.one(renovation.lastUpdated);
+  }
   getCityTotalDeviations(): Promise<{ result: CityTotalDeviations }> {
     return this.db.one(renovation.cityTotalDeviations);
   }

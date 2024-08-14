@@ -165,4 +165,10 @@ export class RenovationController {
     const { result } = await this.renovation.getCityTotalDeviations();
     return result;
   }
+
+  @Get('last-updated-date')
+  async getLastUpdatedDate(): Promise<Date> {
+    const { date } = await this.renovation.getLastUpdatedDate();
+    return date;
+  }
 }
