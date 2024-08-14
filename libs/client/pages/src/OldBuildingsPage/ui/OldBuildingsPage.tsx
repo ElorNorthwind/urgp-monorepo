@@ -53,7 +53,11 @@ const OldBuildingsPage = (): JSX.Element => {
         />
       </HStack>
 
-      <HStack gap="s" className="h-[calc(100vh-3.5rem)] w-full overflow-hidden">
+      <HStack
+        gap="s"
+        noWrap
+        className="h-[calc(100vh-3.5rem)] w-full overflow-hidden"
+      >
         <VirtualDataTable
           // onRowDoubleClick={() => setCurrentAddress(null)}
           onRowClick={(row) => {

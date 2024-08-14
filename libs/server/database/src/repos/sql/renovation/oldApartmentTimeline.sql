@@ -113,7 +113,7 @@ WITH timeline AS (
 		'№ ' || contract_num as notes
 	FROM renovation.apartment_connections c
 	LEFT JOIN renovation.apartments_new a ON a.id = c.new_apart_id
-	WHERE contract_date IS NOT NULL
+	WHERE contract_date IS NOT NULL AND LOWER(contract_status) <> 'проект договора'
 	
 	-- СУДЕБНЫЕ ЭТАПЫ - основная таблица
 	UNION
