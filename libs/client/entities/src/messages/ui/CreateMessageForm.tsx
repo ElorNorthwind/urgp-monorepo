@@ -12,24 +12,32 @@ import {
 } from '@urgp/client/shared';
 import {
   CreateMessageFormValuesDto,
+  ExtendedMessage,
+  Message,
   messageCreateFormValues,
+  UpdateMessageFormValuesDto,
 } from '@urgp/shared/entities';
 import { useSelector } from 'react-redux';
-import { useCreateMessage } from '../api/messagesApi';
+import { useCreateMessage, useUpdateMessage } from '../api/messagesApi';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { add } from 'date-fns';
+import { useEffect } from 'react';
 
 type CreateMessageFormProps = {
   apartmentId: number;
   className?: string;
-  refetch: () => void;
+  refetch?: () => void;
+  editMessage?: Message | null;
+  setEditMessage?: React.Dispatch<React.SetStateAction<ExtendedMessage | null>>;
 };
 const CreateMessageForm = ({
   className,
   apartmentId,
   refetch,
+  editMessage,
+  setEditMessage,
 }: CreateMessageFormProps): JSX.Element => {
   const user = useSelector(selectCurrentUser);
 
@@ -42,13 +50,17 @@ const CreateMessageForm = ({
   });
 
   const [createMessage, { isLoading, isError, error }] = useCreateMessage();
+  const [
+    updateMessage,
+    { isLoading: isUpdateLoading, isError: isUpdateError },
+  ] = useUpdateMessage();
 
   async function onSubmit(data: CreateMessageFormValuesDto) {
     createMessage({ ...data, authorId: user?.id || 0, apartmentId })
       .unwrap()
       .then(() => {
-        refetch();
-        form.reset();
+        refetch && refetch();
+        form.reset({ messageContent: '', validUntil: null });
         toast.success('Сообщение создано');
       })
       .catch((rejected) =>
@@ -57,6 +69,28 @@ const CreateMessageForm = ({
         }),
       );
   }
+
+  async function onEditSubmit(data: UpdateMessageFormValuesDto) {
+    updateMessage({ ...data, id: editMessage?.id || 0 })
+      .unwrap()
+      .then(() => {
+        refetch && refetch();
+        form.reset({ messageContent: '', validUntil: null });
+        setEditMessage && setEditMessage(null);
+        toast.success('Сообщение изменено');
+      })
+      .catch((rejected) =>
+        toast.error('Не удалось изменить сообщение', {
+          description: rejected.data?.message || 'Неизвестная ошибка',
+        }),
+      );
+  }
+
+  useEffect(() => {
+    if (editMessage) {
+      form.reset(editMessage);
+    }
+  }, [editMessage, form]);
 
   if (
     !user ||
@@ -70,19 +104,25 @@ const CreateMessageForm = ({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(editMessage ? onEditSubmit : onSubmit)}
         className={cn(
-          'bg-background relative grid w-full gap-4 rounded border p-2',
+          'bg-background relative grid w-full gap-4 rounded border p-2 transition',
           className,
         )}
       >
+        {editMessage && (
+          <div className="line-clamp-2 relative rounded bg-amber-100 p-1 pl-4 text-amber-700">
+            <div className="absolute top-1 bottom-1 left-1 w-2 rounded-sm bg-amber-300"></div>
+            {editMessage.messageContent}
+          </div>
+        )}
         {/* <div className={cn('grid gap-4 text-center', className)}> */}
         <FormField
           control={form.control}
           name="messageContent"
           render={({ field }) => (
             <FormItem className="grid">
-              <FormLabel className=" text-left">
+              <FormLabel className="text-left">
                 {form.formState.errors.messageContent ? (
                   <p className="flex justify-between truncate">
                     Текст сообщения
@@ -95,7 +135,11 @@ const CreateMessageForm = ({
                 )}
               </FormLabel>
               <FormControl>
-                <Textarea placeholder="Введите сообщение" {...field} />
+                <Textarea
+                  placeholder="Введите сообщение"
+                  {...field}
+                  name="messageContent"
+                />
               </FormControl>
             </FormItem>
           )}
@@ -121,6 +165,7 @@ const CreateMessageForm = ({
 
                 <Calendar
                   mode="single"
+                  id="validUntil"
                   selected={field.value || undefined}
                   onSelect={field.onChange}
                   disabled={(date) =>
@@ -132,10 +177,29 @@ const CreateMessageForm = ({
             </div>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          Отправить сообщение
-        </Button>
-        {/* </div> */}
+        {editMessage && setEditMessage ? (
+          <div className="flex w-full items-center justify-between gap-2">
+            <Button type="submit" className="flex-1" disabled={isUpdateLoading}>
+              Сохранить
+            </Button>
+            <Button
+              className="flex-1"
+              type="button"
+              variant={'outline'}
+              disabled={isUpdateLoading}
+              onClick={() => {
+                setEditMessage(null);
+                form.reset({ messageContent: '', validUntil: null });
+              }}
+            >
+              Отмена
+            </Button>
+          </div>
+        ) : (
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            Отправить сообщение
+          </Button>
+        )}
       </form>
     </Form>
   );

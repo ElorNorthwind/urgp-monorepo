@@ -7,24 +7,31 @@ import {
   cn,
   selectCurrentUser,
 } from '@urgp/client/shared';
-import { ExtendedMessage } from '@urgp/shared/entities';
+import { ExtendedMessage, Message } from '@urgp/shared/entities';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
 import { useDeleteMessage } from '../api/messagesApi';
-import { Trash, Speech } from 'lucide-react';
+import { Trash, Speech, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
+import { useState } from 'react';
 
 type MessageElementProps = {
   message: ExtendedMessage;
   refetch: () => void;
   className?: string;
+  editMessage?: Message | null;
+  setEditMessage?: React.Dispatch<React.SetStateAction<ExtendedMessage | null>>;
 };
 const MessageElement = ({
   message,
   refetch,
   className,
+  editMessage,
+  setEditMessage,
 }: MessageElementProps): JSX.Element => {
   const user = useSelector(selectCurrentUser);
+  // const [editMessage, setEditMessage] = useState<Message | null>(null);
+
   const [
     deleteMessage,
     { isLoading: isDeleting, isSuccess: isDeletedSuccess },
@@ -38,8 +45,12 @@ const MessageElement = ({
   return (
     <Card
       className={cn(
-        'relative overflow-hidden',
-        message.authorId === user?.id ? 'bg-slate-200' : '',
+        'relative overflow-hidden transition',
+        editMessage?.id === message.id
+          ? 'scale-95 border-amber-400 bg-amber-100'
+          : message.authorId === user?.id
+            ? 'bg-slate-200'
+            : '',
         className,
       )}
       key={message.id}
@@ -47,36 +58,57 @@ const MessageElement = ({
       <CardHeader
         className={cn(
           ' py-2 px-6',
-          message.authorId === user?.id ? 'bg-slate-300' : 'bg-accent/40',
+          editMessage?.id === message.id
+            ? 'bg-amber-200'
+            : message.authorId === user?.id
+              ? 'bg-slate-300'
+              : 'bg-accent/40',
+          // message.authorId === user?.id ? 'bg-slate-300' : 'bg-accent/40',
         )}
       >
         <CardDescription className="flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center justify-start gap-2">
+          <p className="flex flex-row items-center justify-start gap-2">
             {message.authorFio}
-          </div>
-          <div className="flex flex-row items-center justify-start gap-2">
+          </p>
+          <p className="flex flex-row items-center justify-start gap-2">
             {message.isBoss ? (
               <Speech className="h-4 w-4 text-rose-500" />
             ) : null}
             {dayjs(message.updatedAt).format('DD.MM.YYYY')}
-          </div>
+          </p>
         </CardDescription>
       </CardHeader>
       <CardContent className="">
         <p>{message.messageContent}</p>
-        {(user?.id === message.authorId || user?.roles.includes('admin')) && (
-          <Button
-            variant="ghost"
-            className="absolute right-2 bottom-2 h-6 w-6 rounded-full p-1"
-            disabled={isDeleting}
-            onClick={() => {
-              deleteMessage({ id: message.id });
-              toast.success('Сообщение удалено');
-              refetch();
-            }}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
+        {!editMessage && (
+          <div className="absolute right-2 bottom-2 flex items-center gap-1">
+            {user?.id === message.authorId && setEditMessage && (
+              <Button
+                variant="ghost"
+                className="h-6 w-6 rounded-full p-1"
+                onClick={() => {
+                  setEditMessage(message);
+                }}
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+            )}
+            {(user?.id === message.authorId ||
+              user?.roles.includes('admin')) && (
+              <Button
+                variant="ghost"
+                className="h-6 w-6 rounded-full p-1"
+                disabled={isDeleting}
+                onClick={() => {
+                  deleteMessage({ id: message.id });
+                  toast.success('Сообщение удалено');
+                  refetch();
+                }}
+              >
+                <Trash className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
         )}
       </CardContent>
     </Card>

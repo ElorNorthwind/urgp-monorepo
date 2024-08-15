@@ -1,16 +1,20 @@
 import { cn } from '@urgp/client/shared';
-import { ExtendedMessage } from '@urgp/shared/entities';
+import { ExtendedMessage, Message } from '@urgp/shared/entities';
 import { MessageElement } from './MessageElement';
 
 type MessageListProps = {
   messages: ExtendedMessage[] | null;
   refetch: () => void;
   className?: string;
+  editMessage?: Message | null;
+  setEditMessage?: React.Dispatch<React.SetStateAction<ExtendedMessage | null>>;
 };
 const MessageList = ({
   messages = [],
   refetch,
   className,
+  editMessage,
+  setEditMessage,
 }: MessageListProps): JSX.Element => {
   return (
     <div className={cn('flex flex-col gap-2', className)}>
@@ -24,6 +28,8 @@ const MessageList = ({
               key={message.id}
               message={message}
               className="w-full"
+              editMessage={editMessage}
+              setEditMessage={setEditMessage}
             />
           );
         })

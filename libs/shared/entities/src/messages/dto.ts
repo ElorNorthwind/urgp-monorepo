@@ -29,6 +29,11 @@ export const messageUpdate = z.object({
   validUntil: z.coerce.date().nullable().optional(),
 });
 
+export const messageUpdateFormValues = messageUpdate.pick({
+  messageContent: true,
+  validUntil: true,
+});
+
 export const messageDelete = z.object({
   id: z.coerce.number(),
 });
@@ -41,4 +46,7 @@ export type DeleteMessageDto = z.infer<typeof messageDelete>;
 
 export type CreateMessageFormValuesDto = z.infer<
   typeof messageCreateFormValues
+>;
+export type UpdateMessageFormValuesDto = z.infer<
+  typeof messageUpdateFormValues
 >;

@@ -5,6 +5,7 @@ import { useApartmentMessages } from '../api/messagesApi';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { MessageList } from './MessageList';
 import { CreateMessageForm } from './CreateMessageForm';
+import { useState } from 'react';
 
 type MessageTabProps = {
   apartmentId: number;
@@ -25,15 +26,7 @@ const MessageTab = ({
   } = useApartmentMessages({
     apartmentIds: [apartmentId],
   });
-
-  //   const {
-  //     currentData: buildings,
-  //     isLoading,
-  //     isFetching,
-  //   } = useOldBuldings({
-  //     ...(debouncedFilters as Partial<GetOldBuldingsDto>),
-  //     offset,
-  //   });
+  const [editMessage, setEditMessage] = useState<ExtendedMessage | null>(null);
 
   return (
     <div
@@ -49,6 +42,8 @@ const MessageTab = ({
             refetch();
             refetchAll && refetchAll();
           }}
+          editMessage={editMessage}
+          setEditMessage={setEditMessage}
           className="pointer-events-auto"
         />
         {/* {isLoading || isFetching ? <Skeleton className="h-11 w-full" /> : null} */}
@@ -60,6 +55,8 @@ const MessageTab = ({
           refetch();
           refetchAll && refetchAll();
         }}
+        editMessage={editMessage}
+        setEditMessage={setEditMessage}
         className="pointer-events-auto"
       />
     </div>

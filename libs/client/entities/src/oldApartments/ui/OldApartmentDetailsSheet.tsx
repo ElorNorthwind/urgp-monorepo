@@ -69,6 +69,7 @@ const OldApartmentDetailsSheet = ({
     <Sheet open={!!apartmentId} onOpenChange={() => setApartmentId(null)}>
       <SheetContent
         side={'right'}
+        aria-describedby={undefined}
         className={cn(
           'border-nones flex h-screen flex-col gap-1 p-0',
           className,
@@ -95,17 +96,17 @@ const OldApartmentDetailsSheet = ({
               </>
             )}
           </SheetTitle>
-          <SheetDescription>
-            {detailsIsLoading || detailsIsFetching ? (
-              <Skeleton className="h-4 w-60" />
-            ) : (
-              apartmentDetails &&
-              apartmentDetails?.adress +
-                ' кв. ' +
-                apartmentDetails?.num +
-                ` (${apartmentDetails?.type})`
-            )}
-          </SheetDescription>
+          {detailsIsLoading || detailsIsFetching ? (
+            <Skeleton className="h-4 w-60" />
+          ) : (
+            <SheetDescription className="text-left">
+              {apartmentDetails &&
+                apartmentDetails?.adress +
+                  ' кв. ' +
+                  apartmentDetails?.num +
+                  ` (${apartmentDetails?.type})`}
+            </SheetDescription>
+          )}
           <p className="bg-muted-foreground/10 truncate rounded px-2 text-center leading-snug">
             {apartmentDetails?.status}
           </p>
@@ -138,7 +139,7 @@ const OldApartmentDetailsSheet = ({
                           ? 'border-orange-500'
                           : 'border-cyan-500',
                   )}
-                  key={operation.npp}
+                  key={operation.type + operation.date}
                 >
                   <div
                     className={
