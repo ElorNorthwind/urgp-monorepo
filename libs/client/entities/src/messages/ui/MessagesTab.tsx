@@ -1,6 +1,5 @@
-import { cn, ScrollBar, Skeleton } from '@urgp/client/shared';
+import { cn, ScrollBar } from '@urgp/client/shared';
 import { ExtendedMessage } from '@urgp/shared/entities';
-import { MessageElement } from './MessageElement';
 import { useApartmentMessages } from '../api/messagesApi';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { MessageList } from './MessageList';
@@ -17,13 +16,7 @@ const MessageTab = ({
   refetchAll,
   className,
 }: MessageTabProps): JSX.Element => {
-  const {
-    data: messages,
-    isLoading,
-    isFetching,
-    isError,
-    refetch,
-  } = useApartmentMessages({
+  const { data: messages, refetch } = useApartmentMessages({
     apartmentIds: [apartmentId],
   });
   const [editMessage, setEditMessage] = useState<ExtendedMessage | null>(null);
@@ -46,7 +39,6 @@ const MessageTab = ({
           setEditMessage={setEditMessage}
           className="pointer-events-auto"
         />
-        {/* {isLoading || isFetching ? <Skeleton className="h-11 w-full" /> : null} */}
         <ScrollBar orientation="vertical" />
       </ScrollArea>
       <CreateMessageForm

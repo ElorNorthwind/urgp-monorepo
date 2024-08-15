@@ -11,9 +11,9 @@ import { ExtendedMessage, Message } from '@urgp/shared/entities';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
 import { useDeleteMessage } from '../api/messagesApi';
-import { Trash, Speech, Pencil } from 'lucide-react';
+import { Speech, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
-import { useState } from 'react';
+import { DeleteMessageButton } from './DeleteMessageButton';
 
 type MessageElementProps = {
   message: ExtendedMessage;
@@ -28,9 +28,8 @@ const MessageElement = ({
   className,
   editMessage,
   setEditMessage,
-}: MessageElementProps): JSX.Element => {
+}: MessageElementProps): JSX.Element | null => {
   const user = useSelector(selectCurrentUser);
-  // const [editMessage, setEditMessage] = useState<Message | null>(null);
 
   const [
     deleteMessage,
@@ -39,7 +38,7 @@ const MessageElement = ({
 
   // TODO: proper optimistic updates
   if (isDeletedSuccess) {
-    return <></>;
+    return null;
   }
 
   return (
@@ -61,9 +60,8 @@ const MessageElement = ({
           editMessage?.id === message.id
             ? 'bg-amber-200'
             : message.authorId === user?.id
-              ? 'bg-slate-300'
+              ? 'bg-slate-300/50'
               : 'bg-accent/40',
-          // message.authorId === user?.id ? 'bg-slate-300' : 'bg-accent/40',
         )}
       >
         <CardDescription className="flex flex-row items-center justify-between">
@@ -95,18 +93,14 @@ const MessageElement = ({
             )}
             {(user?.id === message.authorId ||
               user?.roles.includes('admin')) && (
-              <Button
-                variant="ghost"
-                className="h-6 w-6 rounded-full p-1"
+              <DeleteMessageButton
                 disabled={isDeleting}
-                onClick={() => {
+                onAccept={() => {
                   deleteMessage({ id: message.id });
                   toast.success('Сообщение удалено');
                   refetch();
                 }}
-              >
-                <Trash className="h-4 w-4" />
-              </Button>
+              />
             )}
           </div>
         )}

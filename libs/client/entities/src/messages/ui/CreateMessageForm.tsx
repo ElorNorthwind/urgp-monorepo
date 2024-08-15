@@ -38,7 +38,7 @@ const CreateMessageForm = ({
   refetch,
   editMessage,
   setEditMessage,
-}: CreateMessageFormProps): JSX.Element => {
+}: CreateMessageFormProps): JSX.Element | null => {
   const user = useSelector(selectCurrentUser);
 
   const form = useForm<CreateMessageFormValuesDto>({
@@ -49,11 +49,8 @@ const CreateMessageForm = ({
     },
   });
 
-  const [createMessage, { isLoading, isError, error }] = useCreateMessage();
-  const [
-    updateMessage,
-    { isLoading: isUpdateLoading, isError: isUpdateError },
-  ] = useUpdateMessage();
+  const [createMessage, { isLoading }] = useCreateMessage();
+  const [updateMessage, { isLoading: isUpdateLoading }] = useUpdateMessage();
 
   async function onSubmit(data: CreateMessageFormValuesDto) {
     createMessage({ ...data, authorId: user?.id || 0, apartmentId })
@@ -98,7 +95,7 @@ const CreateMessageForm = ({
       !user.roles.includes('admin') &&
       !user.roles.includes('boss'))
   ) {
-    return <></>;
+    return null;
   }
 
   return (
@@ -106,17 +103,16 @@ const CreateMessageForm = ({
       <form
         onSubmit={form.handleSubmit(editMessage ? onEditSubmit : onSubmit)}
         className={cn(
-          'bg-background relative grid w-full gap-4 rounded border p-2 transition',
+          'bg-background relative grid w-full gap-4 rounded-lg border p-2 transition',
           className,
         )}
       >
         {editMessage && (
-          <div className="line-clamp-2 relative rounded bg-amber-100 p-1 pl-4 text-amber-700">
+          <div className="line-clamp-2 relative rounded bg-amber-100 p-1 pl-5 text-sm text-amber-700">
             <div className="absolute top-1 bottom-1 left-1 w-2 rounded-sm bg-amber-300"></div>
             {editMessage.messageContent}
           </div>
         )}
-        {/* <div className={cn('grid gap-4 text-center', className)}> */}
         <FormField
           control={form.control}
           name="messageContent"

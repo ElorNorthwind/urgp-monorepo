@@ -188,7 +188,7 @@ const OldApartmentDetailsSheet = ({
         <MessageTab
           apartmentId={apartmentId || 0}
           refetchAll={refetch}
-          className="absolute top-0 -left-[calc(500px+0.5rem)] w-[500px]"
+          className="absolute top-0 -left-[calc(500px+0.25rem)] w-[500px]"
         />
       </SheetContent>
     </Sheet>
