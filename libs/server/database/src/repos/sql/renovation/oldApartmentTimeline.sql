@@ -230,9 +230,9 @@ WITH timeline AS (
         0 as prio,
 		'Судебное слушанье' as type,
 		ARRAY_TO_STRING(ARRAY[h.subject_of_proceedings, h.hearing_result, h.hearing_result_class, h.notes], '; ') as notes
-	FROM renovation.apartment_litigation_connections c
-	LEFT JOIN  renovation.apartment_litigations_temp l on l.id = c.litigation_id
-	LEFT JOIN renovation.apartment_litigation_hearings h on h.litigation_id = c.litigation_id
+	FROM renovation.apartment_litigation_hearings h
+	LEFT JOIN renovation.apartment_litigations_temp l ON l.id = h.litigation_id
+	LEFT JOIN renovation.apartment_litigation_connections c ON c.litigation_id = h.litigation_id
 	WHERE l.fssp_list_send_date IS NOT NULL
 	
 	UNION
@@ -244,10 +244,24 @@ WITH timeline AS (
         3 as prio,
 		'Судебный акт' as type,
 		ARRAY_TO_STRING(ARRAY[h.subject_of_proceedings, h.hearing_result, h.hearing_result_class, h.notes], '; ') as notes
-	FROM renovation.apartment_litigation_connections c
-	LEFT JOIN  renovation.apartment_litigations_temp l on l.id = c.litigation_id
-	LEFT JOIN renovation.apartment_litigation_hearings h on h.litigation_id = c.litigation_id
+	FROM renovation.apartment_litigation_hearings h
+	LEFT JOIN renovation.apartment_litigations_temp l ON l.id = h.litigation_id
+	LEFT JOIN renovation.apartment_litigation_connections c ON c.litigation_id = h.litigation_id
 	WHERE h.act_date IS NOT NULL
+
+	UNION
+	SELECT 
+		c.old_apart_id,
+		'Судебная подсистема - слушанья' as source,
+		ARRAY_TO_STRING(ARRAY[case_num_dgi, case_category], ' - ') as apart_or_case,
+		h.hearing_date as date,
+        0 as prio,
+		'Назначена дата слушанья' as type,
+		ARRAY_TO_STRING(ARRAY[h.subject_of_proceedings, h.hearing_result, h.hearing_result_class, h.notes], '; ') as notes
+	FROM renovation.apartment_litigation_hearings h
+	LEFT JOIN renovation.apartment_litigations_temp l ON l.id = h.litigation_id
+	LEFT JOIN renovation.apartment_litigation_connections c ON c.litigation_id = h.litigation_id
+	WHERE h.hearing_date IS NOT NULL
 	
 	UNION
 	SELECT 
@@ -258,9 +272,9 @@ WITH timeline AS (
         4 as prio,
 		'Обжалование решения' as type,
 		ARRAY_TO_STRING(ARRAY[h.subject_of_proceedings, h.hearing_result, h.hearing_result_class, h.notes], '; ') as notes
-	FROM renovation.apartment_litigation_connections c
-	LEFT JOIN  renovation.apartment_litigations_temp l on l.id = c.litigation_id
-	LEFT JOIN renovation.apartment_litigation_hearings h on h.litigation_id = c.litigation_id
+	FROM renovation.apartment_litigation_hearings h
+	LEFT JOIN renovation.apartment_litigations_temp l ON l.id = h.litigation_id
+	LEFT JOIN renovation.apartment_litigation_connections c ON c.litigation_id = h.litigation_id
 	WHERE h.appeal_date IS NOT NULL
 	
 	UNION
@@ -272,9 +286,9 @@ WITH timeline AS (
         0 as prio,
 		'Поручение дано' as type,
 		ARRAY_TO_STRING(ARRAY[e.errant_type, '(' || e.errant_status || ')'], ' ') as notes
-	FROM renovation.apartment_litigation_connections c
-	LEFT JOIN renovation.apartment_litigations_temp l on l.id = c.litigation_id
-	LEFT JOIN renovation.apartment_litigation_errants e on e.litigation_id = c.litigation_id
+	FROM renovation.apartment_litigation_errants e
+	LEFT JOIN renovation.apartment_litigations_temp l ON e.litigation_id = l.id
+	LEFT JOIN renovation.apartment_litigation_connections c ON c.litigation_id = e.litigation_id
 	WHERE e.errant_date IS NOT NULL
 
 	UNION
@@ -286,9 +300,9 @@ WITH timeline AS (
         1 as prio,
 		'Поручение выполнено' as type,
 		ARRAY_TO_STRING(ARRAY[e.errant_type, '(' || e.errant_status || ')'], ' ') as notes
-	FROM renovation.apartment_litigation_connections c
-	LEFT JOIN renovation.apartment_litigations_temp l on l.id = c.litigation_id
-	LEFT JOIN renovation.apartment_litigation_errants e on e.litigation_id = c.litigation_id
+	FROM renovation.apartment_litigation_errants e
+	LEFT JOIN renovation.apartment_litigations_temp l ON e.litigation_id = l.id
+	LEFT JOIN renovation.apartment_litigation_connections c ON c.litigation_id = e.litigation_id
 	WHERE e.errant_complition_date IS NOT NULL
 )
 
