@@ -1,6 +1,5 @@
 import {
   cn,
-  Separator,
   Sheet,
   SheetContent,
   SheetDescription,
@@ -139,7 +138,7 @@ const OldApartmentDetailsSheet = ({
                           ? 'border-orange-500'
                           : 'border-cyan-500',
                   )}
-                  key={operation.type + operation.date}
+                  key={operation.npp}
                 >
                   <div
                     className={

@@ -308,7 +308,7 @@ WITH timeline AS (
 
 SELECT 
 -- 	old_apart_id,
-	DENSE_RANK() OVER(PARTITION BY old_apart_id ORDER BY date ASC, prio ASC)::integer as npp,
+	ROW_NUMBER() OVER(PARTITION BY old_apart_id ORDER BY date ASC, prio ASC)::integer as npp,
 	source,
 	apart_or_case as group,
 	date,
