@@ -4,7 +4,9 @@ import {
   DeleteMessageDto,
   ExtendedMessage,
   Message,
+  MessagesUnansweredDto,
   ReadApartmentMessageDto,
+  UnansweredMessage,
   UpdateMessageDto,
 } from '@urgp/shared/entities';
 
@@ -41,6 +43,13 @@ export const messagesApi = rtkApi.injectEndpoints({
         body: dto,
       }),
     }),
+
+    readUnaswered: build.query<UnansweredMessage[], MessagesUnansweredDto>({
+      query: (user) => ({
+        url: '/renovation/unanswered-messages/' + user,
+        method: 'GET',
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -50,4 +59,5 @@ export const {
   useReadForApartmentsQuery: useApartmentMessages,
   useUpdateMutation: useUpdateMessage,
   useDeleteMutation: useDeleteMessage,
+  useReadUnasweredQuery: useUnansweredMessages,
 } = messagesApi;

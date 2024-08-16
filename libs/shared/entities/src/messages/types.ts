@@ -13,3 +13,26 @@ export type ExtendedMessage = Message & {
   authorFio: string;
   isBoss: boolean;
 };
+
+export type UnansweredMessage = Pick<
+  Message,
+  | 'id'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'authorId'
+  | 'apartmentId'
+  | 'buildingId'
+  | 'messageContent'
+> & {
+  messageType: string | null;
+  fio: string;
+  roles: string[];
+  adress: string;
+  apartNum: string;
+  apartType: string;
+  kpuNum: string;
+  stage: string;
+  actionText: string;
+  deviation: string;
+  problems: string[];
+};

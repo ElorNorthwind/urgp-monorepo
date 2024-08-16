@@ -12,6 +12,8 @@ import {
   UpdateMessageDto,
   ConnectedPlots,
   CityTotalDeviations,
+  UnansweredMessage,
+  MessagesUnansweredDto,
 } from '@urgp/shared/entities';
 
 @Injectable()
@@ -76,5 +78,11 @@ export class RenovationService {
     date: Date;
   }> {
     return this.dbServise.db.renovation.getLastUpdatedDate();
+  }
+
+  public async getUnansweredMessages(
+    user: MessagesUnansweredDto,
+  ): Promise<UnansweredMessage[]> {
+    return this.dbServise.db.renovation.getUnansweredMessages(user);
   }
 }

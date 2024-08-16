@@ -7,7 +7,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { Gauge, TableProperties } from 'lucide-react';
+import { Gauge, MailQuestion, TableProperties } from 'lucide-react';
 
 const RenovationNavbar = (): JSX.Element => {
   const router = useRouterState();
@@ -47,6 +47,27 @@ const RenovationNavbar = (): JSX.Element => {
         <TooltipPortal>
           <TooltipContent side="right" className="">
             Отселяемые дома
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            className={cn(
+              'text-muted-foreground flex p-0',
+              router.location.pathname === '/renovation/messages' &&
+                'bg-muted-foreground/10 text-primary',
+            )}
+            disabled={router.location.pathname === '/renovation/messages'}
+            variant="ghost"
+            onClick={() => navigate({ to: '/renovation/messages' })}
+          >
+            <MailQuestion className="" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent side="right" className="">
+            Сообщения, требующие ответа
           </TooltipContent>
         </TooltipPortal>
       </Tooltip>

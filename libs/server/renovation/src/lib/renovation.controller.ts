@@ -25,15 +25,19 @@ import {
   GetOldAppartmentsDto,
   getOldBuldings,
   GetOldBuldingsDto,
+  messagesUnanswered,
+  MessagesUnansweredDto,
   OkrugTotals,
   OldApartmentDetails,
   OldApartmentTimeline,
   OldAppartment,
   OldBuilding,
   RequestWithUserData,
+  UnansweredMessage,
   UpdateMessageDto,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
+import { z } from 'zod';
 
 @Controller('renovation')
 export class RenovationController {
@@ -171,4 +175,15 @@ export class RenovationController {
     const { date } = await this.renovation.getLastUpdatedDate();
     return date;
   }
+
+  @UseGuards(AccessTokenGuard)
+  @UsePipes(new ZodValidationPipe(messagesUnanswered as any))
+  @Get('unanswered-messages/:user')
+  async getUnansweredMessages(
+    @Param('user') user: MessagesUnansweredDto,
+  ): Promise<UnansweredMessage[]> {
+    return this.renovation.getUnansweredMessages(user);
+  }
 }
+
+// @Query() getOldAppartmentsDto: GetOldAppartmentsDto,

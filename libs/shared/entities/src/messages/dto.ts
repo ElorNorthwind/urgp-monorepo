@@ -38,6 +38,8 @@ export const messageDelete = z.object({
   id: z.coerce.number(),
 });
 
+export const messagesUnanswered = z.coerce.number().or(z.literal('boss'));
+
 export type CreateMessageDto = z.infer<typeof messageCreate>;
 export type ReadApartmentMessageDto = z.infer<typeof messageApartmentRead>;
 export type ReadMessageByIdDto = z.infer<typeof messageReabById>;
@@ -50,3 +52,5 @@ export type CreateMessageFormValuesDto = z.infer<
 export type UpdateMessageFormValuesDto = z.infer<
   typeof messageUpdateFormValues
 >;
+
+export type MessagesUnansweredDto = z.infer<typeof messagesUnanswered>;
