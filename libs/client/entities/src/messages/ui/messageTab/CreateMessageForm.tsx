@@ -18,7 +18,7 @@ import {
   UpdateMessageFormValuesDto,
 } from '@urgp/shared/entities';
 import { useSelector } from 'react-redux';
-import { useCreateMessage, useUpdateMessage } from '../api/messagesApi';
+import { useCreateMessage, useUpdateMessage } from '../../api/messagesApi';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
@@ -60,7 +60,7 @@ const CreateMessageForm = ({
         form.reset({ messageContent: '', validUntil: null });
         toast.success('Сообщение создано');
       })
-      .catch((rejected) =>
+      .catch((rejected: any) =>
         toast.error('Не удалось создать сообщение', {
           description: rejected.data?.message || 'Неизвестная ошибка',
         }),
@@ -76,7 +76,7 @@ const CreateMessageForm = ({
         setEditMessage && setEditMessage(null);
         toast.success('Сообщение изменено');
       })
-      .catch((rejected) =>
+      .catch((rejected: any) =>
         toast.error('Не удалось изменить сообщение', {
           description: rejected.data?.message || 'Неизвестная ошибка',
         }),

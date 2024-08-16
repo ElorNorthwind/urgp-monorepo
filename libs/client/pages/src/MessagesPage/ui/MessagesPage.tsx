@@ -1,6 +1,7 @@
 import {
   OldBuildingsCard,
   oldBuildingsColumns,
+  unansweredMessagesColumns,
   useOldBuldings,
   useUnansweredMessages,
 } from '@urgp/client/entities';
@@ -10,6 +11,9 @@ import {
   HStack,
   selectCurrentUser,
   Separator,
+  Tabs,
+  TabsList,
+  TabsTrigger,
   useDebounce,
   VirtualDataTable,
 } from '@urgp/client/shared';
@@ -26,25 +30,48 @@ const MessagesPage = (): JSX.Element => {
     data: messages,
     isLoading,
     isFetching,
-    isError,
   } = useUnansweredMessages(query);
+  const navigate = useNavigate({ from: '/renovation/messages' });
 
   return (
     <div className="block space-y-6 p-10">
       <div className="space-y-0.5">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold tracking-tight">Сообщения</h2>
+          <Tabs
+            defaultValue="my"
+            className="w-[400px]"
+            value={tab ?? 'my'}
+            onValueChange={(value) => {
+              navigate({
+                search: { tab: value === 'boss' ? 'boss' : undefined },
+              });
+            }}
+          >
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="my">Мои вопросы</TabsTrigger>
+              <TabsTrigger value="boss">Вопросы босса</TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
         <p className="text-muted-foreground">
           Список сообщений, требующих ответа
         </p>
       </div>
+
       <Separator className="my-6" />
       <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-        <div className="grid w-full grid-cols-3 gap-6 lg:grid-cols-5">
-          messages {tab}
-          {messages?.map((message) => <p>{message.messageContent}</p>)}
-        </div>
+        <VirtualDataTable
+          className={cn(
+            'bg-background h-full w-full transition-all ease-in-out',
+          )}
+          columns={unansweredMessagesColumns}
+          data={messages || []}
+          // isFetching={true}
+          isFetching={isLoading || isFetching}
+          totalCount={messages?.length ?? 0}
+          enableMultiRowSelection={false}
+        />
       </div>
     </div>
   );

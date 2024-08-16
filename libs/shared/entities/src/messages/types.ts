@@ -25,12 +25,23 @@ export type UnansweredMessage = Pick<
   | 'messageContent'
 > & {
   messageType: string | null;
-  fio: string;
+  author: string;
   roles: string[];
+
+  lastMessageId: number | null;
+  lastMessageContent: string | null;
+  lastMessateType: string | null;
+  lastMessageCreatedAt: Date | null;
+  lastMessageAuthor: string | null;
+
   adress: string;
+  okrug: string;
+  district: string;
   apartNum: string;
+  fio: string;
   apartType: string;
   kpuNum: string;
+  apartStatus: string;
   stage: string;
   actionText: string;
   deviation: string;

@@ -10,7 +10,7 @@ import {
 import { ExtendedMessage, Message } from '@urgp/shared/entities';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
-import { useDeleteMessage } from '../api/messagesApi';
+import { useDeleteMessage } from '../../api/messagesApi';
 import { Speech, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import { DeleteMessageButton } from './DeleteMessageButton';

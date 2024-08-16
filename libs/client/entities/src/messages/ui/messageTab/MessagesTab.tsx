@@ -1,6 +1,6 @@
 import { cn, ScrollBar } from '@urgp/client/shared';
 import { ExtendedMessage } from '@urgp/shared/entities';
-import { useApartmentMessages } from '../api/messagesApi';
+import { useApartmentMessages } from '../../api/messagesApi';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { MessageList } from './MessageList';
 import { CreateMessageForm } from './CreateMessageForm';
