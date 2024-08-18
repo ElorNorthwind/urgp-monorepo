@@ -248,6 +248,8 @@ export class RenovationRepository {
       return this.db.any(renovation.unansweredMessages, {
         conditions: `AND 'boss' = ANY(u.roles)`,
       });
+    } else if (user === 'all') {
+      return this.db.any(renovation.unansweredMessages, { conditions: ' ' });
     } else {
       return this.db.any(renovation.unansweredMessages, {
         conditions: `AND m.author_id = ${user}`,

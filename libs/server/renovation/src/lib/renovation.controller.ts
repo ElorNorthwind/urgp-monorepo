@@ -180,8 +180,18 @@ export class RenovationController {
   @UsePipes(new ZodValidationPipe(messagesUnanswered as any))
   @Get('unanswered-messages/:user')
   async getUnansweredMessages(
+    @Req() req: RequestWithUserData,
     @Param('user') user: MessagesUnansweredDto,
   ): Promise<UnansweredMessage[]> {
+    if (
+      user === 'all' &&
+      ['admin', 'editor', 'boss'].filter((role) =>
+        req.user.roles.includes(role),
+      ).length === 0
+    ) {
+      throw new UnauthorizedException('Нет прав на просмотр всех сообщений');
+    }
+
     return this.renovation.getUnansweredMessages(user);
   }
 }

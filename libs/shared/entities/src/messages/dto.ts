@@ -44,10 +44,13 @@ export const messageDelete = z.object({
   id: z.coerce.number(),
 });
 
-export const messagesUnanswered = z.coerce.number().or(z.literal('boss'));
+export const messagesUnanswered = z.coerce
+  .number()
+  .or(z.literal('boss'))
+  .or(z.literal('all'));
 
 export const messagesPageSearch = z.object({
-  tab: z.literal('my').or(z.literal('boss')).optional(),
+  tab: z.literal('my').or(z.literal('boss')).or(z.literal('all')).optional(),
   message: z.coerce.number().nullable().optional(),
 });
 

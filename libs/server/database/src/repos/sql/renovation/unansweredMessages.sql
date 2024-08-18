@@ -48,4 +48,4 @@ LEFT JOIN (
 WHERE m.apartment_id IS NOT NULL AND m.is_deleted <> true
   AND needs_answer = true AND answer_date IS NULL
   ${conditions:raw} 
-ORDER BY m.created_at ASC;
+ORDER BY m.created_at DESC;
