@@ -10,7 +10,7 @@ function sql(file: string) {
 export const renovation = {
   oldBuildings: sql('sql/renovation/oldBuildings.sql'),
   getOldBuldingsGeoJson: sql('sql/renovation/oldBuildingsGeoJson.sql'),
-  oldApartments: sql('sql/renovation/oldApartments.sql'),
+  oldApartments: sql('sql/renovation/oldApartmentsList.sql'),
   okrugTotalHouses: sql('sql/renovation/okrugTotalHouses.sql'),
   doneTimeline: sql('sql/renovation/doneTimeline.sql'),
   oldApartmentTimeline: sql('sql/renovation/oldApartmentTimeline.sql'),
@@ -24,6 +24,7 @@ export const renovation = {
   cityTotalDeviations: sql('sql/renovation/cityTotalDeviations.sql'),
   lastUpdated: sql('sql/renovation/lastUpdated.sql'),
   unansweredMessages: sql('sql/renovation/unansweredMessages.sql'),
+  oldBuildingList: sql('sql/renovation/oldBuildingList.sql'),
 };
 
 export const users = {

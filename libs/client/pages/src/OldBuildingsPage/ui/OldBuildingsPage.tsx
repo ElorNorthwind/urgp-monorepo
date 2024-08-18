@@ -71,9 +71,7 @@ const OldBuildingsPage = (): JSX.Element => {
             currentAdress ? 'w-[calc(100%-520px-0.5rem)]' : 'w-[calc(100%)]',
           )}
           columns={oldBuildingsColumns}
-          // Костыль пока не выделил МФР в какой то отдельный риск
           data={buildings || []}
-          // isFetching={true}
           isFetching={isLoading || isFetching}
           totalCount={buildings?.[0]?.totalCount ?? 0}
           callbackFn={() => setOffset(buildings?.length || 0)}

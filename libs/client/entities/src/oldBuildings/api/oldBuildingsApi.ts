@@ -41,7 +41,14 @@ export const oldBuildingsApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getOldBuildingList: build.query<{ value: number; label: string }[], void>({
+      query: (query) => ({
+        url: '/renovation/old-building-list',
+        method: 'GET',
+      }),
+    }),
   }),
+
   overrideExisting: false,
 });
 
@@ -49,4 +56,5 @@ export const {
   useGetGeoJsonQuery: useOldBuildingsGeoJson,
   useGetOldBuldingsQuery: useOldBuldings,
   useGetConnetedPlotsQuery: useConnectedPlots,
+  useGetOldBuildingListQuery: useOldBuildingList,
 } = oldBuildingsApi;

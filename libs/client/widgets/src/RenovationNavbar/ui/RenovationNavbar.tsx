@@ -7,7 +7,13 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { Gauge, MailQuestion, TableProperties } from 'lucide-react';
+import {
+  DoorClosed,
+  Gauge,
+  House,
+  MailQuestion,
+  TableProperties,
+} from 'lucide-react';
 
 const RenovationNavbar = (): JSX.Element => {
   const router = useRouterState();
@@ -41,12 +47,33 @@ const RenovationNavbar = (): JSX.Element => {
             variant="ghost"
             onClick={() => navigate({ to: '/renovation/oldbuildings' })}
           >
-            <TableProperties className="" />
+            <House className="" />
           </Button>
         </TooltipTrigger>
         <TooltipPortal>
           <TooltipContent side="right" className="">
             Отселяемые дома
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            className={cn(
+              'text-muted-foreground flex p-0',
+              router.location.pathname === '/renovation/oldapartments' &&
+                'bg-muted-foreground/10 text-primary',
+            )}
+            disabled={router.location.pathname === '/renovation/oldapartments'}
+            variant="ghost"
+            onClick={() => navigate({ to: '/renovation/oldapartments' })}
+          >
+            <DoorClosed className="" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent side="right" className="">
+            Квартирны в отселяемых домах
           </TooltipContent>
         </TooltipPortal>
       </Tooltip>

@@ -8,11 +8,24 @@ import {
 
 const oldApartmentsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    getOldAppartments: build.query<OldAppartment[], GetOldAppartmentsDto>({
+    getOldApartments: build.query<OldAppartment[], GetOldAppartmentsDto>({
       query: (query) => ({
         url: '/renovation/old-apartments',
         params: { ...query },
       }),
+
+      // Only have one cache entry because the arg always maps to one string
+      serializeQueryArgs: ({ queryArgs, endpointDefinition, endpointName }) => {
+        return { ...queryArgs, offset: undefined };
+      },
+      // Always merge incoming data to the cache entry
+      merge: (currentCache, newItems) => {
+        currentCache.push(...newItems);
+      },
+      // Refetch when the page arg changes
+      forceRefetch({ currentArg, previousArg }) {
+        return currentArg?.offset !== previousArg?.offset;
+      },
     }),
     getOldApartmentTimeline: build.query<OldApartmentTimeline[], number>({
       query: (query) => ({
@@ -31,8 +44,8 @@ const oldApartmentsApi = rtkApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const useOldAppartments = oldApartmentsApi.useGetOldAppartmentsQuery;
-export const useOldApartmentTimeline =
-  oldApartmentsApi.useGetOldApartmentTimelineQuery;
-export const useOldApartmentDetails =
-  oldApartmentsApi.useGetOldApartmentDetailsQuery;
+export const {
+  useGetOldApartmentsQuery: useOldApartments,
+  useGetOldApartmentTimelineQuery: useOldApartmentTimeline,
+  useGetOldApartmentDetailsQuery: useOldApartmentDetails,
+} = oldApartmentsApi;

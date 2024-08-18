@@ -147,19 +147,30 @@ export class RenovationRepository {
 
   // Returns old houses for renovation;
   getOldAppartments(dto: GetOldAppartmentsDto): Promise<OldAppartment[]> {
-    const { limit = 500, offset = 0, okrugs, districts, buildingId } = dto;
+    const {
+      limit = 500,
+      offset = 0,
+      okrugs,
+      districts,
+      buildingIds,
+      fio,
+    } = dto;
     const where = [];
     if (okrugs) {
       where.push(`okrug = ANY(ARRAY['${okrugs.join("','")}'])`);
     }
     if (districts && districts.length > 0) {
-      where.push(`"district" = ANY(ARRAY['${districts.join("','")}'])`);
+      where.push(`district = ANY(ARRAY['${districts.join("','")}'])`);
     }
-    if (buildingId) {
-      where.push(`"oldApartBuildingId" = '${buildingId}'`);
+    if (buildingIds) {
+      where.push(`building_id = ANY(ARRAY[${buildingIds.join(',')}])`);
+    }
+    if (fio && fio.length > 0) {
+      where.push(`LOWER(fio) LIKE LOWER('%${fio}%')`);
     }
 
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
+
     return this.db.any(renovation.oldApartments, {
       limit,
       offset,
@@ -255,5 +266,9 @@ export class RenovationRepository {
         conditions: `AND m.author_id = ${user}`,
       });
     }
+  }
+
+  getOldBuildingList(): Promise<{ value: number; label: string }[]> {
+    return this.db.any(renovation.oldBuildingList);
   }
 }

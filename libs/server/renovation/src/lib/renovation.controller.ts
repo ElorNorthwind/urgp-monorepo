@@ -21,7 +21,7 @@ import {
   CreateMessageDto,
   DeleteMessageDto,
   DoneTimelinePoint,
-  getOldAppartments,
+  getOldApartments,
   GetOldAppartmentsDto,
   getOldBuldings,
   GetOldBuldingsDto,
@@ -57,7 +57,7 @@ export class RenovationController {
   }
 
   @Get('old-apartments')
-  @UsePipes(new ZodValidationPipe(getOldAppartments))
+  @UsePipes(new ZodValidationPipe(getOldApartments))
   getOldAppartments(
     @Query() getOldAppartmentsDto: GetOldAppartmentsDto,
   ): Promise<OldAppartment[]> {
@@ -193,6 +193,11 @@ export class RenovationController {
     }
 
     return this.renovation.getUnansweredMessages(user);
+  }
+
+  @Get('old-building-list')
+  getOldBuildingList(): Promise<{ value: number; label: string }[]> {
+    return this.renovation.getOldBuildingList();
   }
 }
 

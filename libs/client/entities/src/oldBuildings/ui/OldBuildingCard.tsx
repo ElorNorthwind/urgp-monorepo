@@ -15,7 +15,7 @@ import {
   TabsTrigger,
 } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
-import { X } from 'lucide-react';
+import { ExternalLink, X } from 'lucide-react';
 import { OldBuildingTermsTable } from './components/OldBuildingTermsTable';
 import { ProblematicApartsTable } from './components/ProblematicApartsTable';
 import { NewBuildingsTable } from './components/NewBuildingsTable';
@@ -24,6 +24,7 @@ import { useState } from 'react';
 import { OldApartmentDetailsSheet } from '../../oldApartments/ui/OldApartmentDetailsSheet';
 import { useApartmentMessages } from '../../messages';
 import { useConnectedPlots } from '../api/oldBuildingsApi';
+import { useNavigate } from '@tanstack/react-router';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
@@ -41,6 +42,8 @@ const OldBuildingsCard = ({
   const [appartmentDetails, setAppartmentDetails] = useState<number | null>(
     null,
   );
+
+  const navigate = useNavigate({ from: '/renovation/oldbuildings' });
 
   const { data: messages, refetch: refetchAll } = useApartmentMessages({
     apartmentIds: [
@@ -129,6 +132,21 @@ const OldBuildingsCard = ({
                     МФР
                   </Label>
                 </div>
+                {building.totalApartments > 0 && (
+                  <Button
+                    variant="ghost"
+                    className="ml-auto space-x-2 px-2"
+                    onClick={() =>
+                      navigate({
+                        to: '/renovation/oldapartments',
+                        search: { buildingIds: [building.id] },
+                      })
+                    }
+                  >
+                    <p>Все кв.</p>
+                    <ExternalLink className="h-5 w-5" />
+                  </Button>
+                )}
               </HStack>
             )}
           <ProblematicApartsTable

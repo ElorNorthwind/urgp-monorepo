@@ -85,4 +85,10 @@ export class RenovationService {
   ): Promise<UnansweredMessage[]> {
     return this.dbServise.db.renovation.getUnansweredMessages(user);
   }
+
+  public async getOldBuildingList(): Promise<
+    { value: number; label: string }[]
+  > {
+    return this.dbServise.db.renovation.getOldBuildingList();
+  }
 }
