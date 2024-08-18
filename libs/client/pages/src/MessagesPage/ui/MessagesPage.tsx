@@ -1,29 +1,23 @@
 import {
-  OldBuildingsCard,
-  oldBuildingsColumns,
+  OldApartmentDetailsSheet,
   unansweredMessagesColumns,
-  useOldBuldings,
   useUnansweredMessages,
 } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
   cn,
-  HStack,
   selectCurrentUser,
   Separator,
   Tabs,
   TabsList,
   TabsTrigger,
-  useDebounce,
   VirtualDataTable,
 } from '@urgp/client/shared';
-import { LoadedResultCounter, OldBuildingsFilter } from '@urgp/client/widgets';
-import { useCallback, useState } from 'react';
-import { GetOldBuldingsDto, OldBuilding } from '@urgp/shared/entities';
 import { useSelector } from 'react-redux';
+import { MessagesPageSearch } from '@urgp/shared/entities';
 
 const MessagesPage = (): JSX.Element => {
-  const { tab } = getRouteApi('/renovation/messages').useSearch();
+  const { tab, message } = getRouteApi('/renovation/messages').useSearch();
   const user = useSelector(selectCurrentUser);
   const query = tab === 'boss' ? 'boss' : user?.id || 0;
   const {
@@ -32,6 +26,10 @@ const MessagesPage = (): JSX.Element => {
     isFetching,
   } = useUnansweredMessages(query);
   const navigate = useNavigate({ from: '/renovation/messages' });
+
+  const currentApartmentId = messages?.find(
+    (m) => m.id === message,
+  )?.apartmentId;
 
   return (
     <div className="block space-y-6 p-10">
@@ -50,7 +48,7 @@ const MessagesPage = (): JSX.Element => {
           >
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="my">Мои вопросы</TabsTrigger>
-              <TabsTrigger value="boss">Вопросы босса</TabsTrigger>
+              <TabsTrigger value="boss">Вопросы руководителя</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -67,11 +65,33 @@ const MessagesPage = (): JSX.Element => {
           )}
           columns={unansweredMessagesColumns}
           data={messages || []}
-          // isFetching={true}
           isFetching={isLoading || isFetching}
           totalCount={messages?.length ?? 0}
           enableMultiRowSelection={false}
+          onRowClick={(row) => {
+            row.toggleSelected();
+            navigate({
+              search: (prev: MessagesPageSearch) => ({
+                ...prev,
+                message:
+                  message === row.original.id ? undefined : row.original.id,
+              }),
+            });
+          }}
         />
+        {currentApartmentId && (
+          <OldApartmentDetailsSheet
+            apartmentId={currentApartmentId}
+            setApartmentId={() =>
+              navigate({
+                search: (prev: MessagesPageSearch) => ({
+                  ...prev,
+                  message: undefined,
+                }),
+              })
+            }
+          />
+        )}
       </div>
     </div>
   );

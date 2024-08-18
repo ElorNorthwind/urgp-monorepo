@@ -1,18 +1,7 @@
 import { CellContext } from '@tanstack/react-table';
-import { Badge, cn, HStack, VStack } from '@urgp/client/shared';
 import { UnansweredMessage } from '@urgp/shared/entities';
 import { format } from 'date-fns';
-import {
-  CircleAlert,
-  CircleCheck,
-  CircleDollarSign,
-  CircleEllipsis,
-  CircleX,
-  MessageCircle,
-  MessageCircleQuestion,
-  MessageCircleReply,
-} from 'lucide-react';
-import { useMemo } from 'react';
+import { MessageCircleQuestion, MessageCircleReply } from 'lucide-react';
 
 function MessageCell(
   props: CellContext<UnansweredMessage, string>,

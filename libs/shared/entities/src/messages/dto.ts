@@ -40,6 +40,11 @@ export const messageDelete = z.object({
 
 export const messagesUnanswered = z.coerce.number().or(z.literal('boss'));
 
+export const messagesPageSearch = z.object({
+  tab: z.literal('my').or(z.literal('boss')).optional(),
+  message: z.coerce.number().nullable().optional(),
+});
+
 export type CreateMessageDto = z.infer<typeof messageCreate>;
 export type ReadApartmentMessageDto = z.infer<typeof messageApartmentRead>;
 export type ReadMessageByIdDto = z.infer<typeof messageReabById>;
@@ -54,3 +59,4 @@ export type UpdateMessageFormValuesDto = z.infer<
 >;
 
 export type MessagesUnansweredDto = z.infer<typeof messagesUnanswered>;
+export type MessagesPageSearch = z.infer<typeof messagesPageSearch>;

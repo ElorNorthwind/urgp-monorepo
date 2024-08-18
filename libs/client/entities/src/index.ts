@@ -4,3 +4,4 @@ export * from './streets/ui/StreetsCombobox';
 export * from './oldBuildings/';
 export * from './renovationStatistics';
 export * from './messages';
+export * from './oldApartments';
