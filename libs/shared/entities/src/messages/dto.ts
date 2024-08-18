@@ -8,11 +8,14 @@ export const messageCreate = z.object({
     .string()
     .min(1, { message: 'Сообщение не может быть пустым' }),
   validUntil: z.coerce.date().nullable().optional(),
+  needsAnswer: z.coerce.boolean().optional().default(false),
+  answerDate: z.coerce.date().nullable().optional(),
 });
 
 export const messageCreateFormValues = messageCreate.pick({
   messageContent: true,
   validUntil: true,
+  needsAnswer: true,
 });
 
 export const messageApartmentRead = z.object({
@@ -27,11 +30,14 @@ export const messageUpdate = z.object({
   id: z.coerce.number(),
   messageContent: z.string(),
   validUntil: z.coerce.date().nullable().optional(),
+  needsAnswer: z.coerce.boolean().optional().default(false),
+  answerDate: z.coerce.date().nullable().optional(),
 });
 
 export const messageUpdateFormValues = messageUpdate.pick({
   messageContent: true,
   validUntil: true,
+  needsAnswer: true,
 });
 
 export const messageDelete = z.object({

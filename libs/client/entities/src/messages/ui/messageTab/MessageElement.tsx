@@ -10,8 +10,8 @@ import {
 import { ExtendedMessage, Message } from '@urgp/shared/entities';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
-import { useDeleteMessage } from '../../api/messagesApi';
-import { Speech, Pencil } from 'lucide-react';
+import { useDeleteMessage, useUpdateMessage } from '../../api/messagesApi';
+import { Pencil, FileQuestion, FileCheck, ShieldAlert } from 'lucide-react';
 import { toast } from 'sonner';
 import { DeleteMessageButton } from './DeleteMessageButton';
 
@@ -35,6 +35,7 @@ const MessageElement = ({
     deleteMessage,
     { isLoading: isDeleting, isSuccess: isDeletedSuccess },
   ] = useDeleteMessage();
+  const [updateMessage] = useUpdateMessage();
 
   // TODO: proper optimistic updates
   if (isDeletedSuccess) {
@@ -56,7 +57,7 @@ const MessageElement = ({
     >
       <CardHeader
         className={cn(
-          ' py-2 px-6',
+          'py-2 px-2',
           editMessage?.id === message.id
             ? 'bg-amber-200'
             : message.authorId === user?.id
@@ -65,18 +66,54 @@ const MessageElement = ({
         )}
       >
         <CardDescription className="flex flex-row items-center justify-between">
-          <p className="flex flex-row items-center justify-start gap-2">
+          <div className={cn('flex flex-row items-center justify-start')}>
+            {message.isBoss && <ShieldAlert className="h-4 w-4" />}
             {message.authorFio}
-          </p>
+          </div>
+
+          {message.needsAnswer && (
+            <div className="ml-auto mr-1 flex items-center gap-1">
+              {user?.id === message.authorId && (
+                <Button
+                  variant="ghost"
+                  className="h-6 px-1"
+                  onClick={() =>
+                    updateMessage({
+                      ...message,
+                      answerDate: message.answerDate ? null : new Date(),
+                    })
+                      .unwrap()
+                      .then(() => {
+                        refetch && refetch();
+                        toast.success('Возвращено на контроль');
+                      })
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      .catch((rejected: any) =>
+                        toast.error('Не удалось вернуть на контроль', {
+                          description:
+                            rejected.data?.message || 'Неизвестная ошибка',
+                        }),
+                      )
+                  }
+                >
+                  {message.answerDate
+                    ? 'вернуть на контроль'
+                    : 'снять контроль'}
+                </Button>
+              )}
+              {message.answerDate ? (
+                <FileCheck className="h-4 w-4 text-emerald-600" />
+              ) : (
+                <FileQuestion className="h-4 w-4 text-amber-600" />
+              )}
+            </div>
+          )}
           <p className="flex flex-row items-center justify-start gap-2">
-            {message.isBoss ? (
-              <Speech className="h-4 w-4 text-rose-500" />
-            ) : null}
             {dayjs(message.updatedAt).format('DD.MM.YYYY')}
           </p>
         </CardDescription>
       </CardHeader>
-      <CardContent className="">
+      <CardContent className="px-2">
         <p>{message.messageContent}</p>
         {!editMessage && (
           <div className="absolute right-2 bottom-2 flex items-center gap-1">

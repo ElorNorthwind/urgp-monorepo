@@ -1,4 +1,6 @@
 SELECT m.id, m.created_at as "createdAt", m.updated_at as "updatedAt", 
+       m.needs_answer as "needsAnswer",
+       m.answer_date as "answerDate",
        m.apartment_id as "apartmentId",
        m.author_id as "authorId", u.fio as "authorFio", 
 	   CASE WHEN 'boss' = ANY(roles) THEN true ELSE false END as "isBoss",

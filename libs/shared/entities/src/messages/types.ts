@@ -7,6 +7,8 @@ export type Message = {
   buildingId: number | null;
   messageContent: string;
   validUntil: Date | null;
+  needsAnswer: boolean;
+  answerDate: Date | null;
 };
 
 export type ExtendedMessage = Message & {

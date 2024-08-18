@@ -198,6 +198,8 @@ export class RenovationRepository {
       buildingId: dto.buildingId || null,
       messageContent: dto.messageContent,
       validUntil: dto.validUntil || null,
+      needsAnswer: dto.needsAnswer || false,
+      answerDate: dto.answerDate || null,
     };
 
     return this.db.one(renovation.messageCreate, newMessage);
@@ -220,7 +222,15 @@ export class RenovationRepository {
   }
 
   updateMessage(dto: UpdateMessageDto): Promise<Message> {
-    return this.db.one(renovation.messageUpdate, dto);
+    const updatedMessage = {
+      id: dto.id,
+      messageContent: dto.messageContent,
+      validUntil: dto.validUntil || null,
+      needsAnswer: dto.needsAnswer || false,
+      answerDate: dto.answerDate || null,
+    };
+
+    return this.db.one(renovation.messageUpdate, updatedMessage);
   }
 
   deleteMessage(dto: DeleteMessageDto): Promise<boolean> {

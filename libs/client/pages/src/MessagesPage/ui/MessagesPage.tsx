@@ -24,6 +24,7 @@ const MessagesPage = (): JSX.Element => {
     data: messages,
     isLoading,
     isFetching,
+    refetch,
   } = useUnansweredMessages(query);
   const navigate = useNavigate({ from: '/renovation/messages' });
 
@@ -82,6 +83,7 @@ const MessagesPage = (): JSX.Element => {
         {currentApartmentId && (
           <OldApartmentDetailsSheet
             apartmentId={currentApartmentId}
+            refetch={refetch}
             setApartmentId={() =>
               navigate({
                 search: (prev: MessagesPageSearch) => ({

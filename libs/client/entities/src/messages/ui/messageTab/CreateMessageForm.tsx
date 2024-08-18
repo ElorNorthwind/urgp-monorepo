@@ -1,6 +1,7 @@
 import {
   Button,
   Calendar,
+  Checkbox,
   cn,
   Form,
   FormControl,
@@ -46,6 +47,7 @@ const CreateMessageForm = ({
     defaultValues: {
       messageContent: '',
       validUntil: null,
+      needsAnswer: false,
     },
   });
 
@@ -57,9 +59,14 @@ const CreateMessageForm = ({
       .unwrap()
       .then(() => {
         refetch && refetch();
-        form.reset({ messageContent: '', validUntil: null });
+        form.reset({
+          messageContent: '',
+          validUntil: null,
+          needsAnswer: false,
+        });
         toast.success('Сообщение создано');
       })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .catch((rejected: any) =>
         toast.error('Не удалось создать сообщение', {
           description: rejected.data?.message || 'Неизвестная ошибка',
@@ -76,6 +83,7 @@ const CreateMessageForm = ({
         setEditMessage && setEditMessage(null);
         toast.success('Сообщение изменено');
       })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .catch((rejected: any) =>
         toast.error('Не удалось изменить сообщение', {
           description: rejected.data?.message || 'Неизвестная ошибка',
@@ -142,6 +150,28 @@ const CreateMessageForm = ({
         />
         <FormField
           control={form.control}
+          name="needsAnswer"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+              <FormControl>
+                <Checkbox
+                  id="needsAnswer"
+                  // {...field}
+                  checked={field.value === true}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    return checked;
+                  }}
+                />
+              </FormControl>
+              <FormLabel className="flex-1 font-normal" htmlFor="needsAnswer">
+                На контроль
+              </FormLabel>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="validUntil"
           render={({ field }) => (
             <div className="bg-background absolute bottom-0 left-[-310px] hidden rounded border p-2">
@@ -185,7 +215,11 @@ const CreateMessageForm = ({
               disabled={isUpdateLoading}
               onClick={() => {
                 setEditMessage(null);
-                form.reset({ messageContent: '', validUntil: null });
+                form.reset({
+                  messageContent: '',
+                  validUntil: null,
+                  needsAnswer: false,
+                });
               }}
             >
               Отмена
