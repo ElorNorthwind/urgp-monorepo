@@ -1,22 +1,8 @@
 import { useNavigate } from '@tanstack/react-router';
 import { CellContext } from '@tanstack/react-table';
-import { Badge, Button, cn, HStack, VStack } from '@urgp/client/shared';
+import { Button } from '@urgp/client/shared';
 import { UnansweredMessage } from '@urgp/shared/entities';
-import {
-  CircleAlert,
-  CircleCheck,
-  CircleDollarSign,
-  CircleEllipsis,
-  CircleX,
-  ExternalLink,
-} from 'lucide-react';
-import { useMemo } from 'react';
-const problemBadgeStyles = {
-  МФР: cn('bg-violet-100 border-violet-200'),
-  Отказ: cn('bg-amber-100 border-amber-200'),
-  Суды: cn('bg-rose-100 border-rose-200'),
-  Проблемная: cn('bg-slate-100 border-slate-200'),
-};
+import { ExternalLink } from 'lucide-react';
 
 function AdressCell(
   props: CellContext<UnansweredMessage, string>,

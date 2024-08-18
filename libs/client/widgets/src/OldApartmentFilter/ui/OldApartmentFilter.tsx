@@ -7,10 +7,50 @@ import {
   Skeleton,
 } from '@urgp/client/shared';
 import { GetOldBuldingsDto, OldApartmentSearch } from '@urgp/shared/entities';
-import { X } from 'lucide-react';
+import {
+  CircleAlert,
+  CircleCheck,
+  CircleDollarSign,
+  CircleEllipsis,
+  CircleX,
+  X,
+} from 'lucide-react';
 import { useMemo } from 'react';
 import { areas } from '../../OldBuildingsFilter/config/areas';
 import { useOldBuildingList } from '@urgp/client/entities';
+
+export const relocationDeviations = [
+  {
+    value: 'Работа завершена',
+    label: 'Работа завершена',
+    icon: CircleCheck,
+    className: 'text-emerald-500',
+  },
+  {
+    value: 'В работе у МФР',
+    label: 'В работе у МФР',
+    icon: CircleDollarSign,
+    className: 'text-violet-500',
+  },
+  {
+    value: 'Без отклонений',
+    label: 'Без отклонений',
+    icon: CircleEllipsis,
+    className: 'text-blue-500',
+  },
+  {
+    value: 'Требует внимания',
+    label: 'Требует внимания',
+    icon: CircleAlert,
+    className: 'text-yellow-500',
+  },
+  {
+    value: 'Риск',
+    label: 'Наступили риски',
+    icon: CircleX,
+    className: 'text-red-500',
+  },
+];
 
 type OldApartmentFilterProps = {
   filters: OldApartmentSearch;
@@ -108,6 +148,17 @@ const OldApartmentFilter = ({
         />
       )}
 
+      <FacetFilter
+        options={relocationDeviations}
+        title={'Отклонения'}
+        selectedValues={filters.deviation}
+        setSelectedValues={(value) =>
+          setFilters({
+            deviation: value && value.length > 0 ? value : undefined,
+          })
+        }
+      />
+
       {/* <FacetFilter
         options={relocationAge}
         title={'Срок'}
@@ -130,16 +181,7 @@ const OldApartmentFilter = ({
         }
       />
 
-      <FacetFilter
-        options={relocationDeviations}
-        title={'Отклонения'}
-        selectedValues={filters.deviation}
-        setSelectedValues={(value) =>
-          setFilters({
-            deviation: value && value.length > 0 ? value : undefined,
-          })
-        }
-      /> */}
+      */}
 
       {(filters?.okrugs ||
         filters?.districts ||

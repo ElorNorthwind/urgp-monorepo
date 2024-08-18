@@ -154,6 +154,7 @@ export class RenovationRepository {
       districts,
       buildingIds,
       fio,
+      deviation,
     } = dto;
     const where = [];
     if (okrugs) {
@@ -164,6 +165,11 @@ export class RenovationRepository {
     }
     if (buildingIds) {
       where.push(`building_id = ANY(ARRAY[${buildingIds.join(',')}])`);
+    }
+    if (deviation) {
+      where.push(
+        `classificator->>'deviationMFR' = ANY(ARRAY['${deviation.join("','")}'])`,
+      );
     }
     if (fio && fio.length > 0) {
       where.push(`LOWER(fio) LIKE LOWER('%${fio}%')`);

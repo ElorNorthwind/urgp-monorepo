@@ -17,4 +17,5 @@ SELECT
 FROM renovation.apartments_full a
 LEFT JOIN (SELECT apartment_id, COUNT(*) as messages_count FROM renovation.messages WHERE is_deleted <> true AND apartment_id IS NOT NULL GROUP BY apartment_id) m ON a.old_apart_id = m.apartment_id
 ${conditions:raw}
+ORDER BY adress, apart_npp
 LIMIT ${limit} OFFSET ${offset};

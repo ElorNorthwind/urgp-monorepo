@@ -7,6 +7,7 @@ export const getOldApartments = getOldBuldings
     offset: true,
     okrugs: true,
     districts: true,
+    deviation: true,
   })
   .extend({
     fio: z.string().optional(),

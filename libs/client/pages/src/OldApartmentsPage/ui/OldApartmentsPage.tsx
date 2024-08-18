@@ -25,7 +25,6 @@ const OldApartmentsPage = (): JSX.Element => {
     currentData: apartments,
     isLoading,
     isFetching,
-    refetch,
   } = useOldApartments({
     ...(debouncedFilters as Partial<OldApartmentSearch>),
     offset,
@@ -55,11 +54,6 @@ const OldApartmentsPage = (): JSX.Element => {
           className="ml-auto"
         />
       </div>
-      {/* <HStack
-        gap="s"
-        noWrap
-        className="h-[calc(100vh-3.5rem)] w-full overflow-hidden"
-      > */}
       <VirtualDataTable
         onRowClick={(row) => {
           // row.toggleSelected();
@@ -117,7 +111,7 @@ const OldApartmentsPage = (): JSX.Element => {
       {filters.apartment && (
         <OldApartmentDetailsSheet
           apartmentId={filters.apartment}
-          refetch={refetch}
+          // refetch={refetch} //naa, can't do that here!
           setApartmentId={() =>
             navigate({
               search: (prev: OldApartmentSearch) => ({
