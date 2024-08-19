@@ -20,6 +20,7 @@ import { Route as RenovationIndexImport } from './routes/renovation/index'
 import { Route as RenovationOldbuildingsImport } from './routes/renovation/oldbuildings'
 import { Route as RenovationOldapartmentsImport } from './routes/renovation/oldapartments'
 import { Route as RenovationMessagesImport } from './routes/renovation/messages'
+import { Route as RenovationBuildingRelocationMapImport } from './routes/renovation/building-relocation-map'
 import { Route as RenovationSettingsRouteImport } from './routes/renovation/settings/route'
 import { Route as RenovationSettingsIndexImport } from './routes/renovation/settings/index'
 import { Route as RenovationSettingsChangePasswordImport } from './routes/renovation/settings/change-password'
@@ -88,6 +89,12 @@ const RenovationMessagesRoute = RenovationMessagesImport.update({
   getParentRoute: () => RenovationRouteRoute,
 } as any)
 
+const RenovationBuildingRelocationMapRoute =
+  RenovationBuildingRelocationMapImport.update({
+    path: '/building-relocation-map',
+    getParentRoute: () => RenovationRouteRoute,
+  } as any)
+
 const RenovationSettingsRouteRoute = RenovationSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => RenovationRouteRoute,
@@ -140,6 +147,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RenovationSettingsRouteImport
       parentRoute: typeof RenovationRouteImport
     }
+    '/renovation/building-relocation-map': {
+      preLoaderRoute: typeof RenovationBuildingRelocationMapImport
+      parentRoute: typeof RenovationRouteImport
+    }
     '/renovation/messages': {
       preLoaderRoute: typeof RenovationMessagesImport
       parentRoute: typeof RenovationRouteImport
@@ -176,6 +187,7 @@ export const routeTree = rootRoute.addChildren([
       RenovationSettingsChangePasswordRoute,
       RenovationSettingsIndexRoute,
     ]),
+    RenovationBuildingRelocationMapRoute,
     RenovationMessagesRoute,
     RenovationOldapartmentsRoute,
     RenovationOldbuildingsRoute,

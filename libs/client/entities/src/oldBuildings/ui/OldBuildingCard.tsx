@@ -15,11 +15,10 @@ import {
   TabsTrigger,
 } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
-import { ExternalLink, X } from 'lucide-react';
+import { ExternalLink, Map, X } from 'lucide-react';
 import { OldBuildingTermsTable } from './components/OldBuildingTermsTable';
 import { ProblematicApartsTable } from './components/ProblematicApartsTable';
 import { NewBuildingsTable } from './components/NewBuildingsTable';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { useState } from 'react';
 import { OldApartmentDetailsSheet } from '../../oldApartments/ui/OldApartmentDetailsSheet';
 import { useApartmentMessages } from '../../messages';
@@ -66,11 +65,13 @@ const OldBuildingsCard = ({
       )}
       style={{ width: building ? width : 0 }}
     >
-      <CardHeader className="bg-accent/40 pb-1">
-        <CardTitle>{building?.adress}</CardTitle>
-        <CardDescription>
-          {building?.okrug + ', район ' + building?.district}
-        </CardDescription>
+      <CardHeader className="bg-accent/40 flex flex-row items-center gap-2 pb-1">
+        <div className="flex flex-col">
+          <CardTitle>{building?.adress}</CardTitle>
+          <CardDescription>
+            {building?.okrug + ', район ' + building?.district}
+          </CardDescription>
+        </div>
       </CardHeader>
       {building && (
         <CardContent className="flex h-full flex-col gap-3 pt-2">
@@ -132,7 +133,7 @@ const OldBuildingsCard = ({
                 />
               </div>
             </TabsContent>
-            <TabsContent value="newBuildings" className="flex-1">
+            <TabsContent value="newBuildings" className="isolate flex-1">
               <div className="flex h-full flex-col gap-2">
                 <NewBuildingsTable
                   buildings={building.newBuildingMovements}
@@ -150,8 +151,22 @@ const OldBuildingsCard = ({
                 />
                 <OldBuildingRelocationMap
                   buildingId={building.id}
-                  className="w-full flex-1 overflow-hidden rounded border"
-                />
+                  className="relative isolate w-full flex-1 overflow-hidden rounded border"
+                >
+                  <Button
+                    variant="outline"
+                    className="absolute top-2 right-2 z-[1000] h-12 w-12 p-0"
+                    onClick={() =>
+                      navigate({
+                        to: '/renovation/building-relocation-map',
+                        search: { buildingId: building?.id || undefined },
+                        from: '/renovation/oldbuildings',
+                      })
+                    }
+                  >
+                    <Map className="z-[1000] h-6 w-6" />
+                  </Button>
+                </OldBuildingRelocationMap>
               </div>
             </TabsContent>
           </Tabs>

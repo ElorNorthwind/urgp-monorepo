@@ -12,8 +12,8 @@ import {
 } from './command';
 import { ReactNode, useState } from 'react';
 
-type ListItem = {
-  value: string;
+type ListItem<T> = {
+  value: T;
   label: string;
   // icon?: ReactNode; // to do - add something like that I guess
 
@@ -21,8 +21,8 @@ type ListItem = {
   [x: string]: any;
 };
 
-type ComboboxFieldProps = {
-  items: ListItem[];
+type ComboboxFieldProps<T> = {
+  items: ListItem<T>[];
   value: string;
   onSelect: (value: string) => void;
 
@@ -33,7 +33,7 @@ type ComboboxFieldProps = {
   className?: string;
 };
 
-function Combobox(props: ComboboxFieldProps) {
+function Combobox<T>(props: ComboboxFieldProps<T>) {
   const {
     items,
     value,
@@ -77,10 +77,10 @@ function Combobox(props: ComboboxFieldProps) {
               {items.map((item) => (
                 <CommandItem
                   value={item.label}
-                  key={item.value}
+                  key={item.value.toString()}
                   onSelect={() => {
                     setOpen(false);
-                    return onSelect(item.value);
+                    return onSelect(item.value.toString());
                   }}
                 >
                   <Check

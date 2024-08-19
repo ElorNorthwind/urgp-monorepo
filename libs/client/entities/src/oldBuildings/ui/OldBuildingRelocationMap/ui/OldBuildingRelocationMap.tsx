@@ -13,6 +13,7 @@ import { AddCurve } from './AddCurve';
 type OldBuildingRelocationMapProps = {
   buildingId: number;
   className?: string;
+  children?: React.ReactNode;
 };
 
 const basemapDict = {
@@ -30,7 +31,7 @@ const mapItemColors = {
 } as Record<OldBuildingRelocationMapElement['type'], string>;
 
 export const OldBuildingRelocationMap: React.FC<OldBuildingRelocationMapProps> =
-  memo(({ className, buildingId }: OldBuildingRelocationMapProps) => {
+  memo(({ className, buildingId, children }: OldBuildingRelocationMapProps) => {
     // const [basemap, setBasemap] = useState<keyof typeof basemapDict>('carto');
     const {
       data: mapItems,
@@ -81,6 +82,7 @@ export const OldBuildingRelocationMap: React.FC<OldBuildingRelocationMapProps> =
             <FitBounds box={mapItems?.[0]?.bounds?.coordinates} />
           </>
         )}
+        {children}
       </MapContainer>
     );
   });
