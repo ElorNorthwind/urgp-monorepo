@@ -44,6 +44,7 @@ export * from './lib/debounce';
 export * from './lib/onBottomReached';
 export * from './lib/formatDate';
 export * from './lib/getDatesInterval';
+export * from './lib/curve';
 
 // export config
 export * from './config/env.d';

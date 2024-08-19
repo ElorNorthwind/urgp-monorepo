@@ -1,3 +1,5 @@
+import { LatLngExpression, LatLngTuple } from 'leaflet';
+
 type OldBuildingTerms = {
   firstResetlementStart: string | null;
   firstResetlementEnd: string | null;
@@ -159,17 +161,19 @@ export type ConnectedPlots = {
   plots: PlotInfo[];
 };
 
-type geoJsonExpression = {
+type geoJsonExpression<Tjson> = {
   type: string;
-  coordinates: number[] | number[][] | number[][][];
+  // coordinates: number[] | number[][] | number[][][];
+  coordinates: Tjson;
 };
 
 export type OldBuildingRelocationMapElement = {
   id: number;
-  geometry: geoJsonExpression;
-  path: geoJsonExpression;
-  start: geoJsonExpression;
-  finish: geoJsonExpression;
-  type: string;
-  bounds: geoJsonExpression;
+  adress: string;
+  geometry: geoJsonExpression<LatLngExpression[]>;
+  path: geoJsonExpression<LatLngExpression[]>;
+  start: geoJsonExpression<LatLngTuple>;
+  finish: geoJsonExpression<LatLngTuple>;
+  type: 'movement' | 'selected' | 'construction' | 'other_on_plot';
+  bounds: geoJsonExpression<LatLngExpression[]>;
 };

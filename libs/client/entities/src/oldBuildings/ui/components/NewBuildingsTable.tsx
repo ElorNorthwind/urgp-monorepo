@@ -65,7 +65,7 @@ const NewBuildingsTable = ({
 
             return (
               <>
-                <TableRow className="" key={building.id}>
+                <TableRow className="" key={building.id + 'row'}>
                   <TableCell compact className="text-left text-xs">
                     <div>{building.adress}</div>
                   </TableCell>
@@ -85,7 +85,10 @@ const NewBuildingsTable = ({
                   </TableCell>
                 </TableRow>
                 {filteredPlots && filteredPlots.length > 0 && (
-                  <TableRow className=" hover:bg-background bg-background p-0 text-xs">
+                  <TableRow
+                    className=" hover:bg-background bg-background p-0 text-xs"
+                    key={building.id + 'subrow'}
+                  >
                     <TableCell
                       colSpan={3}
                       className="w-full gap-1 space-y-2 p-2"
@@ -94,7 +97,7 @@ const NewBuildingsTable = ({
                         Сносимые дома на участке:
                       </h2>
                       {filteredPlots.map((plot) => (
-                        <div className="">
+                        <div className="" key={plot.id}>
                           <p
                             className={cn(
                               'text-center font-bold leading-none',

@@ -69,4 +69,5 @@ export const {
   useGetOldBuldingsQuery: useOldBuldings,
   useGetConnetedPlotsQuery: useConnectedPlots,
   useGetOldBuildingListQuery: useOldBuildingList,
+  useGetOldBuildingRelocationMapQuery: useOldBuildingRelocationMap,
 } = oldBuildingsApi;

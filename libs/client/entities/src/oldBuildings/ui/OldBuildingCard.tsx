@@ -25,6 +25,8 @@ import { OldApartmentDetailsSheet } from '../../oldApartments/ui/OldApartmentDet
 import { useApartmentMessages } from '../../messages';
 import { useConnectedPlots } from '../api/oldBuildingsApi';
 import { useNavigate } from '@tanstack/react-router';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { OldBuildingRelocationMap } from '@urgp/client/widgets';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
@@ -102,6 +104,10 @@ const OldBuildingsCard = ({
                   oldBuildingId={building.id}
                 />
               </ScrollArea>
+              <OldBuildingRelocationMap
+                buildingId={building.id}
+                className="aspect-square w-full"
+              />
             </TabsContent>
             {/* <TabsContent value="comments">
               <ScrollArea className="flex w-full flex-col gap-1">
