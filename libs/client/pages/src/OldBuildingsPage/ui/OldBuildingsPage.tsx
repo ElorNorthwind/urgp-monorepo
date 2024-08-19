@@ -7,18 +7,25 @@ import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { cn, HStack, useDebounce, VirtualDataTable } from '@urgp/client/shared';
 import { LoadedResultCounter, OldBuildingsFilter } from '@urgp/client/widgets';
 import { useCallback, useState } from 'react';
-import { GetOldBuldingsDto, OldBuilding } from '@urgp/shared/entities';
+import {
+  GetOldBuldingsDto,
+  OldBuilding,
+  OldBuildingsPageSearch,
+} from '@urgp/shared/entities';
 
 const OldBuildingsPage = (): JSX.Element => {
   const filters = getRouteApi(
     '/renovation/oldbuildings',
-  ).useSearch() as GetOldBuldingsDto;
-  const debouncedFilters = useDebounce(filters, 200);
+  ).useSearch() as OldBuildingsPageSearch;
+  const debouncedFilters = useDebounce(
+    { ...filters, tab: undefined, selectedBuildingId: undefined },
+    200,
+  );
 
   const navigate = useNavigate({ from: '/renovation/oldbuildings' });
   const [offset, setOffset] = useState(0);
 
-  const [currentAdress, setCurrentAddress] = useState<OldBuilding | null>(null);
+  // const [currentAdress, setCurrentAddress] = useState<OldBuilding | null>(null);
 
   const {
     currentData: buildings,
@@ -31,10 +38,11 @@ const OldBuildingsPage = (): JSX.Element => {
 
   const setFilters = useCallback(
     (value: Partial<GetOldBuldingsDto>) => {
-      setCurrentAddress(null);
+      // setCurrentAddress(null);
       navigate({
         search: (prev: GetOldBuldingsDto) => ({
           ...prev,
+          selectedBuildingId: undefined,
           ...value,
         }),
       });
@@ -62,13 +70,25 @@ const OldBuildingsPage = (): JSX.Element => {
           // onRowDoubleClick={() => setCurrentAddress(null)}
           onRowClick={(row) => {
             row.toggleSelected();
-            setCurrentAddress(
-              row?.original?.id === currentAdress?.id ? null : row?.original,
-            );
+            navigate({
+              search: (prev: GetOldBuldingsDto) => ({
+                ...prev,
+                selectedBuildingId:
+                  row?.original?.id === filters.selectedBuildingId
+                    ? undefined
+                    : row?.original?.id,
+              }),
+            });
+
+            // setCurrentAddress(
+            //   row?.original?.id === currentAdress?.id ? null : row?.original,
+            // );
           }}
           className={cn(
             'bg-background h-full transition-all ease-in-out',
-            currentAdress ? 'w-[calc(100%-520px-0.5rem)]' : 'w-[calc(100%)]',
+            filters.selectedBuildingId
+              ? 'w-[calc(100%-520px-0.5rem)]'
+              : 'w-[calc(100%)]',
           )}
           columns={oldBuildingsColumns}
           data={buildings || []}
@@ -108,8 +128,17 @@ const OldBuildingsPage = (): JSX.Element => {
           }}
         />
         <OldBuildingsCard
-          building={currentAdress}
-          onClose={() => setCurrentAddress(null)}
+          building={
+            buildings?.find((b) => b.id === filters.selectedBuildingId) || null
+          }
+          onClose={() =>
+            navigate({
+              search: (prev: GetOldBuldingsDto) => ({
+                ...prev,
+                selectedBuildingId: undefined,
+              }),
+            })
+          }
           className="h-full transition-all ease-in-out"
           width={520}
         />

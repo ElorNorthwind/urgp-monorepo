@@ -28,7 +28,7 @@ const BuildingRelocationMapPage = (): JSX.Element => {
 
   return (
     <div className="isolate">
-      <div className="absolute top-4 right-4">
+      <div className="absolute top-4 right-4 shadow-sm">
         {isLoading || isFetching ? null : (
           <Combobox
             value={buildingId}

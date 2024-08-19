@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { OldBuildingsPage } from '@urgp/client/pages';
-import { getOldBuldings } from '@urgp/shared/entities';
+import { oldBuildingsPageSearch } from '@urgp/shared/entities';
 
 export const Route = createFileRoute('/renovation/oldbuildings')({
   component: OldBuildings,
   validateSearch: (search) => {
-    return getOldBuldings.omit({ offset: true }).parse(search);
+    return oldBuildingsPageSearch.parse(search);
   },
 
   // loaderDeps: ({ search: dto }) => dto,

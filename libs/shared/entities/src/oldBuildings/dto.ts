@@ -78,4 +78,12 @@ export const getOldBuldings = z
   })
   .partial();
 
+export const oldBuildingsPageSearch = getOldBuldings
+  .omit({ offset: true })
+  .extend({
+    selectedBuildingId: z.coerce.number().optional(),
+    tab: z.literal('terms').or(z.literal('newBuildings')).optional(),
+  });
+
 export type GetOldBuldingsDto = z.infer<typeof getOldBuldings>;
+export type OldBuildingsPageSearch = z.infer<typeof oldBuildingsPageSearch>;

@@ -14,16 +14,16 @@ import {
   TabsList,
   TabsTrigger,
 } from '@urgp/client/shared';
-import { OldBuilding } from '@urgp/shared/entities';
+import { OldBuilding, OldBuildingsPageSearch } from '@urgp/shared/entities';
 import { ExternalLink, Map, X } from 'lucide-react';
 import { OldBuildingTermsTable } from './components/OldBuildingTermsTable';
 import { ProblematicApartsTable } from './components/ProblematicApartsTable';
 import { NewBuildingsTable } from './components/NewBuildingsTable';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { OldApartmentDetailsSheet } from '../../oldApartments/ui/OldApartmentDetailsSheet';
 import { useApartmentMessages } from '../../messages';
 import { useConnectedPlots } from '../api/oldBuildingsApi';
-import { useNavigate } from '@tanstack/react-router';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { OldBuildingRelocationMap } from './OldBuildingRelocationMap';
 
 type OldBuildingCardProps = {
@@ -42,6 +42,10 @@ const OldBuildingsCard = ({
   const [appartmentDetails, setAppartmentDetails] = useState<number | null>(
     null,
   );
+
+  const { tab, selectedBuildingId } = getRouteApi(
+    '/renovation/oldbuildings',
+  ).useSearch() as OldBuildingsPageSearch;
 
   const navigate = useNavigate({ from: '/renovation/oldbuildings' });
 
@@ -75,7 +79,19 @@ const OldBuildingsCard = ({
       </CardHeader>
       {building && (
         <CardContent className="flex h-full flex-col gap-3 pt-2">
-          <Tabs defaultValue="terms" className="flex flex-1 flex-col">
+          <Tabs
+            defaultValue="terms"
+            className="flex flex-1 flex-col"
+            // value={tab}
+            // onValueChange={(value) =>
+            //   navigate({
+            //     search: (prev: OldBuildingsPageSearch) => ({
+            //       ...prev,
+            //       tab: value,
+            //     }),
+            //   })
+            // }
+          >
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="terms">Сроки и квартиры</TabsTrigger>
               <TabsTrigger value="newBuildings">Площадки</TabsTrigger>
@@ -149,24 +165,26 @@ const OldBuildingsCard = ({
                   connectedPlots={connectedPlots}
                   oldBuildingId={building.id}
                 />
-                <OldBuildingRelocationMap
-                  buildingId={building.id}
-                  className="relative isolate w-full flex-1 overflow-hidden rounded border"
-                >
-                  <Button
-                    variant="outline"
-                    className="absolute top-2 right-2 z-[1000] h-12 w-12 p-0"
-                    onClick={() =>
-                      navigate({
-                        to: '/renovation/building-relocation-map',
-                        search: { buildingId: building?.id || undefined },
-                        from: '/renovation/oldbuildings',
-                      })
-                    }
+                {tab === 'newBuildings' && (
+                  <OldBuildingRelocationMap
+                    buildingId={building.id}
+                    className="relative isolate w-full flex-1 overflow-hidden rounded border"
                   >
-                    <Map className="z-[1000] h-6 w-6" />
-                  </Button>
-                </OldBuildingRelocationMap>
+                    <Button
+                      variant="outline"
+                      className="absolute top-2 right-2 z-[1000] h-12 w-12 p-0"
+                      onClick={() =>
+                        navigate({
+                          to: '/renovation/building-relocation-map',
+                          search: { buildingId: building?.id || undefined },
+                          from: '/renovation/oldbuildings',
+                        })
+                      }
+                    >
+                      <Map className="z-[1000] h-6 w-6" />
+                    </Button>
+                  </OldBuildingRelocationMap>
+                )}
               </div>
             </TabsContent>
           </Tabs>

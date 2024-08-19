@@ -1,5 +1,5 @@
 import React, { memo, useEffect } from 'react';
-import { useMap } from 'react-leaflet';
+import { useMap, useMapEvents } from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css';
 import { LatLngBounds, LatLngExpression, LatLngTuple } from 'leaflet';
@@ -13,12 +13,11 @@ export const FitBounds: React.FC<FitBoundsProps> = memo(
     const map = useMap();
 
     useEffect(() => {
-      //   if (!map || !box || box.length < 4) return;
       const bounds = new LatLngBounds(
         box?.[0] as LatLngTuple,
         box?.[3] as LatLngTuple,
       );
-      map.fitBounds(bounds);
+      map.fitBounds(bounds, { padding: [10, 10] });
     }, [map, box]);
     return null;
   },
