@@ -25,6 +25,7 @@ export const renovation = {
   lastUpdated: sql('sql/renovation/lastUpdated.sql'),
   unansweredMessages: sql('sql/renovation/unansweredMessages.sql'),
   oldBuildingList: sql('sql/renovation/oldBuildingList.sql'),
+  oldBuildingRelocationMap: sql('sql/renovation/oldBuildingRelocationMap.sql'),
 };
 
 export const users = {

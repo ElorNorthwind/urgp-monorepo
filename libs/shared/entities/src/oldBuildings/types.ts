@@ -158,3 +158,18 @@ export type ConnectedPlots = {
   newBuildingId: number;
   plots: PlotInfo[];
 };
+
+type geoJsonExpression = {
+  type: string;
+  coordinates: number[] | number[][] | number[][][];
+};
+
+export type OldBuildingRelocationMapElement = {
+  id: number;
+  geometry: geoJsonExpression;
+  path: geoJsonExpression;
+  start: geoJsonExpression;
+  finish: geoJsonExpression;
+  type: string;
+  bounds: geoJsonExpression;
+};

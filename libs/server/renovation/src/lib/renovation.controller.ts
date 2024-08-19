@@ -32,6 +32,7 @@ import {
   OldApartmentTimeline,
   OldAppartment,
   OldBuilding,
+  OldBuildingRelocationMapElement,
   RequestWithUserData,
   UnansweredMessage,
   UpdateMessageDto,
@@ -198,6 +199,13 @@ export class RenovationController {
   @Get('old-building-list')
   getOldBuildingList(): Promise<{ value: number; label: string }[]> {
     return this.renovation.getOldBuildingList();
+  }
+
+  @Get('old-building-relocation-map/:id')
+  getOldBuildingRelocationMap(
+    @Param('id') id: number,
+  ): Promise<OldBuildingRelocationMapElement[]> {
+    return this.renovation.getOldBuildingRelocationMap(id);
   }
 }
 

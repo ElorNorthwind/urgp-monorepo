@@ -21,6 +21,7 @@ import {
   CityTotalDeviations,
   MessagesUnansweredDto,
   UnansweredMessage,
+  OldBuildingRelocationMapElement,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -276,5 +277,11 @@ export class RenovationRepository {
 
   getOldBuildingList(): Promise<{ value: number; label: string }[]> {
     return this.db.any(renovation.oldBuildingList);
+  }
+
+  getOldBuildingRelocationMap(
+    id: number,
+  ): Promise<OldBuildingRelocationMapElement[]> {
+    return this.db.any(renovation.oldBuildingRelocationMap, { id });
   }
 }

@@ -3,6 +3,7 @@ import {
   ConnectedPlots,
   GetOldBuldingsDto,
   OldBuilding,
+  OldBuildingRelocationMapElement,
 } from '@urgp/shared/entities';
 
 import { GeoJsonObject } from 'geojson';
@@ -41,9 +42,20 @@ export const oldBuildingsApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+
     getOldBuildingList: build.query<{ value: number; label: string }[], void>({
-      query: (query) => ({
+      query: () => ({
         url: '/renovation/old-building-list',
+        method: 'GET',
+      }),
+    }),
+
+    getOldBuildingRelocationMap: build.query<
+      OldBuildingRelocationMapElement[],
+      number
+    >({
+      query: (query) => ({
+        url: '/renovation/old-building-relocation-map/' + query.toString(),
         method: 'GET',
       }),
     }),
