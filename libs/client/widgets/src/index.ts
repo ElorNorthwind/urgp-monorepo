@@ -10,4 +10,3 @@ export * from './UserMenu';
 export * from './ChangePasswordForm';
 export * from './DashbordTotalCard';
 export * from './OldApartmentFilter';
-export * from './OldBuildingRelocationMap';

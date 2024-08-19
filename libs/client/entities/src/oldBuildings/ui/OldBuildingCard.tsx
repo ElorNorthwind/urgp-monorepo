@@ -25,8 +25,7 @@ import { OldApartmentDetailsSheet } from '../../oldApartments/ui/OldApartmentDet
 import { useApartmentMessages } from '../../messages';
 import { useConnectedPlots } from '../api/oldBuildingsApi';
 import { useNavigate } from '@tanstack/react-router';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { OldBuildingRelocationMap } from '@urgp/client/widgets';
+import { OldBuildingRelocationMap } from './OldBuildingRelocationMap';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
