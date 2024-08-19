@@ -1,5 +1,6 @@
 import {
   cn,
+  ScrollArea,
   Table,
   TableBody,
   TableCell,
@@ -38,7 +39,7 @@ const NewBuildingsTable = ({
     );
 
   return (
-    <div className={cn('overflow-auto rounded border', className)}>
+    <ScrollArea className={cn('rounded border', className)}>
       <Table className="w-full">
         <TableHeader>
           <TableRow className="sticky top-0 z-10 bg-slate-50 text-center text-xs hover:bg-slate-50">
@@ -132,7 +133,7 @@ const NewBuildingsTable = ({
           })}
         </TableBody>
       </Table>
-    </div>
+    </ScrollArea>
   );
 };
 

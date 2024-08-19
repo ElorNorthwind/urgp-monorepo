@@ -66,13 +66,8 @@ const ProblematicApartsTable = ({
     );
   }
   return (
-    <ScrollArea
-      className={cn(
-        'relative overflow-y-auto overflow-x-clip rounded border',
-        className,
-      )}
-    >
-      <Accordion type="single" collapsible>
+    <ScrollArea className={cn('rounded border', className)}>
+      <Accordion type="single" collapsible className="absolute inset-0">
         {building?.problematicAparts
           .filter((apart) => showMFR || apart.stageId !== 12)
           .map((apart) => {

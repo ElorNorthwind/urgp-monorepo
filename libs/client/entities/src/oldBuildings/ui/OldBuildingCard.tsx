@@ -61,7 +61,7 @@ const OldBuildingsCard = ({
   return (
     <Card
       className={cn(
-        'relative flex flex-col overflow-hidden',
+        'relative flex h-full flex-col',
         building ? '' : '',
         className,
       )}
@@ -74,21 +74,67 @@ const OldBuildingsCard = ({
         </CardDescription>
       </CardHeader>
       {building && (
-        <CardContent className="flex flex-1 flex-col gap-3 overflow-hidden pt-2">
-          <Tabs defaultValue="terms" className="w-full">
+        <CardContent className="flex h-full flex-col gap-3 pt-2">
+          <Tabs defaultValue="terms" className="flex flex-1 flex-col">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="terms">Сроки отселения</TabsTrigger>
+              <TabsTrigger value="terms">Сроки и квартиры</TabsTrigger>
               <TabsTrigger value="newBuildings">Площадки</TabsTrigger>
               {/* <TabsTrigger value="comments">Примечания</TabsTrigger> */}
             </TabsList>
-            <TabsContent value="terms">
-              <OldBuildingTermsTable
-                building={building}
-                className="w-full flex-shrink "
-              />
+            <TabsContent value="terms" className="flex-1">
+              <div className="flex h-full flex-col">
+                <OldBuildingTermsTable building={building} className="w-full" />
+                {building?.problematicAparts &&
+                  building?.problematicAparts?.length > 0 && (
+                    <HStack className="p-2">
+                      <h3>Проблемные квартиры</h3>
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          id="show-mfr"
+                          defaultChecked
+                          checked={showMFR}
+                          onCheckedChange={(e) => {
+                            setShowMFR(e);
+                          }}
+                        />
+                        <Label
+                          htmlFor="show-mfr"
+                          className={cn(
+                            'transition-opacity',
+                            !showMFR ? 'line-through opacity-30' : '',
+                          )}
+                        >
+                          МФР
+                        </Label>
+                      </div>
+                      {building.totalApartments > 0 && (
+                        <Button
+                          variant="ghost"
+                          className="ml-auto space-x-2 px-2"
+                          onClick={() =>
+                            navigate({
+                              to: '/renovation/oldapartments',
+                              search: { buildingIds: [building.id] },
+                            })
+                          }
+                        >
+                          <p>Все кв.</p>
+                          <ExternalLink className="h-5 w-5" />
+                        </Button>
+                      )}
+                    </HStack>
+                  )}
+                <ProblematicApartsTable
+                  building={building}
+                  messages={messages}
+                  className="w-full flex-1"
+                  showMFR={showMFR}
+                  setSelectedAppartmentId={setAppartmentDetails}
+                />
+              </div>
             </TabsContent>
-            <TabsContent value="newBuildings">
-              <ScrollArea className="flex w-full flex-col gap-1">
+            <TabsContent value="newBuildings" className="flex-1">
+              <div className="flex h-full flex-col gap-2">
                 <NewBuildingsTable
                   buildings={building.newBuildingMovements}
                   className="max-h-[200px] w-full"
@@ -97,71 +143,20 @@ const OldBuildingsCard = ({
                 />
                 <NewBuildingsTable
                   buildings={building.newBuildingConstructions}
-                  className="max-h-[300px] w-full"
+                  className="max-h-[200px] w-full"
                   heading="Строится на месте сноса"
                   emptyText="Нет площадок на месте сноса"
                   connectedPlots={connectedPlots}
                   oldBuildingId={building.id}
                 />
-              </ScrollArea>
-              <OldBuildingRelocationMap
-                buildingId={building.id}
-                className="aspect-square w-full"
-              />
+                <OldBuildingRelocationMap
+                  buildingId={building.id}
+                  className="w-full flex-1 overflow-hidden rounded border"
+                />
+              </div>
             </TabsContent>
-            {/* <TabsContent value="comments">
-              <ScrollArea className="flex w-full flex-col gap-1">
-                <div className="h-96">Tututu</div>
-              </ScrollArea>
-            </TabsContent> */}
           </Tabs>
-          {building?.problematicAparts &&
-            building?.problematicAparts?.length > 0 && (
-              <HStack>
-                <h3>Проблемные квартиры</h3>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="show-mfr"
-                    defaultChecked
-                    checked={showMFR}
-                    onCheckedChange={(e) => {
-                      setShowMFR(e);
-                    }}
-                  />
-                  <Label
-                    htmlFor="show-mfr"
-                    className={cn(
-                      'transition-opacity',
-                      !showMFR ? 'line-through opacity-30' : '',
-                    )}
-                  >
-                    МФР
-                  </Label>
-                </div>
-                {building.totalApartments > 0 && (
-                  <Button
-                    variant="ghost"
-                    className="ml-auto space-x-2 px-2"
-                    onClick={() =>
-                      navigate({
-                        to: '/renovation/oldapartments',
-                        search: { buildingIds: [building.id] },
-                      })
-                    }
-                  >
-                    <p>Все кв.</p>
-                    <ExternalLink className="h-5 w-5" />
-                  </Button>
-                )}
-              </HStack>
-            )}
-          <ProblematicApartsTable
-            building={building}
-            messages={messages}
-            className="w-full flex-grow"
-            showMFR={showMFR}
-            setSelectedAppartmentId={setAppartmentDetails}
-          />
+
           {onClose && (
             <Button
               variant="link"
