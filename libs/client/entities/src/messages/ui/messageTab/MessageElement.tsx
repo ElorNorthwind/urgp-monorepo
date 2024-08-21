@@ -114,7 +114,19 @@ const MessageElement = ({
         </CardDescription>
       </CardHeader>
       <CardContent className="px-2">
-        <p>{message.messageContent}</p>
+        <p className="break-words">
+          {message.messageContent
+            .replace(/(?:\r\n|\r|\n)/g, '\\n')
+            .split('\\n')
+            .map((item, index) => {
+              return (
+                <p key={index}>
+                  {item}
+                  <br />
+                </p>
+              );
+            })}
+        </p>
         {!editMessage && (
           <div className="absolute right-2 bottom-2 flex items-center gap-1">
             {user?.id === message.authorId && setEditMessage && (

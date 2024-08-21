@@ -116,9 +116,9 @@ const CreateMessageForm = ({
         )}
       >
         {editMessage && (
-          <div className="line-clamp-2 relative rounded bg-amber-100 p-1 pl-5 text-sm text-amber-700">
+          <div className="line-clamp-2 relative overflow-hidden rounded bg-amber-100 p-1 pl-5 text-sm text-amber-700">
             <div className="absolute top-1 bottom-1 left-1 w-2 rounded-sm bg-amber-300"></div>
-            {editMessage.messageContent}
+            <p className="truncate">{editMessage.messageContent}</p>
           </div>
         )}
         <FormField
