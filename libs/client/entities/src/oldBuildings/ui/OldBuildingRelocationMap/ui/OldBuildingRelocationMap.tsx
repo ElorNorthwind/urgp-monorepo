@@ -58,7 +58,7 @@ export const OldBuildingRelocationMap: React.FC<OldBuildingRelocationMapProps> =
           attributionControl={false}
           className={cn(className)}
           style={style}
-          whenReady={() => setMap(map)}
+          // whenReady={() => setMap(map)}
         >
           <TileLayer url={basemapDict['carto']} className="z-0" />
           {mapItems && mapItems.length > 0 && (
@@ -90,7 +90,9 @@ export const OldBuildingRelocationMap: React.FC<OldBuildingRelocationMapProps> =
                     />
                   );
                 })}
-              <FitBounds box={mapItems?.[0]?.bounds?.coordinates} />
+              {buildingId && (
+                <FitBounds box={mapItems?.[0]?.bounds?.coordinates} />
+              )}
             </>
           )}
           {children}

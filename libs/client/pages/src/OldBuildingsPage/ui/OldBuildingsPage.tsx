@@ -86,7 +86,7 @@ const OldBuildingsPage = (): JSX.Element => {
           }}
           className={cn(
             'bg-background h-full transition-all ease-in-out',
-            filters.selectedBuildingId
+            filters.selectedBuildingId && buildings
               ? 'w-[calc(100%-520px-0.5rem)]'
               : 'w-[calc(100%)]',
           )}
@@ -127,21 +127,24 @@ const OldBuildingsPage = (): JSX.Element => {
             ],
           }}
         />
-        <OldBuildingsCard
-          building={
-            buildings?.find((b) => b.id === filters.selectedBuildingId) || null
-          }
-          onClose={() =>
-            navigate({
-              search: (prev: GetOldBuldingsDto) => ({
-                ...prev,
-                selectedBuildingId: undefined,
-              }),
-            })
-          }
-          className="h-full transition-all ease-in-out"
-          width={520}
-        />
+        {buildings && (
+          <OldBuildingsCard
+            building={
+              buildings?.find((b) => b.id === filters.selectedBuildingId) ||
+              null
+            }
+            onClose={() =>
+              navigate({
+                search: (prev: GetOldBuldingsDto) => ({
+                  ...prev,
+                  selectedBuildingId: undefined,
+                }),
+              })
+            }
+            className="h-full transition-all ease-in-out"
+            width={520}
+          />
+        )}
       </HStack>
     </>
   );
