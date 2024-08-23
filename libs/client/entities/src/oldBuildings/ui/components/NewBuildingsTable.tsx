@@ -11,14 +11,13 @@ import {
 } from '@urgp/client/shared';
 import {
   ConnectedPlots,
-  GetOldBuldingsDto,
   OldBuilding,
   OldBuildingsPageSearch,
 } from '@urgp/shared/entities';
 import { HousePlug } from 'lucide-react';
 import dayjs from 'dayjs';
 import { DeviationChart } from './DeviationChart';
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 
 type NewBuildingsTableProps = {
   buildings: OldBuilding['newBuildingConstructions'] | null;

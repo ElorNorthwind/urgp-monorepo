@@ -23,9 +23,13 @@ import { NewBuildingsTable } from './components/NewBuildingsTable';
 import { useEffect, useRef, useState } from 'react';
 import { OldApartmentDetailsSheet } from '../../oldApartments/ui/OldApartmentDetailsSheet';
 import { useApartmentMessages } from '../../messages';
-import { useConnectedPlots } from '../api/oldBuildingsApi';
+import {
+  useConnectedPlots,
+  useOldBuildingRelocationMap,
+} from '../api/oldBuildingsApi';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { OldBuildingRelocationMap } from './OldBuildingRelocationMap';
+import { LatLngBounds, LatLngTuple, Map as LeafletMap } from 'leaflet';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
@@ -43,10 +47,27 @@ const OldBuildingsCard = ({
   const [appartmentDetails, setAppartmentDetails] = useState<number | null>(
     null,
   );
+  const mapRef = useRef<LeafletMap>(null);
+  const { data: mapItems } = useOldBuildingRelocationMap(building?.id || 0);
 
   const { tab, selectedBuildingId } = getRouteApi(
     '/renovation/oldbuildings',
   ).useSearch() as OldBuildingsPageSearch;
+
+  useEffect(() => {
+    const timer1 = setTimeout(() => {
+      const bounds = new LatLngBounds(
+        mapItems?.[0]?.bounds?.coordinates?.[0] as LatLngTuple,
+        mapItems?.[0]?.bounds?.coordinates?.[3] as LatLngTuple,
+      );
+
+      mapRef.current?.fitBounds(bounds, { padding: [10, 10] });
+    }, 50);
+
+    return () => {
+      clearTimeout(timer1);
+    };
+  }, [selectedBuildingId, mapItems]);
 
   const navigate = useNavigate({ from: '/renovation/oldbuildings' });
 
@@ -182,6 +203,7 @@ const OldBuildingsCard = ({
                   />
                   {tab === 'newBuildings' && (
                     <OldBuildingRelocationMap
+                      ref={mapRef}
                       buildingId={building.id}
                       className="relative isolate w-[470px] flex-1 overflow-hidden rounded border"
                     >

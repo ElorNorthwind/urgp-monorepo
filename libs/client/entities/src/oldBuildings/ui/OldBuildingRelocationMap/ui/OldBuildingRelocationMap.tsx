@@ -8,6 +8,7 @@ import { useOldBuildingRelocationMap } from '@urgp/client/entities';
 import { OldBuildingRelocationMapElement } from '@urgp/shared/entities';
 import { FitBounds } from './FitBounds';
 import { AddCurve } from './AddCurve';
+import { Map } from 'leaflet';
 // import AntPath from 'react-leaflet-ant-path';
 
 type OldBuildingRelocationMapProps = {
@@ -31,72 +32,79 @@ const mapItemColors = {
   other_on_plot: 'orange',
 } as Record<OldBuildingRelocationMapElement['type'], string>;
 
-export const OldBuildingRelocationMap: React.FC<OldBuildingRelocationMapProps> =
-  memo(
-    ({
-      className,
-      buildingId,
-      children,
-      style,
-    }: OldBuildingRelocationMapProps) => {
-      const [map, setMap] = useState(null);
+// export const OldBuildingRelocationMap: React.FC<OldBuildingRelocationMapProps> =
+//   memo(
+//     ({
+//       className,
+//       buildingId,
+//       children,
+//       style,
+//     }: OldBuildingRelocationMapProps) => {
 
-      // const [basemap, setBasemap] = useState<keyof typeof basemapDict>('carto');
-      const {
-        data: mapItems,
-        isFetching,
-        isLoading,
-      } = useOldBuildingRelocationMap(buildingId);
+export const OldBuildingRelocationMap = React.forwardRef<
+  Map,
+  OldBuildingRelocationMapProps
+>(
+  (
+    { className, buildingId, children, style }: OldBuildingRelocationMapProps,
+    ref,
+  ) => {
+    const {
+      data: mapItems,
+      isFetching,
+      isLoading,
+    } = useOldBuildingRelocationMap(buildingId);
 
-      return isFetching || isLoading ? (
-        <Skeleton className={cn(className)} style={style} />
-      ) : (
-        <MapContainer
-          center={[55.74938, 37.534092]}
-          zoom={13}
-          scrollWheelZoom={false}
-          attributionControl={false}
-          className={cn(className)}
-          style={style}
-          // whenReady={() => setMap(map)}
-        >
-          <TileLayer url={basemapDict['carto']} className="z-0" />
-          {mapItems && mapItems.length > 0 && (
-            <>
-              {mapItems.map((item) => {
-                if (!item || !item?.geometry) return null;
+    return isFetching || isLoading ? (
+      <Skeleton className={cn(className)} style={style} />
+    ) : (
+      <MapContainer
+        center={[55.74938, 37.534092]}
+        zoom={13}
+        scrollWheelZoom={false}
+        attributionControl={false}
+        className={cn(className)}
+        style={style}
+        ref={ref}
+        // whenReady={() => setMap(map)}
+      >
+        <TileLayer url={basemapDict['carto']} className="z-0" />
+        {mapItems && mapItems.length > 0 && (
+          <>
+            {mapItems.map((item) => {
+              if (!item || !item?.geometry) return null;
+              return (
+                <Polygon
+                  key={item?.id + item.type}
+                  positions={item?.geometry?.coordinates}
+                  pathOptions={{
+                    color: mapItemColors[item?.type || 'construction'],
+                  }}
+                >
+                  <Popup>
+                    <h3 className="text-xs">{item?.adress || ''}</h3>
+                  </Popup>
+                </Polygon>
+              );
+            })}
+            {mapItems
+              .filter((item) => item.start && item.finish)
+              .map((item) => {
                 return (
-                  <Polygon
-                    key={item?.id + item.type}
-                    positions={item?.geometry?.coordinates}
-                    pathOptions={{
-                      color: mapItemColors[item?.type || 'construction'],
-                    }}
-                  >
-                    <Popup>
-                      <h3 className="text-xs">{item?.adress || ''}</h3>
-                    </Popup>
-                  </Polygon>
+                  <AddCurve
+                    key={item.id + 'curve'}
+                    start={item?.start.coordinates}
+                    finish={item?.finish.coordinates}
+                  />
                 );
               })}
-              {mapItems
-                .filter((item) => item.start && item.finish)
-                .map((item) => {
-                  return (
-                    <AddCurve
-                      key={item.id + 'curve'}
-                      start={item?.start.coordinates}
-                      finish={item?.finish.coordinates}
-                    />
-                  );
-                })}
-              {buildingId && (
-                <FitBounds box={mapItems?.[0]?.bounds?.coordinates} />
-              )}
-            </>
-          )}
-          {children}
-        </MapContainer>
-      );
-    },
-  );
+            {buildingId && (
+              <FitBounds box={mapItems?.[0]?.bounds?.coordinates} />
+            )}
+          </>
+        )}
+        {children}
+      </MapContainer>
+    );
+  },
+);
