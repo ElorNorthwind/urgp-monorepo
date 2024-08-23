@@ -106,7 +106,6 @@ const OldBuildingsCard = ({
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="terms">Сроки и квартиры</TabsTrigger>
                 <TabsTrigger value="newBuildings">Площадки</TabsTrigger>
-                {/* <TabsTrigger value="comments">Примечания</TabsTrigger> */}
               </TabsList>
               <TabsContent value="terms" className="flex-1">
                 <div className="flex h-full flex-col">
@@ -114,46 +113,48 @@ const OldBuildingsCard = ({
                     building={building}
                     className="w-full"
                   />
-                  {building?.problematicAparts &&
-                    building?.problematicAparts?.length > 0 && (
-                      <HStack className="p-2">
-                        <h3>Проблемные квартиры</h3>
-                        <div className="flex items-center space-x-2">
-                          <Switch
-                            id="show-mfr"
-                            defaultChecked
-                            checked={showMFR}
-                            onCheckedChange={(e) => {
-                              setShowMFR(e);
-                            }}
-                          />
-                          <Label
-                            htmlFor="show-mfr"
-                            className={cn(
-                              'transition-opacity',
-                              !showMFR ? 'line-through opacity-30' : '',
-                            )}
-                          >
-                            МФР
-                          </Label>
-                        </div>
-                        {building.totalApartments > 0 && (
-                          <Button
-                            variant="ghost"
-                            className="ml-auto space-x-2 px-2"
-                            onClick={() =>
-                              navigate({
-                                to: '/renovation/oldapartments',
-                                search: { buildingIds: [building.id] },
-                              })
-                            }
-                          >
-                            <p>Все кв.</p>
-                            <ExternalLink className="h-5 w-5" />
-                          </Button>
-                        )}
-                      </HStack>
+                  <HStack className="p-2">
+                    {building?.problematicAparts &&
+                      building?.problematicAparts?.length > 0 && (
+                        <>
+                          <h3>Проблемные квартиры</h3>
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              id="show-mfr"
+                              defaultChecked
+                              checked={showMFR}
+                              onCheckedChange={(e) => {
+                                setShowMFR(e);
+                              }}
+                            />
+                            <Label
+                              htmlFor="show-mfr"
+                              className={cn(
+                                'transition-opacity',
+                                !showMFR ? 'line-through opacity-30' : '',
+                              )}
+                            >
+                              МФР
+                            </Label>
+                          </div>
+                        </>
+                      )}
+                    {building.totalApartments > 0 && (
+                      <Button
+                        variant="ghost"
+                        className="ml-auto space-x-2 px-2"
+                        onClick={() =>
+                          navigate({
+                            to: '/renovation/oldapartments',
+                            search: { buildingIds: [building.id] },
+                          })
+                        }
+                      >
+                        <p>Все кв.</p>
+                        <ExternalLink className="h-5 w-5" />
+                      </Button>
                     )}
+                  </HStack>
                   <ProblematicApartsTable
                     building={building}
                     messages={messages}

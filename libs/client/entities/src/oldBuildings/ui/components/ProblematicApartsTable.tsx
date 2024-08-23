@@ -59,7 +59,7 @@ const ProblematicApartsTable = ({
     building?.problematicAparts?.length === 0
   ) {
     return (
-      <VStack gap="none">
+      <VStack gap="none" className="py-4">
         <Cat className="stroke-muted-foreground h-12 w-12 stroke-1" />{' '}
         <div className="text-muted-foreground">Нет проблемных квартир</div>
       </VStack>

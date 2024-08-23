@@ -9,10 +9,16 @@ import {
   TableRow,
   VStack,
 } from '@urgp/client/shared';
-import { ConnectedPlots, OldBuilding } from '@urgp/shared/entities';
+import {
+  ConnectedPlots,
+  GetOldBuldingsDto,
+  OldBuilding,
+  OldBuildingsPageSearch,
+} from '@urgp/shared/entities';
 import { HousePlug } from 'lucide-react';
 import dayjs from 'dayjs';
 import { DeviationChart } from './DeviationChart';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
 
 type NewBuildingsTableProps = {
   buildings: OldBuilding['newBuildingConstructions'] | null;
@@ -30,6 +36,8 @@ const NewBuildingsTable = ({
   connectedPlots,
   oldBuildingId = 0,
 }: NewBuildingsTableProps): JSX.Element => {
+  const navigate = useNavigate({ from: '/renovation/oldbuildings' });
+
   if (!buildings)
     return (
       <VStack gap="none" className={cn('rounded border p-2', className)}>
@@ -98,13 +106,29 @@ const NewBuildingsTable = ({
                         Сносимые дома на участке:
                       </h2>
                       {filteredPlots.map((plot) => (
-                        <div className="" key={plot.id}>
+                        <div
+                          className={cn(
+                            'group',
+                            plot.id !== oldBuildingId ? 'cursor-pointer' : '',
+                          )}
+                          key={plot.id}
+                          onClick={() =>
+                            plot.id !== oldBuildingId &&
+                            navigate({
+                              to: `/renovation/oldbuildings`,
+                              search: (prev: OldBuildingsPageSearch) => ({
+                                ...prev,
+                                selectedBuildingId: plot.id,
+                              }),
+                            })
+                          }
+                        >
                           <p
                             className={cn(
                               'text-center font-bold leading-none',
                               plot.id === oldBuildingId
                                 ? 'text-primary before:mr-1 before:content-["››"] after:ml-1 after:content-["‹‹"]'
-                                : 'text-muted-foreground',
+                                : 'text-muted-foreground decoration-slate-300 group-hover:underline',
                             )}
                           >
                             {plot.adress}
