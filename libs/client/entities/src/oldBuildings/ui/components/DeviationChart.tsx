@@ -10,7 +10,6 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-  VStack,
 } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';

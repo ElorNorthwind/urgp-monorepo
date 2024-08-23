@@ -18,6 +18,7 @@ import { HousePlug } from 'lucide-react';
 import dayjs from 'dayjs';
 import { DeviationChart } from './DeviationChart';
 import { useNavigate } from '@tanstack/react-router';
+import { Fragment } from 'react';
 
 type NewBuildingsTableProps = {
   buildings: OldBuilding['newBuildingConstructions'] | null;
@@ -72,7 +73,7 @@ const NewBuildingsTable = ({
             //   filteredPlots?.sort((a, b) => (a.id === oldBuildingId ? 1 : -1));
 
             return (
-              <>
+              <Fragment key={building.id + 'fragment'}>
                 <TableRow className="" key={building.id + 'row'}>
                   <TableCell compact className="text-left text-xs">
                     <div>{building.adress}</div>
@@ -151,7 +152,7 @@ const NewBuildingsTable = ({
                     </TableCell>
                   </TableRow>
                 )}
-              </>
+              </Fragment>
             );
           })}
         </TableBody>

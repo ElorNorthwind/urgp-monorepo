@@ -16,7 +16,7 @@ import {
   TabsTrigger,
 } from '@urgp/client/shared';
 import { OldBuilding, OldBuildingsPageSearch } from '@urgp/shared/entities';
-import { ExternalLink, Map, X } from 'lucide-react';
+import { ExternalLink, Map, Scan, X } from 'lucide-react';
 import { OldBuildingTermsTable } from './components/OldBuildingTermsTable';
 import { ProblematicApartsTable } from './components/ProblematicApartsTable';
 import { NewBuildingsTable } from './components/NewBuildingsTable';
@@ -209,7 +209,7 @@ const OldBuildingsCard = ({
                     >
                       <Button
                         variant="outline"
-                        className="absolute top-2 right-2 z-[1000] h-12 w-12 p-0"
+                        className="absolute top-2 right-2 z-[1000] h-10 w-10 p-0"
                         onClick={() =>
                           navigate({
                             to: '/renovation/building-relocation-map',
@@ -219,6 +219,24 @@ const OldBuildingsCard = ({
                         }
                       >
                         <Map className="z-[1000] h-6 w-6" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="absolute bottom-2 right-2 z-[1000] h-10 w-10 p-0"
+                        onClick={() => {
+                          const bounds = new LatLngBounds(
+                            mapItems?.[0]?.bounds
+                              ?.coordinates?.[0] as LatLngTuple,
+                            mapItems?.[0]?.bounds
+                              ?.coordinates?.[3] as LatLngTuple,
+                          );
+
+                          mapRef.current?.fitBounds(bounds, {
+                            padding: [10, 10],
+                          });
+                        }}
+                      >
+                        <Scan className="z-[1000] h-6 w-6" />
                       </Button>
                     </OldBuildingRelocationMap>
                   )}
