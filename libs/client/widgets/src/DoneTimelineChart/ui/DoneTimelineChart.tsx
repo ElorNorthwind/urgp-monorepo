@@ -1,3 +1,4 @@
+import { useDoneTimeline } from '@urgp/client/entities';
 import {
   Card,
   CardContent,
@@ -13,7 +14,6 @@ import {
   cn,
   Skeleton,
 } from '@urgp/client/shared';
-import { DoneTimelinePoint } from '@urgp/shared/entities';
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
 
 const timelineChartConfig = {
@@ -28,50 +28,32 @@ const timelineChartConfig = {
 } satisfies ChartConfig;
 
 type DoneTimelineChartProps = {
-  timeline: DoneTimelinePoint[];
   className?: string;
-  isLoading?: boolean;
 };
 
 const DoneTimelineChart = ({
-  timeline,
   className,
-  isLoading = false,
 }: DoneTimelineChartProps): JSX.Element => {
-  // if (isLoading)
-  //   return (
-  //     <Card className={cn(className)}>
-  //       <CardHeader className="gap-2 space-y-0 pb-2">
-  //         <Skeleton className="h-8 w-44" />
-  //         <Skeleton className="h-6 w-80" />
-  //       </CardHeader>
-  //       <CardContent>
-  //         <Skeleton className="min-h-[320px] w-full" />
-  //         <Skeleton className="mx-auto mt-2 h-6 w-60" />
-  //       </CardContent>
-  //     </Card>
-  //   );
+  const { data: timeline, isLoading, isFetching } = useDoneTimeline();
 
   return (
     <Card className={cn(className)}>
       <CardHeader className="space-y-0 pb-2">
-        <CardTitle>
-          {isLoading ? (
-            <Skeleton className="mb-1 h-6 w-44" />
-          ) : (
-            'Ход переселения'
-          )}
-        </CardTitle>
-        <CardDescription className="h-16">
-          {isLoading ? (
-            <Skeleton className="mb-1 h-4 w-64" />
-          ) : (
-            'Число семей, отработанных ежемесячно'
-          )}
-        </CardDescription>
+        {isLoading || isFetching ? (
+          <Skeleton className="mb-1 h-6 w-44" />
+        ) : (
+          <CardTitle>Ход переселения</CardTitle>
+        )}
+        {isLoading || isFetching ? (
+          <Skeleton className="mb-1 h-4 w-64" />
+        ) : (
+          <CardDescription className="h-16">
+            Число семей, отработанных ежемесячно
+          </CardDescription>
+        )}
       </CardHeader>
       <CardContent>
-        {isLoading ? (
+        {isLoading || isFetching ? (
           <div>
             <Skeleton className="mb-2 h-[280px] w-full" />
             <Skeleton className="mx-auto h-4 w-44" />

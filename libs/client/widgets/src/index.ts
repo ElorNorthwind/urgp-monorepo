@@ -8,5 +8,6 @@ export * from './OptionsNavbar';
 export * from './LoginForm';
 export * from './UserMenu';
 export * from './ChangePasswordForm';
-export * from './DashbordTotalCard';
 export * from './OldApartmentFilter';
+export * from './OkrugTotalsChart';
+export * from './DoneTimelineChart';

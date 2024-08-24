@@ -1,14 +1,8 @@
 import { useNavigate } from '@tanstack/react-router';
-import {
-  DoneTimelineChart,
-  OkrugTotalsChart,
-  useDoneTimeline,
-  useLastUpdatedDate,
-  useOkrugTotals,
-  useTotalDeviations,
-} from '@urgp/client/entities';
+import { useLastUpdatedDate, useTotalDeviations } from '@urgp/client/entities';
+import { DashboardNumberCard } from '@urgp/client/features';
 import { cn, Separator } from '@urgp/client/shared';
-import { DashboardNumberCard } from '@urgp/client/widgets';
+import { DoneTimelineChart, OkrugTotalsChart } from '@urgp/client/widgets';
 import { formatDate } from 'date-fns';
 import {
   CircleAlert,
@@ -21,18 +15,6 @@ import { useCallback } from 'react';
 
 const RenovationDashboardPage = (): JSX.Element => {
   const {
-    data: okrugs,
-    isLoading: isOkrugsLoading,
-    isFetching: isOkrugsFetching,
-  } = useOkrugTotals();
-
-  const {
-    data: timeline,
-    isLoading: isTimelineLoading,
-    isFetching: isTimelineFetching,
-  } = useDoneTimeline();
-
-  const {
     data: deviations,
     isLoading: isDeviationsLoading,
     isFetching: isDeviationsFetching,
@@ -40,8 +22,8 @@ const RenovationDashboardPage = (): JSX.Element => {
 
   const {
     data: updatedDate,
-    isLoading: isUpdatedDateLoading,
-    isFetching: isUpdatedDateFetching,
+    // isLoading: isUpdatedDateLoading,
+    // isFetching: isUpdatedDateFetching,
   } = useLastUpdatedDate();
 
   const navigate = useNavigate();
@@ -63,7 +45,7 @@ const RenovationDashboardPage = (): JSX.Element => {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold tracking-tight">Дашборд</h2>
           <p className="text-muted-foreground text-right text-xs">
-            <p className="hidden md:block">Данные на</p>
+            <span className="hidden md:block">Данные на</span>
             {formatDate(updatedDate || new Date(), 'dd.MM.yyyy')}
           </p>
         </div>
@@ -160,16 +142,8 @@ const RenovationDashboardPage = (): JSX.Element => {
               })
             }
           />
-          <OkrugTotalsChart
-            okrugs={okrugs || []}
-            isLoading={isOkrugsLoading || isOkrugsFetching}
-            className="col-span-3 lg:col-span-5 xl:col-span-2"
-          />
-          <DoneTimelineChart
-            timeline={timeline || []}
-            isLoading={isTimelineLoading || isTimelineFetching}
-            className="col-span-3 lg:col-span-5 xl:col-span-3"
-          />
+          <OkrugTotalsChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
+          <DoneTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
         </div>
       </div>
     </div>

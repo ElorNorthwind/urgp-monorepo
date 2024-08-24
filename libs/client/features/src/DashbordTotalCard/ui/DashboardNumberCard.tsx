@@ -38,9 +38,14 @@ const DashboardNumberCard = ({
       onClick={onClick}
     >
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="line-clamp-2 text-sm font-medium">
-          {isLoading ? <Skeleton className="h-[0.875rem] w-36" /> : label}
-        </CardTitle>
+        {isLoading ? (
+          <Skeleton className="h-[0.875rem] w-36" />
+        ) : (
+          <CardTitle className="line-clamp-2 text-sm font-medium">
+            {label}
+          </CardTitle>
+        )}
+
         {Icon &&
           (isLoading ? (
             <Skeleton className="h-8 w-8 flex-shrink-0 rounded-full" />
@@ -57,11 +62,12 @@ const DashboardNumberCard = ({
         <div className={cn('text-4xl font-bold', accentClassName)}>
           {isLoading ? <Skeleton className="h-9 w-20" /> : value}
         </div>
-        {description && (
-          <p className="text-muted-foreground text-xs">
-            {isLoading ? <Skeleton className="mt-2 h-2 w-12" /> : description}
-          </p>
-        )}
+        {description &&
+          (isLoading ? (
+            <Skeleton className="mt-2 h-2 w-12" />
+          ) : (
+            <p className="text-muted-foreground text-xs">{description}</p>
+          ))}
       </CardContent>
     </Card>
   );
