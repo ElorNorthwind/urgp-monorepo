@@ -44,13 +44,13 @@ const OldBuildingsCard = ({
   width = 520,
 }: OldBuildingCardProps): JSX.Element | null => {
   const [showMFR, setShowMFR] = useState<boolean>(true);
-  const [appartmentDetails, setAppartmentDetails] = useState<number | null>(
-    null,
-  );
+  // const [appartmentDetails, setAppartmentDetails] = useState<number | null>(
+  //   null,
+  // );
   const mapRef = useRef<LeafletMap>(null);
   const { data: mapItems } = useOldBuildingRelocationMap(building?.id || 0);
 
-  const { tab, selectedBuildingId } = getRouteApi(
+  const { tab, selectedBuildingId, apartment } = getRouteApi(
     '/renovation/oldbuildings',
   ).useSearch() as OldBuildingsPageSearch;
 
@@ -181,7 +181,14 @@ const OldBuildingsCard = ({
                     messages={messages}
                     className="w-full flex-1"
                     showMFR={showMFR}
-                    setSelectedAppartmentId={setAppartmentDetails}
+                    setSelectedAppartmentId={(value) => {
+                      navigate({
+                        search: (prev: OldBuildingsPageSearch) => ({
+                          ...prev,
+                          apartment: value,
+                        }),
+                      });
+                    }}
                   />
                 </div>
               </TabsContent>
@@ -255,9 +262,16 @@ const OldBuildingsCard = ({
             )}
 
             <OldApartmentDetailsSheet
-              apartmentId={appartmentDetails}
+              apartmentId={apartment}
               refetch={refetchAll}
-              setApartmentId={setAppartmentDetails}
+              setApartmentId={() =>
+                navigate({
+                  search: (prev: OldBuildingsPageSearch) => ({
+                    ...prev,
+                    apartment: undefined,
+                  }),
+                })
+              }
             />
           </>
         )}

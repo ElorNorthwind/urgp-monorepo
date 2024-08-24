@@ -20,11 +20,7 @@ const RenovationDashboardPage = (): JSX.Element => {
     isFetching: isDeviationsFetching,
   } = useTotalDeviations();
 
-  const {
-    data: updatedDate,
-    // isLoading: isUpdatedDateLoading,
-    // isFetching: isUpdatedDateFetching,
-  } = useLastUpdatedDate();
+  const { data: updatedDate } = useLastUpdatedDate();
 
   const navigate = useNavigate();
 

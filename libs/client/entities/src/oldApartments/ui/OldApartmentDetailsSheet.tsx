@@ -7,7 +7,7 @@ import {
   SheetTitle,
   Skeleton,
 } from '@urgp/client/shared';
-import { FileText, X } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import {
   useOldApartmentDetails,
@@ -19,7 +19,7 @@ import { OldApartmentTimeline } from '@urgp/shared/entities';
 import { MessageTab } from '../../messages';
 
 type OldApartmentDetailsSheetProps = {
-  apartmentId: number | null;
+  apartmentId?: number;
   setApartmentId: (value: number | null) => void;
   refetch?: () => void;
   className?: string;

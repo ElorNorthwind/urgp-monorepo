@@ -9,7 +9,6 @@ import { LoadedResultCounter, OldBuildingsFilter } from '@urgp/client/widgets';
 import { useCallback, useState } from 'react';
 import {
   GetOldBuldingsDto,
-  OldBuilding,
   OldBuildingsPageSearch,
 } from '@urgp/shared/entities';
 
@@ -18,14 +17,17 @@ const OldBuildingsPage = (): JSX.Element => {
     '/renovation/oldbuildings',
   ).useSearch() as OldBuildingsPageSearch;
   const debouncedFilters = useDebounce(
-    { ...filters, tab: undefined, selectedBuildingId: undefined },
+    {
+      ...filters,
+      tab: undefined,
+      selectedBuildingId: undefined,
+      apartment: undefined,
+    },
     200,
   );
 
   const navigate = useNavigate({ from: '/renovation/oldbuildings' });
   const [offset, setOffset] = useState(0);
-
-  // const [currentAdress, setCurrentAddress] = useState<OldBuilding | null>(null);
 
   const {
     currentData: buildings,

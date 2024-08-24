@@ -66,13 +66,15 @@ const MessageElement = ({
         )}
       >
         <CardDescription className="flex flex-row items-center justify-between">
-          <div className={cn('flex flex-row items-center justify-start')}>
+          <span
+            className={cn('flex flex-row items-center justify-start gap-1')}
+          >
             {message.isBoss && <ShieldAlert className="h-4 w-4" />}
             {message.authorFio}
-          </div>
+          </span>
 
           {message.needsAnswer && (
-            <div className="ml-auto mr-1 flex items-center gap-1">
+            <span className="ml-auto mr-1 flex items-center gap-1">
               {user?.id === message.authorId && (
                 <Button
                   variant="ghost"
@@ -106,11 +108,11 @@ const MessageElement = ({
               ) : (
                 <FileQuestion className="h-4 w-4 text-amber-600" />
               )}
-            </div>
+            </span>
           )}
-          <p className="flex flex-row items-center justify-start gap-2">
+          <span className="flex flex-row items-center justify-start gap-2">
             {dayjs(message.updatedAt).format('DD.MM.YYYY')}
-          </p>
+          </span>
         </CardDescription>
       </CardHeader>
       <CardContent className="px-2">
@@ -120,10 +122,10 @@ const MessageElement = ({
             .split('\\n')
             .map((item, index) => {
               return (
-                <p key={index}>
+                <span key={index}>
                   {item}
                   <br />
-                </p>
+                </span>
               );
             })}
         </p>

@@ -46,30 +46,6 @@ export const getOldBuldings = z
       .transform((value) => value.split(','))
       .pipe(z.string().array())
       .or(z.string().array()),
-    // MFRInvolvment: z
-    //   .string()
-    //   .transform((value) => value.split(','))
-    //   .pipe(z.string().array())
-    //   .or(z.string().array()),
-    // noMFR: z
-    //   .enum(['true', 'false'])
-    //   .transform((value) => value === 'true')
-    //   .or(z.boolean().default(false)),
-    // sorting: z
-    //   .string()
-    //   .transform((value, ctx) => {
-    //     try {
-    //       return JSON.parse(value);
-    //     } catch (error) {
-    //       ctx.addIssue({
-    //         code: z.ZodIssueCode.custom,
-    //         message: 'invalid object string: ' + value,
-    //       });
-    //       return z.never;
-    //     }
-    //   })
-    //   .pipe(sortingOption)
-    //   .or(sortingOption),
     sortingKey: z.string(),
     sortingDirection: z.string(),
     adress: z.string(),
@@ -82,6 +58,7 @@ export const oldBuildingsPageSearch = getOldBuldings
   .omit({ offset: true })
   .extend({
     selectedBuildingId: z.coerce.number().optional(),
+    apartment: z.coerce.number().optional(),
     tab: z.literal('terms').or(z.literal('newBuildings')).optional(),
   });
 
