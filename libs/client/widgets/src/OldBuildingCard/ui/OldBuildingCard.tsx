@@ -17,19 +17,19 @@ import {
 } from '@urgp/client/shared';
 import { OldBuilding, OldBuildingsPageSearch } from '@urgp/shared/entities';
 import { ExternalLink, Map, Scan, X } from 'lucide-react';
-import { OldBuildingTermsTable } from './components/OldBuildingTermsTable';
-import { ProblematicApartsTable } from './components/ProblematicApartsTable';
-import { NewBuildingsTable } from './components/NewBuildingsTable';
 import { useEffect, useRef, useState } from 'react';
-import { OldApartmentDetailsSheet } from '../../oldApartments/ui/OldApartmentDetailsSheet';
-import { useApartmentMessages } from '../../messages';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import { LatLngBounds, LatLngTuple, Map as LeafletMap } from 'leaflet';
 import {
+  OldBuildingRelocationMap,
+  OldBuildingTermsTable,
+  useApartmentMessages,
   useConnectedPlots,
   useOldBuildingRelocationMap,
-} from '../api/oldBuildingsApi';
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import { OldBuildingRelocationMap } from './OldBuildingRelocationMap';
-import { LatLngBounds, LatLngTuple, Map as LeafletMap } from 'leaflet';
+} from '@urgp/client/entities';
+import { ProblematicApartsTable } from './components/ProblematicApartsTable';
+import { NewBuildingsTable } from './components/NewBuildingsTable';
+import { OldApartmentDetailsSheet } from '../../OldApartmentDetailsSheet';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;

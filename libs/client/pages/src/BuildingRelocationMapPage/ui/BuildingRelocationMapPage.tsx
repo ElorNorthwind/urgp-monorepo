@@ -1,21 +1,9 @@
 import {
-  oldApartmentColumns,
-  OldApartmentDetailsSheet,
   OldBuildingRelocationMap,
-  useOldApartments,
   useOldBuildingList,
 } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import {
-  cn,
-  Combobox,
-  FacetFilter,
-  useDebounce,
-  VirtualDataTable,
-} from '@urgp/client/shared';
-import { LoadedResultCounter, OldApartmentFilter } from '@urgp/client/widgets';
-import { useCallback, useState } from 'react';
-import { GetOldBuldingsDto, OldApartmentSearch } from '@urgp/shared/entities';
+import { Combobox } from '@urgp/client/shared';
 
 const BuildingRelocationMapPage = (): JSX.Element => {
   const { buildingId } = getRouteApi(

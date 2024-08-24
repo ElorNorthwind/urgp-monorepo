@@ -9,7 +9,7 @@ import {
 } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
 import { useCallback } from 'react';
-import { OldBuildingTermsTable } from '../components/OldBuildingTermsTable';
+import { OldBuildingTermsTable } from '../OldBuildingTermsTable';
 
 function TermsCell(
   props: CellContext<OldBuilding, string | null>,

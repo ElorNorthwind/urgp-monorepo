@@ -1,5 +1,4 @@
 import {
-  OldApartmentDetailsSheet,
   unansweredMessagesColumns,
   useUnansweredMessages,
 } from '@urgp/client/entities';
@@ -15,6 +14,7 @@ import {
 } from '@urgp/client/shared';
 import { useSelector } from 'react-redux';
 import { MessagesPageSearch } from '@urgp/shared/entities';
+import { OldApartmentDetailsSheet } from '@urgp/client/widgets';
 
 const MessagesPage = (): JSX.Element => {
   const { tab, message } = getRouteApi('/renovation/messages').useSearch();

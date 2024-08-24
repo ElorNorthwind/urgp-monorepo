@@ -1,6 +1,6 @@
 import { CellContext } from '@tanstack/react-table';
 import { OldBuilding } from '@urgp/shared/entities';
-import { DeviationChart } from '../components/DeviationChart';
+import { DeviationChart } from '../DeviationChart';
 
 function DeviationsCell(props: CellContext<OldBuilding, string>): JSX.Element {
   const building = {

@@ -16,9 +16,9 @@ import {
 } from '@urgp/shared/entities';
 import { HousePlug } from 'lucide-react';
 import dayjs from 'dayjs';
-import { DeviationChart } from './DeviationChart';
 import { useNavigate } from '@tanstack/react-router';
 import { Fragment } from 'react';
+import { DeviationChart } from '@urgp/client/entities';
 
 type NewBuildingsTableProps = {
   buildings: OldBuilding['newBuildingConstructions'] | null;
@@ -67,10 +67,6 @@ const NewBuildingsTable = ({
             const filteredPlots = connectedPlots?.find(
               (plot) => plot.newBuildingId === building.id,
             )?.plots;
-
-            // .filter((plot) => plot.id !== oldBuildingId);
-            // filteredPlots &&
-            //   filteredPlots?.sort((a, b) => (a.id === oldBuildingId ? 1 : -1));
 
             return (
               <Fragment key={building.id + 'fragment'}>

@@ -16,7 +16,8 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "../widgets/src/OkrugTotalsChart/ui/OkrugTotalsChart.tsx",
-    "../widgets/src/DoneTimelineChart/ui/DoneTimelineChart.tsx"
+    "../widgets/src/DoneTimelineChart/ui/DoneTimelineChart.tsx",
+    "../widgets/src/OldBuildingCard/ui/OldBuildingCard.tsx"
   ],
   "exclude": [
     "vite.config.ts",

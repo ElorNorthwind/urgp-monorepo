@@ -1,11 +1,11 @@
-import {
-  OldBuildingsCard,
-  oldBuildingsColumns,
-  useOldBuldings,
-} from '@urgp/client/entities';
+import { oldBuildingsColumns, useOldBuldings } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { cn, HStack, useDebounce, VirtualDataTable } from '@urgp/client/shared';
-import { LoadedResultCounter, OldBuildingsFilter } from '@urgp/client/widgets';
+import {
+  LoadedResultCounter,
+  OldBuildingsCard,
+  OldBuildingsFilter,
+} from '@urgp/client/widgets';
 import { useCallback, useState } from 'react';
 import {
   GetOldBuldingsDto,

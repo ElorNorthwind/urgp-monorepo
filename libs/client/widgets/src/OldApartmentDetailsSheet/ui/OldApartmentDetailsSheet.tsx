@@ -9,14 +9,15 @@ import {
 } from '@urgp/client/shared';
 import { FileText } from 'lucide-react';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
-import {
-  useOldApartmentDetails,
-  useOldApartmentTimeline,
-} from '../api/oldApartmentsApi';
+
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { OldApartmentTimeline } from '@urgp/shared/entities';
-import { MessageTab } from '../../messages';
+import {
+  MessageTab,
+  useOldApartmentDetails,
+  useOldApartmentTimeline,
+} from '@urgp/client/entities';
 
 type OldApartmentDetailsSheetProps = {
   apartmentId?: number;

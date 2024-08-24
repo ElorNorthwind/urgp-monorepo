@@ -1,11 +1,11 @@
-import {
-  oldApartmentColumns,
-  OldApartmentDetailsSheet,
-  useOldApartments,
-} from '@urgp/client/entities';
+import { oldApartmentColumns, useOldApartments } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { cn, useDebounce, VirtualDataTable } from '@urgp/client/shared';
-import { LoadedResultCounter, OldApartmentFilter } from '@urgp/client/widgets';
+import {
+  LoadedResultCounter,
+  OldApartmentDetailsSheet,
+  OldApartmentFilter,
+} from '@urgp/client/widgets';
 import { useCallback, useState } from 'react';
 import { GetOldBuldingsDto, OldApartmentSearch } from '@urgp/shared/entities';
 

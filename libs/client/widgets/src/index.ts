@@ -11,3 +11,5 @@ export * from './ChangePasswordForm';
 export * from './OldApartmentFilter';
 export * from './OkrugTotalsChart';
 export * from './DoneTimelineChart';
+export * from './OldApartmentDetailsSheet';
+export * from './OldBuildingCard';
