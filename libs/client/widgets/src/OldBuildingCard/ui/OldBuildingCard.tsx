@@ -6,18 +6,15 @@ import {
   CardHeader,
   CardTitle,
   cn,
-  HStack,
-  Label,
   Skeleton,
-  Switch,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from '@urgp/client/shared';
 import { OldBuilding, OldBuildingsPageSearch } from '@urgp/shared/entities';
-import { ExternalLink, Map, Scan, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { Map, Scan, X } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { LatLngBounds, LatLngTuple, Map as LeafletMap } from 'leaflet';
 import {
@@ -43,7 +40,7 @@ const OldBuildingsCard = ({
   onClose,
   width = 520,
 }: OldBuildingCardProps): JSX.Element | null => {
-  const [showMFR, setShowMFR] = useState<boolean>(true);
+  // const [showMFR, setShowMFR] = useState<boolean>(true);
   // const [appartmentDetails, setAppartmentDetails] = useState<number | null>(
   //   null,
   // );
@@ -134,53 +131,10 @@ const OldBuildingsCard = ({
                     building={building}
                     className="w-full"
                   />
-                  <HStack className="p-2">
-                    {building?.problematicAparts &&
-                      building?.problematicAparts?.length > 0 && (
-                        <>
-                          <h3>Проблемные квартиры</h3>
-                          <div className="flex items-center space-x-2">
-                            <Switch
-                              id="show-mfr"
-                              defaultChecked
-                              checked={showMFR}
-                              onCheckedChange={(e) => {
-                                setShowMFR(e);
-                              }}
-                            />
-                            <Label
-                              htmlFor="show-mfr"
-                              className={cn(
-                                'transition-opacity',
-                                !showMFR ? 'line-through opacity-30' : '',
-                              )}
-                            >
-                              МФР
-                            </Label>
-                          </div>
-                        </>
-                      )}
-                    {building.totalApartments > 0 && (
-                      <Button
-                        variant="ghost"
-                        className="ml-auto space-x-2 px-2"
-                        onClick={() =>
-                          navigate({
-                            to: '/renovation/oldapartments',
-                            search: { buildingIds: [building.id] },
-                          })
-                        }
-                      >
-                        <p>Все кв.</p>
-                        <ExternalLink className="h-5 w-5" />
-                      </Button>
-                    )}
-                  </HStack>
                   <ProblematicApartsTable
                     building={building}
                     messages={messages}
                     className="w-full flex-1"
-                    showMFR={showMFR}
                     setSelectedAppartmentId={(value) => {
                       navigate({
                         search: (prev: OldBuildingsPageSearch) => ({

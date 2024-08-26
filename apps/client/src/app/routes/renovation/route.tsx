@@ -1,4 +1,8 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  Outlet,
+  ScrollRestoration,
+} from '@tanstack/react-router';
 import { Toaster, TooltipProvider } from '@urgp/client/shared';
 import { RenovationNavbar, UserMenu } from '@urgp/client/widgets';
 
@@ -11,6 +15,7 @@ export const Route = createFileRoute('/renovation')({
           <UserMenu />
         </aside>
         <main className="relative flex flex-1 flex-col gap-2 p-2 sm:pl-16">
+          <ScrollRestoration getKey={(location) => location.pathname} />
           <Outlet />
         </main>
         <Toaster />

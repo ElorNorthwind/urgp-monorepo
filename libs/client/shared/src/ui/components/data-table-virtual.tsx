@@ -38,6 +38,7 @@ interface VirtualDataTableProps<TData, TValue> {
   sorting?: ColumnSort[];
   setSorting?: (sorting: ColumnSort[]) => void;
   initialState?: InitialTableState;
+  initialOffset?: number;
 }
 
 export function VirtualDataTable<TData, TValue>({
@@ -55,6 +56,7 @@ export function VirtualDataTable<TData, TValue>({
   sorting,
   setSorting,
   initialState,
+  initialOffset = 0,
 }: VirtualDataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
 
@@ -92,6 +94,7 @@ export function VirtualDataTable<TData, TValue>({
         ? (element) => element?.getBoundingClientRect().height
         : undefined,
     overscan: 5,
+    initialOffset: initialOffset,
   });
 
   const [isScrolled, setIsScrolled] = useState(false);

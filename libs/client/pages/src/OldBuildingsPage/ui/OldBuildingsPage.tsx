@@ -1,5 +1,9 @@
 import { oldBuildingsColumns, useOldBuldings } from '@urgp/client/entities';
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import {
+  getRouteApi,
+  useElementScrollRestoration,
+  useNavigate,
+} from '@tanstack/react-router';
 import { cn, HStack, useDebounce, VirtualDataTable } from '@urgp/client/shared';
 import {
   LoadedResultCounter,
@@ -52,6 +56,11 @@ const OldBuildingsPage = (): JSX.Element => {
     [navigate],
   );
 
+  const scrollRestorationId = 'oldBuildingsScrollRestorationId';
+  const scrollEntry = useElementScrollRestoration({
+    id: scrollRestorationId,
+  });
+
   return (
     <>
       <HStack justify={'between'} className="w-full pr-2">
@@ -70,6 +79,8 @@ const OldBuildingsPage = (): JSX.Element => {
       >
         <VirtualDataTable
           // onRowDoubleClick={() => setCurrentAddress(null)}
+          initialOffset={scrollEntry?.scrollY}
+          data-scroll-restoration-id={scrollRestorationId}
           onRowClick={(row) => {
             row.toggleSelected();
             navigate({

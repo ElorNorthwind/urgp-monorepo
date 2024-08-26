@@ -1,5 +1,9 @@
 import { oldApartmentColumns, useOldApartments } from '@urgp/client/entities';
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import {
+  getRouteApi,
+  useElementScrollRestoration,
+  useNavigate,
+} from '@tanstack/react-router';
 import { cn, useDebounce, VirtualDataTable } from '@urgp/client/shared';
 import {
   LoadedResultCounter,
@@ -43,6 +47,11 @@ const OldApartmentsPage = (): JSX.Element => {
     [navigate],
   );
 
+  const scrollRestorationId = 'oldApartmentsScrollRestorationId';
+  const scrollEntry = useElementScrollRestoration({
+    id: scrollRestorationId,
+  });
+
   return (
     <>
       <div className="flex w-full flex-row justify-start pr-2">
@@ -55,6 +64,8 @@ const OldApartmentsPage = (): JSX.Element => {
         />
       </div>
       <VirtualDataTable
+        initialOffset={scrollEntry?.scrollY}
+        data-scroll-restoration-id={scrollRestorationId}
         onRowClick={(row) => {
           // row.toggleSelected();
           navigate({
