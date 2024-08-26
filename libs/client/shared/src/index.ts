@@ -34,6 +34,7 @@ export * from './ui/components/textarea';
 export * from './ui/components/calendar';
 export * from './ui/components/collapsible';
 export * from './ui/components/checkbox';
+export * from './ui/components/map';
 // export layouts
 export * from './ui/layouts/main';
 

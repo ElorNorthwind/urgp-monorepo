@@ -181,11 +181,11 @@ const OldBuildingsCard = ({
                           })
                         }
                       >
-                        <Map className="z-[1000] h-6 w-6" />
+                        <Map className="h-6 w-6" />
                       </Button>
                       <Button
                         variant="outline"
-                        className="absolute bottom-2 right-2 z-[1000] h-10 w-10 p-0"
+                        className="absolute right-2 bottom-2 z-[1000] h-10 w-10 p-0"
                         onClick={() => {
                           const bounds = new LatLngBounds(
                             mapItems?.[0]?.bounds
@@ -199,7 +199,7 @@ const OldBuildingsCard = ({
                           });
                         }}
                       >
-                        <Focus className="z-[1000] h-6 w-6" />
+                        <Focus className="h-6 w-6" />
                       </Button>
                     </OldBuildingRelocationMap>
                   )}

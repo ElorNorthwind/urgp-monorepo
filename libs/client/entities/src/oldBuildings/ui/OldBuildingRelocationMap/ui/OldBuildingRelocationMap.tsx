@@ -1,4 +1,4 @@
-import { cn, Skeleton } from '@urgp/client/shared';
+import { cn, MapComponent, Skeleton } from '@urgp/client/shared';
 import React, { forwardRef, memo, useState } from 'react';
 import { MapContainer, Polygon, Popup, TileLayer } from 'react-leaflet';
 
@@ -55,20 +55,14 @@ export const OldBuildingRelocationMap = forwardRef<
       isLoading,
     } = useOldBuildingRelocationMap(buildingId);
 
-    return isFetching || isLoading ? (
-      <Skeleton className={cn(className)} style={style} />
-    ) : (
-      <MapContainer
-        center={[55.74938, 37.534092]}
-        zoom={13}
-        scrollWheelZoom={false}
-        attributionControl={false}
-        className={cn(className)}
+    return (
+      <MapComponent
+        isLoading={isLoading || isFetching}
+        className={className}
+        scrollWheelZoom={true}
         style={style}
         ref={ref}
-        // whenReady={() => setMap(map)}
       >
-        <TileLayer url={basemapDict['carto']} className="z-0" />
         {mapItems && mapItems.length > 0 && (
           <>
             {mapItems.map((item) => {
@@ -104,7 +98,7 @@ export const OldBuildingRelocationMap = forwardRef<
           </>
         )}
         {children}
-      </MapContainer>
+      </MapComponent>
     );
   },
 );

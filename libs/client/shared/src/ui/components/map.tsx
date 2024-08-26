@@ -19,7 +19,7 @@ type MapProps = MapContainerProps & {
   isLoading?: boolean;
 };
 
-export const OldBuildingRelocationMap = forwardRef<Map, MapProps>(
+export const MapComponent = forwardRef<Map, MapProps>(
   (
     {
       className,
