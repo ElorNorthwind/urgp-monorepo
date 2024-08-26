@@ -57,6 +57,11 @@ export class RenovationController {
     return this.renovation.getOldBuildings(getOldHousesDto);
   }
 
+  @Get('old-building/:id')
+  getOldBuildingById(@Param('id') id: number): Promise<OldBuilding | null> {
+    return this.renovation.getOldBuildingById(id);
+  }
+
   @Get('old-apartments')
   @UsePipes(new ZodValidationPipe(getOldApartments))
   getOldAppartments(

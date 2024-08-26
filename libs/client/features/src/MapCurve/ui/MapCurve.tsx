@@ -3,17 +3,17 @@ import { useMap } from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css';
 import { LatLngTuple } from 'leaflet';
-import classes from './AddCurve.module.css';
+import classes from './MapCurve.module.css';
 import { cn, createCurve } from '@urgp/client/shared';
 
-type AddCurveProps = {
+type MapCurveProps = {
   start: LatLngTuple;
   finish: LatLngTuple;
   className?: string;
 };
 
-export const AddCurve: React.FC<AddCurveProps> = memo(
-  ({ start, finish, className }: AddCurveProps) => {
+export const MapCurve: React.FC<MapCurveProps> = memo(
+  ({ start, finish, className }) => {
     const map = useMap();
 
     useEffect(() => {

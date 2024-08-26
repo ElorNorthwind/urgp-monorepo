@@ -1,9 +1,7 @@
-import {
-  OldBuildingRelocationMap,
-  useOldBuildingList,
-} from '@urgp/client/entities';
+import { useOldBuildingList } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { Combobox } from '@urgp/client/shared';
+import { OldBuildingRelocationMap } from '@urgp/client/widgets';
 
 const BuildingRelocationMapPage = (): JSX.Element => {
   const { buildingId } = getRouteApi(

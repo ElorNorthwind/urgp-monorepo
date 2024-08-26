@@ -1,15 +1,13 @@
-import { cn, MapComponent, Skeleton } from '@urgp/client/shared';
-import React, { forwardRef, memo, useState } from 'react';
-import { MapContainer, Polygon, Popup, TileLayer } from 'react-leaflet';
+import { MapComponent } from '@urgp/client/shared';
+import React, { forwardRef } from 'react';
+import { Polygon, Popup } from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { useOldBuildingRelocationMap } from '@urgp/client/entities';
 import { OldBuildingRelocationMapElement } from '@urgp/shared/entities';
 import { FitBounds } from './FitBounds';
-import { AddCurve } from './AddCurve';
 import { Map } from 'leaflet';
-// import AntPath from 'react-leaflet-ant-path';
+import { MapCurve } from '@urgp/client/features';
+import { useOldBuildingRelocationMap } from '@urgp/client/entities';
 
 type OldBuildingRelocationMapProps = {
   buildingId: number;
@@ -18,28 +16,12 @@ type OldBuildingRelocationMapProps = {
   style?: React.CSSProperties;
 };
 
-const basemapDict = {
-  carto: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-  osm: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  hot: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-  esri: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-};
-
 const mapItemColors = {
   movement: 'blue',
   selected: 'red',
   construction: 'gray',
   other_on_plot: 'orange',
 } as Record<OldBuildingRelocationMapElement['type'], string>;
-
-// export const OldBuildingRelocationMap: React.FC<OldBuildingRelocationMapProps> =
-//   memo(
-//     ({
-//       className,
-//       buildingId,
-//       children,
-//       style,
-//     }: OldBuildingRelocationMapProps) => {
 
 export const OldBuildingRelocationMap = forwardRef<
   Map,
@@ -85,7 +67,7 @@ export const OldBuildingRelocationMap = forwardRef<
               .filter((item) => item.start && item.finish)
               .map((item) => {
                 return (
-                  <AddCurve
+                  <MapCurve
                     key={item.id + 'curve'}
                     start={item?.start.coordinates}
                     finish={item?.finish.coordinates}

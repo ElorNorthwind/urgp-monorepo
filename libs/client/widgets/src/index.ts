@@ -13,3 +13,4 @@ export * from './OkrugTotalsChart';
 export * from './DoneTimelineChart';
 export * from './OldApartmentDetailsSheet';
 export * from './OldBuildingCard';
+export * from './OldBuildingRelocationMap';

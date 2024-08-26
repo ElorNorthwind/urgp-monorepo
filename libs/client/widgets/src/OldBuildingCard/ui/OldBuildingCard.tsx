@@ -18,7 +18,6 @@ import { useEffect, useRef } from 'react';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { LatLngBounds, LatLngTuple, Map as LeafletMap } from 'leaflet';
 import {
-  OldBuildingRelocationMap,
   OldBuildingTermsTable,
   useApartmentMessages,
   useConnectedPlots,
@@ -27,6 +26,7 @@ import {
 import { ProblematicApartsTable } from './components/ProblematicApartsTable';
 import { NewBuildingsTable } from './components/NewBuildingsTable';
 import { OldApartmentDetailsSheet } from '../../OldApartmentDetailsSheet';
+import { OldBuildingRelocationMap } from '../../OldBuildingRelocationMap';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
