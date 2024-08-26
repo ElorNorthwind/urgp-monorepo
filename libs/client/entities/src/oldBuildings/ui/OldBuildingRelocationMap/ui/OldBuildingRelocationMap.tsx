@@ -41,7 +41,7 @@ const mapItemColors = {
 //       style,
 //     }: OldBuildingRelocationMapProps) => {
 
-export const OldBuildingRelocationMap = React.forwardRef<
+export const OldBuildingRelocationMap = forwardRef<
   Map,
   OldBuildingRelocationMapProps
 >(

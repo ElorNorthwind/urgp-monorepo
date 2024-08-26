@@ -13,7 +13,7 @@ import {
   TabsTrigger,
 } from '@urgp/client/shared';
 import { OldBuilding, OldBuildingsPageSearch } from '@urgp/shared/entities';
-import { Map, Scan, X } from 'lucide-react';
+import { Focus, Map, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { LatLngBounds, LatLngTuple, Map as LeafletMap } from 'leaflet';
@@ -199,7 +199,7 @@ const OldBuildingsCard = ({
                           });
                         }}
                       >
-                        <Scan className="z-[1000] h-6 w-6" />
+                        <Focus className="z-[1000] h-6 w-6" />
                       </Button>
                     </OldBuildingRelocationMap>
                   )}
