@@ -128,11 +128,13 @@ const OldBuildingsCard = ({
               <TabsContent value="terms" className="flex-1">
                 <div className="flex h-full flex-col">
                   <OldBuildingTermsTable
-                    building={building}
+                    terms={building.terms}
                     className="w-full"
                   />
                   <ProblematicApartsTable
-                    building={building}
+                    problematicAparts={building.problematicAparts}
+                    totalApartments={building.totalApartments}
+                    buildingId={building.id}
                     messages={messages}
                     className="w-full flex-1"
                     setSelectedAppartmentId={(value) => {

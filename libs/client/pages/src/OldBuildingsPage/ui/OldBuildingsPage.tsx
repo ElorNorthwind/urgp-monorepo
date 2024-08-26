@@ -38,17 +38,18 @@ const OldBuildingsPage = (): JSX.Element => {
     isLoading,
     isFetching,
   } = useOldBuldings({
-    ...(debouncedFilters as Partial<GetOldBuldingsDto>),
+    ...(debouncedFilters as OldBuildingsPageSearch),
     offset,
   });
 
   const setFilters = useCallback(
-    (value: Partial<GetOldBuldingsDto>) => {
+    (value: OldBuildingsPageSearch) => {
       // setCurrentAddress(null);
       navigate({
         search: (prev: GetOldBuldingsDto) => ({
           ...prev,
           selectedBuildingId: undefined,
+          apartment: undefined,
           ...value,
         }),
       });
@@ -78,10 +79,10 @@ const OldBuildingsPage = (): JSX.Element => {
         className="h-[calc(100vh-3.5rem)] w-full overflow-hidden"
       >
         <VirtualDataTable
-          // onRowDoubleClick={() => setCurrentAddress(null)}
           initialOffset={scrollEntry?.scrollY}
           data-scroll-restoration-id={scrollRestorationId}
           onRowClick={(row) => {
+            // переделать в полностью контролируемый селект?
             row.toggleSelected();
             navigate({
               search: (prev: GetOldBuldingsDto) => ({
@@ -92,10 +93,6 @@ const OldBuildingsPage = (): JSX.Element => {
                     : row?.original?.id,
               }),
             });
-
-            // setCurrentAddress(
-            //   row?.original?.id === currentAdress?.id ? null : row?.original,
-            // );
           }}
           className={cn(
             'bg-background h-full transition-all ease-in-out',

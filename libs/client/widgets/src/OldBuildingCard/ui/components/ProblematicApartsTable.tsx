@@ -36,7 +36,9 @@ import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
 type ProblematicApartsTableProps = {
-  building: OldBuilding | null;
+  problematicAparts: OldBuilding['problematicAparts'] | null;
+  totalApartments: number;
+  buildingId: number;
   messages?: ExtendedMessage[] | null;
   className?: string;
   caption?: string;
@@ -50,7 +52,9 @@ const problemBadgeStyles = {
   Проблемная: cn('bg-slate-100 border-slate-200'),
 };
 const ProblematicApartsTable = ({
-  building,
+  problematicAparts,
+  totalApartments,
+  buildingId,
   messages,
   className,
   setSelectedAppartmentId,
@@ -58,22 +62,19 @@ const ProblematicApartsTable = ({
   const [showMFR, setShowMFR] = useState<boolean>(true);
   const navigate = useNavigate({ from: '/renovation/oldbuildings' });
 
-  if (
-    !building?.problematicAparts ||
-    building?.problematicAparts?.length === 0
-  ) {
+  if (!problematicAparts || problematicAparts.length === 0) {
     return (
       <div className="relative flex flex-col place-items-center py-4">
         <Cat className="stroke-muted-foreground h-12 w-12 stroke-1" />
         <div className="text-muted-foreground">Нет проблемных квартир</div>
-        {building?.totalApartments && building.totalApartments > 0 && (
+        {totalApartments && totalApartments > 0 && (
           <Button
             variant="ghost"
             className="absolute top-2 right-2 space-x-2 px-2"
             onClick={() =>
               navigate({
                 to: '/renovation/oldapartments',
-                search: { buildingIds: [building.id] },
+                search: { buildingIds: [buildingId] },
               })
             }
           >
@@ -87,39 +88,38 @@ const ProblematicApartsTable = ({
   return (
     <>
       <HStack className="p-2">
-        {building?.problematicAparts &&
-          building?.problematicAparts?.length > 0 && (
-            <>
-              <h3>Проблемные квартиры</h3>
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="show-mfr"
-                  defaultChecked
-                  checked={showMFR}
-                  onCheckedChange={(e) => {
-                    setShowMFR(e);
-                  }}
-                />
-                <Label
-                  htmlFor="show-mfr"
-                  className={cn(
-                    'transition-opacity',
-                    !showMFR ? 'line-through opacity-30' : '',
-                  )}
-                >
-                  МФР
-                </Label>
-              </div>
-            </>
-          )}
-        {building.totalApartments > 0 && (
+        {problematicAparts && problematicAparts?.length > 0 && (
+          <>
+            <h3>Проблемные квартиры</h3>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="show-mfr"
+                defaultChecked
+                checked={showMFR}
+                onCheckedChange={(e) => {
+                  setShowMFR(e);
+                }}
+              />
+              <Label
+                htmlFor="show-mfr"
+                className={cn(
+                  'transition-opacity',
+                  !showMFR ? 'line-through opacity-30' : '',
+                )}
+              >
+                МФР
+              </Label>
+            </div>
+          </>
+        )}
+        {totalApartments > 0 && (
           <Button
             variant="ghost"
             className="ml-auto space-x-2 px-2"
             onClick={() =>
               navigate({
                 to: '/renovation/oldapartments',
-                search: { buildingIds: [building.id] },
+                search: { buildingIds: [buildingId] },
               })
             }
           >
@@ -131,7 +131,7 @@ const ProblematicApartsTable = ({
 
       <ScrollArea className={cn('rounded border', className)}>
         <Accordion type="single" collapsible className="absolute inset-0">
-          {building?.problematicAparts
+          {problematicAparts
             .filter((apart) => showMFR || apart.stageId !== 12)
             .map((apart) => {
               const referenceTerms = getReferenceTerms(apart);

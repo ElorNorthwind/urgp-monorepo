@@ -13,12 +13,12 @@ import { OldBuilding } from '@urgp/shared/entities';
 import { OldBuildingTermsChart } from './OldBuildingsTermsChart';
 
 type OldBuildingTermsTableProps = {
-  building: OldBuilding | null;
+  terms: OldBuilding['terms'] | null;
   className?: string;
   caption?: string;
 };
 const OldBuildingTermsTable = ({
-  building,
+  terms,
   className,
   caption,
 }: OldBuildingTermsTableProps): JSX.Element => {
@@ -56,16 +56,16 @@ const OldBuildingTermsTable = ({
                 План:
               </TableCell>
               <TableCell compact className="text-center text-xs">
-                {formatDate(building?.terms.plan.firstResetlementStart)}
+                {formatDate(terms?.plan.firstResetlementStart)}
               </TableCell>
               <TableCell compact className="text-center text-xs">
-                {formatDate(building?.terms.plan.firstResetlementEnd)}
+                {formatDate(terms?.plan.firstResetlementEnd)}
               </TableCell>
               <TableCell compact className="text-center text-xs">
-                {formatDate(building?.terms.plan.secontResetlementEnd)}
+                {formatDate(terms?.plan.secontResetlementEnd)}
               </TableCell>
               <TableCell compact className="text-center text-xs">
-                {formatDate(building?.terms.plan.demolitionEnd)}
+                {formatDate(terms?.plan.demolitionEnd)}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -73,25 +73,22 @@ const OldBuildingTermsTable = ({
                 Факт:
               </TableCell>
               <TableCell compact className="text-center text-xs">
-                {formatDate(building?.terms.actual.firstResetlementStart)}
+                {formatDate(terms?.actual.firstResetlementStart)}
               </TableCell>
               <TableCell compact className="text-center text-xs">
-                {formatDate(building?.terms.actual.firstResetlementEnd)}
+                {formatDate(terms?.actual.firstResetlementEnd)}
               </TableCell>
               <TableCell compact className="text-center text-xs">
-                {formatDate(building?.terms.actual.secontResetlementEnd)}
+                {formatDate(terms?.actual.secontResetlementEnd)}
               </TableCell>
               <TableCell compact className="text-center text-xs">
-                {formatDate(building?.terms.actual.demolitionEnd)}
+                {formatDate(terms?.actual.demolitionEnd)}
               </TableCell>
             </TableRow>
-            {building?.terms && (
+            {terms && (
               <TableRow>
                 <TableCell colSpan={5} className="p-0">
-                  <OldBuildingTermsChart
-                    terms={building.terms}
-                    className="w-full"
-                  />
+                  <OldBuildingTermsChart terms={terms} className="w-full" />
                 </TableCell>
               </TableRow>
             )}

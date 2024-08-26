@@ -41,7 +41,7 @@ const MessagesPage = (): JSX.Element => {
           <h2 className="text-2xl font-bold tracking-tight">Сообщения</h2>
           <Tabs
             defaultValue="my"
-            className="w-[400px]"
+            className=""
             value={tab ?? 'my'}
             onValueChange={(value) => {
               navigate({
@@ -57,7 +57,7 @@ const MessagesPage = (): JSX.Element => {
               {user &&
                 ['admin', 'editor', 'boss'].filter((role) =>
                   user.roles.includes(role),
-                ).length >= 0 && (
+                ).length > 0 && (
                   <TabsTrigger value="all">Все вопросы</TabsTrigger>
                 )}
             </TabsList>

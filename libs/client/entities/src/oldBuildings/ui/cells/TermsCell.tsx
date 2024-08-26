@@ -8,7 +8,6 @@ import {
   VStack,
 } from '@urgp/client/shared';
 import { OldBuilding } from '@urgp/shared/entities';
-import { useCallback } from 'react';
 import { OldBuildingTermsTable } from '../OldBuildingTermsTable';
 
 function TermsCell(
@@ -34,7 +33,7 @@ function TermsCell(
       <TooltipPortal>
         <TooltipContent className="p-0">
           <TooltipArrow />
-          <OldBuildingTermsTable building={props.row.original} />
+          <OldBuildingTermsTable terms={props.row.original.terms} />
         </TooltipContent>
       </TooltipPortal>
     </Tooltip>

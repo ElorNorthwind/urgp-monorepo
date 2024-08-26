@@ -99,7 +99,8 @@ const CreateMessageForm = ({
 
   if (
     !user ||
-    (!user.roles.includes('editor') &&
+    (!user.roles.includes('user') &&
+      !user.roles.includes('editor') &&
       !user.roles.includes('admin') &&
       !user.roles.includes('boss'))
   ) {
