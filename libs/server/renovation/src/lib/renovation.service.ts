@@ -22,8 +22,7 @@ export class RenovationService {
   constructor(private readonly dbServise: DatabaseService) {}
 
   public async getOldBuildingsGeoJson() {
-    const resp = await this.dbServise.db.renovation.getOldBuildingsGeoJson();
-    return resp[0].geojson;
+    return this.dbServise.db.renovation.getOldBuildingsGeoJson();
   }
 
   public async getOldBuildings(dto: GetOldBuldingsDto) {

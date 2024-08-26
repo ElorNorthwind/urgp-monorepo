@@ -76,3 +76,8 @@
       'calt' 1;
   }
 }
+
+/* disabling leaflet focus outline on tooltiped elements */
+path.leaflet-interactive {
+  outline: none;
+}

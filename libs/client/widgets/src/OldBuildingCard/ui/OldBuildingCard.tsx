@@ -15,7 +15,11 @@ import {
 import { OldBuilding, OldBuildingsPageSearch } from '@urgp/shared/entities';
 import { Focus, Map, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import {
+  getRouteApi,
+  useNavigate,
+  useRouterState,
+} from '@tanstack/react-router';
 import { LatLngBounds, LatLngTuple, Map as LeafletMap } from 'leaflet';
 import {
   OldBuildingTermsTable,
@@ -31,6 +35,7 @@ import { OldBuildingRelocationMap } from '../../OldBuildingRelocationMap';
 type OldBuildingCardProps = {
   building: OldBuilding | null;
   className?: string;
+  route?: string;
   onClose?: () => void;
   width?: number;
 };
@@ -38,6 +43,7 @@ const OldBuildingsCard = ({
   building,
   className,
   onClose,
+  route = '/renovation/oldbuildings',
   width = 520,
 }: OldBuildingCardProps): JSX.Element | null => {
   // const [showMFR, setShowMFR] = useState<boolean>(true);
@@ -46,9 +52,8 @@ const OldBuildingsCard = ({
   // );
   const mapRef = useRef<LeafletMap>(null);
   const { data: mapItems } = useOldBuildingRelocationMap(building?.id || 0);
-
   const { tab, selectedBuildingId, apartment } = getRouteApi(
-    '/renovation/oldbuildings',
+    route,
   ).useSearch() as OldBuildingsPageSearch;
 
   useEffect(() => {
@@ -164,45 +169,46 @@ const OldBuildingsCard = ({
                     connectedPlots={connectedPlots}
                     oldBuildingId={building.id}
                   />
-                  {tab === 'newBuildings' && (
-                    <OldBuildingRelocationMap
-                      ref={mapRef}
-                      buildingId={building.id}
-                      className="relative isolate w-[470px] flex-1 overflow-hidden rounded border"
-                    >
-                      <Button
-                        variant="outline"
-                        className="absolute top-2 right-2 z-[1000] h-10 w-10 p-0"
-                        onClick={() =>
-                          navigate({
-                            to: '/renovation/building-relocation-map',
-                            search: { buildingId: building?.id || undefined },
-                            from: '/renovation/oldbuildings',
-                          })
-                        }
+                  {tab === 'newBuildings' &&
+                    route !== '/renovation/building-relocation-map' && (
+                      <OldBuildingRelocationMap
+                        ref={mapRef}
+                        buildingId={building.id}
+                        className="relative isolate w-[470px] flex-1 overflow-hidden rounded border"
                       >
-                        <Map className="h-6 w-6" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        className="absolute right-2 bottom-2 z-[1000] h-10 w-10 p-0"
-                        onClick={() => {
-                          const bounds = new LatLngBounds(
-                            mapItems?.[0]?.bounds
-                              ?.coordinates?.[0] as LatLngTuple,
-                            mapItems?.[0]?.bounds
-                              ?.coordinates?.[3] as LatLngTuple,
-                          );
+                        <Button
+                          variant="outline"
+                          className="absolute top-2 right-2 z-[1000] h-10 w-10 p-0"
+                          onClick={() =>
+                            navigate({
+                              to: '/renovation/building-relocation-map',
+                              search: { buildingId: building?.id || undefined },
+                              from: '/renovation/oldbuildings',
+                            })
+                          }
+                        >
+                          <Map className="h-6 w-6" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="absolute right-2 bottom-2 z-[1000] h-10 w-10 p-0"
+                          onClick={() => {
+                            const bounds = new LatLngBounds(
+                              mapItems?.[0]?.bounds
+                                ?.coordinates?.[0] as LatLngTuple,
+                              mapItems?.[0]?.bounds
+                                ?.coordinates?.[3] as LatLngTuple,
+                            );
 
-                          mapRef.current?.fitBounds(bounds, {
-                            padding: [10, 10],
-                          });
-                        }}
-                      >
-                        <Focus className="h-6 w-6" />
-                      </Button>
-                    </OldBuildingRelocationMap>
-                  )}
+                            mapRef.current?.fitBounds(bounds, {
+                              padding: [10, 10],
+                            });
+                          }}
+                        >
+                          <Focus className="h-6 w-6" />
+                        </Button>
+                      </OldBuildingRelocationMap>
+                    )}
                 </div>
               </TabsContent>
             </Tabs>

@@ -33,19 +33,19 @@ import {
   OldAppartment,
   OldBuilding,
   OldBuildingRelocationMapElement,
+  OldBuildingsGeoJSON,
   RequestWithUserData,
   UnansweredMessage,
   UpdateMessageDto,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
-import { z } from 'zod';
 
 @Controller('renovation')
 export class RenovationController {
   constructor(private readonly renovation: RenovationService) {}
 
   @Get('old-geojson')
-  getOldGeoJson(): Promise<unknown[]> | unknown[] {
+  getOldGeoJson(): Promise<OldBuildingsGeoJSON> {
     return this.renovation.getOldBuildingsGeoJson();
   }
 

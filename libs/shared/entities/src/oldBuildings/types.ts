@@ -1,4 +1,5 @@
 import { LatLngExpression, LatLngTuple } from 'leaflet';
+import { MultiPolygon } from 'geojson';
 
 type OldBuildingTerms = {
   firstResetlementStart: string | null;
@@ -177,3 +178,8 @@ export type OldBuildingRelocationMapElement = {
   type: 'movement' | 'selected' | 'construction' | 'other_on_plot';
   bounds: geoJsonExpression<LatLngExpression[]>;
 };
+
+export type OldBuildingsGeoJSON = GeoJSON.FeatureCollection<
+  MultiPolygon,
+  { id: number; adress: string }
+>;

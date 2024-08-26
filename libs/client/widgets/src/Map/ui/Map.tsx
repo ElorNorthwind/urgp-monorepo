@@ -72,7 +72,7 @@ export const Map: React.FC<MapProps> = memo(({ className }: MapProps) => {
       <TileLayer url={basemapDict[basemap]} className="z-0" />
       {buildingsGeoJson && (
         <GeoJSON
-          data={buildingsGeoJson as GeoJsonObject}
+          data={buildingsGeoJson}
           style={{
             color: '#de984e',
             // className: 'bg-slate-200',

@@ -4,13 +4,12 @@ import {
   GetOldBuldingsDto,
   OldBuilding,
   OldBuildingRelocationMapElement,
+  OldBuildingsGeoJSON,
 } from '@urgp/shared/entities';
-
-import { GeoJsonObject } from 'geojson';
 
 export const oldBuildingsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    getGeoJson: build.query<GeoJsonObject, void>({
+    getGeoJson: build.query<OldBuildingsGeoJSON, void>({
       query: () => ({
         url: '/renovation/old-geojson',
       }),

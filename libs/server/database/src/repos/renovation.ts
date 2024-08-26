@@ -22,9 +22,11 @@ import {
   MessagesUnansweredDto,
   UnansweredMessage,
   OldBuildingRelocationMapElement,
+  OldBuildingsGeoJSON,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
+import { MultiPolygon } from 'geojson';
 // import { Logger } from '@nestjs/common';
 
 // // Helper for linking to external query files:
@@ -65,9 +67,6 @@ const oldBuildingsSorting: Record<string, Record<string, string>> = {
   },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type geodata = { geojson: any };
-
 // @Injectable()
 export class RenovationRepository {
   constructor(
@@ -76,8 +75,9 @@ export class RenovationRepository {
   ) {}
 
   // Returns geojson of old buildings;
-  getOldBuildingsGeoJson(): Promise<geodata[]> {
-    return this.db.any(renovation.getOldBuldingsGeoJson);
+  async getOldBuildingsGeoJson(): Promise<OldBuildingsGeoJSON> {
+    const result = await this.db.one(renovation.getOldBuldingsGeoJson);
+    return result['geojson'] as OldBuildingsGeoJSON;
   }
 
   // Returns old houses for renovation;

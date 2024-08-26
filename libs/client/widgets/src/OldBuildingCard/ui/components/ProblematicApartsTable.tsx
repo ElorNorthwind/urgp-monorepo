@@ -128,7 +128,6 @@ const ProblematicApartsTable = ({
           </Button>
         )}
       </HStack>
-
       <ScrollArea className={cn('rounded border', className)}>
         <Accordion type="single" collapsible className="absolute inset-0">
           {problematicAparts
