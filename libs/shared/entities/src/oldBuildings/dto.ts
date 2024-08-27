@@ -62,5 +62,13 @@ export const oldBuildingsPageSearch = getOldBuldings
     tab: z.literal('terms').or(z.literal('newBuildings')).optional(),
   });
 
+export const relocationMapSerch = z.object({
+  selectedBuildingId: z.coerce.number().optional(),
+  apartment: z.coerce.number().optional(),
+  tab: z.literal('terms').or(z.literal('newBuildings')).optional(),
+  expanded: z.boolean().default(false),
+});
+
 export type GetOldBuldingsDto = z.infer<typeof getOldBuldings>;
 export type OldBuildingsPageSearch = z.infer<typeof oldBuildingsPageSearch>;
+export type RelocationMapSerch = z.infer<typeof relocationMapSerch>;

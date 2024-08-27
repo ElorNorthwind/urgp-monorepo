@@ -78,7 +78,7 @@ export class AuthService {
         login: dto.login.toLowerCase(),
         password: hash,
       });
-    await this.setAuthCookies(res, newUser);
+    // await this.setAuthCookies(res, newUser);
   }
 
   public async logoutAllDevices(userId: number) {

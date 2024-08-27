@@ -7,14 +7,17 @@ import {
   useOldBuldingById,
 } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import { Button, Combobox, MapComponent } from '@urgp/client/shared';
+import { Button, cn, Combobox, MapComponent } from '@urgp/client/shared';
 import {
   OldBuildingRelocationMap,
   OldBuildingsCard,
 } from '@urgp/client/widgets';
 import { useCallback, useEffect, useRef } from 'react';
 import { Marker, Polygon, Popup, Tooltip, GeoJSON } from 'react-leaflet';
-import { OldBuildingRelocationMapElement } from '@urgp/shared/entities';
+import {
+  OldBuildingRelocationMapElement,
+  RelocationMapSerch,
+} from '@urgp/shared/entities';
 import { MapCurve } from '@urgp/client/features';
 import {
   geoJson,
@@ -34,7 +37,7 @@ const mapItemColors = {
 } as Record<OldBuildingRelocationMapElement['type'], string>;
 
 const BuildingRelocationMapPage = (): JSX.Element => {
-  const { buildingId } = getRouteApi(
+  const { selectedBuildingId, expanded } = getRouteApi(
     '/renovation/building-relocation-map',
   ).useSearch();
   const mapRef = useRef<Map>(null);
@@ -42,22 +45,30 @@ const BuildingRelocationMapPage = (): JSX.Element => {
   // const { data: oldBuildings, isLoading, isFetching } = useOldBuildingList();
   const navigate = useNavigate({ from: '/renovation/building-relocation-map' });
 
-  const { data: oldBuildings } = useOldBuildingsGeoJson();
+  const {
+    data: oldBuildings,
+    isFetching,
+    isLoading,
+  } = useOldBuildingsGeoJson();
 
   const {
     data: selectedMapItems,
-    isFetching,
-    isLoading,
-  } = useOldBuildingRelocationMap(buildingId || 0, { skip: buildingId === 0 });
+    isFetching: isSelectedMapItemsFetching,
+    isLoading: isSelectedMapItemsLoading,
+  } = useOldBuildingRelocationMap(selectedBuildingId || 0, {
+    skip: selectedBuildingId === 0,
+  });
 
   const {
     data: oldBuilding,
     isLoading: isBuildingLoading,
     isFetching: isBuildingFetching,
-  } = useOldBuldingById(buildingId || 0, { skip: buildingId === 0 });
+  } = useOldBuldingById(selectedBuildingId || 0, {
+    skip: selectedBuildingId === 0,
+  });
 
   const fitBounds = useCallback(() => {
-    if (!mapRef.current || !buildingId) return;
+    if (!mapRef.current) return;
 
     const bounds = new LatLngBounds(
       selectedMapItems?.[0]?.bounds?.coordinates?.[0] as LatLngTuple,
@@ -65,17 +76,16 @@ const BuildingRelocationMapPage = (): JSX.Element => {
     );
 
     mapRef.current?.fitBounds(bounds, { padding: [50, 50] });
-  }, [mapRef, selectedMapItems, buildingId]);
+  }, [selectedMapItems, mapRef]);
 
   useEffect(() => {
     const timer1 = setTimeout(() => {
       fitBounds();
     }, 200);
-
     return () => {
       clearTimeout(timer1);
     };
-  }, [mapRef, selectedMapItems, buildingId, fitBounds]);
+  }, [fitBounds, isFetching, selectedBuildingId]);
 
   const onEachFeature = useCallback(
     (feature: any, layer: any) => {
@@ -84,34 +94,53 @@ const BuildingRelocationMapPage = (): JSX.Element => {
       });
 
       layer.on({
-        click: (e: LeafletEvent) =>
+        click: (e: LeafletEvent) => {
           navigate({
             search: (prev: any) => ({
               ...prev,
-              buildingId: e.sourceTarget.feature.properties.id,
+              selectedBuildingId: e.sourceTarget.feature.properties.id,
             }),
-          }),
+          });
+          // fitBounds();
+          //   mapRef?.current &&
+          //     mapRef.current.panTo([
+          //       e.sourceTarget.feature.geometry.coordinates[0][0][0][1],
+          //       e.sourceTarget.feature.geometry.coordinates[0][0][0][0],
+          //     ]);
+        },
       });
     },
     [navigate],
   );
 
-  // useEffect(() => {
-  //   if (!mapRef.current || !oldBuildings) return;
-  //   geoJson(oldBuildings, {
-  //     onEachFeature: onEachFeature,
-  //   }).addTo(mapRef?.current);
-  // }, [oldBuildings, mapRef, onEachFeature, buildingId]);
-
   return (
     <div className="isolate">
-      <div className="absolute bottom-20 top-4 right-4 shadow-sm">
-        {isBuildingLoading || isBuildingFetching || !buildingId ? null : (
+      <div
+        className={cn(
+          'absolute top-4 right-4 shadow-sm transition-all ease-in-out',
+          expanded ? 'h-[calc(100vh-2rem)]' : 'h-[4rem]',
+        )}
+      >
+        {isBuildingLoading ||
+        isBuildingFetching ||
+        !selectedBuildingId ? null : (
           <OldBuildingsCard
             building={oldBuilding || null}
-            route="/renovation/building-relocation-map"
-            onClose={() => navigate({ search: { buildingId: undefined } })}
-            className="h-full transition-all ease-in-out"
+            mode="map"
+            onClose={() =>
+              navigate({ search: { selectedBuildingId: undefined } })
+            }
+            className={cn('h-full transition-all ease-in-out')}
+            expanded={expanded}
+            setExpanded={(value) =>
+              navigate({
+                search: (prev: RelocationMapSerch) => ({
+                  ...prev,
+                  expanded: value,
+                }),
+              })
+            }
+            onCenter={() => fitBounds()}
           />
         )}
       </div>
@@ -120,13 +149,14 @@ const BuildingRelocationMapPage = (): JSX.Element => {
         className={'relative -z-10 h-[calc(100vh-1rem)] w-full rounded border'}
         scrollWheelZoom={true}
         ref={mapRef}
+        whenReady={() => fitBounds()}
       >
         {oldBuildings && (
           <GeoJSON
             data={oldBuildings}
             onEachFeature={onEachFeature}
             style={(feature) =>
-              feature?.properties.id === buildingId
+              feature?.properties.id === selectedBuildingId
                 ? { color: 'red', opacity: 1 }
                 : selectedMapItems &&
                     selectedMapItems
@@ -138,48 +168,38 @@ const BuildingRelocationMapPage = (): JSX.Element => {
             }
           />
         )}
-        {selectedMapItems && selectedMapItems.length > 0 && (
-          <>
-            {selectedMapItems
-              .filter((item) =>
-                ['construction', 'movement'].includes(item.type),
-              )
-              .map((item) => {
-                if (!item || !item?.geometry) return null;
-                return (
-                  <Polygon
-                    key={item?.id + item.type}
-                    positions={item?.geometry?.coordinates}
-                    pathOptions={{
-                      color: mapItemColors[item?.type || 'construction'],
-                    }}
-                  >
-                    <Tooltip>{item?.adress || ''}</Tooltip>
-                  </Polygon>
-                );
-              })}
-            {selectedMapItems
-              .filter((item) => item.start && item.finish)
-              .map((item) => {
-                return (
-                  <MapCurve
-                    key={item.id + 'curve'}
-                    start={item?.start.coordinates}
-                    finish={item?.finish.coordinates}
-                  />
-                );
-              })}
-          </>
-        )}
-        {buildingId && (
-          <Button
-            variant="outline"
-            className="absolute right-2 bottom-2 z-[1000] h-10 w-10 p-0"
-            onClick={() => fitBounds()}
-          >
-            <Focus className="h-6 w-6" />
-          </Button>
-        )}
+        {selectedMapItems &&
+          selectedMapItems.length > 0 &&
+          selectedMapItems
+            .filter((item) => ['construction', 'movement'].includes(item.type))
+            .map((item) => {
+              if (!item || !item?.geometry) return null;
+              return (
+                <Polygon
+                  key={item?.id + item.type}
+                  positions={item?.geometry?.coordinates}
+                  pathOptions={{
+                    color: mapItemColors[item?.type || 'construction'],
+                  }}
+                >
+                  <Tooltip>{item?.adress || ''}</Tooltip>
+                </Polygon>
+              );
+            })}
+
+        {selectedMapItems &&
+          selectedMapItems.length > 0 &&
+          selectedMapItems
+            .filter((item) => item.start && item.finish)
+            .map((item) => {
+              return (
+                <MapCurve
+                  key={item.id + 'curve'}
+                  start={item?.start.coordinates}
+                  finish={item?.finish.coordinates}
+                />
+              );
+            })}
       </MapComponent>
     </div>
   );
