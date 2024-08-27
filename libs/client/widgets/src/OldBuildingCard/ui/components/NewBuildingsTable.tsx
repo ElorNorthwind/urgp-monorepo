@@ -27,6 +27,7 @@ type NewBuildingsTableProps = {
   emptyText?: string;
   connectedPlots?: ConnectedPlots[];
   oldBuildingId?: number;
+  mode?: 'map' | 'table';
 };
 const NewBuildingsTable = ({
   buildings,
@@ -35,6 +36,7 @@ const NewBuildingsTable = ({
   emptyText = 'Нет адресов',
   connectedPlots,
   oldBuildingId = 0,
+  mode = 'table',
 }: NewBuildingsTableProps): JSX.Element => {
   const navigate = useNavigate({ from: '/renovation/oldbuildings' });
 
@@ -111,7 +113,10 @@ const NewBuildingsTable = ({
                           onClick={() =>
                             plot.id !== oldBuildingId &&
                             navigate({
-                              to: `/renovation/oldbuildings`,
+                              // to:
+                              //   mode === 'map'
+                              //     ? `/renovation/building-relocation-map`
+                              //     : `/renovation/oldbuildings`,
                               search: (prev: OldBuildingsPageSearch) => ({
                                 ...prev,
                                 selectedBuildingId: plot.id,

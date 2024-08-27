@@ -8,7 +8,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { DoorClosed, Gauge, House, MailQuestion } from 'lucide-react';
+import { DoorClosed, Gauge, House, MailQuestion, Map } from 'lucide-react';
 import { useSelector } from 'react-redux';
 
 const RenovationNavbar = (): JSX.Element => {
@@ -71,6 +71,32 @@ const RenovationNavbar = (): JSX.Element => {
         <TooltipPortal>
           <TooltipContent side="right" className="">
             Квартирны в отселяемых домах
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            className={cn(
+              'text-muted-foreground flex p-0',
+              router.location.pathname ===
+                '/renovation/building-relocation-map' &&
+                'bg-muted-foreground/10 text-primary',
+            )}
+            disabled={
+              router.location.pathname === '/renovation/building-relocation-map'
+            }
+            variant="ghost"
+            onClick={() =>
+              navigate({ to: '/renovation/building-relocation-map' })
+            }
+          >
+            <Map className="" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent side="right" className="">
+            Карта отселяемых домов
           </TooltipContent>
         </TooltipPortal>
       </Tooltip>
