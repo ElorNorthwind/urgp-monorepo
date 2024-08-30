@@ -81,12 +81,6 @@ const BuildingRelocationMapPage = (): JSX.Element => {
                 selectedBuildingId: e.sourceTarget.feature.properties.id,
               }),
             });
-          // fitBounds();
-          //   mapRef?.current &&
-          //     mapRef.current.panTo([
-          //       e.sourceTarget.feature.geometry.coordinates[0][0][0][1],
-          //       e.sourceTarget.feature.geometry.coordinates[0][0][0][0],
-          //     ]);
         },
       });
     },

@@ -2,25 +2,28 @@ import { StyleFunction } from 'leaflet';
 
 export const mapItemStyles = {
   buildingUnselected: {
-    color: '#854d0e',
-    opacity: 0.3,
+    color: '#a8a29e',
+    fillColor: '#d6d3d1',
+    opacity: 1,
+    fillOpacity: 1,
     zIndex: 10,
     weight: 1,
-    fillOpacity: 0.3,
   },
   buildingOnPlot: {
-    color: '#f59e0b',
+    color: '#fbbf24',
+    fillColor: '#fed7aa',
     opacity: 1,
+    fillOpacity: 1,
     zIndex: 10,
     weight: 1,
-    fillOpacity: 0.4,
   },
   buildingSelected: {
-    color: '#dc2626',
+    color: '#f87171',
+    fillColor: '#fecaca',
     opacity: 1,
+    fillOpacity: 1,
     zIndex: 10,
     weight: 1,
-    fillOpacity: 0.4,
   },
   plotUnselected: {
     fillOpacity: 0.1,
@@ -39,8 +42,8 @@ export const mapItemStyles = {
     zIndex: -1,
   },
   plotConstruction: {
-    fillOpacity: 0.3,
-    color: '#f59e0b',
+    fillOpacity: 0.2,
+    color: '#fbbf24',
     dashArray: '3',
     weight: 1,
     opacity: 1,

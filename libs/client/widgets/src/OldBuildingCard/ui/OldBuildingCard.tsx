@@ -180,14 +180,14 @@ const OldBuildingsCard = ({
                 <div className="flex h-full flex-col gap-2">
                   <NewBuildingsTable
                     buildings={building.newBuildingMovements}
-                    className="max-h-[200px] w-full"
+                    className={cn('w-full', mode !== 'map' && 'max-h-[200px]')}
                     heading="Переселяется в"
                     emptyText="Не определены адреса переселения"
                     mode={mode}
                   />
                   <NewBuildingsTable
                     buildings={building.newBuildingConstructions}
-                    className="max-h-[200px] w-full"
+                    className={cn('w-full', mode !== 'map' && 'max-h-[200px]')}
                     heading="Строится на месте сноса"
                     emptyText="Нет площадок на месте сноса"
                     connectedPlots={connectedPlots}
