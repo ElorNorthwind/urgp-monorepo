@@ -22,7 +22,7 @@ import {
   MessagesUnansweredDto,
   UnansweredMessage,
   OldBuildingRelocationMapElement,
-  OldBuildingsGeoJSON,
+  BuildingsGeoJSON,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -75,9 +75,15 @@ export class RenovationRepository {
   ) {}
 
   // Returns geojson of old buildings;
-  async getOldBuildingsGeoJson(): Promise<OldBuildingsGeoJSON> {
-    const result = await this.db.one(renovation.getOldBuldingsGeoJson);
-    return result['geojson'] as OldBuildingsGeoJSON;
+  async getOldBuildingsGeoJson(): Promise<BuildingsGeoJSON> {
+    const result = await this.db.one(renovation.oldBuldingsGeoJson);
+    return result['geojson'] as BuildingsGeoJSON;
+  }
+
+  // Returns geojson of new buildings (plots);
+  async getNewBuildingsGeoJson(): Promise<BuildingsGeoJSON> {
+    const result = await this.db.one(renovation.newBuildingsGeoJson);
+    return result['geojson'] as BuildingsGeoJSON;
   }
 
   // Returns old houses for renovation;

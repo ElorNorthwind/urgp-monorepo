@@ -33,7 +33,7 @@ import {
   OldAppartment,
   OldBuilding,
   OldBuildingRelocationMapElement,
-  OldBuildingsGeoJSON,
+  BuildingsGeoJSON,
   RequestWithUserData,
   UnansweredMessage,
   UpdateMessageDto,
@@ -45,8 +45,13 @@ export class RenovationController {
   constructor(private readonly renovation: RenovationService) {}
 
   @Get('old-geojson')
-  getOldGeoJson(): Promise<OldBuildingsGeoJSON> {
+  getOldGeoJson(): Promise<BuildingsGeoJSON> {
     return this.renovation.getOldBuildingsGeoJson();
+  }
+
+  @Get('new-geojson')
+  getNewGeoJson(): Promise<BuildingsGeoJSON> {
+    return this.renovation.getNewBuildingsGeoJson();
   }
 
   @Get('old-buildings')

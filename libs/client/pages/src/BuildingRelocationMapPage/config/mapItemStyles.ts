@@ -6,7 +6,6 @@ export const mapItemStyles = {
     fillColor: '#d6d3d1',
     opacity: 1,
     fillOpacity: 1,
-    zIndex: 10,
     weight: 1,
   },
   buildingOnPlot: {
@@ -14,7 +13,6 @@ export const mapItemStyles = {
     fillColor: '#fed7aa',
     opacity: 1,
     fillOpacity: 1,
-    zIndex: 10,
     weight: 1,
   },
   buildingSelected: {
@@ -22,14 +20,12 @@ export const mapItemStyles = {
     fillColor: '#fecaca',
     opacity: 1,
     fillOpacity: 1,
-    zIndex: 10,
     weight: 1,
   },
   plotUnselected: {
     fillOpacity: 0.1,
     color: '#334155',
     opacity: 0.3,
-    zIndex: -1,
     dashArray: '3',
     weight: 1,
   },
@@ -39,14 +35,12 @@ export const mapItemStyles = {
     dashArray: '3',
     weight: 1,
     opacity: 1,
-    zIndex: -1,
   },
   plotConstruction: {
     fillOpacity: 0.2,
-    color: '#fbbf24',
+    color: '#334155',
     dashArray: '3',
     weight: 1,
     opacity: 1,
-    zIndex: -1,
   },
 } as Record<string, ReturnType<StyleFunction>>;

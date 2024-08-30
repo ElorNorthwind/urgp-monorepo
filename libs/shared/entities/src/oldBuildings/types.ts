@@ -179,7 +179,7 @@ export type OldBuildingRelocationMapElement = {
   bounds: geoJsonExpression<LatLngExpression[]>;
 };
 
-export type OldBuildingsGeoJSON = GeoJSON.FeatureCollection<
+export type BuildingsGeoJSON = GeoJSON.FeatureCollection<
   MultiPolygon,
   { id: number; adress: string }
 >;

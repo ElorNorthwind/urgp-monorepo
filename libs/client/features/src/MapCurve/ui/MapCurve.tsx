@@ -11,22 +11,24 @@ type MapCurveProps = {
   start: LatLngTuple;
   finish: LatLngTuple;
   className?: string;
+  pane?: string;
 };
 
 export const MapCurve: React.FC<MapCurveProps> = memo(
-  ({ start, finish, className }) => {
+  ({ start, finish, className, pane }) => {
     const map = useMap();
 
     useEffect(() => {
       const curve = createCurve(start, finish, {
         className: cn(classes['path'], 'opacity-50 stroke-red-500', className),
+        pane: pane,
       });
 
       curve.addTo(map);
       return () => {
         map.removeLayer(curve);
       };
-    }, [map, start, finish, className]);
+    }, [map, start, finish, className, pane]);
     return null;
   },
 );

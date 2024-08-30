@@ -1,4 +1,5 @@
 import {
+  useNewBuildingsGeoJson,
   useOldBuildingRelocationMap,
   useOldBuildingsGeoJson,
   useOldBuldingById,
@@ -6,10 +7,10 @@ import {
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { cn, MapComponent } from '@urgp/client/shared';
 import { OldBuildingsCard } from '@urgp/client/widgets';
-import { useCallback, useEffect, useRef } from 'react';
-import { GeoJSON } from 'react-leaflet';
+import { useCallback, useEffect, useState } from 'react';
+import { GeoJSON, LayerGroup, Pane } from 'react-leaflet';
 import {
-  OldBuildingsGeoJSON,
+  BuildingsGeoJSON,
   RelocationMapPageSerch,
 } from '@urgp/shared/entities';
 import { MapCurve } from '@urgp/client/features';
@@ -20,7 +21,8 @@ const BuildingRelocationMapPage = (): JSX.Element => {
   const { selectedBuildingId, expanded } = getRouteApi(
     '/renovation/building-relocation-map',
   ).useSearch();
-  const mapRef = useRef<Map>(null);
+  // const mapRef = useRef<Map>(null);
+  const [map, setMap] = useState<Map | null>(null);
 
   const navigate = useNavigate({ from: '/renovation/building-relocation-map' });
 
@@ -29,6 +31,12 @@ const BuildingRelocationMapPage = (): JSX.Element => {
     isFetching,
     isLoading,
   } = useOldBuildingsGeoJson();
+
+  const {
+    data: newBuildings,
+    isFetching: isNewBuildingsFetching,
+    isLoading: isNewBuildingsLoading,
+  } = useNewBuildingsGeoJson();
 
   const {
     data: selectedMapItems,
@@ -47,15 +55,15 @@ const BuildingRelocationMapPage = (): JSX.Element => {
   });
 
   const fitBounds = useCallback(() => {
-    if (!mapRef.current) return;
+    if (!map) return;
 
     const bounds = new LatLngBounds(
       selectedMapItems?.[0]?.bounds?.coordinates?.[0] as LatLngTuple,
       selectedMapItems?.[0]?.bounds?.coordinates?.[3] as LatLngTuple,
     );
 
-    mapRef.current?.fitBounds(bounds, { padding: [50, 50] });
-  }, [selectedMapItems, mapRef]);
+    map.fitBounds(bounds, { padding: [50, 50] });
+  }, [selectedMapItems, map]);
 
   useEffect(() => {
     const timer1 = setTimeout(() => {
@@ -66,21 +74,40 @@ const BuildingRelocationMapPage = (): JSX.Element => {
     };
   }, [fitBounds, isFetching, selectedBuildingId]);
 
-  const onEachFeature = useCallback(
-    (feature: OldBuildingsGeoJSON['features'][0], layer: Layer) => {
+  const onEachNewFeature = useCallback(
+    (feature: BuildingsGeoJSON['features'][0], layer: Layer) => {
       layer.bindTooltip(() => {
         return feature.properties?.adress || '';
       });
 
       layer.on({
         click: (e: LeafletEvent) => {
-          e.sourceTarget.feature.properties.type === 'old' &&
-            navigate({
-              search: (prev: RelocationMapPageSerch) => ({
-                ...prev,
-                selectedBuildingId: e.sourceTarget.feature.properties.id,
-              }),
-            });
+          navigate({
+            search: (prev: RelocationMapPageSerch) => ({
+              ...prev,
+              selectedPlotId: e.sourceTarget.feature.properties.id,
+            }),
+          });
+        },
+      });
+    },
+    [navigate],
+  );
+
+  const onEachOldFeature = useCallback(
+    (feature: BuildingsGeoJSON['features'][0], layer: Layer) => {
+      layer.bindTooltip(() => {
+        return feature.properties?.adress || '';
+      });
+
+      layer.on({
+        click: (e: LeafletEvent) => {
+          navigate({
+            search: (prev: RelocationMapPageSerch) => ({
+              ...prev,
+              selectedBuildingId: e.sourceTarget.feature.properties.id,
+            }),
+          });
         },
       });
     },
@@ -122,20 +149,22 @@ const BuildingRelocationMapPage = (): JSX.Element => {
         // isLoading={isLoading || isFetching}
         className={'relative -z-10 h-[calc(100vh-1rem)] w-full rounded border'}
         scrollWheelZoom={true}
-        ref={mapRef}
+        ref={setMap}
         whenReady={() => fitBounds()}
       >
-        {oldBuildings && (
-          <GeoJSON
-            data={oldBuildings}
-            onEachFeature={onEachFeature}
-            style={(feature) =>
-              feature?.properties.type === 'new'
-                ? selectedMapItems &&
-                  selectedMapItems
-                    .filter((item) => item.type === 'movement')
-                    .map((item) => item.id)
-                    .includes(feature?.properties.id)
+        <Pane name="newBuildings" style={{ zIndex: 401 }}>
+          {newBuildings && (
+            <GeoJSON
+              key="newBuildings"
+              pane="newBuildings"
+              data={newBuildings}
+              onEachFeature={onEachNewFeature}
+              style={(feature) =>
+                selectedMapItems &&
+                selectedMapItems
+                  .filter((item) => item.type === 'movement')
+                  .map((item) => item.id)
+                  .includes(feature?.properties.id)
                   ? mapItemStyles['plotMovement']
                   : selectedMapItems &&
                       selectedMapItems
@@ -144,7 +173,19 @@ const BuildingRelocationMapPage = (): JSX.Element => {
                         .includes(feature?.properties.id)
                     ? mapItemStyles['plotConstruction']
                     : mapItemStyles['plotUnselected']
-                : feature?.properties.id === selectedBuildingId
+              }
+            />
+          )}
+        </Pane>
+        <Pane name="oldBuildings" style={{ zIndex: 402 }}>
+          {oldBuildings && (
+            <GeoJSON
+              key="oldBuildings"
+              pane="oldBuildings"
+              data={oldBuildings}
+              onEachFeature={onEachOldFeature}
+              style={(feature) =>
+                feature?.properties.id === selectedBuildingId
                   ? mapItemStyles['buildingSelected']
                   : selectedMapItems &&
                       selectedMapItems
@@ -153,22 +194,26 @@ const BuildingRelocationMapPage = (): JSX.Element => {
                         .includes(feature?.properties.id)
                     ? mapItemStyles['buildingOnPlot']
                     : mapItemStyles['buildingUnselected']
-            }
-          />
-        )}
-        {selectedMapItems &&
-          selectedMapItems.length > 0 &&
-          selectedMapItems
-            .filter((item) => item.start && item.finish)
-            .map((item) => {
-              return (
-                <MapCurve
-                  key={item.id + 'curve'}
-                  start={item?.start.coordinates}
-                  finish={item?.finish.coordinates}
-                />
-              );
-            })}
+              }
+            />
+          )}
+        </Pane>
+        <Pane name="connections" style={{ zIndex: 403 }}>
+          {selectedMapItems &&
+            selectedMapItems.length > 0 &&
+            selectedMapItems
+              .filter((item) => item.start && item.finish)
+              .map((item) => {
+                return (
+                  <MapCurve
+                    pane="connections"
+                    key={item.id + 'curve'}
+                    start={item?.start.coordinates}
+                    finish={item?.finish.coordinates}
+                  />
+                );
+              })}
+        </Pane>
       </MapComponent>
     </div>
   );
