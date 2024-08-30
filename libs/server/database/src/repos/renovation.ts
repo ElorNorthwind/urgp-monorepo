@@ -23,10 +23,10 @@ import {
   UnansweredMessage,
   BuildingRelocationMapElement,
   BuildingsGeoJSON,
+  NewBuilding,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
-import { MultiPolygon } from 'geojson';
 // import { Logger } from '@nestjs/common';
 
 // // Helper for linking to external query files:
@@ -159,6 +159,13 @@ export class RenovationRepository {
       offset: 0,
       conditions: `WHERE id = ${id}`,
       ordering: 'o.rank, district, adress',
+    });
+  }
+
+  // Returns old houses for renovation;
+  getNewBuildingById(id: number): Promise<NewBuilding | null> {
+    return this.db.oneOrNone(renovation.newBuildings, {
+      id: id,
     });
   }
 

@@ -37,6 +37,7 @@ import {
   RequestWithUserData,
   UnansweredMessage,
   UpdateMessageDto,
+  NewBuilding,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 
@@ -65,6 +66,11 @@ export class RenovationController {
   @Get('old-building/:id')
   getOldBuildingById(@Param('id') id: number): Promise<OldBuilding | null> {
     return this.renovation.getOldBuildingById(id);
+  }
+
+  @Get('new-building/:id')
+  getNewBuildingById(@Param('id') id: number): Promise<NewBuilding | null> {
+    return this.renovation.getNewBuildingById(id);
   }
 
   @Get('old-apartments')

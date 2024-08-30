@@ -28,6 +28,7 @@ export const renovation = {
   oldBuildingRelocationMap: sql('sql/renovation/oldBuildingRelocationMap.sql'),
   newBuildingRelocationMap: sql('sql/renovation/newBuildingRelocationMap.sql'),
   newBuildingsGeoJson: sql('sql/renovation/newBuildingsGeoJson.sql'),
+  newBuildings: sql('sql/renovation/newBuildings.sql'),
 };
 
 export const users = {

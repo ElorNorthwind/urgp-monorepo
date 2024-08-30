@@ -1,15 +1,16 @@
 import {
   useNewBuildingRelocationMap,
   useNewBuildingsGeoJson,
+  useNewBuldingById,
   useOldBuildingRelocationMap,
   useOldBuildingsGeoJson,
   useOldBuldingById,
 } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { cn, MapComponent } from '@urgp/client/shared';
-import { OldBuildingsCard } from '@urgp/client/widgets';
+import { NewBuildingsCard, OldBuildingsCard } from '@urgp/client/widgets';
 import { useCallback, useEffect, useState } from 'react';
-import { GeoJSON, LayerGroup, Pane } from 'react-leaflet';
+import { GeoJSON, Pane } from 'react-leaflet';
 import {
   BuildingsGeoJSON,
   RelocationMapPageSerch,
@@ -49,6 +50,14 @@ const BuildingRelocationMapPage = (): JSX.Element => {
     isFetching: isBuildingFetching,
   } = useOldBuldingById(selectedBuildingId || 0, {
     skip: selectedBuildingId === 0,
+  });
+
+  const {
+    data: newBuilding,
+    isLoading: isNewBuildingLoading,
+    isFetching: isNewBuildingFetching,
+  } = useNewBuldingById(selectedPlotId || 0, {
+    skip: selectedPlotId === 0,
   });
 
   const fitBounds = useCallback(() => {
@@ -140,6 +149,28 @@ const BuildingRelocationMapPage = (): JSX.Element => {
         !selectedBuildingId ? null : (
           <OldBuildingsCard
             building={oldBuilding || null}
+            mode="map"
+            onClose={() =>
+              navigate({ search: { selectedBuildingId: undefined } })
+            }
+            className={cn('h-full transition-all ease-in-out')}
+            expanded={expanded}
+            setExpanded={(value) =>
+              navigate({
+                search: (prev: RelocationMapPageSerch) => ({
+                  ...prev,
+                  expanded: value,
+                }),
+              })
+            }
+            onCenter={() => fitBounds()}
+          />
+        )}
+        {isNewBuildingLoading ||
+        isNewBuildingFetching ||
+        !selectedPlotId ? null : (
+          <NewBuildingsCard
+            building={newBuilding || null}
             mode="map"
             onClose={() =>
               navigate({ search: { selectedBuildingId: undefined } })

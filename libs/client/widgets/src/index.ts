@@ -14,3 +14,4 @@ export * from './DoneTimelineChart';
 export * from './OldApartmentDetailsSheet';
 export * from './OldBuildingCard';
 export * from './OldBuildingRelocationMap';
+export * from './NewBuildingCard';

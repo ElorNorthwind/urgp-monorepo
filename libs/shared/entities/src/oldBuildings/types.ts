@@ -13,7 +13,7 @@ type NewBuildingTerms = {
   settlement: string | null;
 };
 
-type NewBuilding = {
+export type NewBuilding = {
   id: number;
   adress: string;
   okrug: string;
