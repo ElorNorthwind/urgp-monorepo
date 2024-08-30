@@ -1,4 +1,5 @@
 import {
+  useNewBuildingRelocationMap,
   useNewBuildingsGeoJson,
   useOldBuildingRelocationMap,
   useOldBuildingsGeoJson,
@@ -18,7 +19,7 @@ import { LatLngBounds, LatLngTuple, Layer, LeafletEvent, Map } from 'leaflet';
 import { mapItemStyles } from '../config/mapItemStyles';
 
 const BuildingRelocationMapPage = (): JSX.Element => {
-  const { selectedBuildingId, expanded } = getRouteApi(
+  const { selectedBuildingId, expanded, selectedPlotId } = getRouteApi(
     '/renovation/building-relocation-map',
   ).useSearch();
   // const mapRef = useRef<Map>(null);
@@ -26,25 +27,21 @@ const BuildingRelocationMapPage = (): JSX.Element => {
 
   const navigate = useNavigate({ from: '/renovation/building-relocation-map' });
 
-  const {
-    data: oldBuildings,
-    isFetching,
-    isLoading,
-  } = useOldBuildingsGeoJson();
+  const { data: oldBuildings, isFetching } = useOldBuildingsGeoJson();
+  const { data: newBuildings } = useNewBuildingsGeoJson();
+  const { data: selectedOldBuilding } = useOldBuildingRelocationMap(
+    selectedBuildingId || 0,
+    {
+      skip: selectedBuildingId === 0,
+    },
+  );
 
-  const {
-    data: newBuildings,
-    isFetching: isNewBuildingsFetching,
-    isLoading: isNewBuildingsLoading,
-  } = useNewBuildingsGeoJson();
-
-  const {
-    data: selectedMapItems,
-    isFetching: isSelectedMapItemsFetching,
-    isLoading: isSelectedMapItemsLoading,
-  } = useOldBuildingRelocationMap(selectedBuildingId || 0, {
-    skip: selectedBuildingId === 0,
-  });
+  const { data: selectedNewBuilding } = useNewBuildingRelocationMap(
+    selectedPlotId || 0,
+    {
+      skip: selectedPlotId === 0,
+    },
+  );
 
   const {
     data: oldBuilding,
@@ -57,27 +54,41 @@ const BuildingRelocationMapPage = (): JSX.Element => {
   const fitBounds = useCallback(() => {
     if (!map) return;
 
-    const bounds = new LatLngBounds(
-      selectedMapItems?.[0]?.bounds?.coordinates?.[0] as LatLngTuple,
-      selectedMapItems?.[0]?.bounds?.coordinates?.[3] as LatLngTuple,
-    );
+    if (selectedPlotId) {
+      const bounds = new LatLngBounds(
+        selectedNewBuilding?.[0]?.bounds?.coordinates?.[0] as LatLngTuple,
+        selectedNewBuilding?.[0]?.bounds?.coordinates?.[3] as LatLngTuple,
+      );
+      map.fitBounds(bounds, { padding: [50, 50] });
+    } else if (selectedBuildingId) {
+      const bounds = new LatLngBounds(
+        selectedOldBuilding?.[0]?.bounds?.coordinates?.[0] as LatLngTuple,
+        selectedOldBuilding?.[0]?.bounds?.coordinates?.[3] as LatLngTuple,
+      );
 
-    map.fitBounds(bounds, { padding: [50, 50] });
-  }, [selectedMapItems, map]);
+      map.fitBounds(bounds, { padding: [50, 50] });
+    }
+  }, [
+    map,
+    selectedPlotId,
+    selectedBuildingId,
+    selectedNewBuilding,
+    selectedOldBuilding,
+  ]);
 
   useEffect(() => {
-    const timer1 = setTimeout(() => {
+    const boundsTimer = setTimeout(() => {
       fitBounds();
     }, 200);
     return () => {
-      clearTimeout(timer1);
+      clearTimeout(boundsTimer);
     };
-  }, [fitBounds, isFetching, selectedBuildingId]);
+  }, [fitBounds, isFetching, selectedOldBuilding, selectedNewBuilding]);
 
   const onEachNewFeature = useCallback(
     (feature: BuildingsGeoJSON['features'][0], layer: Layer) => {
       layer.bindTooltip(() => {
-        return feature.properties?.adress || '';
+        return `<b>Площадка:</b></br>` + feature.properties?.adress || '';
       });
 
       layer.on({
@@ -85,6 +96,7 @@ const BuildingRelocationMapPage = (): JSX.Element => {
           navigate({
             search: (prev: RelocationMapPageSerch) => ({
               ...prev,
+              selectedBuildingId: undefined,
               selectedPlotId: e.sourceTarget.feature.properties.id,
             }),
           });
@@ -106,6 +118,7 @@ const BuildingRelocationMapPage = (): JSX.Element => {
             search: (prev: RelocationMapPageSerch) => ({
               ...prev,
               selectedBuildingId: e.sourceTarget.feature.properties.id,
+              selectedPlotId: undefined,
             }),
           });
         },
@@ -160,19 +173,21 @@ const BuildingRelocationMapPage = (): JSX.Element => {
               data={newBuildings}
               onEachFeature={onEachNewFeature}
               style={(feature) =>
-                selectedMapItems &&
-                selectedMapItems
-                  .filter((item) => item.type === 'movement')
-                  .map((item) => item.id)
-                  .includes(feature?.properties.id)
+                feature?.properties.id === selectedPlotId
                   ? mapItemStyles['plotMovement']
-                  : selectedMapItems &&
-                      selectedMapItems
-                        .filter((item) => item.type === 'construction')
+                  : selectedOldBuilding &&
+                      selectedOldBuilding
+                        .filter((item) => item.type === 'movement')
                         .map((item) => item.id)
                         .includes(feature?.properties.id)
-                    ? mapItemStyles['plotConstruction']
-                    : mapItemStyles['plotUnselected']
+                    ? mapItemStyles['plotMovement']
+                    : selectedOldBuilding &&
+                        selectedOldBuilding
+                          .filter((item) => item.type === 'construction')
+                          .map((item) => item.id)
+                          .includes(feature?.properties.id)
+                      ? mapItemStyles['plotConstruction']
+                      : mapItemStyles['plotUnselected']
               }
             />
           )}
@@ -187,26 +202,53 @@ const BuildingRelocationMapPage = (): JSX.Element => {
               style={(feature) =>
                 feature?.properties.id === selectedBuildingId
                   ? mapItemStyles['buildingSelected']
-                  : selectedMapItems &&
-                      selectedMapItems
+                  : selectedOldBuilding &&
+                      selectedOldBuilding
                         .filter((item) => item.type === 'other_on_plot')
                         .map((item) => item.id)
                         .includes(feature?.properties.id)
                     ? mapItemStyles['buildingOnPlot']
-                    : mapItemStyles['buildingUnselected']
+                    : selectedNewBuilding &&
+                        selectedNewBuilding
+                          .filter((item) => item.type === 'movement')
+                          .map((item) => item.id)
+                          .includes(feature?.properties.id)
+                      ? mapItemStyles['buildingMoves']
+                      : selectedNewBuilding &&
+                          selectedNewBuilding
+                            .filter((item) => item.type === 'construction')
+                            .map((item) => item.id)
+                            .includes(feature?.properties.id)
+                        ? mapItemStyles['buildingToDemolish']
+                        : mapItemStyles['buildingUnselected']
               }
             />
           )}
         </Pane>
         <Pane name="connections" style={{ zIndex: 403 }}>
-          {selectedMapItems &&
-            selectedMapItems.length > 0 &&
-            selectedMapItems
+          {selectedOldBuilding &&
+            selectedOldBuilding.length > 0 &&
+            selectedOldBuilding
               .filter((item) => item.start && item.finish)
               .map((item) => {
                 return (
                   <MapCurve
                     pane="connections"
+                    key={item.id + 'curve'}
+                    start={item?.start.coordinates}
+                    finish={item?.finish.coordinates}
+                  />
+                );
+              })}
+          {selectedNewBuilding &&
+            selectedNewBuilding.length > 0 &&
+            selectedNewBuilding
+              .filter((item) => item.start && item.finish)
+              .map((item) => {
+                return (
+                  <MapCurve
+                    pane="connections"
+                    variant="green"
                     key={item.id + 'curve'}
                     start={item?.start.coordinates}
                     finish={item?.finish.coordinates}

@@ -26,6 +26,7 @@ export const renovation = {
   unansweredMessages: sql('sql/renovation/unansweredMessages.sql'),
   oldBuildingList: sql('sql/renovation/oldBuildingList.sql'),
   oldBuildingRelocationMap: sql('sql/renovation/oldBuildingRelocationMap.sql'),
+  newBuildingRelocationMap: sql('sql/renovation/newBuildingRelocationMap.sql'),
   newBuildingsGeoJson: sql('sql/renovation/newBuildingsGeoJson.sql'),
 };
 

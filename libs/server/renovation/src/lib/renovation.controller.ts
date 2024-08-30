@@ -32,7 +32,7 @@ import {
   OldApartmentTimeline,
   OldAppartment,
   OldBuilding,
-  OldBuildingRelocationMapElement,
+  BuildingRelocationMapElement,
   BuildingsGeoJSON,
   RequestWithUserData,
   UnansweredMessage,
@@ -214,8 +214,15 @@ export class RenovationController {
   @Get('old-building-relocation-map/:id')
   getOldBuildingRelocationMap(
     @Param('id') id: number,
-  ): Promise<OldBuildingRelocationMapElement[]> {
+  ): Promise<BuildingRelocationMapElement[]> {
     return this.renovation.getOldBuildingRelocationMap(id);
+  }
+
+  @Get('new-building-relocation-map/:id')
+  getNewBuildingRelocationMap(
+    @Param('id') id: number,
+  ): Promise<BuildingRelocationMapElement[]> {
+    return this.renovation.getNewBuildingRelocationMap(id);
   }
 }
 

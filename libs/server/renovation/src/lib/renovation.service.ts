@@ -14,7 +14,7 @@ import {
   CityTotalDeviations,
   UnansweredMessage,
   MessagesUnansweredDto,
-  OldBuildingRelocationMapElement,
+  BuildingRelocationMapElement,
 } from '@urgp/shared/entities';
 
 @Injectable()
@@ -103,7 +103,13 @@ export class RenovationService {
 
   public async getOldBuildingRelocationMap(
     id: number,
-  ): Promise<OldBuildingRelocationMapElement[]> {
+  ): Promise<BuildingRelocationMapElement[]> {
     return this.dbServise.db.renovation.getOldBuildingRelocationMap(id);
+  }
+
+  public async getNewBuildingRelocationMap(
+    id: number,
+  ): Promise<BuildingRelocationMapElement[]> {
+    return this.dbServise.db.renovation.getNewBuildingRelocationMap(id);
   }
 }

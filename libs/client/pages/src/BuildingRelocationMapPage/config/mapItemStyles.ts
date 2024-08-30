@@ -22,6 +22,20 @@ export const mapItemStyles = {
     fillOpacity: 1,
     weight: 1,
   },
+  buildingMoves: {
+    color: '#10b981',
+    fillColor: '#a7f3d0',
+    opacity: 1,
+    fillOpacity: 1,
+    weight: 1,
+  },
+  buildingToDemolish: {
+    color: '#8b5cf6',
+    fillColor: '#c4b5fd',
+    opacity: 1,
+    fillOpacity: 1,
+    weight: 1,
+  },
   plotUnselected: {
     fillOpacity: 0.1,
     color: '#334155',

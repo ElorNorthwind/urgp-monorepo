@@ -168,7 +168,7 @@ type geoJsonExpression<Tjson> = {
   coordinates: Tjson;
 };
 
-export type OldBuildingRelocationMapElement = {
+export type BuildingRelocationMapElement = {
   id: number;
   adress: string;
   geometry: geoJsonExpression<LatLngExpression[]>;

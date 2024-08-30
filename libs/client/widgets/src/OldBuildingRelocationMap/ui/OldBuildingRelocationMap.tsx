@@ -3,7 +3,7 @@ import React, { forwardRef } from 'react';
 import { Polygon, Popup } from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css';
-import { OldBuildingRelocationMapElement } from '@urgp/shared/entities';
+import { BuildingRelocationMapElement } from '@urgp/shared/entities';
 import { FitBounds } from './FitBounds';
 import { Map } from 'leaflet';
 import { MapCurve } from '@urgp/client/features';
@@ -21,7 +21,7 @@ const mapItemColors = {
   selected: 'red',
   construction: 'gray',
   other_on_plot: 'orange',
-} as Record<OldBuildingRelocationMapElement['type'], string>;
+} as Record<BuildingRelocationMapElement['type'], string>;
 
 export const OldBuildingRelocationMap = forwardRef<
   Map,
