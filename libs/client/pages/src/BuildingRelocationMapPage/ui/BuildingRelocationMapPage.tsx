@@ -1,40 +1,20 @@
 import {
-  DeviationChart,
-  OldBuildingTermsChart,
-  useOldBuildingList,
   useOldBuildingRelocationMap,
   useOldBuildingsGeoJson,
   useOldBuldingById,
 } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import { Button, cn, Combobox, MapComponent } from '@urgp/client/shared';
-import {
-  OldBuildingRelocationMap,
-  OldBuildingsCard,
-} from '@urgp/client/widgets';
+import { cn, MapComponent } from '@urgp/client/shared';
+import { OldBuildingsCard } from '@urgp/client/widgets';
 import { useCallback, useEffect, useRef } from 'react';
-import { Marker, Polygon, Popup, Tooltip, GeoJSON } from 'react-leaflet';
+import { GeoJSON } from 'react-leaflet';
 import {
-  OldBuildingRelocationMapElement,
-  RelocationMapSerch,
+  OldBuildingsGeoJSON,
+  RelocationMapPageSerch,
 } from '@urgp/shared/entities';
 import { MapCurve } from '@urgp/client/features';
-import {
-  geoJson,
-  LatLngBounds,
-  LatLngExpression,
-  LatLngTuple,
-  LeafletEvent,
-  Map,
-} from 'leaflet';
-import { Focus } from 'lucide-react';
-
-const mapItemColors = {
-  movement: 'blue',
-  selected: 'red',
-  construction: 'gray',
-  other_on_plot: 'orange',
-} as Record<OldBuildingRelocationMapElement['type'], string>;
+import { LatLngBounds, LatLngTuple, Layer, LeafletEvent, Map } from 'leaflet';
+import { mapItemStyles } from '../config/mapItemStyles';
 
 const BuildingRelocationMapPage = (): JSX.Element => {
   const { selectedBuildingId, expanded } = getRouteApi(
@@ -42,7 +22,6 @@ const BuildingRelocationMapPage = (): JSX.Element => {
   ).useSearch();
   const mapRef = useRef<Map>(null);
 
-  // const { data: oldBuildings, isLoading, isFetching } = useOldBuildingList();
   const navigate = useNavigate({ from: '/renovation/building-relocation-map' });
 
   const {
@@ -88,7 +67,7 @@ const BuildingRelocationMapPage = (): JSX.Element => {
   }, [fitBounds, isFetching, selectedBuildingId]);
 
   const onEachFeature = useCallback(
-    (feature: any, layer: any) => {
+    (feature: OldBuildingsGeoJSON['features'][0], layer: Layer) => {
       layer.bindTooltip(() => {
         return feature.properties?.adress || '';
       });
@@ -97,7 +76,7 @@ const BuildingRelocationMapPage = (): JSX.Element => {
         click: (e: LeafletEvent) => {
           e.sourceTarget.feature.properties.type === 'old' &&
             navigate({
-              search: (prev: any) => ({
+              search: (prev: RelocationMapPageSerch) => ({
                 ...prev,
                 selectedBuildingId: e.sourceTarget.feature.properties.id,
               }),
@@ -135,7 +114,7 @@ const BuildingRelocationMapPage = (): JSX.Element => {
             expanded={expanded}
             setExpanded={(value) =>
               navigate({
-                search: (prev: RelocationMapSerch) => ({
+                search: (prev: RelocationMapPageSerch) => ({
                   ...prev,
                   expanded: value,
                 }),
@@ -163,44 +142,23 @@ const BuildingRelocationMapPage = (): JSX.Element => {
                     .filter((item) => item.type === 'movement')
                     .map((item) => item.id)
                     .includes(feature?.properties.id)
-                  ? {
-                      fillOpacity: 0.3,
-                      color: '#0284c7',
-                      dashArray: '3',
-                      weight: 1,
-                      opacity: 1,
-                      zIndex: -1,
-                    }
+                  ? mapItemStyles['plotMovement']
                   : selectedMapItems &&
                       selectedMapItems
                         .filter((item) => item.type === 'construction')
                         .map((item) => item.id)
                         .includes(feature?.properties.id)
-                    ? {
-                        fillOpacity: 0.3,
-                        color: '#f59e0b',
-                        dashArray: '3',
-                        weight: 1,
-                        opacity: 1,
-                        zIndex: -1,
-                      }
-                    : {
-                        fillOpacity: 0.1,
-                        color: '#334155',
-                        opacity: 0.3,
-                        zIndex: -1,
-                        dashArray: '3',
-                        weight: 1,
-                      }
+                    ? mapItemStyles['plotConstruction']
+                    : mapItemStyles['plotUnselected']
                 : feature?.properties.id === selectedBuildingId
-                  ? { color: '#dc2626', opacity: 1, zIndex: 10, weight: 1 }
+                  ? mapItemStyles['buildingSelected']
                   : selectedMapItems &&
                       selectedMapItems
                         .filter((item) => item.type === 'other_on_plot')
                         .map((item) => item.id)
                         .includes(feature?.properties.id)
-                    ? { color: '#f59e0b', opacity: 1, zIndex: 10, weight: 1 }
-                    : { color: '#65a30d', opacity: 0.3, zIndex: 10, weight: 1 }
+                    ? mapItemStyles['buildingOnPlot']
+                    : mapItemStyles['buildingUnselected']
             }
           />
         )}

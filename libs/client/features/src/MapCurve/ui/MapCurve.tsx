@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { LatLngTuple } from 'leaflet';
 import classes from './MapCurve.module.css';
 import { cn, createCurve } from '@urgp/client/shared';
+import { Weight } from 'lucide-react';
 
 type MapCurveProps = {
   start: LatLngTuple;
@@ -18,7 +19,7 @@ export const MapCurve: React.FC<MapCurveProps> = memo(
 
     useEffect(() => {
       const curve = createCurve(start, finish, {
-        className: cn(classes['path'], 'opacity-50  stroke-red-500', className),
+        className: cn(classes['path'], 'opacity-50 stroke-red-500', className),
       });
 
       curve.addTo(map);
