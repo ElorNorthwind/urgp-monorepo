@@ -95,12 +95,13 @@ const BuildingRelocationMapPage = (): JSX.Element => {
 
       layer.on({
         click: (e: LeafletEvent) => {
-          navigate({
-            search: (prev: any) => ({
-              ...prev,
-              selectedBuildingId: e.sourceTarget.feature.properties.id,
-            }),
-          });
+          e.sourceTarget.feature.properties.type === 'old' &&
+            navigate({
+              search: (prev: any) => ({
+                ...prev,
+                selectedBuildingId: e.sourceTarget.feature.properties.id,
+              }),
+            });
           // fitBounds();
           //   mapRef?.current &&
           //     mapRef.current.panTo([
@@ -156,37 +157,53 @@ const BuildingRelocationMapPage = (): JSX.Element => {
             data={oldBuildings}
             onEachFeature={onEachFeature}
             style={(feature) =>
-              feature?.properties.id === selectedBuildingId
-                ? { color: 'red', opacity: 1 }
-                : selectedMapItems &&
-                    selectedMapItems
-                      .filter((item) => item.type === 'other_on_plot')
-                      .map((item) => item.id)
-                      .includes(feature?.properties.id)
-                  ? { color: 'orange', opacity: 1 }
-                  : { color: 'grey', opacity: 0.3 }
+              feature?.properties.type === 'new'
+                ? selectedMapItems &&
+                  selectedMapItems
+                    .filter((item) => item.type === 'movement')
+                    .map((item) => item.id)
+                    .includes(feature?.properties.id)
+                  ? {
+                      fillOpacity: 0.3,
+                      color: '#0284c7',
+                      dashArray: '3',
+                      weight: 1,
+                      opacity: 1,
+                      zIndex: -1,
+                    }
+                  : selectedMapItems &&
+                      selectedMapItems
+                        .filter((item) => item.type === 'construction')
+                        .map((item) => item.id)
+                        .includes(feature?.properties.id)
+                    ? {
+                        fillOpacity: 0.3,
+                        color: '#f59e0b',
+                        dashArray: '3',
+                        weight: 1,
+                        opacity: 1,
+                        zIndex: -1,
+                      }
+                    : {
+                        fillOpacity: 0.1,
+                        color: '#334155',
+                        opacity: 0.3,
+                        zIndex: -1,
+                        dashArray: '3',
+                        weight: 1,
+                      }
+                : feature?.properties.id === selectedBuildingId
+                  ? { color: '#dc2626', opacity: 1, zIndex: 10, weight: 1 }
+                  : selectedMapItems &&
+                      selectedMapItems
+                        .filter((item) => item.type === 'other_on_plot')
+                        .map((item) => item.id)
+                        .includes(feature?.properties.id)
+                    ? { color: '#f59e0b', opacity: 1, zIndex: 10, weight: 1 }
+                    : { color: '#65a30d', opacity: 0.3, zIndex: 10, weight: 1 }
             }
           />
         )}
-        {selectedMapItems &&
-          selectedMapItems.length > 0 &&
-          selectedMapItems
-            .filter((item) => ['construction', 'movement'].includes(item.type))
-            .map((item) => {
-              if (!item || !item?.geometry) return null;
-              return (
-                <Polygon
-                  key={item?.id + item.type}
-                  positions={item?.geometry?.coordinates}
-                  pathOptions={{
-                    color: mapItemColors[item?.type || 'construction'],
-                  }}
-                >
-                  <Tooltip>{item?.adress || ''}</Tooltip>
-                </Polygon>
-              );
-            })}
-
         {selectedMapItems &&
           selectedMapItems.length > 0 &&
           selectedMapItems
