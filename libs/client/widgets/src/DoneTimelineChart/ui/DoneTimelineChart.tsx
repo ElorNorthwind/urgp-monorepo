@@ -61,7 +61,7 @@ const DoneTimelineChart = ({
         ) : (
           <ChartContainer
             config={timelineChartConfig}
-            className="h-full w-full lg:h-[320px]"
+            className="mt-[-35px] h-full w-full lg:h-[320px]"
           >
             <AreaChart accessibilityLayer data={timeline}>
               <CartesianGrid vertical={false} />
@@ -99,7 +99,7 @@ const DoneTimelineChart = ({
                     }}
                   />
                 }
-                cursor={false}
+                // cursor={false}
               />
 
               <ChartLegend content={<ChartLegendContent />} />

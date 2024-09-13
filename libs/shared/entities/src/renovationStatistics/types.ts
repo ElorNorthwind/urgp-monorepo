@@ -22,3 +22,19 @@ export type CityTotalDeviations = {
   warning: number;
   notStarted: number;
 };
+
+export type CityTotalAgeInfo = {
+  age: string;
+  done: number;
+  risk: number;
+  warning: number;
+  none: number;
+};
+
+export type StartTimelineInfo = {
+  year: number;
+  month: number;
+  label: string;
+  started: number;
+  planned: number;
+};

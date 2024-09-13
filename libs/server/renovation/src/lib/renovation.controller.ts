@@ -38,6 +38,8 @@ import {
   UnansweredMessage,
   UpdateMessageDto,
   NewBuilding,
+  CityTotalAgeInfo,
+  StartTimelineInfo,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 
@@ -185,6 +187,16 @@ export class RenovationController {
   async getCityTotalDeviations(): Promise<CityTotalDeviations> {
     const { result } = await this.renovation.getCityTotalDeviations();
     return result;
+  }
+
+  @Get('total-ages')
+  async getCityTotalAges(): Promise<CityTotalAgeInfo[]> {
+    return this.renovation.getCityTotalAges();
+  }
+
+  @Get('start-timeline')
+  async getCityStartTimeline(): Promise<StartTimelineInfo[]> {
+    return this.renovation.getCityStartTimeline();
   }
 
   @Get('last-updated-date')

@@ -24,6 +24,8 @@ import {
   BuildingRelocationMapElement,
   BuildingsGeoJSON,
   NewBuilding,
+  CityTotalAgeInfo,
+  StartTimelineInfo,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -223,6 +225,14 @@ export class RenovationRepository {
   }
   getCityTotalDeviations(): Promise<{ result: CityTotalDeviations }> {
     return this.db.one(renovation.cityTotalDeviations);
+  }
+
+  getCityTotalAges(): Promise<CityTotalAgeInfo[]> {
+    return this.db.any(renovation.cityTotalAges);
+  }
+
+  getCityStartTimeline(): Promise<StartTimelineInfo[]> {
+    return this.db.any(renovation.cityStartTimeline);
   }
 
   getOldApartmentsTimeline(id: number): Promise<OldApartmentTimeline[]> {

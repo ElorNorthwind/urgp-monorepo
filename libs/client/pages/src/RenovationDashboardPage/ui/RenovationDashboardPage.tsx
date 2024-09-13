@@ -2,7 +2,13 @@ import { useNavigate } from '@tanstack/react-router';
 import { useLastUpdatedDate, useTotalDeviations } from '@urgp/client/entities';
 import { DashboardNumberCard } from '@urgp/client/features';
 import { cn, Separator } from '@urgp/client/shared';
-import { DoneTimelineChart, OkrugTotalsChart } from '@urgp/client/widgets';
+import {
+  DoneAgesChart,
+  DoneTimelineChart,
+  InProgressAgesChart,
+  OkrugTotalsChart,
+  StartTimelineChart,
+} from '@urgp/client/widgets';
 import { formatDate } from 'date-fns';
 import {
   CircleAlert,
@@ -140,6 +146,9 @@ const RenovationDashboardPage = (): JSX.Element => {
           />
           <OkrugTotalsChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
           <DoneTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
+          <DoneAgesChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
+          <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
+          <StartTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
         </div>
       </div>
     </div>

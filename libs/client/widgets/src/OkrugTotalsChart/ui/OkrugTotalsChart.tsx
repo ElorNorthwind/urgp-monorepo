@@ -97,7 +97,7 @@ const OkrugTotalsChart = ({
         ) : (
           <ChartContainer
             config={okrugChartConfig}
-            className="h-full w-full lg:h-[320px]"
+            className="mt-[-35px] h-full w-full lg:h-[320px]"
           >
             <BarChart accessibilityLayer data={okrugs}>
               <CartesianGrid vertical={false} />
@@ -137,7 +137,7 @@ const OkrugTotalsChart = ({
                     }}
                   />
                 }
-                cursor={false}
+                // cursor={false}
               />
 
               <ChartLegend content={<ChartLegendContent />} />
@@ -146,7 +146,7 @@ const OkrugTotalsChart = ({
                 dataKey="done"
                 stackId="a"
                 fill="var(--color-done)"
-                radius={[0, 0, 4, 4]}
+                radius={[0, 0, 0, 0]}
               />
               <Bar
                 dataKey="inProgress"

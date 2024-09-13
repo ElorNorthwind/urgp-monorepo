@@ -15,6 +15,8 @@ import {
   UnansweredMessage,
   MessagesUnansweredDto,
   BuildingRelocationMapElement,
+  CityTotalAgeInfo,
+  StartTimelineInfo,
 } from '@urgp/shared/entities';
 
 @Injectable()
@@ -85,6 +87,14 @@ export class RenovationService {
     result: CityTotalDeviations;
   }> {
     return this.dbServise.db.renovation.getCityTotalDeviations();
+  }
+
+  public async getCityTotalAges(): Promise<CityTotalAgeInfo[]> {
+    return this.dbServise.db.renovation.getCityTotalAges();
+  }
+
+  public async getCityStartTimeline(): Promise<StartTimelineInfo[]> {
+    return this.dbServise.db.renovation.getCityStartTimeline();
   }
 
   public async getLastUpdatedDate(): Promise<{
