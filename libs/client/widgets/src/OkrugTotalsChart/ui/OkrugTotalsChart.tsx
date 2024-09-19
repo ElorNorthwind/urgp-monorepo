@@ -99,7 +99,14 @@ const OkrugTotalsChart = ({
             config={okrugChartConfig}
             className="mt-[-35px] h-full w-full lg:h-[320px]"
           >
-            <BarChart accessibilityLayer data={okrugs}>
+            <BarChart
+              accessibilityLayer
+              data={
+                showNotStarted
+                  ? okrugs
+                  : okrugs?.map((value) => ({ ...value, notStarted: 0 }))
+              }
+            >
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="okrug"
@@ -118,6 +125,7 @@ const OkrugTotalsChart = ({
                       return <div className="text-lg font-bold">{value}</div>;
                     }}
                     formatter={(value, name, item, index, payload) => {
+                      if (!showNotStarted && name === 'notStarted') return null;
                       return (
                         <div className="flex w-[8rem] items-center gap-2">
                           <div
@@ -154,14 +162,14 @@ const OkrugTotalsChart = ({
                 fill="var(--color-inProgress)"
                 radius={showNotStarted ? [0, 0, 0, 0] : [4, 4, 0, 0]}
               />
-              {showNotStarted && (
-                <Bar
-                  dataKey="notStarted"
-                  stackId="a"
-                  fill="var(--color-notStarted)"
-                  radius={[4, 4, 0, 0]}
-                />
-              )}
+              {/* {showNotStarted && ( */}
+              <Bar
+                dataKey="notStarted"
+                stackId="a"
+                fill="var(--color-notStarted)"
+                radius={[4, 4, 0, 0]}
+              />
+              {/* )} */}
             </BarChart>
           </ChartContainer>
         )}

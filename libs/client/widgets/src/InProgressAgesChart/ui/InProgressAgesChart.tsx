@@ -1,5 +1,6 @@
 import { useTotalAges } from '@urgp/client/entities';
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
@@ -15,17 +16,19 @@ import {
   Skeleton,
 } from '@urgp/client/shared';
 import { CityTotalAgeInfo } from '@urgp/shared/entities';
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 import {
   Bar,
   BarChart,
   BarProps,
   CartesianGrid,
   Cell,
+  Label,
   LabelList,
   XAxis,
   YAxis,
 } from 'recharts';
-import { ImplicitLabelType } from 'recharts/types/component/Label';
 
 const inProgressAgeChartConfig = {
   risk: {
@@ -49,7 +52,8 @@ type inProgressAgesChartProps = {
 const InProgressAgesChart = ({
   className,
 }: inProgressAgesChartProps): JSX.Element => {
-  const { data, isLoading, isFetching } = useTotalAges();
+  const [onlyFull, setOnlyFull] = useState(false);
+  const { data, isLoading, isFetching } = useTotalAges(onlyFull);
 
   return (
     <Card className={cn(className)}>
@@ -62,6 +66,28 @@ const InProgressAgesChart = ({
         ) : (
           <CardTitle className="flex flex-row items-center justify-between">
             <span>Сроки по домам в работе</span>
+            <Button
+              variant={'ghost'}
+              className="h-6 py-0 px-1"
+              onClick={() => setOnlyFull((value) => !value)}
+            >
+              <span
+                className="flex flex-row items-center gap-1"
+                style={{ color: 'hsl(var(--chart-1))' }}
+              >
+                {onlyFull ? (
+                  <>
+                    <Eye className="h-4 w-4" />
+                    <span className="hidden sm:block">показать неполное</span>
+                  </>
+                ) : (
+                  <>
+                    <EyeOff className="h-4 w-4" />
+                    <span className="hidden sm:block">скрыть неполное</span>
+                  </>
+                )}
+              </span>
+            </Button>
           </CardTitle>
         )}
         {isLoading || isFetching ? (
@@ -177,6 +203,33 @@ const InProgressAgesChart = ({
                     fill={`var(--color-${status})`}
                     stackId="a"
                     radius={[0, 4, 4, 0]}
+                    label={(props) => {
+                      const { x, y, width, height, index } = props;
+                      console.log(JSON.stringify(props, null, 2));
+                      if (!data) return <></>;
+                      const total = Object.values(data[index as number])
+                        .filter((elem) => typeof elem === 'number')
+                        .reduce((acc, curr) => acc + curr, 0);
+                      const val =
+                        data[index as number][status as keyof (typeof data)[0]];
+                      return (
+                        <text
+                          x={x + width / 2}
+                          y={y + height / 2}
+                          dx={-5}
+                          dy={4}
+                          fill="white"
+                          fontSize="12"
+                          textAnchor="center"
+                        >
+                          {typeof val === 'number' &&
+                          val / total > 0.08 &&
+                          val > 1
+                            ? val
+                            : ''}
+                        </text>
+                      );
+                    }}
                   >
                     {data &&
                       data.map((entry, index) => {
@@ -207,17 +260,21 @@ const InProgressAgesChart = ({
                         }, 0);
 
                         if (total === runningTotal) {
-                          return <Cell key={`cell-${index}`} />;
+                          return <Cell key={`cell-${index}`}></Cell>;
                         }
-                        return <Cell key={`cell-${index}`} radius={0} />;
+                        return <Cell key={`cell-${index}`} radius={0}></Cell>;
                       })}
+                    {/* <LabelList
+                      dataKey="none"
+                      position="center"
+                      fontSize={10}
+                      fill="white"
+                      formatter={(value: number) => (value > 5 ? value : null)}
+                    /> */}
                   </Bar>
                 );
               })}
-
-              {/* <LabelList dataKey={'age'} position="left" offset={8} /> */}
-              {/* <ChartLegend content={<ChartLegendContent />} /> */}
-
+              <ChartLegend content={<ChartLegendContent />} />
               <ChartTooltip
                 content={
                   <ChartTooltipContent

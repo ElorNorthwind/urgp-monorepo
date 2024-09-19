@@ -90,8 +90,8 @@ export class RenovationService {
     return this.dbServise.db.renovation.getCityTotalDeviations();
   }
 
-  public async getCityTotalAges(): Promise<CityTotalAgeInfo[]> {
-    return this.dbServise.db.renovation.getCityTotalAges();
+  public async getCityTotalAges(onlyFull = false): Promise<CityTotalAgeInfo[]> {
+    return this.dbServise.db.renovation.getCityTotalAges(onlyFull);
   }
 
   public async getCityTotalDoneByYear(): Promise<DoneByYearInfo[]> {

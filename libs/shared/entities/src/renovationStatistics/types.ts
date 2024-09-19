@@ -25,7 +25,7 @@ export type CityTotalDeviations = {
 
 export type CityTotalAgeInfo = {
   age: string;
-  done: number;
+  // done: number;
   risk: number;
   warning: number;
   none: number;

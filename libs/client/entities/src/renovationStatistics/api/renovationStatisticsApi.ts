@@ -26,9 +26,12 @@ export const renovationStatisticsApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
     }),
-    getTotalAges: build.query<CityTotalAgeInfo[], void>({
-      query: () => ({
+    getTotalAges: build.query<CityTotalAgeInfo[], boolean>({
+      query: (onlyFull = false) => ({
         url: '/renovation/total-ages',
+        params: {
+          onlyFull,
+        },
         method: 'GET',
       }),
     }),

@@ -8,6 +8,7 @@ WITH building_ages AS (
         relocation_status,
         adress
     FROM renovation.old_buildings_full
+	${conditions:raw} -- WHERE relocation_type_id = 1
 ), prepared_data AS (
     SELECT 
         *,
@@ -29,7 +30,7 @@ WITH building_ages AS (
 )
 SELECT 
     relocation_age as age,
-    COUNT(*) FILTER (WHERE building_deviation = 'Работа завершена')::integer as done,
+--     COUNT(*) FILTER (WHERE building_deviation = 'Работа завершена')::integer as done,
     COUNT(*) FILTER (WHERE building_deviation = 'Наступили риски' AND relocation_status = 'Переселение')::integer as risk,
     COUNT(*) FILTER (WHERE building_deviation = 'Требует внимания' AND relocation_status = 'Переселение')::integer as warning,
     COUNT(*) FILTER (WHERE building_deviation = 'Без отклонений' AND relocation_status = 'Переселение')::integer as none

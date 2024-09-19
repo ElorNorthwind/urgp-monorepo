@@ -95,8 +95,14 @@ const DoneByYearChart = ({ className }: DoneByYearChartProps): JSX.Element => {
                   ];
                 }}
               />
-              <XAxis dataKey={'year'} />
-              <YAxis type="number" tickLine={false} axisLine={false} hide />
+              <XAxis dataKey={'year'} tickLine={false} axisLine={false} />
+              <YAxis
+                type="number"
+                tickLine={false}
+                axisLine={false}
+                hide
+                domain={[0, 'dataMax + 15']}
+              />
               <ChartTooltip
                 defaultIndex={1}
                 content={

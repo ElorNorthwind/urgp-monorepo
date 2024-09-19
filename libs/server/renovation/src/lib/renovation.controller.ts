@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
   ParseArrayPipe,
+  ParseBoolPipe,
   Patch,
   Post,
   Query,
@@ -191,8 +193,11 @@ export class RenovationController {
   }
 
   @Get('total-ages')
-  async getCityTotalAges(): Promise<CityTotalAgeInfo[]> {
-    return this.renovation.getCityTotalAges();
+  async getCityTotalAges(
+    @Query('onlyFull', new DefaultValuePipe(false), ParseBoolPipe)
+    onlyFull: boolean,
+  ): Promise<CityTotalAgeInfo[]> {
+    return this.renovation.getCityTotalAges(onlyFull);
   }
 
   @Get('total-done-by-year')

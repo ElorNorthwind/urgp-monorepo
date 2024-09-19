@@ -228,8 +228,14 @@ export class RenovationRepository {
     return this.db.one(renovation.cityTotalDeviations);
   }
 
-  getCityTotalAges(): Promise<CityTotalAgeInfo[]> {
-    return this.db.any(renovation.cityTotalAges);
+  getCityTotalAges(onlyFull = false): Promise<CityTotalAgeInfo[]> {
+    if (onlyFull) {
+      return this.db.any(renovation.cityTotalAges, {
+        conditions: 'WHERE relocation_type_id = 1',
+      });
+    } else {
+      return this.db.any(renovation.cityTotalAges, { conditions: '' });
+    }
   }
 
   getCityTotalDoneByYear(): Promise<DoneByYearInfo[]> {
