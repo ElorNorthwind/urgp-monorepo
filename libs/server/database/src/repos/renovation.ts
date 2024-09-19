@@ -26,6 +26,7 @@ import {
   NewBuilding,
   CityTotalAgeInfo,
   StartTimelineInfo,
+  DoneByYearInfo,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -229,6 +230,10 @@ export class RenovationRepository {
 
   getCityTotalAges(): Promise<CityTotalAgeInfo[]> {
     return this.db.any(renovation.cityTotalAges);
+  }
+
+  getCityTotalDoneByYear(): Promise<DoneByYearInfo[]> {
+    return this.db.any(renovation.cityTotalDoneByYear);
   }
 
   getCityStartTimeline(): Promise<StartTimelineInfo[]> {

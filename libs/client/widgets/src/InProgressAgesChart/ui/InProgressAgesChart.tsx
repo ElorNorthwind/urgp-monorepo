@@ -75,13 +75,13 @@ const InProgressAgesChart = ({
       <CardContent>
         {isLoading || isFetching ? (
           <div>
-            <Skeleton className="mb-2 h-[130px] w-full" />
+            <Skeleton className="mb-2 h-[150px] w-full" />
             <Skeleton className="mx-auto h-4 w-44" />
           </div>
         ) : (
           <ChartContainer
             config={inProgressAgeChartConfig}
-            className="mt-[-35px] h-full w-full lg:h-[180px]"
+            className="mt-[-35px] h-full w-full lg:h-[200px]"
           >
             <BarChart
               accessibilityLayer

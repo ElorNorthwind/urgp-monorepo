@@ -3,8 +3,7 @@ import { useLastUpdatedDate, useTotalDeviations } from '@urgp/client/entities';
 import { DashboardNumberCard } from '@urgp/client/features';
 import { cn, Separator } from '@urgp/client/shared';
 import {
-  DoneAgesChart,
-  DoneTimelineChart,
+  DoneByYearChart,
   InProgressAgesChart,
   OkrugTotalsChart,
   StartTimelineChart,
@@ -145,10 +144,9 @@ const RenovationDashboardPage = (): JSX.Element => {
             }
           />
           <OkrugTotalsChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
-          <DoneTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
-          <DoneAgesChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
-          <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
-          <StartTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
+          <StartTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
+          <DoneByYearChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
+          <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
         </div>
       </div>
     </div>

@@ -40,6 +40,7 @@ import {
   NewBuilding,
   CityTotalAgeInfo,
   StartTimelineInfo,
+  DoneByYearInfo,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 
@@ -192,6 +193,11 @@ export class RenovationController {
   @Get('total-ages')
   async getCityTotalAges(): Promise<CityTotalAgeInfo[]> {
     return this.renovation.getCityTotalAges();
+  }
+
+  @Get('total-done-by-year')
+  async getCityTotalDoneByYear(): Promise<DoneByYearInfo[]> {
+    return this.renovation.getCityTotalDoneByYear();
   }
 
   @Get('start-timeline')

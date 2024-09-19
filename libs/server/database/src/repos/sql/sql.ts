@@ -24,6 +24,7 @@ export const renovation = {
   cityTotalDeviations: sql('sql/renovation/cityTotalDeviations.sql'),
   cityTotalAges: sql('sql/renovation/cityTotalAges.sql'),
   cityStartTimeline: sql('sql/renovation/cityStartTimeline.sql'),
+  cityTotalDoneByYear: sql('sql/renovation/cityTotalDoneByYear.sql'),
   lastUpdated: sql('sql/renovation/lastUpdated.sql'),
   unansweredMessages: sql('sql/renovation/unansweredMessages.sql'),
   oldBuildingList: sql('sql/renovation/oldBuildingList.sql'),

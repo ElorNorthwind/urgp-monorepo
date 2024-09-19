@@ -38,3 +38,12 @@ export type StartTimelineInfo = {
   started: number;
   planned: number;
 };
+
+export type DoneByYearInfo = {
+  year: number;
+  '0': number;
+  '1': number;
+  '2': number;
+  '5': number;
+  '8': number;
+};

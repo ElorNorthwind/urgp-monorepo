@@ -15,6 +15,6 @@ export * from './OldApartmentDetailsSheet';
 export * from './OldBuildingCard';
 export * from './OldBuildingRelocationMap';
 export * from './NewBuildingCard';
-export * from './DoneAgesChart';
+export * from './DoneByYearChart';
 export * from './InProgressAgesChart';
 export * from './StartTimelineChart';

@@ -57,24 +57,24 @@ const StartTimelineChart = ({
             <span>График стартов</span>
           </CardTitle>
         )}
-        {/* {isLoading || isFetching ? (
+        {isLoading || isFetching ? (
           <Skeleton className="h-4 w-60" />
         ) : (
           <CardDescription className="h-16">
             Дома, запланированные к началу переселения
           </CardDescription>
-        )} */}
+        )}
       </CardHeader>
       <CardContent>
         {isLoading || isFetching ? (
           <div>
-            <Skeleton className="mb-2 h-[200px] w-full" />
+            <Skeleton className="mb-2 h-[280px] w-full" />
             <Skeleton className="mx-auto h-4 w-44" />
           </div>
         ) : (
           <ChartContainer
             config={startTimelineChartConfig}
-            className=" h-full w-full lg:h-[250px]"
+            className="mt-[-35px] h-full w-full lg:h-[320px]"
           >
             <BarChart accessibilityLayer data={data}>
               <CartesianGrid vertical={false} />

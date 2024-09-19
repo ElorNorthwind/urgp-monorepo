@@ -17,6 +17,7 @@ import {
   BuildingRelocationMapElement,
   CityTotalAgeInfo,
   StartTimelineInfo,
+  DoneByYearInfo,
 } from '@urgp/shared/entities';
 
 @Injectable()
@@ -91,6 +92,10 @@ export class RenovationService {
 
   public async getCityTotalAges(): Promise<CityTotalAgeInfo[]> {
     return this.dbServise.db.renovation.getCityTotalAges();
+  }
+
+  public async getCityTotalDoneByYear(): Promise<DoneByYearInfo[]> {
+    return this.dbServise.db.renovation.getCityTotalDoneByYear();
   }
 
   public async getCityStartTimeline(): Promise<StartTimelineInfo[]> {
