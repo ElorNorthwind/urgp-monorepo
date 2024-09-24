@@ -39,7 +39,7 @@ const renderRechartsStackedBar = ({
                   x={x + width / 2}
                   y={y + height / 2}
                   dy={5}
-                  fill="white"
+                  fill="rgba(255, 255, 255, 0.6)"
                   fontSize="12"
                   textAnchor="middle"
                 >

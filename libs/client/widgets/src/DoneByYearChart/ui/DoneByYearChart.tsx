@@ -18,7 +18,14 @@ import {
   cn,
   Skeleton,
 } from '@urgp/client/shared';
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  LabelList,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
 const doneAgeChartConfig = {
   '0': {
@@ -145,7 +152,14 @@ const DoneByYearChart = ({ className }: DoneByYearChartProps): JSX.Element => {
                         </text>
                       );
                     }}
-                  ></Bar>
+                  >
+                    <LabelList
+                      formatter={(value: number) => (value > 20 ? value : null)}
+                      position="inside"
+                      className="fill-white/60"
+                      fontSize={8}
+                    />
+                  </Bar>
                 );
               })}
               {/* <ChartLegend content={<ChartLegendContent />} /> */}
