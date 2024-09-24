@@ -11,8 +11,6 @@ import {
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
   cn,
   Skeleton,
 } from '@urgp/client/shared';
@@ -43,10 +41,10 @@ const InProgressAgesChart = ({
   className,
 }: inProgressAgesChartProps): JSX.Element => {
   const [onlyFull, setOnlyFull] = useState(false);
-  const { data, isLoading, isFetching } = useTotalAges(onlyFull);
+  const { data, isLoading, isFetching } = useTotalAges();
 
   return (
-    <Card className={cn(className)}>
+    <Card className={cn('relative', cn(className))}>
       <CardHeader className="space-y-0 pb-2">
         {isLoading || isFetching ? (
           <div>
@@ -101,32 +99,34 @@ const InProgressAgesChart = ({
           >
             <BarChart
               accessibilityLayer
-              data={data}
+              data={
+                data && onlyFull
+                  ? data.map((entry) => ({
+                      ...entry,
+                      none: entry.full,
+                    }))
+                  : data
+              }
               layout="vertical"
               margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
             >
-              {/* <CartesianGrid horizontal={false} /> */}
               <YAxis
                 dataKey="age"
                 type="category"
                 tickLine={false}
-                // tickMargin={1}
                 axisLine={false}
                 tick={{ fontSize: 10 }}
                 tickMargin={5}
                 width={80}
-                // tickFormatter={(value) => value.slice(0, 5)}
                 interval={0}
               />
               <XAxis
-                // dataKey={'done'}
                 type="number"
                 domain={[0, 'dataMax']}
                 allowDataOverflow={false}
                 hide
                 tickLine={false}
                 axisLine={false}
-                // width={200}
               />
               {renderRechartsTooltip({ config: inProgressAgeChartConfig })}
               {Object.keys(inProgressAgeChartConfig).map((status) => {
@@ -155,11 +155,7 @@ const InProgressAgesChart = ({
                           fontSize="12"
                           textAnchor="center"
                         >
-                          {typeof val === 'number' &&
-                          val / total > 0.08 &&
-                          val > 1
-                            ? val
-                            : ''}
+                          {width > 12 ? val : ''}
                         </text>
                       );
                     }}

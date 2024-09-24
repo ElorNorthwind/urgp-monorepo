@@ -193,11 +193,8 @@ export class RenovationController {
   }
 
   @Get('total-ages')
-  async getCityTotalAges(
-    @Query('onlyFull', new DefaultValuePipe(false), ParseBoolPipe)
-    onlyFull: boolean,
-  ): Promise<CityTotalAgeInfo[]> {
-    return this.renovation.getCityTotalAges(onlyFull);
+  async getCityTotalAges(): Promise<CityTotalAgeInfo[]> {
+    return this.renovation.getCityTotalAges();
   }
 
   @Get('total-done-by-year')

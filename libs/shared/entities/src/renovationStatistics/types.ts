@@ -29,6 +29,7 @@ export type CityTotalAgeInfo = {
   risk: number;
   warning: number;
   none: number;
+  full: number;
 };
 
 export type StartTimelineInfo = {

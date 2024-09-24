@@ -22,7 +22,7 @@ const renderRechartsTooltip = ({
 }: ReChartTooltip): JSX.Element => {
   return (
     <ChartTooltip
-      defaultIndex={1}
+      // defaultIndex={1}
       content={
         <ChartTooltipContent
           indicator="dot"
