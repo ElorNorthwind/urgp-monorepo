@@ -1,4 +1,5 @@
 import { useDoneByYear } from '@urgp/client/entities';
+import { renderRechartsTooltip } from '@urgp/client/features';
 import {
   Card,
   CardContent,
@@ -103,54 +104,10 @@ const DoneByYearChart = ({ className }: DoneByYearChartProps): JSX.Element => {
                 hide
                 domain={[0, 'dataMax + 15']}
               />
-              <ChartTooltip
-                defaultIndex={1}
-                content={
-                  <ChartTooltipContent
-                    indicator="dot"
-                    labelFormatter={(value) => {
-                      return (
-                        <div className="text-lg font-bold">
-                          {`Завершено в ${value} г.`}
-                        </div>
-                      );
-                    }}
-                    formatter={(value, name, item, index) => {
-                      return (
-                        <div className="flex w-[12rem] items-center gap-2">
-                          <div
-                            className="h-[.75rem] w-[.75rem] rounded"
-                            style={{
-                              backgroundColor: item.color,
-                              opacity: value === 0 ? 0.2 : 1,
-                            }}
-                          />
-                          <div
-                            className={cn(
-                              value === 0 && 'text-muted-foreground/20',
-                            )}
-                          >
-                            {
-                              doneAgeChartConfig[
-                                name as keyof typeof doneAgeChartConfig
-                              ]?.label
-                            }
-                          </div>
-                          <div
-                            className={cn(
-                              'ml-auto font-bold',
-                              value === 0 && 'text-muted-foreground/20',
-                            )}
-                          >
-                            {value}
-                          </div>
-                        </div>
-                      );
-                    }}
-                  />
-                }
-                cursor={{ fill: 'transparent' }}
-              />
+              {renderRechartsTooltip({
+                config: doneAgeChartConfig,
+                cursor: { fill: 'transparent' },
+              })}
               {Object.keys(doneAgeChartConfig).map((key) => {
                 return (
                   <Bar

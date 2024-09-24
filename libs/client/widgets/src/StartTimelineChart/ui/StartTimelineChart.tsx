@@ -1,4 +1,5 @@
 import { useOkrugTotals, useStartTimeline } from '@urgp/client/entities';
+import { renderRechartsTooltip } from '@urgp/client/features';
 import {
   Button,
   Card,
@@ -85,58 +86,20 @@ const StartTimelineChart = ({
                 axisLine={false}
                 interval={0}
               />
-              <ChartTooltip
-                // defaultIndex={2}
-                content={
-                  <ChartTooltipContent
-                    indicator="dot"
-                    labelFormatter={(value, payload) => {
-                      return (
-                        <div className="text-lg font-bold">
-                          {value +
-                            ' ' +
-                            payload.find((entry) => {
-                              return entry.payload.label === value;
-                            })?.payload.year}
-                        </div>
-                      );
-                    }}
-                    formatter={(value, name, item, index, payload) => {
-                      return (
-                        <div className="flex w-[12rem] items-center gap-2">
-                          <div
-                            className="h-[.75rem] w-[.75rem] rounded"
-                            style={{
-                              backgroundColor: item.color,
-                              opacity: value === 0 ? 0.2 : 1,
-                            }}
-                          />
-                          <div
-                            className={cn(
-                              value === 0 && 'text-muted-foreground/20',
-                            )}
-                          >
-                            {
-                              startTimelineChartConfig[
-                                name as keyof typeof startTimelineChartConfig
-                              ]?.label
-                            }
-                          </div>
-                          <div
-                            className={cn(
-                              'ml-auto font-bold',
-                              value === 0 && 'text-muted-foreground/20',
-                            )}
-                          >
-                            {value}
-                          </div>
-                        </div>
-                      );
-                    }}
-                  />
-                }
-                // cursor={false}
-              />
+              {renderRechartsTooltip({
+                config: startTimelineChartConfig,
+                labelFormatter: (value, payload) => {
+                  return (
+                    <div className="text-lg font-bold">
+                      {value +
+                        ' ' +
+                        payload.find((entry: any) => {
+                          return entry.payload.label === value;
+                        })?.payload.year}
+                    </div>
+                  );
+                },
+              })}
 
               {/* <ChartLegend content={<ChartLegendContent />} /> */}
               <ReferenceLine

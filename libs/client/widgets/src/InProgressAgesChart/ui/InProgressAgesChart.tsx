@@ -1,4 +1,5 @@
 import { useTotalAges } from '@urgp/client/entities';
+import { renderRechartsTooltip } from '@urgp/client/features';
 import {
   Button,
   Card,
@@ -15,20 +16,9 @@ import {
   cn,
   Skeleton,
 } from '@urgp/client/shared';
-import { CityTotalAgeInfo } from '@urgp/shared/entities';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
-import {
-  Bar,
-  BarChart,
-  BarProps,
-  CartesianGrid,
-  Cell,
-  Label,
-  LabelList,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Bar, BarChart, Cell, XAxis, YAxis } from 'recharts';
 
 const inProgressAgeChartConfig = {
   risk: {
@@ -138,63 +128,7 @@ const InProgressAgesChart = ({
                 axisLine={false}
                 // width={200}
               />
-              <ChartTooltip
-                // defaultIndex={2}
-                content={
-                  <ChartTooltipContent
-                    indicator="dot"
-                    labelFormatter={(value) => {
-                      return <div className="text-lg font-bold">{value}</div>;
-                    }}
-                    formatter={(value, name, item, index, payload) => {
-                      return (
-                        <div className="w-[12rem]">
-                          <div className="flex w-full items-center gap-2">
-                            <div
-                              className="h-[.75rem] w-[.75rem] rounded"
-                              style={{
-                                backgroundColor: item.color,
-                                opacity: value === 0 ? 0.2 : 1,
-                              }}
-                            />
-                            <div
-                              className={cn(
-                                value === 0 && 'text-muted-foreground/20',
-                              )}
-                            >
-                              {
-                                inProgressAgeChartConfig[
-                                  name as keyof typeof inProgressAgeChartConfig
-                                ]?.label
-                              }
-                            </div>
-                            <div
-                              className={cn(
-                                'ml-auto font-bold',
-                                value === 0 && 'text-muted-foreground/20',
-                              )}
-                            >
-                              {value}
-                            </div>
-                          </div>
-                          {index === 2 && (
-                            <div className="text-foreground mt-1.5 flex w-full basis-full items-center border-t pt-1.5 text-xs font-medium">
-                              ИТОГО
-                              <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-bold">
-                                {item.payload.none +
-                                  item.payload.risk +
-                                  item.payload.warning}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    }}
-                  />
-                }
-                // cursor={false}
-              />
-
+              {renderRechartsTooltip({ config: inProgressAgeChartConfig })}
               {Object.keys(inProgressAgeChartConfig).map((status) => {
                 return (
                   <Bar
@@ -205,7 +139,6 @@ const InProgressAgesChart = ({
                     radius={[0, 4, 4, 0]}
                     label={(props) => {
                       const { x, y, width, height, index } = props;
-                      console.log(JSON.stringify(props, null, 2));
                       if (!data) return <></>;
                       const total = Object.values(data[index as number])
                         .filter((elem) => typeof elem === 'number')
@@ -264,61 +197,10 @@ const InProgressAgesChart = ({
                         }
                         return <Cell key={`cell-${index}`} radius={0}></Cell>;
                       })}
-                    {/* <LabelList
-                      dataKey="none"
-                      position="center"
-                      fontSize={10}
-                      fill="white"
-                      formatter={(value: number) => (value > 5 ? value : null)}
-                    /> */}
                   </Bar>
                 );
               })}
               <ChartLegend content={<ChartLegendContent />} />
-              <ChartTooltip
-                content={
-                  <ChartTooltipContent
-                    hideLabel
-                    className="w-[180px]"
-                    formatter={(value, name, item, index) => (
-                      <>
-                        <div
-                          className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-[--color-bg]"
-                          style={
-                            {
-                              '--color-bg': `var(--color-${name})`,
-                            } as React.CSSProperties
-                          }
-                        />
-                        {inProgressAgeChartConfig[
-                          name as keyof typeof inProgressAgeChartConfig
-                        ]?.label || name}
-                        <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
-                          {value}
-                          <span className="text-muted-foreground font-normal">
-                            kcal
-                          </span>
-                        </div>
-                        {/* Add this after the last item */}
-                        {index === 1 && (
-                          <div className="text-foreground mt-1.5 flex basis-full items-center border-t pt-1.5 text-xs font-medium">
-                            Total
-                            <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
-                              {item.payload.none +
-                                item.payload.risk +
-                                item.payload.warning}
-                              <span className="text-muted-foreground font-normal">
-                                kcal
-                              </span>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    )}
-                  />
-                }
-                defaultIndex={1}
-              />
             </BarChart>
           </ChartContainer>
         )}

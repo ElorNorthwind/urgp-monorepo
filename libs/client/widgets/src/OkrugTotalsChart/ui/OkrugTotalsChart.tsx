@@ -1,4 +1,5 @@
 import { useOkrugTotals } from '@urgp/client/entities';
+import { renderRechartsTooltip } from '@urgp/client/features';
 import {
   Button,
   Card,
@@ -116,7 +117,8 @@ const OkrugTotalsChart = ({
                 tickFormatter={(value) => value.slice(0, 5)}
                 interval={0}
               />
-              <ChartTooltip
+              {renderRechartsTooltip({ config: okrugChartConfig })}
+              {/* <ChartTooltip
                 // defaultIndex={2}
                 content={
                   <ChartTooltipContent
@@ -146,7 +148,7 @@ const OkrugTotalsChart = ({
                   />
                 }
                 // cursor={false}
-              />
+              /> */}
 
               <ChartLegend content={<ChartLegendContent />} />
 
