@@ -13,6 +13,21 @@ type NewBuildingTerms = {
   settlement: string | null;
 };
 
+type NewBuildingConnectionTerms = {
+  start: string | null;
+  demolition: string | null;
+};
+
+type NewBuildingConnection = {
+  id: number;
+  type: 'movement' | 'construction';
+  terms: {
+    plan: NewBuildingConnectionTerms;
+    actual: NewBuildingConnectionTerms;
+  };
+  adress: string;
+};
+
 export type NewBuilding = {
   id: number;
   adress: string;
@@ -21,6 +36,7 @@ export type NewBuilding = {
   terms: { plan: NewBuildingTerms; actual: NewBuildingTerms };
   type: string;
   priority: number;
+  connections: NewBuildingConnection[];
 };
 
 type NewApartment = {

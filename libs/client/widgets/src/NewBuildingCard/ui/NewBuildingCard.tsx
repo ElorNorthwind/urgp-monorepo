@@ -11,6 +11,7 @@ import {
 import { NewBuilding } from '@urgp/shared/entities';
 import { Focus, X } from 'lucide-react';
 import { NewBuildingTermsTable } from './components/NewBuildingTermsTable';
+import { NewBuildingConnectionsTable } from './components/NewBuildingConnectionsTable';
 
 type NewBuildingCardProps = {
   building: NewBuilding | null;
@@ -81,6 +82,28 @@ const NewBuildingsCard = ({
         {building && (
           <>
             <NewBuildingTermsTable terms={building.terms} />
+            {building?.connections &&
+              building.connections.filter(
+                (connection) => connection.type === 'construction',
+              ).length > 0 && (
+                <NewBuildingConnectionsTable
+                  caption="Сносимые дома на участке под площадкой"
+                  connections={building.connections.filter(
+                    (connection) => connection.type === 'construction',
+                  )}
+                />
+              )}
+            {building?.connections &&
+              building.connections.filter(
+                (connection) => connection.type === 'movement',
+              ).length > 0 && (
+                <NewBuildingConnectionsTable
+                  caption="Дома, переселяемые в объекты на площадке"
+                  connections={building.connections.filter(
+                    (connection) => connection.type === 'movement',
+                  )}
+                />
+              )}
             {onClose && (
               <Button
                 variant="link"

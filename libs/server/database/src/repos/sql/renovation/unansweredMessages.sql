@@ -45,7 +45,7 @@ LEFT JOIN (
 	LEFT JOIN renovation.users u ON im.author_id = u.id
 	WHERE im.apartment_id IS NOT NULL AND im.is_deleted <> true
 ) lm on m.apartment_id = lm.apartment_id AND lm.rank = 1
-WHERE m.apartment_id IS NOT NULL AND m.is_deleted <> true
+WHERE a.old_apart_id IS NOT NULL AND m.is_deleted <> true
   AND needs_answer = true AND answer_date IS NULL
   ${conditions:raw} 
 ORDER BY m.created_at DESC;
