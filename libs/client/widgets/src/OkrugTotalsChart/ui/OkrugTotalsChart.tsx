@@ -1,5 +1,8 @@
 import { useOkrugTotals } from '@urgp/client/entities';
-import { renderRechartsTooltip } from '@urgp/client/features';
+import {
+  renderRechartsStackedBar,
+  renderRechartsTooltip,
+} from '@urgp/client/features';
 import {
   Button,
   Card,
@@ -117,42 +120,20 @@ const OkrugTotalsChart = ({
                 tickFormatter={(value) => value.slice(0, 5)}
                 interval={0}
               />
-              {renderRechartsTooltip({ config: okrugChartConfig })}
-              {/* <ChartTooltip
-                // defaultIndex={2}
-                content={
-                  <ChartTooltipContent
-                    indicator="dot"
-                    labelFormatter={(value) => {
-                      return <div className="text-lg font-bold">{value}</div>;
-                    }}
-                    formatter={(value, name, item, index, payload) => {
-                      if (!showNotStarted && name === 'notStarted') return null;
-                      return (
-                        <div className="flex w-[8rem] items-center gap-2">
-                          <div
-                            className="h-[.75rem] w-[.75rem] rounded"
-                            style={{ backgroundColor: item.color }}
-                          />
-                          <div>
-                            {
-                              okrugChartConfig[
-                                name as keyof typeof okrugChartConfig
-                              ]?.label
-                            }
-                          </div>
-                          <div className="ml-auto font-bold">{value}</div>
-                        </div>
-                      );
-                    }}
-                  />
-                }
-                // cursor={false}
-              /> */}
-
+              {renderRechartsTooltip({
+                config: okrugChartConfig,
+                cursor: true,
+              })}
               <ChartLegend content={<ChartLegendContent />} />
 
-              <Bar
+              {renderRechartsStackedBar({
+                config: okrugChartConfig,
+                data: showNotStarted
+                  ? okrugs
+                  : okrugs?.map((value) => ({ ...value, notStarted: 0 })),
+                orientation: 'vertical',
+              })}
+              {/* <Bar
                 dataKey="done"
                 stackId="a"
                 fill="var(--color-done)"
@@ -164,14 +145,12 @@ const OkrugTotalsChart = ({
                 fill="var(--color-inProgress)"
                 radius={showNotStarted ? [0, 0, 0, 0] : [4, 4, 0, 0]}
               />
-              {/* {showNotStarted && ( */}
               <Bar
                 dataKey="notStarted"
                 stackId="a"
                 fill="var(--color-notStarted)"
                 radius={[4, 4, 0, 0]}
-              />
-              {/* )} */}
+              /> */}
             </BarChart>
           </ChartContainer>
         )}

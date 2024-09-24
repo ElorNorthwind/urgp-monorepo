@@ -1,5 +1,8 @@
 import { useTotalAges } from '@urgp/client/entities';
-import { renderRechartsTooltip } from '@urgp/client/features';
+import {
+  renderRechartsStackedBar,
+  renderRechartsTooltip,
+} from '@urgp/client/features';
 import {
   Button,
   Card,
@@ -117,7 +120,7 @@ const InProgressAgesChart = ({
                 axisLine={false}
                 tick={{ fontSize: 10 }}
                 tickMargin={5}
-                width={80}
+                width={72}
                 interval={0}
               />
               <XAxis
@@ -128,73 +131,13 @@ const InProgressAgesChart = ({
                 tickLine={false}
                 axisLine={false}
               />
-              {renderRechartsTooltip({ config: inProgressAgeChartConfig })}
-              {Object.keys(inProgressAgeChartConfig).map((status) => {
-                return (
-                  <Bar
-                    key={status}
-                    dataKey={status}
-                    fill={`var(--color-${status})`}
-                    stackId="a"
-                    radius={[0, 4, 4, 0]}
-                    label={(props) => {
-                      const { x, y, width, height, index } = props;
-                      if (!data) return <></>;
-                      const total = Object.values(data[index as number])
-                        .filter((elem) => typeof elem === 'number')
-                        .reduce((acc, curr) => acc + curr, 0);
-                      const val =
-                        data[index as number][status as keyof (typeof data)[0]];
-                      return (
-                        <text
-                          x={x + width / 2}
-                          y={y + height / 2}
-                          dx={-5}
-                          dy={4}
-                          fill="white"
-                          fontSize="12"
-                          textAnchor="center"
-                        >
-                          {width > 12 ? val : ''}
-                        </text>
-                      );
-                    }}
-                  >
-                    {data &&
-                      data.map((entry, index) => {
-                        const keys = Object.keys(inProgressAgeChartConfig);
-                        const keysSoFar = keys.slice(
-                          0,
-                          keys.findIndex((key) => key === status) + 1,
-                        );
-
-                        const total = keys.reduce((acc, curr) => {
-                          const value = entry[curr as keyof typeof entry];
-                          return (
-                            acc +
-                            (typeof value === 'number'
-                              ? (value as number)
-                              : parseInt(value as string))
-                          );
-                        }, 0);
-
-                        const runningTotal = keysSoFar.reduce((acc, curr) => {
-                          const value = entry[curr as keyof typeof entry];
-                          return (
-                            acc +
-                            (typeof value === 'number'
-                              ? (value as number)
-                              : parseInt(value as string))
-                          );
-                        }, 0);
-
-                        if (total === runningTotal) {
-                          return <Cell key={`cell-${index}`}></Cell>;
-                        }
-                        return <Cell key={`cell-${index}`} radius={0}></Cell>;
-                      })}
-                  </Bar>
-                );
+              {renderRechartsTooltip({
+                config: inProgressAgeChartConfig,
+                cursor: true,
+              })}
+              {renderRechartsStackedBar({
+                config: inProgressAgeChartConfig,
+                data: data || [],
               })}
               <ChartLegend content={<ChartLegendContent />} />
             </BarChart>

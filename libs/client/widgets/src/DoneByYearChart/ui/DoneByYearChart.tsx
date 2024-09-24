@@ -1,5 +1,8 @@
 import { useDoneByYear } from '@urgp/client/entities';
-import { renderRechartsTooltip } from '@urgp/client/features';
+import {
+  renderRechartsStackedBar,
+  renderRechartsTooltip,
+} from '@urgp/client/features';
 import {
   Card,
   CardContent,
@@ -116,15 +119,14 @@ const DoneByYearChart = ({ className }: DoneByYearChartProps): JSX.Element => {
                     fill={`var(--color-${key})`}
                     radius={[4, 4, 0, 0]}
                     label={(props) => {
-                      const { x, y, value, index } = props;
+                      const { x, y, width, value, index } = props;
                       return (
                         <text
-                          x={x}
                           y={y}
+                          x={x + width / 2}
                           dy={-4}
-                          dx={3}
                           fontSize="8"
-                          textAnchor="center"
+                          textAnchor="middle"
                         >
                           {data &&
                             value > 0 &&

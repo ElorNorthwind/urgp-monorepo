@@ -1,3 +1,4 @@
 export * from './DashbordTotalCard';
 export * from './MapCurve';
-export * from './ReChartTooltip';
+export * from './renderReChartTooltip';
+export * from './renderReChartStackedBar';

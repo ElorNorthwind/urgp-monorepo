@@ -1,5 +1,8 @@
 import { useOkrugTotals, useStartTimeline } from '@urgp/client/entities';
-import { renderRechartsTooltip } from '@urgp/client/features';
+import {
+  renderRechartsStackedBar,
+  renderRechartsTooltip,
+} from '@urgp/client/features';
 import {
   Button,
   Card,
@@ -88,6 +91,7 @@ const StartTimelineChart = ({
               />
               {renderRechartsTooltip({
                 config: startTimelineChartConfig,
+                cursor: true,
                 labelFormatter: (value, payload) => {
                   return (
                     <div className="text-lg font-bold">
@@ -108,7 +112,12 @@ const StartTimelineChart = ({
                 strokeDasharray="3 3"
                 strokeWidth={1}
               />
-              <Bar
+              {renderRechartsStackedBar({
+                config: startTimelineChartConfig,
+                data: data || [],
+                orientation: 'vertical',
+              })}
+              {/* <Bar
                 dataKey="started"
                 stackId="a"
                 fill="var(--color-started)"
@@ -119,7 +128,7 @@ const StartTimelineChart = ({
                 stackId="a"
                 fill="var(--color-planned)"
                 radius={[4, 4, 0, 0]}
-              />
+              /> */}
             </BarChart>
           </ChartContainer>
         )}
