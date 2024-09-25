@@ -1,3 +1,4 @@
+import { useNavigate } from '@tanstack/react-router';
 import { useOkrugTotals } from '@urgp/client/entities';
 import {
   renderRechartsStackedBar,
@@ -46,6 +47,7 @@ const OkrugTotalsChart = ({
   className,
 }: OkrugTotalsChartProps): JSX.Element => {
   const { data: okrugs, isLoading, isFetching } = useOkrugTotals();
+  const navigate = useNavigate();
 
   const [showNotStarted, setShowNotStarted] = useState(true);
 
@@ -132,6 +134,15 @@ const OkrugTotalsChart = ({
                   ? okrugs
                   : okrugs?.map((value) => ({ ...value, notStarted: 0 })),
                 orientation: 'vertical',
+                onClick: (data) => {
+                  // console.log(JSON.stringify(data, null, 2));
+                  navigate({
+                    to: './oldbuildings',
+                    search: {
+                      okrugs: [data.okrug],
+                    },
+                  });
+                },
               })}
               {/* <Bar
                 dataKey="done"

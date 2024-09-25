@@ -146,12 +146,12 @@ export class RenovationRepository {
     }
     if (startFrom) {
       where.push(
-        `COALESCE((terms->'actual'->>'firstResetlementStart')::date, (terms->'plan'->>'firstResetlementStart')::date) >= '${startFrom}'::date`,
+        `(terms->'plan'->>'firstResetlementStart')::date >= '${startFrom}'::date`,
       );
     }
     if (startTo) {
       where.push(
-        `COALESCE((terms->'actual'->>'firstResetlementStart')::date, (terms->'plan'->>'firstResetlementStart')::date) <= '${startTo}'::date`,
+        `(terms->'plan'->>'firstResetlementStart')::date <= '${startTo}'::date`,
       );
     }
     // // Отдельный случай: фильтр должен работать строго при одной выбранной опции

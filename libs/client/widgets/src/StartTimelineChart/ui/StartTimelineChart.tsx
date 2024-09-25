@@ -1,3 +1,4 @@
+import { useNavigate } from '@tanstack/react-router';
 import { useOkrugTotals, useStartTimeline } from '@urgp/client/entities';
 import {
   renderRechartsStackedBar,
@@ -19,6 +20,7 @@ import {
   cn,
   Skeleton,
 } from '@urgp/client/shared';
+import { format, lastDayOfMonth } from 'date-fns';
 import {
   Bar,
   BarChart,
@@ -47,6 +49,7 @@ const StartTimelineChart = ({
   className,
 }: StartTimelineChartProps): JSX.Element => {
   const { data, isLoading, isFetching } = useStartTimeline();
+  const navigate = useNavigate();
 
   return (
     <Card className={cn(className)}>
@@ -116,19 +119,23 @@ const StartTimelineChart = ({
                 config: startTimelineChartConfig,
                 data: data || [],
                 orientation: 'vertical',
+                onClick: (data) => {
+                  // console.log(JSON.stringify(data, null, 2));
+                  navigate({
+                    to: './oldbuildings',
+                    search: {
+                      startFrom: format(
+                        new Date(data.year, data.month - 1, 1),
+                        'yyyy-MM-dd',
+                      ),
+                      startTo: format(
+                        lastDayOfMonth(new Date(data.year, data.month - 1, 1)),
+                        'yyyy-MM-dd',
+                      ),
+                    },
+                  });
+                },
               })}
-              {/* <Bar
-                dataKey="started"
-                stackId="a"
-                fill="var(--color-started)"
-                radius={[4, 4, 0, 0]}
-              />
-              <Bar
-                dataKey="planned"
-                stackId="a"
-                fill="var(--color-planned)"
-                radius={[4, 4, 0, 0]}
-              /> */}
             </BarChart>
           </ChartContainer>
         )}

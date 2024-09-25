@@ -1,3 +1,4 @@
+import { useNavigate } from '@tanstack/react-router';
 import { useTotalAges } from '@urgp/client/entities';
 import {
   renderRechartsStackedBar,
@@ -45,6 +46,7 @@ const InProgressAgesChart = ({
 }: inProgressAgesChartProps): JSX.Element => {
   const [onlyFull, setOnlyFull] = useState(false);
   const { data, isLoading, isFetching } = useTotalAges();
+  const navigate = useNavigate();
 
   return (
     <Card className={cn('relative', cn(className))}>
@@ -138,6 +140,14 @@ const InProgressAgesChart = ({
               {renderRechartsStackedBar({
                 config: inProgressAgeChartConfig,
                 data: data || [],
+                onClick: (data) => {
+                  navigate({
+                    to: './oldbuildings',
+                    search: {
+                      relocationAge: [data.age],
+                    },
+                  });
+                },
               })}
               <ChartLegend content={<ChartLegendContent />} />
             </BarChart>

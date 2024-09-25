@@ -1,16 +1,18 @@
-import { ChartConfig } from '@urgp/client/shared';
+import { ChartConfig, cn } from '@urgp/client/shared';
 import { Bar, Cell } from 'recharts';
 
 type ReChartTooltip = {
   config: ChartConfig;
   data: any[] | undefined;
   orientation?: 'vertical' | 'horizontal';
+  onClick?: (data: any, index: number) => void;
 };
 
 const renderRechartsStackedBar = ({
   config,
   data,
   orientation = 'horizontal',
+  onClick,
 }: ReChartTooltip): JSX.Element => {
   const radius: [number, number, number, number] =
     orientation === 'vertical' ? [4, 4, 0, 0] : [0, 4, 4, 0];
@@ -25,6 +27,8 @@ const renderRechartsStackedBar = ({
             fill={`var(--color-${status})`}
             stackId="a"
             radius={radius}
+            onClick={onClick}
+            className={cn('z-10', onClick ? 'cursor-pointer' : '')}
             label={(props) => {
               const { x, y, width, height, index } = props;
               console.log(JSON.stringify(props, null, 2));
