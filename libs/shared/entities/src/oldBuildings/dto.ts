@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { z } from 'zod';
 
 // const sortingOption = z.object({
@@ -51,6 +52,10 @@ export const getOldBuldings = z
     adress: z.string(),
     status: z.number().array(),
     dificulty: z.number().array(),
+    startFrom: z.coerce
+      .date()
+      .transform((value) => format(value, 'yyyy-MM-dd')),
+    startTo: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
   })
   .partial();
 

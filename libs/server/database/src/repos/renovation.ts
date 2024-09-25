@@ -30,6 +30,9 @@ import {
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
+import { toDate } from 'date-fns';
+import { Logger } from '@nestjs/common';
+
 // import { Logger } from '@nestjs/common';
 
 // // Helper for linking to external query files:
@@ -101,6 +104,8 @@ export class RenovationRepository {
       relocationAge,
       relocationStatus,
       adress,
+      startFrom,
+      startTo,
       // MFRInvolvment,
       // noMFR = false,
       sortingKey,
@@ -139,6 +144,16 @@ export class RenovationRepository {
     if (adress && adress.length > 0) {
       where.push(`LOWER(adress) LIKE LOWER('%${adress}%')`);
     }
+    if (startFrom) {
+      where.push(
+        `COALESCE((terms->'actual'->>'firstResetlementStart')::date, (terms->'plan'->>'firstResetlementStart')::date) >= '${startFrom}'::date`,
+      );
+    }
+    if (startTo) {
+      where.push(
+        `COALESCE((terms->'actual'->>'firstResetlementStart')::date, (terms->'plan'->>'firstResetlementStart')::date) <= '${startTo}'::date`,
+      );
+    }
     // // Отдельный случай: фильтр должен работать строго при одной выбранной опции
     // if (MFRInvolvment && MFRInvolvment.length === 1) {
     //   where.push(
@@ -147,6 +162,7 @@ export class RenovationRepository {
     // }
 
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
+    // Logger.log(conditions);
     return this.db.any(renovation.oldBuildings, {
       limit,
       offset,

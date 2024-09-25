@@ -1,12 +1,17 @@
 import {
   Button,
+  Calendar,
+  cn,
   FacetFilter,
   HStack,
   Input,
   NestedFacetFilter,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from '@urgp/client/shared';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
-import { X } from 'lucide-react';
+import { CalendarIcon, X } from 'lucide-react';
 import {
   // MFRInvolvmentTypes,
   relocationAge,
@@ -16,6 +21,9 @@ import {
 } from '@urgp/client/entities';
 import { useMemo } from 'react';
 import { areas } from '../config/areas';
+import { format, toDate } from 'date-fns';
+import { ru } from 'date-fns/locale';
+import { DateRangeSelect } from '@urgp/client/features';
 
 type OldBuildingsFilterProps = {
   filters: GetOldBuldingsDto;
@@ -139,36 +147,18 @@ const OldBuildingsFilter = ({
           })
         }
       />
-
-      {/* <FacetFilter
-        options={MFRInvolvmentTypes}
-        title={'Фонд'}
-        selectedValues={filters.MFRInvolvment}
-        optionsWidth={80}
-        noSearch
-        setSelectedValues={(value) =>
+      <DateRangeSelect
+        from={filters.startFrom ? toDate(filters.startFrom) : undefined}
+        to={filters.startTo ? toDate(filters.startTo) : undefined}
+        onSelect={(range) =>
           setFilters({
-            MFRInvolvment: value && value.length > 0 ? value : undefined,
+            startFrom: range?.from
+              ? format(range.from, 'yyyy-MM-dd')
+              : undefined,
+            startTo: range?.to ? format(range.to, 'yyyy-MM-dd') : undefined,
           })
         }
-      /> */}
-      {/* <div className="flex items-center space-x-2">
-        <Switch
-          id="show-mfr"
-          defaultChecked
-          checked={!filters.noMFR}
-          onCheckedChange={(e) => setFilters({ noMFR: e ? undefined : true })}
-        />
-        <Label
-          htmlFor="show-mfr"
-          className={cn(
-            'transition-opacity',
-            filters.noMFR ? 'line-through opacity-30' : '',
-          )}
-        >
-          МФР
-        </Label>
-      </div> */}
+      />
       <Button
         variant={'secondary'}
         onClick={() =>
@@ -204,6 +194,8 @@ const OldBuildingsFilter = ({
         filters?.relocationAge ||
         filters.relocationStatus ||
         filters?.deviation ||
+        filters?.startFrom ||
+        filters?.startTo ||
         filters?.adress) && (
         <Button
           variant="ghost"
@@ -216,6 +208,8 @@ const OldBuildingsFilter = ({
               relocationStatus: undefined,
               deviation: undefined,
               adress: undefined,
+              startFrom: undefined,
+              startTo: undefined,
             })
           }
           className="h-8 px-2 lg:px-3"
