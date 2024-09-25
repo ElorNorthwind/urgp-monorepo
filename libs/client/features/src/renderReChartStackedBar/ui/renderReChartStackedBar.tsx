@@ -28,7 +28,7 @@ const renderRechartsStackedBar = ({
             stackId="a"
             radius={radius}
             onClick={onClick}
-            className={cn('z-10', onClick ? 'cursor-pointer' : '')}
+            className={cn(onClick ? 'cursor-pointer' : '')}
             label={(props) => {
               const { x, y, width, height, index } = props;
               console.log(JSON.stringify(props, null, 2));
@@ -46,6 +46,7 @@ const renderRechartsStackedBar = ({
                   fill="rgba(255, 255, 255, 0.6)"
                   fontSize="12"
                   textAnchor="middle"
+                  pointerEvents={'none'}
                 >
                   {(orientation === 'horizontal' ? width : height) > 12
                     ? val
