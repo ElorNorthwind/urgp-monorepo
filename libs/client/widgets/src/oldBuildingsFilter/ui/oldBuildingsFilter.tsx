@@ -41,7 +41,7 @@ const OldBuildingsFilter = ({
   }, [filters.okrugs]);
 
   return (
-    <HStack gap="s">
+    <>
       <Input
         type="search"
         placeholder="Поиск по адресу"
@@ -218,7 +218,7 @@ const OldBuildingsFilter = ({
           <X className="ml-2 h-4 w-4" />
         </Button>
       )}
-    </HStack>
+    </>
   );
 };
 

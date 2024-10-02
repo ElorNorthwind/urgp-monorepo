@@ -64,9 +64,10 @@ const OldBuildingsPage = (): JSX.Element => {
 
   return (
     <>
-      <HStack justify={'between'} className="w-full pr-2">
+      <HStack justify={'start'} className="w-full pr-2">
         <OldBuildingsFilter filters={filters} setFilters={setFilters} />
         <LoadedResultCounter
+          className="ml-auto"
           currentCount={buildings?.length}
           totalCount={buildings?.[0]?.totalCount}
           isFetching={isFetching}
