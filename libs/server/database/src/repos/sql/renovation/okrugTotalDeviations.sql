@@ -17,8 +17,8 @@ SELECT
     b.okrug, 
     COUNT(*) FILTER (WHERE building_deviation = 'Наступили риски')::integer as "riskHouses", 
     COUNT(*) FILTER (WHERE building_deviation = 'Требует внимания')::integer as "attentionHouses", 
-    SUM((apartments->'deviationMFR'->>'risk')::integer)::integer as "riskApartments", 
-    SUM((apartments->'deviationMFR'->>'attention')::integer)::integer as "attentionApartments" 
+    SUM((apartments->'deviationMFR'->>'risk')::integer) FILTER (WHERE building_deviation = 'Наступили риски')::integer as "riskApartments", 
+    SUM((apartments->'deviationMFR'->>'attention')::integer) FILTER (WHERE building_deviation = ANY(ARRAY['Наступили риски', 'Требует внимания']))::integer as "attentionApartments" 
 FROM renovation.old_buildings_full b 
 LEFT JOIN ao_ordering ao ON b.okrug = ao.okrug 
 GROUP BY b.okrug, ao.rank 

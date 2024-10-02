@@ -36,7 +36,7 @@ SELECT
  COUNT(*) FILTER (WHERE relocation_age = 'От 5 до 8 месяцев')::integer as "5", 
  COUNT(*) FILTER (WHERE relocation_age = 'Более 8 месяцев')::integer as "8" 
 FROM prepared_data 
-WHERE done_year > DATE_PART('year', NOW()) - 5 -- последние Х лет 
+WHERE done_year > DATE_PART('year', NOW()) - 7 -- последние Х лет 
   AND building_deviation = 'Работа завершена' 
 GROUP BY 
     done_year 

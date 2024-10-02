@@ -75,13 +75,13 @@ const StartTimelineChart = ({
       <CardContent>
         {isLoading || isFetching ? (
           <div>
-            <Skeleton className="mb-2 h-[280px] w-full" />
+            <Skeleton className="mb-2 h-[150px] w-full" />
             <Skeleton className="mx-auto h-4 w-44" />
           </div>
         ) : (
           <ChartContainer
             config={startTimelineChartConfig}
-            className="mt-[-35px] h-full w-full lg:h-[320px]"
+            className="mt-[-35px] h-full w-full lg:h-[200px]"
           >
             <BarChart accessibilityLayer data={data}>
               <CartesianGrid vertical={false} />

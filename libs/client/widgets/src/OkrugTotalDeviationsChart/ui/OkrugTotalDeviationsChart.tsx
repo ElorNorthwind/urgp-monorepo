@@ -94,7 +94,9 @@ const OkrugTotalDeviationsChart = ({
           <Skeleton className="h-4 w-60" />
         ) : (
           <CardDescription className="h-16">
-            Дома, включенные в программу Реновации
+            {showApartments
+              ? 'Семьи, по которым нарушены ожидаемые сроки'
+              : 'Дома, в которых имеются проблемные семьи'}
           </CardDescription>
         )}
       </CardHeader>

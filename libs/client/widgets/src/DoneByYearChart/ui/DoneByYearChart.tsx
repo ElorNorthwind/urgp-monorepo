@@ -81,13 +81,13 @@ const DoneByYearChart = ({ className }: DoneByYearChartProps): JSX.Element => {
       <CardContent>
         {isLoading || isFetching ? (
           <div>
-            <Skeleton className="mb-2 h-[150px] w-full" />
+            <Skeleton className="mb-2 h-[200px] w-full" />
             <Skeleton className="mx-auto h-4 w-44" />
           </div>
         ) : (
           <ChartContainer
             config={doneAgeChartConfig}
-            className="mt-[-35px] h-full w-full lg:h-[200px]"
+            className="mt-[-35px] h-full w-full lg:h-[250px]"
           >
             <BarChart
               accessibilityLayer

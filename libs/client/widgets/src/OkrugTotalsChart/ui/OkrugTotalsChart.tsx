@@ -61,7 +61,7 @@ const OkrugTotalsChart = ({
           </div>
         ) : (
           <CardTitle className="flex flex-row items-center justify-between">
-            <span>Данные по округам</span>
+            <span>Дома по округам</span>
             <Button
               variant={'ghost'}
               className="h-6 py-0 px-1"
@@ -144,24 +144,6 @@ const OkrugTotalsChart = ({
                   });
                 },
               })}
-              {/* <Bar
-                dataKey="done"
-                stackId="a"
-                fill="var(--color-done)"
-                radius={[0, 0, 0, 0]}
-              />
-              <Bar
-                dataKey="inProgress"
-                stackId="a"
-                fill="var(--color-inProgress)"
-                radius={showNotStarted ? [0, 0, 0, 0] : [4, 4, 0, 0]}
-              />
-              <Bar
-                dataKey="notStarted"
-                stackId="a"
-                fill="var(--color-notStarted)"
-                radius={[4, 4, 0, 0]}
-              /> */}
             </BarChart>
           </ChartContainer>
         )}

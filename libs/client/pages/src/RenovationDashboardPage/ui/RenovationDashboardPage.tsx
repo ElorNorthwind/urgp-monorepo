@@ -144,11 +144,11 @@ const RenovationDashboardPage = (): JSX.Element => {
               })
             }
           />
-          <OkrugTotalsChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
-          <StartTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
-          <DoneByYearChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
-          <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
+          <OkrugTotalsChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
           <OkrugTotalDeviationsChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
+          <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
+          <StartTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
+          <DoneByYearChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
         </div>
       </div>
     </div>
