@@ -50,6 +50,9 @@ export class RenovationService {
   public async getOkrugTotals() {
     return this.dbServise.db.renovation.getOkrugTotalHouses();
   }
+  public async getOkrugTotalDeviations() {
+    return this.dbServise.db.renovation.getOkrugTotalDeviations();
+  }
   public async getDoneTimeline() {
     return this.dbServise.db.renovation.getDoneTimeline();
   }

@@ -4,6 +4,7 @@ import {
   CityTotalDeviations,
   DoneByYearInfo,
   DoneTimelinePoint,
+  OkrugTotalDeviations,
   OkrugTotals,
   StartTimelineInfo,
 } from '@urgp/shared/entities';
@@ -13,6 +14,11 @@ export const renovationStatisticsApi = rtkApi.injectEndpoints({
     getOkrugTotals: build.query<OkrugTotals[], void>({
       query: () => ({
         url: '/renovation/okrug-totals',
+      }),
+    }),
+    getOkrugTotalDeviations: build.query<OkrugTotalDeviations[], void>({
+      query: () => ({
+        url: '/renovation/okrug-total-deviations',
       }),
     }),
     getDoneTimeline: build.query<DoneTimelinePoint[], void>({
@@ -57,6 +63,7 @@ export const renovationStatisticsApi = rtkApi.injectEndpoints({
 
 export const {
   useGetOkrugTotalsQuery: useOkrugTotals,
+  useGetOkrugTotalDeviationsQuery: useOkrugTotalDeviations,
   useGetDoneTimelineQuery: useDoneTimeline,
   useGetTotalDeviationsQuery: useTotalDeviations,
   useGetTotalAgesQuery: useTotalAges,

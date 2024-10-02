@@ -158,31 +158,6 @@ const OldApartmentFilter = ({
           })
         }
       />
-
-      {/* <FacetFilter
-        options={relocationAge}
-        title={'Срок'}
-        selectedValues={filters.relocationAge}
-        setSelectedValues={(value) =>
-          setFilters({
-            relocationAge: value && value.length > 0 ? value : undefined,
-          })
-        }
-      />
-
-      <FacetFilter
-        options={relocationStatus}
-        title={'Статус'}
-        selectedValues={filters.relocationStatus}
-        setSelectedValues={(value) =>
-          setFilters({
-            relocationStatus: value && value.length > 0 ? value : undefined,
-          })
-        }
-      />
-
-      */}
-
       {(filters?.okrugs ||
         filters?.districts ||
         filters?.buildingIds ||

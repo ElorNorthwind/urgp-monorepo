@@ -18,3 +18,4 @@ export * from './NewBuildingCard';
 export * from './DoneByYearChart';
 export * from './InProgressAgesChart';
 export * from './StartTimelineChart';
+export * from './OkrugTotalDeviationsChart';

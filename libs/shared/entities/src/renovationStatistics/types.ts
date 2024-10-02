@@ -6,6 +6,14 @@ export type OkrugTotals = {
   notStarted: number;
 };
 
+export type OkrugTotalDeviations = {
+  okrug: string;
+  riskHouses: number;
+  attentionHouses: number;
+  riskApartments: number;
+  attentionApartments: number;
+};
+
 export type DoneTimelinePoint = {
   year: number;
   month: number;

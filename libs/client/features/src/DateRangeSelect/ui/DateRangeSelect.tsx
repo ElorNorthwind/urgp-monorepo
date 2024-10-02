@@ -32,15 +32,16 @@ const DateRangeSelect = ({
   onSelect,
 }: DateRangeSelectProps): JSX.Element => {
   return (
-    <div className={cn('grid gap-2', className)}>
+    <div className={cn('grid gap-2')}>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             id="date"
             variant={'outline'}
             className={cn(
-              'h-8 w-[320px] justify-start text-left font-normal',
+              'h-8 justify-start text-left font-normal',
               !from && !to && 'text-muted-foreground',
+              className,
             )}
           >
             <div className="text-muted-foreground mr-2">Старт:</div>
@@ -48,11 +49,10 @@ const DateRangeSelect = ({
             {from ? (
               to ? (
                 <>
-                  {format(from, 'LLL dd, y', { locale: ru })} -{' '}
-                  {format(to, 'LLL dd, y', { locale: ru })}
+                  {format(from, 'yyyy.MM.dd')} - {format(to, 'yyyy.MM.dd')}
                 </>
               ) : (
-                format(from, 'LLL dd, y', { locale: ru })
+                format(from, 'yyyy.MM.dd')
               )
             ) : (
               <span>Выберете дату</span>

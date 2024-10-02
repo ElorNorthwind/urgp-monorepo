@@ -43,6 +43,7 @@ import {
   CityTotalAgeInfo,
   StartTimelineInfo,
   DoneByYearInfo,
+  OkrugTotalDeviations,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 
@@ -89,6 +90,11 @@ export class RenovationController {
   @Get('okrug-totals')
   getOkrugTotals(): Promise<OkrugTotals[]> {
     return this.renovation.getOkrugTotals();
+  }
+
+  @Get('okrug-total-deviations')
+  getOrkugTotalDeviations(): Promise<OkrugTotalDeviations[]> {
+    return this.renovation.getOkrugTotalDeviations();
   }
 
   @Get('done-timeline')

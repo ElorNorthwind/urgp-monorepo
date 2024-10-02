@@ -5,6 +5,7 @@ import { cn, Separator } from '@urgp/client/shared';
 import {
   DoneByYearChart,
   InProgressAgesChart,
+  OkrugTotalDeviationsChart,
   OkrugTotalsChart,
   StartTimelineChart,
 } from '@urgp/client/widgets';
@@ -47,7 +48,7 @@ const RenovationDashboardPage = (): JSX.Element => {
           <h2 className="text-2xl font-bold tracking-tight">Дашборд</h2>
           <p className="text-muted-foreground text-right text-xs">
             <span className="hidden md:block">Данные на</span>
-            {formatDate(updatedDate || new Date(), 'dd.MM.yyyy')}
+            {updatedDate ? formatDate(updatedDate, 'dd.MM.yyyy') : '...'}
           </p>
         </div>
         <p className="text-muted-foreground">
@@ -147,6 +148,7 @@ const RenovationDashboardPage = (): JSX.Element => {
           <StartTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
           <DoneByYearChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
           <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
+          <OkrugTotalDeviationsChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
         </div>
       </div>
     </div>

@@ -27,6 +27,7 @@ import {
   CityTotalAgeInfo,
   StartTimelineInfo,
   DoneByYearInfo,
+  OkrugTotalDeviations,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -229,6 +230,10 @@ export class RenovationRepository {
 
   getOkrugTotalHouses(): Promise<OkrugTotals[]> {
     return this.db.any(renovation.okrugTotalHouses);
+  }
+
+  getOkrugTotalDeviations(): Promise<OkrugTotalDeviations[]> {
+    return this.db.any(renovation.okrugTotalDeviations);
   }
 
   getDoneTimeline(): Promise<DoneTimelinePoint[]> {
