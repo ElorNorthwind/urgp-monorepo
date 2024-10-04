@@ -7,7 +7,7 @@ function FamilyCell(props: CellContext<OldAppartment, string>): JSX.Element {
   return (
     <div className="flex w-full flex-row items-center justify-start gap-1">
       <div className="flex flex-1 flex-col items-start justify-start truncate">
-        <div className="truncate">{`${apartment.fio.replace('-.-.', '')}`}</div>
+        <div className="truncate">{`${apartment.fio ? apartment.fio.replace('-.-.', '') : '-'}`}</div>
         <div className="text-muted-foreground truncate text-xs">
           {apartment.status}
         </div>

@@ -87,7 +87,7 @@ export class QuestionsRepository {
     try {
       return this.db.any(query);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new HttpException(
         'Failed to update question',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -107,7 +107,7 @@ export class QuestionsRepository {
         [JSON.stringify(emb)],
       );
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new HttpException(
         'Failed to load questions',
         HttpStatus.INTERNAL_SERVER_ERROR,

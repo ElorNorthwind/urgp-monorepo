@@ -49,10 +49,10 @@ const DateRangeSelect = ({
             {from ? (
               to ? (
                 <>
-                  {format(from, 'yyyy.MM.dd')} - {format(to, 'yyyy.MM.dd')}
+                  {format(from, 'dd.MM.yyyy')} - {format(to, 'dd.MM.yyyy')}
                 </>
               ) : (
-                format(from, 'yyyy.MM.dd')
+                format(from, 'dd.MM.yyyy')
               )
             ) : (
               <span>Выберете дату</span>

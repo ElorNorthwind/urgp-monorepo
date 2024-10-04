@@ -131,18 +131,23 @@ const MessageElement = ({
         </p>
         {!editMessage && (
           <div className="absolute right-2 bottom-2 flex items-center gap-1">
-            {user?.id === message.authorId && setEditMessage && (
-              <Button
-                variant="ghost"
-                className="h-6 w-6 rounded-full p-1"
-                onClick={() => {
-                  setEditMessage(message);
-                }}
-              >
-                <Pencil className="h-4 w-4" />
-              </Button>
-            )}
-            {(user?.id === message.authorId ||
+            {user?.id === message.authorId &&
+              (user.roles.includes('boss') ||
+                user.roles.includes('admin') ||
+                user.roles.includes('editor')) &&
+              setEditMessage && (
+                <Button
+                  variant="ghost"
+                  className="h-6 w-6 rounded-full p-1"
+                  onClick={() => {
+                    setEditMessage(message);
+                  }}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              )}
+            {((user?.id === message.authorId &&
+              (user.roles.includes('boss') || user.roles.includes('editor'))) ||
               user?.roles.includes('admin')) && (
               <DeleteMessageButton
                 disabled={isDeleting}

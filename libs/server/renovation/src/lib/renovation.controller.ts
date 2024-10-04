@@ -162,6 +162,17 @@ export class RenovationController {
       );
     }
 
+    const hasRoles =
+      req.user.roles.includes('admin') ||
+      req.user.roles.includes('editor') ||
+      req.user.roles.includes('boss');
+
+    if (!hasRoles) {
+      throw new UnauthorizedException(
+        'Операция не разрешена. Нехватает прав для редактирования сообщений!',
+      );
+    }
+
     return this.renovation.updateMessage(dto);
   }
 
@@ -180,6 +191,13 @@ export class RenovationController {
       if (userId !== authorId) {
         throw new UnauthorizedException(
           'Операция не разрешена. Только администратор может удалять чужие сообщения !',
+        );
+      }
+      const hasRoles =
+        req.user.roles.includes('admin') || req.user.roles.includes('boss');
+      if (!hasRoles) {
+        throw new UnauthorizedException(
+          'Операция не разрешена. Нехватает прав для редактирования сообщений!',
         );
       }
     }

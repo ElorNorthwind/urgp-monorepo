@@ -31,7 +31,6 @@ const renderRechartsStackedBar = ({
             className={cn(onClick ? 'cursor-pointer' : '')}
             label={(props) => {
               const { x, y, width, height, index } = props;
-              console.log(JSON.stringify(props, null, 2));
               if (!data) return <></>;
               const total = Object.keys(config).reduce((total, key) => {
                 return total + data[index as number][key];
