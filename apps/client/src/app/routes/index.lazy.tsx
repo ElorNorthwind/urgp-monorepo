@@ -1,10 +1,10 @@
-import { createLazyFileRoute } from '@tanstack/react-router';
-import { MainPage } from '@urgp/client/pages';
+import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
+// import { MainPage } from '@urgp/client/pages';
 
 export const Route = createLazyFileRoute('/')({
-  component: Index,
+  component: () => <Navigate to="/renovation" />,
 });
 
-function Index() {
-  return <MainPage />;
-}
+// function Index() {
+//   return <MainPage />;
+// }

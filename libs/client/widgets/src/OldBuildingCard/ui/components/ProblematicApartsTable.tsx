@@ -23,7 +23,11 @@ import {
   Switch,
   Label,
 } from '@urgp/client/shared';
-import { ExtendedMessage, OldBuilding } from '@urgp/shared/entities';
+import {
+  ExtendedMessage,
+  OldBuilding,
+  ProblematicApartmentInfo,
+} from '@urgp/shared/entities';
 import {
   Cat,
   CircleAlert,
@@ -34,12 +38,13 @@ import {
 import { getReferenceTerms } from '../../lib/getReferenceTerms';
 import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
+import { useProblematicApartments } from '@urgp/client/entities';
 
 type ProblematicApartsTableProps = {
-  problematicAparts: OldBuilding['problematicAparts'] | null;
+  problematicAparts?: ProblematicApartmentInfo[];
   totalApartments: number;
   buildingId: number;
-  messages?: ExtendedMessage[] | null;
+  // messages?: ExtendedMessage[] | null;
   className?: string;
   caption?: string;
   setSelectedAppartmentId?: (value: number | undefined) => void;
@@ -56,7 +61,7 @@ const ProblematicApartsTable = ({
   problematicAparts,
   totalApartments,
   buildingId,
-  messages,
+  // messages,
   className,
   setSelectedAppartmentId,
   selectedApartmentId,
@@ -155,7 +160,7 @@ const ProblematicApartsTable = ({
                   className="group relative"
                 >
                   <AccordionTrigger
-                    className="data-[state=open]:bg-muted group-hover:bg-muted/50 p-2 text-left text-xs group-hover:no-underline"
+                    className="data-[state=open]:bg-muted group-hover:bg-muted/50 py-2 pl-2 pr-4 text-left text-xs group-hover:no-underline"
                     key={apart.id}
                   >
                     <HStack gap="s" className="w-full truncate">
@@ -225,18 +230,11 @@ const ProblematicApartsTable = ({
                       </VStack>
                     </HStack>
                   </AccordionTrigger>
-                  {messages &&
-                    messages?.filter(
-                      (message) => message.apartmentId === apart.id,
-                    ).length > 0 && (
-                      <Badge className="border-background pointer-events-none absolute top-1 left-2 flex h-5 w-5 select-none place-content-center truncate px-1 text-xs font-light">
-                        {
-                          messages.filter(
-                            (message) => message.apartmentId === apart.id,
-                          ).length
-                        }
-                      </Badge>
-                    )}
+                  {apart?.messages && apart.messages.length > 0 && (
+                    <Badge className="border-background pointer-events-none absolute top-1 left-2 flex h-5 w-5 select-none place-content-center truncate px-1 text-xs font-light">
+                      {apart.messages.length}
+                    </Badge>
+                  )}
                   <AccordionContent className="flex place-content-center border-t p-0">
                     {referenceTerms.filter((term) => term.date).length > 0 ? (
                       <Table className="w-full">

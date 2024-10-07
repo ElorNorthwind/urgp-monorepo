@@ -1,3 +1,5 @@
+import { Message } from '../messages/types';
+
 export type OldAppartment = {
   apartmentId: number;
   buildingId: number;
@@ -60,4 +62,49 @@ export type OldApartmentDetails = {
   kpu: string;
   newAparts: NewApartmentDetails[] | null;
   classificator: OldApartmentClassificator;
+};
+
+type StageInfo = {
+  id: number;
+  date: string | null;
+  days: number | null;
+};
+export type ProblematicApartmentInfo = {
+  id: number;
+  fio: string;
+  stage: string;
+  action: string;
+  stages: {
+    resettlementStart: StageInfo;
+    order: StageInfo;
+    inspection: StageInfo;
+    reject: StageInfo;
+    reinspection: StageInfo;
+    accept: StageInfo;
+    rd: StageInfo;
+    contractProject: StageInfo;
+    contractNotification: StageInfo;
+    contractPrelimenarySigning: StageInfo;
+    claimStart: StageInfo;
+    claimSubmit: StageInfo;
+    claimWon: StageInfo;
+    claimLost: StageInfo;
+    lostInspection: StageInfo;
+    lostAccept: StageInfo;
+    lostRd: StageInfo;
+    lostContractProject: StageInfo;
+    lostContractPrelimenarySigning: StageInfo;
+    fsspList: StageInfo;
+    fsspInstitute: StageInfo;
+    wonRd: StageInfo;
+    wonContractProject: StageInfo;
+    contract: StageInfo;
+  };
+  stageId: number;
+  problems: string;
+  deviation: string;
+  newAdress: NewApartmentDetails[] | null;
+  apartStatus: string;
+  apartNum: string;
+  messages: Message[] | null;
 };

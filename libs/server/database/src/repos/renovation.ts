@@ -28,6 +28,8 @@ import {
   StartTimelineInfo,
   DoneByYearInfo,
   OkrugTotalDeviations,
+  ProblematicApartmentInfo,
+  OldBuildingConnectionsInfo,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -348,5 +350,20 @@ export class RenovationRepository {
     id: number,
   ): Promise<BuildingRelocationMapElement[]> {
     return this.db.any(renovation.newBuildingRelocationMap, { id });
+  }
+
+  async getProblematicApartments(
+    id: number,
+  ): Promise<ProblematicApartmentInfo[]> {
+    const data = await this.db.oneOrNone(renovation.problematicApartments, {
+      id,
+    });
+    return data?.problematicAparts || [];
+  }
+
+  getOldBuildingConnections(
+    id: number,
+  ): Promise<OldBuildingConnectionsInfo | null> {
+    return this.db.oneOrNone(renovation.oldBuildingConnections, { id });
   }
 }

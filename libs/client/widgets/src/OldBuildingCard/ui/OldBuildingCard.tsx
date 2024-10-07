@@ -19,9 +19,10 @@ import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { LatLngBounds, LatLngTuple, Map as LeafletMap } from 'leaflet';
 import {
   OldBuildingTermsTable,
-  useApartmentMessages,
   useConnectedPlots,
+  useOldBuildingConnections,
   useOldBuildingRelocationMap,
+  useProblematicApartments,
 } from '@urgp/client/entities';
 import { ProblematicApartsTable } from './components/ProblematicApartsTable';
 import { NewBuildingsTable } from './components/NewBuildingsTable';
@@ -71,11 +72,19 @@ const OldBuildingsCard = ({
 
   const navigate = useNavigate({ from: '/renovation/oldbuildings' });
 
-  const { data: messages, refetch: refetchAll } = useApartmentMessages({
-    apartmentIds: [
-      0,
-      ...(building?.problematicAparts?.map((apart) => apart.id) || []),
-    ],
+  const {
+    data: problematicAparts,
+    isLoading: isLoadingProblematicAparts,
+    isFetching: isFetchingProblematicAparts,
+    refetch: refetchProblematicAparts,
+  } = useProblematicApartments(building?.id || 0, { skip: !building?.id });
+
+  const {
+    data: connections,
+    isLoading: isLoadingConnections,
+    isFetching: isFetchingConnections,
+  } = useOldBuildingConnections(building?.id || 0, {
+    skip: !building?.id,
   });
 
   const { data: connectedPlots } = useConnectedPlots(building?.id || 0, {
@@ -86,7 +95,6 @@ const OldBuildingsCard = ({
     <Card
       className={cn(
         'relative z-20 flex flex-col',
-        // expanded ? '' : '',
         mode === 'map' && !expanded ? 'overflow-hidden' : '',
         className,
       )}
@@ -153,42 +161,62 @@ const OldBuildingsCard = ({
                     terms={building.terms}
                     className="w-full"
                   />
-                  <ProblematicApartsTable
-                    problematicAparts={building.problematicAparts}
-                    totalApartments={building.totalApartments}
-                    buildingId={building.id}
-                    selectedApartmentId={apartment}
-                    messages={messages}
-                    className="w-full flex-1"
-                    setSelectedAppartmentId={(value) => {
-                      navigate({
-                        search: (prev: OldBuildingsPageSearch) => ({
-                          ...prev,
-                          apartment: value,
-                        }),
-                      });
-                    }}
-                  />
+                  {isFetchingProblematicAparts || isLoadingProblematicAparts ? (
+                    <Skeleton className="mt-8 h-12 w-full" />
+                  ) : (
+                    <ProblematicApartsTable
+                      problematicAparts={problematicAparts}
+                      totalApartments={building.totalApartments}
+                      buildingId={building.id}
+                      selectedApartmentId={apartment}
+                      className="w-full flex-1"
+                      setSelectedAppartmentId={(value) => {
+                        navigate({
+                          search: (prev: OldBuildingsPageSearch) => ({
+                            ...prev,
+                            apartment: value,
+                          }),
+                        });
+                      }}
+                    />
+                  )}
                 </div>
               </TabsContent>
               <TabsContent value="newBuildings" className="isolate flex-1">
                 <div className="flex h-full flex-col gap-2">
-                  <NewBuildingsTable
-                    buildings={building.newBuildingMovements}
-                    className={cn('w-full', mode !== 'map' && 'max-h-[200px]')}
-                    heading="Переселяется в"
-                    emptyText="Не определены адреса переселения"
-                    mode={mode}
-                  />
-                  <NewBuildingsTable
-                    buildings={building.newBuildingConstructions}
-                    className={cn('w-full', mode !== 'map' && 'max-h-[200px]')}
-                    heading="Строится на месте сноса"
-                    emptyText="Нет площадок на месте сноса"
-                    connectedPlots={connectedPlots}
-                    oldBuildingId={building.id}
-                    mode={mode}
-                  />
+                  {isLoadingConnections || isFetchingConnections ? (
+                    <>
+                      <Skeleton className="mt-8 h-12 w-full" />
+                      <Skeleton className="mt-8 h-12 w-full" />
+                    </>
+                  ) : (
+                    <>
+                      <NewBuildingsTable
+                        buildings={connections?.newBuildingMovements || null}
+                        className={cn(
+                          'w-full',
+                          mode !== 'map' && 'max-h-[200px]',
+                        )}
+                        heading="Переселяется в"
+                        emptyText="Не определены адреса переселения"
+                        mode={mode}
+                      />
+                      <NewBuildingsTable
+                        buildings={
+                          connections?.newBuildingConstructions || null
+                        }
+                        className={cn(
+                          'w-full',
+                          mode !== 'map' && 'max-h-[200px]',
+                        )}
+                        heading="Строится на месте сноса"
+                        emptyText="Нет площадок на месте сноса"
+                        connectedPlots={connectedPlots}
+                        oldBuildingId={building.id}
+                        mode={mode}
+                      />
+                    </>
+                  )}
                   {tab === 'newBuildings' && mode !== 'map' && (
                     <OldBuildingRelocationMap
                       ref={mapRef}
@@ -247,7 +275,7 @@ const OldBuildingsCard = ({
             <OldApartmentDetailsSheet
               apartmentId={apartment}
               className="right-[calc(var(--sidebar-width)+0.5rem)]"
-              refetch={refetchAll}
+              refetch={refetchProblematicAparts}
               setApartmentId={() =>
                 navigate({
                   search: (prev: OldBuildingsPageSearch) => ({

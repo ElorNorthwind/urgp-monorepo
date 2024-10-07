@@ -4,6 +4,7 @@ import {
   OldApartmentDetails,
   OldApartmentTimeline,
   OldAppartment,
+  ProblematicApartmentInfo,
 } from '@urgp/shared/entities';
 
 const oldApartmentsApi = rtkApi.injectEndpoints({
@@ -39,6 +40,12 @@ const oldApartmentsApi = rtkApi.injectEndpoints({
         methor: 'GET',
       }),
     }),
+    getProblematicApartments: build.query<ProblematicApartmentInfo[], number>({
+      query: (query) => ({
+        url: '/renovation/problematic-apartments/' + query.toString(),
+        methor: 'GET',
+      }),
+    }),
   }),
 
   overrideExisting: false,
@@ -48,4 +55,5 @@ export const {
   useGetOldApartmentsQuery: useOldApartments,
   useGetOldApartmentTimelineQuery: useOldApartmentTimeline,
   useGetOldApartmentDetailsQuery: useOldApartmentDetails,
+  useGetProblematicApartmentsQuery: useProblematicApartments,
 } = oldApartmentsApi;

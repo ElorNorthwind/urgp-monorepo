@@ -44,6 +44,8 @@ import {
   StartTimelineInfo,
   DoneByYearInfo,
   OkrugTotalDeviations,
+  ProblematicApartmentInfo,
+  OldBuildingConnectionsInfo,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 
@@ -274,6 +276,16 @@ export class RenovationController {
   ): Promise<BuildingRelocationMapElement[]> {
     return this.renovation.getNewBuildingRelocationMap(id);
   }
+  @Get('problematic-apartments/:id')
+  getProblematicApartments(
+    @Param('id') id: number,
+  ): Promise<ProblematicApartmentInfo[]> {
+    return this.renovation.getProblematicApartments(id);
+  }
+  @Get('old-building-connections/:id')
+  getOldBuildingConnections(
+    @Param('id') id: number,
+  ): Promise<OldBuildingConnectionsInfo> {
+    return this.renovation.getOldBuildingConnections(id);
+  }
 }
-
-// @Query() getOldAppartmentsDto: GetOldAppartmentsDto,

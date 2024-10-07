@@ -154,11 +154,17 @@ export type OldBuilding = {
   buildingRelocationStatus: string;
   termsReason: string | null;
   terms: { plan: OldBuildingTerms; actual: OldBuildingTerms };
+  // newBuildingConstructions: NewBuilding[] | null;
+  // newBuildingMovements: NewBuilding[] | null;
+  apartments: ApartmentCounts;
+  // problematicAparts: ProblematicApartment[];
+  totalCount: number;
+};
+
+export type OldBuildingConnectionsInfo = {
+  id: number;
   newBuildingConstructions: NewBuilding[] | null;
   newBuildingMovements: NewBuilding[] | null;
-  apartments: ApartmentCounts;
-  problematicAparts: ProblematicApartment[];
-  totalCount: number;
 };
 
 type PlotInfo = {

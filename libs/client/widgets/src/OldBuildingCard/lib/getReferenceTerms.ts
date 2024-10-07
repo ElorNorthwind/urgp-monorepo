@@ -1,6 +1,6 @@
-import { OldBuilding } from '@urgp/shared/entities';
+import { OldBuilding, ProblematicApartmentInfo } from '@urgp/shared/entities';
 
-export function getReferenceTerms(apart: OldBuilding['problematicAparts'][0]) {
+export function getReferenceTerms(apart: ProblematicApartmentInfo) {
   return [
     // {
     //   label: 'Создано КПУ',

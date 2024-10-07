@@ -18,6 +18,8 @@ import {
   CityTotalAgeInfo,
   StartTimelineInfo,
   DoneByYearInfo,
+  ProblematicApartmentInfo,
+  OldBuildingConnectionsInfo,
 } from '@urgp/shared/entities';
 
 @Injectable()
@@ -133,5 +135,17 @@ export class RenovationService {
     id: number,
   ): Promise<BuildingRelocationMapElement[]> {
     return this.dbServise.db.renovation.getNewBuildingRelocationMap(id);
+  }
+
+  public async getProblematicApartments(
+    id: number,
+  ): Promise<ProblematicApartmentInfo[]> {
+    return this.dbServise.db.renovation.getProblematicApartments(id);
+  }
+
+  public async getOldBuildingConnections(
+    id: number,
+  ): Promise<OldBuildingConnectionsInfo> {
+    return this.dbServise.db.renovation.getOldBuildingConnections(id);
   }
 }
