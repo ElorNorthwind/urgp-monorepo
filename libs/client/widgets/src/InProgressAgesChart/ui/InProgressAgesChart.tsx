@@ -139,7 +139,13 @@ const InProgressAgesChart = ({
               })}
               {renderRechartsStackedBar({
                 config: inProgressAgeChartConfig,
-                data: data || [],
+                data:
+                  data && onlyFull
+                    ? data.map((entry) => ({
+                        ...entry,
+                        none: entry.full,
+                      }))
+                    : data || [],
                 onClick: (data) => {
                   navigate({
                     to: './oldbuildings',
