@@ -86,7 +86,8 @@ const OldBuildingsCard = ({
     <Card
       className={cn(
         'relative z-20 flex flex-col',
-        expanded ? '' : '',
+        // expanded ? '' : '',
+        mode === 'map' && !expanded ? 'overflow-hidden' : '',
         className,
       )}
     >
@@ -156,6 +157,7 @@ const OldBuildingsCard = ({
                     problematicAparts={building.problematicAparts}
                     totalApartments={building.totalApartments}
                     buildingId={building.id}
+                    selectedApartmentId={apartment}
                     messages={messages}
                     className="w-full flex-1"
                     setSelectedAppartmentId={(value) => {
@@ -244,7 +246,7 @@ const OldBuildingsCard = ({
 
             <OldApartmentDetailsSheet
               apartmentId={apartment}
-              className="-left-[calc(var(--detailsbar-width)+0.5rem)]"
+              className="right-[calc(var(--sidebar-width)+0.5rem)]"
               refetch={refetchAll}
               setApartmentId={() =>
                 navigate({

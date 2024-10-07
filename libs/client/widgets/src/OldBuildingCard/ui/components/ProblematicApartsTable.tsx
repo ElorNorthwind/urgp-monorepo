@@ -42,7 +42,8 @@ type ProblematicApartsTableProps = {
   messages?: ExtendedMessage[] | null;
   className?: string;
   caption?: string;
-  setSelectedAppartmentId?: (value: number | null) => void;
+  setSelectedAppartmentId?: (value: number | undefined) => void;
+  selectedApartmentId?: number | null;
 };
 
 const problemBadgeStyles = {
@@ -58,6 +59,7 @@ const ProblematicApartsTable = ({
   messages,
   className,
   setSelectedAppartmentId,
+  selectedApartmentId,
 }: ProblematicApartsTableProps): JSX.Element => {
   const [showMFR, setShowMFR] = useState<boolean>(true);
   const navigate = useNavigate({ from: '/renovation/oldbuildings' });
@@ -129,7 +131,18 @@ const ProblematicApartsTable = ({
         )}
       </HStack>
       <ScrollArea className={cn('rounded border', className)}>
-        <Accordion type="single" collapsible className="absolute inset-0">
+        <Accordion
+          type="single"
+          collapsible
+          className="absolute inset-0"
+          value={selectedApartmentId ? String(selectedApartmentId) : ''}
+          onValueChange={
+            setSelectedAppartmentId &&
+            ((e) => {
+              setSelectedAppartmentId(e ? Number(e) : undefined);
+            })
+          }
+        >
           {problematicAparts
             .filter((apart) => showMFR || apart.stageId !== 12)
             .map((apart) => {
@@ -142,7 +155,7 @@ const ProblematicApartsTable = ({
                   className="group relative"
                 >
                   <AccordionTrigger
-                    className="data-[state=open]:bg-muted group-hover:bg-muted/50 py-2 px-4 text-left text-xs group-hover:no-underline"
+                    className="data-[state=open]:bg-muted group-hover:bg-muted/50 p-2 text-left text-xs group-hover:no-underline"
                     key={apart.id}
                   >
                     <HStack gap="s" className="w-full truncate">
@@ -151,11 +164,7 @@ const ProblematicApartsTable = ({
                           <TooltipTrigger asChild>
                             <div
                               // variant="outline"
-                              className="hover:bg-muted-foreground/10 relative rounded border bg-white p-2"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedAppartmentId(apart.id);
-                              }}
+                              className="relative p-2"
                             >
                               {apart.stageId === 12 ? (
                                 <CircleDollarSign className="h-8 w-8 text-violet-500" />

@@ -19,7 +19,7 @@ const MessageList = ({
   return (
     <div className={cn('flex flex-col gap-2', className)}>
       {!messages || messages?.length === 0 ? (
-        <h1 className="w-full rounded border border-dashed p-8 text-center">
+        <h1 className="bg-muted/40 w-full rounded border border-dashed p-8 text-center">
           Нет сообщений
         </h1>
       ) : (

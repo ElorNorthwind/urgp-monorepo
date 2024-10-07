@@ -63,76 +63,50 @@ const OldApartmentsPage = (): JSX.Element => {
           className="ml-auto"
         />
       </div>
-      <VirtualDataTable
-        initialOffset={scrollEntry?.scrollY}
-        data-scroll-restoration-id={scrollRestorationId}
-        onRowClick={(row) => {
-          // row.toggleSelected();
-          navigate({
-            search: (prev: OldApartmentSearch) => ({
-              ...prev,
-              apartment:
-                filters.apartment === row.original.apartmentId
-                  ? undefined
-                  : row.original.apartmentId,
-            }),
-          });
-        }}
-        className={cn(
-          'bg-background h-[calc(100vh-3.5rem)] transition-all ease-in-out',
-        )}
-        columns={oldApartmentColumns}
-        data={apartments || []}
-        isFetching={isLoading || isFetching}
-        totalCount={apartments?.[0]?.totalCount ?? 0}
-        callbackFn={() => setOffset(apartments?.length || 0)}
-        callbackMargin={3000}
-        enableMultiRowSelection={false}
-        // sorting={
-        //   filters?.sortingKey
-        //     ? [
-        //         {
-        //           id: filters.sortingKey,
-        //           desc: filters.sortingDirection === 'desc',
-        //         } as { id: string; desc: boolean },
-        //       ]
-        //     : []
-        // }
-        // setSorting={(value) => {
-        //   value && value.length > 0
-        //     ? setFilters({
-        //         sortingKey: value[0].id,
-        //         sortingDirection: value[0].desc ? 'desc' : 'asc',
-        //       })
-        //     : setFilters({
-        //         sortingKey: undefined,
-        //         sortingDirection: undefined,
-        //       });
-        // }}
-        // initialState={{
-        //   sorting: [
-        //     {
-        //       id: 'district',
-        //       desc: false,
-        //     },
-        //   ],
-        // }}
-      />
-      {/* </HStack> */}
-      {filters.apartment && (
-        <OldApartmentDetailsSheet
-          apartmentId={filters.apartment}
-          // refetch={refetch} //naa, can't do that here!
-          setApartmentId={() =>
+      <div className="relative w-full">
+        <VirtualDataTable
+          initialOffset={scrollEntry?.scrollY}
+          data-scroll-restoration-id={scrollRestorationId}
+          onRowClick={(row) => {
             navigate({
               search: (prev: OldApartmentSearch) => ({
                 ...prev,
-                apartment: undefined,
+                apartment:
+                  filters.apartment === row.original.apartmentId
+                    ? undefined
+                    : row.original.apartmentId,
               }),
-            })
-          }
+            });
+          }}
+          className={cn(
+            'bg-background h-[calc(100vh-3.5rem)] transition-all ease-in-out',
+            filters.apartment
+              ? 'w-[calc(100%-var(--messagebar-width)-var(--detailsbar-width)-1.0rem)]'
+              : 'w-[calc(100%)]',
+          )}
+          columns={oldApartmentColumns}
+          data={apartments || []}
+          isFetching={isLoading || isFetching}
+          totalCount={apartments?.[0]?.totalCount ?? 0}
+          callbackFn={() => setOffset(apartments?.length || 0)}
+          callbackMargin={3000}
+          enableMultiRowSelection={false}
         />
-      )}
+        {filters.apartment && (
+          <OldApartmentDetailsSheet
+            apartmentId={filters.apartment}
+            className="right-0"
+            setApartmentId={() =>
+              navigate({
+                search: (prev: OldApartmentSearch) => ({
+                  ...prev,
+                  apartment: undefined,
+                }),
+              })
+            }
+          />
+        )}
+      </div>
     </>
   );
 };

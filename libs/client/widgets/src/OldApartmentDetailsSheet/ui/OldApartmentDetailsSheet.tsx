@@ -89,7 +89,7 @@ const OldApartmentDetailsSheet = ({
           <ChevronRight className="stroke-muted-foreground opacity-50 group-hover:opacity-100" />
         </Button>
       }
-      <CardHeader className="bg-slate-100 p-4">
+      <CardHeader className="rounded-t-lg bg-slate-100 p-4">
         <CardTitle className="flex items-center justify-start gap-2">
           {detailsIsLoading || detailsIsFetching ? (
             <Skeleton className="h-6 w-44" />
