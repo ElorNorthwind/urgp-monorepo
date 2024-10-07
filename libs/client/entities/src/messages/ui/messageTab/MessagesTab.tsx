@@ -24,7 +24,7 @@ const MessageTab = ({
   return (
     <div
       className={cn(
-        'pointer-events-none flex h-screen flex-col items-center justify-between gap-2 p-2',
+        'pointer-events-none flex flex-col items-center justify-between gap-2',
         className,
       )}
     >

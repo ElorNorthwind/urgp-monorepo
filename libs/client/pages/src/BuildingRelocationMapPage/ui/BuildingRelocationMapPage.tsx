@@ -153,7 +153,7 @@ const BuildingRelocationMapPage = (): JSX.Element => {
             onClose={() =>
               navigate({ search: { selectedBuildingId: undefined } })
             }
-            className={cn('h-full transition-all ease-in-out')}
+            className={cn('w-sidebar h-full transition-all ease-in-out')}
             expanded={expanded}
             setExpanded={(value) =>
               navigate({

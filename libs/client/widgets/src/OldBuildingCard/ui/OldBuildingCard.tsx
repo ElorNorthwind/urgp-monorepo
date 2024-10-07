@@ -33,7 +33,6 @@ type OldBuildingCardProps = {
   className?: string;
   mode?: 'table' | 'map';
   onClose?: () => void;
-  width?: number;
   expanded?: boolean;
   setExpanded?: (value: boolean) => void;
   onCenter?: () => void;
@@ -43,15 +42,10 @@ const OldBuildingsCard = ({
   className,
   onClose,
   mode = 'table',
-  width = 520,
   expanded = false,
   setExpanded,
   onCenter,
 }: OldBuildingCardProps): JSX.Element | null => {
-  // const [showMFR, setShowMFR] = useState<boolean>(true);
-  // const [appartmentDetails, setAppartmentDetails] = useState<number | null>(
-  //   null,
-  // );
   const mapRef = useRef<LeafletMap>(null);
   const { data: mapItems } = useOldBuildingRelocationMap(building?.id || 0);
   const { tab, selectedBuildingId, apartment } = getRouteApi(
@@ -91,11 +85,10 @@ const OldBuildingsCard = ({
   return (
     <Card
       className={cn(
-        'relative flex h-full flex-col overflow-hidden',
+        'relative z-20 flex flex-col',
         expanded ? '' : '',
         className,
       )}
-      style={{ width: building ? width : 0 }}
     >
       <CardHeader
         className={cn(
@@ -251,6 +244,7 @@ const OldBuildingsCard = ({
 
             <OldApartmentDetailsSheet
               apartmentId={apartment}
+              className="-left-[calc(var(--detailsbar-width)+0.5rem)]"
               refetch={refetchAll}
               setApartmentId={() =>
                 navigate({

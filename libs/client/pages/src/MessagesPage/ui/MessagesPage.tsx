@@ -69,10 +69,17 @@ const MessagesPage = (): JSX.Element => {
       </div>
 
       <Separator className="my-6" />
-      <div className="flex flex-1 flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+      <div
+        className={cn(
+          'relative w-full space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0',
+        )}
+      >
         <VirtualDataTable
           className={cn(
-            'bg-background h-[calc(100vh-13rem)] w-full flex-1 transition-all ease-in-out',
+            'bg-background absolute left-0 h-[calc(100vh-13rem)] flex-1 transition-all ease-in-out',
+            message
+              ? 'w-[calc(100%-var(--messagebar-width)-var(--detailsbar-width)-1.0rem)]'
+              : 'w-[calc(100%)]',
           )}
           columns={unansweredMessagesColumns}
           data={messages || []}
@@ -93,6 +100,7 @@ const MessagesPage = (): JSX.Element => {
         {currentApartmentId && (
           <OldApartmentDetailsSheet
             apartmentId={currentApartmentId}
+            className="right-0"
             refetch={refetch}
             setApartmentId={() =>
               navigate({

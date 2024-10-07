@@ -74,11 +74,7 @@ const OldBuildingsPage = (): JSX.Element => {
         />
       </HStack>
 
-      <HStack
-        gap="s"
-        noWrap
-        className="h-[calc(100vh-3.5rem)] w-full overflow-hidden"
-      >
+      <div className={'relative flex h-[calc(100vh-3.5rem)] w-full'}>
         <VirtualDataTable
           initialOffset={scrollEntry?.scrollY}
           data-scroll-restoration-id={scrollRestorationId}
@@ -92,13 +88,16 @@ const OldBuildingsPage = (): JSX.Element => {
                   row?.original?.id === filters.selectedBuildingId
                     ? undefined
                     : row?.original?.id,
+                apartment: undefined,
               }),
             });
           }}
           className={cn(
-            'bg-background h-full transition-all ease-in-out',
+            'bg-background absolute left-0 h-full transition-all ease-in-out',
             filters.selectedBuildingId && buildings
-              ? 'w-[calc(100%-520px-0.5rem)]'
+              ? filters.apartment
+                ? 'w-[calc(100%-var(--sidebar-width)-var(--messagebar-width)-var(--detailsbar-width)-1.5rem)]'
+                : 'w-[calc(100%-var(--sidebar-width)-0.5rem)]'
               : 'w-[calc(100%)]',
           )}
           columns={oldBuildingsColumns}
@@ -152,11 +151,13 @@ const OldBuildingsPage = (): JSX.Element => {
                 }),
               })
             }
-            className="h-full transition-all ease-in-out"
-            width={520}
+            className={cn(
+              'absolute right-0 top-0 bottom-0 h-full transition-all ease-in-out',
+              filters?.selectedBuildingId ? 'w-sidebar' : 'hidden w-0',
+            )}
           />
         )}
-      </HStack>
+      </div>
     </>
   );
 };

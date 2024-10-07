@@ -1,4 +1,10 @@
 import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
   cn,
   Sheet,
   SheetContent,
@@ -7,7 +13,7 @@ import {
   SheetTitle,
   Skeleton,
 } from '@urgp/client/shared';
-import { FileText } from 'lucide-react';
+import { ChevronRight, FileText } from 'lucide-react';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 
 import dayjs from 'dayjs';
@@ -66,132 +72,146 @@ const OldApartmentDetailsSheet = ({
   }, [apartmentTimeline]);
 
   return (
-    <Sheet open={!!apartmentId} onOpenChange={() => setApartmentId(null)}>
-      <SheetContent
-        side={'right'}
-        aria-describedby={undefined}
+    <Card
+      className={cn(
+        'w-detailsbar absolute top-0 bottom-0',
+        'transition-all ease-in-out',
+        apartmentId ? 'w-detailsbar' : 'hidden w-0',
+        className,
+      )}
+    >
+      {
+        <Button
+          variant="link"
+          className="group absolute top-2 right-2 rounded-full p-2"
+          onClick={() => setApartmentId(null)}
+        >
+          <ChevronRight className="stroke-muted-foreground opacity-50 group-hover:opacity-100" />
+        </Button>
+      }
+      <CardHeader className="bg-slate-100 p-4">
+        <CardTitle className="flex items-center justify-start gap-2">
+          {detailsIsLoading || detailsIsFetching ? (
+            <Skeleton className="h-6 w-44" />
+          ) : (
+            <>
+              <p className="max-w-[calc(var(--detailsbar-width)-6rem)] truncate">
+                {apartmentDetails?.fio}
+              </p>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={
+                  'http://webrsm.mlc.gov:5222/ObjectCard?ObjId=' +
+                  apartmentId +
+                  '&RegisterViewId=KursKpu&isVertical=true&useMasterPage=true'
+                }
+              >
+                <FileText />
+              </a>
+            </>
+          )}
+        </CardTitle>
+        {detailsIsLoading || detailsIsFetching ? (
+          <Skeleton className="h-4 w-60" />
+        ) : (
+          <CardDescription className="text-left">
+            {apartmentDetails &&
+              apartmentDetails?.adress +
+                ' кв. ' +
+                apartmentDetails?.num +
+                ` (${apartmentDetails?.type})`}
+          </CardDescription>
+        )}
+        <p className="bg-muted-foreground/10 truncate rounded px-2 text-center leading-snug">
+          {apartmentDetails?.status}
+        </p>
+      </CardHeader>
+      <CardContent
         className={cn(
-          'border-nones flex h-screen flex-col gap-1 p-0',
+          'flex h-[calc(100%-7.5rem)] w-full flex-col gap-1 border-none p-0',
           className,
         )}
       >
-        <SheetHeader className="bg-slate-100 p-4">
-          <SheetTitle className="flex items-center justify-start gap-2">
-            {detailsIsLoading || detailsIsFetching ? (
-              <Skeleton className="h-6 w-44" />
-            ) : (
-              <>
-                <p>{apartmentDetails?.fio}</p>
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href={
-                    'http://webrsm.mlc.gov:5222/ObjectCard?ObjId=' +
-                    apartmentId +
-                    '&RegisterViewId=KursKpu&isVertical=true&useMasterPage=true'
+        <ScrollArea className="h-full w-full overflow-y-auto pl-4">
+          <h2 className="text-muted-foreground px-2 text-xl font-bold">
+            {apartmentTimeline && apartmentTimeline?.length > 0
+              ? 'История работы с делом'
+              : 'Работа не проводилась'}
+          </h2>
+          {timelineIsLoading || timelineIsFetching ? (
+            <>
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className=" h-6 w-44" />
+              <Skeleton className="mt-[-.8rem] h-4 w-full " />
+              <Skeleton className="mt-[-.8rem] h-4 w-36 " />
+            </>
+          ) : (
+            coloredTimeline &&
+            coloredTimeline.map((operation) => (
+              <div
+                className={cn(
+                  'group flex w-full flex-col border-l-2 pb-10 last:pb-2',
+
+                  operation.color === 'red'
+                    ? 'border-red-500'
+                    : operation.color === 'violet'
+                      ? 'border-violet-500'
+                      : operation.color === 'yellow'
+                        ? 'border-orange-500'
+                        : 'border-cyan-500',
+                )}
+                key={operation.npp}
+              >
+                <div
+                  className={
+                    'truncate p-1 pl-4 text-xs font-light leading-none text-slate-400'
                   }
                 >
-                  <FileText />
-                </a>
-              </>
-            )}
-          </SheetTitle>
-          {detailsIsLoading || detailsIsFetching ? (
-            <Skeleton className="h-4 w-60" />
-          ) : (
-            <SheetDescription className="text-left">
-              {apartmentDetails &&
-                apartmentDetails?.adress +
-                  ' кв. ' +
-                  apartmentDetails?.num +
-                  ` (${apartmentDetails?.type})`}
-            </SheetDescription>
-          )}
-          <p className="bg-muted-foreground/10 truncate rounded px-2 text-center leading-snug">
-            {apartmentDetails?.status}
-          </p>
-        </SheetHeader>
-        <h2 className="text-muted-foreground px-2 text-xl font-bold">
-          {apartmentTimeline && apartmentTimeline?.length > 0
-            ? 'История работы с делом'
-            : 'Работа не проводилась'}
-        </h2>
-        {timelineIsLoading || timelineIsFetching ? (
-          <>
-            <Skeleton className="h-8 w-full" />
-            <Skeleton className=" h-6 w-44" />
-            <Skeleton className="mt-[-.8rem] h-4 w-full " />
-            <Skeleton className="mt-[-.8rem] h-4 w-36 " />
-          </>
-        ) : (
-          <ScrollArea className="relative w-full flex-grow overflow-y-auto overflow-x-clip pl-4 pb-2">
-            {coloredTimeline &&
-              coloredTimeline.map((operation) => (
-                <div
-                  className={cn(
-                    'group flex w-full flex-col border-l-2 pb-10 last:pb-2',
-
-                    operation.color === 'red'
-                      ? 'border-red-500'
-                      : operation.color === 'violet'
-                        ? 'border-violet-500'
-                        : operation.color === 'yellow'
-                          ? 'border-orange-500'
-                          : 'border-cyan-500',
-                  )}
-                  key={operation.npp}
-                >
+                  {operation.group}
+                </div>
+                <div className="flex-rows items-between text-muted-foreground flex w-full items-center gap-2 bg-slate-50 px-4">
                   <div
-                    className={
-                      'truncate p-1 pl-4 text-xs font-light leading-none text-slate-400'
-                    }
+                    className={cn(
+                      'relative flex-1 font-bold',
+                      "before:absolute before:top-[.25rem] before:left-[-1.55rem] before:my-auto before:h-4 before:w-4 before:rounded-full before:border-2 before:border-white before:content-['']",
+
+                      operation.color === 'red'
+                        ? 'before:bg-red-500'
+                        : operation.color === 'violet'
+                          ? 'before:bg-violet-500'
+                          : operation.color === 'yellow'
+                            ? 'before:bg-orange-500'
+                            : 'before:bg-cyan-500',
+                    )}
                   >
-                    {operation.group}
+                    {dayjs(operation.date).format('DD.MM.YYYY')}
                   </div>
-                  <div className="flex-rows items-between text-muted-foreground flex w-full items-center gap-2 bg-slate-50 px-4">
-                    <div
-                      className={cn(
-                        'relative flex-1 font-bold',
-                        "before:absolute before:top-[.25rem] before:left-[-1.55rem] before:my-auto before:h-4 before:w-4 before:rounded-full before:border-2 before:border-white before:content-['']",
-
-                        operation.color === 'red'
-                          ? 'before:bg-red-500'
-                          : operation.color === 'violet'
-                            ? 'before:bg-violet-500'
-                            : operation.color === 'yellow'
-                              ? 'before:bg-orange-500'
-                              : 'before:bg-cyan-500',
-                      )}
-                    >
-                      {dayjs(operation.date).format('DD.MM.YYYY')}
-                    </div>
-                    <div className="flex truncate text-xs opacity-0 group-hover:opacity-100">
-                      {operation.source}
-                    </div>
-                  </div>
-
-                  <div className={'p-1 pl-4 text-lg font-bold leading-none'}>
-                    {operation.type}
-                  </div>
-
-                  <div
-                    className={
-                      'text-muted-foreground px-4 text-sm leading-snug'
-                    }
-                  >
-                    {operation.notes}
+                  <div className="flex truncate text-xs opacity-0 group-hover:opacity-100">
+                    {operation.source}
                   </div>
                 </div>
-              ))}
-          </ScrollArea>
-        )}
+
+                <div className={'p-1 pl-4 text-lg font-bold leading-none'}>
+                  {operation.type}
+                </div>
+
+                <div
+                  className={'text-muted-foreground px-4 text-sm leading-snug'}
+                >
+                  {operation.notes}
+                </div>
+              </div>
+            ))
+          )}
+        </ScrollArea>
         <MessageTab
           apartmentId={apartmentId || 0}
           refetchAll={refetch}
-          className="absolute top-0 -left-[calc(500px+0.25rem)] w-[500px]"
+          className="w-messagebar absolute right-[calc(var(--detailsbar-width)+0.5rem)] top-0 bottom-0"
         />
-      </SheetContent>
-    </Sheet>
+      </CardContent>
+    </Card>
   );
 };
 

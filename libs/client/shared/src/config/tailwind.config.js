@@ -83,6 +83,11 @@ module.exports = function buildConfig(appDir) {
         minHeight: {
           screen: ['100vh /* fallback for Opera, IE and etc. */', '100dvh'],
         },
+        width: {
+          sidebar: 'var(--sidebar-width)',
+          messagebar: 'var(--messagebar-width)',
+          detailsbar: 'var(--detailsbar-width)',
+        },
 
         backgroundImage: {
           striped:
