@@ -34,8 +34,8 @@ export class RenovationService {
     return this.dbServise.db.renovation.getNewBuildingsGeoJson();
   }
 
-  public async getOldBuildings(dto: GetOldBuldingsDto) {
-    return this.dbServise.db.renovation.getOldBuildings(dto);
+  public async getOldBuildings() {
+    return this.dbServise.db.renovation.getOldBuildings();
   }
 
   public async getOldBuildingById(id: number) {

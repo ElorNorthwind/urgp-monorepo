@@ -8,41 +8,26 @@ import {
   useElementScrollRestoration,
   useNavigate,
 } from '@tanstack/react-router';
-import { cn, HStack, useDebounce, VirtualDataTable } from '@urgp/client/shared';
+import { cn, HStack, VirtualDataTable } from '@urgp/client/shared';
 import {
   LoadedResultCounter,
   OldBuildingsCard,
   OldBuildingsFilter,
 } from '@urgp/client/widgets';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import {
   GetOldBuldingsDto,
   OldBuilding,
   OldBuildingsPageSearch,
 } from '@urgp/shared/entities';
-import { Row } from '@tanstack/react-table';
-import { toDate } from 'date-fns';
 
 const OldBuildingsPage = (): JSX.Element => {
   const filters = getRouteApi(
     '/renovation/oldbuildings',
   ).useSearch() as OldBuildingsPageSearch;
-  const debouncedFilters = useDebounce(
-    {
-      ...filters,
-      tab: undefined,
-      selectedBuildingId: undefined,
-      apartment: undefined,
-      sortingKey: undefined,
-      sortingDirection: undefined,
-    },
-    200,
-  );
 
   const navigate = useNavigate({ from: '/renovation/oldbuildings' });
-  const [offset, setOffset] = useState(0);
-
-  const { currentData: buildings, isLoading, isFetching } = useOldBuldings({});
+  const { currentData: buildings, isLoading, isFetching } = useOldBuldings();
 
   const setFilters = useCallback(
     (value: OldBuildingsPageSearch) => {
@@ -66,7 +51,7 @@ const OldBuildingsPage = (): JSX.Element => {
 
   return (
     <>
-      <HStack justify={'start'} className="w-full pr-2">
+      <HStack justify={'start'} className="w-full pr-2" gap={'s'}>
         <OldBuildingsFilter filters={filters} setFilters={setFilters} />
         <LoadedResultCounter
           className="ml-auto"
@@ -108,8 +93,8 @@ const OldBuildingsPage = (): JSX.Element => {
           isFetching={isLoading || isFetching}
           totalCount={buildings?.length ?? 0}
           clientSide
-          callbackFn={() => setOffset(buildings?.length || 0)}
-          callbackMargin={3000}
+          // callbackFn={() => setOffset(buildings?.length || 0)}
+          // callbackMargin={3000}
           enableMultiRowSelection={false}
           sorting={
             filters?.sortingKey

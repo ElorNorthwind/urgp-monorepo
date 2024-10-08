@@ -96,74 +96,8 @@ export class RenovationRepository {
   }
 
   // Returns old houses for renovation;
-  getOldBuildings(dto: GetOldBuldingsDto): Promise<OldBuilding[]> {
-    const {
-      okrugs,
-      districts,
-      relocationType,
-      deviation,
-      relocationAge,
-      relocationStatus,
-      adress,
-      startFrom,
-      startTo,
-    } = dto;
-    const where = [];
-
-    if (okrugs) {
-      where.push(`okrug = ANY(ARRAY['${okrugs.join("','")}'])`);
-    }
-    if (districts && districts.length > 0) {
-      where.push(`district = ANY(ARRAY['${districts.join("','")}'])`);
-    }
-    if (relocationType && relocationType.length > 0) {
-      where.push(
-        `"relocationTypeId" = ANY(ARRAY[${relocationType.join(',')}])`,
-      );
-    }
-    if (deviation && deviation.length > 0) {
-      where.push(
-        `"buildingDeviation" = ANY(ARRAY['${deviation.join("','")}'])`,
-      );
-    }
-    if (relocationAge && relocationAge.length > 0) {
-      where.push(
-        `"relocationAge" = ANY(ARRAY['${relocationAge.join("','")}'])`,
-      );
-    }
-    if (relocationStatus && relocationStatus.length > 0) {
-      where.push(
-        `"buildingRelocationStatus" = ANY(ARRAY['${relocationStatus.join("','")}'])`,
-      );
-    }
-    if (adress && adress.length > 0) {
-      where.push(`LOWER(adress) LIKE LOWER('%${adress}%')`);
-    }
-    if (startFrom) {
-      where.push(
-        `(terms->'plan'->>'firstResetlementStart')::date >= '${startFrom}'::date`,
-      );
-    }
-    if (startTo) {
-      where.push(
-        `(terms->'plan'->>'firstResetlementStart')::date <= '${startTo}'::date`,
-      );
-    }
-    // // Отдельный случай: фильтр должен работать строго при одной выбранной опции
-    // if (MFRInvolvment && MFRInvolvment.length === 1) {
-    //   where.push(
-    //     `(apartments->'difficulty'->>'mfr')::int ${MFRInvolvment[0] === 'С МФР' ? '>' : '='} 0`,
-    //   );
-    // }
-
-    const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
-    // Logger.log(conditions);
-    return this.db.any(renovation.oldBuildings, {
-      // limit,
-      // offset,
-      conditions,
-      // ordering,
-    });
+  getOldBuildings(): Promise<OldBuilding[]> {
+    return this.db.any(renovation.oldBuildings);
   }
 
   // Returns old houses for renovation;
