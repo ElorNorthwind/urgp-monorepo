@@ -1,8 +1,10 @@
 import {
   ColumnDef,
   ColumnSort,
+  FilterFn,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   InitialTableState,
   Row,
@@ -38,6 +40,8 @@ interface VirtualDataTableProps<TData, TValue> {
   compact?: boolean;
   enableMultiRowSelection?: boolean;
   sorting?: ColumnSort[];
+  globalFilter?: any;
+  globalFilterFn?: FilterFn<TData>;
   setSorting?: (sorting: ColumnSort[]) => void;
   initialState?: InitialTableState;
   initialOffset?: number;
@@ -58,6 +62,8 @@ export function VirtualDataTable<TData, TValue>({
   enableMultiRowSelection = true,
   sorting,
   setSorting,
+  globalFilter,
+  globalFilterFn,
   initialState,
   initialOffset = 0,
 }: VirtualDataTableProps<TData, TValue>) {
@@ -68,6 +74,7 @@ export function VirtualDataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: clientSide ? getSortedRowModel() : undefined,
+    getFilteredRowModel: clientSide ? getFilteredRowModel() : undefined,
     defaultColumn: {
       size: 200, //starting column size
     },
@@ -75,7 +82,9 @@ export function VirtualDataTable<TData, TValue>({
     manualSorting: clientSide ? false : true, //use pre-sorted row model instead of sorted row model in serverSide variant
     state: {
       sorting,
+      globalFilter: clientSide ? globalFilter : undefined,
     },
+    globalFilterFn: clientSide ? globalFilterFn : undefined,
     onSortingChange: (updaterOrValue) => {
       if (typeof updaterOrValue === 'function') {
         setSorting(updaterOrValue(table.getState().sorting));

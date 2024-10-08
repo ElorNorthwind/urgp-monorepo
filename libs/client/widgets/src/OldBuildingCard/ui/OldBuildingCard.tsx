@@ -166,7 +166,7 @@ const OldBuildingsCard = ({
                   ) : (
                     <ProblematicApartsTable
                       problematicAparts={problematicAparts}
-                      totalApartments={building.totalApartments}
+                      totalApartments={building.apartments.total}
                       buildingId={building.id}
                       selectedApartmentId={apartment}
                       className="w-full flex-1"

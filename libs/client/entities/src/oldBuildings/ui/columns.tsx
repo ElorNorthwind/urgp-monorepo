@@ -95,7 +95,6 @@ export const oldBuildingsColumns = [
       id: 'date',
       header: 'Старт',
       size: 90,
-
       cell: (props) => {
         return <TermsCell {...props} />;
       },

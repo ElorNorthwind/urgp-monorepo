@@ -1,4 +1,8 @@
-import { oldBuildingsColumns, useOldBuldings } from '@urgp/client/entities';
+import {
+  oldBuildingsColumns,
+  oldBuildingsGlobalFilterFn,
+  useOldBuldings,
+} from '@urgp/client/entities';
 import {
   getRouteApi,
   useElementScrollRestoration,
@@ -13,8 +17,11 @@ import {
 import { useCallback, useState } from 'react';
 import {
   GetOldBuldingsDto,
+  OldBuilding,
   OldBuildingsPageSearch,
 } from '@urgp/shared/entities';
+import { Row } from '@tanstack/react-table';
+import { toDate } from 'date-fns';
 
 const OldBuildingsPage = (): JSX.Element => {
   const filters = getRouteApi(
@@ -35,14 +42,7 @@ const OldBuildingsPage = (): JSX.Element => {
   const navigate = useNavigate({ from: '/renovation/oldbuildings' });
   const [offset, setOffset] = useState(0);
 
-  const {
-    currentData: buildings,
-    isLoading,
-    isFetching,
-  } = useOldBuldings({
-    ...(debouncedFilters as OldBuildingsPageSearch),
-    offset,
-  });
+  const { currentData: buildings, isLoading, isFetching } = useOldBuldings({});
 
   const setFilters = useCallback(
     (value: OldBuildingsPageSearch) => {
@@ -77,7 +77,7 @@ const OldBuildingsPage = (): JSX.Element => {
       </HStack>
 
       <div className={'relative flex h-[calc(100vh-3.5rem)] w-full'}>
-        <VirtualDataTable
+        <VirtualDataTable<OldBuilding, string | number | undefined>
           initialOffset={scrollEntry?.scrollY}
           data-scroll-restoration-id={scrollRestorationId}
           onRowClick={(row) => {
@@ -102,6 +102,7 @@ const OldBuildingsPage = (): JSX.Element => {
                 : 'w-[calc(100%-var(--sidebar-width)-0.5rem)]'
               : 'w-[calc(100%)]',
           )}
+          // @ts-expect-error no idea
           columns={oldBuildingsColumns}
           data={buildings || []}
           isFetching={isLoading || isFetching}
@@ -136,6 +137,8 @@ const OldBuildingsPage = (): JSX.Element => {
                   sortingDirection: undefined,
                 });
           }}
+          globalFilter={filters}
+          globalFilterFn={oldBuildingsGlobalFilterFn}
           initialState={{
             sorting: [
               {

@@ -74,7 +74,7 @@ const ProblematicApartsTable = ({
       <div className="relative flex flex-col place-items-center py-4">
         <Cat className="stroke-muted-foreground h-12 w-12 stroke-1" />
         <div className="text-muted-foreground">Нет проблемных квартир</div>
-        {totalApartments && totalApartments > 0 && (
+        {!!totalApartments && totalApartments > 0 && (
           <Button
             variant="ghost"
             className="absolute top-2 right-2 space-x-2 px-2"

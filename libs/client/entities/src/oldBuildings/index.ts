@@ -5,3 +5,4 @@ export * from './ui/DeviationChart';
 export * from './ui/DeviationChart';
 export * from './ui/OldBuildingTermsTable';
 export * from './ui/OldBuildingsTermsChart';
+export * from './ui/oldBuildingGlobalFilterFn';
