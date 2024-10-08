@@ -1,17 +1,11 @@
 import {
   Button,
-  Calendar,
-  cn,
   FacetFilter,
-  HStack,
   Input,
   NestedFacetFilter,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
 } from '@urgp/client/shared';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
-import { CalendarIcon, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import {
   // MFRInvolvmentTypes,
   relocationAge,
@@ -22,7 +16,6 @@ import {
 import { useMemo } from 'react';
 import { areas } from '../config/areas';
 import { format, toDate } from 'date-fns';
-import { ru } from 'date-fns/locale';
 import { DateRangeSelect } from '@urgp/client/features';
 
 type OldBuildingsFilterProps = {

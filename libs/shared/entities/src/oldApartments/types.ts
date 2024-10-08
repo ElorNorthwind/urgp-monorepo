@@ -39,7 +39,7 @@ export type NewApartmentDetails = {
 };
 
 export type OldApartmentClassificator = {
-  stage: string;
+  stageName: string;
   action: string;
   stageId: number;
   problems: string[];

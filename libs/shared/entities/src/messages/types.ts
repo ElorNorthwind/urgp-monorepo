@@ -47,5 +47,5 @@ export type UnansweredMessage = Pick<
   stage: string;
   actionText: string;
   deviation: string;
-  problems: string[];
+  problems: string;
 };

@@ -20,6 +20,7 @@ function ApartmentCell(
   props: CellContext<UnansweredMessage, string>,
 ): JSX.Element {
   const message = props.row.original;
+  const problems = JSON.parse(message?.problems || '[]');
   const icon = useMemo(() => {
     if (message.stage === 'В работе МФР') {
       return <CircleDollarSign className="h-8 w-8 text-violet-500" />;
@@ -44,26 +45,25 @@ function ApartmentCell(
           </span>
           <span className="px-1">{message.fio}</span>
 
-          {message?.problems &&
-            message.problems.map((problem) => (
-              <Badge
-                key={problem}
-                variant="outline"
-                className={cn(
-                  'ml-1 h-4 px-1 text-xs',
-                  problemBadgeStyles?.[
-                    problem as keyof typeof problemBadgeStyles
-                  ],
-                )}
-              >
-                {problem === 'Проблемная'
-                  ? message.apartStatus === 'федеральная собственность'
-                    ? 'Федеральная'
-                    : message.apartStatus.slice(0, 1).toLocaleUpperCase() +
-                      message.apartStatus.slice(1)
-                  : problem}
-              </Badge>
-            ))}
+          {problems.map((problem: string) => (
+            <Badge
+              key={problem}
+              variant="outline"
+              className={cn(
+                'ml-1 h-4 px-1 text-xs',
+                problemBadgeStyles?.[
+                  problem as keyof typeof problemBadgeStyles
+                ],
+              )}
+            >
+              {problem === 'Проблемная'
+                ? message.apartStatus === 'федеральная собственность'
+                  ? 'Федеральная'
+                  : message.apartStatus.slice(0, 1).toLocaleUpperCase() +
+                    message.apartStatus.slice(1)
+                : problem}
+            </Badge>
+          ))}
         </div>
         <div className="text-muted-foreground flex-1 truncate">
           {message.actionText}

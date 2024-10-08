@@ -18,7 +18,7 @@ import {
   cn,
   Skeleton,
 } from '@urgp/client/shared';
-import { DoorClosed, Eye, EyeOff, House } from 'lucide-react';
+import { House, Users } from 'lucide-react';
 import { useState } from 'react';
 import { BarChart, CartesianGrid, XAxis } from 'recharts';
 
@@ -82,7 +82,7 @@ const OkrugTotalDeviationsChart = ({
                   </>
                 ) : (
                   <>
-                    <DoorClosed className="h-4 w-4" />
+                    <Users className="h-4 w-4" />
                     <span className="hidden sm:block">показать семьи</span>
                   </>
                 )}

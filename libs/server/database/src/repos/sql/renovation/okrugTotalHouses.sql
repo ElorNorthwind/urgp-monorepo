@@ -16,10 +16,10 @@ WITH ao_ordering(okrug, rank) AS (
 )
 SELECT b.okrug, 
        COUNT(*)::int as total,
-       COUNT(*) FILTER (WHERE b.relocation_status = 'Завершено')::int as done,
-       COUNT(*) FILTER (WHERE NOT b.relocation_status = ANY(ARRAY['Завершено', 'Не начато']))::int as "inProgress",
-       COUNT(*) FILTER (WHERE b.relocation_status = 'Не начато')::int as "notStarted"
-FROM renovation.old_buildings_full b
+       COUNT(*) FILTER (WHERE (b.terms->'actual'->>'demolitionEnd')::date IS NOT NULL)::int as done,
+       COUNT(*) FILTER (WHERE (b.terms->'actual'->>'demolitionEnd')::date IS NULL OR (b.terms->'actual'->>'firstResetlementStart')::date IS NOT NULL)::int as "inProgress",
+       COUNT(*) FILTER (WHERE (b.terms->'actual'->>'firstResetlementStart')::date IS NULL)::int as "notStarted"
+FROM renovation.buildings_old b
 LEFT JOIN ao_ordering o ON o.okrug = b.okrug
 GROUP BY b.okrug, o.rank
 ORDER BY o.rank;

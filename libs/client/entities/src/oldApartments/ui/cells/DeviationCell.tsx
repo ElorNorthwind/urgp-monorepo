@@ -46,7 +46,7 @@ function DeviationCell(props: CellContext<OldAppartment, string>): JSX.Element {
       {icon}
       <div className="flex flex-1 flex-col items-start justify-start truncate">
         <div className="flex items-center gap-1 truncate">
-          {`${apartment.classificator.deviationMFR}`}
+          {`${apartment.classificator.deviation}`}
         </div>
         <div className="text-muted-foreground truncate text-xs">
           {apartment.classificator.problems.length > 0 ? (

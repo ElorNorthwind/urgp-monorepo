@@ -1,14 +1,12 @@
 WITH building_ages AS ( 
     SELECT  
-        CASE  
-            WHEN terms->'actual'->>'firstResetlementStart' IS NOT NULL THEN COALESCE((terms->'actual'->>'firstResetlementEnd')::date, (terms->'actual'->>'secontResetlementEnd')::date,  (terms->'actual'->>'demolitionEnd')::date, NOW()) - (terms->'actual'->>'firstResetlementStart')::date 
-            ELSE null 
-        END as age, 
-  DATE_PART('year', COALESCE((terms->'actual'->>'firstResetlementEnd')::date, (terms->'actual'->>'secontResetlementEnd')::date,  (terms->'actual'->>'demolitionEnd')::date, NOW())) as done_year, 
-        building_deviation, 
-        relocation_status, 
-        adress 
-    FROM renovation.old_buildings_full 
+        CASE 
+            WHEN b.terms->'actual'->>'firstResetlementStart' IS NOT NULL THEN COALESCE((b.terms->>'doneDate')::date,  NOW()) - (b.terms->'actual'->>'firstResetlementStart')::date
+            ELSE null
+        END as age,
+        DATE_PART('year', COALESCE((b.terms->>'doneDate')::date,  NOW())) as done_year, 
+        (b.terms->>'doneDate')::date IS NOT NULL AS is_done
+    FROM renovation.buildings_old b
 ), prepared_data AS ( 
     SELECT  
         *, 
@@ -36,8 +34,8 @@ SELECT
  COUNT(*) FILTER (WHERE relocation_age = 'От 5 до 8 месяцев')::integer as "5", 
  COUNT(*) FILTER (WHERE relocation_age = 'Более 8 месяцев')::integer as "8" 
 FROM prepared_data 
-WHERE done_year > DATE_PART('year', NOW()) - 7 -- последние Х лет 
-  AND building_deviation = 'Работа завершена' 
+WHERE done_year > DATE_PART('year', NOW()) - 5 -- последние Х лет 
+  AND is_done = true
 GROUP BY 
     done_year 
 ORDER BY  

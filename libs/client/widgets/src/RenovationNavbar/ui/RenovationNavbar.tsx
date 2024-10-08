@@ -8,7 +8,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { DoorClosed, Gauge, House, MailQuestion, Map } from 'lucide-react';
+import { Gauge, House, MailQuestion, Map, Users } from 'lucide-react';
 import { useSelector } from 'react-redux';
 
 const RenovationNavbar = (): JSX.Element => {
@@ -65,7 +65,7 @@ const RenovationNavbar = (): JSX.Element => {
             variant="ghost"
             onClick={() => navigate({ to: '/renovation/oldapartments' })}
           >
-            <DoorClosed className="" />
+            <Users className="" />
           </Button>
         </TooltipTrigger>
         <TooltipPortal>

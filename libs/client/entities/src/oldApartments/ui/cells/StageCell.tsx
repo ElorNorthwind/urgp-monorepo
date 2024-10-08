@@ -12,7 +12,7 @@ function StageCell(props: CellContext<OldAppartment, string>): JSX.Element {
           {apartment.classificator.action}
         </div>
         <div className="text-muted-foreground flex items-center gap-1 truncate text-xs">
-          {`${apartment.classificator.stage} `}
+          {`${apartment.classificator.stageName} `}
           {apartment.classificator.stageDate && (
             <p className="opacity-60">
               {`(${format(

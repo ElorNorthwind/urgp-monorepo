@@ -102,11 +102,8 @@ export class RenovationRepository {
 
   // Returns old houses for renovation;
   getOldBuildingById(id: number): Promise<OldBuilding | null> {
-    return this.db.oneOrNone(renovation.oldBuildings, {
-      limit: 1,
-      offset: 0,
-      conditions: `WHERE id = ${id}`,
-      ordering: 'o.rank, district, adress',
+    return this.db.oneOrNone(renovation.oldBuildingById, {
+      id,
     });
   }
 
