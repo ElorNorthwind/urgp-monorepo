@@ -59,40 +59,6 @@ type StageInfo = {
 
 type ApartmentCounts = {
   total: number;
-  status: {
-    order: number;
-    problem: number;
-    free: number;
-    inspection: number;
-    reject: number;
-    reinspection: number;
-    accept: number;
-    rd: number;
-    contractProject: number;
-    contractNotification: number;
-    contractPrelimenarySigning: number;
-    mfr: number;
-    claimStart: number;
-    claimSubmit: number;
-    claimWon: number;
-    claimLost: number;
-    lostInspection: number;
-    lostAccept: number;
-    lostRd: number;
-    lostContractProject: number;
-    lostContractPrelimenarySigning: number;
-    fsspList: number;
-    fsspInstitute: number;
-    wonRd: number;
-    wonContractProject: number;
-    contract: number;
-  };
-  difficulty: {
-    problem: number;
-    rejected: number;
-    litigation: number;
-    mfr: number;
-  };
   deviation: {
     done: number;
     none: number;
@@ -154,11 +120,14 @@ export type OldBuilding = {
   buildingRelocationStatus: string;
   termsReason: string | null;
   terms: { plan: OldBuildingTerms; actual: OldBuildingTerms };
+  statusOrder: number;
+  okrugOrder: number;
+  apartments: ApartmentCounts;
+  total: number;
+  // totalCount: number;
   // newBuildingConstructions: NewBuilding[] | null;
   // newBuildingMovements: NewBuilding[] | null;
-  apartments: ApartmentCounts;
   // problematicAparts: ProblematicApartment[];
-  totalCount: number;
 };
 
 export type OldBuildingConnectionsInfo = {

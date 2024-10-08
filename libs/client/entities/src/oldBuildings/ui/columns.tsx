@@ -1,4 +1,4 @@
-import { createColumnHelper } from '@tanstack/react-table';
+import { createColumnHelper, FilterFn, Row } from '@tanstack/react-table';
 import { OldBuilding } from '@urgp/shared/entities';
 import { AreaCell } from './cells/AreaCell';
 import { RelocationTypeCell } from './cells/RelocationTypeCell';
@@ -17,12 +17,24 @@ export const oldBuildingsColumns = [
     cell: (props) => {
       return <AreaCell {...props} />;
     },
+    sortingFn: (rowA, rowB) => {
+      return rowA.original.okrugOrder > rowB.original.okrugOrder
+        ? 1
+        : rowA.original.okrugOrder < rowB.original.okrugOrder
+          ? -1
+          : rowA.original.district.localeCompare(rowB.original.district) > 0
+            ? 1
+            : rowA.original.district.localeCompare(rowB.original.district) < 0
+              ? -1
+              : 0;
+    },
   }),
 
   columnHelper.accessor('adress', {
     id: 'adress',
     header: 'Адрес',
     size: 240,
+    sortingFn: 'alphanumeric',
     // cell: (props) => {
     //   return <AdressCell {...props} />;
     // },
@@ -35,6 +47,24 @@ export const oldBuildingsColumns = [
     cell: (props) => {
       return <RelocationTypeCell {...props} />;
     },
+    // sortingFn: (rowA, rowB) => {
+    //   return (rowA.original.terms.actual.firstResetlementStart ??
+    //     rowA.original.terms.plan.firstResetlementStart ??
+    //     0) >
+    //     (rowB.original.terms.actual.firstResetlementStart ??
+    //       rowB.original.terms.plan.firstResetlementStart ??
+    //       0)
+    //     ? 1
+    //     : (rowA.original.terms.actual.firstResetlementStart ??
+    //           rowA.original.terms.plan.firstResetlementStart ??
+    //           0) <
+    //         (rowB.original.terms.actual.firstResetlementStart ??
+    //           rowB.original.terms.plan.firstResetlementStart ??
+    //           0)
+    //       ? -1
+    //       : 0;
+    // },
+    sortingFn: 'alphanumeric',
   }),
 
   columnHelper.accessor('buildingRelocationStatus', {
@@ -45,6 +75,17 @@ export const oldBuildingsColumns = [
       return <RelocationStatusCell {...props} />;
     },
     // enableSorting: false,
+    sortingFn: (rowA, rowB) => {
+      return rowA.original.statusOrder > rowB.original.statusOrder
+        ? 1
+        : rowA.original.statusOrder < rowB.original.statusOrder
+          ? -1
+          : rowA.original.okrugOrder > rowB.original.okrugOrder
+            ? 1
+            : rowA.original.okrugOrder < rowB.original.okrugOrder
+              ? -1
+              : rowA.original.district.localeCompare(rowB.original.district);
+    },
   }),
 
   columnHelper.accessor(
@@ -62,34 +103,85 @@ export const oldBuildingsColumns = [
         headerClass: 'justify-center',
         cellClass: 'justify-center text-center',
       },
+      sortingFn: (rowA, rowB) => {
+        return (rowA.original.terms.actual.firstResetlementStart ??
+          rowA.original.terms.plan.firstResetlementStart ??
+          0) >
+          (rowB.original.terms.actual.firstResetlementStart ??
+            rowB.original.terms.plan.firstResetlementStart ??
+            0)
+          ? 1
+          : (rowA.original.terms.actual.firstResetlementStart ??
+                rowA.original.terms.plan.firstResetlementStart ??
+                0) <
+              (rowB.original.terms.actual.firstResetlementStart ??
+                rowB.original.terms.plan.firstResetlementStart ??
+                0)
+            ? -1
+            : 0;
+      },
     },
   ),
 
-  columnHelper.accessor((row) => row.totalApartments.toString(), {
-    id: 'total',
-    header: 'Квартир',
-    sortDescFirst: true,
-    size: 80,
-    cell: (props) => {
-      return <ApartmentsCell {...props} />;
+  columnHelper.accessor(
+    (row) => (row.apartments.total === 0 ? undefined : row.apartments.total),
+    {
+      id: 'total',
+      header: 'Квартир',
+      sortDescFirst: true,
+      size: 80,
+      cell: (props) => {
+        return <ApartmentsCell {...props} />;
+      },
+      meta: {
+        headerClass: 'justify-center',
+        cellClass: 'justify-center text-center',
+      },
+      enableSorting: true,
+      sortUndefined: 'last',
     },
-    meta: {
-      headerClass: 'justify-center',
-      cellClass: 'justify-center text-center',
-    },
-    enableSorting: true,
-  }),
+  ),
 
-  columnHelper.accessor((row) => row.apartments.deviation.done.toString(), {
-    id: 'risk',
-    header: 'Ход работы',
-    size: 220,
-    sortDescFirst: true,
-    cell: (props) => {
-      return <DeviationsCell {...props} />;
+  columnHelper.accessor(
+    (row) =>
+      row.apartments.total === 0
+        ? undefined
+        : row.apartments.deviation.risk / row.apartments.total,
+    {
+      id: 'risk',
+      header: 'Ход работы',
+      size: 220,
+      sortDescFirst: true,
+      cell: (props) => {
+        return <DeviationsCell {...props} />;
+      },
+      meta: {
+        headerClass: 'justify-center',
+      },
+      sortUndefined: 'last',
+      sortingFn: (rowA, rowB) => {
+        return rowA.original.apartments.deviation.risk /
+          rowA.original.apartments.total >
+          rowB.original.apartments.deviation.risk /
+            rowB.original.apartments.total
+          ? 1
+          : rowA.original.apartments.deviation.risk /
+                rowA.original.apartments.total <
+              rowB.original.apartments.deviation.risk /
+                rowB.original.apartments.total
+            ? -1
+            : rowA.original.apartments.deviation.attention /
+                  rowA.original.apartments.total >
+                rowB.original.apartments.deviation.done /
+                  rowB.original.apartments.total
+              ? 1
+              : rowA.original.apartments.deviation.attention /
+                    rowA.original.apartments.total <
+                  rowB.original.apartments.deviation.done /
+                    rowB.original.apartments.total
+                ? -1
+                : 0;
+      },
     },
-    meta: {
-      headerClass: 'justify-center',
-    },
-  }),
+  ),
 ];

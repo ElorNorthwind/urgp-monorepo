@@ -26,6 +26,8 @@ const OldBuildingsPage = (): JSX.Element => {
       tab: undefined,
       selectedBuildingId: undefined,
       apartment: undefined,
+      sortingKey: undefined,
+      sortingDirection: undefined,
     },
     200,
   );
@@ -69,7 +71,7 @@ const OldBuildingsPage = (): JSX.Element => {
         <LoadedResultCounter
           className="ml-auto"
           currentCount={buildings?.length}
-          totalCount={buildings?.[0]?.totalCount}
+          totalCount={buildings?.length}
           isFetching={isFetching}
         />
       </HStack>
@@ -103,7 +105,8 @@ const OldBuildingsPage = (): JSX.Element => {
           columns={oldBuildingsColumns}
           data={buildings || []}
           isFetching={isLoading || isFetching}
-          totalCount={buildings?.[0]?.totalCount ?? 0}
+          totalCount={buildings?.length ?? 0}
+          clientSide
           callbackFn={() => setOffset(buildings?.length || 0)}
           callbackMargin={3000}
           enableMultiRowSelection={false}
@@ -115,7 +118,12 @@ const OldBuildingsPage = (): JSX.Element => {
                     desc: filters.sortingDirection === 'desc',
                   } as { id: string; desc: boolean },
                 ]
-              : []
+              : [
+                  {
+                    id: 'district',
+                    desc: false,
+                  },
+                ]
           }
           setSorting={(value) => {
             value && value.length > 0

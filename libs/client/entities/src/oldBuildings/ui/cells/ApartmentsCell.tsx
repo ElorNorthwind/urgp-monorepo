@@ -2,7 +2,9 @@ import { CellContext } from '@tanstack/react-table';
 
 import { OldBuilding } from '@urgp/shared/entities';
 
-function ApartmentsCell(props: CellContext<OldBuilding, string>): JSX.Element {
+function ApartmentsCell(
+  props: CellContext<OldBuilding, number | undefined>,
+): JSX.Element {
   return (
     <div className="m-auto flex h-full items-center ">
       {props.row.original.apartments.total > 0 ? (

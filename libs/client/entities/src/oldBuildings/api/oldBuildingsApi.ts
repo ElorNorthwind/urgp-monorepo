@@ -30,6 +30,8 @@ export const oldBuildingsApi = rtkApi.injectEndpoints({
           params: { ...query },
         };
       },
+      transformResponse: (response: OldBuilding[]) =>
+        response.sort((a, b) => (a.adress.localeCompare(b.adress) ? 1 : -1)),
       // Only have one cache entry because the arg always maps to one string
       serializeQueryArgs: ({ queryArgs, endpointDefinition, endpointName }) => {
         return { ...queryArgs, offset: undefined };

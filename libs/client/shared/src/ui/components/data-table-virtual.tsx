@@ -3,6 +3,7 @@ import {
   ColumnSort,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   InitialTableState,
   Row,
   useReactTable,
@@ -26,6 +27,7 @@ import { Skeleton } from './skeleton';
 interface VirtualDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data?: TData[];
+  clientSide?: boolean;
   totalCount: number;
   isFetching: boolean;
   callbackMargin?: number;
@@ -44,6 +46,7 @@ interface VirtualDataTableProps<TData, TValue> {
 export function VirtualDataTable<TData, TValue>({
   columns,
   data = [],
+  clientSide = false,
   isFetching = false,
   totalCount,
   callbackMargin = 1000,
@@ -64,11 +67,12 @@ export function VirtualDataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: clientSide ? getSortedRowModel() : undefined,
     defaultColumn: {
       size: 200, //starting column size
     },
     enableMultiRowSelection,
-    manualSorting: true, //use pre-sorted row model instead of sorted row model
+    manualSorting: clientSide ? false : true, //use pre-sorted row model instead of sorted row model in serverSide variant
     state: {
       sorting,
     },

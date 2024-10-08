@@ -44,37 +44,37 @@ import { Logger } from '@nestjs/common';
 //   return new pgPromise.QueryFile(fullPath, { minify: true });
 // }
 
-const oldBuildingsSorting: Record<string, Record<string, string>> = {
-  district: {
-    asc: 'o.rank, district, adress',
-    desc: 'o.rank DESC, district DESC, adress DESC',
-  },
-  adress: { asc: 'adress', desc: 'adress DESC' },
-  age: {
-    asc: `a.rank, terms->'actual'->>'firstResetlementStart', adress`,
-    desc: `a.rank DESC, terms->'actual'->>'firstResetlementStart' DESC, adress`,
-  },
-  status: {
-    asc: 's.rank, o.rank, district, adress',
-    desc: 's.rank DESC, o.rank, district, adress',
-  },
-  date: {
-    asc: `COALESCE(terms->'actual'->>'firstResetlementStart', terms->'plan'->>'firstResetlementStart') NULLS LAST, adress`,
-    desc: `COALESCE(terms->'actual'->>'firstResetlementStart', terms->'plan'->>'firstResetlementStart') DESC NULLS LAST, adress`,
-  },
-  total: {
-    asc: 'total_apartments, adress',
-    desc: 'total_apartments DESC, adress',
-  },
-  risk: {
-    asc: `CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'risk' as decimal) / total_apartments END NULLS LAST, 
-          CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'attention' as decimal) / total_apartments END NULLS LAST, 
-          adress`,
-    desc: `CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'risk' as decimal) / total_apartments END DESC NULLS LAST, 
-           CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'attention' as decimal) / total_apartments END DESC NULLS LAST,
-           adress`,
-  },
-};
+// const oldBuildingsSorting: Record<string, Record<string, string>> = {
+//   district: {
+//     asc: 'o.rank, district, adress',
+//     desc: 'o.rank DESC, district DESC, adress DESC',
+//   },
+//   adress: { asc: 'adress', desc: 'adress DESC' },
+//   age: {
+//     asc: `a.rank, terms->'actual'->>'firstResetlementStart', adress`,
+//     desc: `a.rank DESC, terms->'actual'->>'firstResetlementStart' DESC, adress`,
+//   },
+//   status: {
+//     asc: 's.rank, o.rank, district, adress',
+//     desc: 's.rank DESC, o.rank, district, adress',
+//   },
+//   date: {
+//     asc: `COALESCE(terms->'actual'->>'firstResetlementStart', terms->'plan'->>'firstResetlementStart') NULLS LAST, adress`,
+//     desc: `COALESCE(terms->'actual'->>'firstResetlementStart', terms->'plan'->>'firstResetlementStart') DESC NULLS LAST, adress`,
+//   },
+//   total: {
+//     asc: 'total_apartments, adress',
+//     desc: 'total_apartments DESC, adress',
+//   },
+//   risk: {
+//     asc: `CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'risk' as decimal) / total_apartments END NULLS LAST,
+//           CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'attention' as decimal) / total_apartments END NULLS LAST,
+//           adress`,
+//     desc: `CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'risk' as decimal) / total_apartments END DESC NULLS LAST,
+//            CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'attention' as decimal) / total_apartments END DESC NULLS LAST,
+//            adress`,
+//   },
+// };
 
 // @Injectable()
 export class RenovationRepository {
@@ -98,8 +98,6 @@ export class RenovationRepository {
   // Returns old houses for renovation;
   getOldBuildings(dto: GetOldBuldingsDto): Promise<OldBuilding[]> {
     const {
-      limit = 500,
-      offset = 0,
       okrugs,
       districts,
       relocationType,
@@ -109,18 +107,8 @@ export class RenovationRepository {
       adress,
       startFrom,
       startTo,
-      // MFRInvolvment,
-      // noMFR = false,
-      sortingKey,
-      sortingDirection = 'asc',
     } = dto;
     const where = [];
-
-    const ordering = sortingKey
-      ? oldBuildingsSorting?.[sortingKey as string]?.[
-          sortingDirection as string
-        ] || 'o.rank, district, adress'
-      : 'o.rank, district, adress';
 
     if (okrugs) {
       where.push(`okrug = ANY(ARRAY['${okrugs.join("','")}'])`);
@@ -130,18 +118,22 @@ export class RenovationRepository {
     }
     if (relocationType && relocationType.length > 0) {
       where.push(
-        `relocation_type_id = ANY(ARRAY[${relocationType.join(',')}])`,
+        `"relocationTypeId" = ANY(ARRAY[${relocationType.join(',')}])`,
       );
     }
     if (deviation && deviation.length > 0) {
-      where.push(`building_deviation = ANY(ARRAY['${deviation.join("','")}'])`);
+      where.push(
+        `"buildingDeviation" = ANY(ARRAY['${deviation.join("','")}'])`,
+      );
     }
     if (relocationAge && relocationAge.length > 0) {
-      where.push(`relocation_age = ANY(ARRAY['${relocationAge.join("','")}'])`);
+      where.push(
+        `"relocationAge" = ANY(ARRAY['${relocationAge.join("','")}'])`,
+      );
     }
     if (relocationStatus && relocationStatus.length > 0) {
       where.push(
-        `relocation_status = ANY(ARRAY['${relocationStatus.join("','")}'])`,
+        `"buildingRelocationStatus" = ANY(ARRAY['${relocationStatus.join("','")}'])`,
       );
     }
     if (adress && adress.length > 0) {
@@ -167,10 +159,10 @@ export class RenovationRepository {
     const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
     // Logger.log(conditions);
     return this.db.any(renovation.oldBuildings, {
-      limit,
-      offset,
+      // limit,
+      // offset,
       conditions,
-      ordering,
+      // ordering,
     });
   }
 
