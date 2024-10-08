@@ -8,13 +8,9 @@ import {
   useElementScrollRestoration,
   useNavigate,
 } from '@tanstack/react-router';
-import { cn, HStack, VirtualDataTable } from '@urgp/client/shared';
-import {
-  LoadedResultCounter,
-  OldBuildingsCard,
-  OldBuildingsFilter,
-} from '@urgp/client/widgets';
-import { useCallback } from 'react';
+import { cn, VirtualDataTable } from '@urgp/client/shared';
+import { OldBuildingsCard, OldBuildingsFilter } from '@urgp/client/widgets';
+import { useCallback, useRef } from 'react';
 import {
   GetOldBuldingsDto,
   OldBuilding,
@@ -28,6 +24,7 @@ const OldBuildingsPage = (): JSX.Element => {
 
   const navigate = useNavigate({ from: '/renovation/oldbuildings' });
   const { currentData: buildings, isLoading, isFetching } = useOldBuldings();
+  const filterRef = useRef<HTMLDivElement>(null);
 
   const setFilters = useCallback(
     (value: OldBuildingsPageSearch) => {
@@ -51,15 +48,13 @@ const OldBuildingsPage = (): JSX.Element => {
 
   return (
     <>
-      <HStack justify={'start'} className="w-full pr-2" gap={'s'}>
-        <OldBuildingsFilter filters={filters} setFilters={setFilters} />
-        <LoadedResultCounter
-          className="ml-auto"
-          currentCount={buildings?.length}
-          totalCount={buildings?.length}
-          isFetching={isFetching}
-        />
-      </HStack>
+      <OldBuildingsFilter
+        // ref={filterRef}
+        filters={filters}
+        setFilters={setFilters}
+        totalCount={buildings?.length}
+        isFetching={isFetching}
+      />
 
       <div className={'relative flex h-[calc(100vh-3.5rem)] w-full'}>
         <VirtualDataTable<OldBuilding, string | number | undefined>
