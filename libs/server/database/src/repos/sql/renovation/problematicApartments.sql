@@ -49,7 +49,7 @@ FROM (SELECT
             ) as messages
         FROM renovation.messages m
         LEFT JOIN renovation.users u ON u.id = m.author_id
-        WHERE m.is_deleted = false
+        WHERE m.is_deleted = false AND m.message_type = 'comment'
         GROUP BY m.apartment_id
         ) m ON m.apartment_id = ap.id
     ) a

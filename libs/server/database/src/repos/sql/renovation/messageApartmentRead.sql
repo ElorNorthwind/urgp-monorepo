@@ -7,5 +7,5 @@ SELECT m.id, m.created_at as "createdAt", m.updated_at as "updatedAt",
        m.message_content as "messageContent", m.valid_until as "validUntil"
 FROM renovation.messages m
 LEFT JOIN renovation.users u ON u.id = m.author_id
-WHERE apartment_id = ANY(ARRAY[${apartmentIds:raw}]) AND m.is_deleted = false
+WHERE apartment_id = ANY(ARRAY[${apartmentIds:raw}]) AND m.is_deleted = false AND m.message_type = 'comment'
 ORDER BY apartment_id, created_at ASC;

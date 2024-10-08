@@ -19,26 +19,37 @@ import {
   Skeleton,
 } from '@urgp/client/shared';
 import { House, Users } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { BarChart, CartesianGrid, XAxis } from 'recharts';
 
-const okrugTotalDeviationsChartConfig = {
-  riskHouses: {
-    label: 'Наступили риски',
-    color: 'hsl(var(--chart-1))',
-  },
-  attentionHouses: {
-    label: 'Требует внимания',
-    color: 'hsl(var(--chart-4))',
-  },
-} satisfies ChartConfig;
+// const okrugTotalDeviationsChartConfig = {
+//   riskHouses: {
+//     label: 'Наступили риски',
+//     color: 'hsl(var(--chart-1))',
+//   },
+//   attentionHouses: {
+//     label: 'Требует внимания',
+//     color: 'hsl(var(--chart-4))',
+//   },
+// } satisfies ChartConfig;
 
-const okrugTotalDeviationsApartmentChartConfig = {
-  riskApartments: {
+// const okrugTotalDeviationsApartmentChartConfig = {
+//   riskApartments: {
+//     label: 'Наступили риски',
+//     color: 'hsl(var(--chart-1))',
+//   },
+//   attentionApartments: {
+//     label: 'Требует внимания',
+//     color: 'hsl(var(--chart-4))',
+//   },
+// } satisfies ChartConfig;
+
+const okrugTotalDeviationsChartConfig = {
+  risk: {
     label: 'Наступили риски',
     color: 'hsl(var(--chart-1))',
   },
-  attentionApartments: {
+  attention: {
     label: 'Требует внимания',
     color: 'hsl(var(--chart-4))',
   },
@@ -54,6 +65,26 @@ const OkrugTotalDeviationsChart = ({
   const { data: okrugs, isLoading, isFetching } = useOkrugTotalDeviations();
   const navigate = useNavigate();
   const [showApartments, setShowApartments] = useState(false);
+
+  const relevantData = useMemo(() => {
+    if (showApartments) {
+      return okrugs?.map((okrug) => {
+        return {
+          okrug: okrug.okrug,
+          risk: okrug.riskApartments,
+          attention: okrug.attentionApartments,
+        };
+      });
+    } else {
+      return okrugs?.map((okrug) => {
+        return {
+          okrug: okrug.okrug,
+          risk: okrug.riskHouses,
+          attention: okrug.attentionHouses,
+        };
+      });
+    }
+  }, [showApartments, okrugs]);
 
   return (
     <Card className={cn(className)}>
@@ -108,14 +139,10 @@ const OkrugTotalDeviationsChart = ({
           </div>
         ) : (
           <ChartContainer
-            config={
-              showApartments
-                ? okrugTotalDeviationsApartmentChartConfig
-                : okrugTotalDeviationsChartConfig
-            }
+            config={okrugTotalDeviationsChartConfig}
             className="mt-[-35px] h-full w-full lg:h-[320px]"
           >
-            <BarChart accessibilityLayer data={okrugs}>
+            <BarChart accessibilityLayer data={relevantData}>
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="okrug"
@@ -126,18 +153,14 @@ const OkrugTotalDeviationsChart = ({
                 interval={0}
               />
               {renderRechartsTooltip({
-                config: showApartments
-                  ? okrugTotalDeviationsApartmentChartConfig
-                  : okrugTotalDeviationsChartConfig,
+                config: okrugTotalDeviationsChartConfig,
                 cursor: true,
               })}
               <ChartLegend content={<ChartLegendContent />} />
 
               {renderRechartsStackedBar({
-                config: showApartments
-                  ? okrugTotalDeviationsApartmentChartConfig
-                  : okrugTotalDeviationsChartConfig,
-                data: okrugs,
+                config: okrugTotalDeviationsChartConfig,
+                data: relevantData,
                 orientation: 'vertical',
                 onClick: (data) => {
                   // console.log(JSON.stringify(data, null, 2));

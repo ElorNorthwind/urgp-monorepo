@@ -23,7 +23,7 @@ function DeviationCell(props: CellContext<OldAppartment, string>): JSX.Element {
   );
 
   const icon = useMemo(() => {
-    if (apartment.classificator.stage === 'В работе МФР') {
+    if (apartment.classificator.stageName === 'В работе МФР') {
       return <CircleDollarSign className="h-8 w-8 text-violet-500" />;
     } else if (apartment.classificator.deviation === 'Риск') {
       return <CircleX className="h-8 w-8 text-red-500" />;

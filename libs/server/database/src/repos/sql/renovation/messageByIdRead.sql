@@ -6,4 +6,4 @@ SELECT id, created_at as "createdAt",
        needs_answer as "needsAnswer",
        answer_date as "answerDate"
 FROM renovation.messages
-WHERE id = ${id};
+WHERE message_type = 'comment' AND id = ${id};

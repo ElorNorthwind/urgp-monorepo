@@ -49,7 +49,7 @@ export const oldApartmentColumns = [
     },
   }),
 
-  columnHelper.accessor('classificator.stage', {
+  columnHelper.accessor('classificator.stageName', {
     id: 'stage',
     header: 'Этап работы',
     size: 200,

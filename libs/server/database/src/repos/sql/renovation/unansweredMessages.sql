@@ -42,9 +42,9 @@ LEFT JOIN (
 	u.fio as author
 	FROM renovation.messages im 
 	LEFT JOIN renovation.users u ON im.author_id = u.id
-	WHERE im.apartment_id IS NOT NULL AND im.is_deleted <> true
+	WHERE im.apartment_id IS NOT NULL AND im.is_deleted <> true AND im.message_type = 'comment'
 ) lm on m.apartment_id = lm.apartment_id AND lm.rank = 1
-WHERE a.id IS NOT NULL AND m.is_deleted <> true
+WHERE a.id IS NOT NULL AND m.is_deleted <> true AND m.message_type = 'comment'
   AND needs_answer = true AND answer_date IS NULL
     ${conditions:raw} 
 ORDER BY m.created_at DESC;
