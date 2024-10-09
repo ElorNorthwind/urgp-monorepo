@@ -78,12 +78,18 @@ export class RenovationService {
     return this.dbServise.db.renovation.readMessageById(dto);
   }
 
-  public async updateMessage(dto: UpdateMessageDto): Promise<Message> {
-    return this.dbServise.db.renovation.updateMessage(dto);
+  public async updateMessage(
+    dto: UpdateMessageDto,
+    userId: number,
+  ): Promise<Message> {
+    return this.dbServise.db.renovation.updateMessage(dto, userId);
   }
 
-  public async deleteMessage(dto: DeleteMessageDto): Promise<boolean> {
-    return this.dbServise.db.renovation.deleteMessage(dto);
+  public async deleteMessage(
+    dto: DeleteMessageDto,
+    userId: number,
+  ): Promise<boolean> {
+    return this.dbServise.db.renovation.deleteMessage(dto, userId);
   }
   public async getConnectedPlots(id: number): Promise<ConnectedPlots[]> {
     return this.dbServise.db.renovation.getConnectedPlots(id);

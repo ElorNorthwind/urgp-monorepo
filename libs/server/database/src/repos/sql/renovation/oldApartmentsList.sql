@@ -29,7 +29,7 @@ FROM (SELECT
         ROW_NUMBER() OVER (PARTITION BY building_id ORDER BY building_id, CAST(substring(apart_num, '\d+') AS integer), fio) as apart_npp 
     FROM renovation.apartments_old_temp) a
     LEFT JOIN renovation.buildings_old b ON a.building_id = b.id
-    LEFT JOIN (SELECT apartment_id, COUNT(*) as messages_count FROM renovation.messages WHERE is_deleted <> true AND apartment_id IS NOT NULL AND message_type = 'comment' GROUP BY apartment_id) m ON a.id = m.apartment_id
+    LEFT JOIN (SELECT apartment_id, COUNT(*) as messages_count FROM renovation.messages WHERE (message_payload->-1->>'deleted')::boolean IS DISTINCT FROM true AND apartment_id IS NOT NULL GROUP BY apartment_id) m ON a.id = m.apartment_id
 ${conditions:raw}
 ORDER BY adress, apart_npp
 LIMIT ${limit} OFFSET ${offset};

@@ -25,7 +25,7 @@ SELECT
     (a.classificator->>'stageName')::varchar as stage,
     (a.classificator->>'action')::varchar as "actionText",
     (a.classificator->>'deviation')::varchar as deviation,
-    (a.classificator->'problems')::varchar as problems
+    (a.classificator->>'problems')::varchar as problems
 FROM renovation.messages m 
 LEFT JOIN renovation.apartments_old_temp a ON a.id = m.apartment_id
 LEFT JOIN renovation.buildings_old b ON a.building_id = b.id
@@ -34,7 +34,7 @@ LEFT JOIN (
 	SELECT 
 	rank() OVER (PARTITION BY im.apartment_id ORDER BY im.created_at DESC, im.id) as rank,
 	im.id, 
-	im.message_content, 
+	message_payload->-1->>'text' as message_content, 
 	im.message_type, 
 	im.apartment_id,
 	im.author_id,
@@ -42,9 +42,10 @@ LEFT JOIN (
 	u.fio as author
 	FROM renovation.messages im 
 	LEFT JOIN renovation.users u ON im.author_id = u.id
-	WHERE im.apartment_id IS NOT NULL AND im.is_deleted <> true AND im.message_type = 'comment'
+	WHERE im.apartment_id IS NOT NULL AND im.message_type = 'comment' 
+	      AND (im.message_payload->-1->>'deleted')::boolean IS DISTINCT FROM true
 ) lm on m.apartment_id = lm.apartment_id AND lm.rank = 1
-WHERE a.id IS NOT NULL AND m.is_deleted <> true AND m.message_type = 'comment'
+WHERE a.id IS NOT NULL AND (m.message_payload->-1->>'deleted')::boolean IS DISTINCT FROM true
   AND needs_answer = true AND answer_date IS NULL
-    ${conditions:raw} 
+  ${conditions:raw} 
 ORDER BY m.created_at DESC;

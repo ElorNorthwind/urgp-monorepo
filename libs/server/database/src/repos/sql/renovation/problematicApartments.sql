@@ -42,16 +42,16 @@ FROM (SELECT
                     'authorId', m.author_id,
                     'authorFio', u.fio,
                     'isBoss', CASE WHEN 'boss' = ANY(roles) THEN true ELSE false END,
-                    'messageContent', m.message_content,
-                    'validUntil', m.valid_until
+                    message_payload->-1->>'text', m.message_content
                 )
 				ORDER BY apartment_id, created_at ASC
             ) as messages
         FROM renovation.messages m
         LEFT JOIN renovation.users u ON u.id = m.author_id
-        WHERE m.is_deleted = false AND m.message_type = 'comment'
+        WHERE (message_payload->-1->>'deleted')::boolean IS DISTINCT FROM true AND m.message_type = 'comment'
+	
         GROUP BY m.apartment_id
         ) m ON m.apartment_id = ap.id
     ) a
 WHERE building_id = ${id}
-GROUP BY building_id
+GROUP BY building_id;

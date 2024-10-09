@@ -173,7 +173,7 @@ export class RenovationController {
       );
     }
 
-    return this.renovation.updateMessage(dto);
+    return this.renovation.updateMessage(dto, userId);
   }
 
   @UseGuards(AccessTokenGuard)
@@ -202,7 +202,7 @@ export class RenovationController {
       }
     }
 
-    return this.renovation.deleteMessage(dto);
+    return this.renovation.deleteMessage(dto, req.user.id);
   }
 
   @Get('connected-plots/:id')

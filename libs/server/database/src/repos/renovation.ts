@@ -223,9 +223,10 @@ export class RenovationRepository {
     return this.db.one(renovation.messageByIdRead, dto);
   }
 
-  updateMessage(dto: UpdateMessageDto): Promise<Message> {
+  updateMessage(dto: UpdateMessageDto, userId: number): Promise<Message> {
     const updatedMessage = {
       id: dto.id,
+      authorId: userId,
       messageContent: dto.messageContent,
       validUntil: dto.validUntil || null,
       needsAnswer: dto.needsAnswer || false,
@@ -235,8 +236,8 @@ export class RenovationRepository {
     return this.db.one(renovation.messageUpdate, updatedMessage);
   }
 
-  deleteMessage(dto: DeleteMessageDto): Promise<boolean> {
-    return this.db.one(renovation.messageDelete, dto);
+  deleteMessage(dto: DeleteMessageDto, userId: number): Promise<boolean> {
+    return this.db.one(renovation.messageDelete, { ...dto, authorId: userId });
   }
 
   getConnectedPlots(id: number): Promise<ConnectedPlots[]> {
