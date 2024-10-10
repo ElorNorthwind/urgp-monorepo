@@ -3,16 +3,14 @@ import {
   CreateStageDto,
   DeleteMessageDto,
   ExtendedStage,
-  MessagesUnansweredDto,
   ReadApartmentMessageDto,
   Stage,
-  UnansweredMessage,
   UpdateStageDto,
 } from '@urgp/shared/entities';
 
 export const stagesApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    create: build.mutation<Stage, CreateStageDto>({
+    createStage: build.mutation<Stage, CreateStageDto>({
       query: (dto) => ({
         url: '/renovation/stage',
         method: 'POST',
@@ -20,7 +18,10 @@ export const stagesApi = rtkApi.injectEndpoints({
       }),
     }),
 
-    readForApartments: build.query<ExtendedStage[], ReadApartmentMessageDto>({
+    readStagesForApartments: build.query<
+      ExtendedStage[],
+      ReadApartmentMessageDto
+    >({
       query: (dto) => ({
         url: '/renovation/stage/apartment',
         method: 'GET',
@@ -28,7 +29,7 @@ export const stagesApi = rtkApi.injectEndpoints({
       }),
     }),
 
-    update: build.mutation<Stage, UpdateStageDto>({
+    updateStage: build.mutation<Stage, UpdateStageDto>({
       query: (dto) => ({
         url: `/renovation/stage`,
         method: 'PATCH',
@@ -36,20 +37,40 @@ export const stagesApi = rtkApi.injectEndpoints({
       }),
     }),
 
-    delete: build.mutation<boolean, DeleteMessageDto>({
+    deleteStage: build.mutation<boolean, DeleteMessageDto>({
       query: (dto) => ({
         url: `/renovation/stage`,
         method: 'DELETE',
         body: dto,
       }),
     }),
+
+    readStageGroups: build.query<string[], void>({
+      query: () => ({
+        url: '/renovation/stage/groups',
+        method: 'GET',
+      }),
+    }),
+
+    readStageTypes: build.query<
+      { id: number; name: string; group: string }[],
+      void
+    >({
+      query: () => ({
+        url: '/renovation/stage/types',
+        method: 'GET',
+      }),
+    }),
   }),
+
   overrideExisting: false,
 });
 
 export const {
-  useCreateMutation: useCreateStage,
-  useReadForApartmentsQuery: useApartmentStages,
-  useUpdateMutation: useUpdateStage,
-  useDeleteMutation: useDeleteStage,
+  useCreateStageMutation: useCreateStage,
+  useReadStagesForApartmentsQuery: useApartmentStages,
+  useUpdateStageMutation: useUpdateStage,
+  useDeleteStageMutation: useDeleteStage,
+  useReadStageGroupsQuery: useStageGroups,
+  useReadStageTypesQuery: useStageTypes,
 } = stagesApi;

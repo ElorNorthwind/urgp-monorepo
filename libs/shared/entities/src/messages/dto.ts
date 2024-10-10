@@ -71,7 +71,7 @@ export type MessagesPageSearch = z.infer<typeof messagesPageSearch>;
 export const stageCreate = z.object({
   authorId: z.coerce.number(),
   apartmentId: z.coerce.number(),
-  messageContent: z.string().nullable(),
+  messageContent: z.string().optional(),
   // stageDate: z.coerce.date().nullable().optional(),
   stageId: z.coerce.number(),
   docNumber: z.coerce
@@ -92,9 +92,16 @@ export const stageUpdate = stageCreate
   .partial()
   .extend({
     id: z.coerce.number(),
-    apartmentId: z.coerce.number(),
   });
+
+export const stageUpdateFormValues = stageUpdate.pick({
+  messageContent: true,
+  stageId: true,
+  docNumber: true,
+  docDate: true,
+});
 
 export type CreateStageDto = z.infer<typeof stageCreate>;
 export type UpdateStageDto = z.infer<typeof stageUpdate>;
 export type CreateStageFormValuesDto = z.infer<typeof stageCreateFormValues>;
+export type UpdateStageFormValuesDto = z.infer<typeof stageUpdateFormValues>;

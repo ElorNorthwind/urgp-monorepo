@@ -12,7 +12,7 @@ import {
 
 export const messagesApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    create: build.mutation<Message, CreateMessageDto>({
+    createMessage: build.mutation<Message, CreateMessageDto>({
       query: (dto) => ({
         url: '/renovation/message',
         method: 'POST',
@@ -20,7 +20,10 @@ export const messagesApi = rtkApi.injectEndpoints({
       }),
     }),
 
-    readForApartments: build.query<ExtendedMessage[], ReadApartmentMessageDto>({
+    readMessagesForApartments: build.query<
+      ExtendedMessage[],
+      ReadApartmentMessageDto
+    >({
       query: (dto) => ({
         url: '/renovation/message/apartment',
         method: 'GET',
@@ -28,7 +31,7 @@ export const messagesApi = rtkApi.injectEndpoints({
       }),
     }),
 
-    update: build.mutation<Message, UpdateMessageDto>({
+    updateMessage: build.mutation<Message, UpdateMessageDto>({
       query: (dto) => ({
         url: `/renovation/message`,
         method: 'PATCH',
@@ -36,7 +39,7 @@ export const messagesApi = rtkApi.injectEndpoints({
       }),
     }),
 
-    delete: build.mutation<boolean, DeleteMessageDto>({
+    deleteMessage: build.mutation<boolean, DeleteMessageDto>({
       query: (dto) => ({
         url: `/renovation/message`,
         method: 'DELETE',
@@ -44,7 +47,10 @@ export const messagesApi = rtkApi.injectEndpoints({
       }),
     }),
 
-    readUnaswered: build.query<UnansweredMessage[], MessagesUnansweredDto>({
+    readUnasweredMessages: build.query<
+      UnansweredMessage[],
+      MessagesUnansweredDto
+    >({
       query: (user) => ({
         url: '/renovation/unanswered-messages/' + user,
         method: 'GET',
@@ -55,9 +61,9 @@ export const messagesApi = rtkApi.injectEndpoints({
 });
 
 export const {
-  useCreateMutation: useCreateMessage,
-  useReadForApartmentsQuery: useApartmentMessages,
-  useUpdateMutation: useUpdateMessage,
-  useDeleteMutation: useDeleteMessage,
-  useReadUnasweredQuery: useUnansweredMessages,
+  useCreateMessageMutation: useCreateMessage,
+  useReadMessagesForApartmentsQuery: useApartmentMessages,
+  useUpdateMessageMutation: useUpdateMessage,
+  useDeleteMessageMutation: useDeleteMessage,
+  useReadUnasweredMessagesQuery: useUnansweredMessages,
 } = messagesApi;

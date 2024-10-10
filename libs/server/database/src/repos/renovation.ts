@@ -297,12 +297,17 @@ export class RenovationRepository {
   createStage(dto: CreateStageDto): Promise<Stage> {
     const newStage = {
       authorId: dto.authorId,
-      apartmentId: dto.authorId,
-      messageContent: dto.authorId || null,
-      stageId: dto.authorId || null,
-      docNumber: dto.authorId || null,
-      docDate: dto.authorId || null,
+      apartmentId: dto.apartmentId,
+      stageId: dto.stageId,
+      docNumber: dto.docNumber || null,
+      docDate: dto.docDate || new Date(),
+      messageContent: dto.messageContent || null,
     };
+
+    // console.log(dto);
+    // const q = this.pgp.as.format(renovation.stageCreate, newStage);
+    // console.log(q);
+
     return this.db.one(renovation.stageCreate, newStage);
   }
   readApartmentStages(dto: ReadApartmentMessageDto): Promise<ExtendedStage[]> {
@@ -319,10 +324,19 @@ export class RenovationRepository {
       docNumber: dto.docNumber,
       docDate: dto.docDate,
     };
+
+    // const q = this.pgp.as.format(renovation.stageUpdate, updatedStage);
+    // console.log(q);
     return this.db.one(renovation.stageUpdate, updatedStage);
   }
 
   deleteStage(dto: DeleteMessageDto, userId: number): Promise<boolean> {
     return this.db.one(renovation.stageDelete, { ...dto, authorId: userId });
+  }
+  getStageGroups(): Promise<string[]> {
+    return this.db.any(renovation.stageGroups);
+  }
+  getStageTypes(): Promise<{ id: number; name: string; group: string }[]> {
+    return this.db.any(renovation.stageTypes);
   }
 }

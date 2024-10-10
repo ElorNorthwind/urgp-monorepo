@@ -3,7 +3,7 @@ VALUES ('stage',
         ${authorId}, 
         ${apartmentId}, 
         jsonb_build_array(jsonb_build_object(
-                         'date', DATE(),
+                         'date', NOW(),
                          'text', ${messageContent},
                          'deleted', false,
                          'author', ${authorId},

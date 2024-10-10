@@ -65,6 +65,7 @@ export type Stage = {
 
 export type ExtendedStage = Stage & {
   stageName: string;
+  authorFio: string;
   group: string;
   action: string;
   priority: number;

@@ -50,6 +50,7 @@ import {
   stageCreate,
   stageUpdate,
   messageDelete,
+  UpdateStageDto,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
@@ -285,6 +286,8 @@ export class RenovationController {
     return this.renovation.getUnansweredMessages(user);
   }
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('old-building-list')
   getOldBuildingList(): Promise<{ value: number; label: string }[]> {
     return this.renovation.getOldBuildingList();
@@ -340,7 +343,7 @@ export class RenovationController {
     if (ids.length === 0) {
       return [];
     }
-    return this.renovation.readApartmentMessages({
+    return this.renovation.readApartmentStages({
       apartmentIds: ids as [number, ...number[]],
     });
   }
@@ -349,7 +352,7 @@ export class RenovationController {
   @Patch('stage')
   async updateStage(
     @Req() req: RequestWithUserData,
-    @Body(new ZodValidationPipe(stageUpdate)) dto: UpdateMessageDto,
+    @Body(new ZodValidationPipe(stageUpdate)) dto: UpdateStageDto,
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL
     const userId = req.user.id;
@@ -372,7 +375,7 @@ export class RenovationController {
     //   );
     // }
 
-    return this.renovation.updateMessage(dto, userId);
+    return this.renovation.updateStage(dto, userId);
   }
 
   @UseGuards(AccessTokenGuard)
@@ -419,5 +422,19 @@ export class RenovationController {
       );
     }
     this.renovation.resetCache();
+  }
+
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
+  @Get('stage/groups')
+  getStageGroups(): Promise<string[]> {
+    return this.renovation.getStageGroups();
+  }
+
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
+  @Get('stage/types')
+  getStageTypes(): Promise<{ id: number; name: string; group: string }[]> {
+    return this.renovation.getStageTypes();
   }
 }

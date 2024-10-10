@@ -184,7 +184,18 @@ export class RenovationService {
     return this.dbServise.db.renovation.deleteStage(dto, userId);
   }
 
+  // TODO: move to separate module
   public async resetCache(): Promise<void> {
     await this.cacheManager.reset();
+  }
+
+  public async getStageGroups(): Promise<string[]> {
+    return this.dbServise.db.renovation.getStageGroups();
+  }
+
+  public async getStageTypes(): Promise<
+    { id: number; name: string; group: string }[]
+  > {
+    return this.dbServise.db.renovation.getStageTypes();
   }
 }

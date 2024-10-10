@@ -15,6 +15,7 @@ import { ReactNode, useState } from 'react';
 type ListItem<T> = {
   value: T;
   label: string;
+
   // icon?: ReactNode; // to do - add something like that I guess
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,6 +26,7 @@ type ComboboxFieldProps<T> = {
   items: ListItem<T>[];
   value: string;
   onSelect: (value: string) => void;
+  side?: 'top' | 'right' | 'bottom' | 'left';
 
   unselectedPlaceholder?: string;
   searchPlaceholder?: string;
@@ -42,6 +44,7 @@ function Combobox<T>(props: ComboboxFieldProps<T>) {
     searchPlaceholder = 'Найти...',
     emptySearchLabel = 'Ничего не найдено.',
     className,
+    side,
   } = props;
   const [open, setOpen] = useState(false);
 
@@ -68,6 +71,7 @@ function Combobox<T>(props: ComboboxFieldProps<T>) {
       <PopoverContent
         style={{ width: 'var(--radix-popover-trigger-width)' }}
         className="p-0"
+        side={side}
       >
         <Command>
           <CommandInput placeholder={searchPlaceholder} />

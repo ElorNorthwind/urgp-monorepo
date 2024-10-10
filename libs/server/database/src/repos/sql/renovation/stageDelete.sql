@@ -1,7 +1,7 @@
 UPDATE renovation.messages
 SET (message_payload, updated_at) = 
     (message_payload || jsonb_build_array(jsonb_build_object(
-                         'date', DATE(),
+                         'date', NOW(),
                          'text', message_payload->-1->>'text',
                          'deleted', true,
                          'author', ${authorId},
