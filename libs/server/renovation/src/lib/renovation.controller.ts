@@ -1,18 +1,17 @@
 import {
   Body,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   Param,
   ParseArrayPipe,
-  ParseBoolPipe,
   Patch,
   Post,
   Query,
   Req,
   UnauthorizedException,
   UseGuards,
+  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { RenovationService } from './renovation.service';
@@ -26,7 +25,6 @@ import {
   getOldApartments,
   GetOldAppartmentsDto,
   getOldBuldings,
-  GetOldBuldingsDto,
   messagesUnanswered,
   MessagesUnansweredDto,
   OkrugTotals,
@@ -54,21 +52,28 @@ import {
   messageDelete,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
+import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
 
 @Controller('renovation')
 export class RenovationController {
   constructor(private readonly renovation: RenovationService) {}
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('old-geojson')
   getOldGeoJson(): Promise<BuildingsGeoJSON> {
     return this.renovation.getOldBuildingsGeoJson();
   }
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('new-geojson')
   getNewGeoJson(): Promise<BuildingsGeoJSON> {
     return this.renovation.getNewBuildingsGeoJson();
   }
-
+  @CacheTTL(1000 * 60 * 60)
+  // @CacheKey('old-buildings')
+  @UseInterceptors(CacheInterceptor)
   @Get('old-buildings')
   @UsePipes(new ZodValidationPipe(getOldBuldings))
   getOldBuldings(): Promise<OldBuilding[]> {
@@ -85,6 +90,8 @@ export class RenovationController {
     return this.renovation.getNewBuildingById(id);
   }
 
+  @CacheTTL(1000 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('old-apartments')
   @UsePipes(new ZodValidationPipe(getOldApartments))
   getOldAppartments(
@@ -93,16 +100,22 @@ export class RenovationController {
     return this.renovation.getOldAppartments(getOldAppartmentsDto);
   }
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('okrug-totals')
   getOkrugTotals(): Promise<OkrugTotals[]> {
     return this.renovation.getOkrugTotals();
   }
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('okrug-total-deviations')
   getOrkugTotalDeviations(): Promise<OkrugTotalDeviations[]> {
     return this.renovation.getOkrugTotalDeviations();
   }
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('done-timeline')
   getDoneTimeline(): Promise<DoneTimelinePoint[]> {
     return this.renovation.getDoneTimeline();
@@ -218,22 +231,30 @@ export class RenovationController {
     return this.renovation.getConnectedPlots(id);
   }
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('total-deviations')
   async getCityTotalDeviations(): Promise<CityTotalDeviations> {
     const { result } = await this.renovation.getCityTotalDeviations();
     return result;
   }
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('total-ages')
   async getCityTotalAges(): Promise<CityTotalAgeInfo[]> {
     return this.renovation.getCityTotalAges();
   }
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('total-done-by-year')
   async getCityTotalDoneByYear(): Promise<DoneByYearInfo[]> {
     return this.renovation.getCityTotalDoneByYear();
   }
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('start-timeline')
   async getCityStartTimeline(): Promise<StartTimelineInfo[]> {
     return this.renovation.getCityStartTimeline();

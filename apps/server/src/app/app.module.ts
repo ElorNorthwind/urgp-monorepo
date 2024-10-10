@@ -12,6 +12,7 @@ import {
 } from '@urgp/server/external-auth';
 import { RenovationModule } from '@urgp/server/renovation';
 import { AuthModule } from '@urgp/server/auth';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   // dot env files
@@ -20,6 +21,7 @@ import { AuthModule } from '@urgp/server/auth';
       envFilePath: ['.env.development.local', '.env.development', '.env'],
       isGlobal: true,
     }),
+    CacheModule.register({ isGlobal: true }),
     // cls module (async local storage custom implementation),
     ClsModule.forRoot({
       global: true,
