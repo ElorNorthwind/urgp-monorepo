@@ -6,7 +6,6 @@ export type Message = {
   apartmentId: number | null;
   buildingId: number | null;
   messageContent: string;
-  validUntil: Date | null;
   needsAnswer: boolean;
   answerDate: Date | null;
 };
@@ -48,4 +47,25 @@ export type UnansweredMessage = Pick<
   actionText: string;
   deviation: string;
   problems: string;
+};
+
+export type Stage = {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  editedAt: Date | null;
+  authorId: number;
+  editedBy: number | null;
+  apartmentId: number | null;
+  messageContent: string;
+  stageId: number;
+  docNumber: string;
+  docDate: Date;
+};
+
+export type ExtendedStage = Stage & {
+  stageName: string;
+  group: string;
+  action: string;
+  priority: number;
 };

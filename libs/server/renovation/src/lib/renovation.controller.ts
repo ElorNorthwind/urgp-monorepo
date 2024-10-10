@@ -46,6 +46,12 @@ import {
   OkrugTotalDeviations,
   ProblematicApartmentInfo,
   OldBuildingConnectionsInfo,
+  CreateStageDto,
+  messageCreate,
+  messageUpdate,
+  stageCreate,
+  stageUpdate,
+  messageDelete,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 
@@ -118,9 +124,10 @@ export class RenovationController {
 
   @UseGuards(AccessTokenGuard)
   @Post('message')
+  // @UsePipes(new ZodValidationPipe(messageCreate))
   createMessage(
     @Req() req: RequestWithUserData,
-    @Body() dto: CreateMessageDto,
+    @Body(new ZodValidationPipe(messageCreate)) dto: CreateMessageDto,
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL
     const id = req.user.id;
@@ -147,9 +154,10 @@ export class RenovationController {
 
   @UseGuards(AccessTokenGuard)
   @Patch('message')
+  // @UsePipes(new ZodValidationPipe(messageUpdate))
   async updateMessage(
     @Req() req: RequestWithUserData,
-    @Body() dto: UpdateMessageDto,
+    @Body(new ZodValidationPipe(messageUpdate)) dto: UpdateMessageDto,
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL
     const userId = req.user.id;
@@ -285,5 +293,93 @@ export class RenovationController {
     @Param('id') id: number,
   ): Promise<OldBuildingConnectionsInfo> {
     return this.renovation.getOldBuildingConnections(id);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Post('stage')
+  createStage(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(stageCreate)) dto: CreateStageDto,
+  ) {
+    // Это надо вывести в отдельный гвард через библиотеку CASL
+    const id = req.user.id;
+    if (id !== dto.authorId) {
+      throw new UnauthorizedException(
+        'Операция не разрешена. Нельзя создавать этапы от имени другого пользователя!',
+      );
+    }
+    return this.renovation.createStage(dto);
+  }
+
+  @Get('stage/apartment')
+  readApartmentStages(
+    @Query('ids', new ParseArrayPipe({ items: Number, separator: ',' }))
+    ids: number[],
+  ) {
+    if (ids.length === 0) {
+      return [];
+    }
+    return this.renovation.readApartmentMessages({
+      apartmentIds: ids as [number, ...number[]],
+    });
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Patch('stage')
+  async updateStage(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(stageUpdate)) dto: UpdateMessageDto,
+  ) {
+    // Это надо вывести в отдельный гвард через библиотеку CASL
+    const userId = req.user.id;
+    const { authorId } = await this.renovation.readMessageById({
+      id: dto.id,
+    });
+    if (userId !== authorId) {
+      throw new UnauthorizedException(
+        'Операция не разрешена. Нельзя менять этапы другого пользователя!',
+      );
+    }
+
+    // const hasRoles =
+    //   req.user.roles.includes('admin') ||
+    //   req.user.roles.includes('editor') ||
+    //   req.user.roles.includes('boss');
+    // if (!hasRoles) {
+    //   throw new UnauthorizedException(
+    //     'Операция не разрешена. Нехватает прав для редактирования сообщений!',
+    //   );
+    // }
+
+    return this.renovation.updateMessage(dto, userId);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Delete('stage')
+  async deleteStage(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(messageDelete)) dto: DeleteMessageDto,
+  ) {
+    // Это надо вывести в отдельный гвард через библиотеку CASL
+    if (!req.user.roles.includes('admin')) {
+      const userId = req.user.id;
+      const { authorId } = await this.renovation.readMessageById({
+        id: dto.id,
+      });
+      if (userId !== authorId) {
+        throw new UnauthorizedException(
+          'Операция не разрешена. Только администратор может удалять чужие сообщения !',
+        );
+      }
+      // const hasRoles =
+      //   req.user.roles.includes('admin') || req.user.roles.includes('boss');
+      // if (!hasRoles) {
+      //   throw new UnauthorizedException(
+      //     'Операция не разрешена. Нехватает прав для редактирования сообщений!',
+      //   );
+      // }
+    }
+
+    return this.renovation.deleteStage(dto, req.user.id);
   }
 }

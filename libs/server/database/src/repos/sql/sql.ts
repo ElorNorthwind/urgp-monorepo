@@ -36,6 +36,10 @@ export const renovation = {
   newBuildings: sql('sql/renovation/newBuildings.sql'),
   problematicApartments: sql('sql/renovation/problematicApartments.sql'),
   oldBuildingConnections: sql('sql/renovation/oldBuildingConnections.sql'),
+  stageApartmentRead: sql('sql/renovation/stageApartmentRead.sql'),
+  stageCreate: sql('sql/renovation/stageCreate.sql'),
+  stageDelete: sql('sql/renovation/stageDelete.sql'),
+  stageUpdate: sql('sql/renovation/stageUpdate.sql'),
 };
 
 export const users = {

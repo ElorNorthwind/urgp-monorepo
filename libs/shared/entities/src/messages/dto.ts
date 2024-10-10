@@ -59,13 +59,42 @@ export type ReadApartmentMessageDto = z.infer<typeof messageApartmentRead>;
 export type ReadMessageByIdDto = z.infer<typeof messageReabById>;
 export type UpdateMessageDto = z.infer<typeof messageUpdate>;
 export type DeleteMessageDto = z.infer<typeof messageDelete>;
-
 export type CreateMessageFormValuesDto = z.infer<
   typeof messageCreateFormValues
 >;
 export type UpdateMessageFormValuesDto = z.infer<
   typeof messageUpdateFormValues
 >;
-
 export type MessagesUnansweredDto = z.infer<typeof messagesUnanswered>;
 export type MessagesPageSearch = z.infer<typeof messagesPageSearch>;
+
+export const stageCreate = z.object({
+  authorId: z.coerce.number(),
+  apartmentId: z.coerce.number(),
+  messageContent: z.string().nullable(),
+  // stageDate: z.coerce.date().nullable().optional(),
+  stageId: z.coerce.number(),
+  docNumber: z.coerce
+    .string()
+    .min(1, { message: 'Номер документа обязателен' }),
+  docDate: z.coerce.date().default(new Date()),
+});
+
+export const stageCreateFormValues = stageCreate.pick({
+  messageContent: true,
+  stageId: true,
+  docNumber: true,
+  docDate: true,
+});
+
+export const stageUpdate = stageCreate
+  .omit({ authorId: true, apartmentId: true })
+  .partial()
+  .extend({
+    id: z.coerce.number(),
+    apartmentId: z.coerce.number(),
+  });
+
+export type CreateStageDto = z.infer<typeof stageCreate>;
+export type UpdateStageDto = z.infer<typeof stageUpdate>;
+export type CreateStageFormValuesDto = z.infer<typeof stageCreateFormValues>;

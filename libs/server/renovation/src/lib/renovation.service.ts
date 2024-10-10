@@ -20,6 +20,9 @@ import {
   DoneByYearInfo,
   ProblematicApartmentInfo,
   OldBuildingConnectionsInfo,
+  CreateStageDto,
+  Stage,
+  UpdateStageDto,
 } from '@urgp/shared/entities';
 
 @Injectable()
@@ -153,5 +156,26 @@ export class RenovationService {
     id: number,
   ): Promise<OldBuildingConnectionsInfo> {
     return this.dbServise.db.renovation.getOldBuildingConnections(id);
+  }
+
+  public async createStage(dto: CreateStageDto): Promise<Stage> {
+    return this.dbServise.db.renovation.createStage(dto);
+  }
+
+  public async readApartmentStages(dto: ReadApartmentMessageDto) {
+    return this.dbServise.db.renovation.readApartmentStages(dto);
+  }
+  public async updateStage(
+    dto: UpdateStageDto,
+    userId: number,
+  ): Promise<Stage> {
+    return this.dbServise.db.renovation.updateStage(dto, userId);
+  }
+
+  public async deleteStage(
+    dto: DeleteMessageDto,
+    userId: number,
+  ): Promise<boolean> {
+    return this.dbServise.db.renovation.deleteStage(dto, userId);
   }
 }

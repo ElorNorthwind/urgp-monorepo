@@ -112,7 +112,7 @@ const CreateMessageForm = ({
       <form
         onSubmit={form.handleSubmit(editMessage ? onEditSubmit : onSubmit)}
         className={cn(
-          'bg-background relative grid w-full gap-4 rounded-lg border p-2 transition',
+          'bg-background relative grid w-full gap-4 border-t p-2 transition',
           className,
         )}
       >
@@ -122,12 +122,17 @@ const CreateMessageForm = ({
             <p className="truncate">{editMessage.messageContent}</p>
           </div>
         )}
+        {form.formState.errors.messageContent && (
+          <span className="pointer-events-none absolute right-4 top-4 w-full text-right text-xs font-light text-rose-600">
+            {form.formState.errors.messageContent.message}
+          </span>
+        )}
         <FormField
           control={form.control}
           name="messageContent"
           render={({ field }) => (
             <FormItem className="grid">
-              <FormLabel className="text-left">
+              {/* <FormLabel className="text-left">
                 {form.formState.errors.messageContent ? (
                   <p className="flex justify-between truncate">
                     Текст сообщения
@@ -138,7 +143,7 @@ const CreateMessageForm = ({
                 ) : (
                   'Текст сообщения'
                 )}
-              </FormLabel>
+              </FormLabel> */}
               <FormControl>
                 <Textarea
                   placeholder="Введите сообщение"
@@ -157,7 +162,6 @@ const CreateMessageForm = ({
               <FormControl>
                 <Checkbox
                   id="needsAnswer"
-                  // {...field}
                   checked={field.value === true}
                   onCheckedChange={(checked) => {
                     field.onChange(checked);
@@ -171,39 +175,7 @@ const CreateMessageForm = ({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="validUntil"
-          render={({ field }) => (
-            <div className="bg-background absolute bottom-0 left-[-310px] hidden rounded border p-2">
-              <FormItem className="grid">
-                <FormLabel className="text-left">
-                  {form.formState.errors.validUntil ? (
-                    <p className="flex justify-between truncate">
-                      Забыть до
-                      <span className="w-full text-right text-xs font-light">
-                        {form.formState.errors.validUntil.message}
-                      </span>
-                    </p>
-                  ) : (
-                    'Забыть до'
-                  )}
-                </FormLabel>
 
-                <Calendar
-                  mode="single"
-                  id="validUntil"
-                  selected={field.value || undefined}
-                  onSelect={field.onChange}
-                  disabled={(date) =>
-                    date < new Date() || date >= add(new Date(), { years: 1 })
-                  }
-                  // initialFocus
-                />
-              </FormItem>
-            </div>
-          )}
-        />
         {editMessage && setEditMessage ? (
           <div className="flex w-full items-center justify-between gap-2">
             <Button type="submit" className="flex-1" disabled={isUpdateLoading}>

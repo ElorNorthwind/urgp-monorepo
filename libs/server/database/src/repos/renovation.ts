@@ -30,6 +30,10 @@ import {
   OkrugTotalDeviations,
   ProblematicApartmentInfo,
   OldBuildingConnectionsInfo,
+  CreateStageDto,
+  Stage,
+  ExtendedStage,
+  UpdateStageDto,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -289,5 +293,36 @@ export class RenovationRepository {
     id: number,
   ): Promise<OldBuildingConnectionsInfo | null> {
     return this.db.oneOrNone(renovation.oldBuildingConnections, { id });
+  }
+  createStage(dto: CreateStageDto): Promise<Stage> {
+    const newStage = {
+      authorId: dto.authorId,
+      apartmentId: dto.authorId,
+      messageContent: dto.authorId || null,
+      stageId: dto.authorId || null,
+      docNumber: dto.authorId || null,
+      docDate: dto.authorId || null,
+    };
+    return this.db.one(renovation.stageCreate, newStage);
+  }
+  readApartmentStages(dto: ReadApartmentMessageDto): Promise<ExtendedStage[]> {
+    return this.db.any(renovation.stageApartmentRead, {
+      apartmentIds: dto.apartmentIds.join(','),
+    });
+  }
+  updateStage(dto: UpdateStageDto, userId: number): Promise<Stage> {
+    const updatedStage = {
+      id: dto.id,
+      authorId: userId,
+      messageContent: dto.messageContent,
+      stageId: dto.stageId,
+      docNumber: dto.docNumber,
+      docDate: dto.docDate,
+    };
+    return this.db.one(renovation.stageUpdate, updatedStage);
+  }
+
+  deleteStage(dto: DeleteMessageDto, userId: number): Promise<boolean> {
+    return this.db.one(renovation.stageDelete, { ...dto, authorId: userId });
   }
 }
