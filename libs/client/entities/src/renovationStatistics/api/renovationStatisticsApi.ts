@@ -56,6 +56,13 @@ export const renovationStatisticsApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+    // ToDo - вынеси в отдельный апи
+    resetRenovationCache: build.mutation<void, void>({
+      query: () => ({
+        url: '/renovation/reset-cache',
+        method: 'GET',
+      }),
+    }),
   }),
 
   overrideExisting: false,
@@ -70,4 +77,5 @@ export const {
   useGetDoneByYearQuery: useDoneByYear,
   useGetStartTimelineQuery: useStartTimeline,
   useGetLastUpdatedDateQuery: useLastUpdatedDate,
+  useResetRenovationCacheMutation: useResetRenovationCache,
 } = renovationStatisticsApi;

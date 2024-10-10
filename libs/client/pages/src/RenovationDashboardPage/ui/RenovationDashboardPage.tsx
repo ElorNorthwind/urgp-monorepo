@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router';
 import { useLastUpdatedDate, useTotalDeviations } from '@urgp/client/entities';
-import { DashboardNumberCard } from '@urgp/client/features';
+import { DashboardNumberCard, ResetCacheButton } from '@urgp/client/features';
 import { cn, Separator } from '@urgp/client/shared';
 import {
   DoneByYearChart,
@@ -44,8 +44,9 @@ const RenovationDashboardPage = (): JSX.Element => {
   return (
     <div className="block space-y-6 p-10">
       <div className="space-y-0.5">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <h2 className="text-2xl font-bold tracking-tight">Дашборд</h2>
+          <ResetCacheButton className="ml-auto" />
           <p className="text-muted-foreground text-right text-xs">
             <span className="hidden md:block">Данные на</span>
             {updatedDate ? formatDate(updatedDate, 'dd.MM.yyyy') : '...'}

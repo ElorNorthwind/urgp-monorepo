@@ -403,4 +403,21 @@ export class RenovationController {
 
     return this.renovation.deleteStage(dto, req.user.id);
   }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('reset-cache')
+  resetRenovationCache(@Req() req: RequestWithUserData): void {
+    if (
+      !(
+        req.user.roles.includes('admin') ||
+        req.user.roles.includes('editor') ||
+        req.user.roles.includes('boss')
+      )
+    ) {
+      throw new UnauthorizedException(
+        'Операция не разрешена. Нет прав для сброса кэша!',
+      );
+    }
+    this.renovation.resetCache();
+  }
 }

@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import {
   CreateMessageDto,
@@ -24,10 +25,14 @@ import {
   Stage,
   UpdateStageDto,
 } from '@urgp/shared/entities';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class RenovationService {
-  constructor(private readonly dbServise: DatabaseService) {}
+  constructor(
+    private readonly dbServise: DatabaseService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
   public async getOldBuildingsGeoJson() {
     return this.dbServise.db.renovation.getOldBuildingsGeoJson();
@@ -177,5 +182,9 @@ export class RenovationService {
     userId: number,
   ): Promise<boolean> {
     return this.dbServise.db.renovation.deleteStage(dto, userId);
+  }
+
+  public async resetCache(): Promise<void> {
+    await this.cacheManager.reset();
   }
 }
