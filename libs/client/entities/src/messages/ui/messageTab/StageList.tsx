@@ -1,6 +1,6 @@
 import { cn } from '@urgp/client/shared';
 import { ExtendedStage, Stage } from '@urgp/shared/entities';
-import { StageElement } from './stageElement';
+import { StageElement } from './StageElement';
 import { Skull } from 'lucide-react';
 
 type StageListProps = {
