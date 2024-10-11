@@ -73,7 +73,7 @@ export const stageCreate = z.object({
   apartmentId: z.coerce.number(),
   messageContent: z.string().optional(),
   // stageDate: z.coerce.date().nullable().optional(),
-  stageId: z.coerce.number(),
+  stageId: z.coerce.number().gt(0, { message: 'Этап не выбран' }),
   docNumber: z.coerce
     .string()
     .min(1, { message: 'Номер документа обязателен' }),

@@ -2,7 +2,7 @@ SELECT
     m.id,
     m.created_at as "createdAt",
     m.updated_at as "updatedAt",
-    m.message_content as "messageContent",
+    m.message_payload->-1->>'text' as "messageContent",
     m.message_type as "messateType",
     m.author_id as "authorId",
     u.fio as author,
@@ -45,7 +45,7 @@ LEFT JOIN (
 	WHERE im.apartment_id IS NOT NULL AND im.message_type = 'comment' 
 	      AND (im.message_payload->-1->>'deleted')::boolean IS DISTINCT FROM true
 ) lm on m.apartment_id = lm.apartment_id AND lm.rank = 1
-WHERE a.id IS NOT NULL AND (m.message_payload->-1->>'deleted')::boolean IS DISTINCT FROM true
+WHERE a.id IS NOT NULL AND (m.message_payload->-1->>'deleted')::boolean IS DISTINCT FROM true AND lm.message_type = 'comment'
   AND needs_answer = true AND answer_date IS NULL
   ${conditions:raw} 
 ORDER BY m.created_at DESC;

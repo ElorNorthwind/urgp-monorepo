@@ -1,4 +1,5 @@
 import {
+  Badge,
   Button,
   Card,
   CardContent,
@@ -6,6 +7,7 @@ import {
   CardHeader,
   cn,
   selectCurrentUser,
+  Separator,
 } from '@urgp/client/shared';
 import {
   ExtendedMessage,
@@ -80,25 +82,53 @@ const StageElement = ({
           </span>
         </CardDescription>
       </CardHeader>
-      <CardContent className="px-2">
-        <p>{stage.stageName}</p>
-        <p>{dayjs(stage.docDate).format('DD.MM.YYYY')}</p>
-        <p>{stage.docNumber}</p>
-        {stage.messageContent && (
-          <p className="break-words">
-            {stage.messageContent
-              .replace(/(?:\r\n|\r|\n)/g, '\\n')
-              .split('\\n')
-              .map((item, index) => {
-                return (
-                  <span key={index}>
-                    {item}
-                    <br />
-                  </span>
-                );
-              })}
+      <CardContent className="w-full p-0">
+        <div className="grid w-full grid-cols-[max-content_1fr] gap-0">
+          <Separator className="col-span-2 border-t opacity-50" />
+          <p
+            className={cn(
+              stage.authorId === user?.id
+                ? 'bg-background/60'
+                : 'bg-muted-foreground/5',
+              'nowrap text-muted-foreground px-2 py-1 text-sm',
+            )}
+          >
+            {stage.group}
           </p>
-        )}
+          <p className="bg-background/40 nowrap truncate px-2 py-1 text-sm">
+            {stage.stageName}
+          </p>
+          <Separator className="col-span-2 border-t opacity-50" />
+          <p
+            className={cn(
+              stage.authorId === user?.id
+                ? 'bg-background/60'
+                : 'bg-muted-foreground/5',
+              'nowrap text-muted-foreground px-2 py-1 text-sm',
+            )}
+          >
+            от {dayjs(stage.docDate).format('DD.MM.YYYY')}
+          </p>
+          <p className="bg-background/40 nowrap truncate px-2 py-1 text-sm">
+            № {stage.docNumber}
+          </p>
+          <Separator className="col-span-2 border-t opacity-50" />
+          {stage.messageContent && (
+            <p className="col-span-2 break-words px-2 py-1 text-sm">
+              {stage.messageContent
+                .replace(/(?:\r\n|\r|\n)/g, '\\n')
+                .split('\\n')
+                .map((item, index) => {
+                  return (
+                    <span key={index}>
+                      {item}
+                      <br />
+                    </span>
+                  );
+                })}
+            </p>
+          )}
+        </div>
         {!editStage && (
           <div className="absolute right-2 bottom-2 flex items-center gap-1">
             {user?.id === stage.authorId &&

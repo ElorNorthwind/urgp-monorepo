@@ -51,6 +51,7 @@ import {
   stageUpdate,
   messageDelete,
   UpdateStageDto,
+  StageGroup,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
@@ -427,14 +428,7 @@ export class RenovationController {
   @CacheTTL(1000 * 60 * 60)
   @UseInterceptors(CacheInterceptor)
   @Get('stage/groups')
-  getStageGroups(): Promise<string[]> {
+  getStageGroups(): Promise<StageGroup[]> {
     return this.renovation.getStageGroups();
-  }
-
-  @CacheTTL(1000 * 60 * 60)
-  @UseInterceptors(CacheInterceptor)
-  @Get('stage/types')
-  getStageTypes(): Promise<{ id: number; name: string; group: string }[]> {
-    return this.renovation.getStageTypes();
   }
 }

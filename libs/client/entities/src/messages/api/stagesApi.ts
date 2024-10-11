@@ -5,6 +5,7 @@ import {
   ExtendedStage,
   ReadApartmentMessageDto,
   Stage,
+  StageGroup,
   UpdateStageDto,
 } from '@urgp/shared/entities';
 
@@ -45,19 +46,9 @@ export const stagesApi = rtkApi.injectEndpoints({
       }),
     }),
 
-    readStageGroups: build.query<string[], void>({
+    readStageGroups: build.query<StageGroup[], void>({
       query: () => ({
         url: '/renovation/stage/groups',
-        method: 'GET',
-      }),
-    }),
-
-    readStageTypes: build.query<
-      { id: number; name: string; group: string }[],
-      void
-    >({
-      query: () => ({
-        url: '/renovation/stage/types',
         method: 'GET',
       }),
     }),
@@ -72,5 +63,4 @@ export const {
   useUpdateStageMutation: useUpdateStage,
   useDeleteStageMutation: useDeleteStage,
   useReadStageGroupsQuery: useStageGroups,
-  useReadStageTypesQuery: useStageTypes,
 } = stagesApi;

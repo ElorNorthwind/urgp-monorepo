@@ -70,3 +70,9 @@ export type ExtendedStage = Stage & {
   action: string;
   priority: number;
 };
+
+export type StageGroup = {
+  label: string;
+  value: string;
+  items: Array<{ label: string; value: number }>;
+};

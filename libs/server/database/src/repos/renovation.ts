@@ -34,6 +34,7 @@ import {
   Stage,
   ExtendedStage,
   UpdateStageDto,
+  StageGroup,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -333,10 +334,7 @@ export class RenovationRepository {
   deleteStage(dto: DeleteMessageDto, userId: number): Promise<boolean> {
     return this.db.one(renovation.stageDelete, { ...dto, authorId: userId });
   }
-  getStageGroups(): Promise<string[]> {
+  getStageGroups(): Promise<StageGroup[]> {
     return this.db.any(renovation.stageGroups);
-  }
-  getStageTypes(): Promise<{ id: number; name: string; group: string }[]> {
-    return this.db.any(renovation.stageTypes);
   }
 }

@@ -24,6 +24,7 @@ import {
   CreateStageDto,
   Stage,
   UpdateStageDto,
+  StageGroup,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -189,13 +190,7 @@ export class RenovationService {
     await this.cacheManager.reset();
   }
 
-  public async getStageGroups(): Promise<string[]> {
+  public async getStageGroups(): Promise<StageGroup[]> {
     return this.dbServise.db.renovation.getStageGroups();
-  }
-
-  public async getStageTypes(): Promise<
-    { id: number; name: string; group: string }[]
-  > {
-    return this.dbServise.db.renovation.getStageTypes();
   }
 }

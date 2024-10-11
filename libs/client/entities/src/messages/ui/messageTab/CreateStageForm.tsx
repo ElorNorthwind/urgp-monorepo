@@ -1,8 +1,15 @@
 import {
+  Badge,
   Button,
   Calendar,
   cn,
   Combobox,
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
   Form,
   FormControl,
   FormField,
@@ -30,10 +37,10 @@ import { format } from 'date-fns';
 import { useEffect } from 'react';
 import {
   useCreateStage,
-  useStageTypes,
+  useStageGroups,
   useUpdateStage,
 } from '../../api/stagesApi';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react';
 
 type CreateStageFormProps = {
   apartmentId: number;
@@ -46,8 +53,8 @@ type CreateStageFormProps = {
 const initialValues = {
   messageContent: '',
   docDate: new Date(),
-  docNumber: undefined,
-  stageId: undefined,
+  docNumber: '',
+  stageId: 0,
 };
 
 const CreateStageForm = ({
@@ -66,7 +73,8 @@ const CreateStageForm = ({
 
   const [createStage, { isLoading }] = useCreateStage();
   const [updateStage, { isLoading: isUpdateLoading }] = useUpdateStage();
-  const { data: stageTypes, isLoading: isStageTypesLoading } = useStageTypes();
+  const { data: stageGroups, isLoading: isStageGroupsLoading } =
+    useStageGroups();
 
   async function onSubmit(data: CreateStageFormValuesDto) {
     createStage({ ...data, authorId: user?.id || 0, apartmentId })
@@ -128,18 +136,216 @@ const CreateStageForm = ({
           className,
         )}
       >
-        {/* {editStage && (
-          <div className="line-clamp-2 relative overflow-hidden rounded bg-amber-100 p-1 pl-5 text-sm text-amber-700">
-            <div className="absolute top-1 bottom-1 left-1 w-2 rounded-sm bg-amber-300"></div>
-            <p className="truncate">{editStage.messageContent}</p>
-          </div>
-        )} */}
+        <FormField
+          control={form.control}
+          name="stageId"
+          render={({ field }) => (
+            <FormItem className="grid">
+              <FormLabel className="text-left">
+                {form.formState.errors.stageId ? (
+                  <p className="flex justify-between truncate">
+                    Этап
+                    <span className="w-full text-right text-xs font-light">
+                      {form.formState.errors.stageId.message}
+                    </span>
+                  </p>
+                ) : (
+                  'Этап'
+                )}
+              </FormLabel>
+              {!stageGroups || isStageGroupsLoading ? (
+                <Skeleton className="h-8 w-full" />
+              ) : (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          'w-full justify-between overflow-hidden',
+                          !field.value && 'text-muted-foreground',
+                        )}
+                      >
+                        {field.value ? (
+                          <div className="-ml-1 flex w-[calc(100%-1.5rem)] items-center justify-start gap-2">
+                            <Badge variant={'outline'}>
+                              {
+                                stageGroups.find((group) =>
+                                  group.items.some(
+                                    (item) => field.value === item.value,
+                                  ),
+                                )?.label
+                              }
+                            </Badge>
+                            <p className="truncate">
+                              {
+                                stageGroups
+                                  .find((group) =>
+                                    group.items.some(
+                                      (item) => field.value === item.value,
+                                    ),
+                                  )
+                                  ?.items.find(
+                                    (item) => item.value === field.value,
+                                  )?.label
+                              }
+                            </p>
+                          </div>
+                        ) : (
+                          'Этап не выбран'
+                        )}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="w-[calc(var(--messagebar-width)-1.25rem)] p-0"
+                    side="top"
+                  >
+                    <Command
+                      filter={(value, search, keywords) => {
+                        const extendValue = (
+                          keywords ? value + ' ' + keywords.join(' ') : value
+                        ).toLowerCase();
+                        if (extendValue.includes(search.toLowerCase()))
+                          return 1;
+                        return 0;
+                      }}
+                    >
+                      <CommandInput placeholder="Поиск этапов..." />
+                      <CommandList>
+                        <CommandEmpty>Этап не найден.</CommandEmpty>
+                        {stageGroups.map((group) => {
+                          return (
+                            <CommandGroup
+                              key={group.value}
+                              heading={group.label}
+                            >
+                              {group.items.map((stage) => {
+                                return (
+                                  <CommandItem
+                                    value={stage.label}
+                                    key={stage.value}
+                                    keywords={[group.label || '']}
+                                    onSelect={() => {
+                                      form.setValue('stageId', stage.value);
+                                    }}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        'mr-2 h-4 w-4',
+                                        stage.value === field.value
+                                          ? 'opacity-100'
+                                          : 'opacity-0',
+                                      )}
+                                    />
+                                    {stage.label}
+                                  </CommandItem>
+                                );
+                              })}
+                            </CommandGroup>
+                          );
+                        })}
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              )}
+            </FormItem>
+          )}
+        />
+
+        <div className="flex w-full flex-row gap-4">
+          <FormField
+            control={form.control}
+            name="docDate"
+            render={({ field }) => (
+              <FormItem className="grid">
+                <FormLabel className="text-left">
+                  {form.formState.errors.docDate ? (
+                    <p className="flex justify-between truncate">
+                      Дата документа
+                      <span className="w-full text-right text-xs font-light">
+                        {form.formState.errors.docDate.message}
+                      </span>
+                    </p>
+                  ) : (
+                    'Дата документа'
+                  )}
+                </FormLabel>
+                <FormControl>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={'outline'}
+                        className={cn(
+                          'w-32 justify-start text-left font-normal',
+                          !field.value && 'text-muted-foreground',
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {field.value ? (
+                          format(field.value, 'dd.MM.yyyy')
+                        ) : (
+                          <span>Дата не выбрана</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="h-[21.5rem] w-auto p-0"
+                      side="top"
+                    >
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date('2017-01-01')
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="docNumber"
+            render={({ field }) => (
+              <FormItem className="grid w-full">
+                <FormLabel className="text-left">
+                  {form.formState.errors.docNumber ? (
+                    <p className="flex justify-between truncate">
+                      Номер документа
+                      <span className="w-full text-right text-xs font-light">
+                        {form.formState.errors.docNumber.message}
+                      </span>
+                    </p>
+                  ) : (
+                    'Номер документа'
+                  )}
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Номер документа"
+                    {...field}
+                    name="messageContent"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+
         <FormField
           control={form.control}
           name="messageContent"
           render={({ field }) => (
             <FormItem className="grid">
-              <FormLabel className="text-left">
+              {/* <FormLabel className="text-left">
                 {form.formState.errors.messageContent ? (
                   <p className="flex justify-between truncate">
                     Текст примечания
@@ -150,136 +356,13 @@ const CreateStageForm = ({
                 ) : (
                   'Текст примечания'
                 )}
-              </FormLabel>
+              </FormLabel> */}
               <FormControl>
                 <Input
                   placeholder="Примечание"
                   {...field}
                   name="messageContent"
                 />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="docNumber"
-          render={({ field }) => (
-            <FormItem className="grid">
-              <FormLabel className="text-left">
-                {form.formState.errors.messageContent ? (
-                  <p className="flex justify-between truncate">
-                    Номер документа
-                    <span className="w-full text-right text-xs font-light">
-                      {form.formState.errors.messageContent.message}
-                    </span>
-                  </p>
-                ) : (
-                  'Номер документа'
-                )}
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Номер документа"
-                  {...field}
-                  name="messageContent"
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="docDate"
-          render={({ field }) => (
-            <FormItem className="grid">
-              <FormLabel className="text-left">
-                {form.formState.errors.messageContent ? (
-                  <p className="flex justify-between truncate">
-                    Дата документа
-                    <span className="w-full text-right text-xs font-light">
-                      {form.formState.errors.messageContent.message}
-                    </span>
-                  </p>
-                ) : (
-                  'Дата документа'
-                )}
-              </FormLabel>
-              <FormControl>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={'outline'}
-                      className={cn(
-                        'justify-start text-left font-normal',
-                        !field.value && 'text-muted-foreground',
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {field.value ? (
-                        format(field.value, 'dd.MM.yyyy')
-                      ) : (
-                        <span>Дата не выбрана</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date('2017-01-01')
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="stageId"
-          render={({ field }) => (
-            <FormItem className="grid">
-              <FormLabel className="text-left">
-                {form.formState.errors.messageContent ? (
-                  <p className="flex justify-between truncate">
-                    Этап
-                    <span className="w-full text-right text-xs font-light">
-                      {form.formState.errors.messageContent.message}
-                    </span>
-                  </p>
-                ) : (
-                  'Этап'
-                )}
-              </FormLabel>
-              <FormControl>
-                {/* <Input
-                  type="number"
-                  placeholder="ID этапа"
-                  {...field}
-                  name="messageContent"
-                /> */}
-
-                {stageTypes && !isStageTypesLoading ? (
-                  <Combobox
-                    side="top"
-                    className={cn(className)}
-                    value={field?.value?.toString()}
-                    onSelect={field.onChange}
-                    items={stageTypes.map(
-                      (item: { id: number; name: string; group: string }) => ({
-                        value: item.id,
-                        label: item.name,
-                      }),
-                    )}
-                  />
-                ) : (
-                  <Skeleton className="h-6 w-full" />
-                )}
               </FormControl>
             </FormItem>
           )}
