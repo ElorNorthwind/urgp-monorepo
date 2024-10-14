@@ -1,10 +1,10 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { MessagesPage } from '@urgp/client/pages';
+import { PendingStagesPage } from '@urgp/client/pages';
 import { store } from '@urgp/client/shared';
-import { messagesPageSearch } from '@urgp/shared/entities';
+import { pendingStagesPageSearch } from '@urgp/shared/entities';
 
-export const Route = createFileRoute('/renovation/messages')({
-  component: () => <MessagesPage />,
+export const Route = createFileRoute('/renovation/stages')({
+  component: () => <PendingStagesPage />,
   beforeLoad: async ({ location }) => {
     const user = store.getState().auth.user;
     if (!user || user.id === 0) {
@@ -18,8 +18,20 @@ export const Route = createFileRoute('/renovation/messages')({
         },
       });
     }
+
+    if (
+      !(
+        user.roles.includes('admin') ||
+        user.roles.includes('editor') ||
+        user.roles.includes('boss')
+      )
+    ) {
+      throw redirect({
+        to: '/renovation',
+      });
+    }
   },
   validateSearch: (search) => {
-    return messagesPageSearch.parse(search);
+    return pendingStagesPageSearch.parse(search);
   },
 });

@@ -181,6 +181,7 @@ const ApproveStageForm = ({
             <Button
               variant={'default'}
               className="bg-rose-800 hover:bg-rose-700"
+              disabled={isLoading}
               onClick={() => onSubmit(stage.id, 'rejected')}
             >
               <ThumbsDown className="mr-2 h-4 w-4" />
@@ -192,6 +193,7 @@ const ApproveStageForm = ({
               variant={'default'}
               className=""
               autoFocus
+              disabled={isLoading}
               onClick={() => onSubmit(stage.id, 'approved')}
             >
               <ThumbsUp className="mr-2 h-4 w-4" />

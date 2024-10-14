@@ -27,6 +27,7 @@ import {
   StageGroup,
   ApproveStageDto,
   StageApproveStatusData,
+  PendingStage,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -206,5 +207,9 @@ export class RenovationService {
   }
   public async getStageNeedsApproval(id: number): Promise<boolean> {
     return this.dbServise.db.renovation.getStageNeedsApproval(id);
+  }
+
+  public async getPendingStages(): Promise<PendingStage[]> {
+    return this.dbServise.db.renovation.getPendingStages();
   }
 }

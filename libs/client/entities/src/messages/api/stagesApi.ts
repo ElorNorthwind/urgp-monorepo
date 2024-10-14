@@ -5,6 +5,7 @@ import {
   CreateStageDto,
   DeleteMessageDto,
   ExtendedStage,
+  PendingStage,
   ReadApartmentMessageDto,
   Stage,
   StageGroup,
@@ -62,6 +63,13 @@ export const stagesApi = rtkApi.injectEndpoints({
         body: dto,
       }),
     }),
+
+    readPendingStages: build.query<PendingStage[], void>({
+      query: () => ({
+        url: '/renovation/stage/pending',
+        method: 'GET',
+      }),
+    }),
   }),
 
   overrideExisting: false,
@@ -74,4 +82,5 @@ export const {
   useDeleteStageMutation: useDeleteStage,
   useReadStageGroupsQuery: useStageGroups,
   useApproveStageMutation: useApproveStage,
+  useReadPendingStagesQuery: usePendingStages,
 } = stagesApi;

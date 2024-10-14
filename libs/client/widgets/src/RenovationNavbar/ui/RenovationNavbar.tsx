@@ -8,7 +8,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { Gauge, House, MailQuestion, Map, Users } from 'lucide-react';
+import {
+  Gauge,
+  House,
+  MailQuestion,
+  Map,
+  SquareGanttChart,
+  Users,
+} from 'lucide-react';
 import { useSelector } from 'react-redux';
 
 const RenovationNavbar = (): JSX.Element => {
@@ -123,6 +130,33 @@ const RenovationNavbar = (): JSX.Element => {
           </TooltipPortal>
         </Tooltip>
       )}
+      {user &&
+        user.id !== 0 &&
+        (user.roles.includes('admin') ||
+          user.roles.includes('editor') ||
+          user.roles.includes('boss')) && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                className={cn(
+                  'text-muted-foreground flex p-0',
+                  router.location.pathname === '/renovation/stages' &&
+                    'bg-muted-foreground/10 text-primary',
+                )}
+                disabled={router.location.pathname === '/renovation/stages'}
+                variant="ghost"
+                onClick={() => navigate({ to: '/renovation/stages' })}
+              >
+                <SquareGanttChart className="" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipPortal>
+              <TooltipContent side="right" className="">
+                Этапы, требующие согласования
+              </TooltipContent>
+            </TooltipPortal>
+          </Tooltip>
+        )}
     </nav>
   );
 };

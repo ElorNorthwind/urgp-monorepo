@@ -55,6 +55,7 @@ import {
   StageApproveStatusData,
   approveStage,
   ApproveStageDto,
+  PendingStage,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
@@ -470,5 +471,22 @@ export class RenovationController {
   @Get('stage/groups')
   getStageGroups(): Promise<StageGroup[]> {
     return this.renovation.getStageGroups();
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('stage/pending')
+  getPendingStages(@Req() req: RequestWithUserData): Promise<PendingStage[]> {
+    if (
+      !(
+        req.user.roles.includes('admin') ||
+        req.user.roles.includes('editor') ||
+        req.user.roles.includes('boss')
+      )
+    ) {
+      throw new UnauthorizedException(
+        'Операция не разрешена. Нет прав для согласования этапов!',
+      );
+    }
+    return this.renovation.getPendingStages();
   }
 }
