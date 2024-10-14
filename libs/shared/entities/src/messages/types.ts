@@ -81,5 +81,5 @@ export type ExtendedStage = Stage & {
 export type StageGroup = {
   label: string;
   value: string;
-  items: Array<{ label: string; value: number }>;
+  items: Array<{ value: number; label: string; action?: string }>;
 };

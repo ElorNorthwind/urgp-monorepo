@@ -239,7 +239,14 @@ const CreateStageForm = ({
                                           : 'opacity-0',
                                       )}
                                     />
-                                    {stage.label}
+                                    <p className="flex w-full flex-col gap-0 truncate">
+                                      <span className="truncate">
+                                        {stage.label}
+                                      </span>
+                                      <span className="text-muted-foreground/60 truncate text-xs">
+                                        {stage.action}
+                                      </span>
+                                    </p>
                                   </CommandItem>
                                 );
                               })}
