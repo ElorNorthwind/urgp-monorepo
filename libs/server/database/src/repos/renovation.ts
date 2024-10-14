@@ -37,6 +37,7 @@ import {
   StageGroup,
   StageApproveStatusData,
   ApproveStageDto,
+  PendingStage,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -357,5 +358,9 @@ export class RenovationRepository {
   }
   getStageNeedsApproval(id: number): Promise<boolean> {
     return this.db.one(renovation.stageNeedsApproval, { id });
+  }
+
+  getPendingStages(): Promise<PendingStage[]> {
+    return this.db.any(renovation.pendingStages);
   }
 }

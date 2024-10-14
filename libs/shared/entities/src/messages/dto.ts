@@ -54,6 +54,10 @@ export const messagesPageSearch = z.object({
   message: z.coerce.number().nullable().optional(),
 });
 
+export const pendingStagesPageSearch = z.object({
+  message: z.coerce.number().nullable().optional(),
+});
+
 export type CreateMessageDto = z.infer<typeof messageCreate>;
 export type ReadApartmentMessageDto = z.infer<typeof messageApartmentRead>;
 export type ReadMessageByIdDto = z.infer<typeof messageReabById>;
@@ -67,6 +71,7 @@ export type UpdateMessageFormValuesDto = z.infer<
 >;
 export type MessagesUnansweredDto = z.infer<typeof messagesUnanswered>;
 export type MessagesPageSearch = z.infer<typeof messagesPageSearch>;
+export type PendingStagesPageSearch = z.infer<typeof pendingStagesPageSearch>;
 
 export const stageCreate = z.object({
   authorId: z.coerce.number(),

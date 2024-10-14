@@ -83,3 +83,28 @@ export type StageGroup = {
   value: string;
   items: Array<{ value: number; label: string; action?: string }>;
 };
+
+export type PendingStage = Pick<
+  ExtendedStage,
+  'id' | 'apartmentId' | 'createdAt' | 'authorId' | 'authorFio'
+> & {
+  pendingDocDate: Date;
+  pendingDocNum: string;
+  pendingDocNotes: string | null;
+  pendingStageId: number;
+  pendingStageName: string;
+  pendingAction: string | null;
+  buildingId: number | null;
+  adress: string;
+  okrug: string;
+  district: string;
+  apartNum: string;
+  apartType: string;
+  fio: string;
+  kpuNum: string;
+  apartStatus: string;
+  stage: string;
+  action: string;
+  deviation: string;
+  problems: string;
+};
