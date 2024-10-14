@@ -35,6 +35,8 @@ import {
   ExtendedStage,
   UpdateStageDto,
   StageGroup,
+  StageApproveStatusData,
+  ApproveStageDto,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -295,7 +297,10 @@ export class RenovationRepository {
   ): Promise<OldBuildingConnectionsInfo | null> {
     return this.db.oneOrNone(renovation.oldBuildingConnections, { id });
   }
-  createStage(dto: CreateStageDto): Promise<Stage> {
+  createStage(
+    dto: CreateStageDto,
+    approveStatusData?: StageApproveStatusData,
+  ): Promise<Stage> {
     const newStage = {
       authorId: dto.authorId,
       apartmentId: dto.apartmentId,
@@ -303,12 +308,14 @@ export class RenovationRepository {
       docNumber: dto.docNumber || null,
       docDate: dto.docDate || new Date(),
       messageContent: dto.messageContent || null,
+      approveStatus: approveStatusData?.approveStatus || 'pending',
+      approveDate: approveStatusData?.approveDate || null,
+      approveBy: approveStatusData?.approveBy || null,
+      approveNotes: approveStatusData?.approveNotes || null,
     };
-
     // console.log(dto);
     // const q = this.pgp.as.format(renovation.stageCreate, newStage);
     // console.log(q);
-
     return this.db.one(renovation.stageCreate, newStage);
   }
   readApartmentStages(dto: ReadApartmentMessageDto): Promise<ExtendedStage[]> {
@@ -325,10 +332,21 @@ export class RenovationRepository {
       docNumber: dto.docNumber,
       docDate: dto.docDate,
     };
-
     // const q = this.pgp.as.format(renovation.stageUpdate, updatedStage);
     // console.log(q);
     return this.db.one(renovation.stageUpdate, updatedStage);
+  }
+  approveStage(dto: ApproveStageDto, userId: number): Promise<Stage> {
+    const approvedStage = {
+      id: dto.id,
+      approveBy: userId,
+      approveDate: new Date(),
+      approveStatus: dto.approveStatus,
+      approveNotes: dto.approveNotes,
+    };
+    // const q = this.pgp.as.format(renovation.stageUpdate, updatedStage);
+    // console.log(q);
+    return this.db.one(renovation.stageApprove, approvedStage);
   }
 
   deleteStage(dto: DeleteMessageDto, userId: number): Promise<boolean> {
@@ -336,5 +354,8 @@ export class RenovationRepository {
   }
   getStageGroups(): Promise<StageGroup[]> {
     return this.db.any(renovation.stageGroups);
+  }
+  getStageNeedsApproval(id: number): Promise<boolean> {
+    return this.db.one(renovation.stageNeedsApproval, { id });
   }
 }

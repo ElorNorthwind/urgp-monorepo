@@ -52,6 +52,9 @@ import {
   messageDelete,
   UpdateStageDto,
   StageGroup,
+  StageApproveStatusData,
+  approveStage,
+  ApproveStageDto,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
@@ -322,7 +325,7 @@ export class RenovationController {
 
   @UseGuards(AccessTokenGuard)
   @Post('stage')
-  createStage(
+  async createStage(
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(stageCreate)) dto: CreateStageDto,
   ) {
@@ -333,7 +336,44 @@ export class RenovationController {
         'Операция не разрешена. Нельзя создавать этапы от имени другого пользователя!',
       );
     }
-    return this.renovation.createStage(dto);
+    const needsApproval = await this.renovation.getStageNeedsApproval(
+      dto.stageId,
+    );
+    const autoApprove =
+      needsApproval === false ||
+      req.user.roles.includes('admin') ||
+      req.user.roles.includes('editor') ||
+      req.user.roles.includes('boss');
+    const approveData: StageApproveStatusData | undefined = autoApprove
+      ? {
+          approveStatus: 'approved',
+          approveBy: req.user.id,
+          approveDate: new Date(),
+          approveNotes: null,
+        }
+      : undefined;
+
+    autoApprove && this.renovation.resetCache(); // Oooh I don't like that
+    return this.renovation.createStage(dto, approveData);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Patch('stage/approve')
+  approveStage(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(approveStage)) dto: ApproveStageDto,
+  ) {
+    const canApprove =
+      req.user.roles.includes('admin') ||
+      req.user.roles.includes('editor') ||
+      req.user.roles.includes('boss');
+    if (!canApprove) {
+      throw new UnauthorizedException(
+        'Операция не разрешена. Нет прав на согласование этапов!',
+      );
+    }
+    this.renovation.resetCache(); // Oooh I don't like that one bit
+    return this.renovation.approveStage(dto, req.user.id);
   }
 
   @Get('stage/apartment')

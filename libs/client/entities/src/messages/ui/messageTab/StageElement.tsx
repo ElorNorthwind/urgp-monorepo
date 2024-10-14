@@ -1,5 +1,4 @@
 import {
-  Badge,
   Button,
   Card,
   CardContent,
@@ -9,19 +8,14 @@ import {
   selectCurrentUser,
   Separator,
 } from '@urgp/client/shared';
-import {
-  ExtendedMessage,
-  ExtendedStage,
-  Message,
-  Stage,
-} from '@urgp/shared/entities';
+import { ExtendedStage, Stage } from '@urgp/shared/entities';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
-import { useDeleteMessage, useUpdateMessage } from '../../api/messagesApi';
-import { Pencil, FileQuestion, FileCheck, ShieldAlert } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import { DeleteMessageButton } from './DeleteMessageButton';
-import { useDeleteStage, useUpdateStage } from '../../api/stagesApi';
+import { useDeleteStage } from '../../api/stagesApi';
+import { ApproveStageForm } from './ApproveStageForm';
 
 type StageElementProps = {
   stage: ExtendedStage;
@@ -29,6 +23,12 @@ type StageElementProps = {
   className?: string;
   editStage?: Stage | null;
   setEditStage?: React.Dispatch<React.SetStateAction<ExtendedStage | null>>;
+};
+
+const approveText = {
+  approved: '',
+  pending: 'Ожидает подтверждения',
+  rejected: 'Отклонено',
 };
 const StageElement = ({
   stage,
@@ -41,7 +41,7 @@ const StageElement = ({
 
   const [deleteStage, { isLoading: isDeleting, isSuccess: isDeletedSuccess }] =
     useDeleteStage();
-  const [updateStage] = useUpdateStage();
+  // const [updateStage] = useUpdateStage();
 
   // TODO: proper optimistic updates
   if (isDeletedSuccess) {
@@ -67,7 +67,7 @@ const StageElement = ({
           editStage?.id === stage.id
             ? 'bg-amber-200'
             : stage.authorId === user?.id
-              ? 'bg-slate-300/50'
+              ? ''
               : 'bg-accent/40',
         )}
       >
@@ -77,12 +77,26 @@ const StageElement = ({
           >
             {stage.authorFio}
           </span>
+          {/* <span
+            className={cn(
+              stage.approveStatus === 'rejected' && 'text-red-500',
+              stage.approveStatus === 'pending' && 'text-amber-500',
+            )}
+          >
+            {approveText[stage.approveStatus]}
+          </span> */}
+          <ApproveStageForm stage={stage} refetch={refetch} />
           <span className="flex flex-row items-center justify-start gap-2">
             {dayjs(stage.createdAt).format('DD.MM.YYYY')}
           </span>
         </CardDescription>
       </CardHeader>
-      <CardContent className="w-full p-0">
+      <CardContent
+        className={cn(
+          'w-full p-0',
+          stage.approveStatus !== 'approved' && 'opacity-30',
+        )}
+      >
         <div className="grid w-full grid-cols-[max-content_1fr] gap-0">
           <Separator className="col-span-2 border-t opacity-50" />
           <p

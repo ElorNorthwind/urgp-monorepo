@@ -25,6 +25,8 @@ import {
   Stage,
   UpdateStageDto,
   StageGroup,
+  ApproveStageDto,
+  StageApproveStatusData,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -164,8 +166,11 @@ export class RenovationService {
     return this.dbServise.db.renovation.getOldBuildingConnections(id);
   }
 
-  public async createStage(dto: CreateStageDto): Promise<Stage> {
-    return this.dbServise.db.renovation.createStage(dto);
+  public async createStage(
+    dto: CreateStageDto,
+    approveData?: StageApproveStatusData,
+  ): Promise<Stage> {
+    return this.dbServise.db.renovation.createStage(dto, approveData);
   }
 
   public async readApartmentStages(dto: ReadApartmentMessageDto) {
@@ -185,6 +190,12 @@ export class RenovationService {
     return this.dbServise.db.renovation.deleteStage(dto, userId);
   }
 
+  public async approveStage(
+    dto: ApproveStageDto,
+    userId: number,
+  ): Promise<Stage> {
+    return this.dbServise.db.renovation.approveStage(dto, userId);
+  }
   // TODO: move to separate module
   public async resetCache(): Promise<void> {
     await this.cacheManager.reset();
@@ -192,5 +203,8 @@ export class RenovationService {
 
   public async getStageGroups(): Promise<StageGroup[]> {
     return this.dbServise.db.renovation.getStageGroups();
+  }
+  public async getStageNeedsApproval(id: number): Promise<boolean> {
+    return this.dbServise.db.renovation.getStageNeedsApproval(id);
   }
 }

@@ -1,21 +1,20 @@
-INSERT INTO renovation.messages (message_type, author_id, apartment_id, message_payload)
-VALUES ('stage',
-        ${authorId}, 
-        ${apartmentId}, 
-        jsonb_build_array(jsonb_build_object(
+UPDATE renovation.messages
+SET (message_payload, updated_at) = 
+    (message_payload || jsonb_build_array(jsonb_build_object(
                          'date', NOW(),
-                         'text', ${messageContent},
-                         'deleted', false,
-                         'author', ${authorId},
-                         'stageId', ${stageId},
-                         'docNumber', ${docNumber},
-                         'docDate', ${docDate},
+                         'text', message_payload->-1->'text',
+                         'deleted', message_payload->-1->'deleted',
+                         'author', message_payload->-1->'author',
+                         'stageId', message_payload->-1->'stageId',
+                         'docNumber', message_payload->-1->'docNumber',
+                         'docDate', message_payload->-1->'docDate',
                          'approveStatus', ${approveStatus},
                          'approveDate', ${approveDate},
                          'approveBy', ${approveBy},
                          'approveNotes',  ${approveNotes}
-                         ))
-        )
+                         )), 
+    DEFAULT)
+WHERE id = ${id} 
 RETURNING id, created_at as "createdAt", updated_at as "updatedAt", message_type as "type",
           author_id as "authorId", apartment_id as "apartmentId", 
         --   message_payload as "payload", 

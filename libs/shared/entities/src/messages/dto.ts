@@ -101,7 +101,22 @@ export const stageUpdateFormValues = stageUpdate.pick({
   docDate: true,
 });
 
+export const approveStage = z.object({
+  id: z.coerce.number(),
+  approveStatus: z
+    .literal('pending')
+    .or(z.literal('approved'))
+    .or(z.literal('rejected')),
+  approveNotes: z.string().nullable().optional(),
+});
+
+export const approveStageForm = z.object({
+  approveNotes: z.string().optional(),
+});
+
 export type CreateStageDto = z.infer<typeof stageCreate>;
 export type UpdateStageDto = z.infer<typeof stageUpdate>;
 export type CreateStageFormValuesDto = z.infer<typeof stageCreateFormValues>;
 export type UpdateStageFormValuesDto = z.infer<typeof stageUpdateFormValues>;
+export type ApproveStageDto = z.infer<typeof approveStage>;
+export type ApproveStageFormDto = z.infer<typeof approveStageForm>;

@@ -1,5 +1,7 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
+  approveStage,
+  ApproveStageDto,
   CreateStageDto,
   DeleteMessageDto,
   ExtendedStage,
@@ -52,6 +54,14 @@ export const stagesApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+
+    approveStage: build.mutation<Stage, ApproveStageDto>({
+      query: (dto) => ({
+        url: '/renovation/stage/approve',
+        method: 'PATCH',
+        body: dto,
+      }),
+    }),
   }),
 
   overrideExisting: false,
@@ -63,4 +73,5 @@ export const {
   useUpdateStageMutation: useUpdateStage,
   useDeleteStageMutation: useDeleteStage,
   useReadStageGroupsQuery: useStageGroups,
+  useApproveStageMutation: useApproveStage,
 } = stagesApi;

@@ -49,6 +49,13 @@ export type UnansweredMessage = Pick<
   problems: string;
 };
 
+export type StageApproveStatusData = {
+  approveStatus: 'pending' | 'approved' | 'rejected';
+  approveDate: Date | null;
+  approveBy: number | null;
+  approveNotes: string | null;
+};
+
 export type Stage = {
   id: number;
   createdAt: Date;
@@ -61,7 +68,7 @@ export type Stage = {
   stageId: number;
   docNumber: string;
   docDate: Date;
-};
+} & StageApproveStatusData;
 
 export type ExtendedStage = Stage & {
   stageName: string;

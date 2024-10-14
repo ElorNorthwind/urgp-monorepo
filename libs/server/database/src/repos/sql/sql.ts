@@ -40,7 +40,9 @@ export const renovation = {
   stageCreate: sql('sql/renovation/stageCreate.sql'),
   stageDelete: sql('sql/renovation/stageDelete.sql'),
   stageUpdate: sql('sql/renovation/stageUpdate.sql'),
+  stageApprove: sql('sql/renovation/stageApprove.sql'),
   stageGroups: sql('sql/renovation/stageGroups.sql'),
+  stageNeedsApproval: sql('sql/renovation/stageNeedsApproval.sql'),
 };
 
 export const users = {
