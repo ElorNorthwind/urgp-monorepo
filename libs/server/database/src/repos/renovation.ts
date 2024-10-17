@@ -145,7 +145,7 @@ export class RenovationRepository {
     }
     if (deviation) {
       where.push(
-        `classificator->>'deviationMFR' = ANY(ARRAY['${deviation.join("','")}'])`,
+        `classificator->>'deviation' = ANY(ARRAY['${deviation.join("','")}'])`,
       );
     }
     if (fio && fio.length > 0) {

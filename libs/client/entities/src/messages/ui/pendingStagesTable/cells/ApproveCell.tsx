@@ -44,7 +44,7 @@ function ApproveCell(props: CellContext<PendingStage, unknown>): JSX.Element {
   return (
     <HStack gap="s" noWrap className="overflow-hidden truncate">
       <Tooltip>
-        <TooltipTrigger>
+        <TooltipTrigger asChild>
           <Button
             variant={'default'}
             className="h-10 w-10 bg-rose-800 p-0 hover:bg-rose-700"
@@ -65,11 +65,10 @@ function ApproveCell(props: CellContext<PendingStage, unknown>): JSX.Element {
         </TooltipPortal>
       </Tooltip>
       <Tooltip>
-        <TooltipTrigger>
+        <TooltipTrigger asChild>
           <Button
             variant={'default'}
             className="h-10 w-10 p-0"
-            autoFocus
             disabled={isLoading}
             onClick={(e) => {
               e.stopPropagation();

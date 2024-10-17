@@ -49,7 +49,7 @@ const MessageElement = ({
         editMessage?.id === message.id
           ? 'scale-95 border-amber-400 bg-amber-100'
           : message.authorId === user?.id
-            ? 'bg-slate-200'
+            ? 'border-slate-300 bg-slate-200'
             : '',
         className,
       )}

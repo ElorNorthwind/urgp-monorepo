@@ -14,7 +14,7 @@ function MessageCell(
         <p className="whitespace-nowrap opacity-50">
           {format(new Date(message.createdAt), 'dd.MM.yyyy')}
         </p>
-        <b className="whitespace-nowrap">{message.author + ': '}:</b>
+        <b className="whitespace-nowrap">{message.author + ': '}</b>
 
         <p className="truncate">{message.messageContent}</p>
         <MessageCircleQuestion className="ml-auto h-4 w-4 flex-shrink-0 opacity-40" />
@@ -30,7 +30,7 @@ function MessageCell(
               )}
             </p>
             <b className="whitespace-nowrap">
-              {message.lastMessageAuthor + ': '}:
+              {message.lastMessageAuthor + ': '}
             </b>
             <p className="truncate">{message.lastMessageContent}</p>
             <MessageCircleReply className="ml-auto h-4 w-4 flex-shrink-0 opacity-40" />

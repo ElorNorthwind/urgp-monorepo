@@ -25,11 +25,6 @@ type StageElementProps = {
   setEditStage?: React.Dispatch<React.SetStateAction<ExtendedStage | null>>;
 };
 
-const approveText = {
-  approved: '',
-  pending: 'Ожидает подтверждения',
-  rejected: 'Отклонено',
-};
 const StageElement = ({
   stage,
   refetch,
@@ -55,7 +50,7 @@ const StageElement = ({
         editStage?.id === stage.id
           ? 'scale-95 border-amber-400 bg-amber-100'
           : stage.authorId === user?.id
-            ? 'bg-slate-200'
+            ? 'border-slate-300 bg-slate-200'
             : '',
         className,
       )}
