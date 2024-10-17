@@ -19,3 +19,4 @@ export * from './DoneByYearChart';
 export * from './InProgressAgesChart';
 export * from './StartTimelineChart';
 export * from './OkrugTotalDeviationsChart';
+export * from './StartAndFinishTimelineChart';

@@ -56,3 +56,9 @@ export type DoneByYearInfo = {
   '5': number;
   '8': number;
 };
+
+export type OldBuildingsStartAndFinish = {
+  period: string;
+  starts: number;
+  finishes: number;
+};

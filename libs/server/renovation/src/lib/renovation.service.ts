@@ -28,6 +28,7 @@ import {
   ApproveStageDto,
   StageApproveStatusData,
   PendingStage,
+  OldBuildingsStartAndFinish,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -211,5 +212,17 @@ export class RenovationService {
 
   public async getPendingStages(): Promise<PendingStage[]> {
     return this.dbServise.db.renovation.getPendingStages();
+  }
+
+  public async getOldBuildingsStartAndFinishMonthly(): Promise<
+    OldBuildingsStartAndFinish[]
+  > {
+    return this.dbServise.db.renovation.getOldBuildingsStartAndFinishMonthly();
+  }
+
+  public async getOldBuildingsStartAndFinishYearly(): Promise<
+    OldBuildingsStartAndFinish[]
+  > {
+    return this.dbServise.db.renovation.getOldBuildingsStartAndFinishYearly();
   }
 }

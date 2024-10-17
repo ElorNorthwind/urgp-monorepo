@@ -7,6 +7,7 @@ import {
   InProgressAgesChart,
   OkrugTotalDeviationsChart,
   OkrugTotalsChart,
+  StartAndFinishTimelineChart,
   StartTimelineChart,
 } from '@urgp/client/widgets';
 import { formatDate } from 'date-fns';
@@ -147,9 +148,12 @@ const RenovationDashboardPage = (): JSX.Element => {
           />
           <OkrugTotalsChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
           <OkrugTotalDeviationsChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
-          <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
+
+          <StartAndFinishTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
           <StartTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
-          <DoneByYearChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
+
+          <DoneByYearChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
+          <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
         </div>
       </div>
     </div>

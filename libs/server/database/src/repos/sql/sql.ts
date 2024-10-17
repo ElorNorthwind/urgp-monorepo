@@ -44,6 +44,12 @@ export const renovation = {
   stageGroups: sql('sql/renovation/stageGroups.sql'),
   stageNeedsApproval: sql('sql/renovation/stageNeedsApproval.sql'),
   pendingStages: sql('sql/renovation/pendingStages.sql'),
+  oldBuildingsStartAndFinishMonthly: sql(
+    'sql/renovation/oldBuildingsStartAndFinishMonthly.sql',
+  ),
+  oldBuildingsStartAndFinishYearly: sql(
+    'sql/renovation/oldBuildingsStartAndFinishYearly.sql',
+  ),
 };
 
 export const users = {

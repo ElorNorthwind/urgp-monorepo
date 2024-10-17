@@ -6,6 +6,7 @@ import {
   DoneTimelinePoint,
   OkrugTotalDeviations,
   OkrugTotals,
+  OldBuildingsStartAndFinish,
   StartTimelineInfo,
 } from '@urgp/shared/entities';
 
@@ -56,6 +57,25 @@ export const renovationStatisticsApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getOldBuildingsStartAndFinishMonthly: build.query<
+      OldBuildingsStartAndFinish[],
+      void
+    >({
+      query: () => ({
+        url: '/renovation/old-building/start-and-finish/monthly',
+        method: 'GET',
+      }),
+    }),
+    getOldBuildingsStartAndFinishYearly: build.query<
+      OldBuildingsStartAndFinish[],
+      void
+    >({
+      query: () => ({
+        url: '/renovation/old-building/start-and-finish/yearly',
+        method: 'GET',
+      }),
+    }),
+
     // ToDo - вынеси в отдельный апи
     resetRenovationCache: build.mutation<void, void>({
       query: () => ({
@@ -78,4 +98,8 @@ export const {
   useGetStartTimelineQuery: useStartTimeline,
   useGetLastUpdatedDateQuery: useLastUpdatedDate,
   useResetRenovationCacheMutation: useResetRenovationCache,
+  useGetOldBuildingsStartAndFinishMonthlyQuery:
+    useOldBuildingsStartAndFinishMonthly,
+  useGetOldBuildingsStartAndFinishYearlyQuery:
+    useOldBuildingsStartAndFinishYearly,
 } = renovationStatisticsApi;
