@@ -106,12 +106,12 @@ const StartAndFinishTimelineChart = ({
         isFetchingMonthly ? (
           <Skeleton className="h-4 w-60" />
         ) : (
-          <CardDescription className="h-16">
+          <CardDescription className="">
             Количество начатых и завершенных переселений
           </CardDescription>
         )}
       </CardHeader>
-      <CardContent className="h-[200px]">
+      <CardContent className="h-[240px]">
         {isLoadingYearly ||
         isFetchingYearly ||
         isLoadingMonthly ||
@@ -123,12 +123,12 @@ const StartAndFinishTimelineChart = ({
         ) : (
           <ChartContainer
             config={startAndFinishTimelineChartConfig}
-            className="h-full w-full"
+            className="h-full w-full pt-0"
           >
             <LineChart
               accessibilityLayer
               data={showMonthly ? monthly : yearly}
-              margin={{ top: 10, right: 20, bottom: 0, left: 20 }}
+              margin={{ top: 10, right: 15, bottom: 0, left: 15 }}
             >
               <CartesianGrid vertical={false} />
               <XAxis
