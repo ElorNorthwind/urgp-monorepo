@@ -100,7 +100,7 @@ const InProgressAgesChart = ({
         ) : (
           <ChartContainer
             config={inProgressAgeChartConfig}
-            className="mt-[-35px] h-full w-full lg:h-[200px]"
+            className="mt-[-35px] h-full w-full lg:h-[240px]"
           >
             <BarChart
               accessibilityLayer
