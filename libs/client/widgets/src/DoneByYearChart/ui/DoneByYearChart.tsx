@@ -4,6 +4,7 @@ import {
   renderRechartsTooltip,
 } from '@urgp/client/features';
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
@@ -18,6 +19,8 @@ import {
   cn,
   Skeleton,
 } from '@urgp/client/shared';
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -56,6 +59,7 @@ type DoneByYearChartProps = {
 
 const DoneByYearChart = ({ className }: DoneByYearChartProps): JSX.Element => {
   const { data, isLoading, isFetching } = useDoneByYear();
+  const [onlyFull, setOnlyFull] = useState(false);
 
   return (
     <Card className={cn(className)}>
@@ -68,13 +72,36 @@ const DoneByYearChart = ({ className }: DoneByYearChartProps): JSX.Element => {
         ) : (
           <CardTitle className="flex flex-row items-center justify-between">
             <span>Сроки завершения домов</span>
+            <Button
+              variant={'ghost'}
+              className="ml-auto h-6 py-0 px-1"
+              onClick={() => setOnlyFull((value) => !value)}
+            >
+              <span
+                className="flex flex-row items-center gap-1"
+                style={{ color: 'hsl(var(--chart-1))' }}
+              >
+                {onlyFull ? (
+                  <>
+                    <Eye className="h-4 w-4" />
+                    <span className="hidden sm:block">показать неполное</span>
+                  </>
+                ) : (
+                  <>
+                    <EyeOff className="h-4 w-4" />
+                    <span className="hidden sm:block">скрыть неполное</span>
+                  </>
+                )}
+              </span>
+            </Button>
           </CardTitle>
         )}
         {isLoading || isFetching ? (
           <Skeleton className="h-4 w-60" />
         ) : (
           <CardDescription className="h-16">
-            Динамика длительносии переселения по годам
+            {'Динамика длительносии переселения по годам' +
+              (onlyFull ? '' : ' (включая частичное и поэтапное)')}
           </CardDescription>
         )}
       </CardHeader>
@@ -91,7 +118,20 @@ const DoneByYearChart = ({ className }: DoneByYearChartProps): JSX.Element => {
           >
             <BarChart
               accessibilityLayer
-              data={data}
+              data={
+                onlyFull
+                  ? data?.map((entry) => {
+                      return {
+                        ...entry,
+                        '0': entry['0f'],
+                        '1': entry['1f'],
+                        '2': entry['2f'],
+                        '5': entry['5f'],
+                        '8': entry['8f'],
+                      };
+                    })
+                  : data
+              }
               margin={{ top: 10, right: 0, left: 0, bottom: -10 }}
             >
               <CartesianGrid

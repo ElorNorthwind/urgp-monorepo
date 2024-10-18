@@ -55,6 +55,11 @@ export type DoneByYearInfo = {
   '2': number;
   '5': number;
   '8': number;
+  '0f': number;
+  '1f': number;
+  '2f': number;
+  '5f': number;
+  '8f': number;
 };
 
 export type OldBuildingsStartAndFinish = {
@@ -71,4 +76,9 @@ export type MonthlyProgressData = {
   threeToEightM: number;
   eightToTwelveM: number;
   gtTwelveM: number;
+  totalF?: number;
+  ltThreeMf: number;
+  threeToEightMf: number;
+  eightToTwelveMf: number;
+  gtTwelveMf: number;
 };
