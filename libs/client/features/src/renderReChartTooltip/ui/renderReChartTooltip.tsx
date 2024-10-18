@@ -12,6 +12,7 @@ type ReChartTooltip = {
   cursor?: boolean | ReactElement | SVGProps<SVGElement>;
   labelFormatter?: (label: any, payload: any) => ReactNode;
   className?: string;
+  labelWidth?: number | string;
 };
 
 const renderRechartsTooltip = ({
@@ -19,6 +20,7 @@ const renderRechartsTooltip = ({
   config,
   cursor = false,
   labelFormatter,
+  labelWidth,
 }: ReChartTooltip): JSX.Element => {
   return (
     <ChartTooltip
@@ -39,7 +41,10 @@ const renderRechartsTooltip = ({
           }
           formatter={(value, name, item, index) => {
             return (
-              <div className="w-[12rem]">
+              <div
+                // className="w-[12rem]"
+                style={{ width: labelWidth || '12rem' }}
+              >
                 <div className="flex w-full items-center gap-2">
                   <div
                     className="h-[.75rem] w-[.75rem] rounded"

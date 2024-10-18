@@ -5,6 +5,7 @@ import { cn, Separator } from '@urgp/client/shared';
 import {
   DoneByYearChart,
   InProgressAgesChart,
+  MonthlyProgressTimelineChart,
   OkrugTotalDeviationsChart,
   OkrugTotalsChart,
   StartAndFinishTimelineChart,
@@ -154,6 +155,8 @@ const RenovationDashboardPage = (): JSX.Element => {
 
           <DoneByYearChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
           <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
+
+          <MonthlyProgressTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
         </div>
       </div>
     </div>

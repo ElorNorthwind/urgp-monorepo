@@ -4,6 +4,7 @@ import {
   CityTotalDeviations,
   DoneByYearInfo,
   DoneTimelinePoint,
+  MonthlyProgressData,
   OkrugTotalDeviations,
   OkrugTotals,
   OldBuildingsStartAndFinish,
@@ -76,6 +77,12 @@ export const renovationStatisticsApi = rtkApi.injectEndpoints({
       }),
     }),
 
+    getMonthlyProgress: build.query<MonthlyProgressData[], void>({
+      query: () => ({
+        url: '/renovation/monthly-progress-timeline',
+        method: 'GET',
+      }),
+    }),
     // ToDo - вынеси в отдельный апи
     resetRenovationCache: build.mutation<void, void>({
       query: () => ({
@@ -102,4 +109,5 @@ export const {
     useOldBuildingsStartAndFinishMonthly,
   useGetOldBuildingsStartAndFinishYearlyQuery:
     useOldBuildingsStartAndFinishYearly,
+  useGetMonthlyProgressQuery: useMonthlyProgress,
 } = renovationStatisticsApi;

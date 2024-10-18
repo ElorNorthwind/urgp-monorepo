@@ -62,3 +62,13 @@ export type OldBuildingsStartAndFinish = {
   starts: number;
   finishes: number;
 };
+export type MonthlyProgressData = {
+  period: string;
+  year?: number;
+  month?: number;
+  total?: number;
+  ltThreeM: number;
+  threeToEightM: number;
+  eightToTwelveM: number;
+  gtTwelveM: number;
+};

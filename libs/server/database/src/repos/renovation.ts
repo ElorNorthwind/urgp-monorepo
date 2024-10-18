@@ -39,6 +39,7 @@ import {
   ApproveStageDto,
   PendingStage,
   OldBuildingsStartAndFinish,
+  MonthlyProgressData,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -373,5 +374,8 @@ export class RenovationRepository {
 
   getOldBuildingsStartAndFinishYearly(): Promise<OldBuildingsStartAndFinish[]> {
     return this.db.any(renovation.oldBuildingsStartAndFinishYearly);
+  }
+  getMonthlyProgressTimeline(): Promise<MonthlyProgressData[]> {
+    return this.db.any(renovation.monthlyProgressTimeline);
   }
 }

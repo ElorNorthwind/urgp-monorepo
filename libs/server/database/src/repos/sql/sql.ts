@@ -50,6 +50,7 @@ export const renovation = {
   oldBuildingsStartAndFinishYearly: sql(
     'sql/renovation/oldBuildingsStartAndFinishYearly.sql',
   ),
+  monthlyProgressTimeline: sql('sql/renovation/monthlyProgressTimeline.sql'),
 };
 
 export const users = {

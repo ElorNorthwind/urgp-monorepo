@@ -20,3 +20,4 @@ export * from './InProgressAgesChart';
 export * from './StartTimelineChart';
 export * from './OkrugTotalDeviationsChart';
 export * from './StartAndFinishTimelineChart';
+export * from './MonthlyProgressTimelineChart';
