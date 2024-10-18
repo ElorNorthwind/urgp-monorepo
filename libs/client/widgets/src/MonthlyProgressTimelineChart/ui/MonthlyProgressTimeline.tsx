@@ -21,12 +21,12 @@ import { useState } from 'react';
 import { Area, AreaChart, CartesianGrid, ReferenceLine, XAxis } from 'recharts';
 
 const monthlyProgressTimelineChartConfig = {
-  ltThreeM: {
-    label: 'В рабое меньше 3 месяцев',
+  lastM: {
+    label: 'В рабое менее месяца',
     color: 'hsl(var(--chart-3))',
   },
-  threeToEightM: {
-    label: 'В работе от 3 до 8 месяцев',
+  oneToEightM: {
+    label: 'В работе от 1 до 8 месяцев',
     color: 'hsl(var(--chart-2))',
   },
   eightToTwelveM: {
@@ -134,8 +134,8 @@ const MonthlyProgressTimelineChart = ({
                   ? data?.map((entry) => {
                       return {
                         ...entry,
-                        ltThreeM: entry.ltThreeMf,
-                        threeToEightM: entry.threeToEightMf,
+                        lastM: entry.lastMf,
+                        oneToEightM: entry.oneToEightMf,
                         eightToTwelveM: entry.eightToTwelveMf,
                         gtTwelveM: entry.gtTwelveMf,
                       };
@@ -189,20 +189,20 @@ const MonthlyProgressTimelineChart = ({
               })}
               <ChartLegend content={<ChartLegendContent />} />
               <defs>
-                <linearGradient id="fillLtThreeM" x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id="fillLastM" x1="0" y1="0" x2="0" y2="1">
                   <stop
                     offset="5%"
-                    stopColor="var(--color-ltThreeM)"
+                    stopColor="var(--color-lastM)"
                     stopOpacity={0.8}
                   />
                   <stop
                     offset="95%"
-                    stopColor="var(--color-ltThreeM)"
+                    stopColor="var(--color-lastM)"
                     stopOpacity={0.1}
                   />
                 </linearGradient>
                 <linearGradient
-                  id="fillThreeToEightM"
+                  id="fillOneToEightM"
                   x1="0"
                   y1="0"
                   x2="0"
@@ -210,12 +210,12 @@ const MonthlyProgressTimelineChart = ({
                 >
                   <stop
                     offset="5%"
-                    stopColor="var(--color-threeToEightM)"
+                    stopColor="var(--color-oneToEightM)"
                     stopOpacity={0.8}
                   />
                   <stop
                     offset="95%"
-                    stopColor="var(--color-threeToEightM)"
+                    stopColor="var(--color-oneToEightM)"
                     stopOpacity={0.1}
                   />
                 </linearGradient>
@@ -251,19 +251,19 @@ const MonthlyProgressTimelineChart = ({
                 </linearGradient>
               </defs>
               <Area
-                dataKey="ltThreeM"
+                dataKey="lastM"
                 type="natural"
-                fill="url(#fillLtThreeM)"
+                fill="url(#fillLastM)"
                 fillOpacity={0.4}
-                stroke="var(--color-ltThreeM)"
+                stroke="var(--color-lastM)"
                 stackId="a"
               />
               <Area
-                dataKey="threeToEightM"
+                dataKey="oneToEightM"
                 type="natural"
-                fill="url(#fillThreeToEightM)"
+                fill="url(#fillOneToEightM)"
                 fillOpacity={0.4}
-                stroke="var(--color-threeToEightM)"
+                stroke="var(--color-oneToEightM)"
                 stackId="a"
               />
               <Area

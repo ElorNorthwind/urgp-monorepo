@@ -72,13 +72,13 @@ export type MonthlyProgressData = {
   year?: number;
   month?: number;
   total?: number;
-  ltThreeM: number;
-  threeToEightM: number;
+  lastM: number;
+  oneToEightM: number;
   eightToTwelveM: number;
   gtTwelveM: number;
   totalF?: number;
-  ltThreeMf: number;
-  threeToEightMf: number;
+  lastMf: number;
+  oneToEightMf: number;
   eightToTwelveMf: number;
   gtTwelveMf: number;
 };

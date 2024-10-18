@@ -12,10 +12,6 @@ import {
   CardTitle,
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
   cn,
   Skeleton,
 } from '@urgp/client/shared';
