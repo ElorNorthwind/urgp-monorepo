@@ -62,12 +62,28 @@ export type DoneByYearInfo = {
   '8f': number;
 };
 
+export type MonthlyDoneInfo = {
+  year?: number;
+  month?: number;
+  period: string;
+  '0': number;
+  '1': number;
+  '2': number;
+  '5': number;
+  '8': number;
+  '0f': number;
+  '1f': number;
+  '2f': number;
+  '5f': number;
+  '8f': number;
+};
+
 export type OldBuildingsStartAndFinish = {
   period: string;
   starts: number;
   finishes: number;
 };
-export type MonthlyProgressData = {
+export type MonthlyProgressInfo = {
   period: string;
   year?: number;
   month?: number;

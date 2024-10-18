@@ -1,4 +1,4 @@
-import { useMonthlyProgress } from '@urgp/client/entities';
+import { useMonthlyDone, useMonthlyProgress } from '@urgp/client/entities';
 import { renderRechartsTooltip } from '@urgp/client/features';
 import {
   Button,
@@ -14,39 +14,42 @@ import {
   cn,
   Skeleton,
 } from '@urgp/client/shared';
-import exp from 'constants';
 import { format } from 'date-fns';
 import { CircleDot, CirclePercent, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { Area, AreaChart, CartesianGrid, ReferenceLine, XAxis } from 'recharts';
 
-const monthlyProgressTimelineChartConfig = {
-  lastM: {
-    label: 'В рабое менее месяца',
-    color: 'hsl(var(--chart-3))',
+const monthlyDoneTimelineChartConfig = {
+  '0': {
+    label: 'менее месяца',
+    color: '#34d399', // 'hsl(var(--chart-3))'
   },
-  oneToEightM: {
-    label: 'В работе от 1 до 8 месяцев',
-    color: 'hsl(var(--chart-2))',
+  '1': {
+    label: '1-2 месяца',
+    color: '#a3e635', // 'hsl(var(--chart-2))'
   },
-  eightToTwelveM: {
-    label: 'В работе от 8 до 12 месяцев',
-    color: 'hsl(var(--chart-4))',
+  '2': {
+    label: '2-5 месяцев',
+    color: '#fbbf24', // 'hsl(var(--chart-4))'
   },
-  gtTwelveM: {
-    label: 'В работе больше года',
-    color: 'hsl(var(--chart-1))',
+  '5': {
+    label: '3-5 месяцев',
+    color: '#fb923c', // 'hsl(var(--chart-1))'
+  },
+  '8': {
+    label: 'более 8 месяцев',
+    color: '#f87171', // 'hsl(var(--chart-5))'
   },
 } satisfies ChartConfig;
 
-type MonthlyProgressTimelineChartProps = {
+type MonthlyDoneTimelineChartProps = {
   className?: string;
 };
 
-const MonthlyProgressTimelineChart = ({
+const MonthlyDoneTimelineChart = ({
   className,
-}: MonthlyProgressTimelineChartProps): JSX.Element => {
-  const { data, isLoading, isFetching } = useMonthlyProgress();
+}: MonthlyDoneTimelineChartProps): JSX.Element => {
+  const { data, isLoading, isFetching } = useMonthlyDone();
   const [onlyFull, setOnlyFull] = useState(false);
   const [expand, setExpand] = useState(false);
 
@@ -60,7 +63,7 @@ const MonthlyProgressTimelineChart = ({
           </div>
         ) : (
           <CardTitle className="flex flex-row items-center justify-between">
-            <span>{'Динамика домов в работе'}</span>
+            <span>{'Динамика завершения отселений'}</span>
             <Button
               variant={'ghost'}
               className="ml-auto h-6 py-0 px-1"
@@ -111,7 +114,7 @@ const MonthlyProgressTimelineChart = ({
           <Skeleton className="h-4 w-60" />
         ) : (
           <CardDescription className="">
-            {'Количество домов в работе на начало месяца' +
+            {'Количество домов, по которым завершено отселение' +
               (onlyFull ? '' : ' (включая частичное и поэтапное)')}
           </CardDescription>
         )}
@@ -124,7 +127,7 @@ const MonthlyProgressTimelineChart = ({
           </div>
         ) : (
           <ChartContainer
-            config={monthlyProgressTimelineChartConfig}
+            config={monthlyDoneTimelineChartConfig}
             className="h-full w-full pt-0"
           >
             <AreaChart
@@ -134,17 +137,17 @@ const MonthlyProgressTimelineChart = ({
                   ? data?.map((entry) => {
                       return {
                         ...entry,
-                        lastM: entry.lastMf,
-                        oneToEightM: entry.oneToEightMf,
-                        eightToTwelveM: entry.eightToTwelveMf,
-                        gtTwelveM: entry.gtTwelveMf,
+                        '0': entry['0f'],
+                        '1': entry['1f'],
+                        '2': entry['2f'],
+                        '5': entry['5f'],
+                        '8': entry['8f'],
                       };
                     })
                   : data
               }
               margin={{ top: 10, right: 15, bottom: 0, left: 15 }}
-              stackOffset={expand ? 'expand' : 'none'}
-              // stackOffset="expand" // 'sign' | 'expand' | 'none' | 'wiggle' | 'silhouette' | 'positive';
+              stackOffset={expand ? 'expand' : 'none'} // 'sign' | 'expand' | 'none' | 'wiggle' | 'silhouette' | 'positive';
             >
               <CartesianGrid vertical={false} />
               <XAxis
@@ -160,13 +163,13 @@ const MonthlyProgressTimelineChart = ({
                 interval={0}
               />
               {renderRechartsTooltip({
-                config: monthlyProgressTimelineChartConfig,
+                config: monthlyDoneTimelineChartConfig,
                 cursor: true,
                 labelWidth: '16rem',
               })}
 
               <ReferenceLine
-                x={'На сегодня'}
+                x={data && data[data.length - 1].period}
                 orientation={'horizontal'}
                 stroke="hsl(var(--muted-foreground))"
                 strokeDasharray="3 3"
@@ -190,99 +193,43 @@ const MonthlyProgressTimelineChart = ({
               })}
               <ChartLegend content={<ChartLegendContent />} />
               <defs>
-                <linearGradient id="fillLastM" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor="var(--color-lastM)"
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor="var(--color-lastM)"
-                    stopOpacity={0.1}
-                  />
-                </linearGradient>
-                <linearGradient
-                  id="fillOneToEightM"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop
-                    offset="5%"
-                    stopColor="var(--color-oneToEightM)"
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor="var(--color-oneToEightM)"
-                    stopOpacity={0.1}
-                  />
-                </linearGradient>
-                <linearGradient
-                  id="fillEightToTwelveM"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop
-                    offset="5%"
-                    stopColor="var(--color-eightToTwelveM)"
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor="var(--color-eightToTwelveM)"
-                    stopOpacity={0.1}
-                  />
-                </linearGradient>
-                <linearGradient id="fillGtTwelveM" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor="var(--color-gtTwelveM)"
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor="var(--color-gtTwelveM)"
-                    stopOpacity={0.1}
-                  />
-                </linearGradient>
+                {Object.keys(monthlyDoneTimelineChartConfig).map((key) => {
+                  return (
+                    <linearGradient
+                      key={`gradient-${key}`}
+                      id={`fill${key}`}
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="5%"
+                        stopColor={`var(--color-${key})`}
+                        stopOpacity={0.8}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor={`var(--color-${key})`}
+                        stopOpacity={0.1}
+                      />
+                    </linearGradient>
+                  );
+                })}
               </defs>
-              <Area
-                dataKey="lastM"
-                type="natural"
-                fill="url(#fillLastM)"
-                fillOpacity={0.4}
-                stroke="var(--color-lastM)"
-                stackId="a"
-              />
-              <Area
-                dataKey="oneToEightM"
-                type="natural"
-                fill="url(#fillOneToEightM)"
-                fillOpacity={0.4}
-                stroke="var(--color-oneToEightM)"
-                stackId="a"
-              />
-              <Area
-                dataKey="eightToTwelveM"
-                type="natural"
-                fill="url(#fillEightToTwelveM)"
-                fillOpacity={0.4}
-                stroke="var(--color-eightToTwelveM)"
-                stackId="a"
-              />
-              <Area
-                dataKey="gtTwelveM"
-                type="natural"
-                fill="url(#fillGtTwelveM)"
-                fillOpacity={0.4}
-                stroke="var(--color-gtTwelveM)"
-                stackId="a"
-              />
+              {Object.keys(monthlyDoneTimelineChartConfig).map((key) => {
+                return (
+                  <Area
+                    dataKey={key}
+                    key={key}
+                    type="monotone"
+                    fill={`url(#fill${key})`}
+                    fillOpacity={0.4}
+                    stroke={`var(--color-${key})`}
+                    stackId="a"
+                  />
+                );
+              })}
             </AreaChart>
           </ChartContainer>
         )}
@@ -291,4 +238,4 @@ const MonthlyProgressTimelineChart = ({
   );
 };
 
-export { MonthlyProgressTimelineChart };
+export { MonthlyDoneTimelineChart };

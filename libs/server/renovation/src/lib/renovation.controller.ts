@@ -57,7 +57,8 @@ import {
   ApproveStageDto,
   PendingStage,
   OldBuildingsStartAndFinish,
-  MonthlyProgressData,
+  MonthlyProgressInfo,
+  MonthlyDoneInfo,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
@@ -511,7 +512,14 @@ export class RenovationController {
   @CacheTTL(1000 * 60 * 60)
   @UseInterceptors(CacheInterceptor)
   @Get('monthly-progress-timeline')
-  getMonthlyProgressTimeline(): Promise<MonthlyProgressData[]> {
+  getMonthlyProgressTimeline(): Promise<MonthlyProgressInfo[]> {
     return this.renovation.getMonthlyProgressTimeline();
+  }
+
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
+  @Get('monthly-done-timeline')
+  getMonthlyDoneTimeline(): Promise<MonthlyDoneInfo[]> {
+    return this.renovation.getMonthlyDoneTimelime();
   }
 }

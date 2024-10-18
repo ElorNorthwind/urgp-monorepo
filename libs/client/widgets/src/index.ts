@@ -21,3 +21,4 @@ export * from './StartTimelineChart';
 export * from './OkrugTotalDeviationsChart';
 export * from './StartAndFinishTimelineChart';
 export * from './MonthlyProgressTimelineChart';
+export * from './MonthlyDoneTimelineChart';
