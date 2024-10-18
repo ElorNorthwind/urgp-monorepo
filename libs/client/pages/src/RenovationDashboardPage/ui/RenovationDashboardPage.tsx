@@ -1,7 +1,7 @@
 import { useNavigate } from '@tanstack/react-router';
 import { useLastUpdatedDate, useTotalDeviations } from '@urgp/client/entities';
 import { DashboardNumberCard, ResetCacheButton } from '@urgp/client/features';
-import { cn, Separator } from '@urgp/client/shared';
+import { cn, selectCurrentUser, Separator } from '@urgp/client/shared';
 import {
   DoneByYearChart,
   InProgressAgesChart,
@@ -20,8 +20,11 @@ import {
   CircleX,
 } from 'lucide-react';
 import { useCallback } from 'react';
+import { useSelector } from 'react-redux';
 
 const RenovationDashboardPage = (): JSX.Element => {
+  const user = useSelector(selectCurrentUser);
+
   const {
     data: deviations,
     isLoading: isDeviationsLoading,
@@ -156,7 +159,12 @@ const RenovationDashboardPage = (): JSX.Element => {
           <DoneByYearChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
           <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
 
-          <MonthlyProgressTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
+          {user &&
+            (user.roles.includes('admin') ||
+              user.roles.includes('editor') ||
+              user.roles.includes('boss')) && (
+              <MonthlyProgressTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
+            )}
         </div>
       </div>
     </div>
