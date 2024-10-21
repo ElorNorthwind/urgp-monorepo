@@ -9,6 +9,7 @@ import {
   OkrugTotalDeviations,
   OkrugTotals,
   OldBuildingsStartAndFinish,
+  SankeyData,
   StartTimelineInfo,
 } from '@urgp/shared/entities';
 
@@ -89,6 +90,12 @@ export const renovationStatisticsApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getCurrentYearSankey: build.query<SankeyData, void>({
+      query: () => ({
+        url: '/renovation/current-year-sankey',
+        method: 'GET',
+      }),
+    }),
     // ToDo - вынеси в отдельный апи
     resetRenovationCache: build.mutation<void, void>({
       query: () => ({
@@ -117,4 +124,5 @@ export const {
     useOldBuildingsStartAndFinishYearly,
   useGetMonthlyProgressQuery: useMonthlyProgress,
   useGetMonthlyDoneQuery: useMonthlyDone,
+  useGetCurrentYearSankeyQuery: useCurrentYearSankey,
 } = renovationStatisticsApi;

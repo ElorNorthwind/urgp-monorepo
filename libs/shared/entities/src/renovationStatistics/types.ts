@@ -98,3 +98,8 @@ export type MonthlyProgressInfo = {
   eightToTwelveMf: number;
   gtTwelveMf: number;
 };
+
+export type SankeyData = {
+  nodes: Array<{ name: 'string' }>;
+  links: Array<{ source: number; target: number; value: number }>;
+};

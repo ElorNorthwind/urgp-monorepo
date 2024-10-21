@@ -22,3 +22,4 @@ export * from './OkrugTotalDeviationsChart';
 export * from './StartAndFinishTimelineChart';
 export * from './MonthlyProgressTimelineChart';
 export * from './MonthlyDoneTimelineChart';
+export * from './CurrentYearSankeyChart';

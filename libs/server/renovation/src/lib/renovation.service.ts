@@ -31,6 +31,7 @@ import {
   OldBuildingsStartAndFinish,
   MonthlyProgressInfo,
   MonthlyDoneInfo,
+  SankeyData,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -230,8 +231,11 @@ export class RenovationService {
   public async getMonthlyProgressTimeline(): Promise<MonthlyProgressInfo[]> {
     return this.dbServise.db.renovation.getMonthlyProgressTimeline();
   }
-
   public async getMonthlyDoneTimelime(): Promise<MonthlyDoneInfo[]> {
     return this.dbServise.db.renovation.getMonthlyDoneTimelime();
+  }
+
+  public async getCurrentYearSankey(): Promise<SankeyData> {
+    return this.dbServise.db.renovation.getCurrentYearSankey();
   }
 }

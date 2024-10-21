@@ -59,6 +59,7 @@ import {
   OldBuildingsStartAndFinish,
   MonthlyProgressInfo,
   MonthlyDoneInfo,
+  SankeyData,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
@@ -521,5 +522,12 @@ export class RenovationController {
   @Get('monthly-done-timeline')
   getMonthlyDoneTimeline(): Promise<MonthlyDoneInfo[]> {
     return this.renovation.getMonthlyDoneTimelime();
+  }
+
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
+  @Get('current-year-sankey')
+  getCurrentYearSankey(): Promise<SankeyData> {
+    return this.renovation.getCurrentYearSankey();
   }
 }

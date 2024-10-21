@@ -52,6 +52,7 @@ export const renovation = {
   ),
   monthlyProgressTimeline: sql('sql/renovation/monthlyProgressTimeline.sql'),
   monthlyDoneTimeline: sql('sql/renovation/monthlyDoneTimeline.sql'),
+  currentYearSankey: sql('sql/renovation/currentYearSankey.sql'),
 };
 
 export const users = {

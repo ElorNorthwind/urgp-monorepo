@@ -41,6 +41,7 @@ import {
   OldBuildingsStartAndFinish,
   MonthlyProgressInfo,
   MonthlyDoneInfo,
+  SankeyData,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -382,5 +383,9 @@ export class RenovationRepository {
 
   getMonthlyDoneTimelime(): Promise<MonthlyDoneInfo[]> {
     return this.db.any(renovation.monthlyDoneTimeline);
+  }
+
+  getCurrentYearSankey(): Promise<SankeyData> {
+    return this.db.one(renovation.currentYearSankey);
   }
 }
