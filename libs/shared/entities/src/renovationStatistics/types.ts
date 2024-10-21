@@ -101,5 +101,10 @@ export type MonthlyProgressInfo = {
 
 export type SankeyData = {
   nodes: Array<{ name: 'string' }>;
-  links: Array<{ source: number; target: number; value: number }>;
+  links: Array<{
+    source: number;
+    target: number;
+    value: number;
+    valueFull: number;
+  }>;
 };

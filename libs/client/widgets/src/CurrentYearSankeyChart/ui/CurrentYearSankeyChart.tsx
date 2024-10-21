@@ -1,5 +1,6 @@
 import { useCurrentYearSankey } from '@urgp/client/entities';
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
@@ -15,6 +16,9 @@ import {
 import { Sankey } from 'recharts';
 import { SankeyNode } from './SankeyNode';
 import { SankeyLink } from './SankeyLink';
+import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import { format } from 'date-fns';
 
 const CurrentYearSankeyChartConfig = {
   'Больше года тому назад': {
@@ -44,7 +48,11 @@ const CurrentYearSankeyChartConfig = {
   },
   'До 3 месяцев': {
     label: 'До 3 месяцев',
-    color: '#34d399', // 'hsl(var(--chart-3))'
+    color: '#0d9488', // 'hsl(var(--chart-3))'
+  },
+  'Еще не завершено': {
+    label: 'Остаются в работе',
+    color: '#475569', // 'hsl(var(--chart-3))'
   },
 } satisfies ChartConfig;
 
@@ -56,6 +64,7 @@ const CurrentYearSankeyChart = ({
   className,
 }: CurrentYearSankeyChartProps): JSX.Element => {
   const { data, isLoading, isFetching } = useCurrentYearSankey();
+  const [onlyFull, setOnlyFull] = useState(false);
 
   return (
     <Card className={cn(className)}>
@@ -67,7 +76,29 @@ const CurrentYearSankeyChart = ({
           </div>
         ) : (
           <CardTitle className="flex flex-row items-center justify-between">
-            <span>{'Структура завершенных в текущем году отселений'}</span>
+            <span>{`Структура отселений в ${format(new Date(), 'yyyy')} году`}</span>
+            <Button
+              variant={'ghost'}
+              className="ml-auto h-6 py-0 px-1"
+              onClick={() => setOnlyFull((value) => !value)}
+            >
+              <span
+                className="flex flex-row items-center gap-1"
+                style={{ color: 'hsl(var(--chart-1))' }}
+              >
+                {onlyFull ? (
+                  <>
+                    <Eye className="h-4 w-4" />
+                    <span className="hidden sm:block">показать неполное</span>
+                  </>
+                ) : (
+                  <>
+                    <EyeOff className="h-4 w-4" />
+                    <span className="hidden sm:block">скрыть неполное</span>
+                  </>
+                )}
+              </span>
+            </Button>
           </CardTitle>
         )}
         {isLoading || isFetching ? (
@@ -75,7 +106,7 @@ const CurrentYearSankeyChart = ({
         ) : (
           <CardDescription className="">
             {
-              'Когда было начато и сколько продолжалось переселение домов, завершенных в теукщем году'
+              'Когда было начато и сколько длилось переселение домов в теукщем году'
             }
           </CardDescription>
         )}
@@ -97,7 +128,17 @@ const CurrentYearSankeyChart = ({
                 // width="100%"
                 // height={400}
                 margin={{ top: 20, bottom: 20, left: 6, right: 6 }}
-                data={data}
+                data={
+                  onlyFull
+                    ? {
+                        nodes: data.nodes,
+                        links: data.links.map((link) => ({
+                          ...link,
+                          value: link.valueFull,
+                        })),
+                      }
+                    : data
+                }
                 nodeWidth={10}
                 nodePadding={40}
                 linkCurvature={0.61}
@@ -120,10 +161,6 @@ const CurrentYearSankeyChart = ({
                     />
                   }
                 />
-                {/* {renderRechartsTooltip({
-                  config: CurrentYearSankeyChartConfig,
-                  cursor: { fill: 'transparent' },
-                })} */}
               </Sankey>
             </ChartContainer>
           )
