@@ -21,24 +21,16 @@ import { Area, AreaChart, CartesianGrid, ReferenceLine, XAxis } from 'recharts';
 
 const monthlyDoneTimelineChartConfig = {
   '0': {
-    label: 'менее месяца',
-    color: '#34d399', // 'hsl(var(--chart-3))'
-  },
-  '1': {
-    label: '1-2 месяца',
-    color: '#a3e635', // 'hsl(var(--chart-2))'
-  },
-  '2': {
-    label: '2-5 месяцев',
-    color: '#fbbf24', // 'hsl(var(--chart-4))'
+    label: 'Быстрее 5 месяцев',
+    color: 'hsl(var(--chart-2))',
   },
   '5': {
-    label: '3-5 месяцев',
-    color: '#fb923c', // 'hsl(var(--chart-1))'
+    label: 'От 5 до 8 месяцев',
+    color: 'hsl(var(--chart-4))',
   },
   '8': {
-    label: 'более 8 месяцев',
-    color: '#f87171', // 'hsl(var(--chart-5))'
+    label: 'Дольше 8 месяцев',
+    color: 'hsl(var(--chart-1))',
   },
 } satisfies ChartConfig;
 
@@ -138,8 +130,6 @@ const MonthlyDoneTimelineChart = ({
                       return {
                         ...entry,
                         '0': entry['0f'],
-                        '1': entry['1f'],
-                        '2': entry['2f'],
                         '5': entry['5f'],
                         '8': entry['8f'],
                       };

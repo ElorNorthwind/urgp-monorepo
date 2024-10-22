@@ -20,16 +20,14 @@ SELECT
     d.year::integer, 
     d.month::integer,  
     d.period, 
-    COUNT(*) FILTER (WHERE AGE(d.month_date, (b.terms->'actual'->>'firstResetlementStart')::date) <= '1 month')::integer as "lastM",  
-    COUNT(*) FILTER (WHERE AGE(d.month_date, (b.terms->'actual'->>'firstResetlementStart')::date) BETWEEN '1 month'::interval + '1 day'::interval AND '8 month')::integer as "oneToEightM", 
-    COUNT(*) FILTER (WHERE AGE(d.month_date, (b.terms->'actual'->>'firstResetlementStart')::date) BETWEEN '8 month'::interval + '1 day'::interval AND '12 month')::integer as "eightToTwelveM",  
-    COUNT(*) FILTER (WHERE AGE(d.month_date, (b.terms->'actual'->>'firstResetlementStart')::date) > '12 month')::integer as "gtTwelveM", 
+    COUNT(*) FILTER (WHERE AGE(d.month_date, (b.terms->'actual'->>'firstResetlementStart')::date) <= '5 month')::integer as "lt5",  
+    COUNT(*) FILTER (WHERE AGE(d.month_date, (b.terms->'actual'->>'firstResetlementStart')::date) BETWEEN '5 month'::interval + '1 day'::interval AND '8 month')::integer as "5t8", 
+    COUNT(*) FILTER (WHERE AGE(d.month_date, (b.terms->'actual'->>'firstResetlementStart')::date) > '8 month')::integer as "gt8", 
     COUNT(*)::integer as total, 
   
-    COUNT(*) FILTER (WHERE COALESCE(b.manual_relocation_type, b.relocation_type) = 1 AND AGE(d.month_date, (b.terms->'actual'->>'firstResetlementStart')::date) <= '1 month')::integer as "lastMf",  
-    COUNT(*) FILTER (WHERE COALESCE(b.manual_relocation_type, b.relocation_type) = 1 AND AGE(d.month_date, (b.terms->'actual'->>'firstResetlementStart')::date) BETWEEN '1 month'::interval + '1 day'::interval AND '8 month')::integer as "oneToEightMf", 
-    COUNT(*) FILTER (WHERE COALESCE(b.manual_relocation_type, b.relocation_type) = 1 AND AGE(d.month_date, (b.terms->'actual'->>'firstResetlementStart')::date) BETWEEN '8 month'::interval + '1 day'::interval AND '12 month')::integer as "eightToTwelveMf",  
-    COUNT(*) FILTER (WHERE COALESCE(b.manual_relocation_type, b.relocation_type) = 1 AND AGE(d.month_date, (b.terms->'actual'->>'firstResetlementStart')::date) > '12 month')::integer as "gtTwelveMf", 
+    COUNT(*) FILTER (WHERE COALESCE(b.manual_relocation_type, b.relocation_type) = 1 AND AGE(d.month_date, (b.terms->'actual'->>'firstResetlementStart')::date) <= '5 month')::integer as "lt5f",  
+    COUNT(*) FILTER (WHERE COALESCE(b.manual_relocation_type, b.relocation_type) = 1 AND AGE(d.month_date, (b.terms->'actual'->>'firstResetlementStart')::date) BETWEEN '5 month'::interval + '1 day'::interval AND '8 month')::integer as "5t8f", 
+    COUNT(*) FILTER (WHERE COALESCE(b.manual_relocation_type, b.relocation_type) = 1 AND AGE(d.month_date, (b.terms->'actual'->>'firstResetlementStart')::date) > '8 month')::integer as "gt8f", 
     COUNT(*) FILTER (WHERE COALESCE(b.manual_relocation_type, b.relocation_type) = 1)::integer as "totalF" 
 FROM renovation.buildings_old b 
 LEFT JOIN date_series d   

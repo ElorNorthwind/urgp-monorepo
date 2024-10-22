@@ -20,10 +20,9 @@ WITH houses AS (
         END as relocation_start_index,  
         CASE 
             WHEN age IS NULL THEN 3 -- остаются в работе
-            WHEN age < '3 month' THEN 7 -- 'До 3 месяцев' 
-            WHEN age < '8 month' THEN 6 -- 'От 3 до 8 месяцев'    
-            WHEN age < '1 year' THEN 5 -- 'От 8 до 12 месяцев' 
-            ELSE 4 -- 'Более года'  
+            WHEN age < '5 month' THEN 6 -- 'Быстрее 5 месяцев' 
+            WHEN age < '8 month' THEN 5 -- 'От 5 до 8 месяцев'    
+            ELSE 4 -- 'Более 8 месяцев'  
         END as relocation_age_index,  
         COUNT(*)::integer as count,
         COUNT(*) FILTER(WHERE relocation_type = 1)::integer as full_count
@@ -36,10 +35,9 @@ WITH houses AS (
             END,
             CASE    
                 WHEN age IS NULL THEN 3 -- остаются в работе
-                WHEN age < '3 month' THEN 7 -- 'До 3 месяцев' 
-                WHEN age < '8 month' THEN 6 -- 'От 3 до 8 месяцев'    
-                WHEN age < '1 year' THEN 5 -- 'От 8 до 12 месяцев' 
-                ELSE 4 -- 'Более года'   
+                WHEN age < '5 month' THEN 6 -- 'Быстрее 5 месяцев' 
+                WHEN age < '8 month' THEN 5 -- 'От 5 до 8 месяцев'    
+                ELSE 4 -- 'Более 8 месяцев'   
             END
 )
 SELECT 
@@ -49,10 +47,9 @@ SELECT
         JSONB_BUILD_OBJECT('name', 'В текущем году'), -- 2 
 
         JSONB_BUILD_OBJECT('name', 'Еще не завершено'), -- 3
-        JSONB_BUILD_OBJECT('name', 'Дольше года'), -- 4
-        JSONB_BUILD_OBJECT('name', 'От 8 до 12 месяцев'), -- 5
+        JSONB_BUILD_OBJECT('name', 'Дольше 8 месяцев'), -- 4
         JSONB_BUILD_OBJECT('name', 'От 5 до 8 месяцев'), -- 6
-        JSONB_BUILD_OBJECT('name', 'До 3 месяцев') -- 7
+        JSONB_BUILD_OBJECT('name', 'Быстрее 5 месяцев') -- 7
     ) as nodes, 
     JSONB_AGG(
         JSONB_BUILD_OBJECT(

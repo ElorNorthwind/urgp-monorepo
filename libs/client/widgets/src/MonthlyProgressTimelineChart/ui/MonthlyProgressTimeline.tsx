@@ -21,20 +21,16 @@ import { useState } from 'react';
 import { Area, AreaChart, CartesianGrid, ReferenceLine, XAxis } from 'recharts';
 
 const monthlyProgressTimelineChartConfig = {
-  lastM: {
-    label: 'В рабое менее месяца',
-    color: 'hsl(var(--chart-3))',
-  },
-  oneToEightM: {
-    label: 'В работе от 1 до 8 месяцев',
+  lt5: {
+    label: 'В рабое менее 5 месяцев',
     color: 'hsl(var(--chart-2))',
   },
-  eightToTwelveM: {
-    label: 'В работе от 8 до 12 месяцев',
+  '5t8': {
+    label: 'В работе от 5 до 8 месяцев',
     color: 'hsl(var(--chart-4))',
   },
-  gtTwelveM: {
-    label: 'В работе больше года',
+  gt8: {
+    label: 'В работе больше 8 месяцев',
     color: 'hsl(var(--chart-1))',
   },
 } satisfies ChartConfig;
@@ -134,10 +130,9 @@ const MonthlyProgressTimelineChart = ({
                   ? data?.map((entry) => {
                       return {
                         ...entry,
-                        lastM: entry.lastMf,
-                        oneToEightM: entry.oneToEightMf,
-                        eightToTwelveM: entry.eightToTwelveMf,
-                        gtTwelveM: entry.gtTwelveMf,
+                        lt5: entry.lt5f,
+                        '5t8': entry['5t8f'],
+                        gt8: entry.gt8f,
                       };
                     })
                   : data
@@ -190,99 +185,31 @@ const MonthlyProgressTimelineChart = ({
               })}
               <ChartLegend content={<ChartLegendContent />} />
               <defs>
-                <linearGradient id="fillLastM" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor="var(--color-lastM)"
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor="var(--color-lastM)"
-                    stopOpacity={0.1}
-                  />
-                </linearGradient>
-                <linearGradient
-                  id="fillOneToEightM"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop
-                    offset="5%"
-                    stopColor="var(--color-oneToEightM)"
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor="var(--color-oneToEightM)"
-                    stopOpacity={0.1}
-                  />
-                </linearGradient>
-                <linearGradient
-                  id="fillEightToTwelveM"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop
-                    offset="5%"
-                    stopColor="var(--color-eightToTwelveM)"
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor="var(--color-eightToTwelveM)"
-                    stopOpacity={0.1}
-                  />
-                </linearGradient>
-                <linearGradient id="fillGtTwelveM" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor="var(--color-gtTwelveM)"
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor="var(--color-gtTwelveM)"
-                    stopOpacity={0.1}
-                  />
-                </linearGradient>
+                {Object.keys(monthlyProgressTimelineChartConfig).map((key) => (
+                  <linearGradient id={'fill' + key} x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor={`var(--color-${key})`}
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor={`var(--color-${key})`}
+                      stopOpacity={0.1}
+                    />
+                  </linearGradient>
+                ))}
               </defs>
-              <Area
-                dataKey="lastM"
-                type="natural"
-                fill="url(#fillLastM)"
-                fillOpacity={0.4}
-                stroke="var(--color-lastM)"
-                stackId="a"
-              />
-              <Area
-                dataKey="oneToEightM"
-                type="natural"
-                fill="url(#fillOneToEightM)"
-                fillOpacity={0.4}
-                stroke="var(--color-oneToEightM)"
-                stackId="a"
-              />
-              <Area
-                dataKey="eightToTwelveM"
-                type="natural"
-                fill="url(#fillEightToTwelveM)"
-                fillOpacity={0.4}
-                stroke="var(--color-eightToTwelveM)"
-                stackId="a"
-              />
-              <Area
-                dataKey="gtTwelveM"
-                type="natural"
-                fill="url(#fillGtTwelveM)"
-                fillOpacity={0.4}
-                stroke="var(--color-gtTwelveM)"
-                stackId="a"
-              />
+              {Object.keys(monthlyProgressTimelineChartConfig).map((key) => (
+                <Area
+                  dataKey={key}
+                  type="natural"
+                  fill={`url(#fill${key})`}
+                  fillOpacity={0.4}
+                  stroke={`var(--color-${key})`}
+                  stackId="a"
+                />
+              ))}
             </AreaChart>
           </ChartContainer>
         )}

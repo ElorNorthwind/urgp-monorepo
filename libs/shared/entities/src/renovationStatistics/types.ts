@@ -67,13 +67,9 @@ export type MonthlyDoneInfo = {
   month?: number;
   period: string;
   '0': number;
-  '1': number;
-  '2': number;
   '5': number;
   '8': number;
   '0f': number;
-  '1f': number;
-  '2f': number;
   '5f': number;
   '8f': number;
 };
@@ -87,16 +83,16 @@ export type MonthlyProgressInfo = {
   period: string;
   year?: number;
   month?: number;
+
   total?: number;
-  lastM: number;
-  oneToEightM: number;
-  eightToTwelveM: number;
-  gtTwelveM: number;
+  lt5: number;
+  '5t8': number;
+  gt8: number;
+
   totalF?: number;
-  lastMf: number;
-  oneToEightMf: number;
-  eightToTwelveMf: number;
-  gtTwelveMf: number;
+  lt5f: number;
+  '5t8f': number;
+  gt8f: number;
 };
 
 export type SankeyData = {

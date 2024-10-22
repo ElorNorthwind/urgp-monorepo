@@ -34,25 +34,21 @@ const CurrentYearSankeyChartConfig = {
     color: '#0284c7', // 'hsl(var(--chart-3))'
   },
 
-  'Дольше года': {
-    label: 'Дольше года',
-    color: '#dc2626', // 'hsl(var(--chart-3))'
-  },
-  'От 8 до 12 месяцев': {
-    label: 'От 8 до 12 месяцев',
-    color: '#d97706', // 'hsl(var(--chart-3))'
+  'Дольше 8 месяцев': {
+    label: 'Дольше 8 месяцев',
+    color: 'hsl(var(--chart-1))',
   },
   'От 5 до 8 месяцев': {
     label: 'От 5 до 8 месяцев',
-    color: '#65a30d', // 'hsl(var(--chart-3))'
+    color: 'hsl(var(--chart-4))',
   },
-  'До 3 месяцев': {
-    label: 'До 3 месяцев',
-    color: '#0d9488', // 'hsl(var(--chart-3))'
+  'Быстрее 5 месяцев': {
+    label: 'Быстрее 5 месяцев',
+    color: 'hsl(var(--chart-2))',
   },
   'Еще не завершено': {
     label: 'Остаются в работе',
-    color: '#475569', // 'hsl(var(--chart-3))'
+    color: '#525252', // '#475569', // 'hsl(var(--chart-3))'
   },
 } satisfies ChartConfig;
 
