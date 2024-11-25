@@ -238,4 +238,8 @@ export class RenovationService {
   public async getCurrentYearSankey(): Promise<SankeyData> {
     return this.dbServise.db.renovation.getCurrentYearSankey();
   }
+
+  public async getCurrentYearApartmentsSankey(): Promise<SankeyData> {
+    return this.dbServise.db.renovation.getCurrentYearApartmentsSankey();
+  }
 }

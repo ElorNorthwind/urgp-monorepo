@@ -388,4 +388,8 @@ export class RenovationRepository {
   getCurrentYearSankey(): Promise<SankeyData> {
     return this.db.one(renovation.currentYearSankey);
   }
+
+  getCurrentYearApartmentsSankey(): Promise<SankeyData> {
+    return this.db.one(renovation.currentYearApartmentsSankey);
+  }
 }

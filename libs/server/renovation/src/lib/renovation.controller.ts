@@ -530,4 +530,11 @@ export class RenovationController {
   getCurrentYearSankey(): Promise<SankeyData> {
     return this.renovation.getCurrentYearSankey();
   }
+
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
+  @Get('current-year-apartments-sankey')
+  getCurrentYearApartmentsSankey(): Promise<SankeyData> {
+    return this.renovation.getCurrentYearApartmentsSankey();
+  }
 }

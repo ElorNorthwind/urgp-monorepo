@@ -3,6 +3,7 @@ import { useLastUpdatedDate, useTotalDeviations } from '@urgp/client/entities';
 import { DashboardNumberCard, ResetCacheButton } from '@urgp/client/features';
 import { cn, selectCurrentUser, Separator } from '@urgp/client/shared';
 import {
+  CurrentYearApartmentsSankeyChart,
   CurrentYearSankeyChart,
   DoneByYearChart,
   InProgressAgesChart,
@@ -169,6 +170,7 @@ const RenovationDashboardPage = (): JSX.Element => {
                 <MonthlyProgressTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
                 <MonthlyDoneTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
                 <CurrentYearSankeyChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
+                {/* <CurrentYearApartmentsSankeyChart className="col-span-3 lg:col-span-5 xl:col-span-3" /> */}
               </>
             )}
         </div>

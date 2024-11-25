@@ -96,6 +96,12 @@ export const renovationStatisticsApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getCurrentYearApartmentsSankey: build.query<SankeyData, void>({
+      query: () => ({
+        url: '/renovation/current-year-apartments-sankey',
+        method: 'GET',
+      }),
+    }),
     // ToDo - вынеси в отдельный апи
     resetRenovationCache: build.mutation<void, void>({
       query: () => ({
@@ -125,4 +131,5 @@ export const {
   useGetMonthlyProgressQuery: useMonthlyProgress,
   useGetMonthlyDoneQuery: useMonthlyDone,
   useGetCurrentYearSankeyQuery: useCurrentYearSankey,
+  useGetCurrentYearApartmentsSankeyQuery: useCurrentYearApartmentsSankey,
 } = renovationStatisticsApi;
