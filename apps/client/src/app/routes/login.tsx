@@ -1,10 +1,10 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
-import { LoginPage } from '@urgp/client/pages';
-import { store } from '@urgp/client/shared';
+import { createFileRoute, redirect } from '@tanstack/react-router'
+import { LoginPage } from '@urgp/client/pages'
+import { store } from '@urgp/client/shared'
 
 export const Route = createFileRoute('/login')({
   beforeLoad: async ({ location }) => {
-    const user = store.getState().auth.user;
+    const user = store.getState().auth.user
     if (user && user.id !== 0) {
       throw redirect({
         to: '/renovation',
@@ -14,21 +14,21 @@ export const Route = createFileRoute('/login')({
           // potentially lag behind the actual current location)
           redirect: location.href,
         },
-      });
+      })
     }
   },
 
   component: Login,
-});
+})
 
 function Login() {
-  return <LoginPage />;
+  return <LoginPage />
 }
 
-// import { createLazyFileRoute } from '@tanstack/react-router';
+// import { createFileRoute } from '@tanstack/react-router';
 // import { MapPage } from '@urgp/client/pages';
 
-// export const Route = createLazyFileRoute('/login')({
+// export const Route = createFileRoute('/login')({
 //   component: Map,
 // });
 
