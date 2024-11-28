@@ -78,8 +78,8 @@ const OldBuildingsPage = (): JSX.Element => {
             'bg-background absolute left-0 h-full transition-all ease-in-out',
             filters.selectedBuildingId && buildings
               ? filters.apartment
-                ? 'w-[calc(100%-var(--sidebar-width)-var(--messagebar-width)-var(--detailsbar-width)-1.5rem)]'
-                : 'w-[calc(100%-var(--sidebar-width)-0.5rem)]'
+                ? 'w-[calc(100%-var(--renovation-sidebar-width)-var(--messagebar-width)-var(--detailsbar-width)-1.5rem)]'
+                : 'w-[calc(100%-var(--renovation-sidebar-width)-0.5rem)]'
               : 'w-[calc(100%)]',
           )}
           // @ts-expect-error no idea
@@ -144,7 +144,9 @@ const OldBuildingsPage = (): JSX.Element => {
             }
             className={cn(
               'absolute right-0 top-0 bottom-0 h-full transition-all ease-in-out',
-              filters?.selectedBuildingId ? 'w-sidebar' : 'hidden w-0',
+              filters?.selectedBuildingId
+                ? 'w-renovationsidebar'
+                : 'hidden w-0',
             )}
           />
         )}

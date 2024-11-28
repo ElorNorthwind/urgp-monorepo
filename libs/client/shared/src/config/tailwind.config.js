@@ -95,7 +95,7 @@ module.exports = function buildConfig(appDir) {
           screen: ['100vh /* fallback for Opera, IE and etc. */', '100dvh'],
         },
         width: {
-          sidebar: 'var(--sidebar-width)',
+          renovationsidebar: 'var(--renovation-sidebar-width)',
           messagebar: 'var(--messagebar-width)',
           detailsbar: 'var(--detailsbar-width)',
         },

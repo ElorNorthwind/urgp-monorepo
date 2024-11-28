@@ -1,21 +1,50 @@
 import { createFileRoute } from '@tanstack/react-router';
 import {
+  Button,
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
+  useSidebar,
 } from '@urgp/client/shared';
 import { ControlSidebar } from '@urgp/client/widgets';
+import { useState } from 'react';
+
+const ControlPageTest = (): JSX.Element => {
+  const [open2, setOpen2] = useState(false);
+  const [width, setWidth] = useState(400);
+
+  return (
+    <SidebarProvider
+      open={open2}
+      onOpenChange={setOpen2}
+      style={
+        {
+          '--sidebar-width': width + 'px',
+        } as React.CSSProperties
+      }
+    >
+      <div className="h-svh w-8 bg-slate-500"></div>
+      <SidebarInset>
+        <SidebarInset>
+          <main>
+            <SidebarTrigger />
+            <Button onClick={() => setOpen2((value) => !value)}>Open2</Button>
+            <Button
+              onClick={() => setWidth((value) => (value === 400 ? 700 : 400))}
+            >
+              size me
+            </Button>
+            <div>Hello /control!</div>
+          </main>
+        </SidebarInset>
+        <ControlSidebar side="right" />
+      </SidebarInset>
+    </SidebarProvider>
+  );
+};
 
 export const Route = createFileRoute('/control')({
-  component: () => (
-    <SidebarProvider>
-      <ControlSidebar />
-      <main>
-        <SidebarTrigger />
-        <div>Hello /control!</div>
-      </main>
-    </SidebarProvider>
-  ),
+  component: ControlPageTest,
 });
 
 // import {

@@ -19,9 +19,20 @@ import {
 import { items } from '../config/items';
 import { ChevronUp, Drama, User2 } from 'lucide-react';
 
-const ControlSidebar = (): JSX.Element => {
+type ControlSidebarProps = {
+  side?: 'left' | 'right';
+  className?: string;
+};
+
+const ControlSidebar = (props: ControlSidebarProps): JSX.Element => {
+  const { side = 'left', className } = props;
   return (
-    <Sidebar collapsible="icon" variant="sidebar">
+    <Sidebar
+      collapsible="icon"
+      variant="sidebar"
+      side={side}
+      className={className}
+    >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
