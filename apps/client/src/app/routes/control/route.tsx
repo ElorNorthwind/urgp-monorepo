@@ -1,7 +1,21 @@
 import { createFileRoute } from '@tanstack/react-router';
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@urgp/client/shared';
+import { ControlSidebar } from '@urgp/client/widgets';
 
 export const Route = createFileRoute('/control')({
-  component: () => <div>Hello /control!</div>,
+  component: () => (
+    <SidebarProvider>
+      <ControlSidebar />
+      <main>
+        <SidebarTrigger />
+        <div>Hello /control!</div>
+      </main>
+    </SidebarProvider>
+  ),
 });
 
 // import {
