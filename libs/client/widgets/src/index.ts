@@ -25,3 +25,4 @@ export * from './MonthlyDoneTimelineChart';
 export * from './CurrentYearSankeyChart';
 export * from './CurrentYearApartmentsSankey';
 export * from './ControlSidebar';
+export * from './ControlNavbar';

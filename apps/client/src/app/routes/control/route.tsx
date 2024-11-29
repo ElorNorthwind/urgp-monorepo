@@ -6,7 +6,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from '@urgp/client/shared';
-import { ControlSidebar } from '@urgp/client/widgets';
+import { ControlNavbar, ControlSidebar } from '@urgp/client/widgets';
 import { useState } from 'react';
 
 const ControlPageTest = (): JSX.Element => {
@@ -23,7 +23,7 @@ const ControlPageTest = (): JSX.Element => {
         } as React.CSSProperties
       }
     >
-      <div className="h-svh w-8 bg-slate-500"></div>
+      <ControlNavbar />
       <SidebarInset>
         <SidebarInset>
           <main>

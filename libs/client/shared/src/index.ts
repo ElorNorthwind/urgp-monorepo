@@ -58,3 +58,6 @@ export * from './store/rtkApi';
 export * from './store/store';
 export * from './store/auth/authApi';
 export * from './store/auth/authSlice';
+
+//export hooks
+export * from './hooks/useIsMobile';
