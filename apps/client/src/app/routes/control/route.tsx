@@ -1,11 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import {
-  Button,
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-  useSidebar,
-} from '@urgp/client/shared';
+import { ControlCasesPage } from '@urgp/client/pages';
+import { SidebarInset, SidebarProvider } from '@urgp/client/shared';
 import { ControlNavbar, ControlSidebar } from '@urgp/client/widgets';
 import { useState } from 'react';
 
@@ -24,21 +19,7 @@ const ControlPageTest = (): JSX.Element => {
       }
     >
       <ControlNavbar />
-      <SidebarInset>
-        <SidebarInset>
-          <main>
-            <SidebarTrigger />
-            <Button onClick={() => setOpen2((value) => !value)}>Open2</Button>
-            <Button
-              onClick={() => setWidth((value) => (value === 400 ? 700 : 400))}
-            >
-              size me
-            </Button>
-            <div>Hello /control!</div>
-          </main>
-        </SidebarInset>
-        <ControlSidebar side="right" />
-      </SidebarInset>
+      <ControlCasesPage />
     </SidebarProvider>
   );
 };

@@ -6,6 +6,8 @@ type CasePayload = {
   directions: TypeInfo[]; // направления работы
   problems: TypeInfo[]; // системные проблемы
   description: string; // собственно описание проблемы
+  fio: string;
+  adress: string | null;
 } & BasicPayloadData;
 
 export type Case = {

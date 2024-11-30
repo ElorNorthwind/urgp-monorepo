@@ -45,6 +45,7 @@ interface VirtualDataTableProps<TData, TValue> {
   setSorting?: (sorting: ColumnSort[]) => void;
   initialState?: InitialTableState;
   initialOffset?: number;
+  variant?: 'default' | 'borderless';
 }
 
 export function VirtualDataTable<TData, TValue>({
@@ -66,6 +67,7 @@ export function VirtualDataTable<TData, TValue>({
   globalFilterFn,
   initialState,
   initialOffset = 0,
+  variant = 'default',
 }: VirtualDataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
 
@@ -139,7 +141,9 @@ export function VirtualDataTable<TData, TValue>({
   return (
     <ScrollArea
       className={cn(
-        'relative overflow-auto rounded-md border',
+        'relative overflow-auto',
+        variant === 'borderless' && 'rounded-none',
+        variant === 'default' && 'rounded-md border',
         className,
         isScrolled && 'supports-[-moz-appearance:none]:rounded-none',
       )}
@@ -149,8 +153,9 @@ export function VirtualDataTable<TData, TValue>({
       <Table className="grid">
         <TableHeader
           className={cn(
+            variant === 'borderless' && 'bg-primary-foreground rounded-none',
             'supports-[-moz-appearance:none]:bg-primary-foreground/20 sticky top-0 z-10 grid',
-            isScrolled && 'shadow backdrop-blur-md',
+            isScrolled && variant === 'default' && 'shadow backdrop-blur-md',
           )}
         >
           {table.getHeaderGroups().map((headerGroup) => (

@@ -44,8 +44,9 @@ export type ExternalCase = z.infer<typeof externalCase>;
 export const typeInfo = z.object({
   id: z.coerce.number(),
   name: z.string(),
-  group: z.string().nullable().optional(),
+  category: z.string().nullable().optional(),
   fullName: z.string().nullable().optional(),
+  tags: z.array(z.string()).nullable().optional(),
 });
 export type TypeInfo = z.infer<typeof typeInfo>;
 // export type TypeInfo = {

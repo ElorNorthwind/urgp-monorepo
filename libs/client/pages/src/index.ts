@@ -9,3 +9,4 @@ export * from './MessagesPage';
 export * from './OldApartmentsPage';
 export * from './BuildingRelocationMapPage';
 export * from './PendingStagesPage';
+export * from './ControlCasesPage';
