@@ -33,6 +33,14 @@ export type RequestWithUserData = Request & {
   user: User;
 };
 
+export type UserControlData = {
+  approvers?: {
+    cases?: number[];
+    problems?: number[];
+    operations?: number[];
+  };
+};
+
 // export type RequestWithAccessToken = Request & {
 //   user: UserAccessTokenInfo;
 // };

@@ -64,4 +64,9 @@ export const users = {
   create: sql('sql/users/create.sql'),
   incrementTokenVersion: sql('sql/users/incrementTokenVersion.sql'),
   changePassword: sql('sql/users/changePassword.sql'),
+  getUserControlData: sql('sql/users/getUserControlData.sql'),
+};
+
+export const cases = {
+  createCase: sql('sql/cases/createCase.sql'),
 };

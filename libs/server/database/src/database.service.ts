@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 // import * as pgPromise from 'pg-promise';
 import pgPromise from 'pg-promise';
 import {
+  ControlCasesRepository,
   DbExtensions,
   QuestionsRepository,
   RenovationRepository,
@@ -35,6 +36,7 @@ export class DatabaseService {
         obj.streets = new StreetsRepository(obj, pgPromise());
         obj.renovation = new RenovationRepository(obj, pgPromise());
         obj.renovationUsers = new RenovationUsersRepository(obj, pgPromise());
+        obj.controlCases = new ControlCasesRepository(obj, pgPromise());
       },
     };
 

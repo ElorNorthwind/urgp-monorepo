@@ -13,6 +13,7 @@ import {
 import { RenovationModule } from '@urgp/server/renovation';
 import { AuthModule } from '@urgp/server/auth';
 import { CacheModule } from '@nestjs/cache-manager';
+import { ControlModule } from '@urgp/server/control';
 
 @Module({
   // dot env files
@@ -41,6 +42,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     RsmApiModule,
     RenovationModule,
     AuthModule,
+    ControlModule,
   ],
 })
 export class AppModule {}

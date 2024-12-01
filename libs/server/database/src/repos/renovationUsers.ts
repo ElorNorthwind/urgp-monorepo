@@ -11,6 +11,7 @@ import {
   GetUserByIdDto,
   GetUserByLoginDto,
   User,
+  UserControlData,
   UserWithCredentials,
 } from '@urgp/shared/entities';
 import { users } from './sql/sql';
@@ -44,5 +45,10 @@ export class RenovationUsersRepository {
 
   changePassword(id: number, password: string): Promise<null> {
     return this.db.none(users.changePassword, { id, password });
+  }
+
+  async getControlData(id: number): Promise<UserControlData> {
+    const reply = await this.db.oneOrNone(users.getUserControlData, { id });
+    return reply.data;
   }
 }
