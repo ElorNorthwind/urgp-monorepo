@@ -4,10 +4,10 @@ import { DatabaseService } from '@urgp/server/database';
 import {
   Case,
   CaseCreateDto,
-  CreateStageDto,
-  Stage,
-  StageApproveStatusData,
+  CaseUpdateDto,
+  CaseWithStatus,
   UserControlData,
+  UserInputApproveDto,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -25,5 +25,29 @@ export class ControlService {
   public async createCase(dto: CaseCreateDto, userId: number): Promise<Case> {
     // console.log(JSON.stringify(this.dbServise.db.controlCases));
     return this.dbServise.db.controlCases.createCase(dto, userId);
+  }
+
+  public async readCaseById(id: number): Promise<Case> {
+    return this.dbServise.db.controlCases.readCaseById(id);
+  }
+
+  public async readCases(): Promise<CaseWithStatus[]> {
+    return this.dbServise.db.controlCases.readCases();
+  }
+
+  public async updateCase(dto: CaseUpdateDto, userId: number): Promise<Case> {
+    return this.dbServise.db.controlCases.updateCase(dto, userId);
+  }
+
+  public async deleteCase(id: number, userId: number): Promise<Case> {
+    return this.dbServise.db.controlCases.deleteCase(id, userId);
+  }
+
+  public async approveCase(
+    dto: UserInputApproveDto,
+    userId: number,
+    newApprover: number | null,
+  ): Promise<Case> {
+    return this.dbServise.db.controlCases.approveCase(dto, userId, newApprover);
   }
 }

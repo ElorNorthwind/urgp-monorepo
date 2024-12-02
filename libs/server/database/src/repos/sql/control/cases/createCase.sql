@@ -18,4 +18,4 @@ VALUES
                     'updatedBy', ${authorId},
                     'isDeleted', false
                     )))
-RETURNING id, author_id as "authorId", created_at as "createdAt", payload;
+RETURNING id, author_id as "authorId", created_at as "createdAt", payload->-1 as payload;

@@ -7,6 +7,7 @@ export const userInputApprove = z.object({
     .or(z.literal('approved'))
     .or(z.literal('rejected')),
   approveNotes: z.string().nullable().optional(),
+  nextApprover: z.coerce.number().nullable().optional(),
 });
 export type UserInputApproveDto = z.infer<typeof userInputApprove>;
 

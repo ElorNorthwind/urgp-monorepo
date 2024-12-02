@@ -34,6 +34,8 @@ export const caseUpdate = caseCreate
     problems: true,
     description: true,
     approver: true,
+    fio: true,
+    adress: true,
   })
   .partial()
   .extend({
@@ -43,3 +45,8 @@ export type CaseUpdateDto = z.infer<typeof caseUpdate>;
 
 export const caseUpdateFormValues = caseCreateFormValues.partial();
 export type CaseUpdateFormValuesDto = z.infer<typeof caseUpdateFormValues>;
+
+export const caseDelete = z.object({
+  id: z.coerce.number(),
+});
+export type CaseDeleteDto = z.infer<typeof caseDelete>;

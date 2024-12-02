@@ -16,3 +16,7 @@ export type Case = {
   authorId: number;
   payload: CasePayload; // возвращаем только последний пейлоуд, а вообще тут массив
 };
+
+export type CaseWithStatus = Case & {
+  status: TypeInfo;
+};

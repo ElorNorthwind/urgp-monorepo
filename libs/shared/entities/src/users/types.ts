@@ -39,6 +39,7 @@ export type UserControlData = {
     problems?: number[];
     operations?: number[];
   };
+  roles: string[];
 };
 
 // export type RequestWithAccessToken = Request & {

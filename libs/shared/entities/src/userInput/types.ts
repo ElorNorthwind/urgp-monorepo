@@ -5,7 +5,7 @@ export const approveStatusData = z.object({
   approveDate: z.coerce.date().nullable().default(null),
   approveBy: z.number().nullable().default(null),
   approveNotes: z.string().nullable().default(null),
-  approver: z.string().nullable().default(null),
+  approver: z.coerce.number().nullable().default(null),
 });
 export type ApproveStatusData = z.infer<typeof approveStatusData>;
 // type ApproveStatusData = {
