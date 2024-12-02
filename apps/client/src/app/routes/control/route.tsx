@@ -5,18 +5,18 @@ import { ControlNavbar, ControlSidebar } from '@urgp/client/widgets';
 import { useState } from 'react';
 
 const ControlPageTest = (): JSX.Element => {
-  const [open2, setOpen2] = useState(false);
-  const [width, setWidth] = useState(400);
+  // const [open2, setOpen2] = useState(false);
+  // const [width, setWidth] = useState(400);
 
   return (
     <SidebarProvider
-      open={open2}
-      onOpenChange={setOpen2}
-      style={
-        {
-          '--sidebar-width': width + 'px',
-        } as React.CSSProperties
-      }
+    // open={open2}
+    // onOpenChange={setOpen2}
+    // style={
+    //   {
+    //     '--sidebar-width': width + 'px',
+    //   } as React.CSSProperties
+    // }
     >
       <ControlNavbar />
       <ControlCasesPage />

@@ -16,5 +16,5 @@ SET payload = payload || jsonb_build_object(
                     'updatedBy',     ${userId},
                     'isDeleted',     payload->-1->'isDeleted'
                     )
-WHERE id = ${id} 
+WHERE id = ${id}
 RETURNING id, author_id as "authorId", created_at as "createdAt", payload->-1 as payload;

@@ -12,13 +12,17 @@ import {
   Button,
   cn,
   Separator,
+  Sidebar,
   SidebarInset,
+  SidebarProvider,
   SidebarTrigger,
+  useIsMobile,
   useSidebar,
   VirtualDataTable,
 } from '@urgp/client/shared';
 import { ControlSidebar } from '@urgp/client/widgets';
-import { Drama } from 'lucide-react';
+import { Cross, Drama, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const ControlCasesPage = (): JSX.Element => {
   const {
@@ -28,23 +32,26 @@ const ControlCasesPage = (): JSX.Element => {
   } = useUnansweredMessages('all');
 
   const { toggleSidebar } = useSidebar();
+  const [open, setOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   return (
     <>
+      <ControlSidebar side="left" className="left-[--navbar-width]" />
       <SidebarInset className="overflow-hidden">
-        <main className="h-svh flex-col flex-wrap p-0">
+        <main className="h-svh flex-col flex-wrap">
           {/* <div className="h-11 w-full border-b p-2">
             <SidebarTrigger />
           </div> */}
           <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
-            {/* <SidebarTrigger className="-ml-1" /> */}
-            <Button
-              variant="ghost"
-              onClick={toggleSidebar}
-              className="size-8 -ml-1 p-0"
-            >
-              <Drama />
-            </Button>
+            <SidebarTrigger className="-ml-1" />
+            {/* <Button
+                variant="ghost"
+                onClick={toggleSidebar}
+                className="-ml-1 size-8 p-0"
+              >
+                <Drama />
+              </Button> */}
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
               <BreadcrumbList>
@@ -57,6 +64,7 @@ const ControlCasesPage = (): JSX.Element => {
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
+            <Button onClick={() => setOpen((prev) => !prev)}>{'>>'}</Button>
           </header>
           <VirtualDataTable
             className={cn('h-full flex-1 duration-200 ease-linear')}
@@ -69,9 +77,37 @@ const ControlCasesPage = (): JSX.Element => {
           />
         </main>
       </SidebarInset>
-      <ControlSidebar side="right" />
+      <div
+        className={cn(
+          'bg-sidebar text-sidebar-foreground h-svh transform overflow-hidden border-l p-4 duration-200 ease-linear',
+          open ? (isMobile ? 'w-full' : ' w-[--sidebar-width]') : 'm-0 w-0 p-0',
+        )}
+      >
+        Блах блах блах
+        <Button variant="ghost" onClick={() => setOpen(false)}>
+          <X />
+        </Button>
+      </div>
     </>
   );
+};
+
+type TestProps = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
+
+const ControlledSidebar = (props: TestProps): JSX.Element => {
+  // this is a bit cursed, but hey, it works...
+  const { openMobile, setOpenMobile } = useSidebar();
+  useEffect(() => {
+    setOpenMobile(props.open);
+  }, [props.open]);
+  useEffect(() => {
+    props.setOpen(openMobile);
+  }, [openMobile]);
+
+  return <ControlSidebar side="right" />;
 };
 
 export { ControlCasesPage };
