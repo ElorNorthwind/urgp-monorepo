@@ -27,9 +27,7 @@ export class ControlCasesRepository {
         })
         .join(', ') +
       `)`;
-    const directions = this.pgp.as.format(`jsonb_build_array($1:list)`, [
-      dto.directions,
-    ]);
+    const directions = this.pgp.as.format(`ARRAY[$1:list]`, [dto.directions]);
     const problems = this.pgp.as.format(`jsonb_build_array($1:list)`, [
       dto.problems,
     ]);
@@ -71,9 +69,7 @@ export class ControlCasesRepository {
         })
         .join(', ') +
       `)`;
-    const directions = this.pgp.as.format(`jsonb_build_array($1:list)`, [
-      dto.directions,
-    ]);
+    const directions = this.pgp.as.format(`ARRAY[$1:list]`, [dto.directions]);
     const problems = this.pgp.as.format(`jsonb_build_array($1:list)`, [
       dto.problems,
     ]);

@@ -1,8 +1,5 @@
-import { useNavigate } from '@tanstack/react-router';
 import { CellContext } from '@tanstack/react-table';
-import { Button } from '@urgp/client/shared';
-import { CaseWithStatus, UnansweredMessage } from '@urgp/shared/entities';
-import { ExternalLink } from 'lucide-react';
+import { CaseWithStatus } from '@urgp/shared/entities';
 
 function ApplicantCell(
   props: CellContext<CaseWithStatus, string>,

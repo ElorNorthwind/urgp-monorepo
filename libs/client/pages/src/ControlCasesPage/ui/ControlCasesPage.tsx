@@ -23,7 +23,7 @@ import {
   VirtualDataTable,
 } from '@urgp/client/shared';
 import { ControlSidebar } from '@urgp/client/widgets';
-import { CaseWithStatus } from '@urgp/shared/entities';
+import { Case, CaseWithStatus } from '@urgp/shared/entities';
 import { Cross, Drama, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { ColumnDefBase } from '@tanstack/react-table';

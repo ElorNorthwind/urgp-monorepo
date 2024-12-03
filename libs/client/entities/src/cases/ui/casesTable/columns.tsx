@@ -35,7 +35,7 @@ export const controlCasesColumns = [
     },
   }),
 
-  columnHelper.accessor('payload.fio', {
+  columnHelper.accessor((row) => row.payload.fio, {
     id: 'fio',
     header: 'Заявитель',
     size: 150,
@@ -46,7 +46,7 @@ export const controlCasesColumns = [
   }),
 
   columnHelper.accessor(
-    (row): string => row?.payload?.directions?.[0]?.id?.toString() || '0',
+    (row) => row?.payload?.directions.map((d) => d.name)?.join(',') || '-',
     {
       id: 'directions',
       header: 'Направления',
@@ -70,7 +70,6 @@ export const controlCasesColumns = [
       // },
     },
   ),
-
   columnHelper.accessor('payload.description', {
     id: 'description',
     header: 'Описание',

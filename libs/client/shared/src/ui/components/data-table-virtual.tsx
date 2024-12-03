@@ -27,12 +27,11 @@ import { Button } from './button';
 import { Skeleton } from './skeleton';
 
 interface VirtualDataTableProps<TData, TValue> {
-  // columns: ColumnDef<TData, TValue>[];
-  // data?: TData[];
-  columns: {
-    [K in keyof TData]: ColumnDef<TData, TData[K]>;
-  }[keyof TData][];
-  data: TData[];
+  data?: TData[];
+  columns: ColumnDef<TData, TValue | any>[]; // Говна поешь ебучая дрочилка типов
+  // columns: {
+  //   [K in keyof TData]: ColumnDef<TData, TData[K]>;
+  // }[keyof TData][];
   clientSide?: boolean;
   totalCount: number;
   isFetching: boolean;
