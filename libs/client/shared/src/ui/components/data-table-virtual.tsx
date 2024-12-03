@@ -27,8 +27,12 @@ import { Button } from './button';
 import { Skeleton } from './skeleton';
 
 interface VirtualDataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data?: TData[];
+  // columns: ColumnDef<TData, TValue>[];
+  // data?: TData[];
+  columns: {
+    [K in keyof TData]: ColumnDef<TData, TData[K]>;
+  }[keyof TData][];
+  data: TData[];
   clientSide?: boolean;
   totalCount: number;
   isFetching: boolean;
@@ -222,6 +226,7 @@ export function VirtualDataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody
+          className="border-b"
           style={{
             display: 'grid',
             height: `${rowVirtualizer.getTotalSize()}px`, //tells scrollbar how big the table is

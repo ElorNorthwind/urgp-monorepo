@@ -1,5 +1,7 @@
 import {
+  controlCasesColumns,
   unansweredMessagesColumns,
+  useCases,
   useUnansweredMessages,
 } from '@urgp/client/entities';
 import {
@@ -21,17 +23,15 @@ import {
   VirtualDataTable,
 } from '@urgp/client/shared';
 import { ControlSidebar } from '@urgp/client/widgets';
+import { CaseWithStatus } from '@urgp/shared/entities';
 import { Cross, Drama, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { ColumnDefBase } from '@tanstack/react-table';
 
 const ControlCasesPage = (): JSX.Element => {
-  const {
-    data: messages,
-    isLoading,
-    isFetching,
-  } = useUnansweredMessages('all');
+  const { data: cases, isLoading, isFetching } = useCases();
 
-  const { toggleSidebar } = useSidebar();
+  // const { toggleSidebar } = useSidebar();
   const [open, setOpen] = useState(false);
   const isMobile = useIsMobile();
 
@@ -68,11 +68,11 @@ const ControlCasesPage = (): JSX.Element => {
           </header>
           <VirtualDataTable
             className={cn('h-full flex-1 duration-200 ease-linear')}
-            columns={unansweredMessagesColumns}
-            data={messages || []}
+            columns={controlCasesColumns}
+            data={cases || []}
             isFetching={isLoading || isFetching}
-            totalCount={messages?.length ?? 0}
-            enableMultiRowSelection={false}
+            totalCount={cases?.length ?? 0}
+            enableMultiRowSelection={true}
             variant="borderless"
           />
         </main>
