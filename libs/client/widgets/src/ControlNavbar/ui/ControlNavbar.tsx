@@ -45,24 +45,29 @@ const ControlNavbar = (): JSX.Element => {
           <Button
             variant="secondary"
             size="icon"
-            className="size-10 fixed bottom-2 left-2 z-[50] rounded-full"
+            className="fixed bottom-2 left-2 z-[50] size-10 rounded-full"
           >
             <Menu />
           </Button>
         </SheetTrigger>
-        <SheetContent side="bottom" className="p-4 pt-12">
-          {/* <SheetHeader>
-            <SheetTitle className="flex flex-row items-center">
+        <SheetContent
+          side="bottom"
+          className="p-4"
+          aria-description="Навигация"
+        >
+          <SheetHeader className="pb-4">
+            <SheetTitle className="flex flex-row items-center gap-2">
               <Drama />
               <span>ИС Кон(троль)</span>
             </SheetTitle>
-          </SheetHeader> */}
+          </SheetHeader>
           <div className="flex flex-col gap-2">
-            {items.map((item) => (
+            {items.map((item, index) => (
               <a
+                key={item.url + index}
                 className={cn(
                   buttonVariants({ variant: 'ghost' }),
-                  'text-muted-foreground size-9 flex w-full items-center justify-start gap-2 p-4',
+                  'text-muted-foreground flex size-9 w-full items-center justify-start gap-2 p-4',
                   router.location.pathname === item.url &&
                     item.title === 'Home' &&
                     'bg-muted-foreground/10 text-sidebar-foreground pointer-events-none cursor-auto',
@@ -112,13 +117,13 @@ const ControlNavbar = (): JSX.Element => {
             <TooltipContent side="right">Дашборд ИС Кон(троль)</TooltipContent>
           </TooltipPortal>
         </Tooltip> */}
-        {items.map((item) => (
-          <Tooltip>
+        {items.map((item, index) => (
+          <Tooltip key={item.url + index}>
             <TooltipTrigger asChild>
               <a
                 className={cn(
                   buttonVariants({ variant: 'ghost' }),
-                  'text-muted-foreground size-9 flex p-0',
+                  'text-muted-foreground flex size-9 p-0',
                   router.location.pathname === item.url &&
                     item.title === 'Home' &&
                     'bg-muted-foreground/10 text-sidebar-foreground pointer-events-none cursor-auto',

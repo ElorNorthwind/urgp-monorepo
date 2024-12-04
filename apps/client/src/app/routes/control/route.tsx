@@ -10,13 +10,15 @@ const ControlPageTest = (): JSX.Element => {
 
   return (
     <SidebarProvider
-    // open={open2}
-    // onOpenChange={setOpen2}
-    // style={
-    //   {
-    //     '--sidebar-width': width + 'px',
-    //   } as React.CSSProperties
-    // }
+      cookieName="filter-sidebar"
+      defaultOpen={false}
+      // open={open2}
+      // onOpenChange={setOpen2}
+      // style={
+      //   {
+      //     '--sidebar-width': width + 'px',
+      //   } as React.CSSProperties
+      // }
     >
       <ControlNavbar />
       <ControlCasesPage />

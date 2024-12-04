@@ -77,6 +77,7 @@ export function VirtualDataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
+    enableRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: clientSide ? getSortedRowModel() : undefined,
     getFilteredRowModel: clientSide ? getFilteredRowModel() : undefined,
@@ -276,7 +277,7 @@ export function VirtualDataTable<TData, TValue>({
                     'overflow-y-clip',
                     onRowClick && 'cursor-pointer',
                   )}
-                  onClick={() => onRowClick(row)}
+                  onClick={onRowClick ? () => onRowClick(row) : undefined}
                   onDoubleClick={
                     onRowDoubleClick ? () => onRowDoubleClick(row) : undefined
                   }

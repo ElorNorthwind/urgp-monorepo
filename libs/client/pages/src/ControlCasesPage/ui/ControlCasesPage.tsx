@@ -18,6 +18,7 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
+  TooltipProvider,
   useIsMobile,
   useSidebar,
   VirtualDataTable,
@@ -30,28 +31,16 @@ import { ColumnDefBase } from '@tanstack/react-table';
 
 const ControlCasesPage = (): JSX.Element => {
   const { data: cases, isLoading, isFetching } = useCases();
-
-  // const { toggleSidebar } = useSidebar();
   const [open, setOpen] = useState(false);
   const isMobile = useIsMobile();
 
   return (
-    <>
+    <TooltipProvider delayDuration={50}>
       <ControlSidebar side="left" className="left-[--navbar-width]" />
       <SidebarInset className="overflow-hidden">
         <main className="h-svh flex-col flex-wrap">
-          {/* <div className="h-11 w-full border-b p-2">
-            <SidebarTrigger />
-          </div> */}
           <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
             <SidebarTrigger className="-ml-1" />
-            {/* <Button
-                variant="ghost"
-                onClick={toggleSidebar}
-                className="-ml-1 size-8 p-0"
-              >
-                <Drama />
-              </Button> */}
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
               <BreadcrumbList>
@@ -74,6 +63,8 @@ const ControlCasesPage = (): JSX.Element => {
             totalCount={cases?.length ?? 0}
             enableMultiRowSelection={true}
             variant="borderless"
+            compact={false}
+            // onRowClick={() => console.log('click')}
           />
         </main>
       </SidebarInset>
@@ -88,7 +79,7 @@ const ControlCasesPage = (): JSX.Element => {
           <X />
         </Button>
       </div>
-    </>
+    </TooltipProvider>
   );
 };
 

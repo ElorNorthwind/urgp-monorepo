@@ -1,6 +1,8 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { CaseWithStatus } from '@urgp/shared/entities';
 import { ApplicantCell } from './cells/ApplicantCell';
+import { DirectionCell } from './cells/DirectionCell';
+import { Checkbox } from '@urgp/client/shared';
 
 const columnHelper = createColumnHelper<CaseWithStatus>();
 
@@ -23,17 +25,51 @@ const columnHelper = createColumnHelper<CaseWithStatus>();
 
 export const controlCasesColumns = [
   columnHelper.display({
-    id: 'actions',
-    size: 70,
-    header: 'Согласование',
-    cell: (props) => {
+    id: 'select',
+    size: 40,
+    header: ({ table }) => (
+      <Checkbox
+        className="size-5"
+        checked={table.getIsAllRowsSelected()}
+        onClick={table.getToggleAllRowsSelectedHandler()}
+      />
+    ),
+    cell: ({ row }) => {
       return (
-        <div {...props} className="flex items-center justify-center">
-          <input type="checkbox" />
+        <div
+          className="flex items-center justify-center"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Checkbox
+            className="size-5"
+            checked={row.getIsSelected()}
+            disabled={!row.getCanSelect()}
+            onClick={row.getToggleSelectedHandler()}
+          />
         </div>
       );
     },
   }),
+
+  // header: ({ table }) => (
+  //   <IndeterminateCheckbox
+  //     {...{
+  //       checked: table.getIsAllRowsSelected(),
+  //       indeterminate: table.getIsSomeRowsSelected(),
+  //       onChange: table.getToggleAllRowsSelectedHandler(),
+  //     }}
+  //   />
+  // ),
+  // cell: ({ row }) => (
+  //   <div className="px-1">
+  //     <IndeterminateCheckbox
+  //       {...{
+  //         checked: row.getIsSelected(),
+  //         disabled: !row.getCanSelect(),
+  //         indeterminate: row.getIsSomeSelected(),
+  //         onChange: row.getToggleSelectedHandler(),
+  //       }}
+  //     />
 
   columnHelper.accessor((row) => row.payload.fio, {
     id: 'fio',
@@ -46,20 +82,21 @@ export const controlCasesColumns = [
   }),
 
   columnHelper.accessor(
-    (row) => row?.payload?.directions.map((d) => d.name)?.join(',') || '-',
+    (row) => row?.payload?.directions?.map((d) => d.name)?.join(', ') || '-',
     {
       id: 'directions',
       header: 'Направления',
       size: 200,
       enableSorting: true,
-      // cell: (props) => {
-      //   return <ApartmentCell {...props} />;
-      // },
+      cell: (props) => {
+        return <DirectionCell {...props} />;
+      },
     },
   ),
 
   columnHelper.accessor(
-    (row): string => row?.payload?.externalCases?.[0]?.num || '',
+    (row): string =>
+      row?.payload?.externalCases?.map((d) => d.num)?.join(', ') || '',
     {
       id: 'externalCases',
       header: 'Обращение',
