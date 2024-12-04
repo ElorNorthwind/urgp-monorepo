@@ -1,29 +1,38 @@
-import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { CellContext } from '@tanstack/react-table';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@urgp/client/shared';
+import {
+  Separator,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@urgp/client/shared';
 import { CaseWithStatus } from '@urgp/shared/entities';
+import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { format } from 'date-fns';
 
-function ApplicantCell(
+function CaseDesctiptionCell(
   props: CellContext<CaseWithStatus, string>,
 ): JSX.Element {
   const controlCase = props.row.original;
-  // const navigate = useNavigate({ from: '/control/cases' });
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <div className="flex flex-1 flex-col items-start justify-start truncate">
-          <div className="truncate">{controlCase.payload.fio}</div>
-          <div className="text-muted-foreground truncate">
-            {controlCase.payload.adress}
+          <div className="truncate">
+            <span className="font-bold">{controlCase.payload.fio}</span>
+            <span className="text-muted-foreground ml-2 w-full truncate border-l pl-2">
+              {controlCase.payload.adress}
+            </span>
+          </div>
+          <div className="w-full truncate text-xs">
+            {controlCase.payload.description}
           </div>
         </div>
       </TooltipTrigger>
       <TooltipPortal>
         <TooltipContent side="bottom">
           <TooltipArrow />
-          <div className="flex flex-col gap-0">
+          <div className="flex max-w-[300px] flex-col gap-0">
             <div className="font-bold">Данные заявки:</div>
             <div className="flex justify-between">
               <span>ID:</span>
@@ -50,4 +59,4 @@ function ApplicantCell(
   );
 }
 
-export { ApplicantCell };
+export { CaseDesctiptionCell };

@@ -41,7 +41,7 @@ const ControlNavbar = (): JSX.Element => {
   if (isMobile) {
     return (
       <Sheet>
-        <SheetTrigger>
+        <SheetTrigger asChild>
           <Button
             variant="secondary"
             size="icon"

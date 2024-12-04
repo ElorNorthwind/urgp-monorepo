@@ -4,69 +4,64 @@ import {
   cn,
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from '@urgp/client/shared';
 import { CaseWithStatus } from '@urgp/shared/entities';
-import { caseTypeStyles } from '../../../config/caseTypeStyles';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
+import { directionCategoryStyles } from '../../../config/caseStyles';
 
 function DirectionCell(
   props: CellContext<CaseWithStatus, string>,
 ): JSX.Element {
   const payload = props.row.original.payload;
-  const { icon: TypeIcon, className: typeClassName } =
-    caseTypeStyles[payload.type.id];
-  // const navigate = useNavigate({ from: '/control/cases' });
-
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="flex w-full flex-row items-center justify-start gap-2">
-          <TypeIcon className={cn('h-6 w-6', typeClassName)} />
-          <div className="flex flex-1 flex-col items-start justify-start truncate">
-            <div className="truncate">{payload.type.name}</div>
-            <div className="text-muted-foreground line-clamp-1 flex items-start justify-center gap-1">
-              {payload.directions?.slice(0, 2).map((d) => (
-                <Badge
-                  variant={'outline'}
-                  className="h-4 rounded-md p-1"
-                  key={d.id}
-                >
-                  {d.name}
-                </Badge>
-              ))}
-              {payload.directions?.length > 2 && (
-                <Badge variant={'outline'} className="h-4 rounded-md p-1">
-                  ...
-                </Badge>
+        <div className="text-muted-foreground line-clamp-1 flex items-start justify-start gap-1 truncate">
+          {payload.directions?.slice(0, 2).map((d) => (
+            <Badge
+              variant={'outline'}
+              className={cn(
+                'text-nowrap px-1',
+                d.category && directionCategoryStyles[d.category].badgeStyle,
               )}
-            </div>
-          </div>
+              key={d.id}
+            >
+              {d.name}
+            </Badge>
+          ))}
+          {payload.directions?.length > 2 && (
+            <Badge variant={'outline'} className="px-2">
+              ...
+            </Badge>
+          )}
         </div>
       </TooltipTrigger>
       <TooltipPortal>
-        <TooltipContent side="left">
+        <TooltipContent side="bottom">
           <TooltipArrow />
-          <div className="flex flex-col">
-            <div>
-              <span className="font-bold">Тип: </span>{' '}
-              <span>{payload.type.fullname}</span>
-            </div>
-            <div className="flex gap-1">
-              {payload.directions?.map((d) => (
+          <div className="flex flex-col gap-1">
+            <div className="font-bold">Направления работы:</div>
+            {payload.directions?.map((d) => (
+              <div
+                // variant={'outline'}
+                className="flex justify-between"
+                key={d.id}
+              >
                 <Badge
                   variant={'outline'}
-                  className="h-4 rounded-md p-1"
-                  key={d.id}
+                  className={cn(
+                    d.category &&
+                      directionCategoryStyles[d.category].badgeStyle,
+                  )}
                 >
-                  <span>{d.name}</span>
-                  <span className="text-muted-foreground ml-1 text-xs font-normal">
-                    {'(' + d.category + ')'}
-                  </span>
+                  {d.name}
                 </Badge>
-              ))}
-            </div>
+                <span className="text-muted-foreground ml-1 text-xs font-normal">
+                  {'(' + d.category + ')'}
+                </span>
+              </div>
+            ))}
           </div>
         </TooltipContent>
       </TooltipPortal>
