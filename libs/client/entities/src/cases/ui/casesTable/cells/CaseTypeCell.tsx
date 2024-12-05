@@ -7,13 +7,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { CaseWithStatus } from '@urgp/shared/entities';
+import { CasesPageSearchDto, CaseWithStatus } from '@urgp/shared/entities';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { caseTypeStyles } from '../../../config/caseStyles';
+import { getRouteApi } from '@tanstack/react-router';
+import { ChevronLeft, Play, StepBack } from 'lucide-react';
 
 function CaseTypeCell(props: CellContext<CaseWithStatus, string>): JSX.Element {
   const payload = props.row.original.payload;
   const { icon: TypeIcon, iconStyle } = caseTypeStyles[payload.type.id];
+  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
 
   return (
     <Tooltip>
@@ -26,6 +29,12 @@ function CaseTypeCell(props: CellContext<CaseWithStatus, string>): JSX.Element {
               Системная прорблема ...
             </div>
           </div>
+          {search.selectedCase === props.row.original.id && (
+            <ChevronLeft className="text-muted-foreground absolute right-0 size-8" />
+          )}
+          {search.selectedCase === props.row.original.id && (
+            <div className="border-muted-foreground absolute inset-0 border" />
+          )}
         </div>
       </TooltipTrigger>
       <TooltipPortal>

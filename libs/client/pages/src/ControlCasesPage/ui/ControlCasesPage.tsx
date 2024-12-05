@@ -1,9 +1,4 @@
-import {
-  controlCasesColumns,
-  unansweredMessagesColumns,
-  useCases,
-  useUnansweredMessages,
-} from '@urgp/client/entities';
+import { controlCasesColumns, useCases } from '@urgp/client/entities';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,29 +9,35 @@ import {
   Button,
   cn,
   Separator,
-  Sidebar,
   SidebarInset,
-  SidebarProvider,
   SidebarTrigger,
   TooltipProvider,
   useIsMobile,
   useSidebar,
   VirtualDataTable,
 } from '@urgp/client/shared';
-import { ControlSidebar } from '@urgp/client/widgets';
-import { Case, CaseWithStatus } from '@urgp/shared/entities';
-import { Cross, Drama, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { ColumnDefBase } from '@tanstack/react-table';
+// import { ControlSidebar } from '@urgp/client/widgets';
+import { CasesPageSearchDto } from '@urgp/shared/entities';
+import { X } from 'lucide-react';
+import { useEffect } from 'react';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import { CaseFilterSidebar } from '@urgp/client/widgets';
 
 const ControlCasesPage = (): JSX.Element => {
   const { data: cases, isLoading, isFetching } = useCases();
-  const [open, setOpen] = useState(false);
   const isMobile = useIsMobile();
-
+  const navigate = useNavigate({ from: '/control' });
+  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
+  //  className="left-[--navbar-width]"
   return (
     <TooltipProvider delayDuration={50}>
-      <ControlSidebar side="left" className="left-[--navbar-width]" />
+      <CaseFilterSidebar
+        side="left"
+        // className="left-[--navbar-width]"
+        // className="left-[--navbar-width] group-data-[collapsible=offcanvas]:left-[calc((var(--sidebar-width)*-1))]"
+        // className="left-[--navbar-width]"
+        // className="w-[calc(var(--navbar-width)+var(--sidebar-width)] pl-[--navbar-width]"
+      />
       <SidebarInset className="overflow-hidden">
         <main className="h-svh flex-col flex-wrap">
           <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
@@ -53,7 +54,6 @@ const ControlCasesPage = (): JSX.Element => {
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
-            <Button onClick={() => setOpen((prev) => !prev)}>{'>>'}</Button>
           </header>
           <VirtualDataTable
             className={cn('h-full flex-1 duration-200 ease-linear')}
@@ -64,41 +64,47 @@ const ControlCasesPage = (): JSX.Element => {
             enableMultiRowSelection={true}
             variant="borderless"
             compact={false}
-            // onRowClick={() => console.log('click')}
+            onRowClick={(row) => {
+              navigate({
+                search: (prev: CasesPageSearchDto) => ({
+                  ...prev,
+                  selectedCase:
+                    search.selectedCase === row.original.id
+                      ? undefined
+                      : row.original.id,
+                }),
+              });
+            }}
           />
         </main>
       </SidebarInset>
       <div
         className={cn(
           'bg-sidebar text-sidebar-foreground h-svh transform overflow-hidden border-l p-4 duration-200 ease-linear',
-          open ? (isMobile ? 'w-full' : ' w-[--sidebar-width]') : 'm-0 w-0 p-0',
+          search?.selectedCase
+            ? isMobile
+              ? 'w-full'
+              : ' w-[--sidebar-width]'
+            : 'm-0 w-0 p-0',
         )}
       >
         Блах блах блах
-        <Button variant="ghost" onClick={() => setOpen(false)}>
+        <Button
+          variant="ghost"
+          onClick={() =>
+            navigate({
+              search: (prev: CasesPageSearchDto) => ({
+                ...prev,
+                selectedCase: search.selectedCase === undefined,
+              }),
+            })
+          }
+        >
           <X />
         </Button>
       </div>
     </TooltipProvider>
   );
-};
-
-type TestProps = {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-};
-
-const ControlledSidebar = (props: TestProps): JSX.Element => {
-  // this is a bit cursed, but hey, it works...
-  const { openMobile, setOpenMobile } = useSidebar();
-  useEffect(() => {
-    setOpenMobile(props.open);
-  }, [props.open]);
-  useEffect(() => {
-    props.setOpen(openMobile);
-  }, [openMobile]);
-
-  return <ControlSidebar side="right" />;
 };
 
 export { ControlCasesPage };

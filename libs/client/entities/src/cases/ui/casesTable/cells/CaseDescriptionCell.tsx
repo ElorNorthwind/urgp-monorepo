@@ -34,22 +34,34 @@ function CaseDesctiptionCell(
           <TooltipArrow />
           <div className="flex max-w-[300px] flex-col gap-0">
             <div className="font-bold">Данные заявки:</div>
-            <div className="flex justify-between">
+            <div className="flex items-start justify-between">
               <span>ID:</span>
               <span className="text-muted-foreground ml-2 font-normal">
                 {controlCase.id}
               </span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex items-start justify-between">
               <span>Автор:</span>
               <span className="text-muted-foreground ml-2 font-normal">
                 {controlCase.authorId}
               </span>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-start justify-between">
               <span>Создана:</span>
               <span className="text-muted-foreground ml-2 font-normal">
                 {format(controlCase.createdAt, 'dd.MM.yyyy HH:mm')}
+              </span>
+            </div>
+            <div className="flex items-start justify-between">
+              <span>Заявитель:</span>
+              <span className="text-muted-foreground ml-2 font-normal">
+                {controlCase.payload.fio}
+              </span>
+            </div>
+            <div className="flex items-start justify-between">
+              <span>Адрес:</span>
+              <span className="text-muted-foreground ml-2 font-normal">
+                {controlCase.payload.adress}
               </span>
             </div>
           </div>

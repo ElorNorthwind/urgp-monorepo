@@ -1,6 +1,5 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { CaseWithStatus } from '@urgp/shared/entities';
-import { ApplicantCell } from './cells/ApplicantCell';
 import { DirectionCell } from './cells/DirectionCell';
 import { Checkbox } from '@urgp/client/shared';
 import { CaseTypeCell } from './cells/CaseTypeCell';
@@ -10,23 +9,6 @@ import { CaseDesctiptionCell } from './cells/CaseDescriptionCell';
 
 const columnHelper = createColumnHelper<CaseWithStatus>();
 
-// type CasePayload = {
-//     externalCases: ExternalCase[]; // связанные номера
-//     type: TypeInfo; // тип дела
-//     directions: TypeInfo[]; // направления работы
-//     problems: TypeInfo[]; // системные проблемы
-//     description: string; // собственно описание проблемы
-//     fio: string;
-//     adress: string | null;
-//   } & BasicPayloadData;
-
-//   export type Case = {
-//     id: number;
-//     createdAt: Date;
-//     authorId: number;
-//     payload: CasePayload; // возвращаем только последний пейлоуд, а вообще тут массив
-//   };
-
 export const controlCasesColumns = [
   columnHelper.display({
     id: 'select',
@@ -34,7 +16,13 @@ export const controlCasesColumns = [
     header: ({ table }) => (
       <Checkbox
         className="size-5"
-        checked={table.getIsAllRowsSelected()}
+        checked={
+          table.getIsAllRowsSelected()
+            ? true
+            : table.getIsSomeRowsSelected()
+              ? 'indeterminate'
+              : false
+        }
         onClick={table.getToggleAllRowsSelectedHandler()}
       />
     ),
@@ -55,46 +43,6 @@ export const controlCasesColumns = [
     },
   }),
 
-  // header: ({ table }) => (
-  //   <IndeterminateCheckbox
-  //     {...{
-  //       checked: table.getIsAllRowsSelected(),
-  //       indeterminate: table.getIsSomeRowsSelected(),
-  //       onChange: table.getToggleAllRowsSelectedHandler(),
-  //     }}
-  //   />
-  // ),
-  // cell: ({ row }) => (
-  //   <div className="px-1">
-  //     <IndeterminateCheckbox
-  //       {...{
-  //         checked: row.getIsSelected(),
-  //         disabled: !row.getCanSelect(),
-  //         indeterminate: row.getIsSomeSelected(),
-  //         onChange: row.getToggleSelectedHandler(),
-  //       }}
-  //     />
-
-  // columnHelper.accessor((row) => row.payload.fio, {
-  //   id: 'fio',
-  //   header: 'Заявитель',
-  //   size: 120,
-  //   enableSorting: true,
-  //   cell: (props) => {
-  //     return <ApplicantCell {...props} />;
-  //   },
-  // }),
-
-  columnHelper.accessor((row): string => 'status.name', {
-    id: 'status',
-    header: 'Статус',
-    size: 150,
-    enableSorting: true,
-    cell: (props) => {
-      return <CaseStatusCell {...props} />;
-    },
-  }),
-
   columnHelper.accessor(
     (row): string =>
       row?.payload?.externalCases?.map((d) => d.num)?.join(', ') || '',
@@ -112,10 +60,20 @@ export const controlCasesColumns = [
   columnHelper.accessor('payload.description', {
     id: 'description',
     header: 'Описание',
-    size: 300,
+    size: 250,
     enableSorting: true,
     cell: (props) => {
       return <CaseDesctiptionCell {...props} />;
+    },
+  }),
+
+  columnHelper.accessor((row): string => 'status.name', {
+    id: 'status',
+    header: 'Статус',
+    size: 150,
+    enableSorting: true,
+    cell: (props) => {
+      return <CaseStatusCell {...props} />;
     },
   }),
 

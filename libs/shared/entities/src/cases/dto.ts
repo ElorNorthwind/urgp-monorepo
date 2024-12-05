@@ -50,3 +50,10 @@ export const caseDelete = z.object({
   id: z.coerce.number(),
 });
 export type CaseDeleteDto = z.infer<typeof caseDelete>;
+
+export const casesPageSearch = z
+  .object({
+    selectedCase: z.coerce.number(),
+  })
+  .partial();
+export type CasesPageSearchDto = z.infer<typeof casesPageSearch>;
