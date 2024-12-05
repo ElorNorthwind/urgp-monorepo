@@ -30,7 +30,7 @@ import { items } from '../config/items';
 import { buttonVariants } from '@urgp/client/shared';
 import { UserMenu } from '../../UserMenu';
 
-const NAVBAR_WIDTH = '3rem';
+export const NAVBAR_WIDTH = '3rem';
 
 const ControlNavbar = (): JSX.Element => {
   const router = useRouterState();

@@ -14,16 +14,18 @@ import {
 type ControlSidebarProps = {
   side?: 'left' | 'right';
   className?: string;
+  offset?: string;
 };
 
 const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
-  const { side = 'left', className } = props;
+  const { side = 'left', className, offset = '0' } = props;
   return (
     <Sidebar
       collapsible="offcanvas"
       variant="sidebar"
       side={side}
       className={className}
+      offset={offset}
     >
       <SidebarHeader>
         <SidebarMenu>

@@ -21,7 +21,7 @@ import { CasesPageSearchDto } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
 import { useEffect } from 'react';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import { CaseFilterSidebar } from '@urgp/client/widgets';
+import { CaseFilterSidebar, NAVBAR_WIDTH } from '@urgp/client/widgets';
 
 const ControlCasesPage = (): JSX.Element => {
   const { data: cases, isLoading, isFetching } = useCases();
@@ -33,10 +33,7 @@ const ControlCasesPage = (): JSX.Element => {
     <TooltipProvider delayDuration={50}>
       <CaseFilterSidebar
         side="left"
-        // className="left-[--navbar-width]"
-        // className="left-[--navbar-width] group-data-[collapsible=offcanvas]:left-[calc((var(--sidebar-width)*-1))]"
-        // className="left-[--navbar-width]"
-        // className="w-[calc(var(--navbar-width)+var(--sidebar-width)] pl-[--navbar-width]"
+        className={`left-[${NAVBAR_WIDTH}] -z-10`}
       />
       <SidebarInset className="overflow-hidden">
         <main className="h-svh flex-col flex-wrap">
