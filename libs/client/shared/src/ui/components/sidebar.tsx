@@ -169,7 +169,6 @@ const Sidebar = React.forwardRef<
     side?: 'left' | 'right';
     variant?: 'sidebar' | 'floating' | 'inset';
     collapsible?: 'offcanvas' | 'icon' | 'none';
-    offset?: string;
   }
 >(
   (
@@ -177,7 +176,6 @@ const Sidebar = React.forwardRef<
       side = 'left',
       variant = 'sidebar',
       collapsible = 'offcanvas',
-      offset = '0',
       className,
       children,
       ...props
