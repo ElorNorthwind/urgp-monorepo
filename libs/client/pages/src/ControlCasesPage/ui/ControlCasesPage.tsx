@@ -13,22 +13,23 @@ import {
   SidebarTrigger,
   TooltipProvider,
   useIsMobile,
-  useSidebar,
   VirtualDataTable,
 } from '@urgp/client/shared';
-// import { ControlSidebar } from '@urgp/client/widgets';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
-import { useEffect } from 'react';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import { CaseFilterSidebar, NAVBAR_WIDTH } from '@urgp/client/widgets';
+import {
+  CaseFilterSidebar,
+  ControlSidePanel,
+  NAVBAR_WIDTH,
+} from '@urgp/client/widgets';
+import { CasesPageHeader } from './CasesPageHeader';
 
 const ControlCasesPage = (): JSX.Element => {
   const { data: cases, isLoading, isFetching } = useCases();
   const isMobile = useIsMobile();
   const navigate = useNavigate({ from: '/control' });
   const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
-  //  className="left-[--navbar-width]"
   return (
     <TooltipProvider delayDuration={50}>
       <CaseFilterSidebar
@@ -37,21 +38,7 @@ const ControlCasesPage = (): JSX.Element => {
       />
       <SidebarInset className="overflow-hidden">
         <main className="h-svh flex-col flex-wrap">
-          <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="/control">ИС Кон(троль)</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Дела</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </header>
+          <CasesPageHeader />
           <VirtualDataTable
             className={cn('h-full flex-1 duration-200 ease-linear')}
             columns={controlCasesColumns}
@@ -75,7 +62,20 @@ const ControlCasesPage = (): JSX.Element => {
           />
         </main>
       </SidebarInset>
-      <div
+      <ControlSidePanel
+        isOpen={search.selectedCase !== undefined}
+        onClose={() =>
+          navigate({
+            search: (prev: CasesPageSearchDto) => ({
+              ...prev,
+              selectedCase: search.selectedCase === undefined,
+            }),
+          })
+        }
+      >
+        Бла бла бла
+      </ControlSidePanel>
+      {/* <div
         className={cn(
           'bg-sidebar text-sidebar-foreground h-svh transform overflow-hidden border-l p-4 duration-200 ease-linear',
           search?.selectedCase
@@ -99,7 +99,7 @@ const ControlCasesPage = (): JSX.Element => {
         >
           <X />
         </Button>
-      </div>
+      </div> */}
     </TooltipProvider>
   );
 };
