@@ -23,11 +23,14 @@ function ExternalCasesCell(
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="text-muted-foreground line-clamp-1 flex flex-col items-start justify-start gap-0 truncate">
+        <div className="text-muted-foreground line-clamp-1 flex w-full flex-col items-start justify-start gap-0">
           {externalCases.slice(0, 2).map((c) => (
-            <span className={cn('text-nowrap')} key={c.num || '' + c.id || ''}>
+            <div
+              className={cn('w-full truncate text-nowrap')}
+              key={c.num || '' + c.id || ''}
+            >
               {c.num || '-'}
-            </span>
+            </div>
           ))}
           {externalCases.length > 2 && <span className="">...</span>}
         </div>

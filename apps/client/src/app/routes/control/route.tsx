@@ -1,11 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { ControlCasesPage } from '@urgp/client/pages';
-import { SidebarProvider } from '@urgp/client/shared';
+import { SidebarProvider, usePageMeta } from '@urgp/client/shared';
 import { ControlNavbar } from '@urgp/client/widgets';
 import { casesPageSearch } from '@urgp/shared/entities';
+import { useEffect } from 'react';
 
 export const Route = createFileRoute('/control')({
   component: () => {
+    usePageMeta('Кон(троль)', '/control.ico');
     return (
       <SidebarProvider cookieName="filter-sidebar" defaultOpen={false}>
         <ControlNavbar />

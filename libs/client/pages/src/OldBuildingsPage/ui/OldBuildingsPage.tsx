@@ -82,7 +82,6 @@ const OldBuildingsPage = (): JSX.Element => {
                 : 'w-[calc(100%-var(--renovation-sidebar-width)-0.5rem)]'
               : 'w-[calc(100%)]',
           )}
-          // @ts-expect-error no idea
           columns={oldBuildingsColumns}
           data={buildings || []}
           isFetching={isLoading || isFetching}
@@ -143,7 +142,7 @@ const OldBuildingsPage = (): JSX.Element => {
               })
             }
             className={cn(
-              'absolute right-0 top-0 bottom-0 h-full transition-all ease-in-out',
+              'absolute bottom-0 right-0 top-0 h-full transition-all ease-in-out',
               filters?.selectedBuildingId
                 ? 'w-renovationsidebar'
                 : 'hidden w-0',

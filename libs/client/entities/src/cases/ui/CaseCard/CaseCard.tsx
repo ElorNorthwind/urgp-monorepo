@@ -5,22 +5,11 @@ import {
   AccordionItem,
   AccordionTrigger,
   cn,
-  NAVBAR_WIDTH,
-  SidebarInset,
-  TooltipProvider,
-  useIsMobile,
-  VirtualDataTable,
+  Separator,
 } from '@urgp/client/shared';
-import { CasesPageSearchDto, CaseWithStatus } from '@urgp/shared/entities';
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
+import { CaseWithStatus } from '@urgp/shared/entities';
 import { CaseCardHeader } from './CaseCardHeader';
-import { format } from 'date-fns';
-import {
-  caseStatusStyles,
-  caseTypeStyles,
-  externalSystemStyles,
-} from '../../config/caseStyles';
+import { caseStatusStyles, caseTypeStyles } from '../../config/caseStyles';
 import { ExternalCasesList } from '../ExternalCasesList';
 import { CaseDirectionsList } from '../CaseDirectionsList';
 
@@ -43,12 +32,47 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
   return (
     <>
       <CaseCardHeader controlCase={controlCase} />
+      {controlCase && (
+        <div className="flex flex-col gap-2 p-4">
+          <div className="bg-background grid grid-cols-[auto_1fr_auto_1fr] rounded-lg border">
+            <div className="bg-muted-foreground/5 border-b border-r px-2 py-1 text-right font-bold">
+              Тип:
+            </div>
+            <div className="flex items-start justify-center gap-2 truncate border-b p-1">
+              {TypeIcon && (
+                <TypeIcon className={cn('-mr-1 size-5', typeIconStyle)} />
+              )}
+              <p>{controlCase.payload.type.name}</p>
+            </div>
+            <div className="bg-muted-foreground/5 border-x border-b px-2 py-1 text-right font-bold">
+              Статус:
+            </div>
+            <div className="flex items-start justify-center gap-2 truncate border-b p-1">
+              {StatusIcon && (
+                <StatusIcon className={cn('-mr-1 size-5', statusIconStyle)} />
+              )}
+              <p>{controlCase.status.name}</p>
+            </div>
+            <div className="bg-muted-foreground/5 truncate border-r px-2 py-1 text-right font-bold">
+              Тема:
+            </div>
+            <CaseDirectionsList
+              directions={controlCase.payload.directions}
+              className="col-span-3 items-center p-2"
+            />
+          </div>
+          <ExternalCasesList
+            externalCases={controlCase.payload.externalCases}
+          />
+        </div>
+      )}
+      {/* <Separator /> */}
       <Accordion
         type="multiple"
         className="w-full px-4"
-        defaultValue={['classification', 'description']}
+        defaultValue={['description']}
       >
-        <AccordionItem value="classification">
+        {/* <AccordionItem value="classification">
           <AccordionTrigger>Сведения о заявке</AccordionTrigger>
           {controlCase && (
             <AccordionContent className="flex flex-col gap-2">
@@ -86,7 +110,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
               />
             </AccordionContent>
           )}
-        </AccordionItem>
+        </AccordionItem> */}
         <AccordionItem value="description">
           <AccordionTrigger>Описание проблемы</AccordionTrigger>
           {controlCase && (

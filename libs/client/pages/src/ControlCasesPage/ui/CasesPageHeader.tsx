@@ -1,3 +1,4 @@
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -5,16 +6,23 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
+  Button,
+  Input,
   Separator,
   SidebarTrigger,
 } from '@urgp/client/shared';
+import { CasesPageSearchDto } from '@urgp/shared/entities';
+import { Settings2, SquarePlus } from 'lucide-react';
 
 const CasesPageHeader = (): JSX.Element => {
+  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
+  const navigate = useNavigate({ from: '/control' });
+
   return (
-    <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
-      <SidebarTrigger className="-ml-1" />
-      <Separator orientation="vertical" className="mr-2 h-4" />
-      <Breadcrumb>
+    <header className="flex h-12 w-full shrink-0 items-center gap-2 border-b px-3">
+      <SidebarTrigger className="shrink-0" />
+      <Separator orientation="vertical" className="mr-2 h-4 shrink-0" />
+      <Breadcrumb className="mr-6 shrink-0">
         <BreadcrumbList>
           <BreadcrumbItem className="hidden md:block">
             <BreadcrumbLink href="/control">ИС Кон(троль)</BreadcrumbLink>
@@ -25,6 +33,30 @@ const CasesPageHeader = (): JSX.Element => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+      <Input
+        type="search"
+        placeholder="Поиск..."
+        className="ml-auto h-8 w-40 px-2 transition-all duration-200 ease-linear focus:w-full lg:px-3"
+        value={search?.query || ''}
+        onChange={(event) =>
+          navigate({
+            search: (prev: CasesPageSearchDto) => ({
+              ...prev,
+              query:
+                event.target.value && event.target.value.length > 0
+                  ? event.target.value
+                  : undefined,
+            }),
+          })
+        }
+      />
+      <Button variant={'outline'} className=" h-8 p-1">
+        <SquarePlus className="mr-1 size-4" />
+        <p>Добавить</p>
+      </Button>
+      <Button variant={'outline'} className="size-8 shrink-0 p-1">
+        <Settings2 className="size-4" />
+      </Button>
     </header>
   );
 };

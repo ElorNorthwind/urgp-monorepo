@@ -54,6 +54,7 @@ export type CaseDeleteDto = z.infer<typeof caseDelete>;
 export const casesPageSearch = z
   .object({
     selectedCase: z.coerce.number(),
+    query: z.string(),
   })
   .partial();
 export type CasesPageSearchDto = z.infer<typeof casesPageSearch>;

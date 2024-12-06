@@ -63,3 +63,4 @@ export * from './store/auth/authSlice';
 
 //export hooks
 export * from './hooks/useIsMobile';
+export * from './hooks/usePageMeta';

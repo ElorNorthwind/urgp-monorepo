@@ -1,4 +1,9 @@
-import { CaseCard, controlCasesColumns, useCases } from '@urgp/client/entities';
+import {
+  CaseCard,
+  caseGlobalFilterFn,
+  controlCasesColumns,
+  useCases,
+} from '@urgp/client/entities';
 import {
   cn,
   NAVBAR_WIDTH,
@@ -27,6 +32,9 @@ const ControlCasesPage = (): JSX.Element => {
         <main className="h-svh flex-col flex-wrap">
           <CasesPageHeader />
           <VirtualDataTable
+            clientSide
+            globalFilter={search}
+            globalFilterFn={caseGlobalFilterFn}
             className={cn('h-full flex-1 duration-200 ease-linear')}
             columns={controlCasesColumns}
             data={cases || []}
