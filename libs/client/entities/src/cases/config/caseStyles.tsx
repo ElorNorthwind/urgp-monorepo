@@ -14,6 +14,7 @@ type StyleData = {
   >;
   iconStyle?: string;
   badgeStyle?: string;
+  label?: string;
 };
 
 export const caseStatusStyles = {
@@ -35,4 +36,13 @@ export const directionCategoryStyles = {
   УПГУ: { badgeStyle: 'bg-amber-50 border-amber-200' },
   УП: { badgeStyle: 'bg-slate-50 border-slate-200' },
   УОЖП: { badgeStyle: 'bg-violet-50 border-violet-200' },
+} as Record<string, StyleData>;
+
+export const externalSystemStyles = {
+  EDO: { label: 'ЭДО' },
+  SPD: { label: 'СПД' },
+  SPD2: { label: 'СПД-2' },
+  HOTLINE: { label: 'Горячая Линия' },
+  CONSULTATION: { label: 'Онлайн-консультация' },
+  NONE: { label: 'Устное поручение' },
 } as Record<string, StyleData>;

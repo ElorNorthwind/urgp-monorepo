@@ -1,28 +1,15 @@
-import { controlCasesColumns, useCases } from '@urgp/client/entities';
+import { CaseCard, controlCasesColumns, useCases } from '@urgp/client/entities';
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-  Button,
   cn,
-  Separator,
+  NAVBAR_WIDTH,
   SidebarInset,
-  SidebarTrigger,
   TooltipProvider,
   useIsMobile,
   VirtualDataTable,
 } from '@urgp/client/shared';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
-import { X } from 'lucide-react';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import {
-  CaseFilterSidebar,
-  ControlSidePanel,
-  NAVBAR_WIDTH,
-} from '@urgp/client/widgets';
+import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
 import { CasesPageHeader } from './CasesPageHeader';
 
 const ControlCasesPage = (): JSX.Element => {
@@ -68,38 +55,15 @@ const ControlCasesPage = (): JSX.Element => {
           navigate({
             search: (prev: CasesPageSearchDto) => ({
               ...prev,
-              selectedCase: search.selectedCase === undefined,
+              selectedCase: undefined,
             }),
           })
         }
       >
-        Бла бла бла
+        <CaseCard
+          controlCase={cases?.find((c) => c.id === search.selectedCase)!}
+        />
       </ControlSidePanel>
-      {/* <div
-        className={cn(
-          'bg-sidebar text-sidebar-foreground h-svh transform overflow-hidden border-l p-4 duration-200 ease-linear',
-          search?.selectedCase
-            ? isMobile
-              ? 'w-full'
-              : ' w-[--sidebar-width]'
-            : 'm-0 w-0 p-0',
-        )}
-      >
-        Блах блах блах
-        <Button
-          variant="ghost"
-          onClick={() =>
-            navigate({
-              search: (prev: CasesPageSearchDto) => ({
-                ...prev,
-                selectedCase: search.selectedCase === undefined,
-              }),
-            })
-          }
-        >
-          <X />
-        </Button>
-      </div> */}
     </TooltipProvider>
   );
 };

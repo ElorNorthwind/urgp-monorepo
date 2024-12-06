@@ -1,4 +1,4 @@
-import { Button, cn, useIsMobile } from '@urgp/client/shared';
+import { Button, cn, SIDEBAR_WIDTH, useIsMobile } from '@urgp/client/shared';
 import { X } from 'lucide-react';
 
 type ControlSidePanelProps = {
@@ -15,15 +15,27 @@ const ControlSidePanel = (props: ControlSidePanelProps): JSX.Element => {
   return (
     <div
       className={cn(
-        'bg-sidebar text-sidebar-foreground relative h-svh transform overflow-hidden border-l p-4 duration-200 ease-linear',
-        isOpen ? (isMobile ? 'w-full' : ' w-[--sidebar-width]') : 'm-0 w-0 p-0',
+        'transform[width] duration-200 ease-linear',
+
+        'bg-sidebar text-sidebar-foreground relative h-svh overflow-hidden border-l p-0',
+        // isOpen ? (isMobile ? 'w-full' : `w-[${SIDEBAR_WIDTH}]`) : 'w-0',
         className,
       )}
+      style={{
+        width: isOpen ? (isMobile ? '100%' : SIDEBAR_WIDTH) : '0',
+      }}
     >
-      {isOpen && children}
+      <div
+        className={cn('flex h-full w-full flex-col', isOpen ? '' : 'hidden')}
+      >
+        {children}
+      </div>
       <Button
         variant="ghost"
-        className={cn(isOpen ? '' : 'hidden', 'absolute right-2 top-2')}
+        className={cn(
+          isOpen ? '' : 'hidden',
+          'absolute right-2 top-2 size-10 p-0',
+        )}
         onClick={onClose}
       >
         <X />

@@ -53,6 +53,7 @@ export * from './lib/curve';
 // export config
 export * from './config/env.d';
 export * from './config/localStorageKeys';
+export * from './config/controlConstants';
 
 // export store
 export * from './store/rtkApi';

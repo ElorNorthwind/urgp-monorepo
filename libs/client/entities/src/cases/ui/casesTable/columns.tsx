@@ -29,7 +29,7 @@ export const controlCasesColumns = [
     cell: ({ row }) => {
       return (
         <div
-          className="flex items-center justify-center"
+          className="flex h-14 items-center justify-center"
           onClick={(e) => e.stopPropagation()}
         >
           <Checkbox

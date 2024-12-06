@@ -33,7 +33,7 @@ function CaseTypeCell(props: CellContext<CaseWithStatus, string>): JSX.Element {
             <ChevronLeft className="text-muted-foreground absolute right-0 size-8" />
           )}
           {search.selectedCase === props.row.original.id && (
-            <div className="border-muted-foreground absolute inset-0 border" />
+            <div className="border-muted-foreground pointer-events-none absolute inset-0 border" />
           )}
         </div>
       </TooltipTrigger>
