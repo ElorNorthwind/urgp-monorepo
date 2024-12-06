@@ -8,6 +8,7 @@ import {
   getSortedRowModel,
   InitialTableState,
   Row,
+  RowSelectionState,
   useReactTable,
 } from '@tanstack/react-table';
 import {
@@ -20,7 +21,14 @@ import {
 } from './table';
 import { ChevronsUpDown, ChevronUp } from 'lucide-react';
 import { ScrollArea } from './scroll-area';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { cn } from '../../lib/cn';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Button } from './button';
@@ -49,6 +57,8 @@ interface VirtualDataTableProps<TData, TValue> {
   initialState?: InitialTableState;
   initialOffset?: number;
   variant?: 'default' | 'borderless';
+  setFilteredRows?: Dispatch<Row<TData>[]> | undefined;
+  setSelectedRows?: Dispatch<Row<TData>[]> | undefined;
 }
 
 export function VirtualDataTable<TData, TValue>({
@@ -71,8 +81,11 @@ export function VirtualDataTable<TData, TValue>({
   initialState,
   initialOffset = 0,
   variant = 'default',
+  setFilteredRows,
+  setSelectedRows,
 }: VirtualDataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   const table = useReactTable({
     data,
@@ -88,6 +101,7 @@ export function VirtualDataTable<TData, TValue>({
     manualSorting: clientSide ? false : true, //use pre-sorted row model instead of sorted row model in serverSide variant
     state: {
       sorting,
+      rowSelection,
       globalFilter: clientSide ? globalFilter : undefined,
     },
     globalFilterFn: clientSide ? globalFilterFn : undefined,
@@ -99,7 +113,16 @@ export function VirtualDataTable<TData, TValue>({
       }
     },
     initialState,
+    onRowSelectionChange: setRowSelection,
   });
+
+  useEffect(() => {
+    setFilteredRows(table.getRowModel().flatRows);
+  }, [globalFilter, data]);
+
+  useEffect(() => {
+    setSelectedRows(table.getSelectedRowModel().flatRows);
+  }, [data, rowSelection]);
 
   const { rows } = table.getRowModel();
   const rowVirtualizer = useVirtualizer({

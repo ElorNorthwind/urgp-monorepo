@@ -13,9 +13,9 @@ SELECT
 	json_build_object('id', u.id, 'fio', u.fio) as author,
 	c.created_at as "createdAt", 
 	c.payload->-1 
-		#- '{directions}' || jsonb_build_object('directions', d.val)
-		#- '{type}' || jsonb_build_object('type', to_jsonb(t))
-		#- '{problems}' || jsonb_build_object('problems', null)   
+		|| jsonb_build_object('directions', d.val)
+		|| jsonb_build_object('type', to_jsonb(t))
+		|| jsonb_build_object('problems', null)   
 	as payload,
 	jsonb_build_object(
 		'id', s.id,
@@ -27,4 +27,5 @@ FROM control.cases c
 LEFT JOIN control.case_types t ON t.id = (c.payload->-1->'type')::integer
 LEFT JOIN directions d ON d.id = c.id
 LEFT JOIN renovation.users u ON u.id = c.author_id
-LEFT JOIN control.case_status_types s ON s.id = 1; -- placeholder, duh
+LEFT JOIN control.case_status_types s ON s.id = 1
+WHERE (c.payload->-1->>'isDeleted')::boolean IS DISTINCT FROM true;

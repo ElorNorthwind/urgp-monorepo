@@ -16,6 +16,7 @@ import { CaseDirectionsList } from '../CaseDirectionsList';
 type CaseCardProps = {
   className?: string;
   controlCase: CaseWithStatus;
+  onClose?: () => void;
 };
 
 const CaseCard = (props: CaseCardProps): JSX.Element => {
@@ -31,25 +32,29 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
 
   return (
     <>
-      <CaseCardHeader controlCase={controlCase} />
+      <CaseCardHeader controlCase={controlCase} onClose={props.onClose} />
       {controlCase && (
         <div className="flex flex-col gap-2 p-4">
           <div className="bg-background grid grid-cols-[auto_1fr_auto_1fr] rounded-lg border">
             <div className="bg-muted-foreground/5 border-b border-r px-2 py-1 text-right font-bold">
               Тип:
             </div>
-            <div className="flex items-start justify-center gap-2 truncate border-b p-1">
+            <div className="flex items-start justify-start gap-2 truncate border-b p-1">
               {TypeIcon && (
-                <TypeIcon className={cn('-mr-1 size-5', typeIconStyle)} />
+                <TypeIcon
+                  className={cn('-mr-1 size-5 shrink-0', typeIconStyle)}
+                />
               )}
               <p>{controlCase.payload.type.name}</p>
             </div>
             <div className="bg-muted-foreground/5 border-x border-b px-2 py-1 text-right font-bold">
               Статус:
             </div>
-            <div className="flex items-start justify-center gap-2 truncate border-b p-1">
+            <div className="flex items-start justify-start gap-2 truncate border-b p-1">
               {StatusIcon && (
-                <StatusIcon className={cn('-mr-1 size-5', statusIconStyle)} />
+                <StatusIcon
+                  className={cn('-mr-1 size-5 shrink-0', statusIconStyle)}
+                />
               )}
               <p>{controlCase.status.name}</p>
             </div>

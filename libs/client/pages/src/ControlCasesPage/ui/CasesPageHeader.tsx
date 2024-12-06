@@ -7,22 +7,36 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
   Button,
+  cn,
   Input,
   Separator,
   SidebarTrigger,
+  useIsMobile,
 } from '@urgp/client/shared';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
 import { Settings2, SquarePlus } from 'lucide-react';
+type CasePageHeaderProps = {
+  total?: number;
+  filtered?: number;
+  className?: string;
+};
 
-const CasesPageHeader = (): JSX.Element => {
+const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
   const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
   const navigate = useNavigate({ from: '/control' });
+  const { total, filtered, className } = props;
+  const isMobile = useIsMobile();
 
   return (
-    <header className="flex h-12 w-full shrink-0 items-center gap-2 border-b px-3">
+    <header
+      className={cn(
+        'flex h-12 w-full shrink-0 items-center gap-2 border-b px-3',
+        className,
+      )}
+    >
       <SidebarTrigger className="shrink-0" />
       <Separator orientation="vertical" className="mr-2 h-4 shrink-0" />
-      <Breadcrumb className="mr-6 shrink-0">
+      <Breadcrumb className="shrink-0">
         <BreadcrumbList>
           <BreadcrumbItem className="hidden md:block">
             <BreadcrumbLink href="/control">ИС Кон(троль)</BreadcrumbLink>
@@ -33,6 +47,15 @@ const CasesPageHeader = (): JSX.Element => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+
+      {!isMobile && (
+        <>
+          <Separator orientation="vertical" className="mx-2 h-4 shrink-0" />
+          <div className="text-muted-foreground mr-4 shrink-0">
+            {filtered || 0} из {total || 0}
+          </div>
+        </>
+      )}
       <Input
         type="search"
         placeholder="Поиск..."

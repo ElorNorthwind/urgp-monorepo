@@ -2,7 +2,7 @@ import { Button, cn, SIDEBAR_WIDTH, useIsMobile } from '@urgp/client/shared';
 import { X } from 'lucide-react';
 
 type ControlSidePanelProps = {
-  onClose: () => void;
+  onClose?: () => void;
   isOpen?: boolean;
   className?: string;
   children?: React.ReactNode;
@@ -30,16 +30,18 @@ const ControlSidePanel = (props: ControlSidePanelProps): JSX.Element => {
       >
         {children}
       </div>
-      <Button
-        variant="ghost"
-        className={cn(
-          isOpen ? '' : 'hidden',
-          'absolute right-2 top-2 size-10 p-0',
-        )}
-        onClick={onClose}
-      >
-        <X />
-      </Button>
+      {onClose && (
+        <Button
+          variant="ghost"
+          className={cn(
+            isOpen ? '' : 'hidden',
+            'absolute right-2 top-2 size-10 p-0',
+          )}
+          onClick={onClose}
+        >
+          <X />
+        </Button>
+      )}
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import { Row } from '@tanstack/react-table';
+
 import {
   CaseCard,
   caseGlobalFilterFn,
@@ -12,14 +14,18 @@ import {
   useIsMobile,
   VirtualDataTable,
 } from '@urgp/client/shared';
-import { CasesPageSearchDto } from '@urgp/shared/entities';
+import { CasesPageSearchDto, CaseWithStatus } from '@urgp/shared/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
 import { CasesPageHeader } from './CasesPageHeader';
+import { useState } from 'react';
 
 const ControlCasesPage = (): JSX.Element => {
   const { data: cases, isLoading, isFetching } = useCases();
-  const isMobile = useIsMobile();
+  const [selected, setSelected] = useState<Row<CaseWithStatus>[]>([]);
+  const [filtered, setFiltered] = useState<Row<CaseWithStatus>[]>([]);
+
+  // const isMobile = useIsMobile();
   const navigate = useNavigate({ from: '/control' });
   const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
   return (
@@ -30,8 +36,10 @@ const ControlCasesPage = (): JSX.Element => {
       />
       <SidebarInset className="overflow-hidden">
         <main className="h-svh flex-col flex-wrap">
-          <CasesPageHeader />
+          <CasesPageHeader total={cases?.length} filtered={filtered.length} />
           <VirtualDataTable
+            setSelectedRows={setSelected}
+            setFilteredRows={setFiltered}
             clientSide
             globalFilter={search}
             globalFilterFn={caseGlobalFilterFn}
@@ -57,19 +65,17 @@ const ControlCasesPage = (): JSX.Element => {
           />
         </main>
       </SidebarInset>
-      <ControlSidePanel
-        isOpen={search.selectedCase !== undefined}
-        onClose={() =>
-          navigate({
-            search: (prev: CasesPageSearchDto) => ({
-              ...prev,
-              selectedCase: undefined,
-            }),
-          })
-        }
-      >
+      <ControlSidePanel isOpen={search.selectedCase !== undefined}>
         <CaseCard
           controlCase={cases?.find((c) => c.id === search.selectedCase)!}
+          onClose={() =>
+            navigate({
+              search: (prev: CasesPageSearchDto) => ({
+                ...prev,
+                selectedCase: undefined,
+              }),
+            })
+          }
         />
       </ControlSidePanel>
     </TooltipProvider>
