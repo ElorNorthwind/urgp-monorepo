@@ -43,7 +43,7 @@ function CaseDesctiptionCell(
             <div className="flex items-start justify-between">
               <span>Автор:</span>
               <span className="text-muted-foreground ml-2 font-normal">
-                {controlCase.authorId}
+                {controlCase.author.fio}
               </span>
             </div>
             <div className="flex items-start justify-between">

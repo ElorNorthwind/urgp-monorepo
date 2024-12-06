@@ -55,3 +55,9 @@ export type TypeInfo = z.infer<typeof typeInfo>;
 //   group?: string | null;
 //   fullName?: string | null;
 // };s
+
+export const userInfo = z.object({
+  id: z.coerce.number(),
+  fio: z.string(),
+});
+export type UserInfo = z.infer<typeof userInfo>;

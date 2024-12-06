@@ -1,4 +1,9 @@
-import { BasicPayloadData, ExternalCase, TypeInfo } from '../userInput/types';
+import {
+  BasicPayloadData,
+  ExternalCase,
+  TypeInfo,
+  UserInfo,
+} from '../userInput/types';
 
 type CasePayload = {
   externalCases: ExternalCase[]; // связанные номера
@@ -17,6 +22,7 @@ export type Case = {
   payload: CasePayload; // возвращаем только последний пейлоуд, а вообще тут массив
 };
 
-export type CaseWithStatus = Case & {
+export type CaseWithStatus = Omit<Case, 'authorId'> & {
   status: TypeInfo;
+  author: UserInfo;
 };

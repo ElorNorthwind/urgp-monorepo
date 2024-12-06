@@ -9,7 +9,8 @@ WITH directions AS (
 
 SELECT  
 	c.id,
-	c.author_id as "authorId", 
+	-- c.author_id as "authorId", 
+	json_build_object('id', u.id, 'fio', u.fio) as author,
 	c.created_at as "createdAt", 
 	c.payload->-1 
 		#- '{directions}' || jsonb_build_object('directions', d.val)
@@ -25,4 +26,5 @@ SELECT
 FROM control.cases c
 LEFT JOIN control.case_types t ON t.id = (c.payload->-1->'type')::integer
 LEFT JOIN directions d ON d.id = c.id
+LEFT JOIN renovation.users u ON u.id = c.author_id
 LEFT JOIN control.case_status_types s ON s.id = 1; -- placeholder, duh
