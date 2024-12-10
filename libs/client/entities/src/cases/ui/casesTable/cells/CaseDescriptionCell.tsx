@@ -5,13 +5,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { CaseWithStatus } from '@urgp/shared/entities';
+import { Case } from '@urgp/shared/entities';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { format } from 'date-fns';
 
-function CaseDesctiptionCell(
-  props: CellContext<CaseWithStatus, string>,
-): JSX.Element {
+function CaseDesctiptionCell(props: CellContext<Case, string>): JSX.Element {
   const controlCase = props.row.original;
 
   return (

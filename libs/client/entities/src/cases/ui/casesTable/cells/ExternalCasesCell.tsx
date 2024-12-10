@@ -6,14 +6,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { CaseWithStatus } from '@urgp/shared/entities';
+import { Case } from '@urgp/shared/entities';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { format } from 'date-fns';
 import { ExternalCasesList } from '../../ExternalCasesList';
 
-function ExternalCasesCell(
-  props: CellContext<CaseWithStatus, string>,
-): JSX.Element {
+function ExternalCasesCell(props: CellContext<Case, string>): JSX.Element {
   const externalCases = props.row.original.payload.externalCases;
 
   if (externalCases === undefined || externalCases.length === 0) {

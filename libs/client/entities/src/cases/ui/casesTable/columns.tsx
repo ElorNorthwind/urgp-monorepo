@@ -1,5 +1,5 @@
 import { createColumnHelper } from '@tanstack/react-table';
-import { CaseWithStatus } from '@urgp/shared/entities';
+import { Case } from '@urgp/shared/entities';
 import { DirectionCell } from './cells/DirectionCell';
 import { Checkbox } from '@urgp/client/shared';
 import { CaseTypeCell } from './cells/CaseTypeCell';
@@ -7,7 +7,7 @@ import { ExternalCasesCell } from './cells/ExternalCasesCell';
 import { CaseStatusCell } from './cells/CaseStatusCell';
 import { CaseDesctiptionCell } from './cells/CaseDescriptionCell';
 
-const columnHelper = createColumnHelper<CaseWithStatus>();
+const columnHelper = createColumnHelper<Case>();
 
 export const controlCasesColumns = [
   columnHelper.display({

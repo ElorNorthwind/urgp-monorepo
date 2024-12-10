@@ -5,9 +5,8 @@ import {
   AccordionItem,
   AccordionTrigger,
   cn,
-  Separator,
 } from '@urgp/client/shared';
-import { CaseWithStatus } from '@urgp/shared/entities';
+import { Case } from '@urgp/shared/entities';
 import { CaseCardHeader } from './CaseCardHeader';
 import { caseStatusStyles, caseTypeStyles } from '../../config/caseStyles';
 import { ExternalCasesList } from '../ExternalCasesList';
@@ -15,7 +14,7 @@ import { CaseDirectionsList } from '../CaseDirectionsList';
 
 type CaseCardProps = {
   className?: string;
-  controlCase: CaseWithStatus;
+  controlCase: Case;
   onClose?: () => void;
 };
 

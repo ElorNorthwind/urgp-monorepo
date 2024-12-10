@@ -91,7 +91,7 @@ export class ControlCasesRepository {
       approver: dto.approver,
     };
 
-    // const q = this.pgp.as.format(cases.createCase, newCase);
+    // const q = this.pgp.as.format(cases.updateCase, updatedCase);
     // console.log(q);
     return this.db.one(cases.updateCase, updatedCase);
   }

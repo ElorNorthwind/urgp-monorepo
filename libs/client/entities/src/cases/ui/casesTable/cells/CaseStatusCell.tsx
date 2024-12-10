@@ -5,13 +5,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { CaseWithStatus } from '@urgp/shared/entities';
+import { Case } from '@urgp/shared/entities';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { caseStatusStyles } from '../../../config/caseStyles';
 
-function CaseStatusCell(
-  props: CellContext<CaseWithStatus, string>,
-): JSX.Element {
+function CaseStatusCell(props: CellContext<Case, string>): JSX.Element {
   const status = props.row.original.status;
   const { icon: StatusIcon, iconStyle } = caseStatusStyles[status.id];
 

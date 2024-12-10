@@ -1,5 +1,5 @@
 import { Badge, cn } from '@urgp/client/shared';
-import { CaseWithStatus } from '@urgp/shared/entities';
+import { Case } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import {
   directionCategoryStyles,
@@ -9,7 +9,7 @@ import {
 type CaseDirectionsListProps = {
   className?: string;
   variant?: 'list' | 'compact' | 'table';
-  directions: CaseWithStatus['payload']['directions'];
+  directions: Case['payload']['directions'];
   label?: string;
 };
 

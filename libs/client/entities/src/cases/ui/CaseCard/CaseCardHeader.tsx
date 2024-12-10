@@ -1,11 +1,11 @@
 import { Separator } from '@radix-ui/react-separator';
 import { Button, cn } from '@urgp/client/shared';
-import { CaseWithStatus } from '@urgp/shared/entities';
+import { Case } from '@urgp/shared/entities';
 import { ChevronDown, X } from 'lucide-react';
 
 type CaseCardHeaderProps = {
   className?: string;
-  controlCase: CaseWithStatus;
+  controlCase: Case;
   onClose?: () => void;
   total?: number;
   filtered?: number;

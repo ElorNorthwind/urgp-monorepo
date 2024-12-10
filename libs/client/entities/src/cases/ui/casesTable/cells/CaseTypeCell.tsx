@@ -7,13 +7,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { CasesPageSearchDto, CaseWithStatus } from '@urgp/shared/entities';
+import { CasesPageSearchDto, Case } from '@urgp/shared/entities';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { caseTypeStyles } from '../../../config/caseStyles';
 import { getRouteApi } from '@tanstack/react-router';
 import { ChevronLeft, Play, StepBack } from 'lucide-react';
 
-function CaseTypeCell(props: CellContext<CaseWithStatus, string>): JSX.Element {
+function CaseTypeCell(props: CellContext<Case, string>): JSX.Element {
   const payload = props.row.original.payload;
   const { icon: TypeIcon, iconStyle } = caseTypeStyles[payload.type.id];
   const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;

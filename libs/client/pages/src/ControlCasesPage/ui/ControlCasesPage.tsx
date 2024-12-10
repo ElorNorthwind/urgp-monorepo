@@ -14,7 +14,7 @@ import {
   useIsMobile,
   VirtualDataTable,
 } from '@urgp/client/shared';
-import { CasesPageSearchDto, CaseWithStatus } from '@urgp/shared/entities';
+import { CasesPageSearchDto, Case } from '@urgp/shared/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
 import { CasesPageHeader } from './CasesPageHeader';
@@ -22,8 +22,8 @@ import { useState } from 'react';
 
 const ControlCasesPage = (): JSX.Element => {
   const { data: cases, isLoading, isFetching } = useCases();
-  const [selected, setSelected] = useState<Row<CaseWithStatus>[]>([]);
-  const [filtered, setFiltered] = useState<Row<CaseWithStatus>[]>([]);
+  const [selected, setSelected] = useState<Row<Case>[]>([]);
+  const [filtered, setFiltered] = useState<Row<Case>[]>([]);
 
   // const isMobile = useIsMobile();
   const navigate = useNavigate({ from: '/control' });

@@ -1,12 +1,12 @@
 import { cn } from '@urgp/client/shared';
-import { CaseWithStatus } from '@urgp/shared/entities';
+import { Case } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import { externalSystemStyles } from '../config/caseStyles';
 
 type ExternalCasesListProps = {
   className?: string;
   compact?: boolean;
-  externalCases: CaseWithStatus['payload']['externalCases'];
+  externalCases: Case['payload']['externalCases'];
 };
 
 const ExternalCasesList = (props: ExternalCasesListProps): JSX.Element => {
