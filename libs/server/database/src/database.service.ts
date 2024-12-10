@@ -11,6 +11,7 @@ import {
   UsersRepository,
 } from './repos';
 import { CasesRepository } from './repos';
+import { ControlOperationsRepository } from './repos/control-operations';
 
 type ExtendedProtocol = pgPromise.IDatabase<DbExtensions> & DbExtensions;
 
@@ -37,6 +38,10 @@ export class DatabaseService {
         obj.renovation = new RenovationRepository(obj, pgPromise());
         obj.renovationUsers = new RenovationUsersRepository(obj, pgPromise());
         obj.controlCases = new ControlCasesRepository(obj, pgPromise());
+        obj.controlOperations = new ControlOperationsRepository(
+          obj,
+          pgPromise(),
+        );
       },
     };
 

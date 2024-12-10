@@ -12,7 +12,7 @@ import {
 import { Cache } from 'cache-manager';
 
 @Injectable()
-export class ControlService {
+export class ControlCaseService {
   constructor(
     private readonly dbServise: DatabaseService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,

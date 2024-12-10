@@ -10,7 +10,7 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { ControlService } from './control.service';
+import { ControlCaseService } from './control-cases.service';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
   RequestWithUserData,
@@ -28,7 +28,7 @@ import { AccessTokenGuard } from '@urgp/server/auth';
 @Controller('control')
 @UseGuards(AccessTokenGuard)
 export class ControlController {
-  constructor(private readonly control: ControlService) {}
+  constructor(private readonly controlCases: ControlCaseService) {}
 
   @Post('case')
   async createCase(
@@ -42,19 +42,19 @@ export class ControlController {
         'Операция не разрешена. Нельзя создавать заявки от имени другого пользователя!',
       );
     }
-    const controlData = await this.control.getControlData(userId);
+    const controlData = await this.controlCases.getControlData(userId);
     if (!controlData?.approvers?.cases?.includes(dto.approver)) {
       throw new UnauthorizedException(
         'Операция не разрешена. Согласующий не доступен пользователю!',
       );
     }
 
-    return this.control.createCase(dto, userId);
+    return this.controlCases.createCase(dto, userId);
   }
 
   @Get('cases')
   async readCases() {
-    return this.control.readCases();
+    return this.controlCases.readCases();
   }
 
   @Patch('case')
@@ -63,7 +63,7 @@ export class ControlController {
     @Body(new ZodValidationPipe(caseUpdate)) dto: CaseUpdateDto,
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
-    const currentCase = await this.control.readCaseById(dto.id);
+    const currentCase = await this.controlCases.readCaseById(dto.id);
     const userId = req.user.id;
     if (
       userId !== currentCase.authorId &&
@@ -73,7 +73,7 @@ export class ControlController {
         'Операция не разрешена. Менять заявку может только автор или текущий согласующий!',
       );
     }
-    const controlData = await this.control.getControlData(userId);
+    const controlData = await this.controlCases.getControlData(userId);
     if (
       dto.approver &&
       !controlData?.approvers?.cases?.includes(dto.approver)
@@ -83,7 +83,7 @@ export class ControlController {
       );
     }
 
-    return this.control.updateCase(dto, userId);
+    return this.controlCases.updateCase(dto, userId);
   }
 
   @Delete('case')
@@ -93,8 +93,8 @@ export class ControlController {
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
     const userId = req.user.id;
-    const currentCase = await this.control.readCaseById(dto.id);
-    const controlData = await this.control.getControlData(userId);
+    const currentCase = await this.controlCases.readCaseById(dto.id);
+    const controlData = await this.controlCases.getControlData(userId);
 
     if (currentCase.payload.isDeleted) {
       throw new BadRequestException('Заявка уже удалена!');
@@ -109,7 +109,7 @@ export class ControlController {
       );
     }
 
-    return this.control.deleteCase(dto.id, userId);
+    return this.controlCases.deleteCase(dto.id, userId);
   }
 
   @Patch('case/approve')
@@ -119,8 +119,8 @@ export class ControlController {
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
     const userId = req.user.id;
-    const currentCase = await this.control.readCaseById(dto.id);
-    const controlData = await this.control.getControlData(userId);
+    const currentCase = await this.controlCases.readCaseById(dto.id);
+    const controlData = await this.controlCases.getControlData(userId);
 
     if (
       !controlData.roles.includes('admin') &&
@@ -152,7 +152,7 @@ export class ControlController {
         ? currentCase.authorId
         : dto?.nextApprover || controlData?.approvers?.cases?.[0] || null;
 
-    return this.control.approveCase(
+    return this.controlCases.approveCase(
       {
         ...dto,
         approveStatus:

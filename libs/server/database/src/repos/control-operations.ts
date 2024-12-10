@@ -40,7 +40,7 @@ export class ControlOperationsRepository {
     // console.log(q);
     return this.db.one(operations.createStage, newStage);
   }
-  readOperationByCaseId(
+  readOperationsByCaseId(
     id: number,
     operationClass?: ControlOperationClass | null,
   ): Promise<ControlStage[]> {

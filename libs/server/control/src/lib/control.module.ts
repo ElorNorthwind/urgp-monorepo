@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from '@urgp/server/database';
 import { ControlController } from './control.controller';
-import { ControlService } from './control.service';
+import { ControlCaseService } from './control-cases.service';
 
 @Module({
   imports: [DatabaseModule],
-  providers: [ControlService],
+  providers: [ControlCaseService],
   controllers: [ControlController],
 })
 export class ControlModule {}
