@@ -22,3 +22,4 @@ export * from './cases/types';
 export * from './cases/dto';
 
 export * from './operations/types';
+export * from './operations/dto';

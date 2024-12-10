@@ -1,11 +1,15 @@
 import {
-  Case,
-  CaseCreateDto,
-  CreateStageDto,
-  Operation,
+  ControlStageSlim,
+  ControlStageCreateDto,
+  ControlStage,
+  ControlOperationClass,
+  ControlStageUpdateDto,
+  ControlOperationSlim,
+  UserInputApproveDto,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
-import { cases } from './sql/sql';
+import { operations } from './sql/sql';
+import { toDate } from 'date-fns';
 
 // @Injectable()
 export class ControlOperationsRepository {
@@ -14,39 +18,72 @@ export class ControlOperationsRepository {
     private pgp: IMain,
   ) {}
 
-  createStage(dto: CreateStageDto, authorId: number): Promise<Operation> {
-    const externalCases =
-      `jsonb_build_array(` +
-      dto.externalCases
-        .map((c) => {
-          return this.pgp.as.format(
-            `jsonb_build_object('id', $1, 'num', $2, 'date', $3, 'system', $4)`,
-            [c.id, c.num, c.date, c.system],
-          );
-        })
-        .join(', ') +
-      `)`;
-    const directions = this.pgp.as.format(`jsonb_build_array($1:list)`, [
-      dto.directions,
-    ]);
-    const problems = this.pgp.as.format(`jsonb_build_array($1:list)`, [
-      dto.problems,
-    ]);
-
-    const newCase = {
+  createStage(
+    dto: ControlStageCreateDto,
+    authorId: number,
+    approved: boolean,
+  ): Promise<ControlStageSlim> {
+    const newStage = {
       authorId,
-      externalCases,
+      caseId: dto.caseId,
+      problemId: dto.problemId,
       type: dto.type,
-      directions,
-      problems,
+      doneDate: dto.doneDate,
+      num: dto.num,
       description: dto.description,
-      fio: dto.fio,
-      adress: dto.adress,
       approver: dto.approver,
+      approveStatus: approved ? 'approved' : 'pending',
+      approveDate: approved ? toDate(new Date()) : null,
+      approveBy: approved ? authorId : null,
     };
-
-    // const q = this.pgp.as.format(cases.createCase, newCase);
+    // const q = this.pgp.as.format(cases.createStage, newStage);
     // console.log(q);
-    return this.db.one(cases.createCase, newCase);
+    return this.db.one(operations.createStage, newStage);
+  }
+  readOperationByCaseId(
+    id: number,
+    operationClass?: ControlOperationClass | null,
+  ): Promise<ControlStage[]> {
+    const operationClassText =
+      operationClass && typeof operationClass === 'string'
+        ? this.pgp.as.format(` AND class = '$1'`, operationClass)
+        : '';
+    return this.db.one(operations.readOperationById, {
+      id,
+      operationClassText,
+    });
+  }
+
+  updateStage(
+    dto: ControlStageUpdateDto,
+    authorId: number,
+  ): Promise<ControlStageSlim> {
+    const updatedStage = {
+      authorId,
+      type: dto.type,
+      doneDate: dto.doneDate,
+      num: dto.num,
+      description: dto.description,
+    };
+    return this.db.one(operations.updateStage, updatedStage);
+  }
+
+  deleteOperation(id: number, userId: number): Promise<ControlOperationSlim> {
+    return this.db.one(operations.deleteOperation, { id, userId });
+  }
+
+  approveCase(
+    dto: UserInputApproveDto,
+    userId: number,
+    newApprover: number | null,
+  ): Promise<ControlOperationSlim> {
+    const approvedOperation = {
+      userId,
+      newApprover,
+      id: dto.id,
+      approveStatus: dto.approveStatus,
+      approveNotes: dto.approveNotes,
+    };
+    return this.db.one(operations.approveOperation, approvedOperation);
   }
 }

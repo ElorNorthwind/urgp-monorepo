@@ -1,9 +1,9 @@
 import { rtkApi } from '@urgp/client/shared';
-import { CaseWithStatus } from '@urgp/shared/entities';
+import { Case } from '@urgp/shared/entities';
 
 export const casesApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    getCases: build.query<CaseWithStatus[], void>({
+    getCases: build.query<Case[], void>({
       query: () => ({
         url: '/control/cases',
         method: 'GET',

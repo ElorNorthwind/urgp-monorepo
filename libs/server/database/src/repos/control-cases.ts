@@ -1,8 +1,8 @@
 import {
-  Case,
+  CaseSlim,
   CaseCreateDto,
   CaseUpdateDto,
-  CaseWithStatus,
+  Case,
   UserInputApproveDto,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
@@ -15,7 +15,7 @@ export class ControlCasesRepository {
     private pgp: IMain,
   ) {}
 
-  createCase(dto: CaseCreateDto, authorId: number): Promise<Case> {
+  createCase(dto: CaseCreateDto, authorId: number): Promise<CaseSlim> {
     const externalCases =
       `jsonb_build_array(` +
       dto.externalCases
@@ -51,15 +51,15 @@ export class ControlCasesRepository {
     return this.db.one(cases.createCase, newCase);
   }
 
-  readCaseById(id: number): Promise<Case> {
+  readCaseById(id: number): Promise<CaseSlim> {
     return this.db.one(cases.readCaseById, { id });
   }
 
-  readCases(): Promise<CaseWithStatus[]> {
+  readCases(): Promise<Case[]> {
     return this.db.any(cases.readCases);
   }
 
-  updateCase(dto: CaseUpdateDto, userId: number): Promise<Case> {
+  updateCase(dto: CaseUpdateDto, userId: number): Promise<CaseSlim> {
     const externalCases =
       `jsonb_build_array(` +
       (dto.externalCases || [])
@@ -96,7 +96,7 @@ export class ControlCasesRepository {
     return this.db.one(cases.updateCase, updatedCase);
   }
 
-  deleteCase(id: number, userId: number): Promise<Case> {
+  deleteCase(id: number, userId: number): Promise<CaseSlim> {
     return this.db.one(cases.deleteCase, { id, userId });
   }
 
@@ -104,7 +104,7 @@ export class ControlCasesRepository {
     dto: UserInputApproveDto,
     userId: number,
     newApprover: number | null,
-  ): Promise<Case> {
+  ): Promise<CaseSlim> {
     const approvedCase = {
       userId,
       newApprover,

@@ -15,14 +15,21 @@ type CasePayload = {
   adress: string | null;
 } & BasicPayloadData;
 
+type CasePayloadSlim = Omit<CasePayload, 'type' | 'directions' | 'problems'> & {
+  type: number;
+  directions: number[];
+  problems: number[];
+};
+
 export type Case = {
   id: number;
   createdAt: Date;
-  authorId: number;
+  status: TypeInfo;
+  author: UserInfo;
   payload: CasePayload; // возвращаем только последний пейлоуд, а вообще тут массив
 };
 
-export type CaseWithStatus = Omit<Case, 'authorId'> & {
-  status: TypeInfo;
-  author: UserInfo;
+export type CaseSlim = Omit<Case, 'payload' | 'author'> & {
+  authorId: number;
+  payload: CasePayloadSlim;
 };

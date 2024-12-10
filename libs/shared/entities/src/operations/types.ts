@@ -1,10 +1,14 @@
-import { BasicPayloadData, TypeInfo } from '../userInput/types';
+import { BasicPayloadData, TypeInfo, UserInfo } from '../userInput/types';
 
 type BasicOperationData = {
   id: number;
   caseId: number | null;
   problemId: number | null;
   createdAt: Date;
+  author: UserInfo;
+};
+
+type BasicOperationDataSlim = Omit<BasicOperationData, 'author'> & {
   authorId: number;
 };
 
@@ -15,6 +19,10 @@ type StagePayload = {
   num: string | null;
   description: string | null; // описание этапа
 } & BasicPayloadData;
+
+type StagePayloadSlim = Omit<StagePayload, 'type'> & {
+  type: number;
+};
 
 type DispatchPayload = {
   updatedAt: Date;
@@ -28,7 +36,11 @@ type DispatchPayload = {
   description: string | null;
 };
 
-export type Stage = BasicOperationData & {
+type DispatchPayloadSlim = Omit<DispatchPayload, 'type'> & {
+  type: number;
+};
+
+export type ControlStage = BasicOperationData & {
   class: 'stage';
   payload: StagePayload;
 };
@@ -37,4 +49,18 @@ export type Dispatch = BasicOperationData & {
   payload: DispatchPayload;
 };
 
-export type Operation = Stage | Dispatch;
+export type ControlOperation = ControlStage | Dispatch;
+
+export type ControlStageSlim = BasicOperationDataSlim & {
+  class: 'stage';
+  payload: StagePayloadSlim;
+};
+
+export type DispatchSlim = BasicOperationDataSlim & {
+  class: 'dispatch';
+  payload: DispatchPayloadSlim;
+};
+
+export type ControlOperationSlim = ControlStageSlim | DispatchSlim;
+
+export type ControlOperationClass = 'stage' | 'dispatch';

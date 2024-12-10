@@ -1,6 +1,6 @@
 import {
   CasesPageSearchDto,
-  CaseWithStatus,
+  Case,
   GetOldBuldingsDto,
   OldBuilding,
 } from '@urgp/shared/entities';
@@ -8,7 +8,7 @@ import { Row } from '@tanstack/react-table';
 import { toDate } from 'date-fns';
 
 export function caseGlobalFilterFn(
-  row: Row<CaseWithStatus>,
+  row: Row<Case>,
   columnId: string,
   filterValue: CasesPageSearchDto,
 ): boolean {
