@@ -75,3 +75,11 @@ export const cases = {
   deleteCase: sql('sql/cases/deleteCase.sql'),
   approveCase: sql('sql/cases/approveCase.sql'),
 };
+
+export const operations = {
+  createStage: sql('sql/operations/createStage.sql'),
+  readOperationById: sql('sql/operations/readStageById.sql'),
+  updateStage: sql('sql/operations/updateStage.sql'),
+  approveOperation: sql('sql/operations/approveOperation.sql'),
+  deleteOperation: sql('sql/operations/deleteOperation.sql'),
+};

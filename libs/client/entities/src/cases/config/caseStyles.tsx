@@ -32,7 +32,7 @@ export const caseTypeStyles = {
 
 export const directionCategoryStyles = {
   УРЖП: { badgeStyle: 'bg-cyan-50 border-cyan-200' },
-  УВЖУ: { badgeStyle: 'bg-emerald-50 bg-emerald-200' },
+  УВЖУ: { badgeStyle: 'bg-emerald-50 border-emerald-200' },
   УПГУ: { badgeStyle: 'bg-amber-50 border-amber-200' },
   УП: { badgeStyle: 'bg-slate-50 border-slate-200' },
   УОЖП: { badgeStyle: 'bg-violet-50 border-violet-200' },

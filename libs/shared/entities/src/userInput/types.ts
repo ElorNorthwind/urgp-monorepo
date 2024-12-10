@@ -47,6 +47,7 @@ export const typeInfo = z.object({
   category: z.string().nullable().optional(),
   fullname: z.string().nullable().optional(),
   tags: z.array(z.string()).nullable().optional(),
+  priority: z.coerce.number().nullable().optional(),
 });
 export type TypeInfo = z.infer<typeof typeInfo>;
 // export type TypeInfo = {

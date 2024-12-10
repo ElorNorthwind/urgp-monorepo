@@ -39,24 +39,31 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
             <div className="bg-muted-foreground/5 border-b border-r px-2 py-1 text-right font-bold">
               Тип:
             </div>
-            <div className="flex items-start justify-start gap-2 truncate border-b p-1">
+            <div className="flex items-start justify-start gap-2 border-b p-1 ">
               {TypeIcon && (
                 <TypeIcon
-                  className={cn('-mr-1 size-5 shrink-0', typeIconStyle)}
+                  className={cn('my-auto -mr-1 size-5 shrink-0', typeIconStyle)}
                 />
               )}
-              <p>{controlCase.payload.type.name}</p>
+              <p className="my-auto w-full truncate text-sm">
+                {controlCase.payload.type.name}
+              </p>
             </div>
             <div className="bg-muted-foreground/5 border-x border-b px-2 py-1 text-right font-bold">
               Статус:
             </div>
-            <div className="flex items-start justify-start gap-2 truncate border-b p-1">
+            <div className="flex items-start justify-start gap-2 truncate border-b p-1 ">
               {StatusIcon && (
                 <StatusIcon
-                  className={cn('-mr-1 size-5 shrink-0', statusIconStyle)}
+                  className={cn(
+                    'my-auto -mr-1 size-5 shrink-0 ',
+                    statusIconStyle,
+                  )}
                 />
               )}
-              <p>{controlCase.status.name}</p>
+              <p className="my-auto w-full truncate text-sm">
+                {controlCase.status.name}
+              </p>
             </div>
             <div className="bg-muted-foreground/5 truncate border-r px-2 py-1 text-right font-bold">
               Тема:
