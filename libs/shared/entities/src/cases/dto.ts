@@ -46,11 +46,6 @@ export type CaseUpdateDto = z.infer<typeof caseUpdate>;
 export const caseUpdateFormValues = caseCreateFormValues.partial();
 export type CaseUpdateFormValuesDto = z.infer<typeof caseUpdateFormValues>;
 
-export const caseDelete = z.object({
-  id: z.coerce.number(),
-});
-export type CaseDeleteDto = z.infer<typeof caseDelete>;
-
 export const casesPageSearch = z
   .object({
     selectedCase: z.coerce.number(),

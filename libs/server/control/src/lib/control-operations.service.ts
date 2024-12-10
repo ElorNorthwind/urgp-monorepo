@@ -14,6 +14,7 @@ import {
   ControlOperation,
   ControlStageUpdateDto,
   ControlStageSlim,
+  TypeInfo,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -28,6 +29,10 @@ export class ControlOperationsService {
     return this.dbServise.db.renovationUsers.getControlData(userId);
   }
 
+  public async getOperationTypes(): Promise<TypeInfo[]> {
+    return this.dbServise.db.controlClassificators.readOperationTypes();
+  }
+
   public async createStage(
     dto: ControlStageCreateDto,
     userId: number,
@@ -38,6 +43,10 @@ export class ControlOperationsService {
       userId,
       approved,
     );
+  }
+
+  public async readOperationById(id: number): Promise<ControlOperationSlim> {
+    return this.dbServise.db.controlOperations.readOperationById(id);
   }
 
   public async readOperationsByCaseId(

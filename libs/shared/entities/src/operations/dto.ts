@@ -36,6 +36,7 @@ export const controlStageUpdate = controlStageCreate
     doneDate: true,
     num: true,
     description: true,
+    approver: true,
   })
   .partial()
   .extend({

@@ -18,10 +18,10 @@ import {
   caseCreate,
   caseUpdate,
   CaseUpdateDto,
-  caseDelete,
-  CaseDeleteDto,
   userInputApprove,
   UserInputApproveDto,
+  userInputDelete,
+  UserInputDeleteDto,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 
@@ -89,7 +89,7 @@ export class ControlCasesController {
   @Delete()
   async deleteCase(
     @Req() req: RequestWithUserData,
-    @Body(new ZodValidationPipe(caseDelete)) dto: CaseDeleteDto,
+    @Body(new ZodValidationPipe(userInputDelete)) dto: UserInputDeleteDto,
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
     const userId = req.user.id;

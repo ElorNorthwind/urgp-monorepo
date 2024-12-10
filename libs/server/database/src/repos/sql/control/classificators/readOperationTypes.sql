@@ -4,5 +4,5 @@ SELECT
     category, 
     fullname, 
     priority, 
-    needs_approval as "needsApproval"
+    auto_approve as "autoApprove"
 FROM control.operation_types;

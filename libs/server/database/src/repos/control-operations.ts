@@ -40,6 +40,11 @@ export class ControlOperationsRepository {
     // console.log(q);
     return this.db.one(operations.createStage, newStage);
   }
+
+  readOperationById(id: number): Promise<ControlOperationSlim> {
+    return this.db.one(operations.readOperationById, { id });
+  }
+
   readOperationsByCaseId(
     id: number,
     operationClass?: ControlOperationClass | null,
@@ -48,7 +53,7 @@ export class ControlOperationsRepository {
       operationClass && typeof operationClass === 'string'
         ? this.pgp.as.format(` AND class = '$1'`, operationClass)
         : '';
-    return this.db.one(operations.readOperationById, {
+    return this.db.one(operations.readOperationsByCaseId, {
       id,
       operationClassText,
     });
