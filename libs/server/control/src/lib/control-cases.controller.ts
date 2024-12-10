@@ -25,12 +25,12 @@ import {
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 
-@Controller('control')
+@Controller('control/case')
 @UseGuards(AccessTokenGuard)
-export class ControlController {
+export class ControlCasesController {
   constructor(private readonly controlCases: ControlCaseService) {}
 
-  @Post('case')
+  @Post()
   async createCase(
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(caseCreate)) dto: CaseCreateDto,
@@ -52,12 +52,12 @@ export class ControlController {
     return this.controlCases.createCase(dto, userId);
   }
 
-  @Get('cases')
+  @Get('all')
   async readCases() {
     return this.controlCases.readCases();
   }
 
-  @Patch('case')
+  @Patch()
   async updateCase(
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(caseUpdate)) dto: CaseUpdateDto,
@@ -86,7 +86,7 @@ export class ControlController {
     return this.controlCases.updateCase(dto, userId);
   }
 
-  @Delete('case')
+  @Delete()
   async deleteCase(
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(caseDelete)) dto: CaseDeleteDto,
@@ -112,7 +112,7 @@ export class ControlController {
     return this.controlCases.deleteCase(dto.id, userId);
   }
 
-  @Patch('case/approve')
+  @Patch('approve')
   async approveCase(
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(userInputApprove)) dto: UserInputApproveDto,

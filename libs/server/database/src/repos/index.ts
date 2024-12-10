@@ -6,6 +6,7 @@ import { RenovationRepository } from './renovation';
 import { RenovationUsersRepository } from './renovationUsers';
 import { ControlCasesRepository } from './control-cases';
 import { ControlOperationsRepository } from './control-operations';
+import { ControlClassificatorsRepository } from './control-classificators';
 
 // Database Interface Extensions:
 interface DbExtensions {
@@ -17,6 +18,7 @@ interface DbExtensions {
   renovationUsers: RenovationUsersRepository;
   controlCases: ControlCasesRepository;
   controlOperations: ControlOperationsRepository;
+  controlClassificators: ControlClassificatorsRepository;
 }
 
 export {

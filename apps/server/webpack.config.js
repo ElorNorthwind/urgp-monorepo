@@ -29,7 +29,18 @@ module.exports = {
         },
         {
           from: '../../libs/server/database/src/repos/sql/control/cases',
-          to: join(__dirname, '../../dist/apps/server/sql/cases'),
+          to: join(__dirname, '../../dist/apps/server/sql/control/cases'),
+        },
+        {
+          from: '../../libs/server/database/src/repos/sql/control/operations',
+          to: join(__dirname, '../../dist/apps/server/sql/control/operations'),
+        },
+        {
+          from: '../../libs/server/database/src/repos/sql/control/classificators',
+          to: join(
+            __dirname,
+            '../../dist/apps/server/sql/control/classificators',
+          ),
         },
       ],
     }),

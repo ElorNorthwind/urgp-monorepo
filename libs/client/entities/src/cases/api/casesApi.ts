@@ -5,7 +5,7 @@ export const casesApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
     getCases: build.query<Case[], void>({
       query: () => ({
-        url: '/control/cases',
+        url: '/control/case/all',
         method: 'GET',
       }),
     }),

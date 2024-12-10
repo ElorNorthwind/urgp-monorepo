@@ -72,7 +72,7 @@ export class ControlOperationsRepository {
     return this.db.one(operations.deleteOperation, { id, userId });
   }
 
-  approveCase(
+  approveOperation(
     dto: UserInputApproveDto,
     userId: number,
     newApprover: number | null,

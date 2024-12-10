@@ -68,18 +68,22 @@ export const users = {
 };
 
 export const cases = {
-  createCase: sql('sql/cases/createCase.sql'),
-  readCaseById: sql('sql/cases/readCaseById.sql'),
-  readCases: sql('sql/cases/readCases.sql'),
-  updateCase: sql('sql/cases/updateCase.sql'),
-  deleteCase: sql('sql/cases/deleteCase.sql'),
-  approveCase: sql('sql/cases/approveCase.sql'),
+  createCase: sql('sql/control/cases/createCase.sql'),
+  readCaseById: sql('sql/control/cases/readCaseById.sql'),
+  readCases: sql('sql/control/cases/readCases.sql'),
+  updateCase: sql('sql/control/cases/updateCase.sql'),
+  deleteCase: sql('sql/control/cases/deleteCase.sql'),
+  approveCase: sql('sql/control/cases/approveCase.sql'),
 };
 
 export const operations = {
-  createStage: sql('sql/operations/createStage.sql'),
-  readOperationById: sql('sql/operations/readStageById.sql'),
-  updateStage: sql('sql/operations/updateStage.sql'),
-  approveOperation: sql('sql/operations/approveOperation.sql'),
-  deleteOperation: sql('sql/operations/deleteOperation.sql'),
+  createStage: sql('sql/control/operations/createStage.sql'),
+  readOperationById: sql('sql/control/operations/readStageById.sql'),
+  updateStage: sql('sql/control/operations/updateStage.sql'),
+  approveOperation: sql('sql/control/operations/approveOperation.sql'),
+  deleteOperation: sql('sql/control/operations/deleteOperation.sql'),
+};
+
+export const classificators = {
+  readOperationTypes: sql('sql/control/classificators/readOperationTypes.sql'),
 };
