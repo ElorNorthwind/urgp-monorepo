@@ -59,7 +59,7 @@ export class ControlOperationsController {
     return this.controlOperations.createStage(dto, userId, approved);
   }
 
-  @Get('stage/case/:id')
+  @Get('stage/by-case/:id')
   getStagesByCaseId(@Param('id') id: number): Promise<ControlOperation[]> {
     return this.controlOperations.readOperationsByCaseId(id, 'stage');
   }

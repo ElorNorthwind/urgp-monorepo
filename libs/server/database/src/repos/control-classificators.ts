@@ -10,6 +10,6 @@ export class ControlClassificatorsRepository {
   ) {}
 
   readOperationTypes(): Promise<TypeInfo[]> {
-    return this.db.one(classificators.readOperationTypes);
+    return this.db.any(classificators.readOperationTypes);
   }
 }

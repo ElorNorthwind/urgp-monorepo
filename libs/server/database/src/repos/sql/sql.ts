@@ -80,7 +80,7 @@ export const operations = {
   createStage: sql('sql/control/operations/createStage.sql'),
   readOperationById: sql('sql/control/operations/readOperationById.sql'),
   readOperationsByCaseId: sql(
-    'sql/control/operations/readOperationByCaseId.sql',
+    'sql/control/operations/readOperationsByCaseId.sql',
   ),
   updateStage: sql('sql/control/operations/updateStage.sql'),
   approveOperation: sql('sql/control/operations/approveOperation.sql'),

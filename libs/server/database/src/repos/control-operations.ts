@@ -51,8 +51,15 @@ export class ControlOperationsRepository {
   ): Promise<ControlStage[]> {
     const operationClassText =
       operationClass && typeof operationClass === 'string'
-        ? this.pgp.as.format(` AND class = '$1'`, operationClass)
+        ? this.pgp.as.format(` AND class = $1`, operationClass)
         : '';
+
+    // const q = this.pgp.as.format(operations.readOperationsByCaseId, {
+    //   id,
+    //   operationClassText,
+    // });
+    // console.log(q);
+
     return this.db.one(operations.readOperationsByCaseId, {
       id,
       operationClassText,
@@ -64,12 +71,16 @@ export class ControlOperationsRepository {
     authorId: number,
   ): Promise<ControlStageSlim> {
     const updatedStage = {
+      id: dto.id,
       authorId,
       type: dto.type,
       doneDate: dto.doneDate,
       num: dto.num,
       description: dto.description,
     };
+
+    // const q = this.pgp.as.format(operations.updateStage, updatedStage);
+    // console.log(q);
     return this.db.one(operations.updateStage, updatedStage);
   }
 
