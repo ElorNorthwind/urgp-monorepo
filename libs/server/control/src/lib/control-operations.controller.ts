@@ -39,29 +39,44 @@ export class ControlOperationsController {
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
     const userId = req.user.id;
-    if (userId !== dto.authorId) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Нельзя создавать операции от имени другого пользователя!',
-      );
-    }
     const controlData = await this.controlOperations.getControlData(userId);
-    if (!controlData?.approvers?.operations?.includes(dto.approver)) {
+    const operationTypes = await this.controlOperations.getOperationTypes();
+
+    const approved = !!operationTypes.find((operation) => {
+      return operation.id === dto.type;
+    })?.autoApprove;
+
+    const correctApprover =
+      dto?.approver ?? controlData?.approvers?.operations?.[0] ?? null;
+    if (
+      correctApprover &&
+      !controlData?.approvers?.operations?.includes(correctApprover)
+    ) {
       throw new UnauthorizedException(
         'Операция не разрешена. Согласующий не доступен пользователю!',
       );
     }
 
-    const operationTypes = await this.controlOperations.getOperationTypes();
-    const approved = !!operationTypes.find((operation) => {
-      operation.id === dto.type;
-    })?.autoApprove;
-
-    return this.controlOperations.createStage(dto, userId, approved);
+    return this.controlOperations.createStage(
+      {
+        ...dto,
+        approver: correctApprover,
+      },
+      userId,
+      approved,
+    );
   }
 
   @Get('stage/by-case/:id')
-  getStagesByCaseId(@Param('id') id: number): Promise<ControlOperation[]> {
-    return this.controlOperations.readOperationsByCaseId(id, 'stage');
+  getStagesByCaseId(
+    @Req() req: RequestWithUserData,
+    @Param('id') id: number,
+  ): Promise<ControlOperation[]> {
+    return this.controlOperations.readOperationsByCaseId(
+      id,
+      req.user.id,
+      'stage',
+    );
   }
 
   @Patch('stage')

@@ -51,10 +51,12 @@ export class ControlOperationsService {
 
   public async readOperationsByCaseId(
     id: number,
+    userId: number,
     operationClass?: ControlOperationClass | null,
   ): Promise<ControlOperation[]> {
     return this.dbServise.db.controlOperations.readOperationsByCaseId(
       id,
+      userId,
       operationClass,
     );
   }

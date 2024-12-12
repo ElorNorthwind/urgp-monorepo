@@ -47,6 +47,7 @@ export class ControlOperationsRepository {
 
   readOperationsByCaseId(
     id: number,
+    userId: number,
     operationClass?: ControlOperationClass | null,
   ): Promise<ControlStage[]> {
     const operationClassText =
@@ -60,8 +61,9 @@ export class ControlOperationsRepository {
     // });
     // console.log(q);
 
-    return this.db.one(operations.readOperationsByCaseId, {
+    return this.db.any(operations.readOperationsByCaseId, {
       id,
+      userId,
       operationClassText,
     });
   }

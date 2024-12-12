@@ -6,13 +6,13 @@ import { z } from 'zod';
 export const controlStageCreate = z.object({
   caseId: z.coerce.number().nullable().default(null),
   problemId: z.coerce.number().nullable().default(null),
-  authorId: z.coerce.number(),
+  // authorId: z.coerce.number().nullable().default(null),
   type: z.coerce.number(),
   doneDate: z.coerce.date(),
   num: z.string().nullable().default(null),
   // externalCase: externalCase.nullable().default(null), // внешний номер,
   description: z.string().nullable().default(null),
-  approver: z.coerce.number(),
+  approver: z.coerce.number().nullable().default(null),
 });
 export type ControlStageCreateDto = z.infer<typeof controlStageCreate>;
 
