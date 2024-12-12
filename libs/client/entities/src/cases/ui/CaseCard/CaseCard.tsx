@@ -11,6 +11,7 @@ import { CaseCardHeader } from './CaseCardHeader';
 import { caseStatusStyles, caseTypeStyles } from '../../config/caseStyles';
 import { ExternalCasesList } from '../ExternalCasesList';
 import { CaseDirectionsList } from '../CaseDirectionsList';
+import { StagesHeader, StagesList, useStages } from '../../../operations';
 
 type CaseCardProps = {
   className?: string;
@@ -28,12 +29,17 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     caseTypeStyles[controlCase?.payload?.type?.id || 1];
   const { icon: StatusIcon, iconStyle: statusIconStyle } =
     caseStatusStyles[controlCase?.status.id || 1];
+  const {
+    data: stages,
+    isLoading,
+    isFetching,
+  } = useStages(controlCase?.id, { skip: !controlCase?.id });
 
   return (
     <>
       <CaseCardHeader controlCase={controlCase} onClose={props.onClose} />
       {controlCase && (
-        <div className="flex flex-col gap-2 p-4">
+        <div className="pb-0f flex flex-col gap-2 p-4">
           <div className="bg-background grid grid-cols-[auto_1fr_auto_1fr] rounded-lg border">
             <div className="bg-muted-foreground/5 border-b border-r px-2 py-1 text-right font-bold">
               Тип:
@@ -77,51 +83,11 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
           />
         </div>
       )}
-      {/* <Separator /> */}
       <Accordion
         type="multiple"
         className="w-full px-4"
         defaultValue={['description']}
       >
-        {/* <AccordionItem value="classification">
-          <AccordionTrigger>Сведения о заявке</AccordionTrigger>
-          {controlCase && (
-            <AccordionContent className="flex flex-col gap-2">
-              <div className="bg-background grid grid-cols-[auto_1fr_auto_1fr] rounded-lg border">
-                <div className="bg-muted-foreground/5 border-b border-r px-2 py-1 text-right font-bold">
-                  Тип:
-                </div>
-                <div className="flex items-start justify-center gap-2 truncate border-b p-1">
-                  {TypeIcon && (
-                    <TypeIcon className={cn('-mr-1 size-5', typeIconStyle)} />
-                  )}
-                  <p>{controlCase.payload.type.name}</p>
-                </div>
-                <div className="bg-muted-foreground/5 border-x border-b px-2 py-1 text-right font-bold">
-                  Статус:
-                </div>
-                <div className="flex items-start justify-center gap-2 truncate border-b p-1">
-                  {StatusIcon && (
-                    <StatusIcon
-                      className={cn('-mr-1 size-5', statusIconStyle)}
-                    />
-                  )}
-                  <p>{controlCase.status.name}</p>
-                </div>
-                <div className="bg-muted-foreground/5 truncate border-r px-2 py-1 text-right font-bold">
-                  Тема:
-                </div>
-                <CaseDirectionsList
-                  directions={controlCase.payload.directions}
-                  className="col-span-3 p-1"
-                />
-              </div>
-              <ExternalCasesList
-                externalCases={controlCase.payload.externalCases}
-              />
-            </AccordionContent>
-          )}
-        </AccordionItem> */}
         <AccordionItem value="description">
           <AccordionTrigger>Описание проблемы</AccordionTrigger>
           {controlCase && (
@@ -130,11 +96,23 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
             </AccordionContent>
           )}
         </AccordionItem>
-        <AccordionItem value="item-3">
+        <AccordionItem value="dispatches">
           <AccordionTrigger>Поручения</AccordionTrigger>
           <AccordionContent>Лукьянов М.Г.: 31.12.2024</AccordionContent>
         </AccordionItem>
+        {/* <AccordionItem value="stages">
+          <AccordionTrigger>Работа с делом</AccordionTrigger>
+          <AccordionContent>
+            <StageList stages={stages} isLoading={isLoading || isFetching} />
+          </AccordionContent>
+        </AccordionItem> */}
       </Accordion>
+      <StagesHeader caseId={controlCase?.id} className="mx-4 mt-4" />
+      <StagesList
+        stages={stages}
+        isLoading={isLoading || isFetching}
+        className="m-4"
+      />
     </>
   );
 };

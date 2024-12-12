@@ -27,3 +27,4 @@ export * from './CurrentYearApartmentsSankey';
 export * from './CaseFilterSidebar';
 export * from './ControlNavbar';
 export * from './ControlSidePanel';
+export * from './ConfirmationButton';

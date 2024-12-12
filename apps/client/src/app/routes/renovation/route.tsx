@@ -3,7 +3,7 @@ import {
   Outlet,
   ScrollRestoration,
 } from '@tanstack/react-router';
-import { Toaster, TooltipProvider } from '@urgp/client/shared';
+import { TooltipProvider } from '@urgp/client/shared';
 import { RenovationNavbar, UserMenu } from '@urgp/client/widgets';
 
 export const Route = createFileRoute('/renovation')({
@@ -18,7 +18,6 @@ export const Route = createFileRoute('/renovation')({
           <ScrollRestoration getKey={(location) => location.pathname} />
           <Outlet />
         </main>
-        <Toaster />
       </div>
     </TooltipProvider>
   ),

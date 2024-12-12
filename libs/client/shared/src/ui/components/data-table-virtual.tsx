@@ -117,11 +117,11 @@ export function VirtualDataTable<TData, TValue>({
   });
 
   useEffect(() => {
-    setFilteredRows(table.getRowModel().flatRows);
+    setFilteredRows && setFilteredRows(table.getRowModel().flatRows);
   }, [globalFilter, data]);
 
   useEffect(() => {
-    setSelectedRows(table.getSelectedRowModel().flatRows);
+    setSelectedRows && setSelectedRows(table.getSelectedRowModel().flatRows);
   }, [data, rowSelection]);
 
   const { rows } = table.getRowModel();

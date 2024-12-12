@@ -3,7 +3,6 @@ import { ControlCasesPage } from '@urgp/client/pages';
 import { SidebarProvider, usePageMeta } from '@urgp/client/shared';
 import { ControlNavbar } from '@urgp/client/widgets';
 import { casesPageSearch } from '@urgp/shared/entities';
-import { useEffect } from 'react';
 
 export const Route = createFileRoute('/control')({
   component: () => {

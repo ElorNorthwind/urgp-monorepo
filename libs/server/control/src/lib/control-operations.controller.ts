@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   Patch,
   Post,
@@ -121,6 +122,10 @@ export class ControlOperationsController {
     const currentOperation = await this.controlOperations.readOperationById(
       dto.id,
     );
+    if (!currentOperation) {
+      throw new BadRequestException('Операция не найдена!');
+    }
+
     const controlData = await this.controlOperations.getControlData(userId);
 
     if (currentOperation.payload.isDeleted) {

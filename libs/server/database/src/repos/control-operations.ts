@@ -41,8 +41,8 @@ export class ControlOperationsRepository {
     return this.db.one(operations.createStage, newStage);
   }
 
-  readOperationById(id: number): Promise<ControlOperationSlim> {
-    return this.db.one(operations.readOperationById, { id });
+  readOperationById(id: number): Promise<ControlOperationSlim | null> {
+    return this.db.oneOrNone(operations.readOperationById, { id });
   }
 
   readOperationsByCaseId(

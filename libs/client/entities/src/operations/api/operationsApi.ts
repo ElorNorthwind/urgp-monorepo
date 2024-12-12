@@ -1,12 +1,23 @@
 import { rtkApi } from '@urgp/client/shared';
-import { ControlStage } from '@urgp/shared/entities';
+import {
+  ControlStage,
+  ControlStageSlim,
+  UserInputDeleteDto,
+} from '@urgp/shared/entities';
 
 export const operationsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
     getStagesByCaseId: build.query<ControlStage[], number>({
       query: (id) => ({
-        url: 'stage/by-case/' + id.toString(),
+        url: '/control/operation/stage/by-case/' + id.toString(),
         method: 'GET',
+      }),
+    }),
+    deleteOperation: build.mutation<ControlStageSlim, UserInputDeleteDto>({
+      query: (dto) => ({
+        url: '/control/operation',
+        method: 'DELETE',
+        body: dto,
       }),
     }),
   }),
@@ -43,4 +54,7 @@ export const operationsApi = rtkApi.injectEndpoints({
 //   }
 // }
 
-export const { useGetStagesByCaseIdQuery: useStages } = operationsApi;
+export const {
+  useGetStagesByCaseIdQuery: useStages,
+  useDeleteOperationMutation: useDeleteOperation,
+} = operationsApi;

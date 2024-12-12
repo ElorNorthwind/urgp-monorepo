@@ -19,8 +19,8 @@ type StyleData = {
 
 export const caseStatusStyles = {
   1: { icon: CircleHelp, iconStyle: 'text-slate-500' },
-  2: { icon: CirclePlay, iconStyle: 'test-sky-500' },
-  3: { icon: CirclePlay, iconStyle: 'test-sky-500' },
+  2: { icon: CirclePlay, iconStyle: 'text-sky-500' },
+  3: { icon: CirclePlay, iconStyle: 'text-sky-500' },
 } as Record<number, StyleData>;
 
 export const caseTypeStyles = {
