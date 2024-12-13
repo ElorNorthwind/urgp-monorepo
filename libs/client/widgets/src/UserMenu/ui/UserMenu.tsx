@@ -56,7 +56,16 @@ const UserMenu = ({ className }: UserMenuProps): JSX.Element => {
           <DropdownMenuLabel>{user?.fio || 'Гость'}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {!user || user?.fio === 'Гость' ? (
-            <DropdownMenuItem onSelect={() => navigate({ to: '/login' })}>
+            <DropdownMenuItem
+              onSelect={() =>
+                navigate({
+                  to: '/login',
+                  search: {
+                    redirect: location.pathname,
+                  },
+                })
+              }
+            >
               <KeyRound className="mr-2 h-4 w-4" />
               <span>Войти</span>
             </DropdownMenuItem>
@@ -76,7 +85,12 @@ const UserMenu = ({ className }: UserMenuProps): JSX.Element => {
                 onSelect={() => {
                   logout();
                   dispatch(clearUser());
-                  navigate({ to: '/login' });
+                  navigate({
+                    to: '/login',
+                    search: {
+                      redirect: location.pathname,
+                    },
+                  });
                 }}
               >
                 <LogOut className="mr-2 h-4 w-4" />

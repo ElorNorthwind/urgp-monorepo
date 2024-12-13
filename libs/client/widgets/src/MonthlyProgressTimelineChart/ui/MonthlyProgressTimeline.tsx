@@ -59,7 +59,7 @@ const MonthlyProgressTimelineChart = ({
             <span>{'Динамика домов в работе'}</span>
             <Button
               variant={'ghost'}
-              className="ml-auto h-6 py-0 px-1"
+              className="ml-auto h-6 px-1 py-0"
               onClick={() => setOnlyFull((value) => !value)}
             >
               <span
@@ -81,7 +81,7 @@ const MonthlyProgressTimelineChart = ({
             </Button>
             <Button
               variant={'ghost'}
-              className="ml-2 h-6 py-0 px-1"
+              className="ml-2 h-6 px-1 py-0"
               onClick={() => setExpand((value) => !value)}
             >
               <span
@@ -186,7 +186,14 @@ const MonthlyProgressTimelineChart = ({
               <ChartLegend content={<ChartLegendContent />} />
               <defs>
                 {Object.keys(monthlyProgressTimelineChartConfig).map((key) => (
-                  <linearGradient id={'fill' + key} x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient
+                    id={'fill' + key}
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                    key={'fill' + key}
+                  >
                     <stop
                       offset="5%"
                       stopColor={`var(--color-${key})`}
@@ -203,6 +210,7 @@ const MonthlyProgressTimelineChart = ({
               {Object.keys(monthlyProgressTimelineChartConfig).map((key) => (
                 <Area
                   dataKey={key}
+                  key={key}
                   type="natural"
                   fill={`url(#fill${key})`}
                   fillOpacity={0.4}

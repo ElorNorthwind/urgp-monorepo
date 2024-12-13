@@ -11,11 +11,11 @@ const LoginPage = (): JSX.Element => {
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold">Добро пожаловать</h1>
-            <p className="text-balance text-muted-foreground pb-4">
+            <p className="text-muted-foreground text-balance pb-4">
               Введине данные для входа
             </p>
             <LoginForm />
-            <Toaster closeButton richColors />
+            {/* <Toaster closeButton richColors /> */}
           </div>
         </div>
       </div>

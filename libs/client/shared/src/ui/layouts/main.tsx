@@ -27,10 +27,10 @@ const MainLayout = React.forwardRef<
     <div className="background flex min-h-full flex-grow justify-center pt-16">
       <div className="min-h-full w-full items-stretch p-6 lg:w-[1024px]">
         {content}
-        <Logo className="fixed right-[-10%] bottom-[-20%] z-[-10] w-[700px]" />
+        <Logo className="fixed bottom-[-20%] right-[-10%] z-[-10] w-[700px]" />
       </div>
     </div>
-    <Toaster />
+    {/* <Toaster /> */}
   </div>
 ));
 
