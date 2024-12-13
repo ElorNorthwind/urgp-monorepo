@@ -19,6 +19,20 @@ export const operationsApi = rtkApi.injectEndpoints({
         method: 'DELETE',
         body: dto,
       }),
+
+      async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+        const { data: deletedOperation } = await queryFulfilled;
+        deletedOperation?.caseId &&
+          dispatch(
+            operationsApi.util.updateQueryData(
+              'getStagesByCaseId',
+              deletedOperation.caseId,
+              (draft) => {
+                return draft.filter((stage) => stage.id !== id);
+              },
+            ),
+          );
+      },
     }),
   }),
   overrideExisting: false,
