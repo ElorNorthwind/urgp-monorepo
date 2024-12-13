@@ -24,11 +24,15 @@ import {
   UserInputDeleteDto,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
+import { ControlClassificatorsService } from './control-classificators.service';
 
 @Controller('control/case')
 @UseGuards(AccessTokenGuard)
 export class ControlCasesController {
-  constructor(private readonly controlCases: ControlCaseService) {}
+  constructor(
+    private readonly controlCases: ControlCaseService,
+    private readonly classificators: ControlClassificatorsService,
+  ) {}
 
   @Post()
   async createCase(
@@ -42,7 +46,7 @@ export class ControlCasesController {
         'Операция не разрешена. Нельзя создавать заявки от имени другого пользователя!',
       );
     }
-    const controlData = await this.controlCases.getControlData(userId);
+    const controlData = await this.classificators.getControlData(userId);
     if (!controlData?.approvers?.cases?.includes(dto.approver)) {
       throw new UnauthorizedException(
         'Операция не разрешена. Согласующий не доступен пользователю!',
@@ -73,7 +77,7 @@ export class ControlCasesController {
         'Операция не разрешена. Менять заявку может только автор или текущий согласующий!',
       );
     }
-    const controlData = await this.controlCases.getControlData(userId);
+    const controlData = await this.classificators.getControlData(userId);
     if (
       dto.approver &&
       !controlData?.approvers?.cases?.includes(dto.approver)
@@ -94,7 +98,7 @@ export class ControlCasesController {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
     const userId = req.user.id;
     const currentCase = await this.controlCases.readCaseById(dto.id);
-    const controlData = await this.controlCases.getControlData(userId);
+    const controlData = await this.classificators.getControlData(userId);
 
     if (currentCase.payload.isDeleted) {
       throw new BadRequestException('Заявка уже удалена!');
@@ -120,7 +124,7 @@ export class ControlCasesController {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
     const userId = req.user.id;
     const currentCase = await this.controlCases.readCaseById(dto.id);
-    const controlData = await this.controlCases.getControlData(userId);
+    const controlData = await this.classificators.getControlData(userId);
 
     if (
       !controlData.roles.includes('admin') &&

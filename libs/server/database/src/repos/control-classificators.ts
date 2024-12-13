@@ -1,4 +1,8 @@
-import { TypeInfo } from '@urgp/shared/entities';
+import {
+  ClassificatorInfo,
+  NestedClassificatorInfo,
+  TypeInfo,
+} from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { classificators } from './sql/sql';
 
@@ -9,7 +13,19 @@ export class ControlClassificatorsRepository {
     private pgp: IMain,
   ) {}
 
-  readOperationTypes(): Promise<TypeInfo[]> {
+  readCaseTypes(): Promise<ClassificatorInfo[]> {
+    return this.db.any(classificators.readCaseTypes);
+  }
+
+  readOperationTypes(): Promise<NestedClassificatorInfo[]> {
     return this.db.any(classificators.readOperationTypes);
+  }
+
+  readCaseStatusTypes(): Promise<NestedClassificatorInfo[]> {
+    return this.db.any(classificators.readCaseStatusTypes);
+  }
+
+  readCaseDirectionTypes(): Promise<NestedClassificatorInfo[]> {
+    return this.db.any(classificators.readCaseDireactionTypes);
   }
 }

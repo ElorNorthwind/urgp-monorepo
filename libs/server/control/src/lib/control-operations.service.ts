@@ -25,10 +25,6 @@ export class ControlOperationsService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  public async getControlData(userId: number): Promise<UserControlData> {
-    return this.dbServise.db.renovationUsers.getControlData(userId);
-  }
-
   public async getOperationTypes(): Promise<TypeInfo[]> {
     return this.dbServise.db.controlClassificators.readOperationTypes();
   }

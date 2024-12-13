@@ -27,11 +27,15 @@ import {
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlOperationsService } from './control-operations.service';
+import { ControlClassificatorsService } from './control-classificators.service';
 
 @Controller('control/operation')
 @UseGuards(AccessTokenGuard)
 export class ControlOperationsController {
-  constructor(private readonly controlOperations: ControlOperationsService) {}
+  constructor(
+    private readonly controlOperations: ControlOperationsService,
+    private readonly classificators: ControlClassificatorsService,
+  ) {}
 
   @Post('stage')
   async createStage(
@@ -40,7 +44,7 @@ export class ControlOperationsController {
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
     const userId = req.user.id;
-    const controlData = await this.controlOperations.getControlData(userId);
+    const controlData = await this.classificators.getControlData(userId);
     const operationTypes = await this.controlOperations.getOperationTypes();
 
     const approved = !!operationTypes.find((operation) => {
@@ -99,7 +103,7 @@ export class ControlOperationsController {
         'Операция не разрешена. Менять этап работы может только автор или текущий согласующий!',
       );
     }
-    const controlData = await this.controlOperations.getControlData(userId);
+    const controlData = await this.classificators.getControlData(userId);
     if (
       dto.approver &&
       !controlData?.approvers?.cases?.includes(dto.approver)
@@ -126,7 +130,7 @@ export class ControlOperationsController {
       throw new BadRequestException('Операция не найдена!');
     }
 
-    const controlData = await this.controlOperations.getControlData(userId);
+    const controlData = await this.classificators.getControlData(userId);
 
     if (currentOperation.payload.isDeleted) {
       throw new BadRequestException('Операция уже удалена!');
@@ -154,7 +158,7 @@ export class ControlOperationsController {
     const currentOperation = await this.controlOperations.readOperationById(
       dto.id,
     );
-    const controlData = await this.controlOperations.getControlData(userId);
+    const controlData = await this.classificators.getControlData(userId);
 
     if (
       !controlData.roles.includes('admin') &&

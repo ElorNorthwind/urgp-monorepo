@@ -63,3 +63,28 @@ export const userInfo = z.object({
   fio: z.string(),
 });
 export type UserInfo = z.infer<typeof userInfo>;
+
+export const classificatorInfo = typeInfo
+  .omit({
+    id: true,
+    name: true,
+    fullname: true,
+    tags: true,
+  })
+  .extend({
+    value: z.coerce.number(),
+    label: z.string(),
+    fullname: z.string(),
+    tags: z.array(z.string()),
+  });
+export type ClassificatorInfo = z.infer<typeof classificatorInfo>;
+
+export const nestedClassificatorInfo = classificatorInfo
+  .omit({
+    value: true,
+  })
+  .extend({
+    value: z.string(),
+    items: z.array(classificatorInfo),
+  });
+export type NestedClassificatorInfo = z.infer<typeof nestedClassificatorInfo>;

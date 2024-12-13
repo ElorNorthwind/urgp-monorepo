@@ -89,4 +89,11 @@ export const operations = {
 
 export const classificators = {
   readOperationTypes: sql('sql/control/classificators/readOperationTypes.sql'),
+  readCaseTypes: sql('sql/control/classificators/readCaseTypes.sql'),
+  readCaseDireactionTypes: sql(
+    'sql/control/classificators/readCaseDirectionTypes.sql',
+  ),
+  readCaseStatusTypes: sql(
+    'sql/control/classificators/readCaseStatusTypes.sql',
+  ),
 };

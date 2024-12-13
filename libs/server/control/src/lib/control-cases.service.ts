@@ -18,10 +18,6 @@ export class ControlCaseService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  public async getControlData(userId: number): Promise<UserControlData> {
-    return this.dbServise.db.renovationUsers.getControlData(userId);
-  }
-
   public async createCase(
     dto: CaseCreateDto,
     userId: number,
