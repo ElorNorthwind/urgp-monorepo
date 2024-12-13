@@ -1,4 +1,5 @@
 import {
+  Button,
   cn,
   ScrollArea,
   selectCurrentUser,
@@ -7,7 +8,7 @@ import {
 } from '@urgp/client/shared';
 import { ControlStage } from '@urgp/shared/entities';
 import { format } from 'date-fns';
-import { Circle, Coffee } from 'lucide-react';
+import { Circle, Pencil } from 'lucide-react';
 import { operationTypeStyles } from '../../config/operationStyles';
 import { ConfirmationButton } from '@urgp/client/widgets';
 import { toast } from 'sonner';
@@ -48,7 +49,13 @@ const StageItem = (props: StageItemProps): JSX.Element => {
     >
       <div className="flex items-center justify-start gap-2 text-sm">
         {StageIcon && <StageIcon className={cn('-mr-1 size-4', iconStyle)} />}
-        <span className="truncate font-bold">
+        <span
+          className={cn(
+            'truncate font-bold',
+            stage.payload.approveStatus === 'rejected' && 'line-through',
+            stage.payload.approveStatus !== 'approved' && 'opacity-70',
+          )}
+        >
           {stage.payload.type.fullname}
         </span>
         <span className="ml-auto font-thin">{stage.payload.num}</span>
@@ -58,7 +65,7 @@ const StageItem = (props: StageItemProps): JSX.Element => {
       </div>
       <div className="font-light">{stage.payload.description}</div>
       {stage.payload.approveStatus === 'pending' && (
-        <div className="text-muted-foreground font-light">
+        <div className="text-muted-foreground">
           <span className="font-medium">На согласовании: </span>
           {stage?.approver?.fio && <span>{stage?.approver?.fio}</span>}
         </div>
@@ -71,7 +78,7 @@ const StageItem = (props: StageItemProps): JSX.Element => {
           <span>{stage.payload.approveNotes}</span>
         </div>
       )}
-      <div className="bg-background absolute bottom-2 right-1 hidden flex-row items-center gap-2 rounded-full px-2 py-0 text-right text-xs font-thin group-hover:flex">
+      <div className="bg-background absolute bottom-2 right-4 hidden flex-row items-center gap-2 rounded-full p-1 text-right text-xs font-thin shadow-sm group-hover:flex">
         {user?.id === stage.author.id && (
           <ConfirmationButton
             onAccept={() => {
@@ -93,7 +100,16 @@ const StageItem = (props: StageItemProps): JSX.Element => {
             label="Удалить?"
           />
         )}
-        <span>{stage.author.fio}</span>
+        {(user?.id === stage.author.id ||
+          user?.id === stage.payload.approver ||
+          user?.roles.includes('admin')) &&
+          stage.payload.approveStatus !== 'rejected' && (
+            <Button className="size-6 rounded-full p-0" variant={'ghost'}>
+              <Pencil className="size-4" />
+            </Button>
+          )}
+        <span>{format(stage.payload.updatedAt, 'dd.MM.yyyy')}</span>
+        <span className="mr-1 font-normal">{stage.author.fio}</span>
       </div>
     </div>
   );
