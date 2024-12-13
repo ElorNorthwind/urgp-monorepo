@@ -41,6 +41,8 @@ const StageItem = (props: StageItemProps): JSX.Element => {
     <div
       className={cn(
         'group relative flex w-full flex-col border-b px-4 py-4 last:border-b-0',
+        stage.payload.approveStatus === 'pending' && 'bg-slate-50',
+        stage.payload.approveStatus === 'rejected' && 'bg-red-50',
         className,
       )}
     >
@@ -55,6 +57,20 @@ const StageItem = (props: StageItemProps): JSX.Element => {
         </span>
       </div>
       <div className="font-light">{stage.payload.description}</div>
+      {stage.payload.approveStatus === 'pending' && (
+        <div className="text-muted-foreground font-light">
+          <span className="font-medium">На согласовании: </span>
+          {stage?.approver?.fio && <span>{stage?.approver?.fio}</span>}
+        </div>
+      )}
+      {stage.payload.approveStatus === 'rejected' && (
+        <div className="font-light text-rose-500">
+          {stage?.approver?.fio && (
+            <span className="font-medium">{stage?.approver?.fio + ': '}</span>
+          )}
+          <span>{stage.payload.approveNotes}</span>
+        </div>
+      )}
       <div className="bg-background absolute bottom-2 right-1 hidden flex-row items-center gap-2 rounded-full px-2 py-0 text-right text-xs font-thin group-hover:flex">
         {user?.id === stage.author.id && (
           <ConfirmationButton
