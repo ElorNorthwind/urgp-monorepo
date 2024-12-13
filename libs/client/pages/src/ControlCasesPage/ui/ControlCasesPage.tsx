@@ -35,7 +35,7 @@ const ControlCasesPage = (): JSX.Element => {
         className={`left-[${NAVBAR_WIDTH}] -z-10`}
       />
       <SidebarInset className="overflow-hidden">
-        <main className="h-svh flex-col flex-wrap">
+        <main className="h-screen flex-col flex-wrap">
           <CasesPageHeader total={cases?.length} filtered={filtered.length} />
           <VirtualDataTable
             setSelectedRows={setSelected}

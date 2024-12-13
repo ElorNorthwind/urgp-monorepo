@@ -76,7 +76,7 @@ const ControlNavbar = (): JSX.Element => {
     <TooltipProvider delayDuration={0}>
       <nav
         className={cn(
-          'h-svh w-[--sidebar-width]',
+          'h-screen w-[--sidebar-width]',
           isMobile ? 'hidden' : 'flex',
           'bg-sidebar text-sidebar-foreground flex-col items-center gap-4 border-r py-2',
         )}
