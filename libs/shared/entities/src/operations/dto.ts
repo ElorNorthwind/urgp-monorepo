@@ -5,7 +5,6 @@ import { z } from 'zod';
 // создание этапа
 export const controlStageCreate = z.object({
   caseId: z.coerce.number().nullable().default(null),
-  problemId: z.coerce.number().nullable().default(null),
   // authorId: z.coerce.number().nullable().default(null),
   type: z.coerce.number(),
   doneDate: z.coerce.date(),

@@ -3,7 +3,6 @@ import { BasicPayloadData, TypeInfo, UserInfo } from '../userInput/types';
 type BasicOperationData = {
   id: number;
   caseId: number | null;
-  problemId: number | null;
   createdAt: Date;
   author: UserInfo;
   approver: UserInfo | null;

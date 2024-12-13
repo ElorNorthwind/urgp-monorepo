@@ -74,7 +74,7 @@ const OldApartmentDetailsSheet = ({
   return (
     <Card
       className={cn(
-        'w-detailsbar absolute top-0 bottom-0',
+        'w-detailsbar absolute bottom-0 top-0',
         'transition-all ease-in-out',
         apartmentId ? 'w-detailsbar' : 'hidden w-0',
         className,
@@ -83,7 +83,7 @@ const OldApartmentDetailsSheet = ({
       {
         <Button
           variant="link"
-          className="group absolute top-2 right-2 rounded-full p-2"
+          className="group absolute right-2 top-2 rounded-full p-2"
           onClick={() => setApartmentId(null)}
         >
           <ChevronRight className="stroke-muted-foreground opacity-50 group-hover:opacity-100" />
@@ -174,7 +174,7 @@ const OldApartmentDetailsSheet = ({
                   <div
                     className={cn(
                       'relative flex-1 font-bold',
-                      "before:absolute before:top-[.25rem] before:left-[-1.55rem] before:my-auto before:h-4 before:w-4 before:rounded-full before:border-2 before:border-white before:content-['']",
+                      "before:absolute before:left-[-1.55rem] before:top-[.25rem] before:my-auto before:h-4 before:w-4 before:rounded-full before:border-2 before:border-white before:content-['']",
 
                       operation.color === 'red'
                         ? 'before:bg-red-500'
@@ -208,7 +208,7 @@ const OldApartmentDetailsSheet = ({
         <MessageTab
           apartmentId={apartmentId || 0}
           refetchAll={refetch}
-          className="w-messagebar absolute right-[calc(var(--detailsbar-width)+0.5rem)] top-0 bottom-0"
+          className="w-messagebar absolute bottom-0 right-[calc(var(--detailsbar-width)+0.5rem)] top-0"
         />
       </CardContent>
     </Card>

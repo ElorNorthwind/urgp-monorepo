@@ -225,7 +225,7 @@ const OldBuildingsCard = ({
                     >
                       <Button
                         variant="outline"
-                        className="absolute top-2 right-2 z-[1000] h-10 w-10 p-0"
+                        className="absolute right-2 top-2 z-[1000] h-10 w-10 p-0"
                         onClick={() =>
                           navigate({
                             to: '/renovation/building-relocation-map',
@@ -240,7 +240,7 @@ const OldBuildingsCard = ({
                       </Button>
                       <Button
                         variant="outline"
-                        className="absolute right-2 bottom-2 z-[1000] h-10 w-10 p-0"
+                        className="absolute bottom-2 right-2 z-[1000] h-10 w-10 p-0"
                         onClick={() => {
                           const bounds = new LatLngBounds(
                             mapItems?.[0]?.bounds
@@ -265,7 +265,7 @@ const OldBuildingsCard = ({
             {onClose && (
               <Button
                 variant="link"
-                className="group absolute top-2 right-2 rounded-full p-2"
+                className="group absolute right-2 top-2 rounded-full p-2"
                 onClick={() => onClose()}
               >
                 <X className="stroke-muted-foreground opacity-50 group-hover:opacity-100" />
@@ -274,7 +274,7 @@ const OldBuildingsCard = ({
 
             <OldApartmentDetailsSheet
               apartmentId={apartment}
-              className="right-[calc(var(--sidebar-width)+0.5rem)]"
+              className="right-[calc(var(--renovation-sidebar-width)+0.5rem)]"
               refetch={refetchProblematicAparts}
               setApartmentId={() =>
                 navigate({

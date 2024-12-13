@@ -26,7 +26,6 @@ export class ControlOperationsRepository {
     const newStage = {
       authorId,
       caseId: dto.caseId,
-      problemId: dto.problemId,
       type: dto.type,
       doneDate: dto.doneDate,
       num: dto.num,

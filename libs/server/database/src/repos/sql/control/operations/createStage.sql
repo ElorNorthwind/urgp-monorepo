@@ -3,7 +3,6 @@ VALUES
   ('stage',
   ${authorId}, 
   ${caseId},
-  ${problemId},
   jsonb_build_array(jsonb_build_object(
                     'type', ${type},
                     'doneDate', ${doneDate},

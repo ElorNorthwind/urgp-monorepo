@@ -78,7 +78,7 @@ const StageItem = (props: StageItemProps): JSX.Element => {
           <span>{stage.payload.approveNotes}</span>
         </div>
       )}
-      <div className="bg-background absolute bottom-2 right-4 hidden flex-row items-center gap-2 rounded-full p-1 text-right text-xs font-thin shadow-sm group-hover:flex">
+      <div className="bg-background absolute bottom-3 right-4 hidden flex-row items-center gap-2 rounded-full p-1 text-right text-xs font-thin shadow-sm group-hover:flex">
         {user?.id === stage.author.id && (
           <ConfirmationButton
             onAccept={() => {
