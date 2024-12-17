@@ -3,8 +3,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import {
   UserControlData,
-  ClassificatorInfo,
   NestedClassificatorInfo,
+  TypeInfo,
+  UserControlApprovers,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -19,12 +20,20 @@ export class ControlClassificatorsService {
     return this.dbServise.db.renovationUsers.getControlData(userId);
   }
 
-  public async getCaseTypes(): Promise<ClassificatorInfo[]> {
+  public async getUserApprovers(userId: number): Promise<UserControlApprovers> {
+    return this.dbServise.db.renovationUsers.getUserApprovers(userId);
+  }
+
+  public async getCaseTypes(): Promise<NestedClassificatorInfo[]> {
     return this.dbServise.db.controlClassificators.readCaseTypes();
   }
 
   public async getOperationTypes(): Promise<NestedClassificatorInfo[]> {
     return this.dbServise.db.controlClassificators.readOperationTypes();
+  }
+
+  public async getOperationTypesFlat(): Promise<TypeInfo[]> {
+    return this.dbServise.db.controlClassificators.readOperationTypesFlat();
   }
 
   public async getCaseStatusTypes(): Promise<NestedClassificatorInfo[]> {

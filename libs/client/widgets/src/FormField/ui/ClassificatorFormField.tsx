@@ -1,0 +1,173 @@
+import {
+  Badge,
+  Button,
+  cn,
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  FormControl,
+  FormField,
+  FormItem,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@urgp/client/shared';
+import { NestedClassificatorInfo } from '@urgp/shared/entities';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import { UseFormReturn } from 'react-hook-form';
+import { FormInputLabel } from './components/FormInputLabel';
+import { FormInputSkeleton } from './components/FormInputSkeleton';
+import { formItemClassName } from './config/formItem';
+
+type ClassificatorFormFieldProps = {
+  form: UseFormReturn<any, any>;
+  fieldName: string;
+  classificator?: NestedClassificatorInfo[];
+  className?: string;
+  triggerClassName?: string;
+  popoverClassName?: string;
+  label?: string;
+  placeholder?: string;
+  isLoading?: boolean;
+  disabled?: boolean;
+};
+
+const ClassificatorFormField = (
+  props: ClassificatorFormFieldProps,
+): JSX.Element => {
+  const {
+    classificator,
+    className,
+    triggerClassName,
+    popoverClassName,
+    isLoading,
+    form,
+    fieldName,
+    label = 'Значение',
+    placeholder = 'Выберите значение',
+    disabled = false,
+  } = props;
+
+  return (
+    <FormField
+      control={form.control}
+      name={fieldName}
+      render={({ field }) => (
+        <FormItem className={cn(formItemClassName, className)}>
+          <FormInputLabel form={form} fieldName={fieldName} label={label} />
+          {isLoading || !classificator ? (
+            <FormInputSkeleton />
+          ) : (
+            <Popover modal={true}>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant="outline"
+                    disabled={disabled}
+                    role="combobox"
+                    className={cn(
+                      'w-full justify-between overflow-hidden',
+                      !field.value && 'text-muted-foreground',
+                      triggerClassName,
+                    )}
+                  >
+                    {field.value ? (
+                      <div className="-ml-1 flex w-[calc(100%-1.5rem)] items-center justify-start gap-2">
+                        {classificator.length > 1 && (
+                          <Badge variant={'outline'}>
+                            {
+                              classificator.find((category) =>
+                                category.items.some(
+                                  (item) => field.value === item.value,
+                                ),
+                              )?.label
+                            }
+                          </Badge>
+                        )}
+                        <p className="truncate">
+                          {
+                            classificator
+                              .find((category) =>
+                                category.items.some(
+                                  (item) => field.value === item.value,
+                                ),
+                              )
+                              ?.items.find((item) => item.value === field.value)
+                              ?.label
+                          }
+                        </p>
+                      </div>
+                    ) : (
+                      placeholder
+                    )}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent
+                className={cn('p-0', popoverClassName)}
+                side="top"
+              >
+                <Command
+                  filter={(value, search, keywords) => {
+                    const extendValue = (
+                      keywords ? value + ' ' + keywords.join(' ') : value
+                    ).toLowerCase();
+                    if (extendValue.includes(search.toLowerCase())) return 1;
+                    return 0;
+                  }}
+                >
+                  <CommandInput placeholder="Поиск значения..." />
+                  <CommandList>
+                    <CommandEmpty>Ничего не найдено.</CommandEmpty>
+                    {classificator.map((category) => {
+                      return (
+                        <CommandGroup
+                          key={category.value}
+                          heading={category.label}
+                        >
+                          {category.items.map((item) => {
+                            return (
+                              <CommandItem
+                                value={item.label}
+                                key={item.value}
+                                keywords={item.tags}
+                                onSelect={() => {
+                                  form.setValue(fieldName, item.value);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    'mr-2 h-4 w-4',
+                                    item.value === field.value
+                                      ? 'opacity-100'
+                                      : 'opacity-0',
+                                  )}
+                                />
+                                <p className="flex w-full flex-col gap-0 truncate">
+                                  <span className="truncate">{item.label}</span>
+                                  <span className="text-muted-foreground/60 truncate text-xs">
+                                    {item.fullname}
+                                  </span>
+                                </p>
+                              </CommandItem>
+                            );
+                          })}
+                        </CommandGroup>
+                      );
+                    })}
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          )}
+        </FormItem>
+      )}
+    />
+  );
+};
+
+export { ClassificatorFormField };

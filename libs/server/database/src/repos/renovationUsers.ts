@@ -11,6 +11,7 @@ import {
   GetUserByIdDto,
   GetUserByLoginDto,
   User,
+  UserControlApprovers,
   UserControlData,
   UserWithCredentials,
 } from '@urgp/shared/entities';
@@ -50,5 +51,9 @@ export class RenovationUsersRepository {
   async getControlData(id: number): Promise<UserControlData> {
     const reply = await this.db.oneOrNone(users.getUserControlData, { id });
     return reply.data;
+  }
+
+  async getUserApprovers(id: number): Promise<UserControlApprovers> {
+    return this.db.one(users.getUserApprovers, { id });
   }
 }

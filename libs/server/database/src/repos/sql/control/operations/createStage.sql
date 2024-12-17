@@ -1,4 +1,4 @@
-INSERT INTO control.operations (class, author_id, case_id, problem_id, payload)
+INSERT INTO control.operations (class, author_id, case_id, payload)
 VALUES
   ('stage',
   ${authorId}, 
@@ -17,5 +17,5 @@ VALUES
                     'updatedBy', ${authorId},
                     'isDeleted', false
                     )))
-RETURNING id, author_id as "authorId", case_id as "caseId", problem_id as "problemId", 
+RETURNING id, author_id as "authorId", case_id as "caseId", 
           created_at as "createdAt", class, payload->-1 as payload;

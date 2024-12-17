@@ -1,31 +1,17 @@
 import {
-  BadRequestException,
-  Body,
   Controller,
-  Delete,
   Get,
   Param,
-  Patch,
-  Post,
   Req,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { ControlCaseService } from './control-cases.service';
-import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
   RequestWithUserData,
-  CaseCreateDto,
-  caseCreate,
-  caseUpdate,
-  CaseUpdateDto,
-  userInputApprove,
-  UserInputApproveDto,
-  userInputDelete,
-  UserInputDeleteDto,
   UserControlData,
-  ClassificatorInfo,
   NestedClassificatorInfo,
+  UserControlApprovers,
+  TypeInfo,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
@@ -45,6 +31,14 @@ export class ControlClassificatorsController {
     return await this.classificators.getControlData(userId);
   }
 
+  @Get('user-approvers')
+  async getCurrentUserApprovers(
+    @Req() req: RequestWithUserData,
+  ): Promise<UserControlApprovers> {
+    const userId = req.user.id;
+    return await this.classificators.getUserApprovers(userId);
+  }
+
   @Get('user-data/:id')
   async getUserData(
     @Req() req: RequestWithUserData,
@@ -61,13 +55,18 @@ export class ControlClassificatorsController {
   }
 
   @Get('case-types')
-  async getCaseTypes(): Promise<ClassificatorInfo[]> {
+  async getCaseTypes(): Promise<NestedClassificatorInfo[]> {
     return this.classificators.getCaseTypes();
   }
 
   @Get('operation-types')
   async getOperationTypes(): Promise<NestedClassificatorInfo[]> {
     return this.classificators.getOperationTypes();
+  }
+
+  @Get('operation-types-flat')
+  async getOperationTypesFlat(): Promise<TypeInfo[]> {
+    return this.classificators.getOperationTypesFlat();
   }
 
   @Get('case-status-types')

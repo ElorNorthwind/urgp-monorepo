@@ -45,11 +45,7 @@ export class ControlOperationsController {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
     const userId = req.user.id;
     const controlData = await this.classificators.getControlData(userId);
-    const operationTypes = await this.controlOperations.getOperationTypes();
-
-    const approved = !!operationTypes.find((operation) => {
-      return operation.id === dto.type;
-    })?.autoApprove;
+    const operationTypes = await this.classificators.getOperationTypesFlat();
 
     const correctApprover =
       dto?.approver ?? controlData?.approvers?.operations?.[0] ?? null;
@@ -61,6 +57,11 @@ export class ControlOperationsController {
         'Операция не разрешена. Согласующий не доступен пользователю!',
       );
     }
+
+    const approved =
+      !!operationTypes.find((operation) => {
+        return operation.id === dto.type;
+      })?.autoApprove || correctApprover === userId;
 
     return this.controlOperations.createStage(
       {

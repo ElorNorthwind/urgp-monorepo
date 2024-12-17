@@ -5,7 +5,8 @@ SELECT
 		'value', id,        
 		'label', name,
         'fullname', fullname,
-		'tags', jsonb_build_array(LOWER(fullname), LOWER(category))
+		'tags', jsonb_build_array(LOWER(fullname), LOWER(category)),
+		'category', category
 	)) as items
 FROM control.case_status_types
 GROUP BY category;

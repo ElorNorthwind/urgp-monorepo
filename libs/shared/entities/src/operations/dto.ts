@@ -8,9 +8,9 @@ export const controlStageCreate = z.object({
   // authorId: z.coerce.number().nullable().default(null),
   type: z.coerce.number(),
   doneDate: z.coerce.date(),
-  num: z.string().nullable().default(null),
+  num: z.string().default(''),
   // externalCase: externalCase.nullable().default(null), // внешний номер,
-  description: z.string().nullable().default(null),
+  description: z.string().default(''),
   approver: z.coerce.number().nullable().default(null),
 });
 export type ControlStageCreateDto = z.infer<typeof controlStageCreate>;

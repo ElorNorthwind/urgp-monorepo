@@ -11,7 +11,12 @@ import { CaseCardHeader } from './CaseCardHeader';
 import { caseStatusStyles, caseTypeStyles } from '../../config/caseStyles';
 import { ExternalCasesList } from '../ExternalCasesList';
 import { CaseDirectionsList } from '../CaseDirectionsList';
-import { StagesHeader, StagesList, useStages } from '../../../operations';
+import {
+  CreateStageForm,
+  StagesHeader,
+  StagesList,
+  useStages,
+} from '../../../operations';
 
 type CaseCardProps = {
   className?: string;

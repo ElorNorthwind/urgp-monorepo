@@ -1,5 +1,6 @@
 import { QueryFile } from 'pg-promise';
 import { join as joinPath } from 'path';
+import { getUser } from 'libs/server/edo/src/documents.module/parse-document/lib/util/parse-edo-field-helpers';
 
 // Helper for linking to external query files:
 function sql(file: string) {
@@ -65,6 +66,7 @@ export const users = {
   incrementTokenVersion: sql('sql/users/incrementTokenVersion.sql'),
   changePassword: sql('sql/users/changePassword.sql'),
   getUserControlData: sql('sql/users/getUserControlData.sql'),
+  getUserApprovers: sql('sql/users/getUserApprovers.sql'),
 };
 
 export const cases = {
@@ -89,6 +91,9 @@ export const operations = {
 
 export const classificators = {
   readOperationTypes: sql('sql/control/classificators/readOperationTypes.sql'),
+  readOperationTypesFlat: sql(
+    'sql/control/classificators/readOperationTypesFlat.sql',
+  ),
   readCaseTypes: sql('sql/control/classificators/readCaseTypes.sql'),
   readCaseDireactionTypes: sql(
     'sql/control/classificators/readCaseDirectionTypes.sql',

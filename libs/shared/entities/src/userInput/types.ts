@@ -76,15 +76,13 @@ export const classificatorInfo = typeInfo
     label: z.string(),
     fullname: z.string(),
     tags: z.array(z.string()),
+    category: z.string(),
   });
 export type ClassificatorInfo = z.infer<typeof classificatorInfo>;
 
-export const nestedClassificatorInfo = classificatorInfo
-  .omit({
-    value: true,
-  })
-  .extend({
-    value: z.string(),
-    items: z.array(classificatorInfo),
-  });
+export const nestedClassificatorInfo = z.object({
+  value: z.string(),
+  label: z.string(),
+  items: z.array(classificatorInfo),
+});
 export type NestedClassificatorInfo = z.infer<typeof nestedClassificatorInfo>;

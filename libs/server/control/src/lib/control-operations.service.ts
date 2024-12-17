@@ -2,11 +2,6 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import {
-  CaseSlim,
-  CaseCreateDto,
-  CaseUpdateDto,
-  Case,
-  UserControlData,
   UserInputApproveDto,
   ControlStageCreateDto,
   ControlOperationClass,
@@ -14,7 +9,6 @@ import {
   ControlOperation,
   ControlStageUpdateDto,
   ControlStageSlim,
-  TypeInfo,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -25,9 +19,9 @@ export class ControlOperationsService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  public async getOperationTypes(): Promise<TypeInfo[]> {
-    return this.dbServise.db.controlClassificators.readOperationTypes();
-  }
+  // public async getOperationTypes(): Promise<NestedClassificatorInfo[]> {
+  //   return this.dbServise.db.controlClassificators.readOperationTypes();
+  // }
 
   public async createStage(
     dto: ControlStageCreateDto,

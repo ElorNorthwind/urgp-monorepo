@@ -13,12 +13,16 @@ export class ControlClassificatorsRepository {
     private pgp: IMain,
   ) {}
 
-  readCaseTypes(): Promise<ClassificatorInfo[]> {
+  readCaseTypes(): Promise<NestedClassificatorInfo[]> {
     return this.db.any(classificators.readCaseTypes);
   }
 
   readOperationTypes(): Promise<NestedClassificatorInfo[]> {
     return this.db.any(classificators.readOperationTypes);
+  }
+
+  readOperationTypesFlat(): Promise<TypeInfo[]> {
+    return this.db.any(classificators.readOperationTypesFlat);
   }
 
   readCaseStatusTypes(): Promise<NestedClassificatorInfo[]> {

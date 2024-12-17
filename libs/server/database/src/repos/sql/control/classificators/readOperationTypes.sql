@@ -7,7 +7,8 @@ SELECT
         'fullname', fullname,  
 		'priority', priority,
 		'autoApprove', auto_approve,
-		'tags', jsonb_build_array(LOWER(fullname), LOWER(category))    
+		'tags', jsonb_build_array(LOWER(fullname), LOWER(category)),
+		'category', category 
 	)) as items
 FROM control.operation_types
 -- WHERE category = ANY(ARRAY['рассмотрение', 'решение'])

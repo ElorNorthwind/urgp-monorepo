@@ -5,7 +5,8 @@ SELECT
 		'value', id,        
 		'label', name,
         'fullname', fullname,  
-		'tags', tags || lower(fullname) || lower(category)
+		'tags', tags || lower(fullname) || lower(category),
+		'category', category
 	)) as items
 FROM control.directions
 GROUP BY category;

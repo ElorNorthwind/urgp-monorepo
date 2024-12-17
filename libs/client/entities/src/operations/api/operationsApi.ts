@@ -3,6 +3,7 @@ import {
   ControlStage,
   ControlStageCreateDto,
   ControlStageSlim,
+  ControlStageUpdateDto,
   UserInputDeleteDto,
 } from '@urgp/shared/entities';
 
@@ -19,6 +20,29 @@ export const operationsApi = rtkApi.injectEndpoints({
       query: (dto) => ({
         url: '/control/operation/stage',
         method: 'POST',
+        body: dto,
+      }),
+
+      // добавить писимистичный апдейт основного запроса
+      // async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+      //   const { data: deletedOperation } = await queryFulfilled;
+      //   deletedOperation?.caseId &&
+      //     dispatch(
+      //       operationsApi.util.updateQueryData(
+      //         'getStagesByCaseId',
+      //         deletedOperation.caseId,
+      //         (draft) => {
+      //           return draft.filter((stage) => stage.id !== id);
+      //         },
+      //       ),
+      //     );
+      // },
+    }),
+
+    updateStage: build.mutation<ControlStageSlim, ControlStageUpdateDto>({
+      query: (dto) => ({
+        url: '/control/operation/stage',
+        method: 'PATCH',
         body: dto,
       }),
 
@@ -96,5 +120,6 @@ export const operationsApi = rtkApi.injectEndpoints({
 export const {
   useGetStagesByCaseIdQuery: useStages,
   useDeleteOperationMutation: useDeleteOperation,
-  useCreteStageMutation: useCreateStage,
+  useCreteStageMutation: useCreateControlStage,
+  useUpdateStageMutation: useUpdateControlStage,
 } = operationsApi;
