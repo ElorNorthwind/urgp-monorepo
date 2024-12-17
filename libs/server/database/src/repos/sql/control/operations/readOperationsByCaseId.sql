@@ -7,7 +7,8 @@ SELECT
 	o.created_at as "createdAt",
 	o.payload->-1
 			|| jsonb_build_object('type', to_jsonb(t))
-			as payload
+			as payload,
+	jsonb_array_length(o.payload) as version
 FROM control.operations o
 LEFT JOIN (SELECT id, name, category, fullname, priority FROM control.operation_types) t ON t.id = (o.payload->-1->>'type')::integer
 LEFT JOIN renovation.users u ON u.id = o.author_id

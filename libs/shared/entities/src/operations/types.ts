@@ -6,6 +6,7 @@ type BasicOperationData = {
   createdAt: Date;
   author: UserInfo;
   approver: UserInfo | null;
+  version: number;
 };
 
 type BasicOperationDataSlim = Omit<BasicOperationData, 'author'> & {

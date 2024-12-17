@@ -45,6 +45,12 @@ export class ControlOperationsService {
     return this.dbServise.db.controlOperations.readSlimOperationById(id);
   }
 
+  public async readOperationPayloadHistory(
+    id: number,
+  ): Promise<Array<ControlOperation['payload'] & { id: number }>> {
+    return this.dbServise.db.controlOperations.readOperationPayloadHistory(id);
+  }
+
   public async readFullOperationById(id: number): Promise<ControlOperation> {
     return this.dbServise.db.controlOperations.readFullOperationById(id);
   }

@@ -13,6 +13,7 @@ import { operationTypeStyles } from '../../config/operationStyles';
 import { ConfirmationButton } from '@urgp/client/widgets';
 import { toast } from 'sonner';
 import { useDeleteOperation } from '../../api/operationsApi';
+import { StagesHistory } from '../StageHistory';
 
 type StageItemProps = {
   stage: ControlStage | null;
@@ -131,6 +132,7 @@ const StageItem = (props: StageItemProps): JSX.Element => {
               label="Удалить?"
             />
           )}
+
           {(user?.id === stage.author.id ||
             user?.id === stage.payload.approver ||
             user?.roles.includes('admin')) &&
@@ -146,6 +148,7 @@ const StageItem = (props: StageItemProps): JSX.Element => {
               </Button>
             )}
           <span>{format(stage.payload.updatedAt, 'dd.MM.yyyy')}</span>
+          <StagesHistory stage={stage} />
           <span className="mr-1 font-normal">{stage.author.fio}</span>
         </div>
       )}

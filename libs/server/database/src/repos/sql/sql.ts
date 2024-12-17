@@ -92,6 +92,9 @@ export const operations = {
   updateStage: sql('sql/control/operations/updateStage.sql'),
   approveOperation: sql('sql/control/operations/approveOperation.sql'),
   deleteOperation: sql('sql/control/operations/deleteOperation.sql'),
+  readOperationPayloadHistory: sql(
+    'sql/control/operations/readOperationPayloadHistory.sql',
+  ),
 };
 
 export const classificators = {

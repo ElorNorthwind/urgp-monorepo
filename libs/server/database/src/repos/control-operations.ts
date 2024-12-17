@@ -49,6 +49,12 @@ export class ControlOperationsRepository {
     return this.db.oneOrNone(operations.readFullOperationById, { id });
   }
 
+  readOperationPayloadHistory(
+    id: number,
+  ): Promise<Array<ControlOperation['payload'] & { id: number }> | null> {
+    return this.db.any(operations.readOperationPayloadHistory, { id });
+  }
+
   readOperationsByCaseId(
     id: number,
     userId: number,

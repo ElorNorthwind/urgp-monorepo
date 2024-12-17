@@ -78,6 +78,13 @@ export class ControlOperationsController {
     return this.controlOperations.readFullOperationById(id);
   }
 
+  @Get(':id/history')
+  getOperationPayloadHistory(
+    @Param('id') id: number,
+  ): Promise<Array<ControlOperation['payload'] & { id: number }>> {
+    return this.controlOperations.readOperationPayloadHistory(id);
+  }
+
   @Get('stage/by-case/:id')
   getStagesByCaseId(
     @Req() req: RequestWithUserData,
