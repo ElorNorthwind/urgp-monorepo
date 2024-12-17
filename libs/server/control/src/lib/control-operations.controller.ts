@@ -94,6 +94,7 @@ export class ControlOperationsController {
     const currentOperation = await this.controlOperations.readOperationById(
       dto.id,
     );
+
     const userId = req.user.id;
     if (
       userId !== currentOperation.authorId &&

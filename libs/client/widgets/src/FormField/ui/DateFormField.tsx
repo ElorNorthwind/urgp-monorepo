@@ -58,7 +58,7 @@ const DateFormField = (props: DateFormFieldProps): JSX.Element => {
                     variant={'outline'}
                     disabled={disabled}
                     className={cn(
-                      'w-32 justify-start text-left font-normal',
+                      'w-34 justify-start text-left font-normal',
                       !field.value && 'text-muted-foreground',
                       triggerClassName,
                     )}

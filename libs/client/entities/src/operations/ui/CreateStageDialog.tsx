@@ -34,7 +34,13 @@ const CreateStageDialog = ({
   }, [editStage]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        open === false && setEditStage && setEditStage(null);
+        setIsOpen(open);
+      }}
+    >
       <DialogTrigger asChild>
         <Button
           variant={'outline'}
@@ -45,7 +51,7 @@ const CreateStageDialog = ({
           <span>Новый этап</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="w-[425px]">
         <DialogHeader>
           <DialogTitle>
             {editStage ? 'Изменить этап' : 'Добавить этап'}

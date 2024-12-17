@@ -318,7 +318,6 @@ export class RenovationRepository {
       approveBy: approveStatusData?.approveBy || null,
       approveNotes: approveStatusData?.approveNotes || null,
     };
-    // console.log(dto);
     // const q = this.pgp.as.format(renovation.stageCreate, newStage);
     // console.log(q);
     return this.db.one(renovation.stageCreate, newStage);

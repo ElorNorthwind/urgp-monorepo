@@ -31,6 +31,7 @@ import {
   TextAreaFormField,
 } from '@urgp/client/widgets';
 import { useEffect, useMemo } from 'react';
+import { StageItem } from './StagesList/StageItem';
 
 type CreateStageFormProps = {
   caseId: number;
@@ -60,10 +61,10 @@ const CreateStageForm = ({
       type: 6,
       doneDate: new Date(),
       num: '',
-      description: undefined,
+      description: '',
       approver: userData?.approvers?.operations?.[0],
     };
-  }, [userData, isUserDataLoading]);
+  }, [editStage, userData, isUserDataLoading]);
 
   const form = useForm<ControlStageCreateFormValuesDto>({
     resolver: zodResolver(controlStageCreateFormValues),
@@ -72,11 +73,20 @@ const CreateStageForm = ({
 
   useEffect(() => {
     if (editStage) {
-      form.reset({ ...editStage, approver: editStage?.approver?.id });
+      form.reset({
+        type: editStage.payload.type.id || 6,
+        doneDate: editStage.payload.doneDate || new Date(),
+        num: editStage.payload.num || '',
+        description: editStage.payload.description || '',
+        approver:
+          editStage.approver?.id || userData?.approvers?.operations?.[0],
+      });
     }
   }, [editStage, form]);
 
   const watchType = form.watch('type');
+  // const watchApprover = form.watch('approver');
+
   useEffect(() => {
     if (
       operationTypes?.find((operation) => {
@@ -85,10 +95,10 @@ const CreateStageForm = ({
     ) {
       form.unregister('approver');
     } else {
-      userData?.approvers?.operations?.[0] &&
-        form.getValues('approver') === null &&
-        form.setValue('approver', userData.approvers.operations[0]);
       form.register('approver');
+      userData?.approvers?.operations?.[0] &&
+        // watchApprover === undefined &&
+        form.setValue('approver', userData.approvers.operations[0]);
     }
   }, [form.register, form.unregister, watchType]);
 
@@ -125,7 +135,9 @@ const CreateStageForm = ({
   }
 
   if (isUserDataLoading) {
-    return <Skeleton className="h-8 w-full" />;
+    return (
+      <Skeleton className={cn('h-[314px] w-full', className, widthClassName)} />
+    );
   }
 
   return (
@@ -134,6 +146,9 @@ const CreateStageForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('flex flex-col gap-4', className, widthClassName)}
       >
+        {editStage && (
+          <StageItem stage={editStage} noHover className="bg-amber-50" />
+        )}
         <OperationTypeSelector
           form={form}
           fieldName={'type'}

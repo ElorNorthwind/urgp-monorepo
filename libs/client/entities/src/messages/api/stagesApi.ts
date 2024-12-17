@@ -33,7 +33,7 @@ export const stagesApi = rtkApi.injectEndpoints({
       }),
     }),
 
-    updateStage: build.mutation<Stage, UpdateStageDto>({
+    updateRenovationStage: build.mutation<Stage, UpdateStageDto>({
       query: (dto) => ({
         url: `/renovation/stage`,
         method: 'PATCH',
@@ -78,7 +78,7 @@ export const stagesApi = rtkApi.injectEndpoints({
 export const {
   useCreateStageMutation: useCreateStage,
   useReadStagesForApartmentsQuery: useApartmentStages,
-  useUpdateStageMutation: useUpdateStage,
+  useUpdateRenovationStageMutation: useUpdateStage,
   useDeleteStageMutation: useDeleteStage,
   useReadStageGroupsQuery: useStageGroups,
   useApproveStageMutation: useApproveStage,

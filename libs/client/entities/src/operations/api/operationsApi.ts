@@ -45,7 +45,6 @@ export const operationsApi = rtkApi.injectEndpoints({
         method: 'PATCH',
         body: dto,
       }),
-
       // добавить писимистичный апдейт основного запроса
       // async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
       //   const { data: deletedOperation } = await queryFulfilled;

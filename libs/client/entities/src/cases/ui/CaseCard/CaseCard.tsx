@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
   cn,
 } from '@urgp/client/shared';
-import { Case } from '@urgp/shared/entities';
+import { Case, ControlStage } from '@urgp/shared/entities';
 import { CaseCardHeader } from './CaseCardHeader';
 import { caseStatusStyles, caseTypeStyles } from '../../config/caseStyles';
 import { ExternalCasesList } from '../ExternalCasesList';
@@ -17,6 +17,7 @@ import {
   StagesList,
   useStages,
 } from '../../../operations';
+import { useState } from 'react';
 
 type CaseCardProps = {
   className?: string;
@@ -39,6 +40,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     isLoading,
     isFetching,
   } = useStages(controlCase?.id, { skip: !controlCase?.id });
+  const [editStage, SetEditStage] = useState<ControlStage | null>(null);
 
   return (
     <>
@@ -112,11 +114,17 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
           </AccordionContent>
         </AccordionItem> */}
       </Accordion>
-      <StagesHeader caseId={controlCase?.id} className="mx-4 mt-4" />
+      <StagesHeader
+        caseId={controlCase?.id}
+        className="mx-4 mt-4"
+        editStage={editStage}
+        setEditStage={SetEditStage}
+      />
       <StagesList
         stages={stages}
         isLoading={isLoading || isFetching}
         className="m-4"
+        setEditStage={SetEditStage}
       />
     </>
   );

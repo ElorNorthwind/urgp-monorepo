@@ -21,6 +21,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { FormInputLabel } from './components/FormInputLabel';
 import { FormInputSkeleton } from './components/FormInputSkeleton';
 import { formItemClassName } from './config/formItem';
+import { PopoverClose } from '@radix-ui/react-popover';
 
 type ClassificatorFormFieldProps = {
   form: UseFormReturn<any, any>;
@@ -109,7 +110,7 @@ const ClassificatorFormField = (
               </PopoverTrigger>
               <PopoverContent
                 className={cn('p-0', popoverClassName)}
-                side="top"
+                side="bottom"
               >
                 <Command
                   filter={(value, search, keywords) => {
@@ -139,20 +140,26 @@ const ClassificatorFormField = (
                                   form.setValue(fieldName, item.value);
                                 }}
                               >
-                                <Check
-                                  className={cn(
-                                    'mr-2 h-4 w-4',
-                                    item.value === field.value
-                                      ? 'opacity-100'
-                                      : 'opacity-0',
-                                  )}
-                                />
-                                <p className="flex w-full flex-col gap-0 truncate">
-                                  <span className="truncate">{item.label}</span>
-                                  <span className="text-muted-foreground/60 truncate text-xs">
-                                    {item.fullname}
-                                  </span>
-                                </p>
+                                <PopoverClose asChild>
+                                  <Check
+                                    className={cn(
+                                      'mr-2 h-4 w-4',
+                                      item.value === field.value
+                                        ? 'opacity-100'
+                                        : 'opacity-0',
+                                    )}
+                                  />
+                                </PopoverClose>
+                                <PopoverClose asChild>
+                                  <p className="flex w-full flex-col gap-0 truncate">
+                                    <span className="truncate">
+                                      {item.label}
+                                    </span>
+                                    <span className="text-muted-foreground/60 truncate text-xs">
+                                      {item.fullname}
+                                    </span>
+                                  </p>
+                                </PopoverClose>
                               </CommandItem>
                             );
                           })}

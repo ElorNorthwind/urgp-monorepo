@@ -7,10 +7,11 @@ type StagesListProps = {
   stages?: ControlStage[];
   className?: string;
   isLoading?: boolean;
+  setEditStage?: React.Dispatch<React.SetStateAction<ControlStage | null>>;
 };
 
 const StagesList = (props: StagesListProps): JSX.Element => {
-  const { className, stages, isLoading } = props;
+  const { className, stages, isLoading, setEditStage } = props;
 
   if (!stages || stages?.length === 0) {
     return (
@@ -30,7 +31,9 @@ const StagesList = (props: StagesListProps): JSX.Element => {
       {isLoading ? (
         <StageItem stage={null} />
       ) : (
-        stages?.map((stage) => <StageItem stage={stage} key={stage.id} />)
+        stages?.map((stage) => (
+          <StageItem stage={stage} key={stage.id} setEditStage={setEditStage} />
+        ))
       )}
     </ScrollArea>
   );
