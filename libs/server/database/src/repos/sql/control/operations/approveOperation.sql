@@ -10,5 +10,5 @@ SET payload = payload || (payload->-1 ||
         'updatedBy',     ${userId}
                     ))
 WHERE id = ${id} 
-RETURNING id, author_id as "authorId", case_id as "caseId", problem_id as "problemId", 
+RETURNING id, author_id as "authorId", case_id as "caseId",
           created_at as "createdAt", class, payload->-1 as payload;

@@ -9,6 +9,7 @@ import {
   ControlOperation,
   ControlStageUpdateDto,
   ControlStageSlim,
+  ControlStage,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -27,16 +28,25 @@ export class ControlOperationsService {
     dto: ControlStageCreateDto,
     userId: number,
     approved: boolean,
-  ): Promise<ControlOperationSlim> {
-    return this.dbServise.db.controlOperations.createStage(
+  ): Promise<ControlOperation> {
+    const createdStage = await this.dbServise.db.controlOperations.createStage(
       dto,
       userId,
       approved,
     );
+    return this.dbServise.db.controlOperations.readFullOperationById(
+      createdStage.id,
+    ) as Promise<ControlStage>;
   }
 
-  public async readOperationById(id: number): Promise<ControlOperationSlim> {
-    return this.dbServise.db.controlOperations.readOperationById(id);
+  public async readSlimOperationById(
+    id: number,
+  ): Promise<ControlOperationSlim> {
+    return this.dbServise.db.controlOperations.readSlimOperationById(id);
+  }
+
+  public async readFullOperationById(id: number): Promise<ControlOperation> {
+    return this.dbServise.db.controlOperations.readFullOperationById(id);
   }
 
   public async readOperationsByCaseId(
@@ -54,8 +64,14 @@ export class ControlOperationsService {
   public async updateStage(
     dto: ControlStageUpdateDto,
     userId: number,
-  ): Promise<ControlStageSlim> {
-    return this.dbServise.db.controlOperations.updateStage(dto, userId);
+  ): Promise<ControlStage> {
+    const updatedStage = await this.dbServise.db.controlOperations.updateStage(
+      dto,
+      userId,
+    );
+    return this.dbServise.db.controlOperations.readFullOperationById(
+      updatedStage.id,
+    ) as Promise<ControlStage>;
   }
 
   public async deleteOperation(

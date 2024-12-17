@@ -4,7 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  Logger,
   Param,
   Patch,
   Post,
@@ -24,6 +23,7 @@ import {
   ControlStageUpdateDto,
   userInputDelete,
   UserInputDeleteDto,
+  ControlOperationSlim,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlOperationsService } from './control-operations.service';
@@ -73,6 +73,11 @@ export class ControlOperationsController {
     );
   }
 
+  @Get(':id')
+  getOperationById(@Param('id') id: number): Promise<ControlOperation> {
+    return this.controlOperations.readFullOperationById(id);
+  }
+
   @Get('stage/by-case/:id')
   getStagesByCaseId(
     @Req() req: RequestWithUserData,
@@ -91,7 +96,7 @@ export class ControlOperationsController {
     @Body(new ZodValidationPipe(controlStageUpdate)) dto: ControlStageUpdateDto,
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
-    const currentOperation = await this.controlOperations.readOperationById(
+    const currentOperation = await this.controlOperations.readSlimOperationById(
       dto.id,
     );
 
@@ -125,7 +130,7 @@ export class ControlOperationsController {
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
     const userId = req.user.id;
-    const currentOperation = await this.controlOperations.readOperationById(
+    const currentOperation = await this.controlOperations.readSlimOperationById(
       dto.id,
     );
     if (!currentOperation) {
@@ -157,7 +162,7 @@ export class ControlOperationsController {
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
     const userId = req.user.id;
-    const currentOperation = await this.controlOperations.readOperationById(
+    const currentOperation = await this.controlOperations.readSlimOperationById(
       dto.id,
     );
     const controlData = await this.classificators.getControlData(userId);

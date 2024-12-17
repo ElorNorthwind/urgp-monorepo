@@ -6,6 +6,7 @@ import {
   ControlStageUpdateDto,
   ControlOperationSlim,
   UserInputApproveDto,
+  ControlOperation,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { operations } from './sql/sql';
@@ -40,8 +41,12 @@ export class ControlOperationsRepository {
     return this.db.one(operations.createStage, newStage);
   }
 
-  readOperationById(id: number): Promise<ControlOperationSlim | null> {
-    return this.db.oneOrNone(operations.readOperationById, { id });
+  readSlimOperationById(id: number): Promise<ControlOperationSlim | null> {
+    return this.db.oneOrNone(operations.readSlimOperationById, { id });
+  }
+
+  readFullOperationById(id: number): Promise<ControlOperation | null> {
+    return this.db.oneOrNone(operations.readFullOperationById, { id });
   }
 
   readOperationsByCaseId(

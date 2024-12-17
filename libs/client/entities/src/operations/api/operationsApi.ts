@@ -16,35 +16,55 @@ export const operationsApi = rtkApi.injectEndpoints({
       }),
     }),
 
-    creteStage: build.mutation<ControlStageSlim, ControlStageCreateDto>({
+    creteStage: build.mutation<ControlStage, ControlStageCreateDto>({
       query: (dto) => ({
         url: '/control/operation/stage',
         method: 'POST',
         body: dto,
       }),
-
-      // добавить писимистичный апдейт основного запроса
-      // async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
-      //   const { data: deletedOperation } = await queryFulfilled;
-      //   deletedOperation?.caseId &&
-      //     dispatch(
-      //       operationsApi.util.updateQueryData(
-      //         'getStagesByCaseId',
-      //         deletedOperation.caseId,
-      //         (draft) => {
-      //           return draft.filter((stage) => stage.id !== id);
-      //         },
-      //       ),
-      //     );
-      // },
+      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        const { data: createdOperation } = await queryFulfilled;
+        createdOperation?.caseId &&
+          createdOperation?.id &&
+          dispatch(
+            operationsApi.util.updateQueryData(
+              'getStagesByCaseId',
+              createdOperation.caseId,
+              (draft) => {
+                return [createdOperation, ...draft];
+              },
+            ),
+          );
+      },
     }),
 
-    updateStage: build.mutation<ControlStageSlim, ControlStageUpdateDto>({
+    updateStage: build.mutation<ControlStage, ControlStageUpdateDto>({
       query: (dto) => ({
         url: '/control/operation/stage',
         method: 'PATCH',
         body: dto,
       }),
+      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        const { data: updatedOperation } = await queryFulfilled;
+        updatedOperation?.caseId &&
+          updatedOperation?.id &&
+          dispatch(
+            operationsApi.util.updateQueryData(
+              'getStagesByCaseId',
+              updatedOperation.caseId,
+              (draft) => {
+                const index = draft.findIndex(
+                  (stage) => stage.id === updatedOperation.id,
+                );
+                return [
+                  ...draft.slice(0, index),
+                  updatedOperation,
+                  ...draft.slice(index + 1),
+                ];
+              },
+            ),
+          );
+      },
       // добавить писимистичный апдейт основного запроса
       // async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
       //   const { data: deletedOperation } = await queryFulfilled;
