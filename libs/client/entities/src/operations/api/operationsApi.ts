@@ -1,6 +1,5 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
-  ControlOperation,
   ControlOperationPayloadHistoryData,
   ControlStage,
   ControlStageCreateDto,

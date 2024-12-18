@@ -36,8 +36,8 @@ export const typeInfo = z.object({
 export type TypeInfo = z.infer<typeof typeInfo>;
 
 export const userInfo = z.object({
-  id: z.coerce.number(),
-  fio: z.string(),
+  id: z.coerce.number().nullable(),
+  fio: z.string().nullable(),
 });
 export type UserInfo = z.infer<typeof userInfo>;
 

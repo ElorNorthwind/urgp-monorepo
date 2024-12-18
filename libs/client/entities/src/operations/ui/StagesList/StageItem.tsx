@@ -133,8 +133,8 @@ const StageItem = (props: StageItemProps): JSX.Element => {
             />
           )}
 
-          {(user?.id === stage.author.id ||
-            user?.id === stage.payload.approver ||
+          {(user?.id === stage?.author?.id ||
+            user?.id === stage?.payload?.approver?.id ||
             user?.roles.includes('admin')) &&
             stage.payload.approveStatus !== 'rejected' && (
               <Button

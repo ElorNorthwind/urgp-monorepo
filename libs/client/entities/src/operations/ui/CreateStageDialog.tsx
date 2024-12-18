@@ -27,7 +27,7 @@ type CreateStageDialogProps = {
   setEditStage?: React.Dispatch<React.SetStateAction<ControlStage | null>>;
 };
 
-const CONTENT_WIDTH = '525px';
+const DIALOG_WIDTH = '525px';
 
 const CreateStageDialog = ({
   caseId,
@@ -65,7 +65,7 @@ const CreateStageDialog = ({
         </SheetTrigger>
         <SheetContent
           className={cn(
-            `w-[${CONTENT_WIDTH}] max-w-[100vw] sm:w-[${CONTENT_WIDTH}] sm:max-w-[100vw]`,
+            `w-[${DIALOG_WIDTH}] max-w-[100vw] sm:w-[${DIALOG_WIDTH}] sm:max-w-[100vw]`,
           )}
         >
           <SheetHeader>
@@ -81,7 +81,7 @@ const CreateStageDialog = ({
           <CreateStageForm
             caseId={caseId}
             className={className}
-            widthClassName={cn(`w-[calc(${CONTENT_WIDTH}-3rem)]`)}
+            widthClassName={cn(`w-[calc(${DIALOG_WIDTH}-3rem)]`)}
             onClose={() => setIsOpen(false)}
             editStage={editStage}
             setEditStage={setEditStage}
@@ -108,7 +108,7 @@ const CreateStageDialog = ({
           <span>Новый этап</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className={cn(`w-[${CONTENT_WIDTH}]`)}>
+      <DialogContent className={cn(`w-[${DIALOG_WIDTH}]`)}>
         <DialogHeader>
           <DialogTitle>
             {editStage ? 'Изменить этап' : 'Добавить этап'}
@@ -122,7 +122,7 @@ const CreateStageDialog = ({
         <CreateStageForm
           caseId={caseId}
           className={className}
-          widthClassName={cn(`w-[calc(${CONTENT_WIDTH}-3rem)]`)}
+          widthClassName={cn(`w-[calc(${DIALOG_WIDTH}-3rem)]`)}
           onClose={() => setIsOpen(false)}
           editStage={editStage}
           setEditStage={setEditStage}

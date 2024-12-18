@@ -26,8 +26,8 @@ type StagePayload = Omit<
 > & {
   type: TypeInfo;
   updatedBy: UserInfo;
-  approver: UserInfo | null;
-  approveBy: UserInfo | null;
+  approver: UserInfo;
+  approveBy: UserInfo;
 };
 
 type DispatchPayloadSlim = {
@@ -61,13 +61,13 @@ export type Dispatch = BasicOperationData & {
   payload: DispatchPayload;
 };
 
-type ControlStagePayloadHistoryData = StagePayload & {
+export type ControlStagePayloadHistoryData = StagePayload & {
   class: 'stage';
   id: number;
   caseId: number;
 };
 
-type ControlDispatchPayloadHistoryData = DispatchPayload & {
+export type ControlDispatchPayloadHistoryData = DispatchPayload & {
   class: 'dispatch';
   id: number;
   caseId: number;

@@ -10,14 +10,16 @@ import {
   ScrollArea,
 } from '@urgp/client/shared';
 import { ControlStage } from '@urgp/shared/entities';
-import { StageItem } from './StagesList/StageItem';
 import { History } from 'lucide-react';
 import { useOperationPayloadHistroy } from '../api/operationsApi';
+import { StageHistoryItem } from './StagesList/StageHistoryItem';
 
 type StagesHistoryProps = {
   stage: ControlStage;
   className?: string;
 };
+
+const DIALOG_WIDTH = '700px';
 
 const StagesHistory = (props: StagesHistoryProps): JSX.Element => {
   const { className, stage } = props;
@@ -27,6 +29,7 @@ const StagesHistory = (props: StagesHistoryProps): JSX.Element => {
     isFetching,
   } = useOperationPayloadHistroy(stage.id);
   if (stage?.version === 1) return <></>;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -34,7 +37,7 @@ const StagesHistory = (props: StagesHistoryProps): JSX.Element => {
           <History className="size-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className={cn(`w-[${DIALOG_WIDTH}] max-w-[100vw]`)}>
         <DialogHeader>
           <DialogTitle>История изменений</DialogTitle>
           <DialogDescription>Внесенных по этапу</DialogDescription>
@@ -42,23 +45,19 @@ const StagesHistory = (props: StagesHistoryProps): JSX.Element => {
 
         <ScrollArea
           className={cn(
-            'bg-background flex flex-col gap-2 rounded border',
+            'bg-background flex w-full flex-col gap-2 rounded border',
             'max-h-[calc(100vh-12rem)]',
             className,
           )}
         >
           {isLoading || isFetching || !payloadHistory ? (
-            <StageItem stage={null} />
+            <StageHistoryItem item={null} />
           ) : (
-            payloadHistory?.map((payload, index) => (
-              <StageItem
-                stage={{
-                  ...stage,
-                  payload: payload as ControlStage['payload'],
-                }}
-                key={stage.id + '-' + index}
-              />
-            ))
+            payloadHistory
+              .filter((item) => item.class === 'stage')
+              ?.map((item, index) => (
+                <StageHistoryItem item={item} key={stage.id + '-' + index} />
+              ))
           )}
         </ScrollArea>
       </DialogContent>
