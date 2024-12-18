@@ -42,7 +42,9 @@ FROM (SELECT
                     'authorId', m.author_id,
                     'authorFio', u.fio,
                     'isBoss', CASE WHEN 'boss' = ANY(roles) THEN true ELSE false END,
-                    message_payload->-1->>'text', m.message_content
+                    'messageContent', m.message_content,
+                    'validUntil', m.valid_until
+                    -- message_payload->-1->>'text', m.message_content
                 )
 				ORDER BY apartment_id, created_at ASC
             ) as messages
