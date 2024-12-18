@@ -27,7 +27,7 @@ type CreateStageDialogProps = {
   setEditStage?: React.Dispatch<React.SetStateAction<ControlStage | null>>;
 };
 
-const DIALOG_WIDTH = '525px';
+const DIALOG_WIDTH = '600px';
 
 const CreateStageDialog = ({
   caseId,
@@ -64,8 +64,13 @@ const CreateStageDialog = ({
           </Button>
         </SheetTrigger>
         <SheetContent
+          style={
+            {
+              '--dialog-width': DIALOG_WIDTH,
+            } as React.CSSProperties
+          }
           className={cn(
-            `w-[${DIALOG_WIDTH}] max-w-[100vw] sm:w-[${DIALOG_WIDTH}] sm:max-w-[100vw]`,
+            `w-[var(--dialog-width)] max-w-[100vw] sm:w-[var(--dialog-width)] sm:max-w-[100vw]`,
           )}
         >
           <SheetHeader>
@@ -81,7 +86,9 @@ const CreateStageDialog = ({
           <CreateStageForm
             caseId={caseId}
             className={className}
-            widthClassName={cn(`w-[calc(${DIALOG_WIDTH}-3rem)]`)}
+            widthClassName={cn(
+              `w-[calc(var(--dialog-width)-3rem)]  max-w-[calc(100vw-3rem)]`,
+            )}
             onClose={() => setIsOpen(false)}
             editStage={editStage}
             setEditStage={setEditStage}
@@ -108,7 +115,14 @@ const CreateStageDialog = ({
           <span>Новый этап</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className={cn(`w-[${DIALOG_WIDTH}]`)}>
+      <DialogContent
+        style={
+          {
+            '--dialog-width': DIALOG_WIDTH,
+          } as React.CSSProperties
+        }
+        className={cn(`w-[var(--dialog-width)] max-w-[calc(100vw-3rem)]`)}
+      >
         <DialogHeader>
           <DialogTitle>
             {editStage ? 'Изменить этап' : 'Добавить этап'}
@@ -122,7 +136,9 @@ const CreateStageDialog = ({
         <CreateStageForm
           caseId={caseId}
           className={className}
-          widthClassName={cn(`w-[calc(${DIALOG_WIDTH}-3rem)]`)}
+          widthClassName={cn(
+            `w-[calc(var(--dialog-width)-3rem)]  max-w-[calc(100vw-3rem)]`,
+          )}
           onClose={() => setIsOpen(false)}
           editStage={editStage}
           setEditStage={setEditStage}

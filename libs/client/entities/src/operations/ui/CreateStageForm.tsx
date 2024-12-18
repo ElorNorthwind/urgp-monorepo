@@ -32,6 +32,7 @@ import {
 } from '@urgp/client/widgets';
 import { useEffect, useMemo } from 'react';
 import { StageItem } from './StagesList/StageItem';
+import { StageHistoryItem } from './StagesList/StageHistoryItem';
 
 type CreateStageFormProps = {
   caseId: number;
@@ -147,7 +148,15 @@ const CreateStageForm = ({
         className={cn('flex flex-col gap-4', className, widthClassName)}
       >
         {editStage && (
-          <StageItem stage={editStage} noHover className="bg-amber-50" />
+          <StageHistoryItem
+            item={{
+              ...editStage.payload,
+              class: editStage.class,
+              id: editStage.id,
+              caseId: editStage.caseId || 0,
+            }}
+            className="bg-amber-50"
+          />
         )}
         <OperationTypeSelector
           form={form}

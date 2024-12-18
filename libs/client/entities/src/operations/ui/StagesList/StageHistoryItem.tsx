@@ -37,7 +37,7 @@ const StageHistoryItem = (props: StageHistoryItemProps): JSX.Element => {
   return (
     <div
       className={cn(
-        'group relative flex w-full flex-col border-b p-4 last:border-b-0',
+        'group relative flex w-full flex-col overflow-hidden border-b p-4 last:border-b-0',
         badgeStyle,
         className,
       )}
@@ -47,7 +47,7 @@ const StageHistoryItem = (props: StageHistoryItemProps): JSX.Element => {
         <span className={cn('truncate font-bold', fontStyle)}>
           {item.type.fullname}
         </span>
-        <div className="text-muted-foreground ml-auto flex flex-row gap-1 text-xs">
+        <div className="text-muted-foreground ml-auto flex flex-row gap-1 text-nowrap text-xs">
           <span>{item.updatedBy.fio}</span>
           <span>{format(item.updatedAt, 'dd.MM.yyyy HH:mm')}</span>
         </div>
@@ -69,7 +69,9 @@ const StageHistoryItem = (props: StageHistoryItemProps): JSX.Element => {
       <div className="font-light">{item.description}</div>
       <div className="text-muted-foreground">
         <span className="font-medium">{label}</span>
-        {item.approver?.fio && <span>{': ' + item.approver?.fio}</span>}
+        {item.approver?.fio && (
+          <span className="text-nowrap">{': ' + item.approver?.fio}</span>
+        )}
       </div>
     </div>
   );
