@@ -10,6 +10,7 @@ import {
   ControlStageUpdateDto,
   ControlStageSlim,
   ControlStage,
+  ControlOperationPayloadHistoryData,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -47,7 +48,7 @@ export class ControlOperationsService {
 
   public async readOperationPayloadHistory(
     id: number,
-  ): Promise<Array<ControlOperation['payload'] & { id: number }>> {
+  ): Promise<ControlOperationPayloadHistoryData[]> {
     return this.dbServise.db.controlOperations.readOperationPayloadHistory(id);
   }
 

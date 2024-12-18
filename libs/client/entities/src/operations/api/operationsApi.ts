@@ -1,6 +1,7 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
   ControlOperation,
+  ControlOperationPayloadHistoryData,
   ControlStage,
   ControlStageCreateDto,
   ControlStageSlim,
@@ -18,7 +19,7 @@ export const operationsApi = rtkApi.injectEndpoints({
     }),
 
     getOperationPayloadHistroy: build.query<
-      Array<ControlOperation['payload'] & { id: number }>,
+      ControlOperationPayloadHistoryData[],
       number
     >({
       query: (id) => ({

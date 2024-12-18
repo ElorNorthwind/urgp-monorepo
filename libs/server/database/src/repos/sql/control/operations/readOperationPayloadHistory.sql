@@ -1,5 +1,5 @@
 WITH history_data AS (
-	SELECT DISTINCT o.id, p.*
+	SELECT DISTINCT o.id, o.class, o.case_id as "caseId", p.*
 	FROM control.operations o
 	JOIN LATERAL jsonb_to_recordset(o.payload) AS  
 	  p("num" text, 
@@ -19,6 +19,8 @@ WITH history_data AS (
 )
 SELECT 
 	h."id",
+	h."class",
+	h."caseId",
 	h."num",
 	h."doneDate",
 	h."isDeleted",
@@ -29,9 +31,11 @@ SELECT
 	h."approveStatus",
 	to_jsonb(t) as "type",
 	json_build_object('id', u.id, 'fio', u.fio) as "updatedBy",
-	json_build_object('id', u2.id, 'fio', u2.fio) as "approver"
+	json_build_object('id', u2.id, 'fio', u2.fio) as "approver",
+	json_build_object('id', u3.id, 'fio', u3.fio) as "approveBy"
 FROM history_data h
 LEFT JOIN (SELECT id, name, category, fullname, priority FROM control.operation_types) t ON t.id = (h.type)::integer
 LEFT JOIN renovation.users u ON u.id = h."updatedBy"
-LEFT JOIN renovation.users u2 ON u2.id = COALESCE(h."approveBy", h."approver")
+LEFT JOIN renovation.users u2 ON u2.id = h."approver"
+LEFT JOIN renovation.users u3 ON u3.id = h."approveBy"
 ORDER BY h."updatedAt" ASC;

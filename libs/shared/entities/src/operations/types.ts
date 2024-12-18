@@ -13,32 +13,43 @@ type BasicOperationDataSlim = Omit<BasicOperationData, 'author'> & {
   authorId: number;
 };
 
-type StagePayload = {
-  // externalCase: ExternalCase | null; // внешний номер
-  type: TypeInfo;
+type StagePayloadSlim = {
+  type: number;
   doneDate: Date;
   num: string | null;
-  description: string | null; // описание этапа
+  description: string | null;
 } & BasicPayloadData;
 
-type StagePayloadSlim = Omit<StagePayload, 'type'> & {
-  type: number;
+type StagePayload = Omit<
+  StagePayloadSlim,
+  'type' | 'approver' | 'approveBy' | 'updatedBy'
+> & {
+  type: TypeInfo;
+  updatedBy: UserInfo;
+  approver: UserInfo | null;
+  approveBy: UserInfo | null;
 };
 
-type DispatchPayload = {
+type DispatchPayloadSlim = {
+  type: number;
   updatedAt: Date;
-  isDeleted: boolean;
   executorId: number;
-  type: TypeInfo;
   dueDate: Date | null;
   doneDate: Date | null;
   firstSeen: Date | null;
   lastSeen: Date | null;
   description: string | null;
-};
+} & BasicPayloadData;
 
-type DispatchPayloadSlim = Omit<DispatchPayload, 'type'> & {
-  type: number;
+type DispatchPayload = Omit<
+  DispatchPayloadSlim,
+  'type' | 'approver' | 'approveBy' | 'updatedBy' | 'executorId'
+> & {
+  type: TypeInfo;
+  updatedBy: UserInfo;
+  executorId: UserInfo | null;
+  approver: UserInfo | null;
+  approveBy: UserInfo | null;
 };
 
 export type ControlStage = BasicOperationData & {
@@ -49,6 +60,22 @@ export type Dispatch = BasicOperationData & {
   class: 'dispatch';
   payload: DispatchPayload;
 };
+
+type ControlStagePayloadHistoryData = StagePayload & {
+  class: 'stage';
+  id: number;
+  caseId: number;
+};
+
+type ControlDispatchPayloadHistoryData = DispatchPayload & {
+  class: 'dispatch';
+  id: number;
+  caseId: number;
+};
+
+export type ControlOperationPayloadHistoryData =
+  | ControlStagePayloadHistoryData
+  | ControlDispatchPayloadHistoryData;
 
 export type ControlOperation = ControlStage | Dispatch;
 

@@ -24,6 +24,7 @@ import {
   userInputDelete,
   UserInputDeleteDto,
   ControlOperationSlim,
+  ControlOperationPayloadHistoryData,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlOperationsService } from './control-operations.service';
@@ -81,7 +82,7 @@ export class ControlOperationsController {
   @Get(':id/history')
   getOperationPayloadHistory(
     @Param('id') id: number,
-  ): Promise<Array<ControlOperation['payload'] & { id: number }>> {
+  ): Promise<ControlOperationPayloadHistoryData[]> {
     return this.controlOperations.readOperationPayloadHistory(id);
   }
 

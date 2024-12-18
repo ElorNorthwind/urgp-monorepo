@@ -7,6 +7,7 @@ import {
   ControlOperationSlim,
   UserInputApproveDto,
   ControlOperation,
+  ControlOperationPayloadHistoryData,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { operations } from './sql/sql';
@@ -51,7 +52,7 @@ export class ControlOperationsRepository {
 
   readOperationPayloadHistory(
     id: number,
-  ): Promise<Array<ControlOperation['payload'] & { id: number }> | null> {
+  ): Promise<ControlOperationPayloadHistoryData[] | null> {
     return this.db.any(operations.readOperationPayloadHistory, { id });
   }
 
