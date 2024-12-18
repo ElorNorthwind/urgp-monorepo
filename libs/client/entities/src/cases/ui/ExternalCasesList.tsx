@@ -14,10 +14,13 @@ const ExternalCasesList = (props: ExternalCasesListProps): JSX.Element => {
 
   return (
     <div className="overflow-hidden rounded-lg border">
-      <table className={cn('w-full border-collapse divide-y', className)}>
+      <table className={cn('w-full border-collapse', className)}>
         <tbody>
           {externalCases.map((c) => (
-            <tr key={c.num || '' + c.id || ''} className="divide-x">
+            <tr
+              key={c.num || '' + c.id || ''}
+              className="divide-x border-b last:border-b-0"
+            >
               {!compact && (
                 <td className={cn('bg-muted-foreground/5 px-4 py-1')}>
                   {externalSystemStyles[c.system].label || 'Устное поручение'}
