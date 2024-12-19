@@ -26,11 +26,13 @@ const StageHistoryItem = (props: StageHistoryItemProps): JSX.Element => {
     iconStyle: 'text-muted-foreground/40',
   };
 
-  const { badgeStyle, fontStyle, label } = approveStatusStyles?.[
+  const { bgStyle, badgeStyle, fontStyle, label } = approveStatusStyles?.[
     item.approveStatus
   ] || {
     label: 'Без статуса',
-    badgeStyle: 'bg-background',
+    bgStyle: 'bg-background',
+    badgeStyle:
+      'border-muted-foreground/50 bg-muted-foreground/5 text-muted-foreground',
     fontStyle: '',
   };
 
@@ -38,7 +40,7 @@ const StageHistoryItem = (props: StageHistoryItemProps): JSX.Element => {
     <div
       className={cn(
         'group relative flex w-full flex-col overflow-hidden border-b p-4 last:border-b-0',
-        badgeStyle,
+        bgStyle,
         className,
       )}
     >
@@ -67,10 +69,26 @@ const StageHistoryItem = (props: StageHistoryItemProps): JSX.Element => {
         )}
       </div>
       <div className="font-light">{item.description}</div>
-      <div className="text-muted-foreground">
+
+      <div
+        className={cn(
+          'mt-2 grid grid-cols-[auto_auto_1fr] border-l-4 px-2 py-1',
+          badgeStyle,
+        )}
+      >
         <span className="font-medium">{label}</span>
-        {item.approver?.fio && (
-          <span className="text-nowrap">{': ' + item.approver?.fio}</span>
+        {(item?.approveBy?.fio || item?.approver?.fio) && (
+          <span className="text-nowrap">
+            {': ' + (item?.approveBy?.fio || item?.approver?.fio)}
+          </span>
+        )}
+        {item?.approveDate && (
+          <span className="ml-auto text-nowrap">
+            {format(item.approveDate, 'dd.MM.yyyy HH:mm')}
+          </span>
+        )}
+        {item?.approveNotes && (
+          <span className="col-span-3 italic">{item.approveNotes}</span>
         )}
       </div>
     </div>

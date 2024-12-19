@@ -48,9 +48,15 @@ export class ControlOperationsController {
     const controlData = await this.classificators.getControlData(userId);
     const operationTypes = await this.classificators.getOperationTypesFlat();
 
+    const autoApproved = !!operationTypes.find((operation) => {
+      return operation.id === dto.type;
+    })?.autoApprove;
+
     const correctApprover =
       dto?.approver ?? controlData?.approvers?.operations?.[0] ?? null;
+
     if (
+      !autoApproved &&
       correctApprover &&
       !controlData?.approvers?.operations?.includes(correctApprover)
     ) {
@@ -59,10 +65,7 @@ export class ControlOperationsController {
       );
     }
 
-    const approved =
-      !!operationTypes.find((operation) => {
-        return operation.id === dto.type;
-      })?.autoApprove || correctApprover === userId;
+    const approved = autoApproved || correctApprover === userId;
 
     return this.controlOperations.createStage(
       {

@@ -86,7 +86,7 @@ export class ControlOperationsRepository {
     const updatedStage = {
       id: dto.id,
       authorId,
-      type: dto.type,
+      // type: dto.type,
       doneDate: dto.doneDate,
       num: dto.num,
       description: dto.description,

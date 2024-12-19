@@ -108,7 +108,7 @@ const CreateStageForm = ({
 
   async function onSubmit(data: ControlStageCreateFormValuesDto) {
     editStage
-      ? updateStage({ ...data, id: editStage?.id || 0 })
+      ? updateStage({ ...data, id: editStage?.id || 0, type: undefined })
           .unwrap()
           .then(() => {
             form.reset(emptyStage);
@@ -162,6 +162,7 @@ const CreateStageForm = ({
           form={form}
           fieldName={'type'}
           popoverClassName={widthClassName}
+          disabled={editStage ? true : false}
         />
         <div className="flex w-full flex-row gap-4">
           <DateFormField

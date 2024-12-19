@@ -30,7 +30,7 @@ export type ControlStageCreateFormValuesDto = z.infer<
 // изменение этапа
 export const controlStageUpdate = controlStageCreate
   .pick({
-    type: true,
+    // type: true,
     // externalCase: true,
     doneDate: true,
     num: true,
@@ -39,6 +39,7 @@ export const controlStageUpdate = controlStageCreate
   })
   .partial()
   .extend({
+    type: z.undefined().optional(),
     id: z.coerce.number(),
   });
 export type ControlStageUpdateDto = z.infer<typeof controlStageUpdate>;

@@ -6,6 +6,7 @@ type StyleData = {
   >;
   iconStyle?: string;
   badgeStyle?: string;
+  bgStyle?: string;
   fontStyle?: string;
   label?: string;
 };
@@ -18,17 +19,21 @@ export const operationTypeStyles = {
 
 export const approveStatusStyles = {
   pending: {
-    badgeStyle: 'bg-slate-50',
+    bgStyle: 'bg-slate-50',
+    badgeStyle:
+      'border-muted-foreground/50 bg-muted-foreground/5 text-muted-foreground',
     fontStyle: 'opacity-70',
     label: 'На согласовании',
   },
   approved: {
-    badgeStyle: 'bg-background',
+    bgStyle: 'bg-background',
+    badgeStyle: 'border-emerald-500/50 bg-emerald-500/5 text-emerald-600',
     fontStyle: '',
     label: 'Согласовано',
   },
   rejected: {
-    badgeStyle: 'bg-red-50',
+    bgStyle: 'bg-red-50',
+    badgeStyle: 'border-red-500/50 bg-red-500/5 text-red-500',
     fontStyle: 'opacity-70 line-through',
     label: 'Отклонено',
   },

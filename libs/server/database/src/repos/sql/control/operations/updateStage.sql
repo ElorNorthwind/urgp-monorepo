@@ -1,7 +1,6 @@
 UPDATE control.operations
 SET payload = payload || (payload->-1 || 
     jsonb_build_object(
-            'type', ${type},
             'doneDate', ${doneDate},
             'num', ${num},
             'description', ${description},
