@@ -1,6 +1,9 @@
 import { UseFormReturn } from 'react-hook-form';
 import { useOperationTypes } from '../api/classificatorsApi';
 import { ClassificatorFormField } from '@urgp/client/widgets';
+import { operationTypeStyles } from '../../operations/config/operationStyles';
+import { Circle } from 'lucide-react';
+import { cn } from '@urgp/client/shared';
 
 type OperationTypeSelectorProps = {
   className?: string;
@@ -40,6 +43,17 @@ const OperationTypeSelector = (
       isLoading={isLoading || isFetching}
       className={className}
       popoverClassName={popoverClassName}
+      addItemBadge={(item) => {
+        const { icon: StageIcon, iconStyle } = operationTypeStyles?.[
+          item?.value || 0
+        ] || {
+          icon: Circle,
+          iconStyle: 'text-muted-foreground/40',
+        };
+        return StageIcon ? (
+          <StageIcon className={cn('size-4', iconStyle)} />
+        ) : null;
+      }}
     />
   );
 };

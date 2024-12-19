@@ -87,7 +87,7 @@ const CreateStageDialog = ({
             caseId={caseId}
             className={className}
             widthClassName={cn(
-              `w-[calc(var(--dialog-width)-3rem)]  max-w-[calc(100vw-3rem)]`,
+              `w-[calc(${DIALOG_WIDTH}-3rem)]  max-w-[calc(100vw-3rem)]`,
             )}
             onClose={() => setIsOpen(false)}
             editStage={editStage}
@@ -136,8 +136,11 @@ const CreateStageDialog = ({
         <CreateStageForm
           caseId={caseId}
           className={className}
+          // widthClassName={cn(
+          //   `w-[calc(var(--dialog-width)-3rem)]  max-w-[calc(100vw-3rem)]`,
+          // )}
           widthClassName={cn(
-            `w-[calc(var(--dialog-width)-3rem)]  max-w-[calc(100vw-3rem)]`,
+            `w-[calc(${DIALOG_WIDTH}-3rem)]  max-w-[calc(100vw-3rem)]`,
           )}
           onClose={() => setIsOpen(false)}
           editStage={editStage}

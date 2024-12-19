@@ -27,10 +27,20 @@ const StageItem = (props: StageItemProps): JSX.Element => {
   const { className, stage, setEditStage } = props;
   const [deleteOperation, { isLoading: isDeleting }] = useDeleteOperation();
   const user = selectCurrentUser(store.getState());
+  // const userData =
 
   if (stage === null) {
     return <Skeleton className="h-8 w-full" />;
   }
+
+  const canEdit =
+    (stage.payload.approveStatus === 'pending' &&
+      (user?.id === stage?.author?.id ||
+        user?.id === stage?.payload?.approver?.id ||
+        user?.roles.includes('admin'))) ||
+    (stage.payload.approveStatus === 'approved' &&
+      (user?.id === stage?.payload?.approveBy?.id ||
+        user?.roles.includes('admin')));
 
   const { icon: StageIcon, iconStyle } = operationTypeStyles?.[
     stage.payload.type.id
@@ -117,21 +127,17 @@ const StageItem = (props: StageItemProps): JSX.Element => {
             label="Удалить?"
           />
         )}
-
-        {(user?.id === stage?.author?.id ||
-          user?.id === stage?.payload?.approver?.id ||
-          user?.roles.includes('admin')) &&
-          stage.payload.approveStatus !== 'rejected' && (
-            <Button
-              className="size-6 rounded-full p-0"
-              variant={'ghost'}
-              onClick={() => {
-                setEditStage && setEditStage(stage);
-              }}
-            >
-              <Pencil className="size-4" />
-            </Button>
-          )}
+        {canEdit && (
+          <Button
+            className="size-6 rounded-full p-0"
+            variant={'ghost'}
+            onClick={() => {
+              setEditStage && setEditStage(stage);
+            }}
+          >
+            <Pencil className="size-4" />
+          </Button>
+        )}
         <span>{format(stage.payload.updatedAt, 'dd.MM.yyyy')}</span>
         <StagesHistory stage={stage} />
         <span className="mr-1 font-normal">{stage.author.fio}</span>

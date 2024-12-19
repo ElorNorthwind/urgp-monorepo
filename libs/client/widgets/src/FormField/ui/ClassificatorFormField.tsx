@@ -34,6 +34,9 @@ type ClassificatorFormFieldProps = {
   placeholder?: string;
   isLoading?: boolean;
   disabled?: boolean;
+  addItemBadge?: (
+    item: NestedClassificatorInfo['items'][0] | undefined,
+  ) => JSX.Element | null;
 };
 
 const ClassificatorFormField = (
@@ -50,6 +53,7 @@ const ClassificatorFormField = (
     label = 'Значение',
     placeholder = 'Выберите значение',
     disabled = false,
+    addItemBadge,
   } = props;
 
   return (
@@ -100,6 +104,21 @@ const ClassificatorFormField = (
                               ?.label
                           }
                         </p>
+                        {addItemBadge && (
+                          <p className="ml-auto">
+                            {addItemBadge(
+                              classificator
+                                .find((category) =>
+                                  category.items.some(
+                                    (item) => field.value === item.value,
+                                  ),
+                                )
+                                ?.items.find(
+                                  (item) => item.value === field.value,
+                                ),
+                            )}
+                          </p>
+                        )}
                       </div>
                     ) : (
                       placeholder
@@ -160,6 +179,7 @@ const ClassificatorFormField = (
                                     </span>
                                   </p>
                                 </PopoverClose>
+                                {addItemBadge && addItemBadge(item)}
                               </CommandItem>
                             );
                           })}

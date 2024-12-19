@@ -121,7 +121,18 @@ export class ControlOperationsController {
         'Операция не разрешена. Менять этап работы может только автор или текущий согласующий!',
       );
     }
+
     const controlData = await this.classificators.getControlData(userId);
+    if (
+      !!controlData.roles.includes('admin') &&
+      currentOperation.payload?.approveStatus === 'approved' &&
+      userId !== currentOperation.payload?.approveBy
+    ) {
+      throw new UnauthorizedException(
+        'Операция не разрешена. Менять согласованный этап может только тот, кто его согласовал (или админ)!',
+      );
+    }
+
     if (
       dto.approver &&
       !controlData?.approvers?.cases?.includes(dto.approver)
