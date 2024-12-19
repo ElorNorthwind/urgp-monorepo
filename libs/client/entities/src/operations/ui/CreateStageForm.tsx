@@ -162,7 +162,7 @@ const CreateStageForm = ({
           />
           <InputFormField
             form={form}
-            fieldName={'label'}
+            fieldName={'num'}
             label="Номер"
             placeholder="Номер документа"
             className="flex-grow"
