@@ -11,6 +11,7 @@ type CaseTypeSelectorProps = {
   fieldName: string;
   label?: string;
   placeholder?: string;
+  dirtyIndicator?: boolean;
 };
 
 const CaseTypeSelector = (props: CaseTypeSelectorProps): JSX.Element => {
@@ -23,6 +24,7 @@ const CaseTypeSelector = (props: CaseTypeSelectorProps): JSX.Element => {
     fieldName,
     label = 'Тип дела',
     placeholder = 'Выберите тип дела',
+    dirtyIndicator = false,
   } = props;
   const { data, isLoading, isFetching } = useCaseTypes();
 
@@ -38,6 +40,7 @@ const CaseTypeSelector = (props: CaseTypeSelectorProps): JSX.Element => {
       isLoading={isLoading || isFetching}
       className={className}
       popoverClassName={popoverClassName}
+      dirtyIndicator={dirtyIndicator}
     />
   );
 };

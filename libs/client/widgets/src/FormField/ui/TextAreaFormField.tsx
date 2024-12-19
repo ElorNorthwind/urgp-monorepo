@@ -8,7 +8,7 @@ import {
 import { UseFormReturn } from 'react-hook-form';
 import { FormInputLabel } from './components/FormInputLabel';
 import { FormInputSkeleton } from './components/FormInputSkeleton';
-import { formItemClassName } from './config/formItem';
+import { formFieldStatusClassName, formItemClassName } from './config/formItem';
 
 type TextAreaFormFieldProps = {
   form: UseFormReturn<any, any>;
@@ -19,6 +19,7 @@ type TextAreaFormFieldProps = {
   disabled?: boolean;
   label?: string;
   placeholder?: string;
+  dirtyIndicator?: boolean;
 };
 
 const TextAreaFormField = (props: TextAreaFormFieldProps): JSX.Element => {
@@ -31,25 +32,29 @@ const TextAreaFormField = (props: TextAreaFormFieldProps): JSX.Element => {
     fieldName,
     label = 'Значение',
     placeholder = 'Введите значение',
+    dirtyIndicator = false,
   } = props;
 
   return (
     <FormField
       control={form.control}
       name={fieldName}
-      render={({ field }) => (
+      render={({ field, fieldState, formState }) => (
         <FormItem className={cn(formItemClassName, className)}>
-          <FormInputLabel form={form} fieldName={fieldName} label={label} />
+          <FormInputLabel fieldState={fieldState} label={label} />
           {isLoading ? (
             <FormInputSkeleton />
           ) : (
             <FormControl>
               <Textarea
-                disabled={disabled}
+                disabled={disabled || formState.isSubmitting}
                 placeholder={placeholder}
                 {...field}
-                name={fieldName}
-                className={triggerClassName}
+                // name={field.name}
+                className={cn(
+                  formFieldStatusClassName({ dirtyIndicator, fieldState }),
+                  triggerClassName,
+                )}
               />
             </FormControl>
           )}

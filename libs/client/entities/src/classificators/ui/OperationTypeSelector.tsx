@@ -14,6 +14,7 @@ type OperationTypeSelectorProps = {
   fieldName: string;
   label?: string;
   placeholder?: string;
+  dirtyIndicator?: boolean;
 };
 
 const OperationTypeSelector = (
@@ -28,21 +29,23 @@ const OperationTypeSelector = (
     fieldName,
     label = 'Тип операции',
     placeholder = 'Выберите тип операции',
+    dirtyIndicator = false,
   } = props;
   const { data, isLoading, isFetching } = useOperationTypes();
 
   return (
     <ClassificatorFormField
+      fieldName={fieldName}
       form={form}
       label={label}
       placeholder={placeholder}
       disabled={disabled}
       triggerClassName={triggerClassName}
-      fieldName={fieldName}
       classificator={data}
       isLoading={isLoading || isFetching}
       className={className}
       popoverClassName={popoverClassName}
+      dirtyIndicator={dirtyIndicator}
       addItemBadge={(item) => {
         const { icon: StageIcon, iconStyle } = operationTypeStyles?.[
           item?.value || 0

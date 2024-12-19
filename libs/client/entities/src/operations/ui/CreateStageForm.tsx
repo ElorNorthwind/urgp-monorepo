@@ -1,16 +1,9 @@
-import {
-  Button,
-  cn,
-  Form,
-  selectCurrentUser,
-  Skeleton,
-} from '@urgp/client/shared';
+import { Button, cn, Form, Skeleton } from '@urgp/client/shared';
 import {
   ControlStage,
   controlStageCreateFormValues,
   ControlStageCreateFormValuesDto,
 } from '@urgp/shared/entities';
-import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
@@ -31,7 +24,6 @@ import {
   TextAreaFormField,
 } from '@urgp/client/widgets';
 import { useEffect, useMemo } from 'react';
-import { StageItem } from './StagesList/StageItem';
 import { StageHistoryItem } from './StagesList/StageHistoryItem';
 
 type CreateStageFormProps = {
@@ -58,13 +50,15 @@ const CreateStageForm = ({
   const { data: userData, isLoading: isUserDataLoading } = useCurrentUserData();
 
   const emptyStage = useMemo(() => {
-    return {
-      type: 6,
-      doneDate: new Date(),
-      num: '',
-      description: '',
-      approver: userData?.approvers?.operations?.[0],
-    };
+    return controlStageCreateFormValues.safeParse({
+      type: editStage?.payload?.type?.id || 6,
+      doneDate: editStage?.payload?.doneDate || new Date(),
+      num: editStage?.payload?.num?.toString() || '',
+      description: editStage?.payload?.description?.toString() || '',
+      approver:
+        editStage?.approver?.id?.toString() ||
+        userData?.approvers?.operations?.[0].toString(),
+    }).data;
   }, [editStage, userData, isUserDataLoading]);
 
   const form = useForm<ControlStageCreateFormValuesDto>({
@@ -74,14 +68,7 @@ const CreateStageForm = ({
 
   useEffect(() => {
     if (editStage) {
-      form.reset({
-        type: editStage.payload.type.id || 6,
-        doneDate: editStage.payload.doneDate || new Date(),
-        num: editStage.payload.num || '',
-        description: editStage.payload.description || '',
-        approver:
-          editStage.approver?.id || userData?.approvers?.operations?.[0],
-      });
+      form.reset(emptyStage);
     }
   }, [editStage, form]);
 
@@ -171,6 +158,7 @@ const CreateStageForm = ({
             label="Дата"
             placeholder="Дата документа"
             className="flex-shrink-0"
+            dirtyIndicator={editStage ? true : false}
           />
           <InputFormField
             form={form}
@@ -178,6 +166,7 @@ const CreateStageForm = ({
             label="Номер"
             placeholder="Номер документа"
             className="flex-grow"
+            dirtyIndicator={editStage ? true : false}
           />
         </div>
         <TextAreaFormField
@@ -185,6 +174,7 @@ const CreateStageForm = ({
           fieldName={'description'}
           label="Описание"
           placeholder="Описание операции"
+          dirtyIndicator={editStage ? true : false}
         />
         <SelectFormField
           form={form}
@@ -194,6 +184,7 @@ const CreateStageForm = ({
           label="Согласующий"
           placeholder="Выбор согласующего"
           popoverClassName={widthClassName}
+          dirtyIndicator={editStage ? true : false}
           className={cn(
             operationTypes?.find((operation) => {
               return operation.id === watchType;

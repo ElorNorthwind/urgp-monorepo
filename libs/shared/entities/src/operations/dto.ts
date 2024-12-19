@@ -6,8 +6,8 @@ import { z } from 'zod';
 export const controlStageCreate = z.object({
   caseId: z.coerce.number().nullable().default(null),
   // authorId: z.coerce.number().nullable().default(null),
-  type: z.coerce.number(),
-  doneDate: z.coerce.date(),
+  type: z.coerce.number({ message: 'Тип этапа не выбран' }),
+  doneDate: z.coerce.date({ message: 'Дата обязательна' }),
   num: z.string().default(''),
   // externalCase: externalCase.nullable().default(null), // внешний номер,
   description: z.string().default(''),

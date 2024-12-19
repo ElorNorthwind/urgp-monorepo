@@ -20,7 +20,7 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
 import { FormInputLabel } from './components/FormInputLabel';
 import { FormInputSkeleton } from './components/FormInputSkeleton';
-import { formItemClassName } from './config/formItem';
+import { formFieldStatusClassName, formItemClassName } from './config/formItem';
 import { PopoverClose } from '@radix-ui/react-popover';
 
 type ClassificatorFormFieldProps = {
@@ -37,6 +37,7 @@ type ClassificatorFormFieldProps = {
   addItemBadge?: (
     item: NestedClassificatorInfo['items'][0] | undefined,
   ) => JSX.Element | null;
+  dirtyIndicator?: boolean;
 };
 
 const ClassificatorFormField = (
@@ -54,15 +55,16 @@ const ClassificatorFormField = (
     placeholder = 'Выберите значение',
     disabled = false,
     addItemBadge,
+    dirtyIndicator = false,
   } = props;
 
   return (
     <FormField
       control={form.control}
       name={fieldName}
-      render={({ field }) => (
+      render={({ field, fieldState, formState }) => (
         <FormItem className={cn(formItemClassName, className)}>
-          <FormInputLabel form={form} fieldName={fieldName} label={label} />
+          <FormInputLabel fieldState={fieldState} label={label} />
           {isLoading || !classificator ? (
             <FormInputSkeleton />
           ) : (
@@ -70,11 +72,14 @@ const ClassificatorFormField = (
               <PopoverTrigger asChild>
                 <FormControl>
                   <Button
+                    name={field.name}
                     variant="outline"
-                    disabled={disabled}
+                    disabled={disabled || formState.isSubmitting}
                     role="combobox"
+                    ref={field.ref}
                     className={cn(
                       'w-full justify-between overflow-hidden',
+                      formFieldStatusClassName({ dirtyIndicator, fieldState }),
                       !field.value && 'text-muted-foreground',
                       triggerClassName,
                     )}
@@ -155,9 +160,10 @@ const ClassificatorFormField = (
                                 value={item.label}
                                 key={item.value}
                                 keywords={item.tags}
-                                onSelect={() => {
-                                  form.setValue(fieldName, item.value);
-                                }}
+                                // onSelect={() => {
+                                //   form.setValue(fieldName, item.value);
+                                // }}
+                                onSelect={() => field.onChange(item.value)}
                               >
                                 <PopoverClose asChild>
                                   <Check

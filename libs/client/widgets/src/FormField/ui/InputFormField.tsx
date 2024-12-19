@@ -8,7 +8,7 @@ import {
 import { UseFormReturn } from 'react-hook-form';
 import { FormInputLabel } from './components/FormInputLabel';
 import { FormInputSkeleton } from './components/FormInputSkeleton';
-import { formItemClassName } from './config/formItem';
+import { formFieldStatusClassName, formItemClassName } from './config/formItem';
 
 type InputFormFieldProps = {
   form: UseFormReturn<any, any>;
@@ -20,6 +20,7 @@ type InputFormFieldProps = {
   label?: string;
   placeholder?: string;
   type?: React.InputHTMLAttributes<HTMLInputElement>['type'];
+  dirtyIndicator?: boolean;
 };
 
 const InputFormField = (props: InputFormFieldProps): JSX.Element => {
@@ -33,26 +34,31 @@ const InputFormField = (props: InputFormFieldProps): JSX.Element => {
     label = 'Значение',
     placeholder = 'Введите значение',
     type = 'text',
+    dirtyIndicator = false,
   } = props;
 
   return (
     <FormField
       control={form.control}
       name={fieldName}
-      render={({ field }) => (
+      render={({ field, fieldState, formState }) => (
         <FormItem className={cn(formItemClassName, className)}>
-          <FormInputLabel form={form} fieldName={fieldName} label={label} />
+          <FormInputLabel fieldState={fieldState} label={label} />
           {isLoading ? (
             <FormInputSkeleton />
           ) : (
             <FormControl>
               <Input
-                className={triggerClassName}
-                disabled={disabled}
+                className={cn(
+                  formFieldStatusClassName({ dirtyIndicator, fieldState }),
+                  triggerClassName,
+                )}
                 placeholder={placeholder}
                 {...field}
-                name={fieldName}
                 type={type}
+                // value={field.value?.toString() || field.value}
+                // defaultValue={field.value?.toString() || field.value}
+                disabled={disabled || formState.isSubmitting}
               />
             </FormControl>
           )}

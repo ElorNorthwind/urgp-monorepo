@@ -49,8 +49,8 @@ const CreateStageDialog = ({
       <Sheet
         open={isOpen}
         onOpenChange={(open) => {
-          open === false && setEditStage && setEditStage(null);
           setIsOpen(open);
+          open === false && setEditStage && setEditStage(null);
         }}
       >
         <SheetTrigger asChild>
@@ -89,7 +89,10 @@ const CreateStageDialog = ({
             widthClassName={cn(
               `w-[calc(${DIALOG_WIDTH}-3rem)]  max-w-[calc(100vw-3rem)]`,
             )}
-            onClose={() => setIsOpen(false)}
+            onClose={() => {
+              setIsOpen(false);
+              setEditStage && setEditStage(null);
+            }}
             editStage={editStage}
             setEditStage={setEditStage}
           />
@@ -101,8 +104,8 @@ const CreateStageDialog = ({
     <Dialog
       open={isOpen}
       onOpenChange={(open) => {
-        open === false && setEditStage && setEditStage(null);
         setIsOpen(open);
+        open === false && setEditStage && setEditStage(null);
       }}
     >
       <DialogTrigger asChild>
@@ -142,7 +145,10 @@ const CreateStageDialog = ({
           widthClassName={cn(
             `w-[calc(${DIALOG_WIDTH}-3rem)]  max-w-[calc(100vw-3rem)]`,
           )}
-          onClose={() => setIsOpen(false)}
+          onClose={() => {
+            setIsOpen(false);
+            setEditStage && setEditStage(null);
+          }}
           editStage={editStage}
           setEditStage={setEditStage}
         />

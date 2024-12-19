@@ -13,11 +13,11 @@ import { SelectOption } from '@urgp/shared/entities';
 import { UseFormReturn } from 'react-hook-form';
 import { FormInputLabel } from './components/FormInputLabel';
 import { FormInputSkeleton } from './components/FormInputSkeleton';
-import { formItemClassName } from './config/formItem';
+import { formFieldStatusClassName, formItemClassName } from './config/formItem';
 
 type SelectFormFieldProps<T> = {
-  form: UseFormReturn<any, any>;
   fieldName: string;
+  form: UseFormReturn<any, any>;
   options?: Array<SelectOption<T>>;
   className?: string;
   triggerClassName?: string;
@@ -26,6 +26,7 @@ type SelectFormFieldProps<T> = {
   label?: string;
   placeholder?: string;
   disabled?: boolean;
+  dirtyIndicator?: boolean;
 };
 
 const SelectFormField = <T extends string | number>(
@@ -42,25 +43,34 @@ const SelectFormField = <T extends string | number>(
     label = 'Значение',
     placeholder = 'Выберите значение',
     disabled = false,
+    dirtyIndicator = false,
   } = props;
 
   return (
     <FormField
       control={form.control}
       name={fieldName}
-      render={({ field }) => (
+      render={({ field, fieldState, formState }) => (
         <FormItem className={cn(formItemClassName, className)}>
-          <FormInputLabel form={form} fieldName={fieldName} label={label} />
+          <FormInputLabel fieldState={fieldState} label={label} />
           {isLoading || !options ? (
             <FormInputSkeleton />
           ) : (
             <Select
               onValueChange={field.onChange}
-              defaultValue={field.value?.toString()}
-              disabled={disabled}
+              value={field.value?.toString() || field.value}
+              defaultValue={field.value?.toString() || field.value}
+              disabled={disabled || formState.isSubmitting}
+              name={field.name}
             >
               <FormControl>
-                <SelectTrigger className={triggerClassName}>
+                <SelectTrigger
+                  className={cn(
+                    formFieldStatusClassName({ dirtyIndicator, fieldState }),
+                    triggerClassName,
+                  )}
+                  ref={field.ref}
+                >
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
               </FormControl>

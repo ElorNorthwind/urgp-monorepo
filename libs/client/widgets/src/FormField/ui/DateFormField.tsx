@@ -14,7 +14,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { FormInputLabel } from './components/FormInputLabel';
 import { FormInputSkeleton } from './components/FormInputSkeleton';
 import { format } from 'date-fns';
-import { formItemClassName } from './config/formItem';
+import { formFieldStatusClassName, formItemClassName } from './config/formItem';
 
 type DateFormFieldProps = {
   form: UseFormReturn<any, any>;
@@ -26,6 +26,7 @@ type DateFormFieldProps = {
   isLoading?: boolean;
   label?: string;
   placeholder?: string;
+  dirtyIndicator?: boolean;
 };
 
 const DateFormField = (props: DateFormFieldProps): JSX.Element => {
@@ -39,15 +40,16 @@ const DateFormField = (props: DateFormFieldProps): JSX.Element => {
     fieldName,
     label = 'Дата',
     placeholder = 'Выберите дату',
+    dirtyIndicator = false,
   } = props;
 
   return (
     <FormField
       control={form.control}
       name={fieldName}
-      render={({ field }) => (
+      render={({ field, fieldState, formState }) => (
         <FormItem className={cn(formItemClassName, className)}>
-          <FormInputLabel form={form} fieldName={fieldName} label={label} />
+          <FormInputLabel fieldState={fieldState} label={label} />
           {isLoading ? (
             <FormInputSkeleton />
           ) : (
@@ -56,10 +58,11 @@ const DateFormField = (props: DateFormFieldProps): JSX.Element => {
                 <PopoverTrigger asChild>
                   <Button
                     variant={'outline'}
-                    disabled={disabled}
+                    disabled={disabled || formState.isSubmitting}
                     className={cn(
                       'w-34 justify-start text-left font-normal',
                       !field.value && 'text-muted-foreground',
+                      formFieldStatusClassName({ dirtyIndicator, fieldState }),
                       triggerClassName,
                     )}
                   >
