@@ -26,8 +26,8 @@ export class ControlCaseService {
     return this.dbServise.db.controlCases.createCase(dto, userId);
   }
 
-  public async readCaseById(id: number): Promise<CaseSlim> {
-    return this.dbServise.db.controlCases.readCaseById(id);
+  public async readSlimCaseById(id: number): Promise<CaseSlim> {
+    return this.dbServise.db.controlCases.readSlimCaseById(id);
   }
 
   public async readCases(): Promise<Case[]> {

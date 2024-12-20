@@ -67,7 +67,7 @@ export class ControlCasesController {
     @Body(new ZodValidationPipe(caseUpdate)) dto: CaseUpdateDto,
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
-    const currentCase = await this.controlCases.readCaseById(dto.id);
+    const currentCase = await this.controlCases.readSlimCaseById(dto.id);
     const userId = req.user.id;
     if (
       userId !== currentCase.authorId &&
@@ -97,7 +97,7 @@ export class ControlCasesController {
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
     const userId = req.user.id;
-    const currentCase = await this.controlCases.readCaseById(dto.id);
+    const currentCase = await this.controlCases.readSlimCaseById(dto.id);
     const controlData = await this.classificators.getControlData(userId);
 
     if (currentCase.payload.isDeleted) {
@@ -123,7 +123,7 @@ export class ControlCasesController {
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
     const userId = req.user.id;
-    const currentCase = await this.controlCases.readCaseById(dto.id);
+    const currentCase = await this.controlCases.readSlimCaseById(dto.id);
     const controlData = await this.classificators.getControlData(userId);
 
     if (

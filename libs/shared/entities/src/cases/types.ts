@@ -5,24 +5,34 @@ import {
   UserInfo,
 } from '../userInput/types';
 
-type CasePayload = {
+type CasePayloadSlim = {
   externalCases: ExternalCase[]; // связанные номера
-  type: TypeInfo; // тип дела
-  directions: TypeInfo[]; // направления работы
-  problems: TypeInfo[]; // системные проблемы
+  type: number; // тип дела
+  directions: number[]; // направления работы
+  problems: number[]; // системные проблемы
   description: string; // собственно описание проблемы
   fio: string;
   adress: string | null;
+  approver: UserInfo;
+  approveBy: UserInfo;
+  updatedBy: UserInfo;
 } & BasicPayloadData;
 
-type CasePayloadSlim = Omit<CasePayload, 'type' | 'directions' | 'problems'> & {
-  type: number;
-  directions: number[];
-  problems: number[];
+type CasePayload = Omit<
+  CasePayloadSlim,
+  'type' | 'directions' | 'problems' | 'approver' | 'approveBy' | 'updatedBy'
+> & {
+  type: TypeInfo;
+  directions: TypeInfo[];
+  problems: TypeInfo[];
+  approver: UserInfo;
+  approveBy: UserInfo;
+  updatedBy: UserInfo;
 };
 
 export type Case = {
   id: number;
+  class: string;
   createdAt: Date;
   status: TypeInfo;
   author: UserInfo;
