@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { LoginPage } from '@urgp/client/pages';
-import { store } from '@urgp/client/shared';
+import { store, usePageMeta } from '@urgp/client/shared';
 
 export const Route = createFileRoute('/login')({
   beforeLoad: async ({ location }) => {
@@ -18,12 +18,11 @@ export const Route = createFileRoute('/login')({
     }
   },
 
-  component: Login,
+  component: () => {
+    usePageMeta('Сервисы жилищного блока', '/favicon.ico');
+    return <LoginPage />;
+  },
 });
-
-function Login() {
-  return <LoginPage />;
-}
 
 // import { createFileRoute } from '@tanstack/react-router';
 // import { MapPage } from '@urgp/client/pages';
