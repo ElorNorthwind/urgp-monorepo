@@ -3,12 +3,13 @@ WITH directions AS (
 		c.id,
 		jsonb_agg(to_jsonb(d)) as val
 	FROM control.cases c
-	LEFT JOIN control.directions d ON c.payload->-1->'directions' @> to_jsonb(d.id)
+	LEFT JOIN control.direction_types d ON c.payload->-1->'directions' @> to_jsonb(d.id)
 	GROUP BY c.id
 )
 
 SELECT  
 	c.id,
+	c.class,
 	json_build_object('id', u.id, 'fio', u.fio) as author,
 	c.created_at as "createdAt", 
 	c.payload->-1 

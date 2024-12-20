@@ -53,7 +53,9 @@ export class ControlOperationsController {
     })?.autoApprove;
 
     const correctApprover =
-      dto?.approver ?? controlData?.approvers?.operations?.[0] ?? null;
+      dto?.approver ??
+      controlData?.approvers?.operations?.[0] ??
+      (autoApproved ? userId : null);
 
     if (
       !autoApproved &&

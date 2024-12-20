@@ -1,10 +1,6 @@
 import { Badge, cn } from '@urgp/client/shared';
 import { Case } from '@urgp/shared/entities';
-import { format } from 'date-fns';
-import {
-  directionCategoryStyles,
-  externalSystemStyles,
-} from '../config/caseStyles';
+import { directionCategoryStyles } from '../config/caseStyles';
 
 type CaseDirectionsListProps = {
   className?: string;

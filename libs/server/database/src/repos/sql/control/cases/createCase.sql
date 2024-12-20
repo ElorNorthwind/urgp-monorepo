@@ -1,6 +1,7 @@
-INSERT INTO control.cases (author_id, payload)
+INSERT INTO control.cases (author_id, class, payload)
 VALUES
-  (${authorId}, 
+  (${authorId},
+  'control-incident', 
   jsonb_build_array(jsonb_build_object(
                     'externalCases', ${externalCases:raw},
                     'type', ${type},
@@ -18,4 +19,4 @@ VALUES
                     'updatedBy', ${authorId},
                     'isDeleted', false
                     )))
-RETURNING id, author_id as "authorId", created_at as "createdAt", payload->-1 as payload;
+RETURNING id, class, author_id as "authorId", created_at as "createdAt", payload->-1 as payload;

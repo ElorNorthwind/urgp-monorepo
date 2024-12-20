@@ -8,5 +8,5 @@ SELECT
 		'tags', tags || lower(fullname) || lower(category),
 		'category', category
 	)) as items
-FROM control.directions
+FROM control.direction_types
 GROUP BY category;

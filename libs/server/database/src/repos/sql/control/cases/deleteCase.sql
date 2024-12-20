@@ -4,4 +4,4 @@ SET payload = payload || (payload->-1 ||
                     'updatedBy', ${userId},
                     'isDeleted', true))
 WHERE id = ${id} 
-RETURNING id, author_id as "authorId", created_at as "createdAt", payload->-1 as payload;
+RETURNING id, class, author_id as "authorId", created_at as "createdAt", payload->-1 as payload;
