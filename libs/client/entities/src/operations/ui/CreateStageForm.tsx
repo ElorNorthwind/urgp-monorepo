@@ -52,7 +52,7 @@ const CreateStageForm = ({
   const emptyStage = useMemo(() => {
     return controlStageCreateFormValues.safeParse({
       type: editStage?.payload?.type?.id || 6,
-      doneDate: editStage?.payload?.doneDate || new Date(),
+      doneDate: editStage?.payload?.doneDate || new Date().setHours(0, 0, 0, 0),
       num: editStage?.payload?.num?.toString() || '',
       description: editStage?.payload?.description?.toString() || '',
       approver:
