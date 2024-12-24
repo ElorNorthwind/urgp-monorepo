@@ -66,20 +66,18 @@ const CreateStageDialog = ({
         >
           <SheetHeader>
             <SheetTitle className="text-left">
-              {editStage ? 'Изменить этап' : 'Добавить этап'}
+              {editStage === 'new' ? 'Добавить этап' : 'Изменить этап'}
             </SheetTitle>
             <SheetDescription className="text-left">
-              {editStage
-                ? 'Внесите нужные правки по этапу'
-                : 'Внесите данные для создания этапа'}
+              {editStage === 'new'
+                ? 'Внесите данные для создания этапа'
+                : 'Внесите нужные правки по этапу'}
             </SheetDescription>
           </SheetHeader>
           <CreateStageForm
             caseId={caseId}
             className={className}
-            widthClassName={cn(
-              `max-w-[calc(100vw-3rem)] min-w-[calc(${DIALOG_WIDTH}-3rem)]`,
-            )}
+            popoverMinWidth={`calc(${DIALOG_WIDTH} - 3rem)`}
           />
         </SheetContent>
       </Sheet>
@@ -123,9 +121,7 @@ const CreateStageDialog = ({
         <CreateStageForm
           caseId={caseId}
           className={className}
-          widthClassName={cn(
-            `w-[calc(${DIALOG_WIDTH}-3rem)]  max-w-[calc(100vw-3rem)]`,
-          )}
+          popoverMinWidth={`calc(${DIALOG_WIDTH} - 3rem)`}
         />
       </DialogContent>
     </Dialog>

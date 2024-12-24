@@ -36,13 +36,13 @@ import { useDispatch, useSelector } from 'react-redux';
 type CreateStageFormProps = {
   caseId: number;
   className?: string;
-  widthClassName?: string;
+  popoverMinWidth?: string;
 };
 
 const CreateStageForm = ({
   caseId,
   className,
-  widthClassName,
+  popoverMinWidth,
 }: CreateStageFormProps): JSX.Element | null => {
   const { data: operationTypes, isLoading: isOperationTypesLoading } =
     useOperationTypesFlat();
@@ -62,7 +62,13 @@ const CreateStageForm = ({
             description: '',
             approver: userData?.approvers?.operations?.[0].toString(),
           }
-        : editStage,
+        : {
+            type: editStage?.payload?.type?.id,
+            doneDate: editStage?.payload?.doneDate,
+            num: editStage?.payload?.num?.toString(),
+            description: editStage?.payload?.description?.toString(),
+            approver: editStage?.approver?.id?.toString(),
+          },
     ).data;
   }, [editStage, userData, isUserDataLoading]);
 
@@ -126,16 +132,14 @@ const CreateStageForm = ({
   }
 
   if (isUserDataLoading) {
-    return (
-      <Skeleton className={cn('h-[314px] w-full', className, widthClassName)} />
-    );
+    return <Skeleton className={cn('h-[314px] w-full', className)} />;
   }
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn('flex flex-col gap-4', className, widthClassName)}
+        className={cn('flex flex-col gap-4', className)}
       >
         {editStage && editStage !== 'new' && (
           <StageHistoryItem
@@ -151,8 +155,8 @@ const CreateStageForm = ({
         <OperationTypeSelector
           form={form}
           fieldName={'type'}
-          popoverClassName={cn(widthClassName)}
-          disabled={editStage ? true : false}
+          popoverMinWidth={popoverMinWidth}
+          disabled={editStage !== 'new'}
         />
         <div className="flex w-full flex-row gap-4">
           <DateFormField
@@ -186,7 +190,7 @@ const CreateStageForm = ({
           isLoading={isApproversLoading || isOperationTypesLoading}
           label="Согласующий"
           placeholder="Выбор согласующего"
-          popoverClassName={widthClassName}
+          popoverMinWidth={popoverMinWidth}
           dirtyIndicator={editStage ? true : false}
           className={cn(
             operationTypes?.find((operation) => {

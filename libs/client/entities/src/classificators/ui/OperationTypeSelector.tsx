@@ -8,7 +8,7 @@ import { cn } from '@urgp/client/shared';
 type OperationTypeSelectorProps = {
   className?: string;
   triggerClassName?: string;
-  popoverClassName?: string;
+  popoverMinWidth?: string;
   disabled?: boolean;
   form: UseFormReturn<any, any>;
   fieldName: string;
@@ -23,7 +23,7 @@ const OperationTypeSelector = (
   const {
     className,
     triggerClassName,
-    popoverClassName,
+    popoverMinWidth,
     disabled,
     form,
     fieldName,
@@ -43,7 +43,7 @@ const OperationTypeSelector = (
       classificator={data}
       isLoading={isLoading || isFetching}
       className={className}
-      popoverClassName={popoverClassName}
+      popoverMinWidth={popoverMinWidth}
       dirtyIndicator={dirtyIndicator}
       addItemBadge={(item) => {
         const { icon: StageIcon, iconStyle } = operationTypeStyles?.[

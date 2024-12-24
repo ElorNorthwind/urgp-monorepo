@@ -30,7 +30,7 @@ type ClassificatorFormFieldProps = {
   classificator?: NestedClassificatorInfo[];
   className?: string;
   triggerClassName?: string;
-  popoverClassName?: string;
+  popoverMinWidth?: string;
   label?: string;
   placeholder?: string;
   isLoading?: boolean;
@@ -48,7 +48,7 @@ const ClassificatorFormField = (
     classificator,
     className,
     triggerClassName,
-    popoverClassName,
+    popoverMinWidth,
     isLoading,
     form,
     fieldName,
@@ -143,8 +143,12 @@ const ClassificatorFormField = (
                 </FormControl>
               </PopoverTrigger>
               <PopoverContent
-                className={cn('p-0', popoverClassName)}
+                className={cn('p-0')} // popoverClassName
                 side="bottom"
+                style={{
+                  // width: 'calc(600px - 3rem)',
+                  minWidth: popoverMinWidth,
+                }}
               >
                 <Command
                   filter={(value, search, keywords) => {

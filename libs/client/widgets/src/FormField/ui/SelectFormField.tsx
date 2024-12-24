@@ -21,7 +21,7 @@ type SelectFormFieldProps<T> = {
   options?: Array<SelectOption<T>>;
   className?: string;
   triggerClassName?: string;
-  popoverClassName?: string;
+  popoverMinWidth?: string;
   isLoading?: boolean;
   label?: string;
   placeholder?: string;
@@ -36,7 +36,7 @@ const SelectFormField = <T extends string | number>(
     options,
     className,
     triggerClassName,
-    popoverClassName,
+    popoverMinWidth,
     isLoading,
     form,
     fieldName,
@@ -74,7 +74,7 @@ const SelectFormField = <T extends string | number>(
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
               </FormControl>
-              <SelectContent className={popoverClassName}>
+              <SelectContent style={{ minWidth: popoverMinWidth }}>
                 {options.map((option) => (
                   <SelectItem
                     key={option.value}
