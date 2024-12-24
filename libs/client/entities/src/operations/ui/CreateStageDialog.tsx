@@ -16,15 +16,16 @@ import {
   useIsMobile,
 } from '@urgp/client/shared';
 import { ControlStage } from '@urgp/shared/entities';
-import { useEffect, useState } from 'react';
 import { SquarePlus } from 'lucide-react';
 import { CreateStageForm } from './CreateStageForm';
 
 type CreateStageDialogProps = {
   caseId: number;
+  editStage: 'new' | ControlStage | null;
+  setEditStage: React.Dispatch<
+    React.SetStateAction<'new' | ControlStage | null>
+  >;
   className?: string;
-  editStage?: ControlStage | null;
-  setEditStage?: React.Dispatch<React.SetStateAction<ControlStage | null>>;
 };
 
 const DIALOG_WIDTH = '600px';
@@ -35,29 +36,21 @@ const CreateStageDialog = ({
   editStage,
   setEditStage,
 }: CreateStageDialogProps): JSX.Element | null => {
-  const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    if (editStage) {
-      setIsOpen(true);
-    }
-  }, [editStage, isMobile]);
 
   if (isMobile)
     return (
       <Sheet
-        open={isOpen}
+        open={!!editStage}
         onOpenChange={(open) => {
-          setIsOpen(open);
-          open === false && setEditStage && setEditStage(null);
+          open === false && setEditStage(null);
         }}
       >
         <SheetTrigger asChild>
           <Button
             variant={'outline'}
             className="h-8 p-1 pr-2"
-            onClick={() => setIsOpen(true)}
+            onClick={() => setEditStage('new')}
           >
             <SquarePlus className="mr-1 size-4 flex-shrink-0" />
             <span>Новый этап</span>
@@ -89,10 +82,6 @@ const CreateStageDialog = ({
             widthClassName={cn(
               `max-w-[calc(100vw-3rem)] min-w-[calc(${DIALOG_WIDTH}-3rem)]`,
             )}
-            onClose={() => {
-              setIsOpen(false);
-              setEditStage && setEditStage(null);
-            }}
             editStage={editStage}
             setEditStage={setEditStage}
           />
@@ -102,17 +91,16 @@ const CreateStageDialog = ({
 
   return (
     <Dialog
-      open={isOpen}
+      open={!!editStage}
       onOpenChange={(open) => {
-        setIsOpen(open);
-        open === false && setEditStage && setEditStage(null);
+        open === false && setEditStage(null);
       }}
     >
       <DialogTrigger asChild>
         <Button
           variant={'outline'}
           className="h-8 p-1 pr-2"
-          onClick={() => setIsOpen(true)}
+          onClick={() => setEditStage('new')}
         >
           <SquarePlus className="mr-1 size-4 flex-shrink-0" />
           <span>Новый этап</span>
@@ -139,16 +127,9 @@ const CreateStageDialog = ({
         <CreateStageForm
           caseId={caseId}
           className={className}
-          // widthClassName={cn(
-          //   `w-[calc(var(--dialog-width)-3rem)]  max-w-[calc(100vw-3rem)]`,
-          // )}
           widthClassName={cn(
             `w-[calc(${DIALOG_WIDTH}-3rem)]  max-w-[calc(100vw-3rem)]`,
           )}
-          onClose={() => {
-            setIsOpen(false);
-            setEditStage && setEditStage(null);
-          }}
           editStage={editStage}
           setEditStage={setEditStage}
         />

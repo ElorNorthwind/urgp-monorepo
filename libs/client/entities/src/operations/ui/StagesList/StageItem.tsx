@@ -20,7 +20,9 @@ import { StagesHistory } from '../StageHistory';
 type StageItemProps = {
   stage: ControlStage | null;
   className?: string;
-  setEditStage?: React.Dispatch<React.SetStateAction<ControlStage | null>>;
+  setEditStage?: React.Dispatch<
+    React.SetStateAction<'new' | ControlStage | null>
+  >;
 };
 
 const StageItem = (props: StageItemProps): JSX.Element => {

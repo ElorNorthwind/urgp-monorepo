@@ -31,16 +31,16 @@ type CreateStageFormProps = {
   caseId: number;
   className?: string;
   widthClassName?: string;
-  onClose?: () => void;
-  editStage?: ControlStage | null;
-  setEditStage?: React.Dispatch<React.SetStateAction<ControlStage | null>>;
+  editStage: 'new' | ControlStage | null;
+  setEditStage?: React.Dispatch<
+    React.SetStateAction<'new' | ControlStage | null>
+  >;
 };
 
 const CreateStageForm = ({
   caseId,
   className,
   widthClassName,
-  onClose,
   editStage,
   setEditStage,
 }: CreateStageFormProps): JSX.Element | null => {
@@ -51,15 +51,17 @@ const CreateStageForm = ({
   const { data: userData, isLoading: isUserDataLoading } = useCurrentUserData();
 
   const emptyStage = useMemo(() => {
-    return controlStageCreateFormValues.safeParse({
-      type: editStage?.payload?.type?.id || 6,
-      doneDate: editStage?.payload?.doneDate || new Date().setHours(0, 0, 0, 0),
-      num: editStage?.payload?.num?.toString() || '',
-      description: editStage?.payload?.description?.toString() || '',
-      approver:
-        editStage?.approver?.id?.toString() ||
-        userData?.approvers?.operations?.[0].toString(),
-    }).data;
+    return controlStageCreateFormValues.safeParse(
+      !editStage || editStage === 'new'
+        ? {
+            type: 6,
+            doneDate: new Date().setHours(0, 0, 0, 0),
+            num: '',
+            description: '',
+            approver: userData?.approvers?.operations?.[0].toString(),
+          }
+        : editStage,
+    ).data;
   }, [editStage, userData, isUserDataLoading]);
 
   const form = useForm<ControlStageCreateFormValuesDto>({
@@ -74,7 +76,6 @@ const CreateStageForm = ({
   }, [editStage, form]);
 
   const watchType = form.watch('type');
-  // const watchApprover = form.watch('approver');
 
   useEffect(() => {
     if (
@@ -95,14 +96,13 @@ const CreateStageForm = ({
   const [updateStage, { isLoading: isUpdateLoading }] = useUpdateControlStage();
 
   async function onSubmit(data: ControlStageCreateFormValuesDto) {
-    editStage
+    editStage && editStage !== 'new'
       ? updateStage({ ...data, id: editStage?.id || 0, type: undefined })
           .unwrap()
           .then(() => {
             form.reset(emptyStage);
             toast.success('Этап изменен');
             setEditStage && setEditStage(null);
-            onClose && onClose();
           })
           .catch((rejected: any) =>
             toast.error('Не удалось изменить этап', {
@@ -114,7 +114,7 @@ const CreateStageForm = ({
           .then(() => {
             form.reset(emptyStage);
             toast.success('Этап добавлен');
-            onClose && onClose();
+            setEditStage && setEditStage(null);
           })
           .catch((rejected: any) =>
             toast.error('Не удалось создать этап', {
@@ -135,7 +135,7 @@ const CreateStageForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('flex flex-col gap-4', className, widthClassName)}
       >
-        {editStage && (
+        {editStage && editStage !== 'new' && (
           <StageHistoryItem
             item={{
               ...editStage.payload,
@@ -201,7 +201,7 @@ const CreateStageForm = ({
             disabled={isCreateLoading || isUpdateLoading}
             onClick={() => {
               form.reset(emptyStage);
-              onClose && onClose();
+              setEditStage && setEditStage(null);
             }}
           >
             Отмена

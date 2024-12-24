@@ -7,7 +7,9 @@ type StagesListProps = {
   stages?: ControlStage[];
   className?: string;
   isLoading?: boolean;
-  setEditStage?: React.Dispatch<React.SetStateAction<ControlStage | null>>;
+  setEditStage?: React.Dispatch<
+    React.SetStateAction<'new' | ControlStage | null>
+  >;
 };
 
 const StagesList = (props: StagesListProps): JSX.Element => {

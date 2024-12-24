@@ -40,7 +40,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     isLoading,
     isFetching,
   } = useStages(controlCase?.id, { skip: !controlCase?.id });
-  const [editStage, SetEditStage] = useState<ControlStage | null>(null);
+  const [editStage, SetEditStage] = useState<'new' | ControlStage | null>(null);
 
   return (
     <>

@@ -5,8 +5,10 @@ import { CreateStageDialog } from './CreateStageDialog';
 type StagesHeaderProps = {
   caseId?: number;
   className?: string;
-  editStage?: ControlStage | null;
-  setEditStage?: React.Dispatch<React.SetStateAction<ControlStage | null>>;
+  editStage: 'new' | ControlStage | null;
+  setEditStage: React.Dispatch<
+    React.SetStateAction<'new' | ControlStage | null>
+  >;
 };
 
 const StagesHeader = (props: StagesHeaderProps): JSX.Element => {

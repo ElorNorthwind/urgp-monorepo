@@ -6,14 +6,30 @@ import { z } from 'zod';
 export const controlStageCreate = z.object({
   caseId: z.coerce.number().nullable().default(null),
   // authorId: z.coerce.number().nullable().default(null),
-  type: z.coerce.number({ message: 'Тип этапа не выбран' }),
-  doneDate: z.coerce.date({ message: 'Дата обязательна' }),
+  type: z.coerce.number({ message: 'Тип этапа не выбран' }).default(6),
+  doneDate: z.coerce
+    .date({ message: 'Дата обязательна' })
+    .or(z.number())
+    .default(new Date().setHours(0, 0, 0, 0)),
   num: z.string().default(''),
   // externalCase: externalCase.nullable().default(null), // внешний номер,
   description: z.string().default(''),
   approver: z.coerce.number().nullable().default(null),
 });
 export type ControlStageCreateDto = z.infer<typeof controlStageCreate>;
+
+// // создание этапа
+// export const controlStageCreate = z.object({
+//   caseId: z.coerce.number().nullable().default(null),
+//   // authorId: z.coerce.number().nullable().default(null),
+//   type: z.coerce.number({ message: 'Тип этапа не выбран' }),
+//   doneDate: z.coerce.date({ message: 'Дата обязательна' }),
+//   num: z.string().default(''),
+//   // externalCase: externalCase.nullable().default(null), // внешний номер,
+//   description: z.string().default(''),
+//   approver: z.coerce.number().nullable().default(null),
+// });
+// export type ControlStageCreateDto = z.infer<typeof controlStageCreate>;
 
 export const controlStageCreateFormValues = controlStageCreate.pick({
   type: true,
