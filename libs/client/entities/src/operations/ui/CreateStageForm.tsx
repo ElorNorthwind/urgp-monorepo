@@ -192,11 +192,7 @@ const CreateStageForm = ({
             })?.autoApprove && 'hidden',
           )}
         />
-        <DirectionTypeSelector
-          form={form}
-          fieldName={'directionType'}
-          dirtyIndicator={editStage ? true : false}
-        />
+
         <div className="flex w-full items-center justify-between gap-2">
           <Button
             className="flex-1"

@@ -16,7 +16,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { FormInputLabel } from './components/FormInputLabel';
 import { FormInputSkeleton } from './components/FormInputSkeleton';
 import { formFieldStatusClassName, formItemClassName } from './config/formItem';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import { CommandList, Command as CommandPrimitive } from 'cmdk';
 
@@ -60,6 +60,7 @@ const MultiSelectFormField = <T extends string | number>(
     [options],
   );
 
+  const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<ClassificatorInfo[]>(
     flatOptions.filter((o) => form.getValues(fieldName)?.includes(o.value)) ||
@@ -70,6 +71,28 @@ const MultiSelectFormField = <T extends string | number>(
   const handleUnselect = useCallback((option: ClassificatorInfo) => {
     setSelected((prev) => prev.filter((s) => s.value !== option.value));
   }, []);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const input = inputRef.current;
+      if (input) {
+        if (e.key === 'Delete' || e.key === 'Backspace') {
+          if (input.value === '') {
+            setSelected((prev) => {
+              const newSelected = [...prev];
+              newSelected.pop();
+              return newSelected;
+            });
+          }
+        }
+        // This is not a default behaviour of the <input /> field
+        if (e.key === 'Escape') {
+          input.blur();
+        }
+      }
+    },
+    [],
+  );
 
   const selectables = options
     .map((nestedOption) => {
@@ -108,22 +131,22 @@ const MultiSelectFormField = <T extends string | number>(
                   if (extendValue.includes(search.toLowerCase())) return 1;
                   return 0;
                 }}
-                // onKeyDown={handleKeyDown}
-                onKeyDown={(e) => {
-                  if (e.key === 'Delete' || e.key === 'Backspace') {
-                    if (field.value === '') {
-                      setSelected((prev) => {
-                        const newSelected = [...prev];
-                        newSelected.pop();
-                        return newSelected;
-                      });
-                    }
-                  }
-                  // This is not a default behaviour of the <input /> field
-                  if (e.key === 'Escape') {
-                    field.onBlur(); //.blur();
-                  }
-                }}
+                onKeyDown={handleKeyDown}
+                // onKeyDown={(e) => {
+                //   if (e.key === 'Delete' || e.key === 'Backspace') {
+                //     if (field.value === '') {
+                //       setSelected((prev) => {
+                //         const newSelected = [...prev];
+                //         newSelected.pop();
+                //         return newSelected;
+                //       });
+                //     }
+                //   }
+                //   // This is not a default behaviour of the <input /> field
+                //   if (e.key === 'Escape') {
+                //     field.onBlur(); //.blur();
+                //   }
+                // }}
                 className="overflow-visible bg-transparent"
               >
                 <div
@@ -163,7 +186,11 @@ const MultiSelectFormField = <T extends string | number>(
                     {/* Avoid having the "Search" Icon */}
                     <FormControl>
                       <CommandPrimitive.Input
-                        ref={field.ref}
+                        ref={(e) => {
+                          field.ref(e);
+                          // @ts-expect-error oh boy
+                          inputRef.current = e;
+                        }}
                         value={inputValue}
                         disabled={disabled}
                         onValueChange={setInputValue}
