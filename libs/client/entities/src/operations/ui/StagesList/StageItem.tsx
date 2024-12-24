@@ -2,6 +2,7 @@ import {
   Button,
   cn,
   selectCurrentUser,
+  setEditStage,
   Skeleton,
   store,
 } from '@urgp/client/shared';
@@ -16,20 +17,18 @@ import { ConfirmationButton } from '@urgp/client/widgets';
 import { toast } from 'sonner';
 import { useDeleteOperation } from '../../api/operationsApi';
 import { StagesHistory } from '../StageHistory';
+import { useDispatch } from 'react-redux';
 
 type StageItemProps = {
   stage: ControlStage | null;
   className?: string;
-  setEditStage?: React.Dispatch<
-    React.SetStateAction<'new' | ControlStage | null>
-  >;
 };
 
 const StageItem = (props: StageItemProps): JSX.Element => {
-  const { className, stage, setEditStage } = props;
+  const { className, stage } = props;
   const [deleteOperation, { isLoading: isDeleting }] = useDeleteOperation();
   const user = selectCurrentUser(store.getState());
-  // const userData =
+  const dispatch = useDispatch();
 
   if (stage === null) {
     return <Skeleton className="h-8 w-full" />;
@@ -134,7 +133,7 @@ const StageItem = (props: StageItemProps): JSX.Element => {
             className="size-6 rounded-full p-0"
             variant={'ghost'}
             onClick={() => {
-              setEditStage && setEditStage(stage);
+              dispatch(setEditStage(stage));
             }}
           >
             <Pencil className="size-4" />

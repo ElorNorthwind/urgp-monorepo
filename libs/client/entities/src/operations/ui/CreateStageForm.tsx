@@ -1,6 +1,12 @@
-import { Button, cn, Form, Skeleton } from '@urgp/client/shared';
 import {
-  ControlStage,
+  Button,
+  cn,
+  Form,
+  selectEditStage,
+  setEditStage,
+  Skeleton,
+} from '@urgp/client/shared';
+import {
   controlStageCreateFormValues,
   ControlStageCreateFormValuesDto,
 } from '@urgp/shared/entities';
@@ -12,7 +18,6 @@ import {
   useUpdateControlStage,
 } from '../api/operationsApi';
 import {
-  DirectionTypeSelector,
   OperationTypeSelector,
   useCurrentUserApprovers,
   useCurrentUserData,
@@ -26,29 +31,26 @@ import {
 } from '@urgp/client/widgets';
 import { useEffect, useMemo } from 'react';
 import { StageHistoryItem } from './StagesList/StageHistoryItem';
+import { useDispatch, useSelector } from 'react-redux';
 
 type CreateStageFormProps = {
   caseId: number;
   className?: string;
   widthClassName?: string;
-  editStage: 'new' | ControlStage | null;
-  setEditStage?: React.Dispatch<
-    React.SetStateAction<'new' | ControlStage | null>
-  >;
 };
 
 const CreateStageForm = ({
   caseId,
   className,
   widthClassName,
-  editStage,
-  setEditStage,
 }: CreateStageFormProps): JSX.Element | null => {
   const { data: operationTypes, isLoading: isOperationTypesLoading } =
     useOperationTypesFlat();
   const { data: approvers, isLoading: isApproversLoading } =
     useCurrentUserApprovers();
   const { data: userData, isLoading: isUserDataLoading } = useCurrentUserData();
+  const editStage = useSelector(selectEditStage);
+  const dispatch = useDispatch();
 
   const emptyStage = useMemo(() => {
     return controlStageCreateFormValues.safeParse(
@@ -102,7 +104,7 @@ const CreateStageForm = ({
           .then(() => {
             form.reset(emptyStage);
             toast.success('Этап изменен');
-            setEditStage && setEditStage(null);
+            dispatch(setEditStage(null));
           })
           .catch((rejected: any) =>
             toast.error('Не удалось изменить этап', {
@@ -114,7 +116,7 @@ const CreateStageForm = ({
           .then(() => {
             form.reset(emptyStage);
             toast.success('Этап добавлен');
-            setEditStage && setEditStage(null);
+            dispatch(setEditStage(null));
           })
           .catch((rejected: any) =>
             toast.error('Не удалось создать этап', {
@@ -201,7 +203,7 @@ const CreateStageForm = ({
             disabled={isCreateLoading || isUpdateLoading}
             onClick={() => {
               form.reset(emptyStage);
-              setEditStage && setEditStage(null);
+              dispatch(setEditStage(null));
             }}
           >
             Отмена

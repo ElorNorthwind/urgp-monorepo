@@ -60,6 +60,7 @@ export * from './store/rtkApi';
 export * from './store/store';
 export * from './store/auth/authApi';
 export * from './store/auth/authSlice';
+export * from './store/control/controlSlice';
 
 //export hooks
 export * from './hooks/useIsMobile';

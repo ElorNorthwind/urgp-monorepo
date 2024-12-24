@@ -2,9 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { rtkApi } from './rtkApi';
 import authReducer from '../store/auth/authSlice';
+import controlReducer from '../store/control/controlSlice';
 
 export const store = configureStore({
-  reducer: { [rtkApi.reducerPath]: rtkApi.reducer, auth: authReducer },
+  reducer: {
+    [rtkApi.reducerPath]: rtkApi.reducer,
+    auth: authReducer,
+    control: controlReducer,
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(rtkApi.middleware),
 });

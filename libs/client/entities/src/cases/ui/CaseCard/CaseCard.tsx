@@ -1,4 +1,3 @@
-import { controlCasesColumns, useCases } from '@urgp/client/entities';
 import {
   Accordion,
   AccordionContent,
@@ -6,18 +5,12 @@ import {
   AccordionTrigger,
   cn,
 } from '@urgp/client/shared';
-import { Case, ControlStage } from '@urgp/shared/entities';
+import { Case } from '@urgp/shared/entities';
 import { CaseCardHeader } from './CaseCardHeader';
 import { caseStatusStyles, caseTypeStyles } from '../../config/caseStyles';
 import { ExternalCasesList } from '../ExternalCasesList';
 import { CaseDirectionsList } from '../CaseDirectionsList';
-import {
-  CreateStageForm,
-  StagesHeader,
-  StagesList,
-  useStages,
-} from '../../../operations';
-import { useState } from 'react';
+import { StagesHeader, StagesList, useStages } from '../../../operations';
 
 type CaseCardProps = {
   className?: string;
@@ -26,10 +19,6 @@ type CaseCardProps = {
 };
 
 const CaseCard = (props: CaseCardProps): JSX.Element => {
-  //   const { data: cases, isLoading, isFetching } = useCases();
-  //   const isMobile = useIsMobile();
-  //   const navigate = useNavigate({ from: '/control' });
-  //   const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
   const { className, controlCase } = props;
   const { icon: TypeIcon, iconStyle: typeIconStyle } =
     caseTypeStyles[controlCase?.payload?.type?.id || 1];
@@ -40,7 +29,6 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     isLoading,
     isFetching,
   } = useStages(controlCase?.id, { skip: !controlCase?.id });
-  const [editStage, SetEditStage] = useState<'new' | ControlStage | null>(null);
 
   return (
     <>
@@ -107,24 +95,12 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
           <AccordionTrigger>Поручения</AccordionTrigger>
           <AccordionContent>Лукьянов М.Г.: 31.12.2024</AccordionContent>
         </AccordionItem>
-        {/* <AccordionItem value="stages">
-          <AccordionTrigger>Работа с делом</AccordionTrigger>
-          <AccordionContent>
-            <StageList stages={stages} isLoading={isLoading || isFetching} />
-          </AccordionContent>
-        </AccordionItem> */}
       </Accordion>
-      <StagesHeader
-        caseId={controlCase?.id}
-        className="mx-4 mt-4"
-        editStage={editStage}
-        setEditStage={SetEditStage}
-      />
+      <StagesHeader caseId={controlCase?.id} className="mx-4 mt-4" />
       <StagesList
         stages={stages}
         isLoading={isLoading || isFetching}
         className="m-4"
-        setEditStage={SetEditStage}
       />
     </>
   );
