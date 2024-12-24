@@ -22,6 +22,7 @@ import { FormInputLabel } from './components/FormInputLabel';
 import { FormInputSkeleton } from './components/FormInputSkeleton';
 import { formFieldStatusClassName, formItemClassName } from './config/formItem';
 import { PopoverClose } from '@radix-ui/react-popover';
+import { useState } from 'react';
 
 type ClassificatorFormFieldProps = {
   form: UseFormReturn<any, any>;
@@ -57,6 +58,7 @@ const ClassificatorFormField = (
     addItemBadge,
     dirtyIndicator = false,
   } = props;
+  const [open, setOpen] = useState(false);
 
   return (
     <FormField
@@ -75,7 +77,7 @@ const ClassificatorFormField = (
           {isLoading || !classificator ? (
             <FormInputSkeleton />
           ) : (
-            <Popover modal={true}>
+            <Popover modal={true} open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <FormControl>
                   <Button
@@ -143,7 +145,6 @@ const ClassificatorFormField = (
               <PopoverContent
                 className={cn('p-0', popoverClassName)}
                 side="bottom"
-                // style={{ width: 'calc(600px-3rem)', minWidth: '300px' }}
               >
                 <Command
                   filter={(value, search, keywords) => {
@@ -170,29 +171,24 @@ const ClassificatorFormField = (
                                 key={item.value}
                                 keywords={item.tags}
                                 onSelect={() => {
+                                  setOpen(false);
                                   field.onChange(item.value);
                                 }}
                               >
-                                <PopoverClose asChild>
-                                  <Check
-                                    className={cn(
-                                      'mr-2 size-4',
-                                      item.value === field.value
-                                        ? 'opacity-100'
-                                        : 'opacity-0',
-                                    )}
-                                  />
-                                </PopoverClose>
-                                <PopoverClose asChild>
-                                  <p className="flex w-full flex-col gap-0 truncate">
-                                    <span className="truncate">
-                                      {item.label}
-                                    </span>
-                                    <span className="text-muted-foreground/60 truncate text-xs">
-                                      {item.fullname}
-                                    </span>
-                                  </p>
-                                </PopoverClose>
+                                <Check
+                                  className={cn(
+                                    'mr-2 size-4',
+                                    item.value === field.value
+                                      ? 'opacity-100'
+                                      : 'opacity-0',
+                                  )}
+                                />
+                                <p className="flex w-full flex-col gap-0 truncate">
+                                  <span className="truncate">{item.label}</span>
+                                  <span className="text-muted-foreground/60 truncate text-xs">
+                                    {item.fullname}
+                                  </span>
+                                </p>
                                 {addItemBadge && addItemBadge(item)}
                               </CommandItem>
                             );
