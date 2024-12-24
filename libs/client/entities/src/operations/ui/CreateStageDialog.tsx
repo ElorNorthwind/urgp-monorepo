@@ -87,7 +87,7 @@ const CreateStageDialog = ({
             caseId={caseId}
             className={className}
             widthClassName={cn(
-              `w-[calc(${DIALOG_WIDTH}-3rem)]  max-w-[calc(100vw-3rem)]`,
+              `max-w-[calc(100vw-3rem)] min-w-[calc(${DIALOG_WIDTH}-3rem)]`,
             )}
             onClose={() => {
               setIsOpen(false);

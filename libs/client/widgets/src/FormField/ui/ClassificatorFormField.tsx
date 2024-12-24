@@ -58,6 +58,7 @@ const ClassificatorFormField = (
     dirtyIndicator = false,
   } = props;
 
+  console.log(popoverClassName);
   return (
     <FormField
       control={form.control}
@@ -128,13 +129,14 @@ const ClassificatorFormField = (
                     ) : (
                       placeholder
                     )}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                   </Button>
                 </FormControl>
               </PopoverTrigger>
               <PopoverContent
                 className={cn('p-0', popoverClassName)}
                 side="bottom"
+                // style={{ width: 'calc(600px-3rem)', minWidth: '300px' }}
               >
                 <Command
                   filter={(value, search, keywords) => {
@@ -160,15 +162,12 @@ const ClassificatorFormField = (
                                 value={item.label}
                                 key={item.value}
                                 keywords={item.tags}
-                                // onSelect={() => {
-                                //   form.setValue(fieldName, item.value);
-                                // }}
                                 onSelect={() => field.onChange(item.value)}
                               >
                                 <PopoverClose asChild>
                                   <Check
                                     className={cn(
-                                      'mr-2 h-4 w-4',
+                                      'mr-2 size-4',
                                       item.value === field.value
                                         ? 'opacity-100'
                                         : 'opacity-0',

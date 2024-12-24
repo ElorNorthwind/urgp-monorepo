@@ -32,7 +32,6 @@ const OperationTypeSelector = (
     dirtyIndicator = false,
   } = props;
   const { data, isLoading, isFetching } = useOperationTypes();
-
   return (
     <ClassificatorFormField
       fieldName={fieldName}

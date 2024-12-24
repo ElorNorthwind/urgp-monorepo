@@ -76,7 +76,6 @@ const MultiSelectFormField = <T extends string | number>(
       return {
         ...nestedOption,
         items: nestedOption.items.filter(({ value }) => {
-          console.log(value, JSON.stringify(selected, null, 2));
           return !selected?.some((o) => o.value === value);
         }),
       };
@@ -102,6 +101,13 @@ const MultiSelectFormField = <T extends string | number>(
               <FormInputSkeleton />
             ) : (
               <Command
+                filter={(value, search, keywords) => {
+                  const extendValue = (
+                    keywords ? value + ' ' + keywords.join(' ') : value
+                  ).toLowerCase();
+                  if (extendValue.includes(search.toLowerCase())) return 1;
+                  return 0;
+                }}
                 // onKeyDown={handleKeyDown}
                 onKeyDown={(e) => {
                   if (e.key === 'Delete' || e.key === 'Backspace') {
@@ -198,6 +204,7 @@ const MultiSelectFormField = <T extends string | number>(
                                       setSelected((prev) => [...prev, option]);
                                     }}
                                     className={'cursor-pointer'}
+                                    keywords={option.tags}
                                   >
                                     <p className="flex w-full flex-col gap-0 truncate">
                                       <span className="truncate">

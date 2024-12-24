@@ -135,7 +135,6 @@ const CreateStageForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('flex flex-col gap-4', className, widthClassName)}
       >
-        {JSON.stringify(form.getValues())}
         {editStage && (
           <StageHistoryItem
             item={{
@@ -150,7 +149,7 @@ const CreateStageForm = ({
         <OperationTypeSelector
           form={form}
           fieldName={'type'}
-          popoverClassName={widthClassName}
+          popoverClassName={cn(widthClassName)}
           disabled={editStage ? true : false}
         />
         <div className="flex w-full flex-row gap-4">
