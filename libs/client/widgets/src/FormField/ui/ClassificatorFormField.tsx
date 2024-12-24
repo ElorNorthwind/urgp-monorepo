@@ -58,13 +58,19 @@ const ClassificatorFormField = (
     dirtyIndicator = false,
   } = props;
 
-  console.log(popoverClassName);
   return (
     <FormField
       control={form.control}
       name={fieldName}
       render={({ field, fieldState, formState }) => (
-        <FormItem className={cn(formItemClassName, className)}>
+        <FormItem
+          className={cn(
+            'group',
+            // 'focus-within:ring-ring focus-within:ring-2 focus-within:ring-offset-2',
+            formItemClassName,
+            className,
+          )}
+        >
           <FormInputLabel fieldState={fieldState} label={label} />
           {isLoading || !classificator ? (
             <FormInputSkeleton />
@@ -79,6 +85,7 @@ const ClassificatorFormField = (
                     role="combobox"
                     ref={field.ref}
                     className={cn(
+                      'group-focus-within:ring-ring group-focus-within:ring-2 group-focus-within:ring-offset-2',
                       'w-full justify-between overflow-hidden',
                       formFieldStatusClassName({ dirtyIndicator, fieldState }),
                       !field.value && 'text-muted-foreground',
@@ -162,7 +169,9 @@ const ClassificatorFormField = (
                                 value={item.label}
                                 key={item.value}
                                 keywords={item.tags}
-                                onSelect={() => field.onChange(item.value)}
+                                onSelect={() => {
+                                  field.onChange(item.value);
+                                }}
                               >
                                 <PopoverClose asChild>
                                   <Check
