@@ -67,7 +67,7 @@ const CreateStageForm = ({
             doneDate: editStage?.payload?.doneDate,
             num: editStage?.payload?.num?.toString(),
             description: editStage?.payload?.description?.toString(),
-            approver: editStage?.approver?.id?.toString(),
+            approver: editStage?.payload?.approver?.id?.toString(),
           },
     ).data;
   }, [editStage, userData, isUserDataLoading]);

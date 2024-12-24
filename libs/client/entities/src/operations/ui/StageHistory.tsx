@@ -13,6 +13,7 @@ import { ControlStage } from '@urgp/shared/entities';
 import { History } from 'lucide-react';
 import { useOperationPayloadHistroy } from '../api/operationsApi';
 import { StageHistoryItem } from './StagesList/StageHistoryItem';
+import { useState } from 'react';
 
 type StagesHistoryProps = {
   stage: ControlStage;
@@ -23,15 +24,17 @@ const DIALOG_WIDTH = '700px';
 
 const StagesHistory = (props: StagesHistoryProps): JSX.Element => {
   const { className, stage } = props;
+  const [open, setOpen] = useState(false);
+
   const {
     data: payloadHistory,
     isLoading,
     isFetching,
-  } = useOperationPayloadHistroy(stage.id);
+  } = useOperationPayloadHistroy(stage.id, { skip: !open });
   if (stage?.version === 1) return <></>;
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant={'ghost'} className="size-6 rounded-full p-0">
           <History className="size-4" />
