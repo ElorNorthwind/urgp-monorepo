@@ -1,5 +1,5 @@
 import { rtkApi } from '@urgp/client/shared';
-import { Case } from '@urgp/shared/entities';
+import { Case, CaseCreateDto, CaseUpdateDto } from '@urgp/shared/entities';
 
 export const casesApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
@@ -9,8 +9,26 @@ export const casesApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+    createCase: build.mutation<Case, CaseCreateDto>({
+      query: (dto) => ({
+        url: '/control/case',
+        method: 'POST',
+        body: dto,
+      }),
+    }),
+    updateCase: build.mutation<Case, CaseUpdateDto>({
+      query: (dto) => ({
+        url: '/control/case',
+        method: 'PATCH',
+        body: dto,
+      }),
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetCasesQuery: useCases } = casesApi;
+export const {
+  useGetCasesQuery: useCases,
+  useCreateCaseMutation: useCreateCase,
+  useUpdateCaseMutation: useUpdateCase,
+} = casesApi;
