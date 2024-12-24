@@ -31,11 +31,11 @@ export const caseTypeStyles = {
 } as Record<number, StyleData>;
 
 export const directionCategoryStyles = {
-  УРЖП: { badgeStyle: 'bg-cyan-50 border-cyan-200' },
-  УВЖУ: { badgeStyle: 'bg-emerald-50 border-emerald-200' },
-  УПГУ: { badgeStyle: 'bg-amber-50 border-amber-200' },
-  УП: { badgeStyle: 'bg-slate-50 border-slate-200' },
-  УОЖП: { badgeStyle: 'bg-violet-50 border-violet-200' },
+  УРЖП: { badgeStyle: 'bg-cyan-50 border-cyan-200 hover:bg-cyan-100' },
+  УВЖУ: { badgeStyle: 'bg-emerald-50 border-emerald-200 hover:bg-emerald-100' },
+  УПГУ: { badgeStyle: 'bg-amber-50 border-amber-200 hover:bg-amber-100' },
+  УП: { badgeStyle: 'bg-slate-50 border-slate-200 hover:bg-slate-100' },
+  УОЖП: { badgeStyle: 'bg-violet-50 border-violet-200 hover:bg-violet-100' },
 } as Record<string, StyleData>;
 
 export const externalSystemStyles = {

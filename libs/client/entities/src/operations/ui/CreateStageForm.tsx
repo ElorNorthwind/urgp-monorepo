@@ -12,6 +12,7 @@ import {
   useUpdateControlStage,
 } from '../api/operationsApi';
 import {
+  DirectionTypeSelector,
   OperationTypeSelector,
   useCurrentUserApprovers,
   useCurrentUserData,
@@ -134,6 +135,7 @@ const CreateStageForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('flex flex-col gap-4', className, widthClassName)}
       >
+        {JSON.stringify(form.getValues())}
         {editStage && (
           <StageHistoryItem
             item={{
@@ -190,6 +192,11 @@ const CreateStageForm = ({
               return operation.id === watchType;
             })?.autoApprove && 'hidden',
           )}
+        />
+        <DirectionTypeSelector
+          form={form}
+          fieldName={'directionType'}
+          dirtyIndicator={editStage ? true : false}
         />
         <div className="flex w-full items-center justify-between gap-2">
           <Button
