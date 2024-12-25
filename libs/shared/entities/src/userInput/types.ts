@@ -16,12 +16,17 @@ export const basicPayloadData = approveStatusData.extend({
 });
 export type BasicPayloadData = z.infer<typeof basicPayloadData>;
 
-export const externalCase = z.object({
-  id: z.coerce.number().or(z.string()).nullable().default(null),
-  num: z.string().nullable().default(null),
-  date: z.coerce.date().nullable().default(null),
-  system: z.enum(['EDO', 'SPD', 'SPD2', 'HOTLINE', 'CONSULTATION', 'NONE']),
-});
+export const externalCase = z
+  .object({
+    id: z.coerce.number().or(z.string()).nullable().default(null).optional(),
+    num: z.string().nullable().default(null),
+    date: z.coerce.date().nullable().default(null),
+    system: z.enum(['EDO', 'SPD', 'SPD2', 'HOTLINE', 'CONSULTATION', 'NONE']),
+  })
+  .refine(
+    ({ system, num }) => !['EDO', 'SPD', 'SPD2'].includes(system) || !!num,
+    { message: 'Внешний номер обязателен для систем ЭДО и СПД', path: ['num'] },
+  );
 export type ExternalCase = z.infer<typeof externalCase>;
 
 export const typeInfo = z.object({

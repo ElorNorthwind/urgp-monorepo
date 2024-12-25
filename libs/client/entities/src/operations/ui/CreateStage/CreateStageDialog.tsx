@@ -110,18 +110,18 @@ const CreateStageDialog = ({
       >
         <DialogHeader>
           <DialogTitle>
-            {editStage ? 'Изменить этап' : 'Добавить этап'}
+            {editStage === 'new' ? 'Добавить этап' : 'Изменить этап'}
           </DialogTitle>
           <DialogDescription>
-            {editStage
-              ? 'Внесите нужные правки по этапу'
-              : 'Внесите данные для создания этапа'}
+            {editStage === 'new'
+              ? 'Внесите данные для создания этапа'
+              : 'Внесите нужные правки по этапу'}
           </DialogDescription>
         </DialogHeader>
         <CreateStageForm
           caseId={caseId}
           className={className}
-          popoverMinWidth={`calc(${DIALOG_WIDTH} - 3rem)`}
+          popoverMinWidth={`calc(${DIALOG_WIDTH} - 3rem)`} // I hate it
         />
       </DialogContent>
     </Dialog>

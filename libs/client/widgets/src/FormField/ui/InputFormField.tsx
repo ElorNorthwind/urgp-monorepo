@@ -17,7 +17,7 @@ type InputFormFieldProps = {
   triggerClassName?: string;
   isLoading?: boolean;
   disabled?: boolean;
-  label?: string;
+  label?: string | null;
   placeholder?: string;
   type?: React.InputHTMLAttributes<HTMLInputElement>['type'];
   dirtyIndicator?: boolean;
@@ -43,7 +43,7 @@ const InputFormField = (props: InputFormFieldProps): JSX.Element => {
       name={fieldName}
       render={({ field, fieldState, formState }) => (
         <FormItem className={cn(formItemClassName, className)}>
-          <FormInputLabel fieldState={fieldState} label={label} />
+          {label && <FormInputLabel fieldState={fieldState} label={label} />}
           {isLoading ? (
             <FormInputSkeleton />
           ) : (

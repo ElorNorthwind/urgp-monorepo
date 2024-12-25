@@ -1,6 +1,6 @@
 import { cn } from '@urgp/client/shared';
 import { ControlStage } from '@urgp/shared/entities';
-import { CreateStageDialog } from './CreateStageDialog';
+import { CreateStageDialog } from './CreateStage/CreateStageDialog';
 
 type StagesHeaderProps = {
   caseId?: number;

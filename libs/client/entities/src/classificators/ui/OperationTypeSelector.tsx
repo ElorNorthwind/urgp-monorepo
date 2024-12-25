@@ -12,7 +12,7 @@ type OperationTypeSelectorProps = {
   disabled?: boolean;
   form: UseFormReturn<any, any>;
   fieldName: string;
-  label?: string;
+  label?: string | null;
   placeholder?: string;
   dirtyIndicator?: boolean;
 };
@@ -53,7 +53,7 @@ const OperationTypeSelector = (
           iconStyle: 'text-muted-foreground/40',
         };
         return StageIcon ? (
-          <StageIcon className={cn('size-4', iconStyle)} />
+          <StageIcon className={cn('size-6', iconStyle)} />
         ) : null;
       }}
     />

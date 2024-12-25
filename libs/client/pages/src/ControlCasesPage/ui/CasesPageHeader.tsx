@@ -1,5 +1,5 @@
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import { CreateStageForm } from '@urgp/client/entities';
+import { CreateCaseDialog, CreateStageForm } from '@urgp/client/entities';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -74,10 +74,7 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
           })
         }
       />
-      <Button variant={'outline'} className=" h-8 p-1">
-        <SquarePlus className="mr-1 size-4" />
-        <p>Добавить</p>
-      </Button>
+      <CreateCaseDialog />
       <Button variant={'outline'} className="size-8 shrink-0 p-1">
         <Settings2 className="size-4" />
       </Button>

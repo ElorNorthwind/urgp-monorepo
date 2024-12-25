@@ -41,17 +41,20 @@ export class ControlCasesController {
   ) {
     // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
     const userId = req.user.id;
-    if (userId !== dto.authorId) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Нельзя создавать заявки от имени другого пользователя!',
-      );
-    }
     const controlData = await this.classificators.getControlData(userId);
-    if (!controlData?.approvers?.cases?.includes(dto.approver)) {
+
+    const correctApprover =
+      dto?.approver ?? controlData?.approvers?.cases?.[0] ?? null;
+
+    if (
+      correctApprover &&
+      !controlData?.approvers?.cases?.includes(correctApprover)
+    ) {
       throw new UnauthorizedException(
         'Операция не разрешена. Согласующий не доступен пользователю!',
       );
     }
+    const approved = correctApprover === userId; // TBD
 
     return this.controlCases.createCase(dto, userId);
   }

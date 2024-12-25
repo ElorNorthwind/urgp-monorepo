@@ -11,7 +11,6 @@ import {
   NAVBAR_WIDTH,
   SidebarInset,
   TooltipProvider,
-  useIsMobile,
   VirtualDataTable,
 } from '@urgp/client/shared';
 import { CasesPageSearchDto, Case } from '@urgp/shared/entities';

@@ -28,7 +28,7 @@ type MultiSelectFormFieldProps<T> = {
   triggerClassName?: string;
   popoverClassName?: string;
   isLoading?: boolean;
-  label?: string;
+  label?: string | null;
   placeholder?: string;
   disabled?: boolean;
   addItemBadge?: (item: ClassificatorInfo | undefined) => JSX.Element | null;
@@ -119,7 +119,7 @@ const MultiSelectFormField = <T extends string | number>(
       render={({ field, fieldState, formState }) => {
         return (
           <FormItem className={cn(formItemClassName, className)}>
-            <FormInputLabel fieldState={fieldState} label={label} />
+            {label && <FormInputLabel fieldState={fieldState} label={label} />}
             {isLoading || !options ? (
               <FormInputSkeleton />
             ) : (

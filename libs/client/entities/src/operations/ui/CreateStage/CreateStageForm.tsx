@@ -16,13 +16,13 @@ import { toast } from 'sonner';
 import {
   useCreateControlStage,
   useUpdateControlStage,
-} from '../api/operationsApi';
+} from '../../api/operationsApi';
 import {
   OperationTypeSelector,
   useCurrentUserApprovers,
   useCurrentUserData,
   useOperationTypesFlat,
-} from '../../classificators';
+} from '../../../classificators';
 import {
   DateFormField,
   InputFormField,
@@ -30,7 +30,7 @@ import {
   TextAreaFormField,
 } from '@urgp/client/widgets';
 import { useEffect, useMemo } from 'react';
-import { StageHistoryItem } from './StagesList/StageHistoryItem';
+import { StageHistoryItem } from '../StagesList/StageHistoryItem';
 import { useDispatch, useSelector } from 'react-redux';
 
 type CreateStageFormProps = {
@@ -53,23 +53,21 @@ const CreateStageForm = ({
   const dispatch = useDispatch();
 
   const emptyStage = useMemo(() => {
-    return controlStageCreateFormValues.safeParse(
-      !editStage || editStage === 'new'
-        ? {
-            type: 6,
-            doneDate: new Date().setHours(0, 0, 0, 0),
-            num: '',
-            description: '',
-            approver: userData?.approvers?.operations?.[0].toString(),
-          }
-        : {
-            type: editStage?.payload?.type?.id,
-            doneDate: editStage?.payload?.doneDate,
-            num: editStage?.payload?.num?.toString(),
-            description: editStage?.payload?.description?.toString(),
-            approver: editStage?.payload?.approver?.id?.toString(),
-          },
-    ).data;
+    return !editStage || editStage === 'new'
+      ? {
+          type: 6,
+          doneDate: new Date().setHours(0, 0, 0, 0),
+          num: '',
+          description: '',
+          approver: userData?.approvers?.operations?.[0],
+        }
+      : controlStageCreateFormValues.safeParse({
+          type: editStage?.payload?.type?.id,
+          doneDate: editStage?.payload?.doneDate,
+          num: editStage?.payload?.num?.toString(),
+          description: editStage?.payload?.description?.toString(),
+          approver: editStage?.payload?.approver?.id,
+        }).data;
   }, [editStage, userData, isUserDataLoading]);
 
   const form = useForm<ControlStageCreateFormValuesDto>({

@@ -11,7 +11,7 @@ type DirectionTypeSelectorProps = {
   disabled?: boolean;
   form: UseFormReturn<any, any>;
   fieldName: string;
-  label?: string;
+  label?: string | null;
   placeholder?: string;
   dirtyIndicator?: boolean;
 };

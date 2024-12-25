@@ -15,6 +15,8 @@ import { FormInputLabel } from './components/FormInputLabel';
 import { FormInputSkeleton } from './components/FormInputSkeleton';
 import { format } from 'date-fns';
 import { formFieldStatusClassName, formItemClassName } from './config/formItem';
+import { use } from 'passport';
+import { useState } from 'react';
 
 type DateFormFieldProps = {
   form: UseFormReturn<any, any>;
@@ -24,9 +26,10 @@ type DateFormFieldProps = {
   popoverClassName?: string;
   disabled?: boolean;
   isLoading?: boolean;
-  label?: string;
+  label?: string | null;
   placeholder?: string;
   dirtyIndicator?: boolean;
+  stayOpen?: boolean;
 };
 
 const DateFormField = (props: DateFormFieldProps): JSX.Element => {
@@ -41,7 +44,10 @@ const DateFormField = (props: DateFormFieldProps): JSX.Element => {
     label = 'Дата',
     placeholder = 'Выберите дату',
     dirtyIndicator = false,
+    stayOpen = false,
   } = props;
+
+  const [open, setOpen] = useState(false);
 
   return (
     <FormField
@@ -49,12 +55,12 @@ const DateFormField = (props: DateFormFieldProps): JSX.Element => {
       name={fieldName}
       render={({ field, fieldState, formState }) => (
         <FormItem className={cn(formItemClassName, className)}>
-          <FormInputLabel fieldState={fieldState} label={label} />
+          {label && <FormInputLabel fieldState={fieldState} label={label} />}
           {isLoading ? (
             <FormInputSkeleton />
           ) : (
             <FormControl>
-              <Popover>
+              <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                   <Button
                     variant={'outline'}
@@ -83,7 +89,10 @@ const DateFormField = (props: DateFormFieldProps): JSX.Element => {
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    onSelect={(e) => {
+                      !stayOpen && setOpen(false);
+                      field.onChange(e);
+                    }}
                     disabled={(date) =>
                       date > new Date() || date < new Date('2017-01-01')
                     }

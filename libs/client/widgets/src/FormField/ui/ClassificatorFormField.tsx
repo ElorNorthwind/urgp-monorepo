@@ -31,7 +31,7 @@ type ClassificatorFormFieldProps = {
   className?: string;
   triggerClassName?: string;
   popoverMinWidth?: string;
-  label?: string;
+  label?: string | null;
   placeholder?: string;
   isLoading?: boolean;
   disabled?: boolean;
@@ -73,7 +73,7 @@ const ClassificatorFormField = (
             className,
           )}
         >
-          <FormInputLabel fieldState={fieldState} label={label} />
+          {label && <FormInputLabel fieldState={fieldState} label={label} />}
           {isLoading || !classificator ? (
             <FormInputSkeleton />
           ) : (

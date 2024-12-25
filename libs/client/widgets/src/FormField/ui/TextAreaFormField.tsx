@@ -17,7 +17,7 @@ type TextAreaFormFieldProps = {
   triggerClassName?: string;
   isLoading?: boolean;
   disabled?: boolean;
-  label?: string;
+  label?: string | null;
   placeholder?: string;
   dirtyIndicator?: boolean;
 };
@@ -41,7 +41,7 @@ const TextAreaFormField = (props: TextAreaFormFieldProps): JSX.Element => {
       name={fieldName}
       render={({ field, fieldState, formState }) => (
         <FormItem className={cn(formItemClassName, className)}>
-          <FormInputLabel fieldState={fieldState} label={label} />
+          {label && <FormInputLabel fieldState={fieldState} label={label} />}
           {isLoading ? (
             <FormInputSkeleton />
           ) : (

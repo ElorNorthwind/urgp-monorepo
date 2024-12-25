@@ -23,10 +23,11 @@ type SelectFormFieldProps<T> = {
   triggerClassName?: string;
   popoverMinWidth?: string;
   isLoading?: boolean;
-  label?: string;
+  label?: string | null;
   placeholder?: string;
   disabled?: boolean;
   dirtyIndicator?: boolean;
+  valueType?: 'string' | 'number';
 };
 
 const SelectFormField = <T extends string | number>(
@@ -44,6 +45,7 @@ const SelectFormField = <T extends string | number>(
     placeholder = 'Выберите значение',
     disabled = false,
     dirtyIndicator = false,
+    valueType = 'number',
   } = props;
 
   return (
@@ -52,14 +54,20 @@ const SelectFormField = <T extends string | number>(
       name={fieldName}
       render={({ field, fieldState, formState }) => (
         <FormItem className={cn(formItemClassName, className)}>
-          <FormInputLabel fieldState={fieldState} label={label} />
+          {label && <FormInputLabel fieldState={fieldState} label={label} />}
           {isLoading || !options ? (
             <FormInputSkeleton />
           ) : (
             <Select
-              onValueChange={field.onChange}
-              value={field.value?.toString() || field.value}
-              defaultValue={field.value?.toString() || field.value}
+              onValueChange={
+                (v) => field.onChange(valueType === 'number' ? parseInt(v) : v) // that's gonna bite me in the arse wont it?
+              }
+              value={
+                valueType === 'number' ? field.value?.toString() : field.value
+              }
+              defaultValue={
+                valueType === 'number' ? field.value?.toString() : field.value
+              }
               disabled={disabled || formState.isSubmitting}
               name={field.name}
             >

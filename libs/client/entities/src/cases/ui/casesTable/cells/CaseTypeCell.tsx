@@ -1,17 +1,15 @@
 import { CellContext } from '@tanstack/react-table';
 import {
-  Badge,
   cn,
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from '@urgp/client/shared';
 import { CasesPageSearchDto, Case } from '@urgp/shared/entities';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { caseTypeStyles } from '../../../config/caseStyles';
 import { getRouteApi } from '@tanstack/react-router';
-import { ChevronLeft, Play, StepBack } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 
 function CaseTypeCell(props: CellContext<Case, string>): JSX.Element {
   const payload = props.row.original.payload;

@@ -1,11 +1,22 @@
 import { UseFormReturn } from 'react-hook-form';
 import { useCaseTypes } from '../api/classificatorsApi';
-import { ClassificatorFormField } from '@urgp/client/widgets';
+import { ClassificatorFormField, SelectFormField } from '@urgp/client/widgets';
 import { caseTypeStyles } from '../../cases/config/caseStyles';
 import { MessageSquareMore } from 'lucide-react';
 import { cn } from '@urgp/client/shared';
 
-type CaseTypeSelectorProps = {
+// system: z.enum(['EDO', 'SPD', 'SPD2', 'HOTLINE', 'CONSULTATION', 'NONE'])
+
+const externalCaseTypes = [
+  { label: 'ЭДО', value: 'EDO' },
+  { label: 'СПД', value: 'SPD' },
+  { label: 'СПД-2', value: 'SPD2' },
+  { label: 'Линия', value: 'HOTLINE' },
+  { label: 'ВКС', value: 'CONSULTATION' },
+  { label: 'Другое', value: 'NONE' },
+];
+
+type ExternalCaseTypeSelectorProps = {
   className?: string;
   triggerClassName?: string;
   popoverMinWidth?: string;
@@ -17,7 +28,9 @@ type CaseTypeSelectorProps = {
   dirtyIndicator?: boolean;
 };
 
-const CaseTypeSelector = (props: CaseTypeSelectorProps): JSX.Element => {
+const ExternalCaseTypeSelector = (
+  props: ExternalCaseTypeSelectorProps,
+): JSX.Element => {
   const {
     className,
     triggerClassName,
@@ -29,31 +42,22 @@ const CaseTypeSelector = (props: CaseTypeSelectorProps): JSX.Element => {
     placeholder = 'Выберите тип дела',
     dirtyIndicator = false,
   } = props;
-  const { data, isLoading, isFetching } = useCaseTypes();
 
   return (
-    <ClassificatorFormField
+    <SelectFormField
       form={form}
       label={label}
       placeholder={placeholder}
       disabled={disabled}
       triggerClassName={triggerClassName}
       fieldName={fieldName}
-      classificator={data}
-      isLoading={isLoading || isFetching}
-      className={className}
+      options={externalCaseTypes}
+      className={cn('min-w-[91px]', className)}
       popoverMinWidth={popoverMinWidth}
       dirtyIndicator={dirtyIndicator}
-      addItemBadge={(item) => {
-        const { icon: TypeIcon, iconStyle } = caseTypeStyles[
-          item?.value || 0
-        ] || { icon: MessageSquareMore, iconStyle: 'text-slate-500' };
-        return TypeIcon ? (
-          <TypeIcon className={cn('size-6', iconStyle)} />
-        ) : null;
-      }}
+      valueType={'string'}
     />
   );
 };
 
-export { CaseTypeSelector };
+export { ExternalCaseTypeSelector };
