@@ -7,7 +7,7 @@ type FormInputSkeletonProps = {
 const FormInputSkeleton = (props: FormInputSkeletonProps): JSX.Element => {
   const { className } = props;
 
-  return <Skeleton className={cn('h-8 w-full', className)} />;
+  return <Skeleton className={cn('h-10 w-full', className)} />;
 };
 
 export { FormInputSkeleton };

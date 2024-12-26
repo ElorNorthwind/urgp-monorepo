@@ -12,6 +12,10 @@ const guestUser = {
   login: 'guest',
   fio: 'Гость',
   roles: ['guest'],
+  controlData: {
+    roles: [],
+    approvers: { cases: [], problems: [], operations: [] },
+  },
   tokenVersion: 0,
 };
 
@@ -41,4 +45,6 @@ const authSlice = createSlice({
 
 export const { setUser, clearUser } = authSlice.actions;
 export const selectCurrentUser = (state: RootState) => state.auth.user;
+export const selectUserApprovers = (state: RootState) =>
+  state.auth.user.controlData.approvers;
 export default authSlice.reducer;

@@ -9,6 +9,7 @@ import {
 import {
   cn,
   NAVBAR_WIDTH,
+  selectCurrentUser,
   SidebarInset,
   TooltipProvider,
   VirtualDataTable,
@@ -18,11 +19,13 @@ import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
 import { CasesPageHeader } from './CasesPageHeader';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const ControlCasesPage = (): JSX.Element => {
   const { data: cases, isLoading, isFetching } = useCases();
   const [selected, setSelected] = useState<Row<Case>[]>([]);
   const [filtered, setFiltered] = useState<Row<Case>[]>([]);
+  const user = useSelector(selectCurrentUser);
 
   // const isMobile = useIsMobile();
   const navigate = useNavigate({ from: '/control' });

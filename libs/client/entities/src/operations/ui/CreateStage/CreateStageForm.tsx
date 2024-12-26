@@ -2,7 +2,9 @@ import {
   Button,
   cn,
   Form,
+  selectCurrentUser,
   selectEditStage,
+  selectUserApprovers,
   setEditStage,
   Skeleton,
 } from '@urgp/client/shared';
@@ -48,7 +50,6 @@ const CreateStageForm = ({
     useOperationTypesFlat();
   const { data: approvers, isLoading: isApproversLoading } =
     useCurrentUserApprovers();
-  const { data: userData, isLoading: isUserDataLoading } = useCurrentUserData();
   const editStage = useSelector(selectEditStage);
   const dispatch = useDispatch();
 
@@ -59,7 +60,7 @@ const CreateStageForm = ({
           doneDate: new Date().setHours(0, 0, 0, 0),
           num: '',
           description: '',
-          approver: userData?.approvers?.operations?.[0],
+          approver: approvers?.operations?.[0]?.value,
         }
       : controlStageCreateFormValues.safeParse({
           type: editStage?.payload?.type?.id,
@@ -68,7 +69,7 @@ const CreateStageForm = ({
           description: editStage?.payload?.description?.toString(),
           approver: editStage?.payload?.approver?.id,
         }).data;
-  }, [editStage, userData, isUserDataLoading]);
+  }, [editStage, approvers]);
 
   const form = useForm<ControlStageCreateFormValuesDto>({
     resolver: zodResolver(controlStageCreateFormValues),
@@ -92,9 +93,8 @@ const CreateStageForm = ({
       form.unregister('approver');
     } else {
       form.register('approver');
-      userData?.approvers?.operations?.[0] &&
-        // watchApprover === undefined &&
-        form.setValue('approver', userData.approvers.operations[0]);
+      approvers?.operations?.[0]?.value &&
+        form.setValue('approver', approvers?.operations?.[0]?.value);
     }
   }, [form.register, form.unregister, watchType]);
 
@@ -129,9 +129,9 @@ const CreateStageForm = ({
           );
   }
 
-  if (isUserDataLoading) {
-    return <Skeleton className={cn('h-[314px] w-full', className)} />;
-  }
+  // if (isUserDataLoading) {
+  //   return <Skeleton className={cn('h-[314px] w-full', className)} />;
+  // }
 
   return (
     <Form {...form}>
@@ -163,7 +163,7 @@ const CreateStageForm = ({
             label="Дата"
             placeholder="Дата документа"
             className="flex-shrink-0"
-            dirtyIndicator={editStage ? true : false}
+            dirtyIndicator={editStage !== 'new'}
           />
           <InputFormField
             form={form}
@@ -171,7 +171,7 @@ const CreateStageForm = ({
             label="Номер"
             placeholder="Номер документа"
             className="flex-grow"
-            dirtyIndicator={editStage ? true : false}
+            dirtyIndicator={editStage !== 'new'}
           />
         </div>
         <TextAreaFormField
@@ -179,7 +179,7 @@ const CreateStageForm = ({
           fieldName={'description'}
           label="Описание"
           placeholder="Описание операции"
-          dirtyIndicator={editStage ? true : false}
+          dirtyIndicator={editStage !== 'new'}
         />
         <SelectFormField
           form={form}
@@ -189,7 +189,7 @@ const CreateStageForm = ({
           label="Согласующий"
           placeholder="Выбор согласующего"
           popoverMinWidth={popoverMinWidth}
-          dirtyIndicator={editStage ? true : false}
+          dirtyIndicator={editStage !== 'new'}
           className={cn(
             operationTypes?.find((operation) => {
               return operation.id === watchType;

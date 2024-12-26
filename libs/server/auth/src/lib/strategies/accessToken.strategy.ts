@@ -1,12 +1,7 @@
-import {
-  ForbiddenException,
-  Injectable,
-  Next,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { UserAccessTokenInfo } from '@urgp/shared/entities';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Strategy } from 'passport-jwt';
 import { Request } from 'express';
 
 // type JwtPayload = {

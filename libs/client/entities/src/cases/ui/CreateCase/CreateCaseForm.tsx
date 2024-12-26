@@ -21,14 +21,13 @@ import {
   SelectFormField,
   TextAreaFormField,
 } from '@urgp/client/widgets';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useCreateCase, useUpdateCase } from '../../api/casesApi';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CaseTypeSelector,
   DirectionTypeSelector,
   useCurrentUserApprovers,
-  useCurrentUserData,
 } from '../../../classificators';
 import { addBusinessDays } from 'date-fns';
 import { ExternalCaseFieldArray } from './ExternalCaseFieldArray';
@@ -44,7 +43,7 @@ const CreateCaseForm = ({
 }: CreateCaseFormProps): JSX.Element | null => {
   const { data: approvers, isLoading: isApproversLoading } =
     useCurrentUserApprovers();
-  const { data: userData, isLoading: isUserDataLoading } = useCurrentUserData();
+  // const { data: userData, isLoading: isUserDataLoading } = useCurrentUserData();
 
   const editCase = useSelector(selectEditCase);
   const dispatch = useDispatch();
@@ -66,7 +65,7 @@ const CreateCaseForm = ({
           description: '',
           fio: '',
           adress: '',
-          approver: userData?.approvers?.operations?.[0],
+          approver: approvers?.operations?.[0].value,
           dueDate: addBusinessDays(new Date().setHours(0, 0, 0, 0), 5),
         }
       : caseCreateFormValues.safeParse({
@@ -80,7 +79,7 @@ const CreateCaseForm = ({
           adress: editCase?.payload?.adress,
           approver: editCase?.payload?.approver?.id,
         }).data;
-  }, [editCase, userData, isUserDataLoading]);
+  }, [editCase, approvers]);
 
   const form = useForm<CaseCreateFormValuesDto>({
     resolver: zodResolver(caseCreateFormValues),
@@ -124,7 +123,7 @@ const CreateCaseForm = ({
           );
   }
 
-  if (isUserDataLoading) {
+  if (isApproversLoading) {
     return <Skeleton className={cn('h-[550px] w-full', className)} />;
   }
 

@@ -40,7 +40,7 @@ const CaseTypeSelector = (props: CaseTypeSelectorProps): JSX.Element => {
       triggerClassName={triggerClassName}
       fieldName={fieldName}
       classificator={data}
-      isLoading={isLoading || isFetching}
+      isLoading={isLoading || isFetching || !data}
       className={className}
       popoverMinWidth={popoverMinWidth}
       dirtyIndicator={dirtyIndicator}

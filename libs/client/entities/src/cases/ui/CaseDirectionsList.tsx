@@ -16,22 +16,26 @@ const CaseDirectionsList = (props: CaseDirectionsListProps): JSX.Element => {
     return (
       <div className={cn('flex flex-col gap-1', className)}>
         {label && <div className="mb-1 font-bold">{label}</div>}
-        {directions?.map((d) => (
-          <div className="flex justify-between" key={d.id}>
-            <Badge
-              variant={'outline'}
-              className={cn(
-                'px-1 py-0',
-                d.category && directionCategoryStyles[d.category].badgeStyle,
-              )}
-            >
-              {d.name}
-            </Badge>
-            <span className="text-muted-foreground ml-1 text-xs font-normal">
-              {'(' + d.category + ')'}
-            </span>
-          </div>
-        ))}
+        {directions?.map(
+          (d) =>
+            d?.id && (
+              <div className="flex justify-between" key={d.id}>
+                <Badge
+                  variant={'outline'}
+                  className={cn(
+                    'px-1 py-0',
+                    d?.category &&
+                      directionCategoryStyles[d.category].badgeStyle,
+                  )}
+                >
+                  {d.name}
+                </Badge>
+                <span className="text-muted-foreground ml-1 text-xs font-normal">
+                  {d?.category && '(' + d.category + ')'}
+                </span>
+              </div>
+            ),
+        )}
       </div>
     );
   }
@@ -48,18 +52,21 @@ const CaseDirectionsList = (props: CaseDirectionsListProps): JSX.Element => {
       )}
     >
       {label && <div className="font-bold">{label}</div>}
-      {visibleDirections.map((d) => (
-        <Badge
-          variant={'outline'}
-          className={cn(
-            'text-nowrap px-1 py-0',
-            d.category && directionCategoryStyles[d.category].badgeStyle,
-          )}
-          key={d.id}
-        >
-          {d.name}
-        </Badge>
-      ))}
+      {visibleDirections.map(
+        (d) =>
+          d?.id && (
+            <Badge
+              variant={'outline'}
+              className={cn(
+                'text-nowrap px-1 py-0',
+                d?.category && directionCategoryStyles[d.category].badgeStyle,
+              )}
+              key={d.id}
+            >
+              {d?.name && d.name}
+            </Badge>
+          ),
+      )}
       {variant === 'compact' && directions?.length > 2 && (
         <Badge variant={'outline'} className="px-1">
           ...

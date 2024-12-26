@@ -4,6 +4,7 @@ export type User = {
   fio: string;
   roles: string[];
   tokenVersion: number;
+  controlData: UserControlData;
 };
 
 export type UserWithCredentials = User & {

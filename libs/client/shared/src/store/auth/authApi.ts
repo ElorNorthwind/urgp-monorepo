@@ -1,6 +1,5 @@
 import {
   AuthUserDto,
-  changePassword,
   ChangeUserPasswordDto,
   User,
 } from '@urgp/shared/entities';

@@ -38,10 +38,10 @@ const StageItem = (props: StageItemProps): JSX.Element => {
     (stage.payload.approveStatus === 'pending' &&
       (user?.id === stage?.author?.id ||
         user?.id === stage?.payload?.approver?.id ||
-        user?.roles.includes('admin'))) ||
+        user?.controlRoles?.includes('admin'))) ||
     (stage.payload.approveStatus === 'approved' &&
       (user?.id === stage?.payload?.approveBy?.id ||
-        user?.roles.includes('admin')));
+        user?.controlRoles?.includes('admin')));
 
   const { icon: StageIcon, iconStyle } = operationTypeStyles?.[
     stage.payload.type.id

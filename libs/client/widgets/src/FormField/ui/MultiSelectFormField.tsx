@@ -16,7 +16,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { FormInputLabel } from './components/FormInputLabel';
 import { FormInputSkeleton } from './components/FormInputSkeleton';
 import { formFieldStatusClassName, formItemClassName } from './config/formItem';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import { CommandList, Command as CommandPrimitive } from 'cmdk';
 
@@ -105,7 +105,7 @@ const MultiSelectFormField = <T extends string | number>(
     })
     .filter((o) => o.items.length > 0);
 
-  useCallback(() => {
+  useEffect(() => {
     form.setValue(
       fieldName,
       selected.map((o) => o.value),
@@ -132,21 +132,6 @@ const MultiSelectFormField = <T extends string | number>(
                   return 0;
                 }}
                 onKeyDown={handleKeyDown}
-                // onKeyDown={(e) => {
-                //   if (e.key === 'Delete' || e.key === 'Backspace') {
-                //     if (field.value === '') {
-                //       setSelected((prev) => {
-                //         const newSelected = [...prev];
-                //         newSelected.pop();
-                //         return newSelected;
-                //       });
-                //     }
-                //   }
-                //   // This is not a default behaviour of the <input /> field
-                //   if (e.key === 'Escape') {
-                //     field.onBlur(); //.blur();
-                //   }
-                // }}
                 className="overflow-visible bg-transparent"
               >
                 <div
