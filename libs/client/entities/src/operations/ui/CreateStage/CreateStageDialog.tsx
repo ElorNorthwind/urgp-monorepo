@@ -101,6 +101,7 @@ const CreateStageDialog = ({
         </Button>
       </DialogTrigger>
       <DialogContent
+        onEscapeKeyDown={(e) => e.preventDefault()}
         style={
           {
             '--dialog-width': DIALOG_WIDTH,

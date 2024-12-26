@@ -2,21 +2,16 @@ import {
   Button,
   cn,
   Form,
-  Label,
-  ScrollArea,
   selectEditCase,
-  Separator,
   setEditCase,
   Skeleton,
-  Tooltip,
-  TooltipContent,
 } from '@urgp/client/shared';
 import {
   Case,
   caseCreateFormValues,
   CaseCreateFormValuesDto,
 } from '@urgp/shared/entities';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
@@ -26,19 +21,16 @@ import {
   SelectFormField,
   TextAreaFormField,
 } from '@urgp/client/widgets';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useCreateCase, useUpdateCase } from '../../api/casesApi';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CaseTypeSelector,
   DirectionTypeSelector,
-  ExternalCaseTypeSelector,
   useCurrentUserApprovers,
   useCurrentUserData,
 } from '../../../classificators';
 import { addBusinessDays } from 'date-fns';
-import { FilePlus, Trash2 } from 'lucide-react';
-import { TooltipTrigger } from '@radix-ui/react-tooltip';
 import { ExternalCaseFieldArray } from './ExternalCaseFieldArray';
 
 type CreateCaseFormProps = {
@@ -93,11 +85,6 @@ const CreateCaseForm = ({
   const form = useForm<CaseCreateFormValuesDto>({
     resolver: zodResolver(caseCreateFormValues),
     defaultValues: emptyCase,
-  });
-
-  const { fields, append, prepend, remove } = useFieldArray({
-    control: form.control,
-    name: 'externalCases',
   });
 
   useEffect(() => {

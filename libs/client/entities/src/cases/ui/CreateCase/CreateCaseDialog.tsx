@@ -20,6 +20,11 @@ import {
 import { SquarePlus } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CreateCaseForm } from './CreateCaseForm';
+import { useState } from 'react';
+import {
+  caseCreateFormValues,
+  CaseCreateFormValuesDto,
+} from '@urgp/shared/entities';
 
 type CreateCaseDialogProps = {
   className?: string;
@@ -58,10 +63,10 @@ const CreateCaseDialog = ({
             <SquarePlus className="mr-1 size-4" />
             <p>Добавить</p>
           </Button>
-          {/* <NewCaseButton onClick={() => dispatch(setEditCase('new'))} /> */}
         </SheetTrigger>
         <SheetContent
           style={contentStyle}
+          onEscapeKeyDown={(e) => e.preventDefault()}
           className={cn(
             `w-[var(--dialog-width)] max-w-[100vw] sm:w-[var(--dialog-width)] sm:max-w-[100vw]`,
           )}
@@ -93,6 +98,7 @@ const CreateCaseDialog = ({
       </DialogTrigger>
       <DialogContent
         style={contentStyle}
+        onEscapeKeyDown={(e) => e.preventDefault()}
         className={cn(`w-[var(--dialog-width)] max-w-[calc(100vw-3rem)]`)}
       >
         <DialogHeader className="mb-2text-left">
