@@ -62,61 +62,24 @@ const MultiSelectFormField = <T extends string | number>(
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<ClassificatorInfo[]>(
-    flatOptions.filter((o) => form.getValues(fieldName)?.includes(o.value)) ||
-      [],
-  );
   const [inputValue, setInputValue] = useState('');
-
-  const handleUnselect = useCallback((option: ClassificatorInfo) => {
-    setSelected((prev) => prev.filter((s) => s.value !== option.value));
-  }, []);
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
-      const input = inputRef.current;
-      if (input) {
-        if (e.key === 'Delete' || e.key === 'Backspace') {
-          if (input.value === '') {
-            setSelected((prev) => {
-              const newSelected = [...prev];
-              newSelected.pop();
-              return newSelected;
-            });
-          }
-        }
-        // This is not a default behaviour of the <input /> field
-        if (e.key === 'Escape') {
-          input.blur();
-        }
-      }
-    },
-    [],
-  );
-
-  const selectables = options
-    .map((nestedOption) => {
-      return {
-        ...nestedOption,
-        items: nestedOption.items.filter(({ value }) => {
-          return !selected?.some((o) => o.value === value);
-        }),
-      };
-    })
-    .filter((o) => o.items.length > 0);
-
-  useEffect(() => {
-    form.setValue(
-      fieldName,
-      selected.map((o) => o.value),
-    );
-  }, [form, fieldName, selected]);
 
   return (
     <FormField
       control={form.control}
       name={fieldName}
       render={({ field, fieldState, formState }) => {
+        const selectables = options
+          .map((nestedOption) => {
+            return {
+              ...nestedOption,
+              items: nestedOption.items.filter(({ value }) => {
+                return !field.value?.some((v: number) => v === value);
+              }),
+            };
+          })
+          .filter((o) => o.items.length > 0);
+
         return (
           <FormItem className={cn(formItemClassName, className)}>
             {label && <FormInputLabel fieldState={fieldState} label={label} />}
@@ -131,7 +94,17 @@ const MultiSelectFormField = <T extends string | number>(
                   if (extendValue.includes(search.toLowerCase())) return 1;
                   return 0;
                 }}
-                onKeyDown={handleKeyDown}
+                onKeyDown={(e) => {
+                  if (e.key === 'Delete' || e.key === 'Backspace') {
+                    if (inputValue === '') {
+                      field.onChange([...(field.value.slice(0, -1) || [])]);
+                    }
+                  }
+                  // This is not a default behaviour of the <input /> field
+                  if (e.key === 'Escape') {
+                    inputRef.current?.blur();
+                  }
+                }}
                 className="overflow-visible bg-transparent"
               >
                 <div
@@ -142,26 +115,39 @@ const MultiSelectFormField = <T extends string | number>(
                   )}
                 >
                   <div className="flex flex-wrap gap-1">
-                    {selected.map((option) => {
+                    {field.value?.map((option: number) => {
                       return (
                         <Badge
-                          key={option.value}
+                          key={option}
                           variant="secondary"
-                          className={cn(addBadgeStyle && addBadgeStyle(option))}
+                          className={cn(
+                            addBadgeStyle &&
+                              addBadgeStyle(
+                                flatOptions.find((o) => o.value === option),
+                              ),
+                          )}
                         >
-                          {option.label}
+                          {flatOptions.find((o) => o.value === option)?.label}
                           <button
                             className="ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2"
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {
-                                handleUnselect(option);
+                                field.onChange(
+                                  field.value.filter(
+                                    (v: number) => v !== option,
+                                  ),
+                                );
                               }
                             }}
                             onMouseDown={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
                             }}
-                            onClick={() => handleUnselect(option)}
+                            onClick={() =>
+                              field.onChange(
+                                field.value.filter((o: number) => o !== option),
+                              )
+                            }
                           >
                             <X className="text-muted-foreground hover:text-foreground h-3 w-3" />
                           </button>
@@ -213,7 +199,10 @@ const MultiSelectFormField = <T extends string | number>(
                                     }}
                                     onSelect={() => {
                                       setInputValue('');
-                                      setSelected((prev) => [...prev, option]);
+                                      field.onChange([
+                                        ...field.value,
+                                        option.value,
+                                      ]);
                                     }}
                                     className={'cursor-pointer'}
                                     keywords={option.tags}

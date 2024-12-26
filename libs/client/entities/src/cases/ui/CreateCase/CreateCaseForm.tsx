@@ -127,6 +127,8 @@ const CreateCaseForm = ({
     return <Skeleton className={cn('h-[550px] w-full', className)} />;
   }
 
+  const watchDirections = form.watch('directions');
+
   return (
     <Form {...form}>
       <form
@@ -210,6 +212,10 @@ const CreateCaseForm = ({
             Отмена
           </Button>
           <Button
+            // onClick={(e) => {
+            //   e.preventDefault();
+            //   console.log(JSON.stringify(form.getValues(), null, 2));
+            // }}
             type="submit"
             className="flex-1"
             disabled={isCreateLoading || isUpdateLoading}
