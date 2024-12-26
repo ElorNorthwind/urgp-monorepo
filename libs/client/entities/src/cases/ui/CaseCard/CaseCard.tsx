@@ -11,6 +11,7 @@ import { caseStatusStyles, caseTypeStyles } from '../../config/caseStyles';
 import { ExternalCasesList } from '../ExternalCasesList';
 import { CaseDirectionsList } from '../CaseDirectionsList';
 import { StagesHeader, StagesList, useStages } from '../../../operations';
+import { CaseCardFooter } from './CaseCardFooter';
 
 type CaseCardProps = {
   className?: string;
@@ -102,6 +103,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
         isLoading={isLoading || isFetching}
         className="m-4"
       />
+      <CaseCardFooter controlCase={controlCase} />
     </>
   );
 };
