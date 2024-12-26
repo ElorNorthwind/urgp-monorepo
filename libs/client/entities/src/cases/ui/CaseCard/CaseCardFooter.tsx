@@ -1,8 +1,15 @@
+import { DialogClose, DialogDescription } from '@radix-ui/react-dialog';
 import { Separator } from '@radix-ui/react-separator';
 import { TooltipTrigger } from '@radix-ui/react-tooltip';
 import {
   Button,
   cn,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+  Popover,
+  PopoverTrigger,
   selectCurrentUser,
   setEditCase,
   Tooltip,
@@ -11,8 +18,12 @@ import {
 import { ConfirmationButton } from '@urgp/client/widgets';
 import { Case } from '@urgp/shared/entities';
 import { ChevronDown, Edit, ThumbsUp, Trash2, X } from 'lucide-react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Fragment } from 'react/jsx-runtime';
+import { CaseCardHeader } from './CaseCardHeader';
+import { useDeleteCase } from '../../api/casesApi';
+import { toast } from 'sonner';
 
 type CaseCardFooterProps = {
   className?: string;
@@ -23,6 +34,8 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element => {
   const { className, controlCase } = props;
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteCase, { isLoading: isDeleteLoading }] = useDeleteCase();
 
   if (
     !user ||
@@ -39,20 +52,62 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element => {
         className,
       )}
     >
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="outline"
-            role="button"
-            className="flex size-10 flex-shrink-0 flex-row gap-2 p-0"
-          >
-            <Trash2 className="size-5" />
-            {/* <span>Удалить</span> */}
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Удалить заявку</TooltipContent>
-      </Tooltip>
+      <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                role="button"
+                className="flex size-10 flex-shrink-0 flex-row gap-2 p-0"
+              >
+                <Trash2 className="size-5" />
+                {/* <span>Удалить</span> */}
+              </Button>
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>Удалить заявку</TooltipContent>
+        </Tooltip>
 
+        <DialogContent>
+          <DialogHeader>
+            <p>Вы точно хотите удалить заявку?</p>
+          </DialogHeader>
+          <DialogDescription>
+            <CaseCardHeader controlCase={controlCase} />
+          </DialogDescription>
+          <div className="flex flex-row items-center justify-stretch gap-2">
+            <Button
+              variant="default"
+              onClick={() => setDeleteOpen(false)}
+              className="flex-grow"
+            >
+              Отмена
+            </Button>
+            <Button
+              variant="destructive"
+              className="flex-grow"
+              onClick={() =>
+                deleteCase({ id: controlCase.id })
+                  .unwrap()
+                  .then(() => {
+                    setDeleteOpen(false);
+                    toast.success('Заявка удалена');
+                    dispatch(setEditCase(null));
+                  })
+                  .catch((rejected: any) =>
+                    toast.error('Не удалось удалить заявку', {
+                      description:
+                        rejected.data?.message || 'Неизвестная ошибка',
+                    }),
+                  )
+              }
+            >
+              Удалить
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
       <Button
         variant="outline"
         role="button"

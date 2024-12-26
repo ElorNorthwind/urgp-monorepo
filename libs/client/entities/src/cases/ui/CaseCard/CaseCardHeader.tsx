@@ -27,17 +27,19 @@ const CaseCardHeader = (props: CaseCardHeaderProps): JSX.Element => {
           {controlCase?.payload.adress}
         </p>
       )}
-      <Button variant="ghost" className="ml-auto size-6 p-0">
-        <ChevronDown className="size-5 rotate-180" />
-      </Button>
-      <Button variant="ghost" className="size-6 p-0">
-        <ChevronDown className="size-5" />
-      </Button>
-      <Separator className="border-foreground/20 border-l" />
       {onClose && (
-        <Button variant="ghost" className="size-6 p-0" onClick={onClose}>
-          <X className="size-5" />
-        </Button>
+        <>
+          <Button variant="ghost" className="ml-auto size-6 p-0">
+            <ChevronDown className="size-5 rotate-180" />
+          </Button>
+          <Button variant="ghost" className="size-6 p-0">
+            <ChevronDown className="size-5" />
+          </Button>
+          <Separator className="border-foreground/20 border-l" />
+          <Button variant="ghost" className="size-6 p-0" onClick={onClose}>
+            <X className="size-5" />
+          </Button>
+        </>
       )}
     </div>
   );

@@ -16,7 +16,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { FormInputLabel } from './components/FormInputLabel';
 import { FormInputSkeleton } from './components/FormInputSkeleton';
 import { formFieldStatusClassName, formItemClassName } from './config/formItem';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import { CommandList, Command as CommandPrimitive } from 'cmdk';
 
@@ -129,6 +129,7 @@ const MultiSelectFormField = <T extends string | number>(
                         >
                           {flatOptions.find((o) => o.value === option)?.label}
                           <button
+                            tabIndex={-1}
                             className="ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2"
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {

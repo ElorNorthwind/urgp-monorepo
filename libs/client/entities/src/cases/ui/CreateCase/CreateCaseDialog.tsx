@@ -94,7 +94,6 @@ const CreateCaseDialog = ({
           <SquarePlus className="mr-1 size-4" />
           <p>Добавить</p>
         </Button>
-        {/* <NewCaseButton onClick={() => dispatch(setEditCase('new'))} /> */}
       </DialogTrigger>
       <DialogContent
         style={contentStyle}
