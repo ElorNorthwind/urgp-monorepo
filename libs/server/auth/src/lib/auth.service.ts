@@ -98,6 +98,7 @@ export class AuthService {
           login: user.login,
           fio: user.fio,
           roles: user.roles,
+          controlData: user.controlData,
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
