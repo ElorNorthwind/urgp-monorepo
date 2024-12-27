@@ -176,55 +176,54 @@ const MultiSelectFormField = <T extends string | number>(
                 </div>
                 <div className="relative mt-2">
                   <CommandList>
-                    {open && selectables.length > 0 ? (
-                      <div
-                        className={cn(
-                          'bg-popover text-popover-foreground animate-in absolute top-0 z-10 max-h-80 w-full overflow-auto rounded-md border shadow-md outline-none',
-                          popoverClassName,
-                        )}
-                      >
-                        {selectables.map((category) => {
-                          return (
-                            <CommandGroup
-                              key={category.value}
-                              heading={category.label}
-                              className="h-full overflow-auto"
-                            >
-                              {category.items.map((option) => {
-                                return (
-                                  <CommandItem
-                                    key={option.value}
-                                    onMouseDown={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                    }}
-                                    onSelect={() => {
-                                      setInputValue('');
-                                      field.onChange([
-                                        ...field.value,
-                                        option.value,
-                                      ]);
-                                    }}
-                                    className={'cursor-pointer'}
-                                    keywords={option.tags}
-                                  >
-                                    <p className="flex w-full flex-col gap-0 truncate">
-                                      <span className="truncate">
-                                        {option.label}
-                                      </span>
-                                      <span className="text-muted-foreground/60 truncate text-xs">
-                                        {option.fullname}
-                                      </span>
-                                    </p>
-                                    {addItemBadge && addItemBadge(option)}
-                                  </CommandItem>
-                                );
-                              })}
-                            </CommandGroup>
-                          );
-                        })}
-                      </div>
-                    ) : null}
+                    <div
+                      className={cn(
+                        'bg-popover text-popover-foreground animate-in top-0 z-10 max-h-80 w-full overflow-auto rounded-md border shadow-md outline-none',
+                        open && selectables.length > 0 ? 'absolute' : 'hidden',
+                        popoverClassName,
+                      )}
+                    >
+                      {selectables.map((category) => {
+                        return (
+                          <CommandGroup
+                            key={category.value}
+                            heading={category.label}
+                            className="h-full overflow-auto"
+                          >
+                            {category.items.map((option) => {
+                              return (
+                                <CommandItem
+                                  key={option.value}
+                                  onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                  }}
+                                  onSelect={() => {
+                                    setInputValue('');
+                                    field.onChange([
+                                      ...field.value,
+                                      option.value,
+                                    ]);
+                                  }}
+                                  className={'cursor-pointer'}
+                                  keywords={option.tags}
+                                >
+                                  <p className="flex w-full flex-col gap-0 truncate">
+                                    <span className="truncate">
+                                      {option.label}
+                                    </span>
+                                    <span className="text-muted-foreground/60 truncate text-xs">
+                                      {option.fullname}
+                                    </span>
+                                  </p>
+                                  {addItemBadge && addItemBadge(option)}
+                                </CommandItem>
+                              );
+                            })}
+                          </CommandGroup>
+                        );
+                      })}
+                    </div>
                   </CommandList>
                 </div>
               </Command>
