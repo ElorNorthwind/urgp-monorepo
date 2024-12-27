@@ -31,6 +31,7 @@ export type CaseCreateFormValuesDto = z.infer<typeof caseCreateFormValues>;
 // изменение заявки
 export const caseUpdate = caseCreate
   .pick({
+    class: true,
     externalCases: true,
     type: true,
     directions: true,

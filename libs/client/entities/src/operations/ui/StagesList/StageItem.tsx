@@ -1,10 +1,9 @@
 import {
   Button,
   cn,
-  selectCurrentUser,
   setEditStage,
   Skeleton,
-  store,
+  useUserAbility,
 } from '@urgp/client/shared';
 import { ControlStage } from '@urgp/shared/entities';
 import { format } from 'date-fns';
@@ -27,21 +26,12 @@ type StageItemProps = {
 const StageItem = (props: StageItemProps): JSX.Element => {
   const { className, stage } = props;
   const [deleteOperation, { isLoading: isDeleting }] = useDeleteOperation();
-  const user = selectCurrentUser(store.getState());
   const dispatch = useDispatch();
+  const i = useUserAbility();
 
   if (stage === null) {
     return <Skeleton className="h-8 w-full" />;
   }
-
-  const canEdit =
-    (stage.payload.approveStatus === 'pending' &&
-      (user?.id === stage?.author?.id ||
-        user?.id === stage?.payload?.approver?.id ||
-        user?.controlData?.roles?.includes('admin'))) ||
-    (stage.payload.approveStatus === 'approved' &&
-      (user?.id === stage?.payload?.approveBy?.id ||
-        user?.controlData?.roles?.includes('admin')));
 
   const { icon: StageIcon, iconStyle } = operationTypeStyles?.[
     stage.payload.type.id
@@ -107,7 +97,7 @@ const StageItem = (props: StageItemProps): JSX.Element => {
       </div>
 
       <div className="bg-background absolute bottom-3 right-4 hidden flex-row items-center gap-2 rounded-full p-1 text-right text-xs font-thin shadow-sm group-hover:flex">
-        {user?.id === stage.author.id && (
+        {i.can('delete', stage) && (
           <ConfirmationButton
             onAccept={() => {
               deleteOperation({
@@ -128,7 +118,7 @@ const StageItem = (props: StageItemProps): JSX.Element => {
             label="Удалить?"
           />
         )}
-        {canEdit && (
+        {i.can('update', stage) && (
           <Button
             className="size-6 rounded-full p-0"
             variant={'ghost'}

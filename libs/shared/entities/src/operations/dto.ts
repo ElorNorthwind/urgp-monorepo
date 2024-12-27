@@ -5,6 +5,7 @@ import { z } from 'zod';
 // создание этапа
 export const controlStageCreate = z.object({
   caseId: z.coerce.number().nullable().default(null),
+  class: z.string().default('stage'),
   // authorId: z.coerce.number().nullable().default(null),
   type: z.coerce.number({ message: 'Тип этапа не выбран' }).default(6),
   doneDate: z.coerce
@@ -48,6 +49,7 @@ export const controlStageUpdate = controlStageCreate
   .pick({
     // type: true,
     // externalCase: true,
+    class: true,
     doneDate: true,
     num: true,
     description: true,

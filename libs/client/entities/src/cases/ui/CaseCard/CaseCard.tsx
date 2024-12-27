@@ -8,23 +8,21 @@ import {
   selectCurrentUser,
   useUserAbility,
 } from '@urgp/client/shared';
-import { Case, defineControlAbilityFor } from '@urgp/shared/entities';
+import { Case } from '@urgp/shared/entities';
 import { CaseCardHeader } from './CaseCardHeader';
 import { caseStatusStyles, caseTypeStyles } from '../../config/caseStyles';
 import { ExternalCasesList } from '../ExternalCasesList';
 import { CaseDirectionsList } from '../CaseDirectionsList';
 import { StagesHeader, StagesList, useStages } from '../../../operations';
 import { CaseCardFooter } from './CaseCardFooter';
-import { useSelector } from 'react-redux';
 
 type CaseCardProps = {
-  className?: string;
   controlCase: Case;
   onClose?: () => void;
 };
 
 const CaseCard = (props: CaseCardProps): JSX.Element => {
-  const { className, controlCase } = props;
+  const { controlCase } = props;
   const { icon: TypeIcon, iconStyle: typeIconStyle } =
     caseTypeStyles[controlCase?.payload?.type?.id || 1];
   const { icon: StatusIcon, iconStyle: statusIconStyle } =
@@ -34,8 +32,6 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     isLoading,
     isFetching,
   } = useStages(controlCase?.id, { skip: !controlCase?.id });
-
-  const i = useUserAbility();
 
   return (
     <>

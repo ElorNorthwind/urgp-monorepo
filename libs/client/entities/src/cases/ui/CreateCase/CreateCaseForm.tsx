@@ -2,9 +2,11 @@ import {
   Button,
   cn,
   Form,
+  selectCurrentUser,
   selectEditCase,
   setEditCase,
   Skeleton,
+  useUserAbility,
 } from '@urgp/client/shared';
 import {
   Case,
@@ -43,7 +45,6 @@ const CreateCaseForm = ({
 }: CreateCaseFormProps): JSX.Element | null => {
   const { data: approvers, isLoading: isApproversLoading } =
     useCurrentUserApprovers();
-  // const { data: userData, isLoading: isUserDataLoading } = useCurrentUserData();
 
   const editCase = useSelector(selectEditCase);
   const dispatch = useDispatch();
@@ -127,8 +128,6 @@ const CreateCaseForm = ({
     return <Skeleton className={cn('h-[550px] w-full', className)} />;
   }
 
-  const watchDirections = form.watch('directions');
-
   return (
     <Form {...form}>
       <form
@@ -196,8 +195,8 @@ const CreateCaseForm = ({
           placeholder="Выбор согласующего"
           popoverMinWidth={popoverMinWidth}
           dirtyIndicator={editCase !== 'new'}
+          valueType="number"
         />
-
         <div className="flex w-full items-center justify-between gap-2">
           <Button
             className="flex-1"
@@ -212,10 +211,6 @@ const CreateCaseForm = ({
             Отмена
           </Button>
           <Button
-            // onClick={(e) => {
-            //   e.preventDefault();
-            //   console.log(JSON.stringify(form.getValues(), null, 2));
-            // }}
             type="submit"
             className="flex-1"
             disabled={isCreateLoading || isUpdateLoading}

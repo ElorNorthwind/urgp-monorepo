@@ -23,8 +23,9 @@ import {
   ControlStageUpdateDto,
   userInputDelete,
   UserInputDeleteDto,
-  ControlOperationSlim,
   ControlOperationPayloadHistoryData,
+  defineControlAbilityFor,
+  ControlStageSlim,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlOperationsService } from './control-operations.service';
@@ -43,9 +44,12 @@ export class ControlOperationsController {
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(controlStageCreate)) dto: ControlStageCreateDto,
   ) {
-    // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
-    const userId = req.user.id;
-    const controlData = await this.classificators.getControlData(userId);
+    const i = defineControlAbilityFor(req.user);
+
+    if (i.cannot('create', dto)) {
+      throw new UnauthorizedException('Нет прав на создание');
+    }
+
     const operationTypes = await this.classificators.getOperationTypesFlat();
 
     const autoApproved = !!operationTypes.find((operation) => {
@@ -54,27 +58,29 @@ export class ControlOperationsController {
 
     const correctApprover =
       dto?.approver ??
-      controlData?.approvers?.operations?.[0] ??
-      (autoApproved ? userId : null);
+      req.user?.controlData?.approvers?.operations?.[0] ??
+      (autoApproved ? req.user.id : null);
 
-    if (
-      !autoApproved &&
-      correctApprover &&
-      !controlData?.approvers?.operations?.includes(correctApprover)
-    ) {
+    const subject = {
+      ...dto,
+      approver: correctApprover,
+      class: 'control-incident',
+    };
+
+    if (!autoApproved && i.cannot('set-approver', subject)) {
       throw new UnauthorizedException(
         'Операция не разрешена. Согласующий не доступен пользователю!',
       );
     }
 
-    const approved = autoApproved || correctApprover === userId;
+    const approved = autoApproved || correctApprover === req.user.id;
 
     return this.controlOperations.createStage(
       {
         ...dto,
         approver: correctApprover,
       },
-      userId,
+      req.user.id,
       approved,
     );
   }
@@ -108,43 +114,32 @@ export class ControlOperationsController {
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(controlStageUpdate)) dto: ControlStageUpdateDto,
   ) {
-    // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
+    const i = defineControlAbilityFor(req.user);
     const currentOperation = await this.controlOperations.readSlimOperationById(
       dto.id,
     );
 
-    const userId = req.user.id;
     if (
-      userId !== currentOperation.authorId &&
-      (currentOperation.class !== 'stage' ||
-        userId !== currentOperation.payload?.approver)
+      i.cannot('update', {
+        ...currentOperation,
+        class: 'stage',
+      } as ControlStageSlim)
     ) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Менять этап работы может только автор или текущий согласующий!',
-      );
-    }
-
-    const controlData = await this.classificators.getControlData(userId);
-    if (
-      !!controlData.roles.includes('admin') &&
-      currentOperation.payload?.approveStatus === 'approved' &&
-      userId !== currentOperation.payload?.approveBy
-    ) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Менять согласованный этап может только тот, кто его согласовал (или админ)!',
-      );
+      throw new UnauthorizedException('Нет прав на изменение');
     }
 
     if (
-      dto.approver &&
-      !controlData?.approvers?.cases?.includes(dto.approver)
+      i.cannot('set-approver', {
+        ...currentOperation,
+        class: 'stage',
+      } as ControlStageSlim)
     ) {
       throw new UnauthorizedException(
         'Операция не разрешена. Согласующий не доступен пользователю!',
       );
     }
 
-    return this.controlOperations.updateStage(dto, userId);
+    return this.controlOperations.updateStage(dto, req.user.id);
   }
 
   @Delete()
@@ -152,31 +147,16 @@ export class ControlOperationsController {
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(userInputDelete)) dto: UserInputDeleteDto,
   ) {
-    // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
-    const userId = req.user.id;
+    const i = defineControlAbilityFor(req.user);
     const currentOperation = await this.controlOperations.readSlimOperationById(
       dto.id,
     );
-    if (!currentOperation) {
-      throw new BadRequestException('Операция не найдена!');
+
+    if (i.cannot('delete', currentOperation as ControlStageSlim)) {
+      throw new BadRequestException('Нет прав на удаление!');
     }
 
-    const controlData = await this.classificators.getControlData(userId);
-
-    if (currentOperation.payload.isDeleted) {
-      throw new BadRequestException('Операция уже удалена!');
-    }
-
-    if (
-      userId !== currentOperation.authorId &&
-      !controlData.roles.includes('admin')
-    ) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Удалить операцию может только ее автор или администратор!',
-      );
-    }
-
-    return this.controlOperations.deleteOperation(dto.id, userId);
+    return this.controlOperations.deleteOperation(dto.id, req.user.id);
   }
 
   @Patch('approve')
@@ -184,43 +164,37 @@ export class ControlOperationsController {
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(userInputApprove)) dto: UserInputApproveDto,
   ) {
-    // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
-    const userId = req.user.id;
+    const i = defineControlAbilityFor(req.user);
     const currentOperation = await this.controlOperations.readSlimOperationById(
       dto.id,
     );
-    const controlData = await this.classificators.getControlData(userId);
 
     if (
-      !controlData.roles.includes('admin') &&
-      (currentOperation.class !== 'stage' ||
-        userId !== currentOperation.payload?.approver)
+      i.cannot('approve', {
+        ...currentOperation,
+        class: 'stage',
+      } as ControlStageSlim)
     ) {
       throw new UnauthorizedException(
-        'Операция не разрешена. Пользователь не является согласующим!',
+        'Операция не разрешена. Нет прав на редактирование!',
       );
     }
 
     if (
-      !controlData.roles.includes('admin') &&
-      dto?.nextApprover &&
-      !!controlData?.approvers?.cases?.includes(dto.nextApprover)
+      i.cannot('set-approver', {
+        ...currentOperation,
+        class: 'stage',
+      } as ControlStageSlim)
     ) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Согласующий не доступен пользователю!',
-      );
-    }
-
-    if (currentOperation.payload.isDeleted) {
-      throw new BadRequestException(
-        'Заявка уже удалена, согласование непозвожно!',
-      );
+      throw new UnauthorizedException('Согласующий недоступен пользователю!');
     }
 
     const newApprover =
       dto.approveStatus === 'rejected'
         ? currentOperation.authorId
-        : dto?.nextApprover || controlData?.approvers?.cases?.[0] || null;
+        : dto?.nextApprover ||
+          req.user?.controlData?.approvers?.cases?.[0] ||
+          null;
 
     return this.controlOperations.approveOperation(
       {
@@ -228,11 +202,11 @@ export class ControlOperationsController {
         approveStatus:
           dto.approveStatus === 'rejected'
             ? 'rejected'
-            : newApprover === userId
+            : newApprover === req.user.id
               ? dto.approveStatus
               : 'pending',
       },
-      userId,
+      req.user.id,
       newApprover,
     );
   }

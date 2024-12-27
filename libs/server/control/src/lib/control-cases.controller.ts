@@ -22,6 +22,7 @@ import {
   UserInputApproveDto,
   userInputDelete,
   UserInputDeleteDto,
+  defineControlAbilityFor,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
@@ -39,24 +40,25 @@ export class ControlCasesController {
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(caseCreate)) dto: CaseCreateDto,
   ) {
-    // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
-    const userId = req.user.id;
-    const controlData = await this.classificators.getControlData(userId);
-
     const correctApprover =
-      dto?.approver ?? controlData?.approvers?.cases?.[0] ?? null;
+      dto?.approver ?? req.user?.controlData?.approvers?.cases?.[0] ?? null;
 
-    if (
-      correctApprover &&
-      !controlData?.approvers?.cases?.includes(correctApprover)
-    ) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Согласующий не доступен пользователю!',
-      );
+    const i = defineControlAbilityFor(req.user);
+    const subject = {
+      ...dto,
+      approver: correctApprover,
+      class: 'control-incident',
+    };
+
+    if (i.cannot('create', subject)) {
+      throw new UnauthorizedException('Нет прав на создание');
     }
-    const approved = correctApprover === userId; // TBD
+    if (i.cannot('set-approver', subject)) {
+      throw new UnauthorizedException('Согласующий недоступен');
+    }
 
-    return this.controlCases.createCase(dto, userId);
+    const approved = correctApprover === req.user.id; // TBD
+    return this.controlCases.createCase(dto, req.user.id);
   }
 
   @Get('all')
@@ -69,28 +71,19 @@ export class ControlCasesController {
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(caseUpdate)) dto: CaseUpdateDto,
   ) {
-    // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
+    const i = defineControlAbilityFor(req.user);
     const currentCase = await this.controlCases.readSlimCaseById(dto.id);
-    const userId = req.user.id;
-    if (
-      userId !== currentCase.authorId &&
-      userId !== currentCase.payload.approver
-    ) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Менять заявку может только автор или текущий согласующий!',
-      );
+
+    if (i.cannot('update', { ...currentCase, class: 'control-incident' })) {
+      throw new UnauthorizedException('Недостаточно прав для изменения');
     }
-    const controlData = await this.classificators.getControlData(userId);
     if (
-      dto.approver &&
-      !controlData?.approvers?.cases?.includes(dto.approver)
+      i.cannot('set-approver', { ...currentCase, class: 'control-incident' })
     ) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Согласующий не доступен пользователю!',
-      );
+      throw new UnauthorizedException('Согласующий недоступен');
     }
 
-    return this.controlCases.updateCase(dto, userId);
+    return this.controlCases.updateCase(dto, req.user.id);
   }
 
   @Delete()
@@ -98,25 +91,13 @@ export class ControlCasesController {
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(userInputDelete)) dto: UserInputDeleteDto,
   ) {
-    // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
-    const userId = req.user.id;
+    const i = defineControlAbilityFor(req.user);
     const currentCase = await this.controlCases.readSlimCaseById(dto.id);
-    const controlData = await this.classificators.getControlData(userId);
 
-    if (currentCase.payload.isDeleted) {
-      throw new BadRequestException('Заявка уже удалена!');
+    if (i.cannot('delete', { ...currentCase, class: 'control-incident' })) {
+      throw new UnauthorizedException('Недостаточно прав для удаления');
     }
-
-    if (
-      userId !== currentCase.authorId &&
-      !controlData.roles.includes('admin')
-    ) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Удалять заявку может только ее автор или администратор!',
-      );
-    }
-
-    return this.controlCases.deleteCase(dto.id, userId);
+    return this.controlCases.deleteCase(dto.id, req.user.id);
   }
 
   @Patch('approve')
@@ -124,40 +105,21 @@ export class ControlCasesController {
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(userInputApprove)) dto: UserInputApproveDto,
   ) {
-    // Это надо вывести в отдельный гвард через библиотеку CASL, ленивый ты уебок!
-    const userId = req.user.id;
+    const i = defineControlAbilityFor(req.user);
     const currentCase = await this.controlCases.readSlimCaseById(dto.id);
-    const controlData = await this.classificators.getControlData(userId);
 
-    if (
-      !controlData.roles.includes('admin') &&
-      userId !== currentCase.payload.approver
-    ) {
+    if (i.cannot('approve', { ...currentCase, class: 'control-incident' })) {
       throw new UnauthorizedException(
-        'Операция не разрешена. Пользователь не является согласующим!',
+        'Операция не разрешена. Нет прав на согласование.',
       );
     }
-
-    if (
-      !controlData.roles.includes('admin') &&
-      dto?.nextApprover &&
-      !!controlData?.approvers?.cases?.includes(dto.nextApprover)
-    ) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Согласующий не доступен пользователю!',
-      );
-    }
-
-    if (currentCase.payload.isDeleted) {
-      throw new BadRequestException(
-        'Заявка уже удалена, согласование непозвожно!',
-      );
-    }
-
+    // TODO сделать асинхронный рефайн через зод вместо касла аще?
     const newApprover =
       dto.approveStatus === 'rejected'
         ? currentCase.authorId
-        : dto?.nextApprover || controlData?.approvers?.cases?.[0] || null;
+        : dto?.nextApprover ||
+          req.user?.controlData?.approvers?.cases?.[0] ||
+          null;
 
     return this.controlCases.approveCase(
       {
@@ -165,11 +127,11 @@ export class ControlCasesController {
         approveStatus:
           dto.approveStatus === 'rejected'
             ? 'rejected'
-            : newApprover === userId
+            : newApprover === req.user.id
               ? dto.approveStatus
               : 'pending',
       },
-      userId,
+      req.user.id,
       newApprover,
     );
   }

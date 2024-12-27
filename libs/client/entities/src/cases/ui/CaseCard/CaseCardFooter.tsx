@@ -14,6 +14,7 @@ import {
   setEditCase,
   Tooltip,
   TooltipContent,
+  useUserAbility,
 } from '@urgp/client/shared';
 import { ConfirmationButton } from '@urgp/client/widgets';
 import { Case } from '@urgp/shared/entities';
@@ -37,13 +38,16 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element => {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteCase, { isLoading: isDeleteLoading }] = useDeleteCase();
 
+  const i = useUserAbility();
+
   if (
-    !user ||
     !controlCase ||
-    (controlCase?.author.id !== user.id &&
-      controlCase?.payload?.approver?.id !== user.id)
-  )
+    (i.cannot('delete', controlCase) &&
+      i.cannot('update', controlCase) &&
+      i.cannot('approve', controlCase))
+  ) {
     return <Fragment />;
+  }
 
   return (
     <div
@@ -57,6 +61,7 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element => {
           <TooltipTrigger asChild>
             <DialogTrigger asChild>
               <Button
+                disabled={isDeleteLoading || i.cannot('delete', controlCase)}
                 variant="outline"
                 role="button"
                 className="flex size-10 flex-shrink-0 flex-row gap-2 p-0"
@@ -78,6 +83,7 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element => {
           </DialogDescription>
           <div className="flex flex-row items-center justify-stretch gap-2">
             <Button
+              disabled={i.cannot('update', controlCase)}
               variant="default"
               onClick={() => setDeleteOpen(false)}
               className="flex-grow"
@@ -117,17 +123,16 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element => {
         <Edit className="size-5" />
         <span>Редактировать</span>
       </Button>
-      {controlCase?.payload?.approver?.id === user.id &&
-        controlCase?.payload?.approveStatus === 'pending' && (
-          <Button
-            variant="default"
-            role="button"
-            className="flex flex-grow flex-row gap-2"
-          >
-            <ThumbsUp className="size-5" />
-            <span>Согласовать</span>
-          </Button>
-        )}
+      {i.can('approve', controlCase) && (
+        <Button
+          variant="default"
+          role="button"
+          className="flex flex-grow flex-row gap-2"
+        >
+          <ThumbsUp className="size-5" />
+          <span>Согласовать</span>
+        </Button>
+      )}
     </div>
   );
 };

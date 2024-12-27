@@ -13,6 +13,7 @@ import {
   Separator,
   SidebarTrigger,
   useIsMobile,
+  useUserAbility,
 } from '@urgp/client/shared';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
 import { Settings2, SquarePlus } from 'lucide-react';
@@ -27,6 +28,7 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
   const navigate = useNavigate({ from: '/control' });
   const { total, filtered, className } = props;
   const isMobile = useIsMobile();
+  const i = useUserAbility();
 
   return (
     <header
@@ -74,7 +76,7 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
           })
         }
       />
-      <CreateCaseDialog />
+      {i.can('create', 'Case') && <CreateCaseDialog />}
       <Button variant={'outline'} className="size-8 shrink-0 p-1">
         <Settings2 className="size-4" />
       </Button>

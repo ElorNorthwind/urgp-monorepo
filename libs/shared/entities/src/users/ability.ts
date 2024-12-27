@@ -1,51 +1,87 @@
 import {
   AbilityBuilder,
-  MongoAbility,
   createMongoAbility,
   MongoQuery,
   ExtractSubjectType,
 } from '@casl/ability';
 import { User } from './types';
-import { ControlStage } from '../operations/types';
-import { Case } from '../cases/types';
+import { ControlStage, ControlStageSlim } from '../operations/types';
+import { Case, CaseSlim } from '../cases/types';
+import { CaseCreateDto, CaseUpdateDto } from '../cases/dto';
+import {
+  ControlStageCreateDto,
+  ControlStageUpdateDto,
+} from '../operations/dto';
 
-// class Article {
-//     id: number
-//     title: string
-//     content: string
-//     authorId: number
-//   }
+type Action =
+  | 'create'
+  | 'read'
+  | 'update'
+  | 'delete'
+  | 'approve'
+  | 'set-approver'
+  | 'manage';
+type Subject =
+  | Case
+  | CaseSlim
+  | CaseCreateDto
+  | CaseUpdateDto
+  | 'Case'
+  | ControlStage
+  | ControlStageSlim
+  | ControlStageCreateDto
+  | ControlStageUpdateDto
+  | 'Stage'
+  | 'unknown'
+  | 'all';
 
-type Action = 'create' | 'read' | 'update' | 'delete' | 'approve' | 'manage';
-type Subject = ControlStage | Case | 'Case' | 'ControlStage' | 'all';
-
-type AppAbility = MongoAbility<[Action, Subject]>;
-
-// type PossibleAbilities = [Action, Subject];
-// type Conditions = MongoQuery;
-
-// const ability = createMongoAbility<PossibleAbilities, Conditions>();
+const subjectMap = {
+  stage: 'ControlStage',
+  'control-incident': 'Case',
+};
 
 export function defineControlAbilityFor(user: User) {
   const { can, cannot, build } = new AbilityBuilder(
     createMongoAbility<[Action, Subject], MongoQuery>,
   );
 
+  const caseApprovers = user.controlData.approvers?.cases || [];
+  const operationApprovers = user.controlData.approvers?.operations || [];
+
   if (user.controlData.roles.includes('admin')) {
-    can('manage', 'all'); // админу можно все
+    can('manage', 'all'); // админу по дефолту можно все
   } else {
     can(['read', 'create'], 'all'); // Все могут читать или создавать все
     can(['update', 'delete'], 'all', {
-      'author.id': { $eq: user.id }, // Все могу менять или удалять то, что они создали
+      'author.id': { $eq: user.id }, // FE // Все могу менять или удалять то, что они создали
+    });
+    can(['update', 'delete'], 'all', {
+      authorId: { $eq: user.id }, // BE // Все могу менять или удалять то, что они создали
     });
     can(['update', 'approve'], 'all', {
-      'payload.approver.id': { $eq: user.id }, // Все могут менять или согласовывать то, что у них на согле
+      'payload.approver.id': { $eq: user.id }, // FE // Все могут менять или согласовывать то, что у них на согле
+    });
+    can(['update', 'approve'], 'all', {
+      'payload.approver': { $eq: user.id }, // BE // Все могут менять или согласовывать то, что у них на согле
+    });
+    cannot(['update', 'approve'], 'all', {
+      'payload.approveStatus': { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
     });
   }
 
-  can('delete', 'Case', { payload: { authorId: user.id } });
+  can('set-approver', 'all', {
+    approver: null, // без согласующего можно создавать все
+  });
+  cannot('set-approver', 'Case', {
+    approver: { $nin: caseApprovers }, // Никто не может создавать или ставить дела на утверждении не своих согласующих
+  });
+  cannot('set-approver', 'Stage', {
+    approver: { $nin: operationApprovers }, // Никто не может создавать или ставить операции на утверждении не своих согласующих
+  });
 
   return build({
-    detectSubjectType: (item) => item.class as ExtractSubjectType<Subject>,
+    detectSubjectType: (item) =>
+      (subjectMap?.[item?.class as keyof typeof subjectMap] ||
+        'unknown') as ExtractSubjectType<Subject>,
   });
 }
