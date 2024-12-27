@@ -4,14 +4,18 @@ import {
   AccordionItem,
   AccordionTrigger,
   cn,
+  guestUser,
+  selectCurrentUser,
+  useUserAbility,
 } from '@urgp/client/shared';
-import { Case } from '@urgp/shared/entities';
+import { Case, defineControlAbilityFor } from '@urgp/shared/entities';
 import { CaseCardHeader } from './CaseCardHeader';
 import { caseStatusStyles, caseTypeStyles } from '../../config/caseStyles';
 import { ExternalCasesList } from '../ExternalCasesList';
 import { CaseDirectionsList } from '../CaseDirectionsList';
 import { StagesHeader, StagesList, useStages } from '../../../operations';
 import { CaseCardFooter } from './CaseCardFooter';
+import { useSelector } from 'react-redux';
 
 type CaseCardProps = {
   className?: string;
@@ -30,6 +34,8 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     isLoading,
     isFetching,
   } = useStages(controlCase?.id, { skip: !controlCase?.id });
+
+  const i = useUserAbility();
 
   return (
     <>

@@ -7,7 +7,7 @@ type UserState = {
   user: User | null;
 };
 
-const guestUser = {
+export const guestUser = {
   id: 0,
   login: 'guest',
   fio: 'Гость',

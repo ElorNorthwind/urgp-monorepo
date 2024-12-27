@@ -23,3 +23,4 @@ export * from './cases/dto';
 
 export * from './operations/types';
 export * from './operations/dto';
+export * from './users/ability';

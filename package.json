@@ -8,6 +8,7 @@
   },
   "private": true,
   "dependencies": {
+    "@casl/ability": "^6.7.2",
     "@elfalem/leaflet-curve": "^0.9.2",
     "@hookform/resolvers": "^3.3.4",
     "@nestjs/axios": "^3.0.2",

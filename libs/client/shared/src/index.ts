@@ -65,3 +65,4 @@ export * from './store/control/controlSlice';
 //export hooks
 export * from './hooks/useIsMobile';
 export * from './hooks/usePageMeta';
+export * from './hooks/useUserAbility';
