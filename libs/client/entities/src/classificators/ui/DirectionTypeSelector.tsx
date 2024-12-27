@@ -46,15 +46,16 @@ const DirectionTypeSelector = (
       popoverClassName={popoverClassName}
       dirtyIndicator={dirtyIndicator}
       addBadgeStyle={(item) => {
-        return (
-          directionCategoryStyles?.[item?.category || '']?.badgeStyle || ''
+        return cn(
+          directionCategoryStyles?.[item?.category || '']?.badgeStyle || '',
+          'px-2',
         );
       }}
       addItemBadge={(item) => {
         return (
           <div
             className={cn(
-              'bg-muted-foreground/5 size-4 flex-shrink-0 rounded-full border',
+              'bg-muted-foreground/5 size-4 flex-shrink-0 rounded-full',
               directionCategoryStyles?.[item?.category || '']?.badgeStyle || '',
             )}
           />

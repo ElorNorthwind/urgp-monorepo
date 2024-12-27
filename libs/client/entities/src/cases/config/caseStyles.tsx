@@ -31,11 +31,31 @@ export const caseTypeStyles = {
 } as Record<number, StyleData>;
 
 export const directionCategoryStyles = {
-  УРЖП: { badgeStyle: 'bg-cyan-50 border-cyan-200 hover:bg-cyan-100' },
-  УВЖУ: { badgeStyle: 'bg-emerald-50 border-emerald-200 hover:bg-emerald-100' },
-  УПГУ: { badgeStyle: 'bg-amber-50 border-amber-200 hover:bg-amber-100' },
-  УП: { badgeStyle: 'bg-slate-50 border-slate-200 hover:bg-slate-100' },
-  УОЖП: { badgeStyle: 'bg-violet-50 border-violet-200 hover:bg-violet-100' },
+  // УРЖП: { badgeStyle: 'bg-cyan-50 border-cyan-200 hover:bg-cyan-100' },
+  // УВЖУ: { badgeStyle: 'bg-emerald-50 border-emerald-200 hover:bg-emerald-100' },
+  // УПГУ: { badgeStyle: 'bg-amber-50 border-amber-200 hover:bg-amber-100' },
+  // УП: { badgeStyle: 'bg-slate-50 border-slate-200 hover:bg-slate-100' },
+  // УОЖП: { badgeStyle: 'bg-violet-50 border-violet-200 hover:bg-violet-100' },
+  УРЖП: {
+    badgeStyle:
+      'bg-background border-cyan-500 border px-1 text-cyan-600 hover:bg-cyan-50',
+  },
+  УВЖУ: {
+    badgeStyle:
+      'bg-background border-emerald-500 border px-1 text-emerald-600 hover:bg-emerald-50',
+  },
+  УПГУ: {
+    badgeStyle:
+      'bg-background border-amber-500 border px-1 text-amber-600 hover:bg-amber-50',
+  },
+  УП: {
+    badgeStyle:
+      'bg-background border-slate-500 border px-1 text-slate-600 hover:bg-slate-50',
+  },
+  УОЖП: {
+    badgeStyle:
+      'bg-background border-violet-500 border px-1 text-violet-600 hover:bg-violet-50',
+  },
 } as Record<string, StyleData>;
 
 export const externalSystemStyles = {

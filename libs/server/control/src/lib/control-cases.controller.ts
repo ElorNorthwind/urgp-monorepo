@@ -60,7 +60,8 @@ export class ControlCasesController {
   }
 
   @Get('all')
-  async readCases() {
+  async readCases(@Req() req: RequestWithUserData) {
+    console.log(JSON.stringify(req.user));
     return this.controlCases.readCases();
   }
 

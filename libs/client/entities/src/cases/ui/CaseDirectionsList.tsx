@@ -23,9 +23,9 @@ const CaseDirectionsList = (props: CaseDirectionsListProps): JSX.Element => {
                 <Badge
                   variant={'outline'}
                   className={cn(
-                    'px-1 py-0',
                     d?.category &&
                       directionCategoryStyles[d.category].badgeStyle,
+                    'px-2 py-0',
                   )}
                 >
                   {d.name}
