@@ -84,19 +84,27 @@ export class ControlOperationsService {
   public async deleteOperation(
     id: number,
     userId: number,
-  ): Promise<ControlOperationSlim> {
-    return this.dbServise.db.controlOperations.deleteOperation(id, userId);
+  ): Promise<ControlOperation> {
+    const deletedOperation =
+      await this.dbServise.db.controlOperations.deleteOperation(id, userId);
+    return this.dbServise.db.controlOperations.readFullOperationById(
+      deletedOperation.id,
+    ) as Promise<ControlOperation>;
   }
 
   public async approveOperation(
     dto: UserInputApproveDto,
     userId: number,
     newApprover: number | null,
-  ): Promise<ControlOperationSlim> {
-    return this.dbServise.db.controlOperations.approveOperation(
-      dto,
-      userId,
-      newApprover,
-    );
+  ): Promise<ControlOperation> {
+    const approvedOperation =
+      await this.dbServise.db.controlOperations.approveOperation(
+        dto,
+        userId,
+        newApprover,
+      );
+    return this.dbServise.db.controlOperations.readFullOperationById(
+      approvedOperation.id,
+    ) as Promise<ControlOperation>;
   }
 }

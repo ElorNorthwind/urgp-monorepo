@@ -62,8 +62,8 @@ export class ControlCasesController {
   }
 
   @Get('all')
-  async readCases() {
-    return this.controlCases.readCases();
+  async readCases(@Req() req: RequestWithUserData) {
+    return this.controlCases.readCases(req.user.id);
   }
 
   @Patch()

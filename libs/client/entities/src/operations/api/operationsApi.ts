@@ -78,7 +78,7 @@ export const operationsApi = rtkApi.injectEndpoints({
       },
     }),
 
-    deleteOperation: build.mutation<ControlStageSlim, UserInputDeleteDto>({
+    deleteOperation: build.mutation<ControlStage, UserInputDeleteDto>({
       query: (dto) => ({
         url: '/control/operation',
         method: 'DELETE',

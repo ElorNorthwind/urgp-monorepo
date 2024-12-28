@@ -6,6 +6,9 @@ import {
   cn,
   guestUser,
   selectCurrentUser,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
   useUserAbility,
 } from '@urgp/client/shared';
 import { Case } from '@urgp/shared/entities';
@@ -55,19 +58,37 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
             <div className="bg-muted-foreground/5 border-x border-b px-2 py-1 text-right font-bold">
               Статус:
             </div>
-            <div className="flex items-start justify-start gap-2 truncate border-b p-1 ">
-              {StatusIcon && (
-                <StatusIcon
-                  className={cn(
-                    'my-auto -mr-1 size-5 shrink-0 ',
-                    statusIconStyle,
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-start justify-start gap-2 truncate border-b p-1 ">
+                  {StatusIcon && (
+                    <StatusIcon
+                      className={cn(
+                        'my-auto -mr-1 size-5 shrink-0 ',
+                        statusIconStyle,
+                      )}
+                    />
                   )}
-                />
-              )}
-              <p className="my-auto w-full truncate text-sm">
-                {controlCase.status.name}
-              </p>
-            </div>
+                  <p className="my-auto w-full truncate text-sm">
+                    {controlCase.status.name}
+                  </p>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                {controlCase?.payload?.approver?.fio && (
+                  <>
+                    <p>
+                      {controlCase?.payload?.approveStatus === 'pending'
+                        ? 'На утверждении: '
+                        : 'Согласовано: '}
+                    </p>
+                    <p className="font-bold">
+                      {controlCase.payload.approver.fio}
+                    </p>
+                  </>
+                )}
+              </TooltipContent>
+            </Tooltip>
             <div className="bg-muted-foreground/5 truncate border-r px-2 py-1 text-right font-bold">
               Тема:
             </div>

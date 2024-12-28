@@ -61,10 +61,13 @@ export class ControlCasesRepository {
     return this.db.one(cases.readSlimCaseById, { id });
   }
 
-  readCases(): Promise<Case[]> {
-    return this.db.any(cases.readCases);
+  readFullCaseById(id: number): Promise<Case> {
+    return this.db.one(cases.readFullCaseById, { id });
   }
 
+  readCases(userId: number): Promise<Case[]> {
+    return this.db.any(cases.readCases, { userId });
+  }
   updateCase(dto: CaseUpdateDto, userId: number): Promise<CaseSlim> {
     const externalCases =
       `jsonb_build_array(` +

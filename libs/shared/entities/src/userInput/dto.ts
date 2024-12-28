@@ -12,6 +12,7 @@ export const userInputApprove = z.object({
 export type UserInputApproveDto = z.infer<typeof userInputApprove>;
 
 export const userInputApproveFormValues = z.object({
+  approveStatus: z.literal('approved').or(z.literal('rejected')),
   approveNotes: z.string().optional(),
 });
 export type UserInputApproveFormValuesDto = z.infer<

@@ -3,6 +3,7 @@ import {
   Case,
   CaseCreateDto,
   CaseUpdateDto,
+  UserInputApproveDto,
   UserInputDeleteDto,
 } from '@urgp/shared/entities';
 
@@ -31,6 +32,13 @@ export const casesApi = rtkApi.injectEndpoints({
     deleteCase: build.mutation<Case, UserInputDeleteDto>({
       query: (dto) => ({
         url: '/control/case',
+        method: 'DELETE',
+        body: dto,
+      }),
+    }),
+    approveCase: build.mutation<Case, UserInputApproveDto>({
+      query: (dto) => ({
+        url: '/control/case/approve',
         method: 'DELETE',
         body: dto,
       }),

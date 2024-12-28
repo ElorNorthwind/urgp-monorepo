@@ -72,6 +72,7 @@ export const users = {
 export const cases = {
   createCase: sql('sql/control/cases/createCase.sql'),
   readSlimCaseById: sql('sql/control/cases/readSlimCaseById.sql'),
+  readFullCaseById: sql('sql/control/cases/readFullCaseById.sql'),
   readCases: sql('sql/control/cases/readCases.sql'),
   updateCase: sql('sql/control/cases/updateCase.sql'),
   deleteCase: sql('sql/control/cases/deleteCase.sql'),

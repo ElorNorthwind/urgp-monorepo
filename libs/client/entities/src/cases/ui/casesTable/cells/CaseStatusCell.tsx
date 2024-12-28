@@ -11,7 +11,7 @@ import { caseStatusStyles } from '../../../config/caseStyles';
 
 function CaseStatusCell(props: CellContext<Case, string>): JSX.Element {
   const status = props.row.original.status;
-  const { icon: StatusIcon, iconStyle } = caseStatusStyles[status.id];
+  const { icon: StatusIcon, iconStyle } = caseStatusStyles[status.id || 0];
 
   return (
     <Tooltip>
