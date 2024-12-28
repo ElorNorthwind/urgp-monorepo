@@ -7,6 +7,7 @@ import {
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { cases } from './sql/sql';
+import { toDate } from 'date-fns';
 
 // @Injectable()
 export class ControlCasesRepository {
@@ -15,7 +16,11 @@ export class ControlCasesRepository {
     private pgp: IMain,
   ) {}
 
-  createCase(dto: CaseCreateDto, authorId: number): Promise<CaseSlim> {
+  createCase(
+    dto: CaseCreateDto,
+    authorId: number,
+    approved: boolean,
+  ): Promise<CaseSlim> {
     const externalCases =
       `jsonb_build_array(` +
       dto.externalCases
@@ -44,10 +49,11 @@ export class ControlCasesRepository {
       fio: dto.fio,
       adress: dto.adress,
       approver: dto.approver,
+      approveStatus: approved ? 'approved' : 'pending',
+      approveDate: approved ? toDate(new Date()) : null,
+      approveBy: approved ? authorId : null,
     };
 
-    // const q = this.pgp.as.format(cases.createCase, newCase);
-    // console.log(q);
     return this.db.one(cases.createCase, newCase);
   }
 

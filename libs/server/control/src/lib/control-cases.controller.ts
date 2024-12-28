@@ -57,8 +57,8 @@ export class ControlCasesController {
       throw new UnauthorizedException('Согласующий недоступен');
     }
 
-    const approved = correctApprover === req.user.id; // TBD
-    return this.controlCases.createCase(dto, req.user.id);
+    const approved = correctApprover === req.user.id;
+    return this.controlCases.createCase(dto, req.user.id, approved);
   }
 
   @Get('all')

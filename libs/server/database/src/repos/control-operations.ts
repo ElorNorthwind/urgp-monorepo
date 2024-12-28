@@ -92,8 +92,6 @@ export class ControlOperationsRepository {
       description: dto.description,
     };
 
-    // const q = this.pgp.as.format(operations.updateStage, updatedStage);
-    // console.log(q);
     return this.db.one(operations.updateStage, updatedStage);
   }
 

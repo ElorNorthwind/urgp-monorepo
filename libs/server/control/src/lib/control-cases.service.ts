@@ -21,9 +21,9 @@ export class ControlCaseService {
   public async createCase(
     dto: CaseCreateDto,
     userId: number,
+    approved: boolean,
   ): Promise<CaseSlim> {
-    // console.log(JSON.stringify(this.dbServise.db.controlCases));
-    return this.dbServise.db.controlCases.createCase(dto, userId);
+    return this.dbServise.db.controlCases.createCase(dto, userId, approved);
   }
 
   public async readSlimCaseById(id: number): Promise<CaseSlim> {
