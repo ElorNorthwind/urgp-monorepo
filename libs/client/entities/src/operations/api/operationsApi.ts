@@ -1,5 +1,6 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
+  ControlOperation,
   ControlOperationPayloadHistoryData,
   ControlStage,
   ControlStageCreateDto,
@@ -99,6 +100,37 @@ export const operationsApi = rtkApi.injectEndpoints({
           );
       },
     }),
+
+    approveOperation: build.mutation<ControlOperation, UserInputDeleteDto>({
+      query: (dto) => ({
+        url: '/control/operation/approve',
+        method: 'PATCH',
+        body: dto,
+      }),
+
+      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        const { data: approvedOperation } = await queryFulfilled;
+        approvedOperation?.caseId &&
+          approvedOperation?.id &&
+          approvedOperation?.class === 'stage' &&
+          dispatch(
+            operationsApi.util.updateQueryData(
+              'getStagesByCaseId',
+              approvedOperation.caseId,
+              (draft) => {
+                const index = draft.findIndex(
+                  (stage) => stage.id === approvedOperation.id,
+                );
+                return [
+                  ...draft.slice(0, index),
+                  approvedOperation,
+                  ...draft.slice(index + 1),
+                ];
+              },
+            ),
+          );
+      },
+    }),
   }),
   overrideExisting: false,
 });
@@ -109,4 +141,5 @@ export const {
   useDeleteOperationMutation: useDeleteOperation,
   useCreteStageMutation: useCreateControlStage,
   useUpdateStageMutation: useUpdateControlStage,
+  useApproveOperationMutation: useApproveOperation,
 } = operationsApi;

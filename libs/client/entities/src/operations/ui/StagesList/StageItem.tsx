@@ -12,19 +12,21 @@ import {
   approveStatusStyles,
   operationTypeStyles,
 } from '../../config/operationStyles';
-import { ConfirmationButton } from '@urgp/client/widgets';
+import { ApproveDialog, ConfirmationButton } from '@urgp/client/widgets';
 import { toast } from 'sonner';
 import { useDeleteOperation } from '../../api/operationsApi';
 import { StagesHistory } from '../StageHistory';
 import { useDispatch } from 'react-redux';
+import { StageHistoryItem } from './StageHistoryItem';
 
 type StageItemProps = {
   stage: ControlStage | null;
+  hover?: boolean;
   className?: string;
 };
 
 const StageItem = (props: StageItemProps): JSX.Element => {
-  const { className, stage } = props;
+  const { className, stage, hover = true } = props;
   const [deleteOperation, { isLoading: isDeleting }] = useDeleteOperation();
   const dispatch = useDispatch();
   const i = useUserAbility();
@@ -96,43 +98,54 @@ const StageItem = (props: StageItemProps): JSX.Element => {
         )}
       </div>
 
-      <div className="bg-background absolute bottom-3 right-4 hidden flex-row items-center gap-2 rounded-full p-1 text-right text-xs font-thin shadow-sm group-hover:flex">
-        {i.can('delete', stage) && (
-          <ConfirmationButton
-            onAccept={() => {
-              deleteOperation({
-                id: stage.id,
-              })
-                .unwrap()
-                .then(() => {
-                  toast.success('Операция удалена');
+      {hover && (
+        <div className="bg-background absolute bottom-3 right-4 hidden flex-row items-center gap-2 rounded-full p-1 text-right text-xs font-thin shadow-sm group-hover:flex">
+          {i.can('delete', stage) && (
+            <ConfirmationButton
+              onAccept={() => {
+                deleteOperation({
+                  id: stage.id,
                 })
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .catch((rejected: any) =>
-                  toast.error('Не удалось Удалить операцию', {
-                    description: rejected.data?.message || 'Неизвестная ошибка',
-                  }),
-                );
-            }}
-            disabled={isDeleting}
-            label="Удалить?"
-          />
-        )}
-        {i.can('update', stage) && (
-          <Button
-            className="size-6 rounded-full p-0"
-            variant={'ghost'}
-            onClick={() => {
-              dispatch(setEditStage(stage));
-            }}
-          >
-            <Pencil className="size-4" />
-          </Button>
-        )}
-        <span>{format(stage.payload.updatedAt, 'dd.MM.yyyy')}</span>
-        <StagesHistory stage={stage} />
-        <span className="mr-1 font-normal">{stage.author.fio}</span>
-      </div>
+                  .unwrap()
+                  .then(() => {
+                    toast.success('Операция удалена');
+                  })
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  .catch((rejected: any) =>
+                    toast.error('Не удалось Удалить операцию', {
+                      description:
+                        rejected.data?.message || 'Неизвестная ошибка',
+                    }),
+                  );
+              }}
+              disabled={isDeleting}
+              label="Удалить?"
+            />
+          )}
+          {i.can('approve', stage) && (
+            <ApproveDialog
+              entityId={stage.id}
+              variant="mini"
+              entityType="operation"
+              displayedElement={<StageItem stage={stage} hover={false} />}
+            />
+          )}
+          {i.can('update', stage) && (
+            <Button
+              className="size-6 rounded-full p-0"
+              variant={'ghost'}
+              onClick={() => {
+                dispatch(setEditStage(stage));
+              }}
+            >
+              <Pencil className="size-4" />
+            </Button>
+          )}
+          <span>{format(stage.payload.updatedAt, 'dd.MM.yyyy')}</span>
+          <StagesHistory stage={stage} />
+          <span className="mr-1 font-normal">{stage.author.fio}</span>
+        </div>
+      )}
     </div>
   );
 };

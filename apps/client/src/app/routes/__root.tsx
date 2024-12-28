@@ -7,7 +7,7 @@ export const Route = createRootRoute({
     <>
       <Outlet />
       {/* <TanStackRouterDevtools /> */}
-      <Toaster closeButton />
+      <Toaster closeButton duration={2000} />
     </>
   ),
 });

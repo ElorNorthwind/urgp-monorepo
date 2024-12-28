@@ -65,8 +65,8 @@ export class ControlCasesRepository {
     return this.db.one(cases.readFullCaseById, { id });
   }
 
-  readCases(userId: number): Promise<Case[]> {
-    return this.db.any(cases.readCases, { userId });
+  readCases(userId: number, readAll: boolean): Promise<Case[]> {
+    return this.db.any(cases.readCases, { userId, readAll });
   }
   updateCase(dto: CaseUpdateDto, userId: number): Promise<CaseSlim> {
     const externalCases =

@@ -8,15 +8,13 @@ import {
   DialogContent,
   DialogHeader,
   DialogTrigger,
-  Popover,
-  PopoverTrigger,
   selectCurrentUser,
   setEditCase,
   Tooltip,
   TooltipContent,
   useUserAbility,
 } from '@urgp/client/shared';
-import { ConfirmationButton } from '@urgp/client/widgets';
+import { ApproveDialog, ConfirmationButton } from '@urgp/client/widgets';
 import { Case } from '@urgp/shared/entities';
 import { ChevronDown, Edit, ThumbsUp, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
@@ -124,14 +122,18 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element => {
         <span>Редактировать</span>
       </Button>
       {i.can('approve', controlCase) && (
-        <Button
-          variant="default"
-          role="button"
-          className="flex flex-grow flex-row gap-2"
-        >
-          <ThumbsUp className="size-5" />
-          <span>Согласовать</span>
-        </Button>
+        <ApproveDialog
+          entityId={controlCase.id}
+          entityType="case"
+          displayedElement={
+            <div>
+              <CaseCardHeader controlCase={controlCase} className="rounded-t" />
+              <div className="bg-sidebar/80 max-h-50 overflow-hidden rounded-b border-t p-4">
+                {controlCase.payload.description}
+              </div>
+            </div>
+          }
+        />
       )}
     </div>
   );

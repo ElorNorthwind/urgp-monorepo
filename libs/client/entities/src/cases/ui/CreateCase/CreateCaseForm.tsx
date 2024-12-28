@@ -91,7 +91,7 @@ const CreateCaseForm = ({
     if (editCase) {
       form.reset(emptyCase);
     }
-  }, [editCase, form]);
+  }, [editCase, form, approvers, isApproversLoading]);
 
   const [createCase, { isLoading: isCreateLoading }] = useCreateCase();
   const [updateCase, { isLoading: isUpdateLoading }] = useUpdateCase();

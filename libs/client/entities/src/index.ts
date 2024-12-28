@@ -7,3 +7,4 @@ export * from './messages';
 export * from './oldApartments';
 export * from './cases';
 export * from './operations';
+export * from './classificators';

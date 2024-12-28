@@ -26,10 +26,19 @@ type CaseCardProps = {
 
 const CaseCard = (props: CaseCardProps): JSX.Element => {
   const { controlCase } = props;
-  const { icon: TypeIcon, iconStyle: typeIconStyle } =
-    caseTypeStyles[controlCase?.payload?.type?.id || 1];
-  const { icon: StatusIcon, iconStyle: statusIconStyle } =
-    caseStatusStyles[controlCase?.status.id || 1];
+  const { icon: TypeIcon, iconStyle: typeIconStyle } = caseTypeStyles[
+    controlCase?.payload?.type?.id || 1
+  ] || {
+    icon: null,
+    iconStyle: '',
+  };
+  const { icon: StatusIcon, iconStyle: statusIconStyle } = caseStatusStyles?.[
+    controlCase?.status.id || 1
+  ] || {
+    icon: null,
+    iconStyle: '',
+  };
+
   const {
     data: stages,
     isLoading,

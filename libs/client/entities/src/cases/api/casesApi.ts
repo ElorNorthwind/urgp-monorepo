@@ -21,6 +21,15 @@ export const casesApi = rtkApi.injectEndpoints({
         method: 'POST',
         body: dto,
       }),
+      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        const { data: createdCase } = await queryFulfilled;
+        createdCase?.id &&
+          dispatch(
+            casesApi.util.updateQueryData('getCases', undefined, (draft) => {
+              draft?.push(createdCase);
+            }),
+          );
+      },
     }),
     updateCase: build.mutation<Case, CaseUpdateDto>({
       query: (dto) => ({
@@ -28,6 +37,22 @@ export const casesApi = rtkApi.injectEndpoints({
         method: 'PATCH',
         body: dto,
       }),
+      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        const { data: updatedCase } = await queryFulfilled;
+        updatedCase?.id &&
+          dispatch(
+            casesApi.util.updateQueryData('getCases', undefined, (draft) => {
+              const index = draft.findIndex(
+                (stage) => stage.id === updatedCase.id,
+              );
+              return [
+                ...draft.slice(0, index),
+                updatedCase,
+                ...draft.slice(index + 1),
+              ];
+            }),
+          );
+      },
     }),
     deleteCase: build.mutation<Case, UserInputDeleteDto>({
       query: (dto) => ({
@@ -35,13 +60,40 @@ export const casesApi = rtkApi.injectEndpoints({
         method: 'DELETE',
         body: dto,
       }),
+
+      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        const { data: deletedCase } = await queryFulfilled;
+        deletedCase?.id &&
+          dispatch(
+            casesApi.util.updateQueryData('getCases', undefined, (draft) => {
+              return draft.filter((stage) => stage.id !== deletedCase.id);
+            }),
+          );
+      },
     }),
+
     approveCase: build.mutation<Case, UserInputApproveDto>({
       query: (dto) => ({
         url: '/control/case/approve',
-        method: 'DELETE',
+        method: 'PATCH',
         body: dto,
       }),
+      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        const { data: approvedCase } = await queryFulfilled;
+        approvedCase?.id &&
+          dispatch(
+            casesApi.util.updateQueryData('getCases', undefined, (draft) => {
+              const index = draft.findIndex(
+                (stage) => stage.id === approvedCase.id,
+              );
+              return [
+                ...draft.slice(0, index),
+                approvedCase,
+                ...draft.slice(index + 1),
+              ];
+            }),
+          );
+      },
     }),
   }),
   overrideExisting: false,
@@ -52,4 +104,5 @@ export const {
   useCreateCaseMutation: useCreateCase,
   useUpdateCaseMutation: useUpdateCase,
   useDeleteCaseMutation: useDeleteCase,
+  useApproveCaseMutation: useApproveCase,
 } = casesApi;

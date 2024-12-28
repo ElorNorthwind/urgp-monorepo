@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   Patch,
   Post,
@@ -134,6 +135,15 @@ export class ControlOperationsController {
         class: 'stage',
       } as ControlStageSlim)
     ) {
+      Logger.warn(
+        'Согласующий недоступен',
+        JSON.stringify({
+          currentApprover: currentOperation.payload.approver,
+          dtoApprover: dto.approver,
+          userFio: req.user.fio,
+          userApprovers: req.user.controlData.approvers?.cases,
+        }),
+      );
       throw new UnauthorizedException(
         'Операция не разрешена. Согласующий не доступен пользователю!',
       );
@@ -180,21 +190,35 @@ export class ControlOperationsController {
       );
     }
 
-    if (
-      i.cannot('set-approver', {
-        ...currentOperation,
-        class: 'stage',
-      } as ControlStageSlim)
-    ) {
-      throw new UnauthorizedException('Согласующий недоступен пользователю!');
-    }
-
     const newApprover =
       dto.approveStatus === 'rejected'
         ? currentOperation.authorId
         : dto?.nextApprover ||
           req.user?.controlData?.approvers?.cases?.[0] ||
           null;
+
+    if (
+      i.cannot('set-approver', {
+        ...currentOperation,
+        class: 'stage',
+      } as ControlStageSlim) ||
+      i.cannot('set-approver', {
+        ...dto,
+        approver: newApprover,
+        class: 'stage',
+      })
+    ) {
+      Logger.warn(
+        'Согласующий недоступен',
+        JSON.stringify({
+          currentApprover: currentOperation.payload.approver,
+          dtoApprover: newApprover,
+          userFio: req.user.fio,
+          userApprovers: req.user.controlData.approvers?.cases,
+        }),
+      );
+      throw new UnauthorizedException('Согласующий недоступен пользователю!');
+    }
 
     return this.controlOperations.approveOperation(
       {

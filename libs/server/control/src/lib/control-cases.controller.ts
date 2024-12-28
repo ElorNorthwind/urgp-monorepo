@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Patch,
   Post,
   Req,
@@ -54,6 +55,14 @@ export class ControlCasesController {
       throw new UnauthorizedException('Нет прав на создание');
     }
     if (i.cannot('set-approver', subject)) {
+      Logger.warn(
+        'Согласующий недоступен',
+        JSON.stringify({
+          dtoApprover: dto?.approver,
+          userFio: req.user.fio,
+          userApprovers: req.user.controlData.approvers?.cases,
+        }),
+      );
       throw new UnauthorizedException('Согласующий недоступен');
     }
 
@@ -63,7 +72,9 @@ export class ControlCasesController {
 
   @Get('all')
   async readCases(@Req() req: RequestWithUserData) {
-    return this.controlCases.readCases(req.user.id);
+    const i = defineControlAbilityFor(req.user);
+    const readAll = i.can('read-all', 'Case');
+    return this.controlCases.readCases(req.user.id, readAll);
   }
 
   @Patch()
@@ -73,13 +84,22 @@ export class ControlCasesController {
   ) {
     const i = defineControlAbilityFor(req.user);
     const currentCase = await this.controlCases.readSlimCaseById(dto.id);
-
     if (i.cannot('update', { ...currentCase, class: 'control-incident' })) {
       throw new UnauthorizedException('Недостаточно прав для изменения');
     }
     if (
-      i.cannot('set-approver', { ...currentCase, class: 'control-incident' })
+      i.cannot('set-approver', { ...currentCase, class: 'control-incident' }) ||
+      i.cannot('set-approver', { ...dto, class: 'control-incident' })
     ) {
+      Logger.warn(
+        'Согласующий недоступен',
+        JSON.stringify({
+          currentApprover: currentCase.payload.approver,
+          dtoApprover: dto?.approver,
+          userFio: req.user.fio,
+          userApprovers: req.user.controlData.approvers?.cases,
+        }),
+      );
       throw new UnauthorizedException('Согласующий недоступен');
     }
 
@@ -113,7 +133,26 @@ export class ControlCasesController {
         'Операция не разрешена. Нет прав на согласование.',
       );
     }
-    // TODO сделать асинхронный рефайн через зод вместо касла аще?
+
+    if (
+      i.cannot('set-approver', {
+        ...dto,
+        approver: dto.nextApprover,
+        class: 'control-incident',
+      })
+    ) {
+      Logger.warn(
+        'Согласующий недоступен',
+        JSON.stringify({
+          currentApprover: currentCase.payload.approver,
+          dtoApprover: dto?.nextApprover,
+          userFio: req.user.fio,
+          userApprovers: req.user.controlData.approvers?.cases,
+        }),
+      );
+      throw new UnauthorizedException('Согласующий недоступен');
+    }
+
     const newApprover =
       dto.approveStatus === 'rejected'
         ? currentCase.authorId

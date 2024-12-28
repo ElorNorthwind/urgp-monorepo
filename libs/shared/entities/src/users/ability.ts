@@ -16,6 +16,7 @@ import {
 type Action =
   | 'create'
   | 'read'
+  | 'read-all'
   | 'update'
   | 'delete'
   | 'approve'
@@ -68,17 +69,22 @@ export function defineControlAbilityFor(user: User) {
       'payload.approveStatus': { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
     });
   }
+
+  if (user.controlData.roles.includes('controller')) {
+    can('read-all', 'all'); // контроллер видит все
+  }
+
   cannot('approve', 'all', {
     'payload.approveStatus': { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
   });
   can('set-approver', 'all', {
     approver: null, // без согласующего можно создавать все
   });
-  cannot('set-approver', 'Case', {
-    approver: { $nin: caseApprovers }, // Никто не может создавать или ставить дела на утверждении не своих согласующих
+  can('set-approver', 'Case', {
+    approver: { $in: caseApprovers }, // Никто не может создавать или ставить дела на утверждении не своих согласующих
   });
-  cannot('set-approver', 'Stage', {
-    approver: { $nin: operationApprovers }, // Никто не может создавать или ставить операции на утверждении не своих согласующих
+  can('set-approver', 'Stage', {
+    approver: { $in: operationApprovers }, // Никто не может создавать или ставить операции на утверждении не своих согласующих
   });
 
   return build({

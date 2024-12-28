@@ -1,6 +1,8 @@
 import {
   CircleHelp,
   CirclePlay,
+  CircleStop,
+  CircleX,
   LucideProps,
   MessageSquareHeart,
   MessageSquareMore,
@@ -21,6 +23,7 @@ export const caseStatusStyles = {
   1: { icon: CircleHelp, iconStyle: 'text-slate-500' },
   2: { icon: CirclePlay, iconStyle: 'text-sky-500' },
   3: { icon: CirclePlay, iconStyle: 'text-sky-500' },
+  5: { icon: CircleX, iconStyle: 'text-rose-500' },
 } as Record<number, StyleData>;
 
 export const caseTypeStyles = {

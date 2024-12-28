@@ -37,6 +37,7 @@ LEFT JOIN (SELECT id, fio FROM renovation.users) u4 ON u4.id = (c.payload->-1->>
 LEFT JOIN control.case_status_types s ON s.id = 
 	CASE 
 		WHEN c.payload->-1->>'approveStatus' = 'pending' THEN 1 
+		WHEN c.payload->-1->>'approveStatus' = 'rejected' THEN 5
 		ELSE 2
 	END
 LEFT JOIN (SELECT case_id, MAX((payload->-1->>'updatedAt')::timestamp with time zone) as updated FROM control.operations GROUP BY case_id) o ON o.case_id = c.id

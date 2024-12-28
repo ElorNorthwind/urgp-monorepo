@@ -29,3 +29,4 @@ export * from './ControlNavbar';
 export * from './ControlSidePanel';
 export * from './ConfirmationButton';
 export * from './FormField';
+export * from './ApproveDialog';
