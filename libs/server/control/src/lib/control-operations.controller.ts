@@ -141,7 +141,7 @@ export class ControlOperationsController {
           currentApprover: currentOperation.payload.approver,
           dtoApprover: dto.approver,
           userFio: req.user.fio,
-          userApprovers: req.user.controlData.approvers?.cases,
+          userApprovers: req.user.controlData?.approvers?.cases,
         }),
       );
       throw new UnauthorizedException(
@@ -214,7 +214,7 @@ export class ControlOperationsController {
           currentApprover: currentOperation.payload.approver,
           dtoApprover: newApprover,
           userFio: req.user.fio,
-          userApprovers: req.user.controlData.approvers?.cases,
+          userApprovers: req.user.controlData?.approvers?.cases,
         }),
       );
       throw new UnauthorizedException('Согласующий недоступен пользователю!');

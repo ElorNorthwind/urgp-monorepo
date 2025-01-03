@@ -60,7 +60,7 @@ export class ControlCasesController {
         JSON.stringify({
           dtoApprover: dto?.approver,
           userFio: req.user.fio,
-          userApprovers: req.user.controlData.approvers?.cases,
+          userApprovers: req.user.controlData?.approvers?.cases,
         }),
       );
       throw new UnauthorizedException('Согласующий недоступен');
@@ -97,7 +97,7 @@ export class ControlCasesController {
           currentApprover: currentCase.payload.approver,
           dtoApprover: dto?.approver,
           userFio: req.user.fio,
-          userApprovers: req.user.controlData.approvers?.cases,
+          userApprovers: req.user.controlData?.approvers?.cases,
         }),
       );
       throw new UnauthorizedException('Согласующий недоступен');
@@ -147,7 +147,7 @@ export class ControlCasesController {
           currentApprover: currentCase.payload.approver,
           dtoApprover: dto?.nextApprover,
           userFio: req.user.fio,
-          userApprovers: req.user.controlData.approvers?.cases,
+          userApprovers: req.user.controlData?.approvers?.cases,
         }),
       );
       throw new UnauthorizedException('Согласующий недоступен');

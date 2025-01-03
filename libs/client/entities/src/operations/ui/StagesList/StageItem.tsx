@@ -65,7 +65,7 @@ const StageItem = (props: StageItemProps): JSX.Element => {
         <span className={cn('truncate font-bold', fontStyle)}>
           {stage.payload.type.fullname}
         </span>
-        <span className="ml-auto font-thin">{stage.payload.num}</span>
+        <span className="ml-auto font-light">{stage.payload.num}</span>
         <span className={cn('text-muted-foreground')}>
           {format(stage.payload.doneDate, 'dd.MM.yyyy')}
         </span>
