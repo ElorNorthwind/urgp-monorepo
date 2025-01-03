@@ -6,7 +6,7 @@ SET payload = payload || (payload->-1 ||
             'description', ${description},
             'approveNotes', null,
             'updatedAt', NOW(),
-            'updatedBy', ${authorId}
+            'updatedById', ${authorId}
                     ))
 WHERE id = ${id} 
 RETURNING id, author_id as "authorId", case_id as "caseId",

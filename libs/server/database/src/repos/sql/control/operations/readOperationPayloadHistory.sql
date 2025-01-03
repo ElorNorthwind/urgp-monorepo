@@ -3,13 +3,13 @@ WITH history_data AS (
 	FROM control.operations o
 	JOIN LATERAL jsonb_to_recordset(o.payload) AS  
 	  p("num" text, 
-		"type" integer, 
-		"approver" integer,
+		"typeId" integer, 
+		"approverId" integer,
 		"doneDate" date, 
-		"approveBy" integer,
+		"approveById" integer,
 		"isDeleted" boolean, 
 		"updatedAt" timestamp with time zone,
-		"updatedBy" integer, 
+		"updatedById" integer, 
 		"approveDate" timestamp with time zone,
 		"description" varchar, 
 		"approveNotes" text,
@@ -34,8 +34,8 @@ SELECT
 	json_build_object('id', u2.id, 'fio', u2.fio) as "approver",
 	json_build_object('id', u3.id, 'fio', u3.fio) as "approveBy"
 FROM history_data h
-LEFT JOIN (SELECT id, name, category, fullname, priority FROM control.operation_types) t ON t.id = (h.type)::integer
-LEFT JOIN renovation.users u ON u.id = h."updatedBy"
-LEFT JOIN renovation.users u2 ON u2.id = h."approver"
-LEFT JOIN renovation.users u3 ON u3.id = h."approveBy"
+LEFT JOIN (SELECT id, name, category, fullname, priority FROM control.operation_types) t ON t.id = (h."typeId")::integer
+LEFT JOIN renovation.users u ON u.id = h."updatedById"
+LEFT JOIN renovation.users u2 ON u2.id = h."approverId"
+LEFT JOIN renovation.users u3 ON u3.id = h."approveById"
 ORDER BY h."updatedAt" ASC;

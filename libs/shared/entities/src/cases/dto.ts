@@ -4,27 +4,27 @@ import { externalCase } from '../userInput/types';
 // создание заявки
 export const caseCreate = z.object({
   class: z.coerce.string().default('control-incedent'),
-  type: z.coerce.number().default(4),
+  typeId: z.coerce.number().default(4),
   externalCases: z.array(externalCase).default([]),
-  directions: z.array(z.coerce.number()).default([]),
-  problems: z.array(z.coerce.number()).nullable().default(null),
+  directionIds: z.array(z.coerce.number()).default([]),
+  problemIds: z.array(z.coerce.number()).nullable().default(null),
   description: z.string().min(1, { message: 'Описание не может быть пустым' }),
   fio: z.string().min(1, { message: 'ФИО не может быть пустым' }),
   adress: z.string().nullable().default(''),
-  approver: z.coerce.number().nullable().default(null),
+  approverId: z.coerce.number().nullable().default(null),
 });
 export type CaseCreateDto = z.infer<typeof caseCreate>;
 
 export const caseCreateFormValues = caseCreate.pick({
   class: true,
-  type: true,
+  typeId: true,
   externalCases: true,
-  directions: true,
-  problems: true,
+  directionIds: true,
+  problemIds: true,
   description: true,
   fio: true,
   adress: true,
-  approver: true,
+  approverId: true,
 });
 export type CaseCreateFormValuesDto = z.infer<typeof caseCreateFormValues>;
 
@@ -33,11 +33,11 @@ export const caseUpdate = caseCreate
   .pick({
     class: true,
     externalCases: true,
-    type: true,
-    directions: true,
-    problems: true,
+    typeId: true,
+    directionIds: true,
+    problemIds: true,
     description: true,
-    approver: true,
+    approverId: true,
     fio: true,
     adress: true,
   })

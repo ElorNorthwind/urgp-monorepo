@@ -56,18 +56,18 @@ const CreateStageForm = ({
   const emptyStage = useMemo(() => {
     return !editStage || editStage === 'new'
       ? {
-          type: 6,
+          typeId: 6,
           doneDate: new Date().setHours(0, 0, 0, 0),
           num: '',
           description: '',
-          approver: approvers?.operations?.[0]?.value,
+          approverId: approvers?.operations?.[0]?.value,
         }
       : controlStageCreateFormValues.safeParse({
-          type: editStage?.payload?.type?.id,
+          typeId: editStage?.payload?.type?.id,
           doneDate: editStage?.payload?.doneDate,
           num: editStage?.payload?.num?.toString(),
           description: editStage?.payload?.description?.toString(),
-          approver: editStage?.payload?.approver?.id,
+          approverId: editStage?.payload?.approver?.id,
         }).data;
   }, [editStage, approvers]);
 
@@ -82,7 +82,7 @@ const CreateStageForm = ({
     }
   }, [editStage, form]);
 
-  const watchType = form.watch('type');
+  const watchType = form.watch('typeId');
 
   useEffect(() => {
     if (
@@ -90,11 +90,11 @@ const CreateStageForm = ({
         return operation.id === watchType;
       })?.autoApprove
     ) {
-      form.unregister('approver');
+      form.unregister('approverId');
     } else {
-      form.register('approver');
+      form.register('approverId');
       approvers?.operations?.[0]?.value &&
-        form.setValue('approver', approvers?.operations?.[0]?.value);
+        form.setValue('approverId', approvers?.operations?.[0]?.value);
     }
   }, [form.register, form.unregister, watchType]);
 
@@ -103,7 +103,7 @@ const CreateStageForm = ({
 
   async function onSubmit(data: ControlStageCreateFormValuesDto) {
     editStage && editStage !== 'new'
-      ? updateStage({ ...data, id: editStage?.id || 0, type: undefined })
+      ? updateStage({ ...data, id: editStage?.id || 0, typeId: undefined })
           .unwrap()
           .then(() => {
             form.reset(emptyStage);
@@ -115,7 +115,7 @@ const CreateStageForm = ({
               description: rejected.data?.message || 'Неизвестная ошибка',
             }),
           )
-      : createStage({ ...data, caseId })
+      : createStage({ ...data, caseId, class: 'stage' })
           .unwrap()
           .then(() => {
             form.reset(emptyStage);
@@ -128,10 +128,6 @@ const CreateStageForm = ({
             }),
           );
   }
-
-  // if (isUserDataLoading) {
-  //   return <Skeleton className={cn('h-[314px] w-full', className)} />;
-  // }
 
   return (
     <Form {...form}>
@@ -152,7 +148,7 @@ const CreateStageForm = ({
         )}
         <OperationTypeSelector
           form={form}
-          fieldName={'type'}
+          fieldName={'typeId'}
           popoverMinWidth={popoverMinWidth}
           disabled={editStage !== 'new'}
         />
@@ -183,7 +179,7 @@ const CreateStageForm = ({
         />
         <SelectFormField
           form={form}
-          fieldName={'approver'}
+          fieldName={'approverId'}
           options={approvers?.operations}
           isLoading={isApproversLoading || isOperationTypesLoading}
           label="Согласующий"

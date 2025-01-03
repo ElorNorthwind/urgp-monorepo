@@ -54,17 +54,17 @@ export class ControlOperationsController {
     const operationTypes = await this.classificators.getOperationTypesFlat();
 
     const autoApproved = !!operationTypes.find((operation) => {
-      return operation.id === dto.type;
+      return operation.id === dto.typeId;
     })?.autoApprove;
 
-    const correctApprover =
-      dto?.approver ??
+    const correctApproverId =
+      dto?.approverId ??
       req.user?.controlData?.approvers?.operations?.[0] ??
       (autoApproved ? req.user.id : null);
 
     const subject = {
       ...dto,
-      approver: correctApprover,
+      approver: correctApproverId,
       class: 'control-incident',
     };
 
@@ -74,12 +74,12 @@ export class ControlOperationsController {
       );
     }
 
-    const approved = autoApproved || correctApprover === req.user.id;
+    const approved = autoApproved || correctApproverId === req.user.id;
 
     return this.controlOperations.createStage(
       {
         ...dto,
-        approver: correctApprover,
+        approverId: correctApproverId,
       },
       req.user.id,
       approved,
@@ -138,8 +138,8 @@ export class ControlOperationsController {
       Logger.warn(
         'Согласующий недоступен',
         JSON.stringify({
-          currentApprover: currentOperation.payload.approver,
-          dtoApprover: dto.approver,
+          currentApprover: currentOperation.payload.approverId,
+          dtoApprover: dto.approverId,
           userFio: req.user.fio,
           userApprovers: req.user.controlData?.approvers?.cases,
         }),
@@ -190,10 +190,10 @@ export class ControlOperationsController {
       );
     }
 
-    const newApprover =
+    const newApproverId =
       dto.approveStatus === 'rejected'
         ? currentOperation.authorId
-        : dto?.nextApprover ||
+        : dto?.nextApproverId ||
           req.user?.controlData?.approvers?.cases?.[0] ||
           null;
 
@@ -204,15 +204,15 @@ export class ControlOperationsController {
       } as ControlStageSlim) ||
       i.cannot('set-approver', {
         ...dto,
-        approver: newApprover,
+        approverId: newApproverId,
         class: 'stage',
       })
     ) {
       Logger.warn(
         'Согласующий недоступен',
         JSON.stringify({
-          currentApprover: currentOperation.payload.approver,
-          dtoApprover: newApprover,
+          currentApprover: currentOperation.payload.approverId,
+          dtoApprover: newApproverId,
           userFio: req.user.fio,
           userApprovers: req.user.controlData?.approvers?.cases,
         }),
@@ -226,12 +226,12 @@ export class ControlOperationsController {
         approveStatus:
           dto.approveStatus === 'rejected'
             ? 'rejected'
-            : newApprover === req.user.id
+            : newApproverId === req.user.id
               ? dto.approveStatus
               : 'pending',
       },
       req.user.id,
-      newApprover,
+      newApproverId,
     );
   }
 }

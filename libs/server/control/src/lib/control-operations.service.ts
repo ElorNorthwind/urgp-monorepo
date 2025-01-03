@@ -8,7 +8,6 @@ import {
   ControlOperationSlim,
   ControlOperation,
   ControlStageUpdateDto,
-  ControlStageSlim,
   ControlStage,
   ControlOperationPayloadHistoryData,
 } from '@urgp/shared/entities';
@@ -20,10 +19,6 @@ export class ControlOperationsService {
     private readonly dbServise: DatabaseService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
-
-  // public async getOperationTypes(): Promise<NestedClassificatorInfo[]> {
-  //   return this.dbServise.db.controlClassificators.readOperationTypes();
-  // }
 
   public async createStage(
     dto: ControlStageCreateDto,
@@ -95,13 +90,13 @@ export class ControlOperationsService {
   public async approveOperation(
     dto: UserInputApproveDto,
     userId: number,
-    newApprover: number | null,
+    newApproverId: number | null,
   ): Promise<ControlOperation> {
     const approvedOperation =
       await this.dbServise.db.controlOperations.approveOperation(
         dto,
         userId,
-        newApprover,
+        newApproverId,
       );
     return this.dbServise.db.controlOperations.readFullOperationById(
       approvedOperation.id,

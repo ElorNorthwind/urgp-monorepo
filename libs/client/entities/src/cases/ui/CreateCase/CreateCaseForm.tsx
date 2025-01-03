@@ -2,11 +2,9 @@ import {
   Button,
   cn,
   Form,
-  selectCurrentUser,
   selectEditCase,
   setEditCase,
   Skeleton,
-  useUserAbility,
 } from '@urgp/client/shared';
 import {
   Case,
@@ -53,7 +51,7 @@ const CreateCaseForm = ({
     return !editCase || editCase === 'new'
       ? {
           class: 'control-incident',
-          type: 4,
+          typeId: 4,
           externalCases: [
             {
               system: 'NONE',
@@ -61,24 +59,24 @@ const CreateCaseForm = ({
               date: new Date(),
             } as Case['payload']['externalCases'][0],
           ],
-          directions: [],
-          problems: [],
+          directionIds: [],
+          problemIds: [],
           description: '',
           fio: '',
           adress: '',
-          approver: approvers?.operations?.[0].value,
+          approverId: approvers?.operations?.[0].value,
           dueDate: addBusinessDays(new Date().setHours(0, 0, 0, 0), 5),
         }
       : caseCreateFormValues.safeParse({
           class: editCase?.class,
-          type: editCase?.payload?.type?.id,
+          typeId: editCase?.payload?.type?.id,
           externalCases: editCase?.payload?.externalCases,
-          directions: editCase?.payload?.directions?.map((d) => d.id),
-          problems: editCase?.payload?.problems?.map((p) => p.id),
+          directionIds: editCase?.payload?.directions?.map((d) => d.id),
+          problemIds: editCase?.payload?.problems?.map((p) => p.id),
           description: editCase?.payload?.description,
           fio: editCase?.payload?.fio,
           adress: editCase?.payload?.adress,
-          approver: editCase?.payload?.approver?.id,
+          approverId: editCase?.payload?.approver?.id,
         }).data;
   }, [editCase, approvers]);
 
@@ -139,7 +137,7 @@ const CreateCaseForm = ({
             form={form}
             label="Тип"
             placeholder="Тип заявки"
-            fieldName="type"
+            fieldName="typeId"
             popoverMinWidth={'405px'} // oh that's not good
             dirtyIndicator={editCase !== 'new'}
             className="flex-grow"
@@ -157,7 +155,7 @@ const CreateCaseForm = ({
           form={form}
           label="Направления"
           placeholder="Направления работы"
-          fieldName="directions"
+          fieldName="directionIds"
           dirtyIndicator={editCase !== 'new'}
         />
         <ExternalCaseFieldArray form={form} fieldArrayName="externalCases" />
@@ -188,7 +186,7 @@ const CreateCaseForm = ({
         />
         <SelectFormField
           form={form}
-          fieldName={'approver'}
+          fieldName={'approverId'}
           options={approvers?.operations}
           isLoading={isApproversLoading}
           label="Согласующий"

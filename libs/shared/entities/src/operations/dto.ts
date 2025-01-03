@@ -7,7 +7,7 @@ export const controlStageCreate = z.object({
   caseId: z.coerce.number().nullable().default(null),
   class: z.string().default('stage'),
   // authorId: z.coerce.number().nullable().default(null),
-  type: z.coerce.number({ message: 'Тип этапа не выбран' }).default(6),
+  typeId: z.coerce.number({ message: 'Тип этапа не выбран' }).default(6),
   doneDate: z.coerce
     .date({ message: 'Дата обязательна' })
     .or(z.number())
@@ -15,7 +15,7 @@ export const controlStageCreate = z.object({
   num: z.string().default(''),
   // externalCase: externalCase.nullable().default(null), // внешний номер,
   description: z.string().default(''),
-  approver: z.coerce.number().nullable().default(null),
+  approverId: z.coerce.number().nullable().default(null),
 });
 export type ControlStageCreateDto = z.infer<typeof controlStageCreate>;
 
@@ -33,12 +33,12 @@ export type ControlStageCreateDto = z.infer<typeof controlStageCreate>;
 // export type ControlStageCreateDto = z.infer<typeof controlStageCreate>;
 
 export const controlStageCreateFormValues = controlStageCreate.pick({
-  type: true,
+  typeId: true,
   // externalCase: true,
   doneDate: true,
   num: true,
   description: true,
-  approver: true,
+  approverId: true,
 });
 export type ControlStageCreateFormValuesDto = z.infer<
   typeof controlStageCreateFormValues
@@ -53,11 +53,11 @@ export const controlStageUpdate = controlStageCreate
     doneDate: true,
     num: true,
     description: true,
-    approver: true,
+    approverId: true,
   })
   .partial()
   .extend({
-    type: z.undefined().optional(),
+    typeId: z.undefined().optional(),
     id: z.coerce.number(),
   });
 export type ControlStageUpdateDto = z.infer<typeof controlStageUpdate>;
@@ -76,7 +76,7 @@ export const dispatchCreate = z.object({
   problemId: z.coerce.number().nullable().default(null),
   authorId: z.coerce.number(),
   executorId: z.coerce.number(),
-  type: z.coerce.number(),
+  typeId: z.coerce.number(),
   dueDate: z.coerce.date().nullable().default(null),
   description: z.string().nullable().default(null),
 });
@@ -84,7 +84,7 @@ export type DispatchCreateDto = z.infer<typeof dispatchCreate>;
 
 export const dispatchCreateFormValues = dispatchCreate.pick({
   executorId: true,
-  type: true,
+  typeId: true,
   dueDate: true,
   description: true,
 });
@@ -96,7 +96,7 @@ export type DispatchCreateFormValuesDto = z.infer<
 export const dispatchUpdate = dispatchCreate
   .pick({
     executorId: true,
-    type: true,
+    typeId: true,
     dueDate: true,
     description: true,
   })

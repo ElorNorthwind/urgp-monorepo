@@ -1,20 +1,20 @@
 import { z } from 'zod';
 
-export const approveStatusData = z.object({
+export const approveStatusDataSlim = z.object({
   approveStatus: z.enum(['pending', 'approved', 'rejected']).default('pending'),
   approveDate: z.coerce.date().nullable().default(null),
-  approveBy: z.number().nullable().default(null),
+  approveById: z.number().nullable().default(null),
   approveNotes: z.string().nullable().default(null),
-  approver: z.coerce.number().nullable().default(null),
+  approverId: z.coerce.number().nullable().default(null),
 });
-export type ApproveStatusData = z.infer<typeof approveStatusData>;
+export type ApproveStatusDataSlim = z.infer<typeof approveStatusDataSlim>;
 
-export const basicPayloadData = approveStatusData.extend({
-  updatedAt: z.coerce.date(),
-  updatedBy: z.coerce.number(),
+export const basicPayloadDataSlim = approveStatusDataSlim.extend({
+  updatedAtId: z.coerce.date(),
+  updatedById: z.coerce.number(),
   isDeleted: z.boolean().default(false),
 });
-export type BasicPayloadData = z.infer<typeof basicPayloadData>;
+export type BasicPayloadDataSlim = z.infer<typeof basicPayloadDataSlim>;
 
 export const externalCase = z
   .object({
@@ -45,6 +45,8 @@ export const userInfo = z.object({
   fio: z.string().nullable(),
 });
 export type UserInfo = z.infer<typeof userInfo>;
+
+// Чисто для всяких селектов в интерфейсах
 
 export const classificatorInfo = typeInfo
   .omit({

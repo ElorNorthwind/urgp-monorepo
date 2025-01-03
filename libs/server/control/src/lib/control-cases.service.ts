@@ -6,7 +6,6 @@ import {
   CaseCreateDto,
   CaseUpdateDto,
   Case,
-  UserControlData,
   UserInputApproveDto,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
@@ -64,12 +63,12 @@ export class ControlCaseService {
   public async approveCase(
     dto: UserInputApproveDto,
     userId: number,
-    newApprover: number | null,
+    newApproverId: number | null,
   ): Promise<Case> {
     const approvedCase = await this.dbServise.db.controlCases.approveCase(
       dto,
       userId,
-      newApprover,
+      newApproverId,
     );
     return this.dbServise.db.controlCases.readFullCaseById(
       approvedCase.id,

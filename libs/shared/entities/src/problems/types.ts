@@ -1,10 +1,10 @@
-import { BasicPayloadData, TypeInfo } from '../userInput/types';
+import { BasicPayloadDataSlim, TypeInfo } from '../userInput/types';
 
 type ProblemPayload = {
   shortName: string;
   directions: TypeInfo[]; // направления работы
   description: string; // собственно описание проблемы
-} & BasicPayloadData;
+} & BasicPayloadDataSlim;
 
 export type Problem = {
   id: number;

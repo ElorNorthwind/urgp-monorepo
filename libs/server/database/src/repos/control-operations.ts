@@ -28,17 +28,15 @@ export class ControlOperationsRepository {
     const newStage = {
       authorId,
       caseId: dto.caseId,
-      type: dto.type,
+      typeId: dto.typeId,
       doneDate: dto.doneDate,
       num: dto.num,
       description: dto.description,
-      approver: dto.approver,
+      approverId: dto.approverId,
       approveStatus: approved ? 'approved' : 'pending',
       approveDate: approved ? toDate(new Date()) : null,
-      approveBy: approved ? authorId : null,
+      approveById: approved ? authorId : null,
     };
-    // const q = this.pgp.as.format(cases.createStage, newStage);
-    // console.log(q);
     return this.db.one(operations.createStage, newStage);
   }
 
@@ -66,12 +64,6 @@ export class ControlOperationsRepository {
         ? this.pgp.as.format(` AND class = $1`, operationClass)
         : '';
 
-    // const q = this.pgp.as.format(operations.readOperationsByCaseId, {
-    //   id,
-    //   operationClassText,
-    // });
-    // console.log(q);
-
     return this.db.any(operations.readOperationsByCaseId, {
       id,
       userId,
@@ -86,7 +78,6 @@ export class ControlOperationsRepository {
     const updatedStage = {
       id: dto.id,
       authorId,
-      // type: dto.type,
       doneDate: dto.doneDate,
       num: dto.num,
       description: dto.description,
@@ -102,11 +93,11 @@ export class ControlOperationsRepository {
   approveOperation(
     dto: UserInputApproveDto,
     userId: number,
-    newApprover: number | null,
+    newApproverId: number | null,
   ): Promise<ControlOperationSlim> {
     const approvedOperation = {
       userId,
-      newApprover,
+      newApproverId,
       id: dto.id,
       approveStatus: dto.approveStatus,
       approveNotes: dto.approveNotes,

@@ -3,7 +3,7 @@ WITH directions AS (
 		c.id,
 		jsonb_agg(to_jsonb(d)) as val
 	FROM control.cases c
-	LEFT JOIN control.direction_types d ON c.payload->-1->'directions' @> to_jsonb(d.id)
+	LEFT JOIN control.direction_types d ON c.payload->-1->'directionIds' @> to_jsonb(d.id)
 	GROUP BY c.id
 )
 
@@ -20,6 +20,7 @@ SELECT
 		'fullName', s.fullname
 	) as status,
 	c.payload->-1 
+		#- '{typeId, directionIds, problemIds, approverId, approveById, updatedById}'
 		|| jsonb_build_object('directions', d.val)
 		|| jsonb_build_object('type', to_jsonb(t))
 		|| jsonb_build_object('problems', null)   
@@ -28,12 +29,12 @@ SELECT
 		|| jsonb_build_object('updatedBy', to_jsonb(u4)) 
 	as payload
 FROM control.cases c
-LEFT JOIN control.case_types t ON t.id = (c.payload->-1->'type')::integer
+LEFT JOIN control.case_types t ON t.id = (c.payload->-1->'typeId')::integer
 LEFT JOIN directions d ON d.id = c.id
 LEFT JOIN (SELECT id, fio FROM renovation.users) u ON u.id = c.author_id
-LEFT JOIN (SELECT id, fio FROM renovation.users) u2 ON u2.id = (c.payload->-1->>'approver')::integer
-LEFT JOIN (SELECT id, fio FROM renovation.users) u3 ON u3.id = (c.payload->-1->>'approveBy')::integer
-LEFT JOIN (SELECT id, fio FROM renovation.users) u4 ON u4.id = (c.payload->-1->>'updatedBy')::integer
+LEFT JOIN (SELECT id, fio FROM renovation.users) u2 ON u2.id = (c.payload->-1->>'approverId')::integer
+LEFT JOIN (SELECT id, fio FROM renovation.users) u3 ON u3.id = (c.payload->-1->>'approveById')::integer
+LEFT JOIN (SELECT id, fio FROM renovation.users) u4 ON u4.id = (c.payload->-1->>'updatedById')::integer
 LEFT JOIN control.case_status_types s ON s.id = 
 	CASE 
 		WHEN c.payload->-1->>'approveStatus' = 'pending' THEN 1 

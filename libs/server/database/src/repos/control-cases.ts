@@ -32,26 +32,26 @@ export class ControlCasesRepository {
         })
         .join(', ') +
       `)`;
-    const directions = this.pgp.as.format(`jsonb_build_array($1:list)`, [
-      dto.directions,
+    const directionIds = this.pgp.as.format(`jsonb_build_array($1:list)`, [
+      dto.directionIds,
     ]);
-    const problems = this.pgp.as.format(`jsonb_build_array($1:list)`, [
-      dto.problems,
+    const problemIds = this.pgp.as.format(`jsonb_build_array($1:list)`, [
+      dto.problemIds,
     ]);
 
     const newCase = {
       authorId,
       externalCases,
-      type: dto.type,
-      directions,
-      problems,
+      typeId: dto.typeId,
+      directionIds,
+      problemIds,
       description: dto.description,
       fio: dto.fio,
       adress: dto.adress,
-      approver: dto.approver,
+      approverId: dto.approverId,
       approveStatus: approved ? 'approved' : 'pending',
       approveDate: approved ? toDate(new Date()) : null,
-      approveBy: approved ? authorId : null,
+      approveById: approved ? authorId : null,
     };
 
     return this.db.one(cases.createCase, newCase);
@@ -80,28 +80,26 @@ export class ControlCasesRepository {
         })
         .join(', ') +
       `)`;
-    const directions = this.pgp.as.format(`jsonb_build_array($1:list)`, [
-      dto.directions,
+    const directionIds = this.pgp.as.format(`jsonb_build_array($1:list)`, [
+      dto.directionIds,
     ]);
-    const problems = this.pgp.as.format(`jsonb_build_array($1:list)`, [
-      dto.problems,
+    const problemIds = this.pgp.as.format(`jsonb_build_array($1:list)`, [
+      dto.problemIds,
     ]);
 
     const updatedCase = {
       id: dto.id,
       userId,
       externalCases,
-      type: dto.type,
-      directions,
-      problems,
+      typeId: dto.typeId,
+      directionIds,
+      problemIds,
       description: dto.description,
       fio: dto.fio,
       adress: dto.adress,
-      approver: dto.approver,
+      approverId: dto.approverId,
     };
 
-    // const q = this.pgp.as.format(cases.updateCase, updatedCase);
-    // console.log(q);
     return this.db.one(cases.updateCase, updatedCase);
   }
 
@@ -112,11 +110,11 @@ export class ControlCasesRepository {
   approveCase(
     dto: UserInputApproveDto,
     userId: number,
-    newApprover: number | null,
+    newApproverId: number | null,
   ): Promise<CaseSlim> {
     const approvedCase = {
       userId,
-      newApprover,
+      newApproverId,
       id: dto.id,
       approveStatus: dto.approveStatus,
       approveNotes: dto.approveNotes,

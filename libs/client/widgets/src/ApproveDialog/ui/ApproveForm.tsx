@@ -36,7 +36,7 @@ const ApproveForm = ({
 
   const emptyApproveData = useMemo(() => {
     return {
-      nextApprover: approvers?.operations?.[0].value || null,
+      nextApproverId: approvers?.operations?.[0].value || null,
       approveNotes: '',
     };
   }, [approvers]);
@@ -97,7 +97,7 @@ const ApproveForm = ({
         />
         <SelectFormField
           form={form}
-          fieldName={'nextApprover'}
+          fieldName={'nextApproverId'}
           options={approvers?.operations}
           isLoading={isApproversLoading}
           label="Следующий согласующий"

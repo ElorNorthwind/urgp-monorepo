@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -41,13 +40,13 @@ export class ControlCasesController {
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(caseCreate)) dto: CaseCreateDto,
   ) {
-    const correctApprover =
-      dto?.approver ?? req.user?.controlData?.approvers?.cases?.[0] ?? null;
+    const correctApproverId =
+      dto?.approverId ?? req.user?.controlData?.approvers?.cases?.[0] ?? null;
 
     const i = defineControlAbilityFor(req.user);
     const subject = {
       ...dto,
-      approver: correctApprover,
+      approver: correctApproverId,
       class: 'control-incident',
     };
 
@@ -58,7 +57,7 @@ export class ControlCasesController {
       Logger.warn(
         'Согласующий недоступен',
         JSON.stringify({
-          dtoApprover: dto?.approver,
+          dtoApprover: dto?.approverId,
           userFio: req.user.fio,
           userApprovers: req.user.controlData?.approvers?.cases,
         }),
@@ -66,14 +65,18 @@ export class ControlCasesController {
       throw new UnauthorizedException('Согласующий недоступен');
     }
 
-    const approved = correctApprover === req.user.id;
-    return this.controlCases.createCase(dto, req.user.id, approved);
+    const approved = correctApproverId === req.user.id;
+    return this.controlCases.createCase(
+      { ...dto, approverId: correctApproverId },
+      req.user.id,
+      approved,
+    );
   }
 
   @Get('all')
   async readCases(@Req() req: RequestWithUserData) {
     const i = defineControlAbilityFor(req.user);
-    const readAll = i.can('read-all', 'Case');
+    const readAll = i.can('read-all', 'Case'); // Наверное лучше сделать 2 эндпоинта
     return this.controlCases.readCases(req.user.id, readAll);
   }
 
@@ -94,8 +97,8 @@ export class ControlCasesController {
       Logger.warn(
         'Согласующий недоступен',
         JSON.stringify({
-          currentApprover: currentCase.payload.approver,
-          dtoApprover: dto?.approver,
+          currentApprover: currentCase.payload.approverId,
+          dtoApprover: dto?.approverId,
           userFio: req.user.fio,
           userApprovers: req.user.controlData?.approvers?.cases,
         }),
@@ -137,15 +140,15 @@ export class ControlCasesController {
     if (
       i.cannot('set-approver', {
         ...dto,
-        approver: dto.nextApprover,
+        approverId: dto.nextApproverId,
         class: 'control-incident',
       })
     ) {
       Logger.warn(
         'Согласующий недоступен',
         JSON.stringify({
-          currentApprover: currentCase.payload.approver,
-          dtoApprover: dto?.nextApprover,
+          currentApprover: currentCase.payload.approverId,
+          dtoApprover: dto?.nextApproverId,
           userFio: req.user.fio,
           userApprovers: req.user.controlData?.approvers?.cases,
         }),
@@ -156,7 +159,7 @@ export class ControlCasesController {
     const newApprover =
       dto.approveStatus === 'rejected'
         ? currentCase.authorId
-        : dto?.nextApprover ||
+        : dto?.nextApproverId ||
           req.user?.controlData?.approvers?.cases?.[0] ||
           null;
 

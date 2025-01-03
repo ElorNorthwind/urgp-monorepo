@@ -78,13 +78,13 @@ export function defineControlAbilityFor(user: User) {
     'payload.approveStatus': { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
   });
   can('set-approver', 'all', {
-    approver: null, // без согласующего можно создавать все
+    approverId: null, // без согласующего можно создавать все
   });
   can('set-approver', 'Case', {
-    approver: { $in: caseApprovers }, // Никто не может создавать или ставить дела на утверждении не своих согласующих
+    approverId: { $in: caseApprovers }, // Никто не может создавать или ставить дела на утверждении не своих согласующих
   });
   can('set-approver', 'Stage', {
-    approver: { $in: operationApprovers }, // Никто не может создавать или ставить операции на утверждении не своих согласующих
+    approverId: { $in: operationApprovers }, // Никто не может создавать или ставить операции на утверждении не своих согласующих
   });
 
   return build({

@@ -1,13 +1,13 @@
 UPDATE control.operations
 SET payload = payload || (payload->-1 || 
     jsonb_build_object(
-        'approver',      ${newApprover},
+        'approverId',    ${newApproverId},
         'approveStatus', ${approveStatus},
         'approveNotes',  ${approveNotes},
         'approveDate',   NOW(),
-        'approveBy',     ${userId},
+        'approveById',   ${userId},
         'updatedAt',     NOW(),
-        'updatedBy',     ${userId}
+        'updatedById',   ${userId}
                     ))
 WHERE id = ${id} 
 RETURNING id, author_id as "authorId", case_id as "caseId",

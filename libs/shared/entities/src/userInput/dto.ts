@@ -7,12 +7,12 @@ export const userInputApprove = z.object({
     .or(z.literal('approved'))
     .or(z.literal('rejected')),
   approveNotes: z.string().nullable().optional(),
-  nextApprover: z.coerce.number().nullable().optional(),
+  nextApproverId: z.coerce.number().nullable().optional(),
 });
 export type UserInputApproveDto = z.infer<typeof userInputApprove>;
 
 export const userInputApproveFormValues = z.object({
-  nextApprover: z.coerce.number().nullable(),
+  nextApproverId: z.coerce.number().nullable(),
   approveNotes: z.string().optional(),
 });
 export type UserInputApproveFormValuesDto = z.infer<

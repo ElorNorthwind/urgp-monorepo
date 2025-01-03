@@ -4,17 +4,17 @@ VALUES
   ${authorId}, 
   ${caseId},
   jsonb_build_array(jsonb_build_object(
-                    'type', ${type},
+                    'typeId', ${typeId},
                     'doneDate', ${doneDate},
                     'num', ${num},
                     'description', ${description},
-                    'approver', ${approver},
+                    'approverId', ${approverId},
                     'approveStatus', ${approveStatus},
                     'approveDate', ${approveDate},
-                    'approveBy', ${approveBy},
+                    'approveById', ${approveById},
                     'approveNotes', null,
                     'updatedAt', NOW(),
-                    'updatedBy', ${authorId},
+                    'updatedById', ${authorId},
                     'isDeleted', false
                     )))
 RETURNING id, author_id as "authorId", case_id as "caseId", 

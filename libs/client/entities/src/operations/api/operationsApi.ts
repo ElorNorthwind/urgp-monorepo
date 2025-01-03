@@ -4,7 +4,6 @@ import {
   ControlOperationPayloadHistoryData,
   ControlStage,
   ControlStageCreateDto,
-  ControlStageSlim,
   ControlStageUpdateDto,
   UserInputDeleteDto,
 } from '@urgp/shared/entities';
