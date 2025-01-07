@@ -1,5 +1,13 @@
-import { Button, cn, Form, Skeleton } from '@urgp/client/shared';
 import {
+  Button,
+  cn,
+  Form,
+  selectCurrentUser,
+  Skeleton,
+  useUserAbility,
+} from '@urgp/client/shared';
+import {
+  GET_DEFAULT_CONTROL_DUE_DATE,
   userInputApproveFormValues,
   UserInputApproveFormValuesDto,
 } from '@urgp/shared/entities';
@@ -7,7 +15,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
-import { SelectFormField, TextAreaFormField } from '@urgp/client/widgets';
+import {
+  DateFormField,
+  SelectFormField,
+  TextAreaFormField,
+} from '@urgp/client/widgets';
 import { useEffect, useMemo } from 'react';
 import {
   useApproveCase,
@@ -15,6 +27,7 @@ import {
   useCurrentUserApprovers,
 } from '@urgp/client/entities';
 import { ThumbsDown, ThumbsUp } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 type ApproveFormProps = {
   entityId: number;
@@ -38,6 +51,7 @@ const ApproveForm = ({
     return {
       nextApproverId: approvers?.operations?.[0].value || null,
       approveNotes: '',
+      dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
     };
   }, [approvers]);
 
@@ -45,6 +59,9 @@ const ApproveForm = ({
     resolver: zodResolver(userInputApproveFormValues),
     defaultValues: emptyApproveData,
   });
+
+  const user = useSelector(selectCurrentUser);
+  const watchApprover = form.watch('nextApproverId');
 
   const [approveCase, { isLoading: isApproveCaseLoading }] = useApproveCase();
   const [approveOperation, { isLoading: isApproveOperationLoading }] =
@@ -95,16 +112,30 @@ const ApproveForm = ({
           label="Комментарий"
           placeholder="Комментарий к заключению"
         />
-        <SelectFormField
-          form={form}
-          fieldName={'nextApproverId'}
-          options={approvers?.operations}
-          isLoading={isApproversLoading}
-          label="Следующий согласующий"
-          placeholder="Выбор следующего согласующего"
-          popoverMinWidth={popoverMinWidth}
-          valueType="number"
-        />
+        <div className="flex w-full flex-row gap-2">
+          <SelectFormField
+            form={form}
+            fieldName={'nextApproverId'}
+            options={approvers?.operations}
+            isLoading={isApproversLoading}
+            label="Следующий согласующий"
+            placeholder="Выбор следующего согласующего"
+            popoverMinWidth={popoverMinWidth}
+            valueType="number"
+            className="flex-grow"
+          />
+          <DateFormField
+            form={form}
+            fieldName={'dueDate'}
+            label="Срок решения"
+            placeholder="Контрольный срок"
+            className={cn(
+              'flex-shrink-0',
+              (user?.id !== watchApprover || entityType !== 'case') && 'hidden',
+            )}
+            disabled={user?.id !== watchApprover || entityType !== 'case'}
+          />
+        </div>
         <div className="flex w-full items-center justify-between gap-2">
           <Button
             type="button"

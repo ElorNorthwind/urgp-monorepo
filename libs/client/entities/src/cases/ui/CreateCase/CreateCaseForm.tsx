@@ -2,6 +2,7 @@ import {
   Button,
   cn,
   Form,
+  selectCurrentUser,
   selectEditCase,
   setEditCase,
   Skeleton,
@@ -85,6 +86,9 @@ const CreateCaseForm = ({
     defaultValues: emptyCase,
   });
 
+  const user = useSelector(selectCurrentUser);
+  const watchApprover = form.watch('approverId');
+
   useEffect(() => {
     if (editCase) {
       form.reset(emptyCase);
@@ -132,25 +136,17 @@ const CreateCaseForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('flex flex-col gap-4', className)}
       >
-        <div className="flex w-full flex-row gap-2">
-          <CaseTypeSelector
-            form={form}
-            label="Тип"
-            placeholder="Тип заявки"
-            fieldName="typeId"
-            popoverMinWidth={'405px'} // oh that's not good
-            dirtyIndicator={editCase !== 'new'}
-            className="flex-grow"
-          />
-          <DateFormField
-            form={form}
-            fieldName={'dueDate'}
-            label="Срок решения"
-            placeholder="Контрольный срок"
-            className="flex-shrink-0"
-            disabled={editCase !== 'new'}
-          />
-        </div>
+        <CaseTypeSelector
+          form={form}
+          label="Тип"
+          placeholder="Тип заявки"
+          fieldName="typeId"
+          popoverMinWidth={popoverMinWidth}
+          // popoverMinWidth={'405px'} // oh that's not good
+          dirtyIndicator={editCase !== 'new'}
+          // className="flex-grow"
+        />
+
         <DirectionTypeSelector
           form={form}
           label="Направления"
@@ -184,17 +180,33 @@ const CreateCaseForm = ({
           placeholder="Описание проблемы"
           dirtyIndicator={editCase !== 'new'}
         />
-        <SelectFormField
-          form={form}
-          fieldName={'approverId'}
-          options={approvers?.operations}
-          isLoading={isApproversLoading}
-          label="Согласующий"
-          placeholder="Выбор согласующего"
-          popoverMinWidth={popoverMinWidth}
-          dirtyIndicator={editCase !== 'new'}
-          valueType="number"
-        />
+        <div className="flex w-full flex-row gap-2">
+          <SelectFormField
+            form={form}
+            fieldName={'approverId'}
+            options={approvers?.operations}
+            isLoading={isApproversLoading}
+            label="Согласующий"
+            placeholder="Выбор согласующего"
+            popoverMinWidth={popoverMinWidth}
+            dirtyIndicator={editCase !== 'new'}
+            valueType="number"
+            className="flex-grow"
+          />
+          <DateFormField
+            form={form}
+            fieldName={'dueDate'}
+            label="Срок решения"
+            placeholder="Контрольный срок"
+            disabled={editCase !== 'new' || user?.id !== watchApprover}
+            className={cn(
+              'flex-shrink-0',
+              (user?.id !== watchApprover || user?.id !== watchApprover) &&
+                'hidden',
+            )}
+            // disabled={user?.id !== waatchApprover || entityType !== 'case'}
+          />
+        </div>
         <div className="flex w-full items-center justify-between gap-2">
           <Button
             className="flex-1"
