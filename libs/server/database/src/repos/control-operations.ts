@@ -18,6 +18,7 @@ import {
 import { IDatabase, IMain } from 'pg-promise';
 import { operations } from './sql/sql';
 import { toDate } from 'date-fns';
+import { Logger } from '@nestjs/common';
 
 // @Injectable()
 export class ControlOperationsRepository {
@@ -74,7 +75,7 @@ export class ControlOperationsRepository {
       description: dto.description,
       dueDate: dto.dueDate,
     };
-    return this.db.one(operations.createDispatch, newDispatch);
+    return this.db.one(operations.createReminder, newDispatch);
   }
 
   readSlimOperationById(id: number): Promise<ControlOperationSlim | null> {

@@ -10,6 +10,7 @@ import {
   Case,
   caseCreateFormValues,
   CaseCreateFormValuesDto,
+  GET_DEFAULT_CONTROL_DUE_DATE,
 } from '@urgp/shared/entities';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -29,7 +30,6 @@ import {
   DirectionTypeSelector,
   useCurrentUserApprovers,
 } from '../../../classificators';
-import { addBusinessDays } from 'date-fns';
 import { ExternalCaseFieldArray } from './ExternalCaseFieldArray';
 
 type CreateCaseFormProps = {
@@ -65,7 +65,7 @@ const CreateCaseForm = ({
           fio: '',
           adress: '',
           approverId: approvers?.operations?.[0].value,
-          dueDate: addBusinessDays(new Date().setHours(0, 0, 0, 0), 5),
+          dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
         }
       : caseCreateFormValues.safeParse({
           class: editCase?.class,

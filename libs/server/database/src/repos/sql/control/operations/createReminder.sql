@@ -1,6 +1,6 @@
 INSERT INTO control.operations (class, author_id, case_id, payload)
 VALUES
-  ('dispatch',
+  ('reminder',
   ${authorId}, 
   ${caseId},
   jsonb_build_array(jsonb_build_object(

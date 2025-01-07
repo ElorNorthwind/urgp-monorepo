@@ -1,5 +1,5 @@
-import { addBusinessDays } from 'date-fns';
 import { z } from 'zod';
+import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
 
 // ================ ЭТАПЫ (STAGES) ================
 
@@ -60,7 +60,7 @@ export const dispatchCreate = z.object({
   dueDate: z.coerce
     .date({ message: 'Дата обязательна' })
     .or(z.number())
-    .default(addBusinessDays(new Date().setHours(0, 0, 0, 0), 5)),
+    .default(GET_DEFAULT_CONTROL_DUE_DATE()),
   description: z.string().default(''),
   controllerId: z.coerce.number().nullable().default(null),
   executorId: z.coerce.number().nullable().default(null),
@@ -109,7 +109,7 @@ export const reminderCreate = z.object({
   dueDate: z.coerce
     .date({ message: 'Дата обязательна' })
     .or(z.number())
-    .default(addBusinessDays(new Date().setHours(0, 0, 0, 0), 5)),
+    .default(GET_DEFAULT_CONTROL_DUE_DATE()),
 });
 export type ReminderCreateDto = z.infer<typeof reminderCreate>;
 

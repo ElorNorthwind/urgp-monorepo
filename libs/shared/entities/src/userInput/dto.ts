@@ -8,12 +8,14 @@ export const userInputApprove = z.object({
     .or(z.literal('rejected')),
   approveNotes: z.string().nullable().optional(),
   nextApproverId: z.coerce.number().nullable().optional(),
+  dueDate: z.coerce.date().nullable().optional(),
 });
 export type UserInputApproveDto = z.infer<typeof userInputApprove>;
 
 export const userInputApproveFormValues = z.object({
   nextApproverId: z.coerce.number().nullable(),
   approveNotes: z.string().optional(),
+  dueDate: z.coerce.date().nullable().optional(),
 });
 export type UserInputApproveFormValuesDto = z.infer<
   typeof userInputApproveFormValues

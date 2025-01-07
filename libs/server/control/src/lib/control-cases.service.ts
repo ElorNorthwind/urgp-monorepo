@@ -7,13 +7,18 @@ import {
   CaseUpdateDto,
   Case,
   UserInputApproveDto,
+  GET_DEFAULT_CONTROL_DUE_DATE,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
+import { ControlOperationsService } from './control-operations.service';
+import { ControlClassificatorsService } from './control-classificators.service';
 
 @Injectable()
 export class ControlCaseService {
   constructor(
     private readonly dbServise: DatabaseService,
+    private readonly operations: ControlOperationsService,
+    private readonly classificators: ControlClassificatorsService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
@@ -22,11 +27,17 @@ export class ControlCaseService {
     userId: number,
     approved: boolean,
   ): Promise<Case> {
-    const createdCase = await this.dbServise.db.controlCases.createCase(
-      dto,
-      userId,
-      approved,
-    );
+    const createdCase: CaseSlim =
+      await this.dbServise.db.controlCases.createCase(dto, userId, approved);
+
+    if (approved) {
+      this.operations.createDispatchesAndReminderForCase(
+        createdCase,
+        userId,
+        dto.dueDate,
+      );
+    }
+
     return this.dbServise.db.controlCases.readFullCaseById(
       createdCase.id,
     ) as Promise<Case>;
@@ -70,6 +81,15 @@ export class ControlCaseService {
       userId,
       newApproverId,
     );
+
+    if (dto.approveStatus === 'approved') {
+      this.operations.createDispatchesAndReminderForCase(
+        approvedCase,
+        userId,
+        dto.dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
+      );
+    }
+
     return this.dbServise.db.controlCases.readFullCaseById(
       approvedCase.id,
     ) as Promise<Case>;

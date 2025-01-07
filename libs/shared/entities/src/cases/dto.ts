@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { externalCase } from '../userInput/types';
+import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
 
 // создание заявки
 export const caseCreate = z.object({
@@ -12,6 +13,10 @@ export const caseCreate = z.object({
   fio: z.string().min(1, { message: 'ФИО не может быть пустым' }),
   adress: z.string().nullable().default(''),
   approverId: z.coerce.number().nullable().default(null),
+  dueDate: z.coerce
+    .date({ message: 'Дата обязательна' })
+    .or(z.number())
+    .default(GET_DEFAULT_CONTROL_DUE_DATE()),
 });
 export type CaseCreateDto = z.infer<typeof caseCreate>;
 
@@ -25,6 +30,7 @@ export const caseCreateFormValues = caseCreate.pick({
   fio: true,
   adress: true,
   approverId: true,
+  dueDate: true,
 });
 export type CaseCreateFormValuesDto = z.infer<typeof caseCreateFormValues>;
 

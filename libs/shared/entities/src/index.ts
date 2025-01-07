@@ -15,6 +15,7 @@ export * from './messages/dto';
 // ИС Контроль (codename Stukachok)
 export * from './userInput/types';
 export * from './userInput/dto';
+export * from './userInput/config';
 
 export * from './problems/types';
 

@@ -17,13 +17,18 @@ import {
   DispatchUpdateDto,
   ReminderUpdateDto,
   ControlReminderSlim,
+  CaseCreateDto,
+  CaseSlim,
+  GET_DEFAULT_CONTROL_DUE_DATE,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
+import { ControlClassificatorsService } from './control-classificators.service';
 
 @Injectable()
 export class ControlOperationsService {
   constructor(
     private readonly dbServise: DatabaseService,
+    private readonly classificators: ControlClassificatorsService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
@@ -176,5 +181,47 @@ export class ControlOperationsService {
     return this.dbServise.db.controlOperations.readFullOperationById(
       approvedOperation.id,
     ) as Promise<ControlOperation>;
+  }
+
+  public async createDispatchesAndReminderForCase(
+    slimCase: CaseSlim,
+    userId: number,
+    dueDate?: Date | number,
+  ) {
+    // Создаем по поручению на каждого из исполнителей
+    const directions = await this.classificators.getCaseDirectionTypes();
+    const flatDirections = directions.flatMap((d) => d.items);
+    const executors = slimCase.payload.directionIds.reduce((prev, cur) => {
+      const executor =
+        flatDirections.find((d) => d.value === cur)?.defaultExecutorId ||
+        undefined;
+      return executor && !prev.includes(executor) ? [...prev, executor] : prev;
+    }, [] as number[]);
+    executors.map(async (executor) => {
+      await this.createDispatch(
+        {
+          caseId: slimCase.id,
+          class: 'dispatch',
+          typeId: 10,
+          dueDate: dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
+          description: 'Для рассмотрения по принадлежности',
+          controllerId: executor,
+          executorId: executor,
+        },
+        userId,
+      );
+    });
+    // Создаем напоминалку автору
+    this.createReminder(
+      {
+        caseId: slimCase.id,
+        class: 'reminder',
+        typeId: 11,
+        dueDate: dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
+        description: 'Напоминание автору заявки',
+        observerId: userId,
+      },
+      userId,
+    );
   }
 }
