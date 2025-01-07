@@ -5,12 +5,23 @@ import {
   ExtractSubjectType,
 } from '@casl/ability';
 import { User } from './types';
-import { ControlStage, ControlStageSlim } from '../operations/types';
+import {
+  ControlDispatch,
+  ControlDispatchSlim,
+  ControlReminder,
+  ControlReminderSlim,
+  ControlStage,
+  ControlStageSlim,
+} from '../operations/types';
 import { Case, CaseSlim } from '../cases/types';
 import { CaseCreateDto, CaseUpdateDto } from '../cases/dto';
 import {
   ControlStageCreateDto,
   ControlStageUpdateDto,
+  DispatchCreateDto,
+  DispatchUpdateDto,
+  ReminderCreateDto,
+  ReminderUpdateDto,
 } from '../operations/dto';
 
 type Action =
@@ -23,16 +34,26 @@ type Action =
   | 'set-approver'
   | 'manage';
 type Subject =
+  | 'Case'
   | Case
   | CaseSlim
   | CaseCreateDto
   | CaseUpdateDto
-  | 'Case'
+  | 'Stage'
   | ControlStage
   | ControlStageSlim
   | ControlStageCreateDto
   | ControlStageUpdateDto
-  | 'Stage'
+  | 'Dispatch'
+  | ControlDispatch
+  | ControlDispatchSlim
+  | DispatchCreateDto
+  | DispatchUpdateDto
+  | 'Reminder'
+  | ControlReminder
+  | ControlReminderSlim
+  | ReminderCreateDto
+  | ReminderUpdateDto
   | 'unknown'
   | 'all';
 
@@ -63,11 +84,15 @@ export function defineControlAbilityFor(user: User) {
       'payload.approver.id': { $eq: user.id }, // FE // Все могут менять или согласовывать то, что у них на согле
     });
     can(['update', 'approve'], 'all', {
-      'payload.approver': { $eq: user.id }, // BE // Все могут менять или согласовывать то, что у них на согле
+      'payload.approverId': { $eq: user.id }, // BE // Все могут менять или согласовывать то, что у них на согле
     });
     cannot('update', 'all', {
       'payload.approveStatus': { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
     });
+    can('update', 'Dispatch', { 'payload.controllerId': { $eq: user.id } }); // BE Можно менять поручения, которые ты контролируешь
+    can('update', 'Dispatch', { 'payload.controller.id': { $eq: user.id } }); // FE Можно менять поручения, которые ты контролируешь
+    can('update', 'Reminder', { 'payload.observerId': { $eq: user.id } }); // BE Можно менять свои напоминалки
+    can('update', 'Reminder', { 'payload.observer.id': { $eq: user.id } }); // FE Можно менять свои напоминалки
   }
 
   if (user.controlData.roles.includes('controller')) {

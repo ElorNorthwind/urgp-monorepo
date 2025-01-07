@@ -10,6 +10,7 @@ SELECT
 		'tags', jsonb_build_array(LOWER(fullname), LOWER(category)),
 		'category', category 
 	)) as items
-FROM control.operation_types
+FROM control.operation_types 
+${operationClassText:raw} 
 -- WHERE category = ANY(ARRAY['рассмотрение', 'решение'])
 GROUP BY category;

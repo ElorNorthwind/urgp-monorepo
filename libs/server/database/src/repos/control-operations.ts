@@ -8,6 +8,12 @@ import {
   UserInputApproveDto,
   ControlOperation,
   ControlOperationPayloadHistoryData,
+  DispatchCreateDto,
+  ControlDispatchSlim,
+  ReminderCreateDto,
+  ControlReminderSlim,
+  DispatchUpdateDto,
+  ReminderUpdateDto,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { operations } from './sql/sql';
@@ -40,12 +46,49 @@ export class ControlOperationsRepository {
     return this.db.one(operations.createStage, newStage);
   }
 
+  createDispatch(
+    dto: DispatchCreateDto,
+    authorId: number,
+  ): Promise<ControlDispatchSlim> {
+    const newDispatch = {
+      authorId,
+      caseId: dto.caseId,
+      typeId: dto.typeId || 10,
+      controllerId: dto.controllerId || authorId,
+      executorId: dto.executorId || authorId,
+      description: dto.description,
+      dueDate: dto.dueDate,
+    };
+    return this.db.one(operations.createDispatch, newDispatch);
+  }
+
+  createReminder(
+    dto: ReminderCreateDto,
+    authorId: number,
+  ): Promise<ControlReminderSlim> {
+    const newDispatch = {
+      authorId,
+      caseId: dto.caseId,
+      typeId: dto.typeId || 11,
+      observerId: dto.observerId || authorId,
+      description: dto.description,
+      dueDate: dto.dueDate,
+    };
+    return this.db.one(operations.createDispatch, newDispatch);
+  }
+
   readSlimOperationById(id: number): Promise<ControlOperationSlim | null> {
     return this.db.oneOrNone(operations.readSlimOperationById, { id });
   }
 
   readFullOperationById(id: number): Promise<ControlOperation | null> {
     return this.db.oneOrNone(operations.readFullOperationById, { id });
+  }
+
+  readFullOperationsByIds(ids: number[]): Promise<ControlOperation[] | null> {
+    return this.db.any(operations.readFullOperationById, {
+      ids: ids.join(','),
+    });
   }
 
   readOperationPayloadHistory(
@@ -84,6 +127,43 @@ export class ControlOperationsRepository {
     };
 
     return this.db.one(operations.updateStage, updatedStage);
+  }
+  updateDispatch(
+    dto: DispatchUpdateDto,
+    authorId: number,
+  ): Promise<ControlDispatchSlim> {
+    const updatedDispatch = {
+      id: dto.id,
+      authorId,
+      dueDate: dto.dueDate,
+      executorId: dto.executorId || authorId,
+      description: dto.description,
+      dateDescription: dto.dateDescription,
+    };
+    return this.db.one(operations.updateDispatch, updatedDispatch);
+  }
+
+  updateReminder(
+    dto: ReminderUpdateDto,
+    authorId: number,
+  ): Promise<ControlReminderSlim> {
+    const updatedReminder = {
+      id: dto.id,
+      authorId,
+      dueDate: dto.dueDate,
+      doneDate: dto.doneDate,
+      description: dto.description,
+    };
+    return this.db.one(operations.updateReminder, updatedReminder);
+  }
+  updateRemindersByCaseIds(
+    caseIds: number[],
+    authorId: number,
+  ): Promise<ControlReminderSlim[]> {
+    return this.db.any(operations.updateRemindersByCaseIds, {
+      caseIds: caseIds.join(','),
+      authorId,
+    });
   }
 
   deleteOperation(id: number, userId: number): Promise<ControlOperationSlim> {

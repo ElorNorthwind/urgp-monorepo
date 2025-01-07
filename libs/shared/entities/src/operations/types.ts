@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { BasicPayloadDataSlim, TypeInfo, UserInfo } from '../userInput/types';
 
 // ================ ОБЩАЯ ЧАСТЬ ================
@@ -55,7 +56,6 @@ export type ControlStagePayloadHistoryData = StagePayload & {
 };
 
 // =============== ПОРУЧЕНИЯ (DISPATCHES) ================
-
 type DispatchPayloadSlim = {
   typeId: number;
   controllerId: number | null;
@@ -68,9 +68,9 @@ type DispatchPayloadSlim = {
 type DispatchPayload = Omit<
   DispatchPayloadSlim,
   | 'typeId'
-  | 'approver'
-  | 'approveBy'
-  | 'updatedBy'
+  | 'approverId'
+  | 'approveById'
+  | 'updatedById'
   | 'controllerId'
   | 'executorId'
 > & {
@@ -82,7 +82,7 @@ type DispatchPayload = Omit<
   approveBy: UserInfo | null;
 };
 
-export type Dispatch = BasicOperationData & {
+export type ControlDispatch = BasicOperationData & {
   class: 'dispatch';
   payload: DispatchPayload;
 };
@@ -93,20 +93,65 @@ export type ControlDispatchPayloadHistoryData = DispatchPayload & {
   caseId: number;
 };
 
-export type DispatchSlim = BasicOperationDataSlim & {
+export type ControlDispatchSlim = BasicOperationDataSlim & {
   class: 'dispatch';
   payload: DispatchPayloadSlim;
 };
 
-// ================ СЛЕДИЛКИ ================
+// ================ НАПОМИНАНИЯ (REMINDERS) ================
+type ReminderPayloadSlim = {
+  typeId: number;
+  observerId: number;
+  lastSeenDate: Date;
+  expectedDate: Date | null;
+  doneDate: Date | null;
+  description: string | null;
+} & BasicPayloadDataSlim;
+
+type ReminderPayload = Omit<
+  ReminderPayloadSlim,
+  'typeId' | 'updatedById' | 'observerId' | 'approverId' | 'approveById'
+> & {
+  type: TypeInfo;
+  updatedBy: UserInfo;
+  observer: UserInfo | null;
+  approver: UserInfo | null;
+  approveBy: UserInfo | null;
+};
+
+export type ControlReminderSlim = BasicOperationDataSlim & {
+  class: 'reminder';
+  payload: ReminderPayloadSlim;
+};
+
+export type ControlReminder = BasicOperationData & {
+  class: 'reminder';
+  payload: ReminderPayload;
+};
+
+export type ReminderPayloadHistoryData = ReminderPayload & {
+  class: 'reminder';
+  id: number;
+  caseId: number;
+};
 
 // ================ КОМПОЗИТНЫЕ ТИПЫ ================
-export type ControlOperationSlim = ControlStageSlim | DispatchSlim;
+export type ControlOperationSlim =
+  | ControlStageSlim
+  | ControlDispatchSlim
+  | ControlReminderSlim;
 
 export type ControlOperationPayloadHistoryData =
   | ControlStagePayloadHistoryData
-  | ControlDispatchPayloadHistoryData;
+  | ControlDispatchPayloadHistoryData
+  | ReminderPayloadHistoryData;
 
-export type ControlOperation = ControlStage | Dispatch;
+export type ControlOperation = ControlStage | ControlDispatch | ControlReminder;
 
-export type ControlOperationClass = 'stage' | 'dispatch';
+export const controlOperationClass = z
+  .literal('stage')
+  .or(z.literal('dispatch'))
+  .or(z.literal('reminder'))
+  .default('stage');
+
+export type ControlOperationClass = z.infer<typeof controlOperationClass>;

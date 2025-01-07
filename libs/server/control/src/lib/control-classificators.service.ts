@@ -6,6 +6,7 @@ import {
   NestedClassificatorInfo,
   TypeInfo,
   UserControlApprovers,
+  ControlOperationClass,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -28,12 +29,20 @@ export class ControlClassificatorsService {
     return this.dbServise.db.controlClassificators.readCaseTypes();
   }
 
-  public async getOperationTypes(): Promise<NestedClassificatorInfo[]> {
-    return this.dbServise.db.controlClassificators.readOperationTypes();
+  public async getOperationTypes(
+    operationClass?: ControlOperationClass,
+  ): Promise<NestedClassificatorInfo[]> {
+    return this.dbServise.db.controlClassificators.readOperationTypes(
+      operationClass,
+    );
   }
 
-  public async getOperationTypesFlat(): Promise<TypeInfo[]> {
-    return this.dbServise.db.controlClassificators.readOperationTypesFlat();
+  public async getOperationTypesFlat(
+    operationClass?: ControlOperationClass,
+  ): Promise<TypeInfo[]> {
+    return this.dbServise.db.controlClassificators.readOperationTypesFlat(
+      operationClass,
+    );
   }
 
   public async getCaseStatusTypes(): Promise<NestedClassificatorInfo[]> {

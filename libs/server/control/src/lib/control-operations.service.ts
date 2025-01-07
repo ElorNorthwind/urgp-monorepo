@@ -10,6 +10,13 @@ import {
   ControlStageUpdateDto,
   ControlStage,
   ControlOperationPayloadHistoryData,
+  DispatchCreateDto,
+  ControlDispatch,
+  ReminderCreateDto,
+  ControlReminder,
+  DispatchUpdateDto,
+  ReminderUpdateDto,
+  ControlReminderSlim,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -35,6 +42,27 @@ export class ControlOperationsService {
     ) as Promise<ControlStage>;
   }
 
+  public async createDispatch(
+    dto: DispatchCreateDto,
+    userId: number,
+  ): Promise<ControlDispatch> {
+    const createdDispatch =
+      await this.dbServise.db.controlOperations.createDispatch(dto, userId);
+    return this.dbServise.db.controlOperations.readFullOperationById(
+      createdDispatch.id,
+    ) as Promise<ControlDispatch>;
+  }
+
+  public async createReminder(
+    dto: ReminderCreateDto,
+    userId: number,
+  ): Promise<ControlReminder> {
+    const createdReminder =
+      await this.dbServise.db.controlOperations.createReminder(dto, userId);
+    return this.dbServise.db.controlOperations.readFullOperationById(
+      createdReminder.id,
+    ) as Promise<ControlReminder>;
+  }
   public async readSlimOperationById(
     id: number,
   ): Promise<ControlOperationSlim> {
@@ -49,6 +77,12 @@ export class ControlOperationsService {
 
   public async readFullOperationById(id: number): Promise<ControlOperation> {
     return this.dbServise.db.controlOperations.readFullOperationById(id);
+  }
+
+  public async readFullOperationsByIds(
+    ids: number[],
+  ): Promise<ControlOperation[]> {
+    return this.dbServise.db.controlOperations.readFullOperationsByIds(ids);
   }
 
   public async readOperationsByCaseId(
@@ -74,6 +108,47 @@ export class ControlOperationsService {
     return this.dbServise.db.controlOperations.readFullOperationById(
       updatedStage.id,
     ) as Promise<ControlStage>;
+  }
+
+  public async updateDispatch(
+    dto: DispatchUpdateDto,
+    userId: number,
+  ): Promise<ControlDispatch> {
+    const updatedDispatch =
+      await this.dbServise.db.controlOperations.updateDispatch(dto, userId);
+    return this.dbServise.db.controlOperations.readFullOperationById(
+      updatedDispatch.id,
+    ) as Promise<ControlDispatch>;
+  }
+
+  public async updateReminder(
+    dto: ReminderUpdateDto,
+    userId: number,
+  ): Promise<ControlReminder> {
+    const updatedReminder =
+      await this.dbServise.db.controlOperations.updateReminder(dto, userId);
+    return this.dbServise.db.controlOperations.readFullOperationById(
+      updatedReminder.id,
+    ) as Promise<ControlReminder>;
+  }
+
+  public async updateRemindersByCaseIds(
+    caseIds: number[],
+    userId: number,
+  ): Promise<ControlReminder[]> {
+    try {
+      const updatedRemnders: ControlReminderSlim[] =
+        await this.dbServise.db.controlOperations.updateRemindersByCaseIds(
+          caseIds,
+          userId,
+        );
+      return this.dbServise.db.controlOperations.readFullOperationsByIds(
+        updatedRemnders.map((r) => r.id),
+      ) as Promise<ControlReminder[]>;
+    } catch (e) {
+      Logger.error(e);
+      return [];
+    }
   }
 
   public async deleteOperation(

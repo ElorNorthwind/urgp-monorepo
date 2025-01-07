@@ -6,6 +6,7 @@ import {
   Get,
   Logger,
   Param,
+  ParseArrayPipe,
   Patch,
   Post,
   Req,
@@ -27,6 +28,15 @@ import {
   ControlOperationPayloadHistoryData,
   defineControlAbilityFor,
   ControlStageSlim,
+  dispatchCreate,
+  DispatchCreateDto,
+  ReminderCreateDto,
+  dispatchUpdate,
+  DispatchUpdateDto,
+  ControlDispatchSlim,
+  reminderUpdate,
+  ReminderUpdateDto,
+  ControlReminderSlim,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlOperationsService } from './control-operations.service';
@@ -84,6 +94,30 @@ export class ControlOperationsController {
       req.user.id,
       approved,
     );
+  }
+
+  @Post('dispatch')
+  async createDispatch(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(dispatchCreate)) dto: DispatchCreateDto,
+  ) {
+    const i = defineControlAbilityFor(req.user);
+    if (i.cannot('create', dto)) {
+      throw new UnauthorizedException('Нет прав на создание');
+    }
+    return this.controlOperations.createDispatch(dto, req.user.id);
+  }
+
+  @Post('reminder')
+  async createReminder(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(dispatchCreate)) dto: ReminderCreateDto,
+  ) {
+    const i = defineControlAbilityFor(req.user);
+    if (i.cannot('create', dto)) {
+      throw new UnauthorizedException('Нет прав на создание');
+    }
+    return this.controlOperations.createReminder(dto, req.user.id);
   }
 
   @Get(':id')
@@ -150,6 +184,66 @@ export class ControlOperationsController {
     }
 
     return this.controlOperations.updateStage(dto, req.user.id);
+  }
+
+  @Patch('dispatch')
+  async updateDispatch(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(dispatchUpdate)) dto: DispatchUpdateDto,
+  ) {
+    const i = defineControlAbilityFor(req.user);
+    const currentDispatch = await this.controlOperations.readSlimOperationById(
+      dto.id,
+    );
+
+    if (
+      i.cannot('update', {
+        ...currentDispatch,
+        class: 'dispatch',
+      } as ControlDispatchSlim) ||
+      i.cannot('update', { ...dto, class: 'dispatch' })
+    ) {
+      throw new UnauthorizedException('Нет прав на изменение');
+    }
+    return this.controlOperations.updateDispatch(dto, req.user.id);
+  }
+
+  @Patch('reminder')
+  async updateReminder(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(reminderUpdate)) dto: ReminderUpdateDto,
+  ) {
+    const i = defineControlAbilityFor(req.user);
+    const currentReminder = await this.controlOperations.readSlimOperationById(
+      dto.id,
+    );
+
+    if (
+      i.cannot('update', {
+        ...currentReminder,
+        class: 'reminder',
+      } as ControlReminderSlim) ||
+      i.cannot('update', { ...dto, class: 'reminder' })
+    ) {
+      throw new UnauthorizedException('Нет прав на изменение');
+    }
+    return this.controlOperations.updateReminder(dto, req.user.id);
+  }
+
+  @Patch('mark-as-seen')
+  async markRemindersAsSeen(
+    @Req() req: RequestWithUserData,
+    @Body('caseIds', new ParseArrayPipe({ items: Number, separator: ',' }))
+    caseIds: number[],
+  ) {
+    const i = defineControlAbilityFor(req.user);
+    if (i.cannot('update', 'Reminder')) {
+      throw new UnauthorizedException('Нет прав на изменение');
+    }
+    return this.controlOperations.updateRemindersByCaseIds(
+      caseIds,
+      req.user.id,
+    );
   }
 
   @Delete()

@@ -1,7 +1,10 @@
 import {
+  Body,
   Controller,
   Get,
+  Logger,
   Param,
+  Query,
   Req,
   UnauthorizedException,
   UseGuards,
@@ -12,10 +15,14 @@ import {
   NestedClassificatorInfo,
   UserControlApprovers,
   TypeInfo,
+  ControlOperationClass,
+  controlOperationClass,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
 import { CacheTTL } from '@nestjs/cache-manager';
+import { ZodValidationPipe } from '@urgp/server/pipes';
+import { z } from 'zod';
 
 @Controller('control/classificators')
 @CacheTTL(1000 * 60 * 60)
@@ -60,13 +67,21 @@ export class ControlClassificatorsController {
   }
 
   @Get('operation-types')
-  async getOperationTypes(): Promise<NestedClassificatorInfo[]> {
-    return this.classificators.getOperationTypes();
+  async getOperationTypes(
+    @Query('class')
+    operationClass: ControlOperationClass,
+  ): Promise<NestedClassificatorInfo[]> {
+    const correctClass = controlOperationClass.safeParse(operationClass).data;
+    return this.classificators.getOperationTypes(correctClass || 'stage');
   }
 
   @Get('operation-types-flat')
-  async getOperationTypesFlat(): Promise<TypeInfo[]> {
-    return this.classificators.getOperationTypesFlat();
+  async getOperationTypesFlat(
+    @Query('class')
+    operationClass: ControlOperationClass,
+  ): Promise<TypeInfo[]> {
+    const correctClass = controlOperationClass.safeParse(operationClass).data;
+    return this.classificators.getOperationTypesFlat(correctClass || 'stage');
   }
 
   @Get('case-status-types')

@@ -41,6 +41,7 @@ export type UserControlData = {
     operations?: number[];
   };
   roles: string[];
+  priority?: number;
 };
 
 export type SelectOption<T> = {

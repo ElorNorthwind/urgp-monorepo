@@ -5,7 +5,8 @@ SELECT
 	fullname,
 	priority,
 	auto_approve as  "autoApprove"
-FROM control.operation_types;
+FROM control.operation_types
+${operationClassText:raw};
 -- WHERE category = ANY(ARRAY['рассмотрение', 'решение'])
 -- GROUP BY category;
 

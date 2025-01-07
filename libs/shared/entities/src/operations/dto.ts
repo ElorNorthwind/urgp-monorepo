@@ -1,3 +1,4 @@
+import { addBusinessDays } from 'date-fns';
 import { z } from 'zod';
 
 // ================ ЭТАПЫ (STAGES) ================
@@ -6,35 +7,19 @@ import { z } from 'zod';
 export const controlStageCreate = z.object({
   caseId: z.coerce.number().nullable().default(null),
   class: z.string().default('stage'),
-  // authorId: z.coerce.number().nullable().default(null),
   typeId: z.coerce.number({ message: 'Тип этапа не выбран' }).default(6),
   doneDate: z.coerce
     .date({ message: 'Дата обязательна' })
     .or(z.number())
     .default(new Date().setHours(0, 0, 0, 0)),
   num: z.string().default(''),
-  // externalCase: externalCase.nullable().default(null), // внешний номер,
   description: z.string().default(''),
   approverId: z.coerce.number().nullable().default(null),
 });
 export type ControlStageCreateDto = z.infer<typeof controlStageCreate>;
 
-// // создание этапа
-// export const controlStageCreate = z.object({
-//   caseId: z.coerce.number().nullable().default(null),
-//   // authorId: z.coerce.number().nullable().default(null),
-//   type: z.coerce.number({ message: 'Тип этапа не выбран' }),
-//   doneDate: z.coerce.date({ message: 'Дата обязательна' }),
-//   num: z.string().default(''),
-//   // externalCase: externalCase.nullable().default(null), // внешний номер,
-//   description: z.string().default(''),
-//   approver: z.coerce.number().nullable().default(null),
-// });
-// export type ControlStageCreateDto = z.infer<typeof controlStageCreate>;
-
 export const controlStageCreateFormValues = controlStageCreate.pick({
   typeId: true,
-  // externalCase: true,
   doneDate: true,
   num: true,
   description: true,
@@ -47,8 +32,6 @@ export type ControlStageCreateFormValuesDto = z.infer<
 // изменение этапа
 export const controlStageUpdate = controlStageCreate
   .pick({
-    // type: true,
-    // externalCase: true,
     class: true,
     doneDate: true,
     num: true,
@@ -69,22 +52,23 @@ export type ControlStageUpdateFormValuesDto = z.infer<
 >;
 
 // ================ ПОРУЧЕНИЯ (DISPATCHES) ================
-
 // создание поручения
 export const dispatchCreate = z.object({
   caseId: z.coerce.number().nullable().default(null),
-  problemId: z.coerce.number().nullable().default(null),
-  authorId: z.coerce.number(),
-  executorId: z.coerce.number(),
-  typeId: z.coerce.number(),
-  dueDate: z.coerce.date().nullable().default(null),
-  description: z.string().nullable().default(null),
+  class: z.literal('dispatch').default('dispatch'),
+  typeId: z.coerce.number({ message: 'Тип поручения не выбран' }).default(10),
+  dueDate: z.coerce
+    .date({ message: 'Дата обязательна' })
+    .or(z.number())
+    .default(addBusinessDays(new Date().setHours(0, 0, 0, 0), 5)),
+  description: z.string().default(''),
+  controllerId: z.coerce.number().nullable().default(null),
+  executorId: z.coerce.number().nullable().default(null),
 });
 export type DispatchCreateDto = z.infer<typeof dispatchCreate>;
 
 export const dispatchCreateFormValues = dispatchCreate.pick({
   executorId: true,
-  typeId: true,
   dueDate: true,
   description: true,
 });
@@ -95,18 +79,64 @@ export type DispatchCreateFormValuesDto = z.infer<
 // изменение поручения
 export const dispatchUpdate = dispatchCreate
   .pick({
+    class: true,
     executorId: true,
-    typeId: true,
     dueDate: true,
     description: true,
   })
   .partial()
   .extend({
     id: z.coerce.number(),
+    doneDate: z.coerce.date().nullable().default(null),
+    dateDescription: z.string().default(''),
+    typeId: z.undefined().optional(),
   });
 export type DispatchUpdateDto = z.infer<typeof dispatchUpdate>;
 
 export const dispatchUpdateFormValues = dispatchCreateFormValues.partial();
 export type DispatchUpdateFormValuesDto = z.infer<
   typeof dispatchUpdateFormValues
+>;
+
+// ================ НАПОМИНАНИЯ (REMINDERS) ================
+// создание напоминаний
+export const reminderCreate = z.object({
+  caseId: z.coerce.number().nullable().default(null),
+  class: z.literal('reminder').default('reminder'),
+  typeId: z.coerce.number({ message: 'Тип напоминания не выбран' }).default(11),
+  description: z.string().default(''),
+  observerId: z.coerce.number().nullable().default(null),
+  dueDate: z.coerce
+    .date({ message: 'Дата обязательна' })
+    .or(z.number())
+    .default(addBusinessDays(new Date().setHours(0, 0, 0, 0), 5)),
+});
+export type ReminderCreateDto = z.infer<typeof reminderCreate>;
+
+export const reminderCreateFormValues = reminderCreate.pick({
+  dueDate: true,
+  description: true,
+});
+export type ReminderCreateFormValuesDto = z.infer<
+  typeof reminderCreateFormValues
+>;
+
+// изменение поручения
+export const reminderUpdate = reminderCreate
+  .pick({
+    class: true,
+    dueDate: true,
+    description: true,
+  })
+  .partial()
+  .extend({
+    id: z.coerce.number(),
+    doneDate: z.coerce.date().nullable().default(null),
+    typeId: z.undefined().optional(),
+  });
+export type ReminderUpdateDto = z.infer<typeof reminderUpdate>;
+
+export const reminderUpdateFormValues = reminderCreateFormValues.partial();
+export type ReminderUpdateFormValuesDto = z.infer<
+  typeof reminderUpdateFormValues
 >;

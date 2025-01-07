@@ -6,7 +6,8 @@ SELECT
 		'label', name,
         'fullname', fullname,  
 		'tags', tags || lower(fullname) || lower(category),
-		'category', category
+		'category', category,
+		'defaultExecutorId', default_executor_id
 	)) as items
 FROM control.direction_types
 GROUP BY category;

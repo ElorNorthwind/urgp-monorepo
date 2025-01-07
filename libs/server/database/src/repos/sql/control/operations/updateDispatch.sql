@@ -1,9 +1,10 @@
 UPDATE control.operations
 SET payload = payload || (payload->-1 || 
     jsonb_build_object(
-            'doneDate', ${doneDate},
-            'num', ${num},
+            'dueDate', ${dueDate},
+            'executorId', ${executorId},
             'description', ${description},
+            'dateDescription', ${dateDescription},
             'updatedAt', NOW(),
             'updatedById', ${authorId}
             'approveNotes', null,

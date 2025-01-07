@@ -1,5 +1,6 @@
 import {
   ClassificatorInfo,
+  ControlOperationClass,
   NestedClassificatorInfo,
   TypeInfo,
 } from '@urgp/shared/entities';
@@ -17,12 +18,34 @@ export class ControlClassificatorsRepository {
     return this.db.any(classificators.readCaseTypes);
   }
 
-  readOperationTypes(): Promise<NestedClassificatorInfo[]> {
-    return this.db.any(classificators.readOperationTypes);
+  readOperationTypes(
+    operationClass?: ControlOperationClass,
+  ): Promise<NestedClassificatorInfo[]> {
+    const operationClassText =
+      operationClass && typeof operationClass === 'string'
+        ? this.pgp.as.format(` WHERE class = $1`, operationClass)
+        : '';
+
+    // const q = this.pgp.as.format(classificators.readOperationTypes, {
+    //   operationClassText,
+    // });
+    // console.log(q);
+
+    return this.db.any(classificators.readOperationTypes, {
+      operationClassText,
+    });
   }
 
-  readOperationTypesFlat(): Promise<TypeInfo[]> {
-    return this.db.any(classificators.readOperationTypesFlat);
+  readOperationTypesFlat(
+    operationClass?: ControlOperationClass,
+  ): Promise<TypeInfo[]> {
+    const operationClassText =
+      operationClass && typeof operationClass === 'string'
+        ? this.pgp.as.format(` WHERE class = $1`, operationClass)
+        : '';
+    return this.db.any(classificators.readOperationTypesFlat, {
+      operationClassText,
+    });
   }
 
   readCaseStatusTypes(): Promise<NestedClassificatorInfo[]> {

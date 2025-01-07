@@ -1,6 +1,5 @@
 import { QueryFile } from 'pg-promise';
 import { join as joinPath } from 'path';
-import { getUser } from 'libs/server/edo/src/documents.module/parse-document/lib/util/parse-edo-field-helpers';
 
 // Helper for linking to external query files:
 function sql(file: string) {
@@ -81,16 +80,26 @@ export const cases = {
 
 export const operations = {
   createStage: sql('sql/control/operations/createStage.sql'),
+  createDispatch: sql('sql/control/operations/createDispatch.sql'),
+  createReminder: sql('sql/control/operations/createReminder.sql'),
   readSlimOperationById: sql(
     'sql/control/operations/readSlimOperationById.sql',
   ),
   readFullOperationById: sql(
     'sql/control/operations/readFullOperationById.sql',
   ),
+  readFullOperationsByIds: sql(
+    'sql/control/operations/readFullOperationsByIds.sql',
+  ),
   readOperationsByCaseId: sql(
     'sql/control/operations/readOperationsByCaseId.sql',
   ),
   updateStage: sql('sql/control/operations/updateStage.sql'),
+  updateDispatch: sql('sql/control/operations/updateDispatch.sql'),
+  updateReminder: sql('sql/control/operations/updateReminder.sql'),
+  updateRemindersByCaseIds: sql(
+    'sql/control/operations/updateRemindersByCaseIds.sql',
+  ),
   approveOperation: sql('sql/control/operations/approveOperation.sql'),
   deleteOperation: sql('sql/control/operations/deleteOperation.sql'),
   readOperationPayloadHistory: sql(

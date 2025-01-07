@@ -43,6 +43,7 @@ export type TypeInfo = z.infer<typeof typeInfo>;
 export const userInfo = z.object({
   id: z.coerce.number().nullable(),
   fio: z.string().nullable(),
+  proprity: z.coerce.number().nullable().optional(),
 });
 export type UserInfo = z.infer<typeof userInfo>;
 
@@ -61,6 +62,7 @@ export const classificatorInfo = typeInfo
     fullname: z.string(),
     tags: z.array(z.string()),
     category: z.string(),
+    defaultExecutorId: z.coerce.number().nullable().optional(),
   });
 export type ClassificatorInfo = z.infer<typeof classificatorInfo>;
 

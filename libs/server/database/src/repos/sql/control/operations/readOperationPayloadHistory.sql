@@ -13,10 +13,19 @@ WITH history_data AS (
 		"approveDate" timestamp with time zone,
 		"description" varchar, 
 		"approveNotes" text,
-		"approveStatus" varchar) 
+		"approveStatus" varchar,
+		-- dispatches & reminders only
+		"controllerId", integer,
+		"executorId", integer,
+		"dateDescription", text,
+		"dueDate", date,
+		"observerId", integer,
+		"lastSeenDate", timestamp with time zone
+		) 
 	ON true
 	WHERE o.id = ${id}
 )
+
 SELECT 
 	h."id",
 	h."class",
@@ -29,6 +38,13 @@ SELECT
 	h."description",
 	h."approveNotes",
 	h."approveStatus",
+	-- dispatches & reminders only
+	h."controllerId",
+	h."executorId",
+	h."dateDescription",
+	h."dueDate",
+	h."observerId",
+	h."lastSeenDate",
 	to_jsonb(t) as "type",
 	json_build_object('id', u.id, 'fio', u.fio) as "updatedBy",
 	json_build_object('id', u2.id, 'fio', u2.fio) as "approver",
