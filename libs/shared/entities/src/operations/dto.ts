@@ -67,11 +67,19 @@ export const dispatchCreate = z.object({
 });
 export type DispatchCreateDto = z.infer<typeof dispatchCreate>;
 
-export const dispatchCreateFormValues = dispatchCreate.pick({
-  executorId: true,
-  dueDate: true,
-  description: true,
-});
+export const dispatchCreateFormValues = dispatchCreate
+  .pick({
+    executorId: true,
+    dueDate: true,
+    description: true,
+  })
+  .extend({
+    controller: z
+      .literal('author')
+      .or(z.literal('executor'))
+      .optional()
+      .default('executor'),
+  });
 export type DispatchCreateFormValuesDto = z.infer<
   typeof dispatchCreateFormValues
 >;
@@ -87,13 +95,15 @@ export const dispatchUpdate = dispatchCreate
   .partial()
   .extend({
     id: z.coerce.number(),
-    doneDate: z.coerce.date().nullable().default(null),
-    dateDescription: z.string().default(''),
+    // doneDate: z.coerce.date().nullable().default(null),
+    dateDescription: z
+      .string()
+      .min(1, { message: 'Необходимо указать причину переноса срока' }),
     typeId: z.undefined().optional(),
   });
 export type DispatchUpdateDto = z.infer<typeof dispatchUpdate>;
 
-export const dispatchUpdateFormValues = dispatchCreateFormValues.partial();
+export const dispatchUpdateFormValues = dispatchUpdate.partial();
 export type DispatchUpdateFormValuesDto = z.infer<
   typeof dispatchUpdateFormValues
 >;

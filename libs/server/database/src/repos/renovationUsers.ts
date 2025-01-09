@@ -10,6 +10,7 @@ import {
   CreateUserDto,
   GetUserByIdDto,
   GetUserByLoginDto,
+  SelectOption,
   User,
   UserControlApprovers,
   UserControlData,
@@ -55,5 +56,9 @@ export class RenovationUsersRepository {
 
   async getUserApprovers(id: number): Promise<UserControlApprovers> {
     return this.db.one(users.getUserApprovers, { id });
+  }
+
+  async getControlExecutors(): Promise<SelectOption<number>[]> {
+    return this.db.any(users.getControlExecutors);
   }
 }

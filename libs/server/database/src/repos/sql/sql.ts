@@ -66,6 +66,7 @@ export const users = {
   changePassword: sql('sql/users/changePassword.sql'),
   getUserControlData: sql('sql/users/getUserControlData.sql'),
   getUserApprovers: sql('sql/users/getUserApprovers.sql'),
+  getControlExecutors: sql('sql/users/getControlExecutors.sql'),
 };
 
 export const cases = {

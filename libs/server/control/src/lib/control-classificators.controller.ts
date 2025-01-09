@@ -17,6 +17,7 @@ import {
   TypeInfo,
   ControlOperationClass,
   controlOperationClass,
+  SelectOption,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
@@ -44,6 +45,11 @@ export class ControlClassificatorsController {
   ): Promise<UserControlApprovers> {
     const userId = req.user.id;
     return await this.classificators.getUserApprovers(userId);
+  }
+
+  @Get('executors')
+  async getControlExecutors(): Promise<SelectOption<number>[]> {
+    return await this.classificators.getControlExecutors();
   }
 
   @Get('user-data/:id')

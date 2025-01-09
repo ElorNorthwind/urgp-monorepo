@@ -37,6 +37,9 @@ import {
   reminderUpdate,
   ReminderUpdateDto,
   ControlReminderSlim,
+  ControlDispatch,
+  ControlStage,
+  ControlReminder,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlOperationsService } from './control-operations.service';
@@ -136,12 +139,36 @@ export class ControlOperationsController {
   getStagesByCaseId(
     @Req() req: RequestWithUserData,
     @Param('id') id: number,
-  ): Promise<ControlOperation[]> {
+  ): Promise<ControlStage[]> {
     return this.controlOperations.readOperationsByCaseId(
       id,
       req.user.id,
       'stage',
-    );
+    ) as Promise<ControlStage[]>;
+  }
+
+  @Get('dispatch/by-case/:id')
+  getDispatchesByCaseId(
+    @Req() req: RequestWithUserData,
+    @Param('id') id: number,
+  ): Promise<ControlDispatch[]> {
+    return this.controlOperations.readOperationsByCaseId(
+      id,
+      req.user.id,
+      'dispatch',
+    ) as Promise<ControlDispatch[]>;
+  }
+
+  @Get('reminder/by-case/:id')
+  getRemindersByCaseId(
+    @Req() req: RequestWithUserData,
+    @Param('id') id: number,
+  ): Promise<ControlReminder[]> {
+    return this.controlOperations.readOperationsByCaseId(
+      id,
+      req.user.id,
+      'reminder',
+    ) as Promise<ControlReminder[]>;
   }
 
   @Patch('stage')

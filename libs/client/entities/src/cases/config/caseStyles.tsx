@@ -1,6 +1,14 @@
+import { Case } from '@urgp/shared/entities';
 import {
+  Circle,
+  CircleAlert,
+  CircleArrowUp,
+  CircleCheck,
+  CircleDivide,
+  CircleFadingPlus,
   CircleHelp,
   CirclePlay,
+  CircleSlash,
   CircleStop,
   CircleX,
   LucideProps,
@@ -23,7 +31,11 @@ export const caseStatusStyles = {
   1: { icon: CircleHelp, iconStyle: 'text-slate-500' },
   2: { icon: CirclePlay, iconStyle: 'text-sky-500' },
   3: { icon: CirclePlay, iconStyle: 'text-sky-500' },
-  5: { icon: CircleX, iconStyle: 'text-rose-500' },
+  4: { icon: CircleDivide, iconStyle: 'text-sky-500' },
+  5: { icon: CircleSlash, iconStyle: 'text-amber-500' },
+  6: { icon: CircleCheck, iconStyle: 'text-emerald-500' },
+  7: { icon: CircleX, iconStyle: 'text-rose-500' },
+  10: { icon: CircleStop, iconStyle: 'text-red-500' },
 } as Record<number, StyleData>;
 
 export const caseTypeStyles = {
@@ -32,6 +44,21 @@ export const caseTypeStyles = {
   3: { icon: MessageSquarePlus, iconStyle: 'text-violet-500' },
   4: { icon: MessageSquareMore, iconStyle: 'text-slate-500' },
 } as Record<number, StyleData>;
+
+export const viewStatusStyles = {
+  unwatched: { icon: Circle, iconStyle: 'hidden', badgeStyle: 'hidden' },
+  unchanged: { icon: Circle, iconStyle: 'hidden', badgeStyle: 'hidden' },
+  changed: {
+    icon: CircleArrowUp,
+    iconStyle: 'text-foreground',
+    badgeStyle: 'bg-stone-400',
+  },
+  new: {
+    icon: CircleFadingPlus,
+    iconStyle: 'text-foreground',
+    badgeStyle: 'bg-stone-600',
+  },
+} as Record<Case['viewStatus'], StyleData>;
 
 export const directionCategoryStyles = {
   // УРЖП: { badgeStyle: 'bg-cyan-50 border-cyan-200 hover:bg-cyan-100' },

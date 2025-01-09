@@ -32,6 +32,15 @@ type CasePayload = Omit<
   updatedBy: UserInfo;
 };
 
+type CaseDispatchInfo = {
+  id: number;
+  class: 'dispatch';
+  dueDate: Date;
+  executor: UserInfo;
+  controller: UserInfo;
+  description?: string;
+};
+
 export type Case = {
   id: number;
   class: string;
@@ -39,6 +48,11 @@ export type Case = {
   status: TypeInfo;
   author: UserInfo;
   payload: CasePayload; // возвращаем только последний пейлоуд, а вообще тут массив
+  lastStageId: number | null;
+  lastEdit: Date | null;
+  lastSeen: Date | null;
+  dispatches: CaseDispatchInfo[];
+  viewStatus: 'unwatched' | 'unchanged' | 'new' | 'changed';
 };
 
 export type CaseSlim = Omit<Case, 'payload' | 'author'> & {

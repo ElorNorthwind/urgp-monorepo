@@ -9,11 +9,14 @@ import { CasesPageSearchDto, Case } from '@urgp/shared/entities';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { caseTypeStyles } from '../../../config/caseStyles';
 import { getRouteApi } from '@tanstack/react-router';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Circle, MessageSquare } from 'lucide-react';
 
 function CaseTypeCell(props: CellContext<Case, string>): JSX.Element {
   const payload = props.row.original.payload;
-  const { icon: TypeIcon, iconStyle } = caseTypeStyles[payload.type.id];
+  const { icon: TypeIcon, iconStyle } = caseTypeStyles?.[payload?.type?.id] || {
+    icon: MessageSquare,
+    iconStyle: 'text-slate-500',
+  };
   const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
 
   return (

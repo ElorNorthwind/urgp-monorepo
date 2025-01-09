@@ -7,6 +7,7 @@ import {
   TypeInfo,
   UserControlApprovers,
   ControlOperationClass,
+  SelectOption,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -23,6 +24,10 @@ export class ControlClassificatorsService {
 
   public async getUserApprovers(userId: number): Promise<UserControlApprovers> {
     return this.dbServise.db.renovationUsers.getUserApprovers(userId);
+  }
+
+  public async getControlExecutors(): Promise<SelectOption<number>[]> {
+    return this.dbServise.db.renovationUsers.getControlExecutors();
   }
 
   public async getCaseTypes(): Promise<NestedClassificatorInfo[]> {

@@ -30,6 +30,7 @@ type DateFormFieldProps = {
   placeholder?: string;
   dirtyIndicator?: boolean;
   stayOpen?: boolean;
+  disabledDays?: (date: Date) => boolean;
 };
 
 const DateFormField = (props: DateFormFieldProps): JSX.Element => {
@@ -45,6 +46,7 @@ const DateFormField = (props: DateFormFieldProps): JSX.Element => {
     placeholder = 'Выберите дату',
     dirtyIndicator = false,
     stayOpen = false,
+    disabledDays,
   } = props;
 
   const [open, setOpen] = useState(false);
@@ -93,9 +95,7 @@ const DateFormField = (props: DateFormFieldProps): JSX.Element => {
                       !stayOpen && setOpen(false);
                       field.onChange(e);
                     }}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date('2017-01-01')
-                    }
+                    disabled={disabledDays}
                     initialFocus
                   />
                 </PopoverContent>

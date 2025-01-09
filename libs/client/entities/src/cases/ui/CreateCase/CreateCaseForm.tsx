@@ -204,7 +204,6 @@ const CreateCaseForm = ({
               (user?.id !== watchApprover || user?.id !== watchApprover) &&
                 'hidden',
             )}
-            // disabled={user?.id !== waatchApprover || entityType !== 'case'}
           />
         </div>
         <div className="flex w-full items-center justify-between gap-2">

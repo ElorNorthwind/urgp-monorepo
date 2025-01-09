@@ -16,8 +16,16 @@ import { CaseCardHeader } from './CaseCardHeader';
 import { caseStatusStyles, caseTypeStyles } from '../../config/caseStyles';
 import { ExternalCasesList } from '../ExternalCasesList';
 import { CaseDirectionsList } from '../CaseDirectionsList';
-import { StagesHeader, StagesList, useStages } from '../../../operations';
+import {
+  StagesHeader,
+  StagesList,
+  useDispatches,
+  useStages,
+} from '../../../operations';
 import { CaseCardFooter } from './CaseCardFooter';
+import { CaseDispatchesList } from '../CaseDispatchesList';
+import { CreateDispatchDialog } from '@urgp/client/widgets';
+import { ControlDispatchesList } from '../ControlDispatchesList';
 
 type CaseCardProps = {
   controlCase: Case;
@@ -44,6 +52,14 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     isLoading,
     isFetching,
   } = useStages(controlCase?.id, { skip: !controlCase?.id });
+
+  const {
+    data: dispatches,
+    isLoading: isDispatchesLoading,
+    isFetching: isDispatchesFetching,
+  } = useDispatches(controlCase?.id, { skip: !controlCase?.id });
+
+  const i = useUserAbility();
 
   return (
     <>
@@ -124,9 +140,21 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
             </AccordionContent>
           )}
         </AccordionItem>
-        <AccordionItem value="dispatches">
+        <AccordionItem value="dispatches" className="relative">
           <AccordionTrigger>Поручения</AccordionTrigger>
-          <AccordionContent>Лукьянов М.Г.: 31.12.2024</AccordionContent>
+          {i.can('create', 'Dispatch') && (
+            <CreateDispatchDialog
+              caseId={controlCase?.id}
+              className="absolute right-6 top-3 h-8 p-1"
+            />
+          )}
+          <AccordionContent>
+            <ControlDispatchesList
+              dispatches={dispatches}
+              isLoading={isDispatchesLoading || isDispatchesFetching}
+              className="-mb-4 rounded-b-none border-b-0"
+            />
+          </AccordionContent>
         </AccordionItem>
       </Accordion>
       <StagesHeader caseId={controlCase?.id} className="mx-4 mt-4" />

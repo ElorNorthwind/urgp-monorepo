@@ -1,6 +1,7 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
   NestedClassificatorInfo,
+  SelectOption,
   TypeInfo,
   UserControlApprovers,
   UserControlData,
@@ -17,6 +18,12 @@ export const classificatorsApi = rtkApi.injectEndpoints({
     getCurrentUserApprovers: build.query<UserControlApprovers, void>({
       query: () => ({
         url: '/control/classificators/user-approvers',
+        method: 'GET',
+      }),
+    }),
+    getControlExecutors: build.query<SelectOption<number>[], void>({
+      query: () => ({
+        url: '/control/classificators/executors',
         method: 'GET',
       }),
     }),
@@ -57,6 +64,7 @@ export const classificatorsApi = rtkApi.injectEndpoints({
 export const {
   useGetCurrentUserDataQuery: useCurrentUserData,
   useGetCurrentUserApproversQuery: useCurrentUserApprovers,
+  useGetControlExecutorsQuery: useControlExecutors,
   useGetCaseTypesQuery: useCaseTypes,
   useGetOperationTypesQuery: useOperationTypes,
   useGetOperationTypesFlatQuery: useOperationTypesFlat,

@@ -10,6 +10,9 @@ SELECT
 			|| jsonb_build_object('approver', json_build_object('id', u2.id, 'fio', u2.fio))
 			|| jsonb_build_object('approveBy', json_build_object('id', u3.id, 'fio', u3.fio))
 			|| jsonb_build_object('updatedBy', json_build_object('id', u4.id, 'fio', u4.fio))
+			|| jsonb_build_object('controller', json_build_object('id', u5.id, 'fio', u4.fio))
+			|| jsonb_build_object('executor', json_build_object('id', u6.id, 'fio', u4.fio))
+			|| jsonb_build_object('observer', json_build_object('id', u7.id, 'fio', u4.fio))
 			as payload,
 	jsonb_array_length(o.payload) as version
 FROM control.operations o
@@ -18,4 +21,7 @@ LEFT JOIN renovation.users u ON u.id = o.author_id
 LEFT JOIN renovation.users u2 ON u2.id = (o.payload->-1->>'approverId')::integer
 LEFT JOIN renovation.users u3 ON u3.id = (o.payload->-1->>'approveById')::integer
 LEFT JOIN renovation.users u4 ON u4.id = (o.payload->-1->>'updatedById')::integer
+LEFT JOIN renovation.users u5 ON u5.id = (o.payload->-1->>'controllerId')::integer
+LEFT JOIN renovation.users u6 ON u6.id = (o.payload->-1->>'executorId')::integer
+LEFT JOIN renovation.users u7 ON u7.id = (o.payload->-1->>'observerId')::integer
 WHERE o.id = ${id};
