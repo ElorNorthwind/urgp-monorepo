@@ -58,22 +58,22 @@ const ControlCasesPage = (): JSX.Element => {
       });
     }
   };
-  // Adds a keyboard shortcut to navigate cases
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'ArrowUp' && prevCaseId) {
-        event.preventDefault();
-        onPrevCase();
-      }
-      if (event.key === 'ArrowDown' && nextCaseId) {
-        event.preventDefault();
-        onNextCase();
-      }
-    };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [prevCaseId, nextCaseId, navigate]);
+  // // Adds a keyboard shortcut to navigate cases
+  // useEffect(() => {
+  //   const handleKeyDown = (event: KeyboardEvent) => {
+  //     if (event.key === 'ArrowUp' && prevCaseId) {
+  //       event.preventDefault();
+  //       onPrevCase();
+  //     }
+  //     if (event.key === 'ArrowDown' && nextCaseId) {
+  //       event.preventDefault();
+  //       onNextCase();
+  //     }
+  //   };
+  //   window.addEventListener('keydown', handleKeyDown);
+  //   return () => window.removeEventListener('keydown', handleKeyDown);
+  // }, [prevCaseId, nextCaseId, navigate]);
 
   return (
     <TooltipProvider delayDuration={50}>
