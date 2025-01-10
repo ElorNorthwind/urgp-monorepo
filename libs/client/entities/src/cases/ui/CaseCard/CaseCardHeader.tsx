@@ -1,4 +1,5 @@
 import { Separator } from '@radix-ui/react-separator';
+import { useNavigate } from '@tanstack/react-router';
 import { Button, cn } from '@urgp/client/shared';
 import { Case } from '@urgp/shared/entities';
 import { ChevronDown, X } from 'lucide-react';
@@ -9,10 +10,13 @@ type CaseCardHeaderProps = {
   onClose?: () => void;
   total?: number;
   filtered?: number;
+  onPrevCase?: () => void;
+  onNextCase?: () => void;
 };
 
 const CaseCardHeader = (props: CaseCardHeaderProps): JSX.Element => {
-  const { className, controlCase, onClose } = props;
+  const { className, controlCase, onClose, onNextCase, onPrevCase } = props;
+  const navigate = useNavigate({ from: '/control' });
 
   return (
     <div
@@ -29,14 +33,32 @@ const CaseCardHeader = (props: CaseCardHeaderProps): JSX.Element => {
       )}
       {onClose && (
         <>
-          <Button variant="ghost" className="ml-auto size-6 p-0">
+          <Button
+            role="button"
+            variant="ghost"
+            className="ml-auto size-6 p-0"
+            onClick={() => onPrevCase && onPrevCase()}
+            disabled={!onPrevCase}
+          >
             <ChevronDown className="size-5 rotate-180" />
           </Button>
-          <Button variant="ghost" className="size-6 p-0">
+          <Button
+            role="button"
+            variant="ghost"
+            className="size-6 p-0"
+            onClick={() => onNextCase && onNextCase()}
+            disabled={!onNextCase}
+          >
             <ChevronDown className="size-5" />
           </Button>
           <Separator className="border-foreground/20 border-l" />
-          <Button variant="ghost" className="size-6 p-0" onClick={onClose}>
+          <Button
+            role="button"
+            variant="ghost"
+            className="size-6 p-0"
+            onClick={() => onClose && onClose()}
+            disabled={!onClose}
+          >
             <X className="size-5" />
           </Button>
         </>

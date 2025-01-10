@@ -59,6 +59,7 @@ interface VirtualDataTableProps<TData, TValue> {
   variant?: 'default' | 'borderless';
   setFilteredRows?: Dispatch<Row<TData>[]> | undefined;
   setSelectedRows?: Dispatch<Row<TData>[]> | undefined;
+  setNeighborRows?: Dispatch<Row<TData>[]> | undefined;
 }
 
 export function VirtualDataTable<TData, TValue>({
@@ -118,7 +119,7 @@ export function VirtualDataTable<TData, TValue>({
 
   useEffect(() => {
     setFilteredRows && setFilteredRows(table.getRowModel().flatRows);
-  }, [globalFilter, data]);
+  }, [data, globalFilter]);
 
   useEffect(() => {
     setSelectedRows && setSelectedRows(table.getSelectedRowModel().flatRows);

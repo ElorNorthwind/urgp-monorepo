@@ -18,7 +18,7 @@ import { CasesPageSearchDto, Case } from '@urgp/shared/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
 import { CasesPageHeader } from './CasesPageHeader';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 const ControlCasesPage = (): JSX.Element => {
@@ -30,6 +30,51 @@ const ControlCasesPage = (): JSX.Element => {
   // const isMobile = useIsMobile();
   const navigate = useNavigate({ from: '/control' });
   const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
+
+  // ID прошлого и текущего дела
+  const currentIndex = filtered?.findIndex(
+    (row) => row.original.id === search.selectedCase,
+  );
+  const prevCaseId = filtered?.[currentIndex - 1]?.original?.id;
+  const nextCaseId = filtered?.[currentIndex + 1]?.original?.id;
+
+  const onPrevCase = () => {
+    if (prevCaseId) {
+      navigate({
+        search: (prev: CasesPageSearchDto) => ({
+          ...prev,
+          selectedCase: prevCaseId,
+        }),
+      });
+    }
+  };
+  const onNextCase = () => {
+    if (nextCaseId) {
+      navigate({
+        search: (prev: CasesPageSearchDto) => ({
+          ...prev,
+          selectedCase: nextCaseId,
+        }),
+      });
+    }
+  };
+  // Adds a keyboard shortcut to navigate cases
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowUp' && prevCaseId) {
+        event.preventDefault();
+        onPrevCase();
+      }
+      if (event.key === 'ArrowDown' && nextCaseId) {
+        event.preventDefault();
+        onNextCase();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [prevCaseId, nextCaseId, navigate]);
+
   return (
     <TooltipProvider delayDuration={50}>
       <CaseFilterSidebar
@@ -69,6 +114,8 @@ const ControlCasesPage = (): JSX.Element => {
       </SidebarInset>
       <ControlSidePanel isOpen={search.selectedCase !== undefined}>
         <CaseCard
+          onPrevCase={prevCaseId ? onPrevCase : undefined}
+          onNextCase={nextCaseId ? onNextCase : undefined}
           controlCase={cases?.find((c) => c.id === search.selectedCase)!}
           onClose={() =>
             navigate({

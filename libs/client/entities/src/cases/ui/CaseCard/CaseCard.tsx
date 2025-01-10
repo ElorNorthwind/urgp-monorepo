@@ -26,11 +26,13 @@ import { ControlDispatchesList } from '../ControlDispatchesList';
 
 type CaseCardProps = {
   controlCase: Case;
+  onPrevCase?: () => void;
+  onNextCase?: () => void;
   onClose?: () => void;
 };
 
 const CaseCard = (props: CaseCardProps): JSX.Element => {
-  const { controlCase } = props;
+  const { controlCase, onNextCase, onPrevCase } = props;
   const { icon: TypeIcon, iconStyle: typeIconStyle } = caseTypeStyles[
     controlCase?.payload?.type?.id || 1
   ] || {
@@ -60,7 +62,12 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
 
   return (
     <>
-      <CaseCardHeader controlCase={controlCase} onClose={props.onClose} />
+      <CaseCardHeader
+        controlCase={controlCase}
+        onClose={props.onClose}
+        onPrevCase={onPrevCase}
+        onNextCase={onNextCase}
+      />
       {controlCase && (
         <div className="pb-0f flex flex-col gap-2 p-4">
           <div className="bg-background grid grid-cols-[auto_1fr_auto_1fr] rounded-lg border">
