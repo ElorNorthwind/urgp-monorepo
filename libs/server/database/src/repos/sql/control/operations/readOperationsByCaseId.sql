@@ -29,4 +29,4 @@ WHERE case_id = ${id}
 AND (o.payload->-1->>'isDeleted')::boolean IS DISTINCT FROM true
 AND (o.payload->-1->>'approveStatus' = 'approved' OR o.author_id = ${userId} OR (o.payload->-1->>'approver')::integer = ${userId})
 ${operationClassText:raw}
-ORDER BY (o.payload->-1->>'doneDate')::date DESC NULLS FIRST, o.created_at DESC;
+ORDER BY (u5.control_data->>'priority')::integer DESC, (o.payload->-1->>'doneDate')::date DESC NULLS FIRST, o.created_at DESC;
