@@ -11,7 +11,7 @@ import {
 import { EditDispatchButton } from '@urgp/client/widgets';
 import { Case, ControlDispatch } from '@urgp/shared/entities';
 import { format } from 'date-fns';
-import { CalendarCog, Replace } from 'lucide-react';
+import { CalendarCog, Repeat, Replace } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { Fragment } from 'react/jsx-runtime';
 
@@ -91,7 +91,7 @@ const ControlDispatchesList = (
                             : '-'}
                         </span>
                         {d.payload.dueDateChanged && (
-                          <Replace className="size-3" />
+                          <Repeat className="size-4 opacity-50" />
                         )}
                         <CalendarCog
                           className={cn('hidden size-4 group-hover:block')}
