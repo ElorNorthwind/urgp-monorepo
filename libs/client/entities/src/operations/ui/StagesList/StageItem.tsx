@@ -141,9 +141,9 @@ const StageItem = (props: StageItemProps): JSX.Element => {
               <Pencil className="size-4" />
             </Button>
           )}
-          <span>{format(stage.payload.updatedAt, 'dd.MM.yyyy')}</span>
+          <span>{format(stage?.payload?.updatedAt || 0, 'dd.MM.yyyy')}</span>
           <StagesHistory stage={stage} />
-          <span className="mr-1 font-normal">{stage.author.fio}</span>
+          <span className="mr-1 font-normal">{stage?.author?.fio}</span>
         </div>
       )}
     </div>

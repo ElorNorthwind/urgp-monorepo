@@ -10,7 +10,7 @@ export const approveStatusDataSlim = z.object({
 export type ApproveStatusDataSlim = z.infer<typeof approveStatusDataSlim>;
 
 export const basicPayloadDataSlim = approveStatusDataSlim.extend({
-  updatedAtId: z.coerce.date(),
+  updatedAt: z.coerce.date(),
   updatedById: z.coerce.number(),
   isDeleted: z.boolean().default(false),
 });
