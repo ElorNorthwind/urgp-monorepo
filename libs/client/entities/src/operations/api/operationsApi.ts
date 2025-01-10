@@ -1,5 +1,6 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
+  Case,
   ControlDispatch,
   ControlOperation,
   ControlOperationPayloadHistoryData,
@@ -14,6 +15,7 @@ import {
   UserInputDeleteDto,
 } from '@urgp/shared/entities';
 import { RefetchCachedCase } from './lib';
+import { casesApi } from '../../cases';
 
 export const operationsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
@@ -22,6 +24,28 @@ export const operationsApi = rtkApi.injectEndpoints({
         url: '/control/operation/stage/by-case/' + id.toString(),
         method: 'GET',
       }),
+
+      // Этот эндпоинт провоцирует статус "отсмотренности"
+      // Делаем оптимистичный апдейт операции новой датой просмотра
+      async onQueryStarted(id, { dispatch }) {
+        dispatch(
+          casesApi.util.updateQueryData('getCases', undefined, (draft) => {
+            const index = draft.findIndex((stage) => stage.id === id);
+            return [
+              ...draft.slice(0, index),
+              {
+                ...draft[index],
+                lastSeen: new Date().toISOString(),
+                viewStatus:
+                  draft[index].viewStatus === 'unwatched'
+                    ? 'unwatched'
+                    : 'unchanged',
+              },
+              ...draft.slice(index + 1),
+            ] as Case[];
+          }),
+        );
+      },
     }),
     getDispatchesByCaseId: build.query<ControlDispatch[], number>({
       query: (id) => ({

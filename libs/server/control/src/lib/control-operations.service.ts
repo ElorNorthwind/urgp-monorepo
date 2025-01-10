@@ -140,20 +140,15 @@ export class ControlOperationsService {
   public async updateRemindersByCaseIds(
     caseIds: number[],
     userId: number,
-  ): Promise<ControlReminder[]> {
-    try {
-      const updatedRemnders: ControlReminderSlim[] =
-        await this.dbServise.db.controlOperations.updateRemindersByCaseIds(
-          caseIds,
-          userId,
-        );
-      return this.dbServise.db.controlOperations.readFullOperationsByIds(
-        updatedRemnders.map((r) => r.id),
-      ) as Promise<ControlReminder[]>;
-    } catch (e) {
-      Logger.error(e);
-      return [];
-    }
+  ): Promise<ControlReminderSlim[]> {
+    // const updatedRemnders: ControlReminderSlim[] =
+    return this.dbServise.db.controlOperations.updateRemindersByCaseIds(
+      caseIds,
+      userId,
+    );
+    // return this.dbServise.db.controlOperations.readFullOperationsByIds(
+    //   updatedRemnders.map((r) => r?.id),
+    // ) as Promise<ControlReminder[]>;
   }
 
   public async deleteOperation(
@@ -188,7 +183,7 @@ export class ControlOperationsService {
     userId: number,
     dueDate?: Date | number,
   ) {
-    // Создаем по поручению на каждого из исполнителей
+    // Создаем по поручению и напоминалке на каждого из исполнителей
     const directions = await this.classificators.getCaseDirectionTypes();
     const flatDirections = directions.flatMap((d) => d.items);
     const executors = slimCase.payload.directionIds.reduce((prev, cur) => {
@@ -207,6 +202,17 @@ export class ControlOperationsService {
           description: 'Для рассмотрения по принадлежности',
           controllerId: executor,
           executorId: executor,
+        },
+        userId,
+      );
+      await this.createReminder(
+        {
+          caseId: slimCase.id,
+          class: 'reminder',
+          typeId: 11,
+          dueDate: dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
+          description: 'Напоминание исполнителю',
+          observerId: executor,
         },
         userId,
       );

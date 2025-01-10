@@ -140,6 +140,8 @@ export class ControlOperationsController {
     @Req() req: RequestWithUserData,
     @Param('id') id: number,
   ): Promise<ControlStage[]> {
+    // Считаем дело отсмотренным, если по нему загрузились этапы
+    this.controlOperations.updateRemindersByCaseIds([id], req.user.id);
     return this.controlOperations.readOperationsByCaseId(
       id,
       req.user.id,
