@@ -13,6 +13,7 @@ import {
   ReminderUpdateDto,
   UserInputDeleteDto,
 } from '@urgp/shared/entities';
+import { RefetchCachedCase } from './lib';
 
 export const operationsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
@@ -64,6 +65,7 @@ export const operationsApi = rtkApi.injectEndpoints({
               },
             ),
           );
+        RefetchCachedCase(dispatch, createdOperation?.caseId);
       },
     }),
 
@@ -73,7 +75,21 @@ export const operationsApi = rtkApi.injectEndpoints({
         method: 'POST',
         body: dto,
       }),
-      // TO DO: песимистичные обновления операций. Так же надо и для стейджов
+      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        const { data: createdOperation } = await queryFulfilled;
+        createdOperation?.caseId &&
+          createdOperation?.id &&
+          dispatch(
+            operationsApi.util.updateQueryData(
+              'getDispatchesByCaseId',
+              createdOperation.caseId,
+              (draft) => {
+                return [createdOperation, ...draft];
+              },
+            ),
+          );
+        RefetchCachedCase(dispatch, createdOperation?.caseId);
+      },
     }),
 
     createReminder: build.mutation<ControlReminder, ReminderCreateDto>({
@@ -82,7 +98,21 @@ export const operationsApi = rtkApi.injectEndpoints({
         method: 'POST',
         body: dto,
       }),
-      // TO DO: оптимистичное обновление операции
+      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        const { data: createdOperation } = await queryFulfilled;
+        createdOperation?.caseId &&
+          createdOperation?.id &&
+          dispatch(
+            operationsApi.util.updateQueryData(
+              'getRemindersByCaseId',
+              createdOperation.caseId,
+              (draft) => {
+                return [createdOperation, ...draft];
+              },
+            ),
+          );
+        RefetchCachedCase(dispatch, createdOperation?.caseId);
+      },
     }),
 
     updateStage: build.mutation<ControlStage, ControlStageUpdateDto>({
@@ -111,6 +141,7 @@ export const operationsApi = rtkApi.injectEndpoints({
               },
             ),
           );
+        RefetchCachedCase(dispatch, updatedOperation?.caseId);
       },
     }),
 
@@ -120,7 +151,28 @@ export const operationsApi = rtkApi.injectEndpoints({
         method: 'PATCH',
         body: dto,
       }),
-      // TO DO: песимистичные обновления операций. Так же надо и для стейджов
+      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        const { data: updatedOperation } = await queryFulfilled;
+        updatedOperation?.caseId &&
+          updatedOperation?.id &&
+          dispatch(
+            operationsApi.util.updateQueryData(
+              'getDispatchesByCaseId',
+              updatedOperation.caseId,
+              (draft) => {
+                const index = draft.findIndex(
+                  (stage) => stage.id === updatedOperation.id,
+                );
+                return [
+                  ...draft.slice(0, index),
+                  updatedOperation,
+                  ...draft.slice(index + 1),
+                ];
+              },
+            ),
+          );
+        RefetchCachedCase(dispatch, updatedOperation?.caseId);
+      },
     }),
 
     updateReminder: build.mutation<ControlReminder, ReminderUpdateDto>({
@@ -129,7 +181,28 @@ export const operationsApi = rtkApi.injectEndpoints({
         method: 'PATCH',
         body: dto,
       }),
-      // TO DO: оптимистичное обновление операции
+      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        const { data: updatedOperation } = await queryFulfilled;
+        updatedOperation?.caseId &&
+          updatedOperation?.id &&
+          dispatch(
+            operationsApi.util.updateQueryData(
+              'getRemindersByCaseId',
+              updatedOperation.caseId,
+              (draft) => {
+                const index = draft.findIndex(
+                  (stage) => stage.id === updatedOperation.id,
+                );
+                return [
+                  ...draft.slice(0, index),
+                  updatedOperation,
+                  ...draft.slice(index + 1),
+                ];
+              },
+            ),
+          );
+        RefetchCachedCase(dispatch, updatedOperation?.caseId);
+      },
     }),
 
     deleteOperation: build.mutation<ControlStage, UserInputDeleteDto>({
@@ -151,6 +224,7 @@ export const operationsApi = rtkApi.injectEndpoints({
               },
             ),
           );
+        RefetchCachedCase(dispatch, deletedOperation?.caseId);
       },
     }),
 
@@ -182,6 +256,7 @@ export const operationsApi = rtkApi.injectEndpoints({
               },
             ),
           );
+        RefetchCachedCase(dispatch, approvedOperation?.caseId);
       },
     }),
   }),

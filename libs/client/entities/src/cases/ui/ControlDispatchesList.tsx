@@ -1,7 +1,18 @@
-import { cn, Skeleton } from '@urgp/client/shared';
+import {
+  Button,
+  cn,
+  setEditDispatch,
+  Skeleton,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  useUserAbility,
+} from '@urgp/client/shared';
 import { EditDispatchButton } from '@urgp/client/widgets';
 import { Case, ControlDispatch } from '@urgp/shared/entities';
 import { format } from 'date-fns';
+import { CalendarCog, Replace } from 'lucide-react';
+import { useDispatch } from 'react-redux';
 import { Fragment } from 'react/jsx-runtime';
 
 type ControlDispatchesListProps = {
@@ -23,6 +34,10 @@ const ControlDispatchesList = (
     isLoading = false,
   } = props;
   const paddingStyle = cn(compact ? 'px-2' : 'px-4 py-1');
+  const dispatch = useDispatch();
+  const i = useUserAbility();
+
+  // onClick={() => dispatch(setEditDispatch(editDispatch))}
 
   if (isLoading) {
     return <Skeleton className="h-10 w-full" />;
@@ -55,23 +70,54 @@ const ControlDispatchesList = (
               >
                 {d.payload?.executor?.fio}
               </div>
-              <div
-                className={cn(
-                  paddingStyle,
-                  'bg-background relative',
-                  sameController ? 'col-span-2' : 'col-span-1 border-r',
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div
+                    className={cn(
+                      paddingStyle,
+                      'bg-background group flex flex-row items-center gap-1',
+                      sameController ? 'col-span-2' : 'col-span-1 border-r',
+                    )}
+                  >
+                    {i.can('update', d) ? (
+                      <Button
+                        variant="link"
+                        className="flex h-5 flex-row gap-2 p-0"
+                        onClick={() => dispatch(setEditDispatch(d))}
+                      >
+                        <span>
+                          {d.payload?.dueDate
+                            ? format(d.payload?.dueDate, 'dd.MM.yyyy')
+                            : '-'}
+                        </span>
+                        {d.payload.dueDateChanged && (
+                          <Replace className="size-3" />
+                        )}
+                        <CalendarCog
+                          className={cn('hidden size-4 group-hover:block')}
+                        />
+                      </Button>
+                    ) : (
+                      <>
+                        <span>
+                          {d.payload?.dueDate
+                            ? format(d.payload?.dueDate, 'dd.MM.yyyy')
+                            : '-'}
+                        </span>
+                        {d.payload.dueDateChanged && (
+                          <Replace className="size-3" />
+                        )}
+                      </>
+                    )}
+                  </div>
+                </TooltipTrigger>
+                {d.payload.dueDateChanged && (
+                  <TooltipContent side="top">
+                    <span className="font-bold">Причина переноса: </span>
+                    <span>{d.payload.dateDescription}</span>
+                  </TooltipContent>
                 )}
-              >
-                <span>
-                  {d.payload?.dueDate
-                    ? format(d.payload?.dueDate, 'dd.MM.yyyy')
-                    : '-'}
-                </span>
-                <EditDispatchButton
-                  editDispatch={d}
-                  className="absolute right-0 top-0"
-                />
-              </div>
+              </Tooltip>
               {!sameController && (
                 <div className={cn(paddingStyle, 'bg-muted-foreground/5')}>
                   {'от: ' + d.payload?.controller?.fio}

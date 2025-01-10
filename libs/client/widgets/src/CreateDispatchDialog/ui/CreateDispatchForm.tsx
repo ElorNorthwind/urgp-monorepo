@@ -11,6 +11,7 @@ import {
 import {
   dispatchCreateFormValues,
   DispatchCreateFormValuesDto,
+  dispatchUpdate,
   dispatchUpdateFormValues,
   DispatchUpdateFormValuesDto,
   GET_DEFAULT_CONTROL_DUE_DATE,
@@ -28,9 +29,10 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   useControlExecutors,
   useCreateDispatch,
+  useDeleteOperation,
   useUpdateDispatch,
 } from '@urgp/client/entities';
-import { Save } from 'lucide-react';
+import { Save, Trash } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { endOfYesterday, isAfter, isBefore } from 'date-fns';
 
@@ -56,12 +58,14 @@ const CreateDispatchForm = ({
   const emptyDispatch = useMemo(() => {
     return !isEdit
       ? ({
+          id: 0,
           executorId: null,
           description: '',
           dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
+          dateDescription: 'Первично установленный срок',
           controller: 'executor',
         } as DispatchCreateFormValuesDto)
-      : dispatchUpdateFormValues.safeParse({
+      : dispatchCreateFormValues.safeParse({
           id: editControlDispatch?.id,
           executorId: editControlDispatch?.payload?.executor?.id,
           description: editControlDispatch?.payload?.description?.toString(),
@@ -77,9 +81,7 @@ const CreateDispatchForm = ({
   const form = useForm<
     DispatchCreateFormValuesDto | DispatchUpdateFormValuesDto
   >({
-    resolver: zodResolver(
-      isEdit ? dispatchUpdateFormValues : dispatchCreateFormValues,
-    ),
+    resolver: zodResolver(dispatchCreateFormValues),
     defaultValues: emptyDispatch,
   });
 
@@ -94,7 +96,8 @@ const CreateDispatchForm = ({
 
   const [createDispatch, { isLoading: isCreateLoading }] = useCreateDispatch();
   const [updateDispatch, { isLoading: isUpdateLoading }] = useUpdateDispatch();
-  const isLoading = isCreateLoading || isUpdateLoading;
+  const [deleteDispatch, { isLoading: isDeleteLoading }] = useDeleteOperation();
+  const isLoading = isCreateLoading || isUpdateLoading || isDeleteLoading;
 
   async function onCreate(data: DispatchCreateFormValuesDto) {
     createDispatch({
@@ -118,14 +121,15 @@ const CreateDispatchForm = ({
   }
 
   async function onEdit(data: DispatchUpdateFormValuesDto) {
+    console.log(data.dateDescription);
     editControlDispatch !== 'new' &&
       updateDispatch({
         ...data,
         dateDescription:
           data.dateDescription ||
-          data.dueDate === editControlDispatch?.payload.dueDate
+          (data.dueDate === editControlDispatch?.payload.dueDate
             ? 'Корректировка без уточнения срока'
-            : '',
+            : ''),
         id: editControlDispatch?.id || 0,
         class: 'dispatch',
       })
@@ -147,6 +151,8 @@ const CreateDispatchForm = ({
     isEdit
       ? onEdit(data as DispatchUpdateFormValuesDto)
       : onCreate(data as DispatchCreateFormValuesDto);
+    form.reset(emptyDispatch);
+    dispatch(setEditDispatch(null));
   }
 
   useEffect(() => {
@@ -172,7 +178,10 @@ const CreateDispatchForm = ({
 
   return (
     <Form {...form}>
-      <form className={cn('flex flex-col gap-4', className)}>
+      <form
+        className={cn('flex flex-col gap-4', className)}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <div className="flex w-full flex-row gap-2">
           <SelectFormField
             form={form}
@@ -203,7 +212,7 @@ const CreateDispatchForm = ({
           placeholder="За кем останется контроль"
           popoverMinWidth={popoverMinWidth}
           valueType="string"
-          className="flex-grow"
+          className={cn('flex-grow')}
           disabled={!!isEdit}
         />
         <TextAreaFormField
@@ -213,23 +222,6 @@ const CreateDispatchForm = ({
           placeholder="Комментарий к поручению"
           dirtyIndicator={!!isEdit}
         />
-        {/* {isEdit &&
-          new Date(watchDueDate).setHours(0, 0, 0, 0) !==
-            new Date(editControlDispatch?.payload?.dueDate || 0).setHours(
-              0,
-              0,
-              0,
-              0,
-            ) && (
-            <TextAreaFormField
-              form={form}
-              fieldName={'dateDescription'}
-              label="Причина переноса срока"
-              placeholder="Комментарий к изменению срока поручения"
-              // dirtyIndicator={!!isEdit}
-            />
-          )} */}
-
         <TextAreaFormField
           form={form}
           fieldName={'dateDescription'}
@@ -251,16 +243,39 @@ const CreateDispatchForm = ({
           >
             Отмена
           </Button>
+          {!!isEdit && (
+            <Button
+              type="button"
+              variant="destructive"
+              className="flex flex-grow flex-row gap-2"
+              onClick={() => {
+                deleteDispatch({ id: editControlDispatch?.id || 0 })
+                  .unwrap()
+                  .then(() => {
+                    form.reset(emptyDispatch);
+                    toast.success('Поручение удалено');
+                    dispatch(setEditDispatch(null));
+                  })
+                  .catch((rejected: any) =>
+                    toast.error('Не удалось удалить поручение', {
+                      description:
+                        rejected.data?.message || 'Неизвестная ошибка',
+                    }),
+                  );
+                form.reset(emptyDispatch);
+                dispatch(setEditDispatch(null));
+              }}
+              disabled={isLoading}
+            >
+              <Trash className="size-5" />
+              <span>Удалить поручение</span>
+            </Button>
+          )}
           <Button
-            type="button"
+            type="submit"
             variant="default"
             className="flex flex-grow flex-row gap-2"
             disabled={isLoading}
-            onClick={() => {
-              onSubmit(form.getValues());
-              form.reset(emptyDispatch);
-              dispatch(setEditDispatch(null));
-            }}
           >
             <Save className="size-5" />
             <span>Сохранить</span>

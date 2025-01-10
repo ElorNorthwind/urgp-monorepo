@@ -40,11 +40,16 @@ export class ControlCaseService {
 
     return this.dbServise.db.controlCases.readFullCaseById(
       createdCase.id,
+      userId,
     ) as Promise<Case>;
   }
 
   public async readSlimCaseById(id: number): Promise<CaseSlim> {
     return this.dbServise.db.controlCases.readSlimCaseById(id);
+  }
+
+  public async readFullCaseById(id: number, userId: number): Promise<Case> {
+    return this.dbServise.db.controlCases.readFullCaseById(id, userId);
   }
 
   public async readCases(userId: number, readAll: boolean): Promise<Case[]> {
@@ -58,6 +63,7 @@ export class ControlCaseService {
     );
     return this.dbServise.db.controlCases.readFullCaseById(
       updatedCase.id,
+      userId,
     ) as Promise<Case>;
   }
 
@@ -68,6 +74,7 @@ export class ControlCaseService {
     );
     return this.dbServise.db.controlCases.readFullCaseById(
       deletedCase.id,
+      userId,
     ) as Promise<Case>;
   }
 
@@ -92,6 +99,7 @@ export class ControlCaseService {
 
     return this.dbServise.db.controlCases.readFullCaseById(
       approvedCase.id,
+      userId,
     ) as Promise<Case>;
   }
 }

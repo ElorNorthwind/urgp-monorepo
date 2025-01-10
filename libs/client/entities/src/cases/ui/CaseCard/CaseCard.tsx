@@ -4,8 +4,6 @@ import {
   AccordionItem,
   AccordionTrigger,
   cn,
-  guestUser,
-  selectCurrentUser,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -23,7 +21,6 @@ import {
   useStages,
 } from '../../../operations';
 import { CaseCardFooter } from './CaseCardFooter';
-import { CaseDispatchesList } from '../CaseDispatchesList';
 import { CreateDispatchDialog } from '@urgp/client/widgets';
 import { ControlDispatchesList } from '../ControlDispatchesList';
 
@@ -146,6 +143,17 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
             <CreateDispatchDialog
               caseId={controlCase?.id}
               className="absolute right-6 top-3 h-8 p-1"
+              displayedElement={
+                <div>
+                  <CaseCardHeader
+                    controlCase={controlCase}
+                    className="rounded-t"
+                  />
+                  <div className="bg-sidebar/80 max-h-50 overflow-hidden rounded-b border-t p-4">
+                    {controlCase.payload.description}
+                  </div>
+                </div>
+              }
             />
           )}
           <AccordionContent>

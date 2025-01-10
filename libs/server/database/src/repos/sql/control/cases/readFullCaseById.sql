@@ -19,7 +19,7 @@ WITH directions AS (
 	FROM control.operations o
 	LEFT JOIN (SELECT id, fio, (control_data->>'priority')::integer as priority FROM renovation.users) e ON e.id = (o.payload->-1->>'executorId')::integer
 	LEFT JOIN (SELECT id, fio, (control_data->>'priority')::integer as priority FROM renovation.users) c ON c.id = (o.payload->-1->>'controllerId')::integer
-	WHERE class = 'dispatch'
+	WHERE class = 'dispatch' AND (o.payload->-1->>'isDeleted')::boolean IS NOT DISTINCT FROM false
 	GROUP BY o.case_id
 ), last_stage AS (
 	SELECT case_id, id, class, "doneDate", "approveStatus", type
@@ -83,7 +83,7 @@ LEFT JOIN control.case_status_types s ON s.id =
 		WHEN ls."approveStatus" = 'pending' THEN 4 -- "проект решения"
 		-- Эти вот штуки лучше бы прописать через специальное поле в control.operation_types ?
 		WHEN (ls.type->>'id')::integer = 7 THEN 5 -- "отклонено"
-		WHEN (ls.type->>'id')::integer = 6 THEN 6 -- "решено"
+		WHEN (ls.type->>'id')::integer = 8 THEN 6 -- "решено"
 		WHEN (ls.type->>'id')::integer = 9 THEN 7 -- "не решено"
 		WHEN ls.id IS NOT NULL THEN 3 -- "в работе"
 		ELSE 2 -- "направлено"

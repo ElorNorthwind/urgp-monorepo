@@ -63,6 +63,7 @@ type DispatchPayloadSlim = {
   dueDate: Date | null;
   description: string | null;
   dateDescription: string | null;
+  dueDateChanged?: boolean;
 } & BasicPayloadDataSlim;
 
 type DispatchPayload = Omit<

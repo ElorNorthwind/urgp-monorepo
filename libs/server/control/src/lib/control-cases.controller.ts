@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Logger,
+  Param,
   Patch,
   Post,
   Req,
@@ -23,6 +24,7 @@ import {
   userInputDelete,
   UserInputDeleteDto,
   defineControlAbilityFor,
+  Case,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
@@ -78,6 +80,14 @@ export class ControlCasesController {
     const i = defineControlAbilityFor(req.user);
     const readAll = i.can('read-all', 'Case'); // Наверное лучше сделать 2 эндпоинта
     return this.controlCases.readCases(req.user.id, readAll);
+  }
+
+  @Get(':id')
+  getCaseById(
+    @Req() req: RequestWithUserData,
+    @Param('id') id: number,
+  ): Promise<Case> {
+    return this.controlCases.readFullCaseById(id, req.user.id);
   }
 
   @Patch()

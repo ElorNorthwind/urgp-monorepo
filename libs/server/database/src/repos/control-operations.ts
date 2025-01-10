@@ -60,6 +60,10 @@ export class ControlOperationsRepository {
       description: dto.description,
       dueDate: dto.dueDate,
     };
+
+    // const q = this.pgp.as.format(operations.createDispatch, newDispatch);
+    // console.log(q);
+
     return this.db.one(operations.createDispatch, newDispatch);
   }
 
@@ -141,6 +145,10 @@ export class ControlOperationsRepository {
       description: dto.description,
       dateDescription: dto.dateDescription,
     };
+
+    // const q = this.pgp.as.format(operations.updateDispatch, updatedDispatch);
+    // console.log(q);
+
     return this.db.one(operations.updateDispatch, updatedDispatch);
   }
 

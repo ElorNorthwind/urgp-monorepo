@@ -10,9 +10,10 @@ SELECT
 			|| jsonb_build_object('approver', json_build_object('id', u2.id, 'fio', u2.fio))
 			|| jsonb_build_object('approveBy', json_build_object('id', u3.id, 'fio', u3.fio))
 			|| jsonb_build_object('updatedBy', json_build_object('id', u4.id, 'fio', u4.fio))
-			|| jsonb_build_object('controller', json_build_object('id', u5.id, 'fio', u4.fio))
-			|| jsonb_build_object('executor', json_build_object('id', u6.id, 'fio', u4.fio))
-			|| jsonb_build_object('observer', json_build_object('id', u7.id, 'fio', u4.fio))
+			|| jsonb_build_object('controller', json_build_object('id', u5.id, 'fio', u5.fio))
+			|| jsonb_build_object('executor', json_build_object('id', u6.id, 'fio', u6.fio))
+			|| jsonb_build_object('observer', json_build_object('id', u7.id, 'fio', u7.fio))
+			|| jsonb_build_object('dueDateChanged', (o.payload->-1->>'dueDate')::date <> (o.payload->1->>'dueDate')::date)
 			as payload,
 	jsonb_array_length(o.payload) as version
 FROM control.operations o
@@ -28,4 +29,4 @@ WHERE case_id = ${id}
 AND (o.payload->-1->>'isDeleted')::boolean IS DISTINCT FROM true
 AND (o.payload->-1->>'approveStatus' = 'approved' OR o.author_id = ${userId} OR (o.payload->-1->>'approver')::integer = ${userId})
 ${operationClassText:raw}
-ORDER BY o.created_at DESC;
+ORDER BY (o.payload->-1->>'doneDate')::date DESC NULLS FIRST, o.created_at DESC;

@@ -93,6 +93,9 @@ const ApproveForm = ({
             description: rejected.data?.message || 'Неизвестная ошибка',
           }),
         );
+
+    form.reset(emptyApproveData);
+    onClose && onClose();
   }
 
   useEffect(() => {
@@ -154,11 +157,12 @@ const ApproveForm = ({
             variant="destructive"
             className="flex flex-grow flex-row gap-2"
             disabled={isLoading}
-            onClick={() => {
-              form.reset(emptyApproveData);
-              onSubmit(form.getValues(), false);
-              onClose && onClose();
-            }}
+            onClick={form.handleSubmit((data) => onSubmit(data, false))}
+            // onClick={() => {
+            //   form.reset(emptyApproveData);
+            //   onSubmit(form.getValues(), false);
+            //   onClose && onClose();
+            // }}
           >
             <ThumbsDown className="size-5" />
             <span>Отклонить</span>
@@ -167,11 +171,12 @@ const ApproveForm = ({
             type="button"
             disabled={isLoading}
             className="flex flex-grow flex-row gap-2"
-            onClick={() => {
-              form.reset(emptyApproveData);
-              onSubmit(form.getValues(), true);
-              onClose && onClose();
-            }}
+            onClick={form.handleSubmit((data) => onSubmit(data, true))}
+            // onClick={() => {
+            //   form.reset(emptyApproveData);
+            //   onSubmit(form.getValues(), true);
+            //   onClose && onClose();
+            // }}
           >
             <ThumbsUp className="size-5" />
             <span>Одобрить</span>

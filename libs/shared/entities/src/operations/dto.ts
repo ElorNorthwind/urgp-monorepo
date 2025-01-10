@@ -79,6 +79,9 @@ export const dispatchCreateFormValues = dispatchCreate
       .or(z.literal('executor'))
       .optional()
       .default('executor'),
+    dateDescription: z
+      .string()
+      .min(1, { message: 'Необходимо указать причину переноса срока' }),
   });
 export type DispatchCreateFormValuesDto = z.infer<
   typeof dispatchCreateFormValues
@@ -103,7 +106,14 @@ export const dispatchUpdate = dispatchCreate
   });
 export type DispatchUpdateDto = z.infer<typeof dispatchUpdate>;
 
-export const dispatchUpdateFormValues = dispatchUpdate.partial();
+export const dispatchUpdateFormValues = dispatchUpdate
+  .omit({ dateDescription: true })
+  .partial()
+  .extend({
+    dateDescription: z
+      .string()
+      .min(1, { message: 'Необходимо указать причину переноса срока' }),
+  });
 export type DispatchUpdateFormValuesDto = z.infer<
   typeof dispatchUpdateFormValues
 >;

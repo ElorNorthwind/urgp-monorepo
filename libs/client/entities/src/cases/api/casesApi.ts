@@ -15,6 +15,12 @@ export const casesApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getCaseById: build.query<Case, number>({
+      query: (id) => ({
+        url: '/control/case/' + id.toString(),
+        method: 'GET',
+      }),
+    }),
     createCase: build.mutation<Case, CaseCreateDto>({
       query: (dto) => ({
         url: '/control/case',
@@ -101,6 +107,7 @@ export const casesApi = rtkApi.injectEndpoints({
 
 export const {
   useGetCasesQuery: useCases,
+  useGetCaseByIdQuery: useCaseById,
   useCreateCaseMutation: useCreateCase,
   useUpdateCaseMutation: useUpdateCase,
   useDeleteCaseMutation: useDeleteCase,
