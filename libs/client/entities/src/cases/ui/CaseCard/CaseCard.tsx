@@ -150,7 +150,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
                     className="rounded-t"
                   />
                   <div className="bg-sidebar/80 max-h-50 overflow-hidden rounded-b border-t p-4">
-                    {controlCase.payload.description}
+                    {controlCase?.payload?.description}
                   </div>
                 </div>
               }
