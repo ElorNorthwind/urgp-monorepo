@@ -134,19 +134,12 @@ const CreateReminderDialog = ({
   return (
     <Wrapper open={!!editReminder} onOpenChange={onOpenChange}>
       <Trigger asChild>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <ReminderButton
-              reminders={reminders}
-              editReminder={userReminder}
-              className={className}
-              disabled={isLoading || isFetching}
-            />
-          </TooltipTrigger>
-          <TooltipContent>
-            <RemindersList reminders={reminders} label="За делом наблюдают" />
-          </TooltipContent>
-        </Tooltip>
+        <ReminderButton
+          reminders={reminders}
+          editReminder={userReminder}
+          className={className}
+          disabled={isLoading || isFetching}
+        />
       </Trigger>
       <Content
         style={contentStyle}
