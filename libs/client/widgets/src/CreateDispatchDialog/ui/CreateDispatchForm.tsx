@@ -11,9 +11,6 @@ import {
 import {
   dispatchCreateFormValues,
   DispatchCreateFormValuesDto,
-  dispatchUpdate,
-  dispatchUpdateFormValues,
-  DispatchUpdateFormValuesDto,
   GET_DEFAULT_CONTROL_DUE_DATE,
 } from '@urgp/shared/entities';
 import { useForm } from 'react-hook-form';
@@ -78,9 +75,7 @@ const CreateDispatchForm = ({
         }).data;
   }, [executors, editControlDispatch]);
 
-  const form = useForm<
-    DispatchCreateFormValuesDto | DispatchUpdateFormValuesDto
-  >({
+  const form = useForm<DispatchCreateFormValuesDto>({
     resolver: zodResolver(dispatchCreateFormValues),
     defaultValues: emptyDispatch,
   });
@@ -120,8 +115,7 @@ const CreateDispatchForm = ({
       );
   }
 
-  async function onEdit(data: DispatchUpdateFormValuesDto) {
-    console.log(data.dateDescription);
+  async function onEdit(data: DispatchCreateFormValuesDto) {
     editControlDispatch !== 'new' &&
       updateDispatch({
         ...data,
@@ -145,12 +139,8 @@ const CreateDispatchForm = ({
           }),
         );
   }
-  async function onSubmit(
-    data: DispatchCreateFormValuesDto | DispatchUpdateFormValuesDto,
-  ) {
-    isEdit
-      ? onEdit(data as DispatchUpdateFormValuesDto)
-      : onCreate(data as DispatchCreateFormValuesDto);
+  async function onSubmit(data: DispatchCreateFormValuesDto) {
+    isEdit ? onEdit(data) : onCreate(data);
     form.reset(emptyDispatch);
     dispatch(setEditDispatch(null));
   }

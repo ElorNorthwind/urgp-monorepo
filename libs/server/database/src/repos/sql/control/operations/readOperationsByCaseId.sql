@@ -5,7 +5,7 @@ SELECT
 	json_build_object('id', u.id, 'fio', u.fio) as author,
 	o.created_at as "createdAt",
 	o.payload->-1
-			#- '{typeId, approverId, approveById, updatedById}'
+			#- '{typeId, approverId, approveById, updatedById, controllerId, executorId, observerId}'
 			|| jsonb_build_object('type', to_jsonb(t))
 			|| jsonb_build_object('approver', json_build_object('id', u2.id, 'fio', u2.fio))
 			|| jsonb_build_object('approveBy', json_build_object('id', u3.id, 'fio', u3.fio))

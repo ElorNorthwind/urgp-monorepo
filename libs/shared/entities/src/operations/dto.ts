@@ -106,17 +106,17 @@ export const dispatchUpdate = dispatchCreate
   });
 export type DispatchUpdateDto = z.infer<typeof dispatchUpdate>;
 
-export const dispatchUpdateFormValues = dispatchUpdate
-  .omit({ dateDescription: true })
-  .partial()
-  .extend({
-    dateDescription: z
-      .string()
-      .min(1, { message: 'Необходимо указать причину переноса срока' }),
-  });
-export type DispatchUpdateFormValuesDto = z.infer<
-  typeof dispatchUpdateFormValues
->;
+// export const dispatchUpdateFormValues = dispatchUpdate
+//   .omit({ dateDescription: true })
+//   .partial()
+//   .extend({
+//     dateDescription: z
+//       .string()
+//       .min(1, { message: 'Необходимо указать причину переноса срока' }),
+//   });
+// export type DispatchUpdateFormValuesDto = z.infer<
+//   typeof dispatchUpdateFormValues
+// >;
 
 // ================ НАПОМИНАНИЯ (REMINDERS) ================
 // создание напоминаний
@@ -147,12 +147,13 @@ export const reminderUpdate = reminderCreate
     class: true,
     dueDate: true,
     description: true,
+    typeId: true,
   })
   .partial()
   .extend({
     id: z.coerce.number(),
     doneDate: z.coerce.date().nullable().default(null),
-    typeId: z.undefined().optional(),
+    // typeId: z.undefined().optional(),
   });
 export type ReminderUpdateDto = z.infer<typeof reminderUpdate>;
 

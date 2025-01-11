@@ -21,7 +21,10 @@ import {
   useStages,
 } from '../../../operations';
 import { CaseCardFooter } from './CaseCardFooter';
-import { CreateDispatchDialog } from '@urgp/client/widgets';
+import {
+  CreateDispatchDialog,
+  CreateReminderDialog,
+} from '@urgp/client/widgets';
 import { ControlDispatchesList } from '../ControlDispatchesList';
 
 type CaseCardProps = {
@@ -69,7 +72,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
         onNextCase={onNextCase}
       />
       {controlCase && (
-        <div className="pb-0f flex flex-col gap-2 p-4">
+        <div className="flex flex-col gap-2 p-4">
           <div className="bg-background grid grid-cols-[auto_1fr_auto_1fr] rounded-lg border">
             <div className="bg-muted-foreground/5 border-b border-r px-2 py-1 text-right font-bold">
               Тип:
@@ -136,8 +139,13 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
         className="w-full px-4"
         defaultValue={['description']}
       >
-        <AccordionItem value="description">
+        <AccordionItem value="description" className="relative">
           <AccordionTrigger>Описание проблемы</AccordionTrigger>
+          <CreateReminderDialog
+            className="absolute right-6 top-3 h-8 px-2 py-1"
+            caseId={controlCase?.id}
+            expectedDueDate={controlCase?.dispatches?.[0]?.dueDate || null}
+          />
           {controlCase && (
             <AccordionContent className="bg-background rounded-t-lg border border-b-0 p-2">
               {controlCase.payload.description}
@@ -149,7 +157,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
           {i.can('create', 'Dispatch') && (
             <CreateDispatchDialog
               caseId={controlCase?.id}
-              className="absolute right-6 top-3 h-8 p-1"
+              className="absolute right-6 top-3 h-8 px-2 py-1"
               displayedElement={
                 <div>
                   <CaseCardHeader

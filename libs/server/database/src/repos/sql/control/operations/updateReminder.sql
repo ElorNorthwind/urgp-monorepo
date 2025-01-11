@@ -1,7 +1,7 @@
 UPDATE control.operations
 SET payload = payload || (payload->-1 || 
     jsonb_build_object(
-            'observerId', ${observerId},
+        --     'observerId', ${observerId},
             'description', ${description},
             'updatedAt', NOW(),
             'lastSeenDate', NOW(),

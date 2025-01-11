@@ -104,7 +104,7 @@ type ReminderPayloadSlim = {
   typeId: number;
   observerId: number;
   lastSeenDate: Date;
-  expectedDate: Date | null;
+  dueDate: Date | null;
   doneDate: Date | null;
   description: string | null;
 } & BasicPayloadDataSlim;

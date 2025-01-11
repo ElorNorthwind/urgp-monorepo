@@ -40,6 +40,7 @@ import {
   ControlDispatch,
   ControlStage,
   ControlReminder,
+  reminderCreate,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlOperationsService } from './control-operations.service';
@@ -114,7 +115,7 @@ export class ControlOperationsController {
   @Post('reminder')
   async createReminder(
     @Req() req: RequestWithUserData,
-    @Body(new ZodValidationPipe(dispatchCreate)) dto: ReminderCreateDto,
+    @Body(new ZodValidationPipe(reminderCreate)) dto: ReminderCreateDto,
   ) {
     const i = defineControlAbilityFor(req.user);
     if (i.cannot('create', dto)) {

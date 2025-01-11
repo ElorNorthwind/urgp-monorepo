@@ -13,7 +13,7 @@ const StagesHeader = (props: StagesHeaderProps): JSX.Element => {
   if (!caseId) return <></>;
 
   return (
-    <div className={cn('flex items-center justify-between', className)}>
+    <div className={cn('flex items-center justify-between pr-6', className)}>
       <div className="font-medium">Работа с делом</div>
       <CreateStageDialog caseId={caseId} />
     </div>
