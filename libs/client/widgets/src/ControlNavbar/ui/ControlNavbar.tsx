@@ -32,7 +32,10 @@ const ControlNavbar = (): JSX.Element => {
           <Button
             variant="secondary"
             size="icon"
-            className="fixed bottom-2 left-2 z-[50] size-10 rounded-full"
+            className={cn(
+              router?.location?.search?.selectedCase ? 'bottom-20' : 'bottom-2',
+              'hover:bg-sidebar-accent fixed left-2 z-[50] size-12 rounded-full',
+            )}
           >
             <Menu />
           </Button>

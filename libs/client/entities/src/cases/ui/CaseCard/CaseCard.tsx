@@ -103,7 +103,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
                   </p>
                 </div>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent side="bottom">
                 {controlCase?.payload?.approver?.fio && (
                   <>
                     <p>
