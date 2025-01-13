@@ -36,7 +36,7 @@ const ResetFilter = (props: ResetFilterProps): JSX.Element => {
       }
     >
       <span>
-        {variant === 'full' ? `Сброс фильтров: ${paramLength}` : `Сброс`}
+        {variant === 'full' ? `Снять фильтры: ${paramLength}` : `Сброс`}
       </span>
       <X className="size-4" />
     </Button>

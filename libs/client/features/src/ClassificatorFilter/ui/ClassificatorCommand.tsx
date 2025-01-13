@@ -118,10 +118,10 @@ const ClassificatorCommand = forwardRef<
         </div>
       )}
       <CommandList
-        className={cn(variant === 'checkbox' ? 'max-h-full' : 'max-h-[400px]')}
+        className={cn(variant !== 'popover' ? 'max-h-full' : 'max-h-[400px]')}
       >
         <CommandEmpty>Не найдено</CommandEmpty>
-        {variant === 'checkbox' && <CommandItem value="-" className="hidden" />}
+        {variant !== 'popover' && <CommandItem value="-" className="hidden" />}
         {options.map((category) => {
           return (
             <CommandGroup

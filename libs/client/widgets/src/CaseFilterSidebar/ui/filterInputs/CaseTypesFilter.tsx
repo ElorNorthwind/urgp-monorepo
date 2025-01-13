@@ -5,12 +5,17 @@ import { cn } from '@urgp/client/shared';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
 
 type CaseTypesFilterProps = {
-  variant?: 'popover' | 'checkbox';
+  variant?: 'popover' | 'checkbox' | 'accordion';
   className?: string;
+  accordionItemValue?: string;
 };
 
 const CaseTypesFilter = (props: CaseTypesFilterProps): JSX.Element => {
-  const { className, variant = 'checkbox' } = props;
+  const {
+    className,
+    variant = 'accordion',
+    accordionItemValue = 'caseTypes',
+  } = props;
 
   const navigate = useNavigate({ from: '/control' });
   const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
@@ -18,6 +23,7 @@ const CaseTypesFilter = (props: CaseTypesFilterProps): JSX.Element => {
 
   return (
     <ClassificatorFilter
+      accordionItemValue={accordionItemValue}
       label="Типы дел"
       className={cn('w-full', className)}
       variant={variant}

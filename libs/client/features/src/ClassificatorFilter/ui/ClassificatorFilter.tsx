@@ -1,6 +1,9 @@
 import { PlusCircleIcon, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import {
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
   Badge,
   Button,
   cn,
@@ -32,7 +35,8 @@ export interface ClassificatorFilterProps<TValue extends string | number>
   setSelectedValues: (value: TValue[]) => void;
   categoryStyles?: Record<string, StyleData>;
   valueStyles?: Record<TValue, StyleData>;
-  variant?: 'popover' | 'checkbox';
+  variant?: 'popover' | 'checkbox' | 'accordion';
+  accordionItemValue?: string;
   label?: string;
   placeholder?: string;
   isLoading?: boolean;
@@ -58,6 +62,7 @@ function ClassificatorFilter<TValue extends string | number>(
     popoverClassName,
     shortBadge = false,
     setSelectedValues,
+    accordionItemValue,
     // categoryStyles,
     // valueStyles,
     // placeholder = 'Поиск значения',
@@ -92,6 +97,36 @@ function ClassificatorFilter<TValue extends string | number>(
         )}
         <ClassificatorCommand {...(props as any)} flatOptions={flatOptions} />
       </div>
+    );
+  }
+
+  if (variant === 'accordion') {
+    return (
+      <AccordionItem
+        value={accordionItemValue || label}
+        className="relative mb-2 flex w-full flex-col gap-1"
+      >
+        {selectedValues.length > 0 && (
+          <Button
+            type="button"
+            variant="outline"
+            className="absolute right-6 top-4 h-6 rounded-full p-1 px-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedValues([]);
+            }}
+          >
+            <span>{selectedValues.length}</span>
+            <X className="size-4 flex-shrink-0" />
+          </Button>
+        )}
+        <AccordionTrigger>
+          <span className="w-full text-left text-base">{label}</span>
+        </AccordionTrigger>
+        <AccordionContent>
+          <ClassificatorCommand {...(props as any)} flatOptions={flatOptions} />
+        </AccordionContent>
+      </AccordionItem>
     );
   }
 

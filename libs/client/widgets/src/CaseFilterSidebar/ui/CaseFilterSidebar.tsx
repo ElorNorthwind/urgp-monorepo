@@ -5,6 +5,7 @@ import {
 } from '@urgp/client/entities';
 import { ClassificatorFilter } from '@urgp/client/features';
 import {
+  Accordion,
   Input,
   Sidebar,
   SidebarContent,
@@ -26,6 +27,7 @@ import { StatusFilter } from './filterInputs/StatusFilter';
 import { ResetFilter } from './filterInputs/ResetFilter';
 import { DepartmentsFilter } from './filterInputs/DepartmentsFilter';
 import { NumberFilter } from './filterInputs/NumberFilter';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
 
 type ControlSidebarProps = {
   side?: 'left' | 'right';
@@ -41,27 +43,30 @@ const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
       side={side}
       className={className}
     >
-      <SidebarHeader>
+      <SidebarHeader className="bg-muted-foreground/5">
         <SidebarMenu>
-          <SidebarMenuItem>Фильтр дел</SidebarMenuItem>
+          <SidebarMenuItem className="text-foreground text-center  text-lg">
+            Фильтр таблицы дел
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Условия поиска</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-2">
               <QueryFilter className="h-8" />
               <NumberFilter className="h-8" />
-              <DepartmentsFilter variant="checkbox" />
-              <DirectionsFilter variant="checkbox" />
-              <CaseTypesFilter variant="checkbox" />
-              <StatusFilter variant="checkbox" />
+              <Accordion type="multiple" defaultValue={['departments']}>
+                <DepartmentsFilter variant="accordion" />
+                <StatusFilter variant="accordion" />
+                <DirectionsFilter variant="accordion" />
+                <CaseTypesFilter variant="accordion" />
+              </Accordion>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="">
         <SidebarMenu>
           <SidebarMenuItem>
             <ResetFilter className="w-full" />

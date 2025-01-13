@@ -10,12 +10,17 @@ import { cn } from '@urgp/client/shared';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
 
 type StatusFilterProps = {
-  variant?: 'popover' | 'checkbox';
+  variant?: 'popover' | 'checkbox' | 'accordion';
   className?: string;
+  accordionItemValue?: string;
 };
 
 const StatusFilter = (props: StatusFilterProps): JSX.Element => {
-  const { className, variant = 'checkbox' } = props;
+  const {
+    className,
+    variant = 'accordion',
+    accordionItemValue = 'status',
+  } = props;
 
   const navigate = useNavigate({ from: '/control' });
   const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
@@ -23,6 +28,7 @@ const StatusFilter = (props: StatusFilterProps): JSX.Element => {
 
   return (
     <ClassificatorFilter
+      accordionItemValue={accordionItemValue}
       label="Статусы"
       className={cn('w-full', className)}
       variant={variant}
