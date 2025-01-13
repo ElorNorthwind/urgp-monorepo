@@ -25,6 +25,16 @@ const ControlCasesPage = (): JSX.Element => {
   const { data: cases, isLoading, isFetching } = useCases();
   const [selected, setSelected] = useState<Row<Case>[]>([]);
   const [filtered, setFiltered] = useState<Row<Case>[]>([]);
+  const [facets, setFacets] = useState<Map<any, number>>(new Map());
+
+  // let facets: Record<string, number> = {};
+
+  // filtered.forEach((row) => {
+  //   facets[row.original.class] == facets[row.original.class]
+  //     ? facets[row.original.class]++
+  //     : 1;
+  // });
+
   const user = useSelector(selectCurrentUser);
 
   // const isMobile = useIsMobile();
@@ -79,14 +89,16 @@ const ControlCasesPage = (): JSX.Element => {
     <TooltipProvider delayDuration={50}>
       <CaseFilterSidebar
         side="left"
-        className={`left-[${NAVBAR_WIDTH}] -z-10`}
+        className={`left-[${NAVBAR_WIDTH}] z-10`}
       />
       <SidebarInset className="overflow-hidden">
+        {JSON.stringify(facets)}
         <main className="h-screen flex-col flex-wrap">
           <CasesPageHeader total={cases?.length} filtered={filtered.length} />
           <VirtualDataTable
             setSelectedRows={setSelected}
             setFilteredRows={setFiltered}
+            setFacetedValues={setFacets}
             clientSide
             globalFilter={search}
             globalFilterFn={caseGlobalFilterFn}

@@ -79,7 +79,7 @@ const ControlNavbar = (): JSX.Element => {
     <TooltipProvider delayDuration={0}>
       <nav
         className={cn(
-          'h-screen w-[--sidebar-width]',
+          'z-20 h-screen w-[--sidebar-width]',
           isMobile ? 'hidden' : 'flex',
           'bg-sidebar text-sidebar-foreground flex-col items-center gap-4 border-r py-2',
         )}

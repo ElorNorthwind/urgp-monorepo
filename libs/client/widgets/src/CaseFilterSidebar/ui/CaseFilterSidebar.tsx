@@ -1,4 +1,12 @@
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
+  directionCategoryStyles,
+  useCaseDirectionTypes,
+} from '@urgp/client/entities';
+import { ClassificatorFilter } from '@urgp/client/features';
+import {
+  Button,
+  Input,
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -10,6 +18,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from '@urgp/client/shared';
+import { CasesPageSearchDto } from '@urgp/shared/entities';
 
 type ControlSidebarProps = {
   side?: 'left' | 'right';
@@ -18,6 +27,15 @@ type ControlSidebarProps = {
 
 const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
   const { side = 'left', className } = props;
+
+  const navigate = useNavigate({ from: '/control' });
+  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
+  const {
+    data: directionTypes,
+    isLoading,
+    isFetching,
+  } = useCaseDirectionTypes();
+
   return (
     <Sidebar
       collapsible="offcanvas"
@@ -32,9 +50,27 @@ const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Условия поиска</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>Поеск...</SidebarMenu>
+            <SidebarMenu>
+              <ClassificatorFilter
+                label="Направления"
+                triggerClassName="w-full"
+                disabled={isLoading || isFetching}
+                isLoading={isLoading || isFetching}
+                options={directionTypes || []}
+                categoryStyles={directionCategoryStyles}
+                selectedValues={search.direction}
+                setSelectedValues={(directions) =>
+                  navigate({
+                    search: {
+                      ...search,
+                      direction: directions.length > 0 ? directions : undefined,
+                    },
+                  })
+                }
+              />
+            </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

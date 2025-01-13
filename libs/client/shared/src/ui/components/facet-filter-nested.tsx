@@ -14,7 +14,6 @@ import {
   CommandSeparator,
 } from './command';
 import { useMemo } from 'react';
-import { useCommandState } from 'cmdk';
 
 type Option<TValue extends string | number> = {
   value: TValue;

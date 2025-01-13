@@ -17,8 +17,9 @@ import {
   MessageSquarePlus,
   MessageSquareX,
 } from 'lucide-react';
+import { ReactNode } from 'react';
 
-type StyleData = {
+export type StyleData = {
   icon?: React.ForwardRefExoticComponent<
     Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
   >;
@@ -67,22 +68,32 @@ export const directionCategoryStyles = {
   // УП: { badgeStyle: 'bg-slate-50 border-slate-200 hover:bg-slate-100' },
   // УОЖП: { badgeStyle: 'bg-violet-50 border-violet-200 hover:bg-violet-100' },
   УРЖП: {
+    icon: Circle,
+    iconStyle: 'bg-cyan-500 rounded-full text-cyan-500',
     badgeStyle:
       'bg-background border-cyan-500 border px-1 text-cyan-600 hover:bg-cyan-50',
   },
   УВЖУ: {
+    icon: Circle,
+    iconStyle: 'bg-emerald-500 rounded-full text-emerald-500',
     badgeStyle:
       'bg-background border-emerald-500 border px-1 text-emerald-600 hover:bg-emerald-50',
   },
   УПГУ: {
+    icon: Circle,
+    iconStyle: 'bg-amber-500 rounded-full text-amber-500',
     badgeStyle:
       'bg-background border-amber-500 border px-1 text-amber-600 hover:bg-amber-50',
   },
   УП: {
+    icon: Circle,
+    iconStyle: 'bg-slate-500 rounded-full text-slate-500',
     badgeStyle:
       'bg-background border-slate-500 border px-1 text-slate-600 hover:bg-slate-50',
   },
   УОЖП: {
+    icon: Circle,
+    iconStyle: 'bg-violet-500 rounded-full text-violet-500',
     badgeStyle:
       'bg-background border-violet-500 border px-1 text-violet-600 hover:bg-violet-50',
   },
