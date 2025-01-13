@@ -18,6 +18,7 @@ import {
   ControlOperationClass,
   controlOperationClass,
   SelectOption,
+  NestedClassificatorInfoString,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
@@ -98,6 +99,11 @@ export class ControlClassificatorsController {
   @Get('case-direction-types')
   async getCaseDirectionTypes(): Promise<NestedClassificatorInfo[]> {
     return this.classificators.getCaseDirectionTypes();
+  }
+
+  @Get('case-department-types')
+  async getDepartmentTypes(): Promise<NestedClassificatorInfoString[]> {
+    return this.classificators.getDepartmentTypes();
   }
 
   // getCaseDirectionTypes

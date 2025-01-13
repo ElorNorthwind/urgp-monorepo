@@ -4,9 +4,6 @@ import {
   FilterFn,
   flexRender,
   getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
   getFilteredRowModel,
   getSortedRowModel,
   InitialTableState,
@@ -24,14 +21,7 @@ import {
 } from './table';
 import { ChevronsUpDown, ChevronUp } from 'lucide-react';
 import { ScrollArea } from './scroll-area';
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '../../lib/cn';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Button } from './button';
@@ -63,7 +53,6 @@ interface VirtualDataTableProps<TData, TValue> {
   setFilteredRows?: Dispatch<Row<TData>[]> | undefined;
   setSelectedRows?: Dispatch<Row<TData>[]> | undefined;
   setNeighborRows?: Dispatch<Row<TData>[]> | undefined;
-  setFacetedValues?: Dispatch<Map<any, number>> | undefined;
 }
 
 export function VirtualDataTable<TData, TValue>({
@@ -88,7 +77,6 @@ export function VirtualDataTable<TData, TValue>({
   variant = 'default',
   setFilteredRows,
   setSelectedRows,
-  setFacetedValues,
 }: VirtualDataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -102,9 +90,6 @@ export function VirtualDataTable<TData, TValue>({
       clientSide && setSelectedRows ? getSortedRowModel() : undefined,
     getFilteredRowModel:
       clientSide && setFilteredRows ? getFilteredRowModel() : undefined,
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
     defaultColumn: {
       size: 200, //starting column size
     },
@@ -129,10 +114,6 @@ export function VirtualDataTable<TData, TValue>({
 
   useEffect(() => {
     setFilteredRows && setFilteredRows(table.getRowModel().flatRows);
-  }, [data, globalFilter]);
-
-  useEffect(() => {
-    setFacetedValues && setFacetedValues(table.getGlobalFacetedUniqueValues());
   }, [data, globalFilter]);
 
   useEffect(() => {

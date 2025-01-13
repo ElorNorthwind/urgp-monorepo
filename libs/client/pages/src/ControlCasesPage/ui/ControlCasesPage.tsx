@@ -25,7 +25,7 @@ const ControlCasesPage = (): JSX.Element => {
   const { data: cases, isLoading, isFetching } = useCases();
   const [selected, setSelected] = useState<Row<Case>[]>([]);
   const [filtered, setFiltered] = useState<Row<Case>[]>([]);
-  const [facets, setFacets] = useState<Map<any, number>>(new Map());
+  // const [facets, setFacets] = useState<Map<any, number>>(new Map());
 
   // let facets: Record<string, number> = {};
 
@@ -92,13 +92,11 @@ const ControlCasesPage = (): JSX.Element => {
         className={`left-[${NAVBAR_WIDTH}] z-10`}
       />
       <SidebarInset className="overflow-hidden">
-        {JSON.stringify(facets)}
         <main className="h-screen flex-col flex-wrap">
           <CasesPageHeader total={cases?.length} filtered={filtered.length} />
           <VirtualDataTable
             setSelectedRows={setSelected}
             setFilteredRows={setFiltered}
-            setFacetedValues={setFacets}
             clientSide
             globalFilter={search}
             globalFilterFn={caseGlobalFilterFn}

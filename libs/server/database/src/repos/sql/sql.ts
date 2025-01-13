@@ -120,4 +120,7 @@ export const classificators = {
   readCaseStatusTypes: sql(
     'sql/control/classificators/readCaseStatusTypes.sql',
   ),
+  readDepartmentTypes: sql(
+    'sql/control/classificators/readDepartmentTypes.sql',
+  ),
 };

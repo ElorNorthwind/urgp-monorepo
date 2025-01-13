@@ -15,8 +15,9 @@ import {
   useIsMobile,
   useUserAbility,
 } from '@urgp/client/shared';
+import { QueryFilter, ResetFilter } from '@urgp/client/widgets';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
-import { Search, Settings2, SquarePlus } from 'lucide-react';
+import { Settings2 } from 'lucide-react';
 type CasePageHeaderProps = {
   total?: number;
   filtered?: number;
@@ -24,20 +25,29 @@ type CasePageHeaderProps = {
 };
 
 const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
-  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
-  const navigate = useNavigate({ from: '/control' });
   const { total, filtered, className } = props;
   const isMobile = useIsMobile();
   const i = useUserAbility();
 
+  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
+  const paramLength = Object.keys(search).filter(
+    (key) => !['selectedCase'].includes(key),
+  ).length;
+
   return (
     <header
       className={cn(
-        'flex h-12 w-full shrink-0 items-center gap-2 border-b px-3',
+        'relative flex h-12 w-full shrink-0 items-center gap-2 border-b px-3',
         className,
       )}
     >
       <SidebarTrigger className="shrink-0" />
+      {!!paramLength && (
+        <div className="bg-foreground text-background pointer-events-none absolute left-7 top-6 size-4 rounded-full p-0 text-center text-xs">
+          {paramLength}
+        </div>
+      )}
+      <ResetFilter variant="mini" className="" />
       <Separator orientation="vertical" className="mr-2 h-4 shrink-0" />
       <Breadcrumb className="shrink-0">
         <BreadcrumbList>
@@ -59,24 +69,8 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
           </div>
         </>
       )}
-      <Input
-        type="search"
-        placeholder="Поиск..."
-        leading={<Search className="size-4" />}
-        className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full"
-        value={search?.query || ''}
-        onChange={(event) =>
-          navigate({
-            search: (prev: CasesPageSearchDto) => ({
-              ...prev,
-              query:
-                event.target.value && event.target.value.length > 0
-                  ? event.target.value
-                  : undefined,
-            }),
-          })
-        }
-      />
+
+      <QueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
       {i.can('create', 'Case') && <CreateCaseDialog />}
       <Button variant={'outline'} className="size-8 shrink-0 p-1">
         <Settings2 className="size-4" />

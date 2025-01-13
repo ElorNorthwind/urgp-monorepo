@@ -1,6 +1,7 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
   NestedClassificatorInfo,
+  NestedClassificatorInfoString,
   SelectOption,
   TypeInfo,
   UserControlApprovers,
@@ -57,6 +58,12 @@ export const classificatorsApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getDepartmentTypes: build.query<NestedClassificatorInfoString[], void>({
+      query: () => ({
+        url: '/control/classificators/case-department-types',
+        method: 'GET',
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -70,4 +77,5 @@ export const {
   useGetOperationTypesFlatQuery: useOperationTypesFlat,
   useGetCaseStatusTypesQuery: useCaseStatusTypes,
   useGetCaseDirectionTypesQuery: useCaseDirectionTypes,
+  useGetDepartmentTypesQuery: useDepartmentTypes,
 } = classificatorsApi;

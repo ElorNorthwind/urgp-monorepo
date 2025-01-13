@@ -2,6 +2,7 @@ import {
   ClassificatorInfo,
   ControlOperationClass,
   NestedClassificatorInfo,
+  NestedClassificatorInfoString,
   TypeInfo,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
@@ -54,5 +55,9 @@ export class ControlClassificatorsRepository {
 
   readCaseDirectionTypes(): Promise<NestedClassificatorInfo[]> {
     return this.db.any(classificators.readCaseDireactionTypes);
+  }
+
+  readDepartmentTypes(): Promise<NestedClassificatorInfoString[]> {
+    return this.db.any(classificators.readDepartmentTypes);
   }
 }

@@ -1,0 +1,42 @@
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import { caseTypeStyles, useCaseTypes } from '@urgp/client/entities';
+import { ClassificatorFilter } from '@urgp/client/features';
+import { cn } from '@urgp/client/shared';
+import { CasesPageSearchDto } from '@urgp/shared/entities';
+
+type CaseTypesFilterProps = {
+  variant?: 'popover' | 'checkbox';
+  className?: string;
+};
+
+const CaseTypesFilter = (props: CaseTypesFilterProps): JSX.Element => {
+  const { className, variant = 'checkbox' } = props;
+
+  const navigate = useNavigate({ from: '/control' });
+  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
+  const { data, isLoading, isFetching } = useCaseTypes();
+
+  return (
+    <ClassificatorFilter
+      label="Типы дел"
+      triggerClassName={cn('w-full', className)}
+      variant={variant}
+      isLoading={isLoading || isFetching}
+      options={data || []}
+      valueStyles={caseTypeStyles}
+      selectedValues={search.type}
+      iconClassName="size-5"
+      shortBadge
+      setSelectedValues={(values) =>
+        navigate({
+          search: {
+            ...search,
+            type: values.length > 0 ? values : undefined,
+          },
+        })
+      }
+    />
+  );
+};
+
+export { CaseTypesFilter };

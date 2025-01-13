@@ -1,9 +1,9 @@
 import { CheckIcon, PlusCircleIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
-
 import {
   Badge,
   Button,
+  Checkbox,
   cn,
   Command,
   CommandEmpty,
@@ -18,7 +18,7 @@ import {
   Separator,
   Skeleton,
 } from '@urgp/client/shared';
-import { directionCategoryStyles, StyleData } from '@urgp/client/entities';
+import { StyleData } from '@urgp/client/entities';
 
 // type MultiSelectFormFieldProps<T> = {
 //   fieldName: string;
@@ -264,6 +264,8 @@ interface ClassificatorFilterProps<TValue extends string | number>
   className?: string;
   triggerClassName?: string;
   popoverClassName?: string;
+  iconClassName?: string;
+  shortBadge?: boolean;
 }
 
 function ClassificatorFilter<TValue extends string | number>(
@@ -283,14 +285,29 @@ function ClassificatorFilter<TValue extends string | number>(
     className,
     triggerClassName,
     popoverClassName,
+    iconClassName,
+    shortBadge = false,
   } = props;
 
   const [open, setOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
 
   const flatOptions = useMemo(
     () => options.flatMap((option) => option.items),
     [options],
   );
+
+  const filteredOptions = useMemo(() => {
+    return flatOptions.filter((option) => {
+      const extendValue = (
+        option.label +
+        ' ' +
+        option.tags?.join(' ')
+      ).toLowerCase();
+      if (extendValue.includes(searchValue.toLowerCase())) return 1;
+      return 0;
+    });
+  }, [options, searchValue]);
 
   // const taggedGroups = useMemo(() => {
   //   return groups.map((group) => ({
@@ -303,20 +320,26 @@ function ClassificatorFilter<TValue extends string | number>(
   }
 
   return (
-    <div className={cn('flex items-center space-x-2', className)}>
+    <div className={cn('', className)}>
       <Popover modal={true} open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             disabled={disabled}
             variant="outline"
             size="sm"
-            className={cn('h-8 border-dashed', triggerClassName)}
+            className={cn(
+              'flex h-8 items-center justify-start border-dashed p-1',
+              triggerClassName,
+            )}
           >
             <PlusCircleIcon className="mr-2 h-4 w-4 flex-shrink-0" />
             {label}
             {selectedValues?.length > 0 && (
               <>
-                <Separator orientation="vertical" className="mx-2 h-4" />
+                <Separator
+                  orientation="vertical"
+                  className="mx-2 ml-auto h-4"
+                />
                 <Badge
                   variant="secondary"
                   className="rounded-sm px-1 font-normal lg:hidden"
@@ -324,7 +347,7 @@ function ClassificatorFilter<TValue extends string | number>(
                   {selectedValues.length}
                 </Badge>
                 <div className="hidden space-x-1 lg:flex">
-                  {selectedValues.length > 2 ? (
+                  {selectedValues.length > 2 || shortBadge ? (
                     <Badge
                       variant="secondary"
                       className="rounded-sm px-1 font-normal"
@@ -361,20 +384,59 @@ function ClassificatorFilter<TValue extends string | number>(
               return 0;
             }}
           >
-            {flatOptions.length > 3 && (
-              <CommandInput placeholder={placeholder} />
+            {flatOptions.length > 5 && (
+              <>
+                <CommandInput
+                  value={searchValue}
+                  onValueChange={setSearchValue}
+                  placeholder={placeholder}
+                  className="pl-1"
+                />
+                <Checkbox
+                  className="bg-background absolute left-3 top-3 size-5"
+                  checked={
+                    filteredOptions.every((option) =>
+                      selectedValues.includes(option.value),
+                    )
+                      ? true
+                      : selectedValues.length > 0
+                        ? 'indeterminate'
+                        : false
+                  }
+                  onClick={
+                    selectedValues.length === flatOptions.length
+                      ? () => setSelectedValues([])
+                      : () =>
+                          setSelectedValues(
+                            flatOptions
+                              .filter((option) => {
+                                const extendValue = (
+                                  option.label +
+                                  ' ' +
+                                  option.tags?.join(' ')
+                                ).toLowerCase();
+                                if (
+                                  extendValue.includes(
+                                    searchValue.toLowerCase(),
+                                  )
+                                )
+                                  return 1;
+                                return 0;
+                              })
+                              .map((option) => option.value),
+                          )
+                  }
+                />
+              </>
             )}
             <CommandList>
-              {/* {selectAllToggle && (
-                <SelectAllToggle
-                  selected={selectedValues}
-                  setSelectedValues={setSelectedValues}
-                />
-              )} */}
               <CommandEmpty>Не найдено</CommandEmpty>
               {options.map((category) => {
                 return (
-                  <CommandGroup key={category.value} heading={category.label}>
+                  <CommandGroup
+                    key={category.value}
+                    heading={options.length < 2 ? undefined : category.label}
+                  >
                     {category.items.map((option) => {
                       const isSelected = selectedValues.includes(option.value);
                       const { icon: ValueIcon, iconStyle } = valueStyles
@@ -388,6 +450,7 @@ function ClassificatorFilter<TValue extends string | number>(
                         <CommandItem
                           key={option.value}
                           keywords={option?.tags || []}
+                          className="group/command-item relative"
                           onSelect={() => {
                             if (isSelected) {
                               setSelectedValues(
@@ -403,6 +466,17 @@ function ClassificatorFilter<TValue extends string | number>(
                             }
                           }}
                         >
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            className="bg-accent text-muted-foreground hover:text-foreground absolute right-0 top-1/2 h-6 -translate-y-1/2 px-2 opacity-0 group-hover/command-item:opacity-100"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedValues([option.value]);
+                            }}
+                          >
+                            только
+                          </Button>
                           <div
                             className={cn(
                               'border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border',
@@ -416,7 +490,11 @@ function ClassificatorFilter<TValue extends string | number>(
                           <span>{option.label}</span>
                           {ValueIcon && (
                             <ValueIcon
-                              className={cn('ml-auto size-3', iconStyle)}
+                              className={cn(
+                                'ml-auto',
+                                iconClassName,
+                                iconStyle,
+                              )}
                             />
                           )}
                         </CommandItem>
@@ -426,7 +504,7 @@ function ClassificatorFilter<TValue extends string | number>(
                 );
               })}
               {selectedValues.length > 0 && (
-                <>
+                <div className="bg-background">
                   <CommandSeparator />
                   <CommandGroup>
                     <CommandItem
@@ -436,7 +514,7 @@ function ClassificatorFilter<TValue extends string | number>(
                       Сбросить фильтр
                     </CommandItem>
                   </CommandGroup>
-                </>
+                </div>
               )}
             </CommandList>
           </Command>

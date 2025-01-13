@@ -5,7 +5,6 @@ import {
 } from '@urgp/client/entities';
 import { ClassificatorFilter } from '@urgp/client/features';
 import {
-  Button,
   Input,
   Sidebar,
   SidebarContent,
@@ -19,6 +18,14 @@ import {
   SidebarRail,
 } from '@urgp/client/shared';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
+import { Search } from 'lucide-react';
+import { QueryFilter } from './filterInputs/QueryFilter';
+import { DirectionsFilter } from './filterInputs/DirectionsFilter';
+import { CaseTypesFilter } from './filterInputs/CaseTypesFilter';
+import { StatusFilter } from './filterInputs/StatusFilter';
+import { ResetFilter } from './filterInputs/ResetFilter';
+import { DepartmentsFilter } from './filterInputs/DepartmentsFilter';
+import { NumberFilter } from './filterInputs/NumberFilter';
 
 type ControlSidebarProps = {
   side?: 'left' | 'right';
@@ -27,15 +34,6 @@ type ControlSidebarProps = {
 
 const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
   const { side = 'left', className } = props;
-
-  const navigate = useNavigate({ from: '/control' });
-  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
-  const {
-    data: directionTypes,
-    isLoading,
-    isFetching,
-  } = useCaseDirectionTypes();
-
   return (
     <Sidebar
       collapsible="offcanvas"
@@ -52,31 +50,22 @@ const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
         <SidebarGroup>
           <SidebarGroupLabel>Условия поиска</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              <ClassificatorFilter
-                label="Направления"
-                triggerClassName="w-full"
-                disabled={isLoading || isFetching}
-                isLoading={isLoading || isFetching}
-                options={directionTypes || []}
-                categoryStyles={directionCategoryStyles}
-                selectedValues={search.direction}
-                setSelectedValues={(directions) =>
-                  navigate({
-                    search: {
-                      ...search,
-                      direction: directions.length > 0 ? directions : undefined,
-                    },
-                  })
-                }
-              />
+            <SidebarMenu className="gap-2">
+              <QueryFilter className="h-8" />
+              <NumberFilter className="h-8" />
+              <DepartmentsFilter variant="checkbox" />
+              <DirectionsFilter variant="checkbox" />
+              <CaseTypesFilter variant="checkbox" />
+              <StatusFilter variant="checkbox" />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuItem></SidebarMenuItem>
+          <SidebarMenuItem>
+            <ResetFilter className="w-full" />
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
       <SidebarRail />

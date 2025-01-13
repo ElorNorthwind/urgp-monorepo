@@ -8,6 +8,7 @@ import {
   UserControlApprovers,
   ControlOperationClass,
   SelectOption,
+  NestedClassificatorInfoString,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -56,5 +57,9 @@ export class ControlClassificatorsService {
 
   public async getCaseDirectionTypes(): Promise<NestedClassificatorInfo[]> {
     return this.dbServise.db.controlClassificators.readCaseDirectionTypes();
+  }
+
+  public async getDepartmentTypes(): Promise<NestedClassificatorInfoString[]> {
+    return this.dbServise.db.controlClassificators.readDepartmentTypes();
   }
 }
