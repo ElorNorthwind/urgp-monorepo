@@ -22,7 +22,7 @@ const DirectionsFilter = (props: DirectionsFilterProps): JSX.Element => {
   return (
     <ClassificatorFilter
       label="Направления"
-      triggerClassName={cn('w-full', className)}
+      className={cn('w-full', className)}
       variant={variant}
       isLoading={isLoading || isFetching}
       options={data || []}

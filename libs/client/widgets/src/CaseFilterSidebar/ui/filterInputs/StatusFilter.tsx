@@ -24,7 +24,7 @@ const StatusFilter = (props: StatusFilterProps): JSX.Element => {
   return (
     <ClassificatorFilter
       label="Статусы"
-      triggerClassName={cn('w-full', className)}
+      className={cn('w-full', className)}
       variant={variant}
       isLoading={isLoading || isFetching}
       options={data || []}

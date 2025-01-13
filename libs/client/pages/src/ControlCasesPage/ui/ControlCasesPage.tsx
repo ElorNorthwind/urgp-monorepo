@@ -87,12 +87,9 @@ const ControlCasesPage = (): JSX.Element => {
 
   return (
     <TooltipProvider delayDuration={50}>
-      <CaseFilterSidebar
-        side="left"
-        className={`left-[${NAVBAR_WIDTH}] z-10`}
-      />
+      <CaseFilterSidebar side="left" className={`left-[${NAVBAR_WIDTH}]`} />
       <SidebarInset className="overflow-hidden">
-        <main className="h-screen flex-col flex-wrap">
+        <main className=" h-screen flex-col flex-wrap">
           <CasesPageHeader total={cases?.length} filtered={filtered.length} />
           <VirtualDataTable
             setSelectedRows={setSelected}

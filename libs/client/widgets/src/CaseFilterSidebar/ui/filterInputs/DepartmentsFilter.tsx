@@ -24,7 +24,7 @@ const DepartmentsFilter = (props: DepartmentsFilterProps): JSX.Element => {
   return (
     <ClassificatorFilter<string>
       label="Управления"
-      triggerClassName={cn('w-full', className)}
+      className={cn('w-full', className)}
       variant={variant}
       isLoading={isLoading || isFetching}
       options={data || []}
