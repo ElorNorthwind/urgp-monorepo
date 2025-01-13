@@ -16,7 +16,7 @@ import {
   useUserAbility,
 } from '@urgp/client/shared';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
-import { Settings2, SquarePlus } from 'lucide-react';
+import { Search, Settings2, SquarePlus } from 'lucide-react';
 type CasePageHeaderProps = {
   total?: number;
   filtered?: number;
@@ -62,7 +62,8 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
       <Input
         type="search"
         placeholder="Поиск..."
-        className="ml-auto h-8 w-40 px-2 transition-all duration-200 ease-linear focus:w-full lg:px-3"
+        leading={<Search className="size-4" />}
+        className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full"
         value={search?.query || ''}
         onChange={(event) =>
           navigate({
