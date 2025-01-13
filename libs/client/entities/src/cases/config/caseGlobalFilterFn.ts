@@ -1,9 +1,4 @@
-import {
-  CasesPageSearchDto,
-  Case,
-  GetOldBuldingsDto,
-  OldBuilding,
-} from '@urgp/shared/entities';
+import { CasesPageSearchDto, Case } from '@urgp/shared/entities';
 import { Row } from '@tanstack/react-table';
 import { toDate } from 'date-fns';
 
@@ -12,8 +7,10 @@ export function caseGlobalFilterFn(
   columnId: string,
   filterValue: CasesPageSearchDto,
 ): boolean {
-  const { query } = filterValue;
+  const { query, num, status, direction, type, department, dueFrom, dueTo } =
+    filterValue;
   let allowed = true;
+
   if (
     query &&
     !(
@@ -21,52 +18,62 @@ export function caseGlobalFilterFn(
         ?.toLowerCase()
         .includes(query.toLowerCase()) ||
       row.original.payload.fio?.toLowerCase().includes(query.toLowerCase()) ||
-      row.original.payload.adress?.toLowerCase().includes(query.toLowerCase())
+      row.original.payload.adress
+        ?.toLowerCase()
+        .includes(query.toLowerCase()) ||
+      row.original.payload.externalCases
+        .reduce((prev, cur) => {
+          return prev + ' ' + cur.num;
+        }, '')
+        .toLowerCase()
+        .includes(query.toLowerCase())
     )
   ) {
     allowed = false;
   }
-  // if (okrugs && !okrugs.includes(row.original.okrug)) allowed = false;
-  // if (districts && !districts.includes(row.original.district)) allowed = false;
-  // if (relocationType && !relocationType.includes(row.original.relocationTypeId))
-  //   allowed = false;
-  // if (deviation && !deviation.includes(row.original.buildingDeviation))
-  //   allowed = false;
-  // if (
-  //   relocationAge &&
-  //   !relocationAge.includes(row.original.buildingRelocationStartAge)
-  // )
-  //   allowed = false;
-  // if (
-  //   relocationStatus &&
-  //   !relocationStatus.includes(row.original.buildingRelocationStatus)
-  // )
-  //   allowed = false;
-  // if (
-  //   adress &&
-  //   !row.original.adress
-  //     .toLocaleLowerCase()
-  //     .includes(adress.toLocaleLowerCase())
-  // )
-  //   allowed = false;
-
-  // if (
-  //   startFrom &&
-  //   !(
-  //     toDate(row?.original?.terms?.plan?.firstResetlementStart ?? 0) >=
-  //     toDate(startFrom)
-  //   )
-  // )
-  //   allowed = false;
-
-  // if (
-  //   startTo &&
-  //   !(
-  //     toDate(row?.original?.terms?.plan?.firstResetlementStart ?? 0) <=
-  //     toDate(startTo)
-  //   )
-  // )
-  //   allowed = false;
-
+  if (
+    num &&
+    !row.original.payload.externalCases
+      .reduce((prev, cur) => {
+        return prev + ' ' + cur.num;
+      }, '')
+      .toLowerCase()
+      .includes(num.toLowerCase())
+  ) {
+    allowed = false;
+  }
+  if (status && !status.includes(row.original?.status?.id)) {
+    allowed = false;
+  }
+  if (type && !type.includes(row.original?.payload?.type?.id)) {
+    allowed = false;
+  }
+  if (
+    direction &&
+    row.original?.payload?.directions.filter((d) => direction.includes(d.id))
+      .length === 0
+  ) {
+    allowed = false;
+  }
+  if (
+    department &&
+    row.original?.payload?.directions.filter((d) =>
+      department.includes(d.category || '-'),
+    ).length === 0
+  ) {
+    allowed = false;
+  }
+  if (
+    dueFrom &&
+    !(toDate(row?.original?.dispatches?.[0]?.dueDate ?? 0) >= toDate(dueFrom))
+  ) {
+    allowed = false;
+  }
+  if (
+    dueTo &&
+    !(toDate(row?.original?.dispatches?.[0]?.dueDate ?? 0) <= toDate(dueTo))
+  ) {
+    allowed = false;
+  }
   return allowed;
 }

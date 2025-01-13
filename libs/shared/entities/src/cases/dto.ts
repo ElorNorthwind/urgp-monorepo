@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { externalCase } from '../userInput/types';
 import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
+import { format } from 'date-fns';
 
 // создание заявки
 export const caseCreate = z.object({
@@ -56,10 +57,37 @@ export type CaseUpdateDto = z.infer<typeof caseUpdate>;
 export const caseUpdateFormValues = caseCreateFormValues.partial();
 export type CaseUpdateFormValuesDto = z.infer<typeof caseUpdateFormValues>;
 
+// Параметры поиска на странице
+const quetyNumberArray = z
+  .string()
+  .transform((value) => value.split(','))
+  .pipe(
+    z.array(
+      z
+        .string()
+        .transform((value) => Number(value))
+        .pipe(z.number()),
+    ),
+  )
+  .or(z.number().array());
+
+const queryStringArray = z
+  .string()
+  .transform((value) => value.split(','))
+  .pipe(z.string().array())
+  .or(z.string().array());
+
 export const casesPageSearch = z
   .object({
     selectedCase: z.coerce.number(),
     query: z.string(),
+    num: z.string(),
+    status: quetyNumberArray,
+    direction: quetyNumberArray,
+    type: quetyNumberArray,
+    department: queryStringArray,
+    dueFrom: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
+    dueTo: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
   })
   .partial();
 export type CasesPageSearchDto = z.infer<typeof casesPageSearch>;
