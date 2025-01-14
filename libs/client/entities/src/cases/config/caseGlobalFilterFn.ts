@@ -7,8 +7,17 @@ export function caseGlobalFilterFn(
   columnId: string,
   filterValue: CasesPageSearchDto,
 ): boolean {
-  const { query, num, status, direction, type, department, dueFrom, dueTo } =
-    filterValue;
+  const {
+    query,
+    num,
+    status,
+    direction,
+    type,
+    department,
+    viewStatus,
+    dueFrom,
+    dueTo,
+  } = filterValue;
   let allowed = true;
 
   if (
@@ -43,6 +52,9 @@ export function caseGlobalFilterFn(
     allowed = false;
   }
   if (status && !status.includes(row.original?.status?.id)) {
+    allowed = false;
+  }
+  if (viewStatus && !viewStatus.includes(row.original?.viewStatus)) {
     allowed = false;
   }
   if (type && !type.includes(row.original?.payload?.type?.id)) {

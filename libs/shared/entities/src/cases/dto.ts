@@ -88,6 +88,7 @@ export const casesPageSearch = z
     department: queryStringArray,
     dueFrom: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
     dueTo: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
+    viewStatus: z.array(z.enum(['unwatched', 'unchanged', 'new', 'changed'])),
   })
   .partial();
 export type CasesPageSearchDto = z.infer<typeof casesPageSearch>;

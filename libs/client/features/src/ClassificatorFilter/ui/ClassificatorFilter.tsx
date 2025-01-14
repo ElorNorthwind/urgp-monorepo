@@ -117,7 +117,7 @@ function ClassificatorFilter<TValue extends string | number>(
             }}
           >
             <span>{selectedValues.length}</span>
-            <X className="size-4 flex-shrink-0" />
+            <X className="ml-1 size-4 flex-shrink-0" />
           </Button>
         )}
         <AccordionTrigger>

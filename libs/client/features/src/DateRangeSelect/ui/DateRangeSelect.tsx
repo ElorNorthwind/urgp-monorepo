@@ -2,18 +2,13 @@ import { ReactNode } from '@tanstack/react-router';
 import {
   Button,
   Calendar,
-  ChartConfig,
-  ChartTooltip,
-  ChartTooltipContent,
   cn,
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@urgp/client/shared';
 import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';
-import { ReactElement, SVGProps } from 'react';
 import { DateRange } from 'react-day-picker';
 
 type DateRangeSelectProps = {
@@ -28,7 +23,7 @@ const DateRangeSelect = ({
   className,
   from,
   to,
-  label,
+  label = 'Старт',
   onSelect,
 }: DateRangeSelectProps): JSX.Element => {
   return (
@@ -44,7 +39,7 @@ const DateRangeSelect = ({
               className,
             )}
           >
-            <div className="text-muted-foreground mr-2">Старт:</div>
+            <div className="text-muted-foreground mr-2">{label + ':'}</div>
             <CalendarIcon className="mr-2 h-4 w-4" />
             {from ? (
               to ? (

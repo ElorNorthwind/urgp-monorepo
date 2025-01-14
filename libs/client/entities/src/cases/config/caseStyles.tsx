@@ -4,6 +4,7 @@ import {
   CircleAlert,
   CircleArrowUp,
   CircleCheck,
+  CircleDashed,
   CircleDivide,
   CircleFadingPlus,
   CircleHelp,
@@ -47,8 +48,16 @@ export const caseTypeStyles = {
 } as Record<number, StyleData>;
 
 export const viewStatusStyles = {
-  unwatched: { icon: Circle, iconStyle: 'hidden', badgeStyle: 'hidden' },
-  unchanged: { icon: Circle, iconStyle: 'hidden', badgeStyle: 'hidden' },
+  unwatched: {
+    icon: CircleDashed,
+    iconStyle: 'text-foreground',
+    badgeStyle: 'hidden',
+  },
+  unchanged: {
+    icon: Circle,
+    iconStyle: 'text-var(--foreground)',
+    badgeStyle: 'hidden',
+  },
   changed: {
     icon: CircleArrowUp,
     iconStyle: 'text-foreground',

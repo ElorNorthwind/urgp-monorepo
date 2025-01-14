@@ -6,7 +6,9 @@ import {
 import { ClassificatorFilter } from '@urgp/client/features';
 import {
   Accordion,
+  cn,
   Input,
+  ScrollArea,
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -27,7 +29,8 @@ import { StatusFilter } from './filterInputs/StatusFilter';
 import { ResetFilter } from './filterInputs/ResetFilter';
 import { DepartmentsFilter } from './filterInputs/DepartmentsFilter';
 import { NumberFilter } from './filterInputs/NumberFilter';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { ViewStatusFilter } from './filterInputs/ViewStatusFilter';
+import { DueDateFilter } from './filterInputs/DueDateFilter';
 
 type ControlSidebarProps = {
   side?: 'left' | 'right';
@@ -51,20 +54,20 @@ const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu className="gap-2">
-              <QueryFilter className="h-8" />
-              <NumberFilter className="h-8" />
-              <Accordion type="multiple" defaultValue={['departments']}>
-                <DepartmentsFilter variant="accordion" />
-                <StatusFilter variant="accordion" />
-                <DirectionsFilter variant="accordion" />
-                <CaseTypesFilter variant="accordion" />
-              </Accordion>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <ScrollArea className={cn('h-full')}>
+          <div className="m-3 flex h-full flex-col gap-2">
+            <QueryFilter className="h-8 flex-shrink-0" />
+            <NumberFilter className="h-8 flex-shrink-0" />
+            <DueDateFilter className="flex-shrink-0" />
+            <Accordion type="multiple" defaultValue={['departments']}>
+              <DepartmentsFilter variant="accordion" />
+              <StatusFilter variant="accordion" />
+              <DirectionsFilter variant="accordion" />
+              <CaseTypesFilter variant="accordion" />
+              <ViewStatusFilter variant="accordion" />
+            </Accordion>
+          </div>
+        </ScrollArea>
       </SidebarContent>
       <SidebarFooter className="">
         <SidebarMenu>
