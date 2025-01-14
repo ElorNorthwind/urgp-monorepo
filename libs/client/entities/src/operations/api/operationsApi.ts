@@ -229,7 +229,7 @@ export const operationsApi = rtkApi.injectEndpoints({
       },
     }),
 
-    deleteOperation: build.mutation<ControlStage, UserInputDeleteDto>({
+    deleteOperation: build.mutation<ControlOperation, UserInputDeleteDto>({
       query: (dto) => ({
         url: '/control/operation',
         method: 'DELETE',
@@ -238,10 +238,33 @@ export const operationsApi = rtkApi.injectEndpoints({
 
       async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
         const { data: deletedOperation } = await queryFulfilled;
-        deletedOperation?.caseId &&
+        deletedOperation?.class === 'stage' &&
+          deletedOperation?.caseId &&
           dispatch(
             operationsApi.util.updateQueryData(
               'getStagesByCaseId',
+              deletedOperation.caseId,
+              (draft) => {
+                return draft.filter((stage) => stage.id !== id);
+              },
+            ),
+          );
+        deletedOperation?.class === 'dispatch' &&
+          deletedOperation?.caseId &&
+          dispatch(
+            operationsApi.util.updateQueryData(
+              'getDispatchesByCaseId',
+              deletedOperation.caseId,
+              (draft) => {
+                return draft.filter((stage) => stage.id !== id);
+              },
+            ),
+          );
+        deletedOperation?.class === 'reminder' &&
+          deletedOperation?.caseId &&
+          dispatch(
+            operationsApi.util.updateQueryData(
+              'getRemindersByCaseId',
               deletedOperation.caseId,
               (draft) => {
                 return draft.filter((stage) => stage.id !== id);
