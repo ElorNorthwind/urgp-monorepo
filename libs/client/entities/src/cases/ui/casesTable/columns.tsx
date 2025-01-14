@@ -13,6 +13,7 @@ export const controlCasesColumns = [
   columnHelper.display({
     id: 'select',
     size: 40,
+    enableHiding: false,
     header: ({ table }) => (
       <Checkbox
         className="size-5"
@@ -62,6 +63,7 @@ export const controlCasesColumns = [
     header: 'Описание',
     size: 250,
     enableSorting: true,
+    enableHiding: false,
     cell: (props) => {
       return <CaseDesctiptionCell {...props} />;
     },

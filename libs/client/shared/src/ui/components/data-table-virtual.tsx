@@ -10,6 +10,7 @@ import {
   Row,
   RowSelectionState,
   useReactTable,
+  VisibilityState,
 } from '@tanstack/react-table';
 import {
   Table,
@@ -53,6 +54,8 @@ interface VirtualDataTableProps<TData, TValue> {
   setFilteredRows?: Dispatch<Row<TData>[]> | undefined;
   setSelectedRows?: Dispatch<Row<TData>[]> | undefined;
   setNeighborRows?: Dispatch<Row<TData>[]> | undefined;
+  columnVisibility?: VisibilityState;
+  // onColumnVisibilityChange?: Dispatch<VisibilityState> | undefined;
 }
 
 export function VirtualDataTable<TData, TValue>({
@@ -77,6 +80,8 @@ export function VirtualDataTable<TData, TValue>({
   variant = 'default',
   setFilteredRows,
   setSelectedRows,
+  columnVisibility,
+  // onColumnVisibilityChange,
 }: VirtualDataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -88,6 +93,9 @@ export function VirtualDataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: clientSide ? getSortedRowModel() : undefined,
     getFilteredRowModel: clientSide ? getFilteredRowModel() : undefined,
+    // onColumnVisibilityChange: onColumnVisibilityChange
+    //   ? onColumnVisibilityChange
+    //   : undefined,
     defaultColumn: {
       size: 200, //starting column size
     },
@@ -96,6 +104,7 @@ export function VirtualDataTable<TData, TValue>({
     state: {
       sorting,
       rowSelection,
+      columnVisibility,
       globalFilter: clientSide ? globalFilter : undefined,
     },
     globalFilterFn: clientSide ? globalFilterFn : undefined,

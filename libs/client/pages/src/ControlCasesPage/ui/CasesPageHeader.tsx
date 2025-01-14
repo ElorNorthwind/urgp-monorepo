@@ -1,5 +1,6 @@
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import { CreateCaseDialog, CreateStageForm } from '@urgp/client/entities';
+import { getRouteApi } from '@tanstack/react-router';
+import { CreateCaseDialog } from '@urgp/client/entities';
+import { ColumnDef, VisibilityState } from '@tanstack/react-table';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,9 +8,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  Button,
   cn,
-  Input,
   Separator,
   SidebarTrigger,
   useIsMobile,
@@ -17,15 +16,19 @@ import {
 } from '@urgp/client/shared';
 import { QueryFilter, ResetFilter } from '@urgp/client/widgets';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
-import { Settings2 } from 'lucide-react';
+import { Dispatch } from 'react';
+import { ColumnVisibilitySelector } from '@urgp/client/features';
 type CasePageHeaderProps = {
   total?: number;
   filtered?: number;
   className?: string;
+  columnVisibility?: VisibilityState;
+  setColumnVisibility?: Dispatch<VisibilityState>;
 };
 
 const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
-  const { total, filtered, className } = props;
+  const { total, filtered, className, columnVisibility, setColumnVisibility } =
+    props;
   const isMobile = useIsMobile();
   const i = useUserAbility();
 
@@ -72,9 +75,19 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
 
       <QueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
       {i.can('create', 'Case') && <CreateCaseDialog />}
-      <Button variant={'outline'} className="size-8 shrink-0 p-1">
-        <Settings2 className="size-4" />
-      </Button>
+      {setColumnVisibility && columnVisibility && (
+        <ColumnVisibilitySelector
+          columnNames={{
+            externalCases: 'Обращение',
+            desctiption: 'Описание',
+            status: 'Статус',
+            directions: 'Направления',
+            type: 'Тип проблемы',
+          }}
+          columnVisibility={columnVisibility}
+          setColumnVisibility={setColumnVisibility}
+        />
+      )}
     </header>
   );
 };

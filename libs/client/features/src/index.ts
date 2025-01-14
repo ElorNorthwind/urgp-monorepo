@@ -5,3 +5,4 @@ export * from './renderReChartStackedBar';
 export * from './DateRangeSelect';
 export * from './ResetCacheButton';
 export * from './ClassificatorFilter';
+export * from './ColumnVisibilitySelector';

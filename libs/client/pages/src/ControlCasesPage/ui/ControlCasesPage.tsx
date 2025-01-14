@@ -1,4 +1,4 @@
-import { Row } from '@tanstack/react-table';
+import { Row, VisibilityState } from '@tanstack/react-table';
 
 import {
   CaseCard,
@@ -69,29 +69,27 @@ const ControlCasesPage = (): JSX.Element => {
     }
   };
 
-  // // Adds a keyboard shortcut to navigate cases
-  // useEffect(() => {
-  //   const handleKeyDown = (event: KeyboardEvent) => {
-  //     if (event.key === 'ArrowUp' && prevCaseId) {
-  //       event.preventDefault();
-  //       onPrevCase();
-  //     }
-  //     if (event.key === 'ArrowDown' && nextCaseId) {
-  //       event.preventDefault();
-  //       onNextCase();
-  //     }
-  //   };
-  //   window.addEventListener('keydown', handleKeyDown);
-  //   return () => window.removeEventListener('keydown', handleKeyDown);
-  // }, [prevCaseId, nextCaseId, navigate]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+    controlCasesColumns
+      .filter((col) => col.enableHiding !== false)
+      .reduce((acc, cur) => {
+        return cur.id ? { ...acc, [cur.id]: true } : acc;
+      }, {}) as VisibilityState,
+  );
 
   return (
     <TooltipProvider delayDuration={50}>
       <CaseFilterSidebar side="left" className={`left-[${NAVBAR_WIDTH}]`} />
       <SidebarInset className="overflow-hidden">
         <main className=" h-screen flex-col flex-wrap">
-          <CasesPageHeader total={cases?.length} filtered={filtered.length} />
+          <CasesPageHeader
+            total={cases?.length}
+            filtered={filtered.length}
+            columnVisibility={columnVisibility}
+            setColumnVisibility={setColumnVisibility}
+          />
           <VirtualDataTable
+            columnVisibility={columnVisibility}
             setSelectedRows={setSelected}
             setFilteredRows={setFiltered}
             clientSide
