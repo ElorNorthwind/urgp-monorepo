@@ -70,7 +70,7 @@ export function defineControlAbilityFor(user: User) {
   const caseApprovers = user.controlData.approvers?.cases || [];
   const operationApprovers = user.controlData.approvers?.operations || [];
 
-  if (user.controlData.roles.includes('admin')) {
+  if (user?.controlData?.roles?.includes('admin')) {
     can('manage', 'all'); // админу по дефолту можно все
   } else {
     can(['read', 'create'], 'all'); // Все могут читать или создавать все
@@ -95,7 +95,7 @@ export function defineControlAbilityFor(user: User) {
     can('update', 'Reminder', { 'payload.observer.id': { $eq: user.id } }); // FE Можно менять свои напоминалки
   }
 
-  if (user.controlData.roles.includes('controller')) {
+  if (user?.controlData?.roles?.includes('controller')) {
     can('read-all', 'all'); // контроллер видит все
   }
 
