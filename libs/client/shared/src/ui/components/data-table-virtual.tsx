@@ -86,10 +86,8 @@ export function VirtualDataTable<TData, TValue>({
     columns,
     enableRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel:
-      clientSide && setSelectedRows ? getSortedRowModel() : undefined,
-    getFilteredRowModel:
-      clientSide && setFilteredRows ? getFilteredRowModel() : undefined,
+    getSortedRowModel: clientSide ? getSortedRowModel() : undefined,
+    getFilteredRowModel: clientSide ? getFilteredRowModel() : undefined,
     defaultColumn: {
       size: 200, //starting column size
     },

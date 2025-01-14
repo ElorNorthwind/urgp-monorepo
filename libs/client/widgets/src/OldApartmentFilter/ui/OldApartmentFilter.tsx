@@ -75,7 +75,8 @@ const OldApartmentFilter = ({
       <Input
         type="search"
         placeholder="Поиск по ФИО"
-        className="h-8 w-40 px-2 lg:px-3"
+        inputClassName="px-2 lg:px-3"
+        className="h-8 w-40"
         value={filters.fio || ''}
         onChange={(event) =>
           setFilters({

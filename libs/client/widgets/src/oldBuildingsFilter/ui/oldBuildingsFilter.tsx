@@ -43,7 +43,8 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
         <Input
           type="search"
           placeholder="Поиск по адресу"
-          className="h-8 w-40 px-2 lg:px-3"
+          inputClassName="px-2 lg:px-3"
+          className="h-8 w-40"
           value={filters.adress || ''}
           onChange={(event) =>
             setFilters({
