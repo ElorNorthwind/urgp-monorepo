@@ -13,7 +13,7 @@ const ResetFilter = (props: ResetFilterProps): JSX.Element => {
   const navigate = useNavigate({ from: '/control' });
   const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
   const paramLength = Object.keys(search).filter(
-    (key) => !['selectedCase'].includes(key),
+    (key) => !['selectedCase', 'sortKey', 'sortDir'].includes(key),
   ).length;
 
   return (
@@ -31,6 +31,8 @@ const ResetFilter = (props: ResetFilterProps): JSX.Element => {
         navigate({
           search: (prev: CasesPageSearchDto) => ({
             selectedCase: prev.selectedCase,
+            sortKey: prev.sortKey,
+            sortDir: prev.sortDir,
           }),
         })
       }

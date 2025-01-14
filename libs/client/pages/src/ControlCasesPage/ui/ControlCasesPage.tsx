@@ -114,6 +114,33 @@ const ControlCasesPage = (): JSX.Element => {
                 }),
               });
             }}
+            sorting={
+              search?.sortKey
+                ? [
+                    {
+                      id: search.sortKey,
+                      desc: search?.sortDir === 'desc',
+                    } as { id: string; desc: boolean },
+                  ]
+                : undefined
+            }
+            setSorting={(value) => {
+              value && value.length > 0
+                ? navigate({
+                    search: (prev: CasesPageSearchDto) => ({
+                      ...prev,
+                      sortKey: value[0].id,
+                      sortDir: value[0].desc ? 'desc' : 'asc',
+                    }),
+                  })
+                : navigate({
+                    search: (prev: CasesPageSearchDto) => ({
+                      ...prev,
+                      sortKey: undefined,
+                      sortDir: undefined,
+                    }),
+                  });
+            }}
           />
         </main>
       </SidebarInset>

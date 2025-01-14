@@ -80,6 +80,8 @@ const queryStringArray = z
 export const casesPageSearch = z
   .object({
     selectedCase: z.coerce.number(),
+    sortKey: z.string(),
+    sortDir: z.enum(['asc', 'desc']),
     query: z.string(),
     num: z.string(),
     status: quetyNumberArray,

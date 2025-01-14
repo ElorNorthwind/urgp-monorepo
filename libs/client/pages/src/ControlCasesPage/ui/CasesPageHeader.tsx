@@ -34,7 +34,7 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
 
   const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
   const paramLength = Object.keys(search).filter(
-    (key) => !['selectedCase'].includes(key),
+    (key) => !['selectedCase', 'sortKey', 'sortDir'].includes(key),
   ).length;
 
   return (

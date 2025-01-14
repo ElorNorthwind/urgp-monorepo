@@ -55,6 +55,12 @@ export const controlCasesColumns = [
       cell: (props) => {
         return <ExternalCasesCell {...props} />;
       },
+      sortingFn: (rowA, rowB) => {
+        const dif = (
+          rowA.original.payload?.externalCases?.[0]?.num || ''
+        ).localeCompare(rowB.original.payload?.externalCases?.[0]?.num || '');
+        return dif > 0 ? 1 : dif < 0 ? -1 : 0;
+      },
     },
   ),
 
@@ -67,6 +73,12 @@ export const controlCasesColumns = [
     cell: (props) => {
       return <CaseDesctiptionCell {...props} />;
     },
+    sortingFn: (rowA, rowB) => {
+      const dif = (rowA.original.payload?.fio || '').localeCompare(
+        rowB.original.payload?.fio || '',
+      );
+      return dif > 0 ? 1 : dif < 0 ? -1 : 0;
+    },
   }),
 
   columnHelper.accessor((row): string => 'status.name', {
@@ -76,6 +88,15 @@ export const controlCasesColumns = [
     enableSorting: true,
     cell: (props) => {
       return <CaseStatusCell {...props} />;
+    },
+    sortingFn: (rowA, rowB) => {
+      const dif1 =
+        (rowA.original?.status?.priority || 0) -
+        (rowB.original?.status?.priority || 0);
+      const dif2 = (rowA.original?.status.name || '').localeCompare(
+        rowB.original?.status.name || '',
+      );
+      return dif1 > 0 ? 1 : dif1 < 0 ? -1 : dif2 > 0 ? 1 : dif2 < 0 ? -1 : 0;
     },
   }),
 
@@ -89,6 +110,12 @@ export const controlCasesColumns = [
       cell: (props) => {
         return <DirectionCell {...props} />;
       },
+      sortingFn: (rowA, rowB) => {
+        const dif = (
+          rowA.original.payload?.directions?.[0]?.name || ''
+        ).localeCompare(rowB.original.payload?.directions?.[0]?.name || '');
+        return dif > 0 ? 1 : dif < 0 ? -1 : 0;
+      },
     },
   ),
 
@@ -99,6 +126,17 @@ export const controlCasesColumns = [
     enableSorting: true,
     cell: (props) => {
       return <CaseTypeCell {...props} />;
+    },
+    sortingFn: (rowA, rowB) => {
+      const dif = rowA.original.payload?.type?.priority;
+
+      const dif1 =
+        (rowA.original.payload?.type?.priority || 0) -
+        (rowB.original.payload?.type?.priority || 0);
+      const dif2 = (rowA.original.payload?.type?.name || '').localeCompare(
+        rowB.original.payload?.type?.name || '',
+      );
+      return dif1 > 0 ? 1 : dif1 < 0 ? -1 : dif2 > 0 ? 1 : dif2 < 0 ? -1 : 0;
     },
   }),
 ];
