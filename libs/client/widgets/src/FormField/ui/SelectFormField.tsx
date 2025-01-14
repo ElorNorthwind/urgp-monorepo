@@ -54,8 +54,10 @@ const SelectFormField = <T extends string | number>(
       name={fieldName}
       render={({ field, fieldState, formState }) => (
         <FormItem className={cn(formItemClassName, className)}>
-          {label && <FormInputLabel fieldState={fieldState} label={label} />}
-          {isLoading || !options ? (
+          {options && label && (
+            <FormInputLabel fieldState={fieldState} label={label} />
+          )}
+          {!options ? null : isLoading ? (
             <FormInputSkeleton />
           ) : (
             <Select

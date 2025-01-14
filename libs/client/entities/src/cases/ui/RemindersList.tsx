@@ -59,16 +59,13 @@ const RemindersList = (props: RemindersListProps): JSX.Element => {
                   paddingStyle,
                   index === reminders.length - 1 ? 'border-b-0' : 'border-b',
                   'bg-background',
-                  rem.payload?.doneDate
-                    ? 'col-span-1 border-r line-through'
-                    : 'col-span-2',
+                  'col-span-1 border-r line-through',
                 )}
               >
-                {'следит с ' + rem.createdAt
-                  ? format(rem.createdAt, 'dd.MM.yyyy')
-                  : '-'}
+                {'следит с ' +
+                  (rem.createdAt ? format(rem.createdAt, 'dd.MM.yyyy') : '-')}
               </div>
-              {rem.payload?.doneDate && (
+              {rem.payload?.doneDate ? (
                 <div
                   className={cn(
                     paddingStyle,
@@ -77,6 +74,17 @@ const RemindersList = (props: RemindersListProps): JSX.Element => {
                   )}
                 >
                   {'не следит с ' + format(rem.payload?.doneDate, 'dd.MM.yyyy')}
+                </div>
+              ) : (
+                <div
+                  className={cn(
+                    paddingStyle,
+                    index === reminders.length - 1 ? 'border-b-0' : 'border-b',
+                    'bg-muted-foreground/5',
+                  )}
+                >
+                  {'видел ' +
+                    format(rem.payload?.lastSeenDate, 'dd.MM.yyyy HH:mm')}
                 </div>
               )}
             </Fragment>

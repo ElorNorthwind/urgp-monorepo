@@ -89,10 +89,18 @@ export function defineControlAbilityFor(user: User) {
     cannot('update', 'all', {
       'payload.approveStatus': { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
     });
+    cannot('create', 'Dispatch');
     can('update', 'Dispatch', { 'payload.controllerId': { $eq: user.id } }); // BE Можно менять поручения, которые ты контролируешь
     can('update', 'Dispatch', { 'payload.controller.id': { $eq: user.id } }); // FE Можно менять поручения, которые ты контролируешь
     can('update', 'Reminder', { 'payload.observerId': { $eq: user.id } }); // BE Можно менять свои напоминалки
     can('update', 'Reminder', { 'payload.observer.id': { $eq: user.id } }); // FE Можно менять свои напоминалки
+  }
+
+  if (
+    user?.controlData?.roles?.includes('executor') ||
+    user?.controlData?.roles?.includes('boss')
+  ) {
+    can('create', 'Dispatch'); // начальники могут создавать поручения
   }
 
   if (user?.controlData?.roles?.includes('controller')) {

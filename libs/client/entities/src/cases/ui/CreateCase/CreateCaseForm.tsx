@@ -72,8 +72,8 @@ const CreateCaseForm = ({
           class: editCase?.class,
           typeId: editCase?.payload?.type?.id,
           externalCases: editCase?.payload?.externalCases,
-          directionIds: editCase?.payload?.directions?.map((d) => d.id),
-          problemIds: editCase?.payload?.problems?.map((p) => p.id),
+          directionIds: editCase?.payload?.directions?.map((d) => d?.id),
+          problemIds: editCase?.payload?.problems?.map((p) => p?.id),
           description: editCase?.payload?.description,
           fio: editCase?.payload?.fio,
           adress: editCase?.payload?.adress,
@@ -132,6 +132,7 @@ const CreateCaseForm = ({
 
   return (
     <Form {...form}>
+      {JSON.stringify(editCase)}
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('flex flex-col gap-4', className)}
