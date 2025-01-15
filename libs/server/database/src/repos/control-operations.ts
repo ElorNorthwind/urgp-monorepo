@@ -39,7 +39,7 @@ export class ControlOperationsRepository {
       doneDate: dto.doneDate,
       num: dto.num,
       description: dto.description,
-      approverId: dto.approverId,
+      approverId: approved ? authorId : dto.approverId,
       approveStatus: approved ? 'approved' : 'pending',
       approveDate: approved ? toDate(new Date()) : null,
       approveById: approved ? authorId : null,

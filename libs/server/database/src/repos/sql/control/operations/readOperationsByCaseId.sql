@@ -27,6 +27,9 @@ LEFT JOIN renovation.users u6 ON u6.id = (o.payload->-1->>'executorId')::integer
 LEFT JOIN renovation.users u7 ON u7.id = (o.payload->-1->>'observerId')::integer
 WHERE case_id = ${id} 
 AND (o.payload->-1->>'isDeleted')::boolean IS DISTINCT FROM true
-AND (o.payload->-1->>'approveStatus' = 'approved' OR o.author_id = ${userId} OR (o.payload->-1->>'approver')::integer = ${userId})
+AND (o.payload->-1->>'approveStatus' = ANY(ARRAY['approved', 'pending']) 
+     OR o.author_id = ${userId} 
+	 OR (o.payload->-1->>'approveById')::integer = ${userId}
+	 OR (o.payload->-1->>'approverId')::integer = ${userId}) 
 ${operationClassText:raw}
 ORDER BY (u5.control_data->>'priority')::integer DESC, (o.payload->-1->>'doneDate')::date DESC NULLS FIRST, o.created_at DESC;

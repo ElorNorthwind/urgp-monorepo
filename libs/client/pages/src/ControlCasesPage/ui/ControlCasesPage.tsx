@@ -81,7 +81,7 @@ const ControlCasesPage = (): JSX.Element => {
     <TooltipProvider delayDuration={50}>
       <CaseFilterSidebar side="left" className={`left-[${NAVBAR_WIDTH}]`} />
       <SidebarInset className="overflow-hidden">
-        <main className=" h-screen flex-col flex-wrap">
+        <main className="h-screen flex-col flex-wrap">
           <CasesPageHeader
             total={cases?.length}
             filtered={filtered.length}
@@ -95,7 +95,9 @@ const ControlCasesPage = (): JSX.Element => {
             clientSide
             globalFilter={search}
             globalFilterFn={caseGlobalFilterFn}
-            className={cn('h-full flex-1 duration-200 ease-linear')}
+            className={cn(
+              'h-[calc(100vh-3rem)] flex-1 duration-200 ease-linear',
+            )}
             columns={controlCasesColumns}
             data={cases || []}
             isFetching={isLoading || isFetching}

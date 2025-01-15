@@ -132,7 +132,6 @@ const CreateCaseForm = ({
 
   return (
     <Form {...form}>
-      {JSON.stringify(editCase)}
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('flex flex-col gap-4', className)}

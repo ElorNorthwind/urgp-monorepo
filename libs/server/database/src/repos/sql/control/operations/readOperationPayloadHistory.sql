@@ -15,12 +15,12 @@ WITH history_data AS (
 		"approveNotes" text,
 		"approveStatus" varchar,
 		-- dispatches & reminders only
-		"controllerId", integer,
-		"executorId", integer,
-		"dateDescription", text,
-		"dueDate", date,
-		"observerId", integer,
-		"lastSeenDate", timestamp with time zone
+		"controllerId" integer,
+		"executorId" integer,
+		"dateDescription" text,
+		"dueDate" date,
+		"observerId" integer,
+		"lastSeenDate" timestamp with time zone
 		) 
 	ON true
 	WHERE o.id = ${id}
