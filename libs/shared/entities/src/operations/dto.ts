@@ -60,6 +60,7 @@ export const dispatchCreate = z.object({
   dueDate: z.coerce
     .date({ message: 'Дата обязательна' })
     .or(z.number())
+    .or(z.string())
     .default(GET_DEFAULT_CONTROL_DUE_DATE()),
   description: z.string().default(''),
   controllerId: z.coerce.number().nullable().default(null),
@@ -129,6 +130,7 @@ export const reminderCreate = z.object({
   dueDate: z.coerce
     .date({ message: 'Дата обязательна' })
     .or(z.number())
+    .or(z.string())
     .default(GET_DEFAULT_CONTROL_DUE_DATE()),
 });
 export type ReminderCreateDto = z.infer<typeof reminderCreate>;

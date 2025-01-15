@@ -17,23 +17,10 @@ export const caseCreate = z.object({
   dueDate: z.coerce
     .date({ message: 'Дата обязательна' })
     .or(z.number())
+    .or(z.string())
     .default(GET_DEFAULT_CONTROL_DUE_DATE()),
 });
 export type CaseCreateDto = z.infer<typeof caseCreate>;
-
-export const caseCreateFormValues = caseCreate.pick({
-  class: true,
-  typeId: true,
-  externalCases: true,
-  directionIds: true,
-  problemIds: true,
-  description: true,
-  fio: true,
-  adress: true,
-  approverId: true,
-  dueDate: true,
-});
-export type CaseCreateFormValuesDto = z.infer<typeof caseCreateFormValues>;
 
 // изменение заявки
 export const caseUpdate = caseCreate
@@ -54,8 +41,26 @@ export const caseUpdate = caseCreate
   });
 export type CaseUpdateDto = z.infer<typeof caseUpdate>;
 
-export const caseUpdateFormValues = caseCreateFormValues.partial();
-export type CaseUpdateFormValuesDto = z.infer<typeof caseUpdateFormValues>;
+export const caseFormValuesDto = caseCreate
+  .pick({
+    class: true,
+    typeId: true,
+    externalCases: true,
+    directionIds: true,
+    problemIds: true,
+    description: true,
+    fio: true,
+    adress: true,
+    dueDate: true,
+    approverId: true,
+  })
+  .extend({
+    id: z.coerce.number().nullable().default(null),
+  });
+export type CaseFormValuesDto = z.infer<typeof caseFormValuesDto>;
+
+// export const caseUpdateFormValues = caseCreateFormValues.partial();
+// export type CaseUpdateFormValuesDto = z.infer<typeof caseUpdateFormValues>;
 
 // Параметры поиска на странице
 const quetyNumberArray = z

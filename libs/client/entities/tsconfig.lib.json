@@ -18,7 +18,8 @@
     "../widgets/src/OkrugTotalsChart/ui/OkrugTotalsChart.tsx",
     "../widgets/src/DoneTimelineChart/ui/DoneTimelineChart.tsx",
     "../widgets/src/OldBuildingCard/ui/OldBuildingCard.tsx",
-    "../features/src/MapCurve/ui/AddCurve.tsx"
+    "../features/src/MapCurve/ui/AddCurve.tsx",
+    "src/cases/ui/CreateCaseDialog"
   ],
   "exclude": [
     "vite.config.ts",

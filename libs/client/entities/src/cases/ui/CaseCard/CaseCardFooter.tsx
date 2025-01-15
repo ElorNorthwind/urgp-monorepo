@@ -1,41 +1,18 @@
-import { DialogClose, DialogDescription } from '@radix-ui/react-dialog';
-import { Separator } from '@radix-ui/react-separator';
-import { TooltipTrigger } from '@radix-ui/react-tooltip';
-import {
-  Button,
-  cn,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTrigger,
-  selectCurrentUser,
-  setEditCase,
-  Tooltip,
-  TooltipContent,
-  useUserAbility,
-} from '@urgp/client/shared';
-import { ApproveDialog, ConfirmationButton } from '@urgp/client/widgets';
+import { cn, useUserAbility } from '@urgp/client/shared';
 import { Case } from '@urgp/shared/entities';
-import { ChevronDown, Edit, ThumbsUp, Trash2, X } from 'lucide-react';
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Fragment } from 'react/jsx-runtime';
-import { CaseCardHeader } from './CaseCardHeader';
-import { useDeleteCase } from '../../api/casesApi';
-import { toast } from 'sonner';
+import {
+  ApproveCaseButton,
+  DeleteCaseButton,
+  EditCaseButton,
+} from '../CreateCaseDialog';
 
 type CaseCardFooterProps = {
   className?: string;
   controlCase: Case;
 };
 
-const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element => {
+const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element | null => {
   const { className, controlCase } = props;
-  const dispatch = useDispatch();
-  const user = useSelector(selectCurrentUser);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [deleteCase, { isLoading: isDeleteLoading }] = useDeleteCase();
-
   const i = useUserAbility();
 
   if (
@@ -44,7 +21,7 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element => {
       i.cannot('update', controlCase) &&
       i.cannot('approve', controlCase))
   ) {
-    return <Fragment />;
+    return null;
   }
 
   return (
@@ -54,87 +31,9 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element => {
         className,
       )}
     >
-      <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <DialogTrigger asChild>
-              <Button
-                disabled={isDeleteLoading || i.cannot('delete', controlCase)}
-                variant="outline"
-                role="button"
-                className="flex size-10 flex-shrink-0 flex-row gap-2 p-0"
-              >
-                <Trash2 className="size-5" />
-                {/* <span>Удалить</span> */}
-              </Button>
-            </DialogTrigger>
-          </TooltipTrigger>
-          <TooltipContent>Удалить заявку</TooltipContent>
-        </Tooltip>
-
-        <DialogContent>
-          <DialogHeader>
-            <p>Вы точно хотите удалить заявку?</p>
-          </DialogHeader>
-          <DialogDescription>
-            <CaseCardHeader controlCase={controlCase} />
-          </DialogDescription>
-          <div className="flex flex-row items-center justify-stretch gap-2">
-            <Button
-              disabled={i.cannot('update', controlCase)}
-              variant="default"
-              onClick={() => setDeleteOpen(false)}
-              className="flex-grow"
-            >
-              Отмена
-            </Button>
-            <Button
-              variant="destructive"
-              className="flex-grow"
-              onClick={() =>
-                deleteCase({ id: controlCase.id })
-                  .unwrap()
-                  .then(() => {
-                    setDeleteOpen(false);
-                    toast.success('Заявка удалена');
-                    dispatch(setEditCase(null));
-                  })
-                  .catch((rejected: any) =>
-                    toast.error('Не удалось удалить заявку', {
-                      description:
-                        rejected.data?.message || 'Неизвестная ошибка',
-                    }),
-                  )
-              }
-            >
-              Удалить
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-      <Button
-        variant="outline"
-        role="button"
-        className="flex flex-grow flex-row gap-2"
-        onClick={() => dispatch(setEditCase(controlCase))}
-      >
-        <Edit className="size-5" />
-        <span>Редактировать</span>
-      </Button>
-      {i.can('approve', controlCase) && (
-        <ApproveDialog
-          entityId={controlCase.id}
-          entityType="case"
-          displayedElement={
-            <div>
-              <CaseCardHeader controlCase={controlCase} className="rounded-t" />
-              <div className="bg-sidebar/80 max-h-50 overflow-hidden rounded-b border-t p-4">
-                {controlCase?.payload?.description}
-              </div>
-            </div>
-          }
-        />
-      )}
+      <DeleteCaseButton controlCase={controlCase} />
+      <EditCaseButton controlCase={controlCase} />
+      <ApproveCaseButton controlCase={controlCase} />
     </div>
   );
 };

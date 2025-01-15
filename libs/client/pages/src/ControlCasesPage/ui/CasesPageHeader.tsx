@@ -1,6 +1,5 @@
 import { getRouteApi } from '@tanstack/react-router';
-import { CreateCaseDialog } from '@urgp/client/entities';
-import { ColumnDef, VisibilityState } from '@tanstack/react-table';
+import { VisibilityState } from '@tanstack/react-table';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,6 +17,7 @@ import { QueryFilter, ResetFilter } from '@urgp/client/widgets';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
 import { Dispatch } from 'react';
 import { ColumnVisibilitySelector } from '@urgp/client/features';
+import { CreateCaseButton } from '@urgp/client/entities';
 type CasePageHeaderProps = {
   total?: number;
   filtered?: number;
@@ -74,7 +74,7 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
       )}
 
       <QueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
-      {i.can('create', 'Case') && <CreateCaseDialog />}
+      <CreateCaseButton />
       {setColumnVisibility && columnVisibility && (
         <ColumnVisibilitySelector
           columnNames={{

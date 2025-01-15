@@ -1,4 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
+import { CreateCaseDialog } from '@urgp/client/entities';
 import { ControlCasesPage } from '@urgp/client/pages';
 import { SidebarProvider, store, usePageMeta } from '@urgp/client/shared';
 import { ControlNavbar } from '@urgp/client/widgets';
@@ -25,6 +26,7 @@ export const Route = createFileRoute('/control')({
       <SidebarProvider cookieName="filter-sidebar" defaultOpen={false}>
         <ControlNavbar />
         <ControlCasesPage />
+        <CreateCaseDialog />
       </SidebarProvider>
     );
   },

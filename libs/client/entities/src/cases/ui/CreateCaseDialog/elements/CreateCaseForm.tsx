@@ -2,19 +2,18 @@ import {
   Button,
   cn,
   Form,
+  selectCaseFormState,
   selectCurrentUser,
-  selectEditCase,
-  setEditCase,
+  setCaseFormState,
+  setCaseFormValuesEmpty,
   Skeleton,
 } from '@urgp/client/shared';
 import {
-  Case,
-  caseCreateFormValues,
-  CaseCreateFormValuesDto,
-  GET_DEFAULT_CONTROL_DUE_DATE,
+  CaseCreateDto,
+  CaseFormValuesDto,
+  CaseUpdateDto,
 } from '@urgp/shared/entities';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import {
@@ -23,101 +22,68 @@ import {
   SelectFormField,
   TextAreaFormField,
 } from '@urgp/client/widgets';
-import { useEffect, useMemo } from 'react';
-import { useCreateCase, useUpdateCase } from '../../api/casesApi';
+import { useCreateCase, useUpdateCase } from '../../../api/casesApi';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CaseTypeSelector,
   DirectionTypeSelector,
   useCurrentUserApprovers,
-} from '../../../classificators';
+} from '../../../../classificators';
 import { ExternalCaseFieldArray } from './ExternalCaseFieldArray';
 
 type CreateCaseFormProps = {
+  form: UseFormReturn<CaseFormValuesDto, any, undefined>;
   className?: string;
   popoverMinWidth?: string;
 };
 
 const CreateCaseForm = ({
+  form,
   className,
   popoverMinWidth,
 }: CreateCaseFormProps): JSX.Element | null => {
-  const { data: approvers, isLoading: isApproversLoading } =
-    useCurrentUserApprovers();
-
-  const editCase = useSelector(selectEditCase);
+  const formState = useSelector(selectCaseFormState);
+  const isEdit = formState === 'edit';
+  const user = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
 
-  const emptyCase = useMemo(() => {
-    return !editCase || editCase === 'new'
-      ? {
-          class: 'control-incident',
-          typeId: 4,
-          externalCases: [
-            {
-              system: 'NONE',
-              num: '',
-              date: new Date(),
-            } as Case['payload']['externalCases'][0],
-          ],
-          directionIds: [],
-          problemIds: [],
-          description: '',
-          fio: '',
-          adress: '',
-          approverId: approvers?.operations?.[0].value,
-          dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
-        }
-      : caseCreateFormValues.safeParse({
-          class: editCase?.class,
-          typeId: editCase?.payload?.type?.id,
-          externalCases: editCase?.payload?.externalCases,
-          directionIds: editCase?.payload?.directions?.map((d) => d?.id),
-          problemIds: editCase?.payload?.problems?.map((p) => p?.id),
-          description: editCase?.payload?.description,
-          fio: editCase?.payload?.fio,
-          adress: editCase?.payload?.adress,
-          approverId: editCase?.payload?.approver?.id,
-        }).data;
-  }, [editCase, approvers]);
-
-  const form = useForm<CaseCreateFormValuesDto>({
-    resolver: zodResolver(caseCreateFormValues),
-    defaultValues: emptyCase,
-  });
-
-  const user = useSelector(selectCurrentUser);
   const watchApprover = form.watch('approverId');
-
-  useEffect(() => {
-    if (editCase) {
-      form.reset(emptyCase);
-    }
-  }, [editCase, form, approvers, isApproversLoading]);
 
   const [createCase, { isLoading: isCreateLoading }] = useCreateCase();
   const [updateCase, { isLoading: isUpdateLoading }] = useUpdateCase();
 
-  async function onSubmit(data: CaseCreateFormValuesDto) {
-    editCase && editCase !== 'new'
-      ? updateCase({ ...data, id: editCase?.id || 0 })
+  const { data: approvers, isLoading: isApproversLoading } =
+    useCurrentUserApprovers();
+
+  const closeAndReset = () => {
+    dispatch(setCaseFormValuesEmpty()); // Сбрасываем стейт в состояние пустого
+    dispatch(setCaseFormState('close')); // Закрываем форму (диалог)
+    // form.reset(emptyCase); // Ресетаем форму (не нужно на самом деле)
+  };
+
+  // const form = useForm<CaseCreateFormValuesDto>({
+  //   resolver: zodResolver(caseCreateFormValues),
+  //   defaultValues: emptyCase,
+  // });
+
+  async function onSubmit(data: CaseFormValuesDto) {
+    isEdit
+      ? updateCase({ ...data, class: 'control-incident' } as CaseUpdateDto)
           .unwrap()
           .then(() => {
-            form.reset(emptyCase);
             toast.success('Заявка изменена');
-            dispatch(setEditCase(null));
+            closeAndReset();
           })
           .catch((rejected: any) =>
             toast.error('Не удалось изменить заявку', {
               description: rejected.data?.message || 'Неизвестная ошибка',
             }),
           )
-      : createCase({ ...data, class: 'control-incident' })
+      : createCase({ ...data, class: 'control-incident' } as CaseCreateDto)
           .unwrap()
           .then(() => {
-            form.reset(emptyCase);
             toast.success('Заявка добавлена');
-            dispatch(setEditCase(null));
+            closeAndReset();
           })
           .catch((rejected: any) =>
             toast.error('Не удалось создать заявку', {
@@ -143,7 +109,7 @@ const CreateCaseForm = ({
           fieldName="typeId"
           popoverMinWidth={popoverMinWidth}
           // popoverMinWidth={'405px'} // oh that's not good
-          dirtyIndicator={editCase !== 'new'}
+          dirtyIndicator={isEdit}
           // className="flex-grow"
         />
 
@@ -152,7 +118,7 @@ const CreateCaseForm = ({
           label="Направления"
           placeholder="Направления работы"
           fieldName="directionIds"
-          dirtyIndicator={editCase !== 'new'}
+          dirtyIndicator={isEdit}
         />
         <ExternalCaseFieldArray form={form} fieldArrayName="externalCases" />
         <div className="flex w-full flex-row gap-2">
@@ -162,7 +128,7 @@ const CreateCaseForm = ({
             label="Заявитель"
             placeholder="ФИО заявителя"
             className="flex-grow"
-            dirtyIndicator={editCase !== 'new'}
+            dirtyIndicator={isEdit}
           />
           <InputFormField
             form={form}
@@ -170,7 +136,7 @@ const CreateCaseForm = ({
             label="Адрес"
             placeholder="Адрес заявителя"
             className="flex-grow"
-            dirtyIndicator={editCase !== 'new'}
+            dirtyIndicator={isEdit}
           />
         </div>
         <TextAreaFormField
@@ -178,18 +144,17 @@ const CreateCaseForm = ({
           fieldName={'description'}
           label="Описание"
           placeholder="Описание проблемы"
-          dirtyIndicator={editCase !== 'new'}
+          dirtyIndicator={isEdit}
         />
         <div className="flex w-full flex-row gap-2">
           <SelectFormField
             form={form}
             fieldName={'approverId'}
             options={approvers?.operations}
-            isLoading={isApproversLoading}
             label="Согласующий"
             placeholder="Выбор согласующего"
             popoverMinWidth={popoverMinWidth}
-            dirtyIndicator={editCase !== 'new'}
+            dirtyIndicator={isEdit}
             valueType="number"
             className="flex-grow"
           />
@@ -198,7 +163,7 @@ const CreateCaseForm = ({
             fieldName={'dueDate'}
             label="Срок решения"
             placeholder="Контрольный срок"
-            disabled={editCase !== 'new' || user?.id !== watchApprover}
+            disabled={isEdit || user?.id !== watchApprover}
             className={cn(
               'flex-shrink-0',
               (user?.id !== watchApprover || user?.id !== watchApprover) &&
@@ -212,10 +177,7 @@ const CreateCaseForm = ({
             type="button"
             variant={'outline'}
             disabled={isCreateLoading || isUpdateLoading}
-            onClick={() => {
-              form.reset(emptyCase);
-              dispatch(setEditCase(null));
-            }}
+            onClick={closeAndReset}
           >
             Отмена
           </Button>

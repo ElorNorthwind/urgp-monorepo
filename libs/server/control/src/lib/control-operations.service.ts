@@ -181,7 +181,7 @@ export class ControlOperationsService {
   public async createDispatchesAndReminderForCase(
     slimCase: CaseSlim,
     userId: number,
-    dueDate?: Date | number,
+    dueDate?: Date | string | number,
   ) {
     // Создаем по поручению и напоминалке на каждого из исполнителей
     const directions = await this.classificators.getCaseDirectionTypes();

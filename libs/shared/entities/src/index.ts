@@ -21,6 +21,7 @@ export * from './problems/types';
 
 export * from './cases/types';
 export * from './cases/dto';
+export * from './cases/config';
 
 export * from './operations/types';
 export * from './operations/dto';
