@@ -93,7 +93,7 @@ const DateFormField = (props: DateFormFieldProps): JSX.Element => {
                     selected={field.value}
                     onSelect={(e) => {
                       !stayOpen && setOpen(false);
-                      field.onChange(e);
+                      field.onChange(e?.toISOString());
                     }}
                     disabled={disabledDays}
                     initialFocus

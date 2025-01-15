@@ -18,5 +18,5 @@ export const emptyCase = {
   fio: '',
   adress: '',
   approverId: null,
-  dueDate: GET_DEFAULT_CONTROL_DUE_DATE().toISOString(),
+  dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
 };

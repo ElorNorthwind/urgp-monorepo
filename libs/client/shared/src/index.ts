@@ -37,7 +37,7 @@ export * from './ui/components/checkbox';
 export * from './ui/components/map';
 export * from './ui/components/sidebar';
 export * from './ui/components/breadcrumb';
-
+export * from './ui/components/alert-dialog';
 // export layouts
 export * from './ui/layouts/main';
 

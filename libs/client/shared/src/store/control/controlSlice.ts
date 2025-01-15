@@ -7,6 +7,7 @@ import {
   ControlStage,
   Case,
   emptyCase,
+  GET_DEFAULT_CONTROL_DUE_DATE,
 } from '@urgp/shared/entities';
 import { RootState } from '../store';
 
@@ -44,24 +45,31 @@ const controlSlice = createSlice({
       state.caseForm.values = emptyCase;
     },
     setCaseFormValuesFromCase: (state, { payload }: PayloadAction<Case>) => {
-      state.caseForm.values = caseFormValuesDto.safeParse({
+      state.caseForm.values = {
         id: payload?.id,
         class: payload?.class,
         typeId: payload?.payload?.type?.id,
-        externalCases: payload?.payload?.externalCases,
+        externalCases: payload?.payload?.externalCases.map((ec) => ({
+          ...ec,
+          date: new Date(ec.date).toISOString(),
+        })),
         directionIds: payload?.payload?.directions?.map((d) => d?.id),
         problemIds: payload?.payload?.problems?.map((p) => p?.id),
         description: payload?.payload?.description,
         fio: payload?.payload?.fio,
         adress: payload?.payload?.adress,
         approverId: payload?.payload?.approver?.id,
-      }).data;
+        dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
+      };
     },
     setCaseFormValuesFromDto: (
       state,
       { payload }: PayloadAction<CaseFormValuesDto & { saved?: boolean }>,
     ) => {
-      state.caseForm.values = payload; // caseFormValuesDto.safeParse(payload).data;
+      state.caseForm.values = {
+        ...payload,
+        dueDate: payload.dueDate,
+      }; // caseFormValuesDto.safeParse(payload).data;
     },
 
     setEditStage: (

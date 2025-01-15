@@ -20,7 +20,12 @@ export const externalCase = z
   .object({
     id: z.coerce.number().or(z.string()).nullable().default(null).optional(),
     num: z.string().nullable().default(null),
-    date: z.coerce.date().nullable().default(null),
+    date: z.coerce
+      .date()
+      .or(z.number())
+      .or(z.string())
+      .nullable()
+      .default(null),
     system: z.enum(['EDO', 'SPD', 'SPD2', 'HOTLINE', 'CONSULTATION', 'NONE']),
   })
   .refine(

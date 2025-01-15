@@ -61,11 +61,6 @@ const CreateCaseForm = ({
     // form.reset(emptyCase); // Ресетаем форму (не нужно на самом деле)
   };
 
-  // const form = useForm<CaseCreateFormValuesDto>({
-  //   resolver: zodResolver(caseCreateFormValues),
-  //   defaultValues: emptyCase,
-  // });
-
   async function onSubmit(data: CaseFormValuesDto) {
     isEdit
       ? updateCase({ ...data, class: 'control-incident' } as CaseUpdateDto)
