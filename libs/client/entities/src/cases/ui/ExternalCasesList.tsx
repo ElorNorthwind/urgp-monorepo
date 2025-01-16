@@ -9,9 +9,12 @@ type ExternalCasesListProps = {
   externalCases: Case['payload']['externalCases'];
 };
 
-const ExternalCasesList = (props: ExternalCasesListProps): JSX.Element => {
+const ExternalCasesList = (
+  props: ExternalCasesListProps,
+): JSX.Element | null => {
   const { className, compact = false, externalCases } = props;
 
+  if (externalCases.length === 0) return null;
   return (
     <div className="overflow-hidden rounded-lg border">
       <table className={cn('w-full border-collapse', className)}>

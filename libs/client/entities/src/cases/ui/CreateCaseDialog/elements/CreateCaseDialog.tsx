@@ -1,28 +1,22 @@
 import {
-  Button,
   cn,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   selectCaseFormState,
   selectCaseFormValues,
-  selectEditCase,
   setCaseFormState,
   setCaseFormValuesEmpty,
   setCaseFormValuesFromDto,
-  setEditCase,
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
   useIsMobile,
 } from '@urgp/client/shared';
-import { SquarePlus } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CreateCaseForm } from './CreateCaseForm';
 import { useCurrentUserApprovers } from '../../../../classificators';

@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
-  caseFormValuesDto,
   CaseFormValuesDto,
   ControlDispatch,
   ControlReminder,
@@ -16,7 +15,6 @@ type ControlState = {
   editStage: 'new' | ControlStage | null;
   editDispatch: 'new' | ControlDispatch | null;
   editReminder: 'new' | ControlReminder | null;
-  editCase: 'new' | Case | null;
   caseForm: {
     state: FormState;
     values: CaseFormValuesDto & { saved?: boolean };
@@ -27,7 +25,6 @@ const initialState: ControlState = {
   editStage: null,
   editDispatch: null,
   editReminder: null,
-  editCase: null,
   caseForm: {
     state: 'close',
     values: emptyCase,
@@ -91,9 +88,7 @@ const controlSlice = createSlice({
     ) => {
       state.editReminder = payload;
     },
-    setEditCase: (state, { payload }: PayloadAction<'new' | Case | null>) => {
-      state.editCase = payload;
-    },
+
     //   extraReducers: {},
   },
 });
@@ -109,9 +104,8 @@ export const selectCaseFormValues = (state: RootState) =>
 export const selectCaseFormState = (state: RootState) =>
   state.control.caseForm.state;
 
-export const { setEditCase, setEditStage, setEditDispatch, setEditReminder } =
+export const { setEditStage, setEditDispatch, setEditReminder } =
   controlSlice.actions;
-export const selectEditCase = (state: RootState) => state.control.editCase;
 export const selectEditStage = (state: RootState) => state.control.editStage;
 export const selectEditDispatch = (state: RootState) =>
   state.control.editDispatch;

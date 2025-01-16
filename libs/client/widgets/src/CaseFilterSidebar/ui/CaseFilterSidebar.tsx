@@ -19,9 +19,11 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarRail,
+  SidebarTrigger,
+  useSidebar,
 } from '@urgp/client/shared';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
-import { Search } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { QueryFilter } from './filterInputs/QueryFilter';
 import { DirectionsFilter } from './filterInputs/DirectionsFilter';
 import { CaseTypesFilter } from './filterInputs/CaseTypesFilter';
@@ -39,6 +41,7 @@ type ControlSidebarProps = {
 
 const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
   const { side = 'left', className } = props;
+  const { setOpen } = useSidebar();
   return (
     <Sidebar
       collapsible="offcanvas"
@@ -48,8 +51,12 @@ const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
     >
       <SidebarHeader className="bg-muted-foreground/5">
         <SidebarMenu>
-          <SidebarMenuItem className="text-foreground text-center  text-lg">
-            Фильтр таблицы дел
+          <SidebarMenuItem
+            className="text-foreground group/header flex cursor-pointer flex-row items-center justify-center gap-1 text-center text-lg"
+            onClick={() => setOpen(false)}
+          >
+            <div>Фильтр таблицы дел</div>
+            <ChevronLeft className="size-5 opacity-0 transition-opacity duration-200 group-hover/header:opacity-100" />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
