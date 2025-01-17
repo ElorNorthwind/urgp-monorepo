@@ -12,17 +12,17 @@ import {
 } from '@urgp/shared/entities';
 import { RootState } from '../store';
 
-type FormState = 'create' | 'edit' | 'close';
+export type DialogFormState = 'create' | 'edit' | 'close';
 type ControlState = {
   editStage: 'new' | ControlStage | null;
   editDispatch: 'new' | ControlDispatch | null;
   editReminder: 'new' | ControlReminder | null;
   caseForm: {
-    state: FormState;
+    state: DialogFormState;
     values: CaseFormValuesDto & { saved?: boolean };
   };
   stageForm: {
-    state: FormState;
+    state: DialogFormState;
     values: ControlStageFormValuesDto & { saved?: boolean };
   };
 };
@@ -45,7 +45,7 @@ const controlSlice = createSlice({
   name: 'control',
   initialState,
   reducers: {
-    setCaseFormState: (state, { payload }: PayloadAction<FormState>) => {
+    setCaseFormState: (state, { payload }: PayloadAction<DialogFormState>) => {
       state.caseForm.state = payload;
     },
     setCaseFormValuesEmpty: (state) => {
@@ -78,7 +78,7 @@ const controlSlice = createSlice({
         // dueDate: payload.dueDate,
       };
     },
-    setStageFormState: (state, { payload }: PayloadAction<FormState>) => {
+    setStageFormState: (state, { payload }: PayloadAction<DialogFormState>) => {
       state.stageForm.state = payload;
     },
     setStageFormCaseId: (state, { payload }: PayloadAction<number>) => {

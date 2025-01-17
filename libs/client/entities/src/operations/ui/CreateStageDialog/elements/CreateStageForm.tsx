@@ -79,7 +79,7 @@ const CreateStageForm = ({
           ...data,
           class: 'stage',
           approverId: operationTypes?.find((operation) => {
-            return operation.id === watchType;
+            return operation.id === form.getValues('typeId');
           })?.autoApprove
             ? null
             : data.approverId,
