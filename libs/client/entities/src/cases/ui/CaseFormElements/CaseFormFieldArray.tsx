@@ -12,11 +12,11 @@ import {
   CaseTypeSelector,
   DirectionTypeSelector,
   useCurrentUserApprovers,
-} from '../../../../classificators';
+} from '../../../classificators';
 import { ExternalCaseFieldArray } from './ExternalCaseFieldArray';
 import { Fragment } from 'react/jsx-runtime';
 
-const CreateCaseForm = ({
+const CaseFormFieldArray = ({
   form,
   isEdit,
   popoverMinWidth,
@@ -101,4 +101,4 @@ const CreateCaseForm = ({
   );
 };
 
-export { CreateCaseForm };
+export { CaseFormFieldArray };

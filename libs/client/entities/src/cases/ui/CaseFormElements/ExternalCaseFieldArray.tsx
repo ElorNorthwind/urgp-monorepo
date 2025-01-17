@@ -10,7 +10,7 @@ import {
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
 
 import { DateFormField, InputFormField } from '@urgp/client/widgets';
-import { ExternalCaseTypeSelector } from '../../../../classificators';
+import { ExternalCaseTypeSelector } from '../../../classificators';
 import { FilePlus, Trash2 } from 'lucide-react';
 import { TooltipTrigger } from '@radix-ui/react-tooltip';
 import { Fragment } from 'react/jsx-runtime';

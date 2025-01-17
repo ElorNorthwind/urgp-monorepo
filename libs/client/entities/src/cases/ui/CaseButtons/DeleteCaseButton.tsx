@@ -16,10 +16,10 @@ import {
 import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useDeleteCase } from '../../../api/casesApi';
 import { Case } from '@urgp/shared/entities';
-import { CaseCardHeader } from '../../CaseCard/CaseCardHeader';
 import { toast } from 'sonner';
+import { useDeleteCase } from '../../api/casesApi';
+import { CaseCardHeader } from '../CaseCard/CaseCardHeader';
 
 type DeleteCaseButtonProps = {
   controlCase: Case;

@@ -1,6 +1,6 @@
 import { useUserAbility } from '@urgp/client/shared';
 import { Case } from '@urgp/shared/entities';
-import { CaseCardHeader } from '../../CaseCard/CaseCardHeader';
+import { CaseCardHeader } from '../CaseCard/CaseCardHeader';
 import { ApproveDialog } from '@urgp/client/widgets';
 
 type ApproveCaseButtonProps = {

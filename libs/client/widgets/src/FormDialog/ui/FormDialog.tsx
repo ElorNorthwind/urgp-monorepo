@@ -10,6 +10,7 @@ import {
   DialogTitle,
   Form,
   RootState,
+  Separator,
   setStageFormState,
   Sheet,
   SheetContent,
@@ -38,6 +39,8 @@ import {
 } from '@reduxjs/toolkit';
 import { MutationDefinition } from '@reduxjs/toolkit/query';
 import { TypedUseMutation } from '@reduxjs/toolkit/dist/query/react';
+import { is } from 'date-fns/locale';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
 
 // const entitySliceFormHelpers = {
 //   stage: {
@@ -70,7 +73,7 @@ type UseAnyMutation = TypedUseMutation<
   any
 >;
 
-type CreateStageDialogProps<TDto extends FieldValues> = {
+export type FormDialogProps<TDto extends FieldValues> = {
   entityType: 'operation' | 'case';
   dto: ZodObject<TDto>;
 
@@ -100,8 +103,8 @@ type CreateStageDialogProps<TDto extends FieldValues> = {
   editDescription?: string;
 };
 
-const CreateStageDialog = <TDto extends FieldValues>(
-  props: CreateStageDialogProps<TDto>,
+const FormDialog = <TDto extends FieldValues>(
+  props: FormDialogProps<TDto>,
 ): JSX.Element | null => {
   const {
     entityType,
@@ -210,7 +213,7 @@ const CreateStageDialog = <TDto extends FieldValues>(
             );
       } else {
         formState === 'edit' && dispatch(valuesEmptyDispatch());
-        dispatch(setStageFormState('close'));
+        dispatch(stateDispatch('close'));
       }
     }
   };
@@ -222,54 +225,59 @@ const CreateStageDialog = <TDto extends FieldValues>(
   const Title = isMobile ? SheetTitle : DialogTitle;
   const Description = isMobile ? SheetDescription : DialogDescription;
 
-  <Fragment />;
   return (
     <Wrapper open={formState !== 'close'} onOpenChange={onOpenChange}>
       <Content
         style={contentStyle}
         onEscapeKeyDown={(e) => e.preventDefault()}
         className={cn(
+          'max-h-[calc(100vh-0.5rem)] overflow-y-auto', // TODO: Отрефактори со скролл эриа как белый человек йопт
           isMobile
             ? 'w-[var(--dialog-width)] max-w-[100vw] sm:w-[var(--dialog-width)] sm:max-w-[100vw]'
             : `w-[var(--dialog-width)] max-w-[calc(100vw-3rem)]`,
         )}
       >
-        <Header className="mb-2 text-left">
+        <Header className="bg-muted-foreground/5 -m-6 mb-0 px-6 py-4 text-left">
           <Title>{title}</Title>
           <Description>{subTitle}</Description>
         </Header>
         <Form {...form}>
           <form
             // onSubmit={form.handleSubmit(onSubmit as any)}
-            className={cn('flex flex-col gap-4', className)}
+            className={cn('relative flex flex-col gap-2', className)}
           >
             <FieldsArray
               isEdit={isEdit}
               form={form}
               popoverMinWidth={`calc(${dialogWidth} - 3rem)`}
             />
+            <Footer
+              className={cn(
+                'bg-muted-foreground/5 -m-6 mt-4 px-6 py-4',
+                isMobile && 'flex-shrink-0 gap-2',
+              )}
+            >
+              <Button
+                className="flex-1"
+                type="button"
+                variant={'outline'}
+                disabled={isCreateLoading || isUpdateLoading}
+                onClick={closeAndReset}
+              >
+                Отмена
+              </Button>
+              <Button
+                type="submit"
+                className="flex-1"
+                disabled={isCreateLoading || isUpdateLoading}
+                onClick={form.handleSubmit(onSubmit as any)}
+              >
+                Сохранить
+              </Button>
+            </Footer>
           </form>
         </Form>
       </Content>
-      <Footer>
-        <Button
-          className="flex-1"
-          type="button"
-          variant={'outline'}
-          disabled={isCreateLoading || isUpdateLoading}
-          onClick={closeAndReset}
-        >
-          Отмена
-        </Button>
-        <Button
-          type="submit"
-          className="flex-1"
-          disabled={isCreateLoading || isUpdateLoading}
-          onClick={form.handleSubmit(onSubmit as any)}
-        >
-          Сохранить
-        </Button>
-      </Footer>
 
       <ConfirmationAlertDialog
         title={'Сохранить изменения?'}
@@ -288,4 +296,4 @@ const CreateStageDialog = <TDto extends FieldValues>(
   );
 };
 
-export { CreateStageDialog };
+export { FormDialog };

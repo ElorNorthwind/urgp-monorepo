@@ -1,10 +1,8 @@
 import { cn, useUserAbility } from '@urgp/client/shared';
 import { Case } from '@urgp/shared/entities';
-import {
-  ApproveCaseButton,
-  DeleteCaseButton,
-  EditCaseButton,
-} from '../CreateCaseDialog';
+import { DeleteCaseButton } from '../CaseButtons/DeleteCaseButton';
+import { EditCaseButton } from '../CaseButtons/EditCaseButton';
+import { ApproveCaseButton } from '../CaseButtons/ApproveCaseButton';
 
 type CaseCardFooterProps = {
   className?: string;
