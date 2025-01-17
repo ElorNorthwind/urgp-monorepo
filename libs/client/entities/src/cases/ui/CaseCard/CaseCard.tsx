@@ -43,7 +43,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     iconStyle: '',
   };
   const { icon: StatusIcon, iconStyle: statusIconStyle } = caseStatusStyles?.[
-    controlCase?.status.id || 1
+    controlCase?.status?.id || 1
   ] || {
     icon: null,
     iconStyle: '',
@@ -84,7 +84,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
                 />
               )}
               <p className="my-auto w-full truncate text-sm">
-                {controlCase.payload.type.name}
+                {controlCase?.payload?.type?.name}
               </p>
             </div>
             <div className="bg-muted-foreground/5 border-x border-b px-2 py-1 text-right font-bold">
@@ -102,7 +102,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
                     />
                   )}
                   <p className="my-auto w-full truncate text-sm">
-                    {controlCase.status.name}
+                    {controlCase?.status?.name}
                   </p>
                 </div>
               </TooltipTrigger>
@@ -115,7 +115,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
                         : 'Согласовано: '}
                     </p>
                     <p className="font-bold">
-                      {controlCase.payload.approver.fio}
+                      {controlCase?.payload?.approver?.fio}
                     </p>
                   </>
                 )}
@@ -125,12 +125,12 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
               Тема:
             </div>
             <CaseDirectionsList
-              directions={controlCase.payload.directions}
+              directions={controlCase?.payload?.directions}
               className="col-span-3 items-center p-2"
             />
           </div>
           <ExternalCasesList
-            externalCases={controlCase.payload.externalCases}
+            externalCases={controlCase?.payload?.externalCases}
           />
         </div>
       )}
@@ -148,7 +148,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
           />
           {controlCase && (
             <AccordionContent className="bg-background rounded-t-lg border border-b-0 p-2">
-              {controlCase.payload.description}
+              {controlCase?.payload?.description}
             </AccordionContent>
           )}
         </AccordionItem>

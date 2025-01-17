@@ -9,10 +9,10 @@ import { CasesPageSearchDto, Case } from '@urgp/shared/entities';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { caseTypeStyles } from '../../../config/caseStyles';
 import { getRouteApi } from '@tanstack/react-router';
-import { ChevronLeft, Circle, MessageSquare } from 'lucide-react';
+import { ChevronLeft, MessageSquare } from 'lucide-react';
 
 function CaseTypeCell(props: CellContext<Case, string>): JSX.Element {
-  const payload = props.row.original.payload;
+  const payload = props.row.original?.payload;
   const { icon: TypeIcon, iconStyle } = caseTypeStyles?.[payload?.type?.id] || {
     icon: MessageSquare,
     iconStyle: 'text-slate-500',
@@ -25,15 +25,15 @@ function CaseTypeCell(props: CellContext<Case, string>): JSX.Element {
         <div className="flex w-full flex-row items-center justify-start gap-2">
           {TypeIcon && <TypeIcon className={cn('size-8', iconStyle)} />}
           <div className="flex flex-1 flex-col items-start justify-start truncate">
-            <div className="truncate">{payload.type.name}</div>
+            <div className="truncate">{payload?.type?.name || ''}</div>
             <div className="text-muted-foreground line-clamp-1 flex items-start justify-center gap-1 text-xs">
               Системная прорблема ...
             </div>
           </div>
-          {search.selectedCase === props.row.original.id && (
+          {search?.selectedCase === props.row.original?.id && (
             <ChevronLeft className="text-muted-foreground absolute right-0 size-8" />
           )}
-          {search.selectedCase === props.row.original.id && (
+          {search?.selectedCase === props.row.original?.id && (
             <div className="border-muted-foreground pointer-events-none absolute inset-0 border" />
           )}
         </div>

@@ -6,7 +6,7 @@ import {
 } from '@urgp/client/shared';
 import { ControlStage } from '@urgp/shared/entities';
 import { ApproveDialog } from '@urgp/client/widgets';
-import { StageItem } from '../../StagesList/StageItem';
+import { StageItem } from '../StagesList/StageItem';
 
 type ApproveStageButtonProps = {
   stage: ControlStage;

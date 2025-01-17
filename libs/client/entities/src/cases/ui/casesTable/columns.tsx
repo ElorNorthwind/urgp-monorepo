@@ -74,7 +74,7 @@ export const controlCasesColumns = [
       return <CaseDesctiptionCell {...props} />;
     },
     sortingFn: (rowA, rowB) => {
-      const dif = (rowA.original.payload?.fio || '').localeCompare(
+      const dif = (rowA.original?.payload?.fio || '').localeCompare(
         rowB.original.payload?.fio || '',
       );
       return dif > 0 ? 1 : dif < 0 ? -1 : 0;
@@ -93,8 +93,8 @@ export const controlCasesColumns = [
       const dif1 =
         (rowA.original?.status?.priority || 0) -
         (rowB.original?.status?.priority || 0);
-      const dif2 = (rowA.original?.status.name || '').localeCompare(
-        rowB.original?.status.name || '',
+      const dif2 = (rowA.original?.status?.name || '').localeCompare(
+        rowB.original?.status?.name || '',
       );
       return dif1 > 0 ? 1 : dif1 < 0 ? -1 : dif2 > 0 ? 1 : dif2 < 0 ? -1 : 0;
     },

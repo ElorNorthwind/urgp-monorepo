@@ -7,7 +7,7 @@ import {
 import { ControlStage } from '@urgp/shared/entities';
 import { toast } from 'sonner';
 import { ConfirmationButton } from '@urgp/client/widgets';
-import { useDeleteOperation } from '../../../api/operationsApi';
+import { useDeleteOperation } from '../../api/operationsApi';
 
 type DeleteStageButtonProps = {
   stage: ControlStage;

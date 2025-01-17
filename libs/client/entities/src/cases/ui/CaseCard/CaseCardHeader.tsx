@@ -25,10 +25,12 @@ const CaseCardHeader = (props: CaseCardHeaderProps): JSX.Element => {
         className,
       )}
     >
-      {controlCase && <h1 className="font-bold">{controlCase?.payload.fio}</h1>}
+      {controlCase && (
+        <h1 className="font-bold">{controlCase?.payload?.fio}</h1>
+      )}
       {controlCase && (
         <p className="border-foreground/20 text-muted-foreground h-full truncate border-l pl-2">
-          {controlCase?.payload.adress}
+          {controlCase?.payload?.adress}
         </p>
       )}
       {onClose && (

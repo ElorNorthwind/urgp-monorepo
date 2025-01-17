@@ -52,7 +52,7 @@ const CaseDirectionsList = (props: CaseDirectionsListProps): JSX.Element => {
       )}
     >
       {label && <div className="font-bold">{label}</div>}
-      {visibleDirections.map(
+      {visibleDirections?.map(
         (d) =>
           d?.id && (
             <Badge
@@ -61,7 +61,7 @@ const CaseDirectionsList = (props: CaseDirectionsListProps): JSX.Element => {
                 'text-nowrap px-1 py-0',
                 d?.category && directionCategoryStyles[d.category].badgeStyle,
               )}
-              key={d.id}
+              key={d?.id}
             >
               {d?.name && d.name}
             </Badge>

@@ -1,5 +1,5 @@
 import { cn } from '@urgp/client/shared';
-import { CreateStageButton } from './CreateStageDialog';
+import { CreateStageButton } from './StageButtons/CreateStageButton';
 
 type StagesHeaderProps = {
   caseId?: number;

@@ -12,9 +12,9 @@ import { format } from 'date-fns';
 import { ExternalCasesList } from '../../ExternalCasesList';
 
 function ExternalCasesCell(props: CellContext<Case, string>): JSX.Element {
-  const externalCases = props.row.original.payload.externalCases;
+  const externalCases = props.row.original?.payload?.externalCases;
 
-  if (externalCases === undefined || externalCases.length === 0) {
+  if (externalCases === undefined || externalCases?.length === 0) {
     return <div className="text-muted-foreground line-clamp-1">-</div>;
   }
 
@@ -22,7 +22,7 @@ function ExternalCasesCell(props: CellContext<Case, string>): JSX.Element {
     <Tooltip>
       <TooltipTrigger asChild>
         <div className="text-muted-foreground line-clamp-1 flex w-full flex-col items-start justify-start gap-0">
-          {externalCases.slice(0, 2).map((c) => (
+          {externalCases?.slice(0, 2).map((c) => (
             <div
               className={cn('w-full truncate text-nowrap')}
               key={c.num || '' + c.id || ''}
@@ -30,7 +30,7 @@ function ExternalCasesCell(props: CellContext<Case, string>): JSX.Element {
               {c.num || '-'}
             </div>
           ))}
-          {externalCases.length > 2 && <span className="">...</span>}
+          {externalCases?.length > 2 && <span className="">...</span>}
         </div>
       </TooltipTrigger>
       <TooltipPortal>

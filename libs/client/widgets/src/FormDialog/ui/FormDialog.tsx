@@ -96,6 +96,9 @@ export type FormDialogProps<TDto extends FieldValues> = {
 
   dialogWidth?: string;
   className?: string;
+  skeletonClassName?: string;
+  isLoading?: boolean;
+  displayedElement?: JSX.Element | null;
 
   createTitle?: string;
   editTitle?: string;
@@ -124,6 +127,9 @@ const FormDialog = <TDto extends FieldValues>(
     customizeUpdateValues,
     dialogWidth = '600px',
     className,
+    skeletonClassName = 'h-[35rem] w-full',
+    isLoading = false,
+    displayedElement,
     createTitle = 'Добавить запись',
     editTitle = 'Изменить запись',
     createDescription = 'Внесите данные для создания записи',
@@ -165,6 +171,7 @@ const FormDialog = <TDto extends FieldValues>(
   const closeAndReset = () => {
     dispatch(valuesEmptyDispatch()); // Сбрасываем стейт в состояние пустого
     dispatch(stateDispatch('close')); // Закрываем форму (диалог)
+    setConfirmationOpen(false);
   };
 
   async function onEdit(data: TDto) {
@@ -200,8 +207,9 @@ const FormDialog = <TDto extends FieldValues>(
   }
 
   const onOpenChange = (open: boolean) => {
+    const dirty = form.formState.isDirty;
     if (open === false) {
-      if (form.formState.isDirty) {
+      if (dirty) {
         formState === 'edit'
           ? setConfirmationOpen(true)
           : dispatch(stateDispatch('close')) &&
@@ -225,6 +233,8 @@ const FormDialog = <TDto extends FieldValues>(
   const Title = isMobile ? SheetTitle : DialogTitle;
   const Description = isMobile ? SheetDescription : DialogDescription;
 
+  if (isLoading) return <Skeleton className={skeletonClassName} />;
+
   return (
     <Wrapper open={formState !== 'close'} onOpenChange={onOpenChange}>
       <Content
@@ -241,6 +251,7 @@ const FormDialog = <TDto extends FieldValues>(
           <Title>{title}</Title>
           <Description>{subTitle}</Description>
         </Header>
+        {displayedElement}
         <Form {...form}>
           <form
             // onSubmit={form.handleSubmit(onSubmit as any)}
@@ -286,9 +297,7 @@ const FormDialog = <TDto extends FieldValues>(
         cancelText={'Сбросить'}
         open={confirmationOpen}
         setOpen={setConfirmationOpen}
-        onCancel={() => {
-          closeAndReset();
-        }}
+        onCancel={closeAndReset}
         // onConfirm={() => form.handleSubmit(onEdit as any)()}
         onConfirm={form.handleSubmit(onEdit as any)}
       />

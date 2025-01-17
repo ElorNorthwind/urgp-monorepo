@@ -13,9 +13,11 @@ import { format } from 'date-fns';
 import { CaseDispatchesList } from '../../CaseDispatchesList';
 
 function CaseStatusCell(props: CellContext<Case, string>): JSX.Element {
-  const status = props.row.original.status;
+  const status = props.row.original?.status;
   const dispatches = props.row.original?.dispatches || [];
-  const { icon: StatusIcon, iconStyle } = caseStatusStyles?.[status.id] || {
+  const { icon: StatusIcon, iconStyle } = caseStatusStyles?.[
+    status?.id || 0
+  ] || {
     icon: Circle,
     iconStyle: 'text-slate-500',
   };
@@ -42,11 +44,11 @@ function CaseStatusCell(props: CellContext<Case, string>): JSX.Element {
             />
           }
           <div className="flex flex-1 flex-col items-start justify-start truncate">
-            <div className="truncate">{status.name}</div>
+            <div className="truncate">{status?.name || ''}</div>
             <div className="text-muted-foreground">
               <span className="">
-                {dispatches.length > 0
-                  ? 'срок: ' + format(dispatches[0].dueDate, 'dd.MM.yyyy')
+                {dispatches?.length > 0
+                  ? 'срок: ' + format(dispatches?.[0]?.dueDate, 'dd.MM.yyyy')
                   : 'нет поручений'}
               </span>
             </div>

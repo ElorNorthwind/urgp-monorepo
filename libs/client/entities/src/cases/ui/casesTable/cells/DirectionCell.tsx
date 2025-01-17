@@ -1,14 +1,7 @@
 import { CellContext } from '@tanstack/react-table';
-import {
-  Badge,
-  cn,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@urgp/client/shared';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@urgp/client/shared';
 import { Case } from '@urgp/shared/entities';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
-import { directionCategoryStyles } from '../../../config/caseStyles';
 import { CaseDirectionsList } from '../../CaseDirectionsList';
 
 function DirectionCell(props: CellContext<Case, string>): JSX.Element {
@@ -17,7 +10,7 @@ function DirectionCell(props: CellContext<Case, string>): JSX.Element {
     <Tooltip>
       <TooltipTrigger>
         <CaseDirectionsList
-          directions={payload.directions}
+          directions={payload?.directions}
           variant="list"
           className="max-h-12 overflow-hidden"
           // className="bg-red-300"
@@ -26,9 +19,8 @@ function DirectionCell(props: CellContext<Case, string>): JSX.Element {
       <TooltipPortal>
         <TooltipContent side="bottom">
           <TooltipArrow />
-
           <CaseDirectionsList
-            directions={payload.directions}
+            directions={payload?.directions}
             variant="table"
             label="Направления работы:"
           />

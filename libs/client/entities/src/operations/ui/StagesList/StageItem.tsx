@@ -7,8 +7,9 @@ import {
   operationTypeStyles,
 } from '../../config/operationStyles';
 import { StagesHistory } from '../StageHistory';
-import { ApproveStageButton, DeleteStageButton } from '../CreateStageDialog';
-import { EditStageButton } from '../CreateStageDialog/elements/EditStageButton';
+import { DeleteStageButton } from '../StageButtons/DeleteStageButton';
+import { ApproveStageButton } from '../StageButtons/ApproveStageButton';
+import { EditStageButton } from '../StageButtons/EditStageButton';
 
 type StageItemProps = {
   stage: ControlStage | null;

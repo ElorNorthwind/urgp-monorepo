@@ -11,6 +11,8 @@ import { caseFormValuesDto, CaseFormValuesDto } from '@urgp/shared/entities';
 import { useCreateCase, useDeleteCase, useUpdateCase } from '../api/casesApi';
 import { FormDialog, FormDialogProps } from '@urgp/client/widgets';
 import { CaseFormFieldArray } from './CaseFormElements/CaseFormFieldArray';
+import { use } from 'passport';
+import { useSelector } from 'react-redux';
 
 type CreateCaseDialogProps = {
   className?: string;
@@ -20,8 +22,10 @@ const CreateCaseDialog = ({
   className,
 }: CreateCaseDialogProps): JSX.Element | null => {
   const { data: approvers } = useCurrentUserApprovers();
+  const isEdit = useSelector(selectCaseFormState) === 'edit';
 
   const dialogProps = {
+    isEdit,
     entityType: 'case',
     dto: caseFormValuesDto,
     valuesSelector: selectCaseFormValues,

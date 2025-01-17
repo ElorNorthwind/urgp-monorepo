@@ -31,7 +31,7 @@ export const operationsApi = rtkApi.injectEndpoints({
         dispatch(
           casesApi.util.updateQueryData('getCases', undefined, (draft) => {
             const index = draft.findIndex((stage) => stage.id === id);
-            if (!index) return draft;
+            if (!index || !id) return draft;
             return [
               ...draft.slice(0, index),
               {

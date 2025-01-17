@@ -14,7 +14,7 @@ const ExternalCasesList = (
 ): JSX.Element | null => {
   const { className, compact = false, externalCases } = props;
 
-  if (externalCases.length === 0) return null;
+  if (!externalCases || externalCases?.length === 0) return null;
   return (
     <div className="overflow-hidden rounded-lg border">
       <table className={cn('w-full border-collapse', className)}>
