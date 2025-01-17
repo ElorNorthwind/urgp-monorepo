@@ -31,13 +31,14 @@ export const operationsApi = rtkApi.injectEndpoints({
         dispatch(
           casesApi.util.updateQueryData('getCases', undefined, (draft) => {
             const index = draft.findIndex((stage) => stage.id === id);
+            if (!index) return draft;
             return [
               ...draft.slice(0, index),
               {
                 ...draft[index],
                 lastSeen: new Date().toISOString(),
                 viewStatus:
-                  draft[index].viewStatus === 'unwatched'
+                  draft[index]?.viewStatus === 'unwatched'
                     ? 'unwatched'
                     : 'unchanged',
               },

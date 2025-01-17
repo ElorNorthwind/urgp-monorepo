@@ -58,51 +58,85 @@ const DialogButton = forwardRef<
   );
 });
 
-const ApproveDialog = ({
-  entityId,
-  variant = 'default',
-  entityType = 'case',
-  displayedElement,
-  className,
-}: ApproveDialogProps): JSX.Element | null => {
-  const isMobile = useIsMobile();
-  const [open, setOpen] = useState(false);
+const ApproveDialog = forwardRef<HTMLButtonElement, ApproveDialogProps>(
+  (
+    {
+      entityId,
+      variant = 'default',
+      entityType = 'case',
+      displayedElement,
+      className,
+    }: ApproveDialogProps,
+    ref,
+  ): JSX.Element | null => {
+    const isMobile = useIsMobile();
+    const [open, setOpen] = useState(false);
 
-  const entityTitles = {
-    case: [
-      'Согласование заявки',
-      'Вынесение решения по заявке, ожидающей согласования',
-    ],
-    operation: [
-      'Согласование операции',
-      'Вынесение решения по операции, ожидающей согласования',
-    ],
-  };
+    const entityTitles = {
+      case: [
+        'Согласование заявки',
+        'Вынесение решения по заявке, ожидающей согласования',
+      ],
+      operation: [
+        'Согласование операции',
+        'Вынесение решения по операции, ожидающей согласования',
+      ],
+    };
 
-  const title = entityTitles[entityType][0] || 'Согласование';
-  const subTitle = entityTitles[entityType][1] || 'Вынести решение';
+    const title = entityTitles[entityType][0] || 'Согласование';
+    const subTitle = entityTitles[entityType][1] || 'Вынести решение';
 
-  const contentStyle = {
-    '--dialog-width': DIALOG_WIDTH,
-  } as React.CSSProperties;
+    const contentStyle = {
+      '--dialog-width': DIALOG_WIDTH,
+    } as React.CSSProperties;
 
-  if (isMobile)
+    if (isMobile)
+      return (
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <DialogButton
+              variant={variant}
+              onClick={() => setOpen(true)}
+              ref={ref}
+            />
+          </SheetTrigger>
+          <SheetContent
+            style={contentStyle}
+            onEscapeKeyDown={(e) => e.preventDefault()}
+            className={cn(
+              `w-[var(--dialog-width)] max-w-[100vw] sm:w-[var(--dialog-width)] sm:max-w-[100vw]`,
+            )}
+          >
+            <SheetHeader className="mb-2 text-left">
+              <SheetTitle>{title}</SheetTitle>
+              <SheetDescription>{subTitle}</SheetDescription>
+            </SheetHeader>
+            {displayedElement}
+            <ApproveForm
+              entityId={entityId}
+              entityType={entityType}
+              className={className}
+              onClose={() => setOpen(false)}
+              popoverMinWidth={`calc(${DIALOG_WIDTH} - 3rem)`}
+            />
+          </SheetContent>
+        </Sheet>
+      );
+
     return (
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger asChild>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
           <DialogButton variant={variant} onClick={() => setOpen(true)} />
-        </SheetTrigger>
-        <SheetContent
+        </DialogTrigger>
+        <DialogContent
           style={contentStyle}
           onEscapeKeyDown={(e) => e.preventDefault()}
-          className={cn(
-            `w-[var(--dialog-width)] max-w-[100vw] sm:w-[var(--dialog-width)] sm:max-w-[100vw]`,
-          )}
+          className={cn(`w-[var(--dialog-width)] max-w-[calc(100vw-3rem)]`)}
         >
-          <SheetHeader className="mb-2 text-left">
-            <SheetTitle>{title}</SheetTitle>
-            <SheetDescription>{subTitle}</SheetDescription>
-          </SheetHeader>
+          <DialogHeader className="mb-2 text-left">
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>{subTitle}</DialogDescription>
+          </DialogHeader>
           {displayedElement}
           <ApproveForm
             entityId={entityId}
@@ -111,35 +145,10 @@ const ApproveDialog = ({
             onClose={() => setOpen(false)}
             popoverMinWidth={`calc(${DIALOG_WIDTH} - 3rem)`}
           />
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
     );
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <DialogButton variant={variant} onClick={() => setOpen(true)} />
-      </DialogTrigger>
-      <DialogContent
-        style={contentStyle}
-        onEscapeKeyDown={(e) => e.preventDefault()}
-        className={cn(`w-[var(--dialog-width)] max-w-[calc(100vw-3rem)]`)}
-      >
-        <DialogHeader className="mb-2 text-left">
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{subTitle}</DialogDescription>
-        </DialogHeader>
-        {displayedElement}
-        <ApproveForm
-          entityId={entityId}
-          entityType={entityType}
-          className={className}
-          onClose={() => setOpen(false)}
-          popoverMinWidth={`calc(${DIALOG_WIDTH} - 3rem)`}
-        />
-      </DialogContent>
-    </Dialog>
-  );
-};
+  },
+);
 
 export { ApproveDialog };

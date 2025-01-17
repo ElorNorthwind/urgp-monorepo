@@ -25,4 +25,6 @@ export * from './cases/config';
 
 export * from './operations/types';
 export * from './operations/dto';
+export * from './operations/config';
+
 export * from './users/ability';

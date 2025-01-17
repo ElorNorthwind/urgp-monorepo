@@ -7,6 +7,8 @@ import {
   Case,
   emptyCase,
   GET_DEFAULT_CONTROL_DUE_DATE,
+  ControlStageFormValuesDto,
+  emptyStage,
 } from '@urgp/shared/entities';
 import { RootState } from '../store';
 
@@ -19,6 +21,10 @@ type ControlState = {
     state: FormState;
     values: CaseFormValuesDto & { saved?: boolean };
   };
+  stageForm: {
+    state: FormState;
+    values: ControlStageFormValuesDto & { saved?: boolean };
+  };
 };
 
 const initialState: ControlState = {
@@ -28,6 +34,10 @@ const initialState: ControlState = {
   caseForm: {
     state: 'close',
     values: emptyCase,
+  },
+  stageForm: {
+    state: 'close',
+    values: emptyStage,
   },
 };
 
@@ -65,8 +75,44 @@ const controlSlice = createSlice({
     ) => {
       state.caseForm.values = {
         ...payload,
-        dueDate: payload.dueDate,
-      }; // caseFormValuesDto.safeParse(payload).data;
+        // dueDate: payload.dueDate,
+      };
+    },
+    setStageFormState: (state, { payload }: PayloadAction<FormState>) => {
+      state.stageForm.state = payload;
+    },
+    setStageFormCaseId: (state, { payload }: PayloadAction<number>) => {
+      state.stageForm.values.caseId = payload;
+    },
+    setStageFormValuesEmpty: (state) => {
+      state.stageForm.values = emptyStage;
+    },
+    setStageFormValuesFromStage: (
+      state,
+      { payload }: PayloadAction<ControlStage>,
+    ) => {
+      state.stageForm.values = {
+        id: payload?.id,
+        caseId: payload?.caseId,
+        class: payload?.class,
+        typeId: payload?.payload?.type?.id,
+        doneDate: payload?.payload?.doneDate,
+        num: payload?.payload?.num,
+        description: payload?.payload?.description,
+        approverId: payload?.payload?.approver?.id,
+      };
+    },
+
+    setStageFormValuesFromDto: (
+      state,
+      {
+        payload,
+      }: PayloadAction<ControlStageFormValuesDto & { saved?: boolean }>,
+    ) => {
+      state.stageForm.values = {
+        ...payload,
+        // dueDate: payload.dueDate,
+      };
     },
 
     setEditStage: (
@@ -103,6 +149,18 @@ export const selectCaseFormValues = (state: RootState) =>
   state.control.caseForm.values;
 export const selectCaseFormState = (state: RootState) =>
   state.control.caseForm.state;
+
+export const {
+  setStageFormState,
+  setStageFormCaseId,
+  setStageFormValuesEmpty,
+  setStageFormValuesFromStage,
+  setStageFormValuesFromDto,
+} = controlSlice.actions;
+export const selectStageFormValues = (state: RootState) =>
+  state.control.stageForm.values;
+export const selectStageFormState = (state: RootState) =>
+  state.control.stageForm.state;
 
 export const { setEditStage, setEditDispatch, setEditReminder } =
   controlSlice.actions;

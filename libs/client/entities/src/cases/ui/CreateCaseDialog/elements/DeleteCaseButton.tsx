@@ -66,7 +66,7 @@ const DeleteCaseButton = ({
         <DialogDescription>
           <CaseCardHeader controlCase={controlCase} />
         </DialogDescription>
-        <div className="flex flex-row items-center justify-stretch gap-2">
+        <p className="flex flex-row items-center justify-stretch gap-2">
           <Button
             disabled={i.cannot('update', controlCase)}
             variant="default"
@@ -96,7 +96,7 @@ const DeleteCaseButton = ({
           >
             Удалить
           </Button>
-        </div>
+        </p>
       </DialogContent>
     </Dialog>
   );

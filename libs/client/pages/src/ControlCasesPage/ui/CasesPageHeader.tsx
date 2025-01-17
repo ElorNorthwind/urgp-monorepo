@@ -73,8 +73,10 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
         </>
       )}
 
-      <QueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
-      <CreateCaseButton />
+      {!isMobile && (
+        <QueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
+      )}
+      <CreateCaseButton className={isMobile ? 'ml-auto' : ''} />
       {setColumnVisibility && columnVisibility && (
         <ColumnVisibilitySelector
           columnNames={{

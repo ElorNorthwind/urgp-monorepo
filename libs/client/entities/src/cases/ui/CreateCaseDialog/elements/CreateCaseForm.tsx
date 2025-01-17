@@ -30,6 +30,7 @@ import {
   useCurrentUserApprovers,
 } from '../../../../classificators';
 import { ExternalCaseFieldArray } from './ExternalCaseFieldArray';
+import { DeleteCaseButton } from './DeleteCaseButton';
 
 type CreateCaseFormProps = {
   form: UseFormReturn<CaseFormValuesDto, any, undefined>;

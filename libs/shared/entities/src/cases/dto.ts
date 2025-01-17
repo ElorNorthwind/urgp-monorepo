@@ -17,7 +17,7 @@ export const caseCreate = z.object({
   dueDate: z.coerce
     .date({ message: 'Дата обязательна' })
     .or(z.number())
-    .or(z.string())
+    .or(z.string().date())
     .default(GET_DEFAULT_CONTROL_DUE_DATE()),
 });
 export type CaseCreateDto = z.infer<typeof caseCreate>;

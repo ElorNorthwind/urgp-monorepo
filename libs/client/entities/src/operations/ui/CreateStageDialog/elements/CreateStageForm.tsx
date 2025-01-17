@@ -3,46 +3,46 @@ import {
   cn,
   Form,
   selectCurrentUser,
-  selectEditStage,
-  selectUserApprovers,
-  setEditStage,
+  selectStageFormState,
+  selectStageFormValues,
+  setStageFormState,
+  setStageFormValuesEmpty,
   Skeleton,
 } from '@urgp/client/shared';
-import {
-  controlStageCreateFormValues,
-  ControlStageCreateFormValuesDto,
-} from '@urgp/shared/entities';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+
+import { UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
   useCreateControlStage,
+  useStages,
   useUpdateControlStage,
-} from '../../api/operationsApi';
+} from '../../../api/operationsApi';
 import {
   OperationTypeSelector,
   useCurrentUserApprovers,
-  useCurrentUserData,
   useOperationTypesFlat,
-} from '../../../classificators';
+} from '../../../../classificators';
 import {
   DateFormField,
   InputFormField,
   SelectFormField,
   TextAreaFormField,
 } from '@urgp/client/widgets';
-import { useEffect, useMemo } from 'react';
-import { StageHistoryItem } from '../StagesList/StageHistoryItem';
+import { StageHistoryItem } from '../../StagesList/StageHistoryItem';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+  ControlStageFormValuesDto,
+  ControlStageUpdateDto,
+} from '@urgp/shared/entities';
 
 type CreateStageFormProps = {
-  caseId: number;
+  form: UseFormReturn<ControlStageFormValuesDto, any, undefined>;
   className?: string;
   popoverMinWidth?: string;
 };
 
 const CreateStageForm = ({
-  caseId,
+  form,
   className,
   popoverMinWidth,
 }: CreateStageFormProps): JSX.Element | null => {
@@ -50,77 +50,55 @@ const CreateStageForm = ({
     useOperationTypesFlat();
   const { data: approvers, isLoading: isApproversLoading } =
     useCurrentUserApprovers();
-  const editStage = useSelector(selectEditStage);
+
+  const formState = useSelector(selectStageFormState);
+  const isEdit = formState === 'edit';
+  const initialValues = useSelector(selectStageFormValues);
+  const { data: stages, isLoading: isStagesLoading } = useStages(
+    initialValues?.id || 0,
+    { skip: !isEdit || !initialValues?.id },
+  );
+  const editStage = stages?.find((stage) => stage.id === initialValues?.id);
+
+  const user = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
 
-  const emptyStage = useMemo(() => {
-    return !editStage || editStage === 'new'
-      ? {
-          typeId: 6,
-          doneDate: new Date().setHours(0, 0, 0, 0),
-          num: '',
-          description: '',
-          approverId: approvers?.operations?.[0]?.value,
-        }
-      : controlStageCreateFormValues.safeParse({
-          typeId: editStage?.payload?.type?.id,
-          doneDate: editStage?.payload?.doneDate,
-          num: editStage?.payload?.num?.toString(),
-          description: editStage?.payload?.description?.toString(),
-          approverId: editStage?.payload?.approver?.id,
-        }).data;
-  }, [editStage, approvers]);
-
-  const form = useForm<ControlStageCreateFormValuesDto>({
-    resolver: zodResolver(controlStageCreateFormValues),
-    defaultValues: emptyStage,
-  });
-
-  useEffect(() => {
-    if (editStage) {
-      form.reset(emptyStage);
-    }
-  }, [editStage, form]);
-
   const watchType = form.watch('typeId');
-
-  useEffect(() => {
-    if (
-      operationTypes?.find((operation) => {
-        return operation.id === watchType;
-      })?.autoApprove
-    ) {
-      form.unregister('approverId');
-    } else {
-      form.register('approverId');
-      approvers?.operations?.[0]?.value &&
-        form.setValue('approverId', approvers?.operations?.[0]?.value);
-    }
-  }, [form.register, form.unregister, watchType]);
 
   const [createStage, { isLoading: isCreateLoading }] = useCreateControlStage();
   const [updateStage, { isLoading: isUpdateLoading }] = useUpdateControlStage();
 
-  async function onSubmit(data: ControlStageCreateFormValuesDto) {
-    editStage && editStage !== 'new'
-      ? updateStage({ ...data, id: editStage?.id || 0, typeId: undefined })
+  const closeAndReset = () => {
+    dispatch(setStageFormValuesEmpty()); // Сбрасываем стейт в состояние пустого
+    dispatch(setStageFormState('close')); // Закрываем форму (диалог)
+  };
+
+  async function onSubmit(data: ControlStageFormValuesDto) {
+    isEdit
+      ? updateStage({
+          ...data,
+          class: 'stage',
+          approverId: operationTypes?.find((operation) => {
+            return operation.id === watchType;
+          })?.autoApprove
+            ? null
+            : data.approverId,
+        } as ControlStageUpdateDto)
           .unwrap()
           .then(() => {
-            form.reset(emptyStage);
             toast.success('Этап изменен');
-            dispatch(setEditStage(null));
+            closeAndReset();
           })
           .catch((rejected: any) =>
             toast.error('Не удалось изменить этап', {
               description: rejected.data?.message || 'Неизвестная ошибка',
             }),
           )
-      : createStage({ ...data, caseId, class: 'stage' })
+      : createStage({ ...data, class: 'stage' })
           .unwrap()
           .then(() => {
-            form.reset(emptyStage);
             toast.success('Этап добавлен');
-            dispatch(setEditStage(null));
+            closeAndReset();
           })
           .catch((rejected: any) =>
             toast.error('Не удалось создать этап', {
@@ -135,22 +113,25 @@ const CreateStageForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('flex flex-col gap-4', className)}
       >
-        {editStage && editStage !== 'new' && (
-          <StageHistoryItem
-            item={{
-              ...editStage.payload,
-              class: editStage.class,
-              id: editStage.id,
-              caseId: editStage.caseId || 0,
-            }}
-            className="bg-amber-50"
-          />
-        )}
+        {isEdit &&
+          (isStagesLoading ? (
+            <Skeleton />
+          ) : editStage ? (
+            <StageHistoryItem
+              item={{
+                ...editStage.payload,
+                class: editStage.class,
+                id: editStage.id,
+                caseId: editStage.caseId || 0,
+              }}
+              className="bg-amber-50"
+            />
+          ) : null)}
         <OperationTypeSelector
           form={form}
           fieldName={'typeId'}
           popoverMinWidth={popoverMinWidth}
-          disabled={editStage !== 'new'}
+          disabled={isEdit}
         />
         <div className="flex w-full flex-row gap-4">
           <DateFormField
@@ -159,7 +140,7 @@ const CreateStageForm = ({
             label="Дата"
             placeholder="Дата документа"
             className="flex-shrink-0"
-            dirtyIndicator={editStage !== 'new'}
+            dirtyIndicator={isEdit}
           />
           <InputFormField
             form={form}
@@ -167,7 +148,7 @@ const CreateStageForm = ({
             label="Номер"
             placeholder="Номер документа"
             className="flex-grow"
-            dirtyIndicator={editStage !== 'new'}
+            dirtyIndicator={isEdit}
           />
         </div>
         <TextAreaFormField
@@ -175,7 +156,7 @@ const CreateStageForm = ({
           fieldName={'description'}
           label="Описание"
           placeholder="Описание операции"
-          dirtyIndicator={editStage !== 'new'}
+          dirtyIndicator={isEdit}
         />
         <SelectFormField
           form={form}
@@ -185,7 +166,7 @@ const CreateStageForm = ({
           label="Согласующий"
           placeholder="Выбор согласующего"
           popoverMinWidth={popoverMinWidth}
-          dirtyIndicator={editStage !== 'new'}
+          dirtyIndicator={isEdit}
           className={cn(
             operationTypes?.find((operation) => {
               return operation.id === watchType;
@@ -199,10 +180,7 @@ const CreateStageForm = ({
             type="button"
             variant={'outline'}
             disabled={isCreateLoading || isUpdateLoading}
-            onClick={() => {
-              form.reset(emptyStage);
-              dispatch(setEditStage(null));
-            }}
+            onClick={closeAndReset}
           >
             Отмена
           </Button>

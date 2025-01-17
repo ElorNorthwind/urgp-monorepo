@@ -6,7 +6,7 @@ import {
   CollapsibleTrigger,
 } from '@urgp/client/shared';
 import { Trash, X, Check, LucideProps } from 'lucide-react';
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 
 type ConfirmationButtonProps = {
   onAccept: () => void;
@@ -17,53 +17,66 @@ type ConfirmationButtonProps = {
   className?: string;
   label?: string;
 };
-const ConfirmationButton = ({
-  onAccept,
-  disabled = false,
-  className,
-  Icon,
-  label,
-}: ConfirmationButtonProps): JSX.Element => {
-  const [isOpen, setIsOpen] = useState(false);
+const ConfirmationButton = forwardRef<
+  HTMLButtonElement,
+  ConfirmationButtonProps
+>(
+  (
+    {
+      onAccept,
+      disabled = false,
+      className,
+      Icon,
+      label,
+    }: ConfirmationButtonProps,
+    ref,
+  ): JSX.Element => {
+    const [isOpen, setIsOpen] = useState(false);
 
-  return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="">
-      {!isOpen && (
-        <CollapsibleTrigger asChild>
+    return (
+      <Collapsible open={isOpen} onOpenChange={setIsOpen} className="">
+        {!isOpen && (
+          <CollapsibleTrigger asChild>
+            <Button
+              ref={ref}
+              variant="ghost"
+              className={cn('size-6 rounded-full p-1', className)}
+              disabled={disabled}
+            >
+              {Icon ? (
+                <Icon className="size-4" />
+              ) : (
+                <Trash className="size-4" />
+              )}
+            </Button>
+          </CollapsibleTrigger>
+        )}
+
+        <CollapsibleContent className="flex flex-row items-center space-x-1">
           <Button
             variant="ghost"
             className={cn('size-6 rounded-full p-1', className)}
             disabled={disabled}
+            onClick={() => {
+              setIsOpen(false);
+              onAccept && onAccept();
+            }}
           >
-            {Icon ? <Icon className="size-4" /> : <Trash className="size-4" />}
+            <Check className={cn('size-6 text-rose-500 transition')} />
           </Button>
-        </CollapsibleTrigger>
-      )}
-
-      <CollapsibleContent className="flex flex-row items-center space-x-1">
-        <Button
-          variant="ghost"
-          className={cn('size-6 rounded-full p-1', className)}
-          disabled={disabled}
-          onClick={() => {
-            setIsOpen(false);
-            onAccept && onAccept();
-          }}
-        >
-          <Check className={cn('size-6 text-rose-500 transition')} />
-        </Button>
-        {label && <span className="text-md font-normal">{label}</span>}
-        <Button
-          variant="ghost"
-          className={cn('size-6 rounded-full p-1', className)}
-          disabled={disabled}
-          onClick={() => setIsOpen(false)}
-        >
-          <X className="size-4" />
-        </Button>
-      </CollapsibleContent>
-    </Collapsible>
-  );
-};
+          {label && <span className="text-md font-normal">{label}</span>}
+          <Button
+            variant="ghost"
+            className={cn('size-6 rounded-full p-1', className)}
+            disabled={disabled}
+            onClick={() => setIsOpen(false)}
+          >
+            <X className="size-4" />
+          </Button>
+        </CollapsibleContent>
+      </Collapsible>
+    );
+  },
+);
 
 export { ConfirmationButton };

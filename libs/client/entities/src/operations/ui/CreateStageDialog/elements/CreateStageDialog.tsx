@@ -5,11 +5,11 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  selectCaseFormState,
-  selectCaseFormValues,
-  setCaseFormState,
-  setCaseFormValuesEmpty,
-  setCaseFormValuesFromDto,
+  selectStageFormState,
+  selectStageFormValues,
+  setStageFormState,
+  setStageFormValuesEmpty,
+  setStageFormValuesFromDto,
   Sheet,
   SheetContent,
   SheetDescription,
@@ -18,44 +18,46 @@ import {
   useIsMobile,
 } from '@urgp/client/shared';
 import { useDispatch, useSelector } from 'react-redux';
-import { CreateCaseForm } from './CreateCaseForm';
-import { useCurrentUserApprovers } from '../../../../classificators';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
-  caseFormValuesDto,
-  CaseFormValuesDto,
-  CaseUpdateDto,
+  controlStageFormValuesDto,
+  ControlStageFormValuesDto,
+  ControlStageUpdateDto,
 } from '@urgp/shared/entities';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
 import { ConfirmationAlertDialog } from '@urgp/client/features';
-import { useUpdateCase } from '../../../api/casesApi';
 import { toast } from 'sonner';
+import { CreateStageForm } from './CreateStageForm';
+import {
+  useCurrentUserApprovers,
+  useUpdateControlStage,
+} from '@urgp/client/entities';
 
-type CreateCaseDialogProps = {
+type CreateStageDialogProps = {
   className?: string;
 };
 
 const DIALOG_WIDTH = '600px';
 
-const CreateCaseDialog = ({
+const CreateStageDialog = ({
   className,
-}: CreateCaseDialogProps): JSX.Element | null => {
+}: CreateStageDialogProps): JSX.Element | null => {
   const { data: approvers } = useCurrentUserApprovers();
   const [confirmationOpen, setConfirmationOpen] = useState(false);
-  const [updateCase] = useUpdateCase();
+  const [updateStage] = useUpdateControlStage();
 
-  const formState = useSelector(selectCaseFormState);
+  const emptyValues = useSelector(selectStageFormValues);
+  const formState = useSelector(selectStageFormState);
   const isEdit = formState === 'edit';
-  const emptyValues = useSelector(selectCaseFormValues);
   const defaultValues = {
     ...emptyValues,
-    approverId: emptyValues?.approverId || approvers?.cases?.[0]?.value,
+    approverId: emptyValues?.approverId || approvers?.operations?.[0]?.value,
   };
   const isMobile = useIsMobile();
 
-  const form = useForm<CaseFormValuesDto>({
-    resolver: zodResolver(caseFormValuesDto),
+  const form = useForm<ControlStageFormValuesDto>({
+    resolver: zodResolver(controlStageFormValuesDto),
     defaultValues,
   });
 
@@ -65,10 +67,10 @@ const CreateCaseDialog = ({
     form.reset(defaultValues);
   }, [formState]);
 
-  const title = isEdit ? 'Изменить заявку' : 'Добавить заявку';
+  const title = isEdit ? 'Изменить этап' : 'Добавить этап';
   const subTitle = isEdit
-    ? 'Внесите данные для создания дела'
-    : 'Внесите нужные правки по делу';
+    ? 'Внесите данные для создания этапа'
+    : 'Внесите нужные правки по этапу';
   const contentStyle = {
     '--dialog-width': DIALOG_WIDTH,
   } as React.CSSProperties;
@@ -77,13 +79,13 @@ const CreateCaseDialog = ({
       if (form.formState.isDirty) {
         formState === 'edit'
           ? setConfirmationOpen(true)
-          : dispatch(setCaseFormState('close')) &&
+          : dispatch(setStageFormState('close')) &&
             dispatch(
-              setCaseFormValuesFromDto({ ...form.getValues(), saved: true }),
+              setStageFormValuesFromDto({ ...form.getValues(), saved: true }),
             );
       } else {
-        formState === 'edit' && dispatch(setCaseFormValuesEmpty());
-        dispatch(setCaseFormState('close'));
+        formState === 'edit' && dispatch(setStageFormValuesEmpty());
+        dispatch(setStageFormState('close'));
       }
     }
   };
@@ -109,7 +111,7 @@ const CreateCaseDialog = ({
           <Title>{title}</Title>
           <Description>{subTitle}</Description>
         </Header>
-        <CreateCaseForm
+        <CreateStageForm
           form={form}
           className={className}
           popoverMinWidth={`calc(${DIALOG_WIDTH} - 3rem)`}
@@ -117,31 +119,31 @@ const CreateCaseDialog = ({
       </Content>
       <ConfirmationAlertDialog
         title={'Сохранить изменения?'}
-        description={'В дело были внесены изменения.'}
+        description={'В этап были внесены изменения.'}
         confirmText={'Сохранить'}
         cancelText={'Сбросить'}
         open={confirmationOpen}
         setOpen={setConfirmationOpen}
         onCancel={() => {
-          dispatch(setCaseFormValuesEmpty());
-          dispatch(setCaseFormState('close'));
+          dispatch(setStageFormValuesEmpty());
+          dispatch(setStageFormState('close'));
         }}
         onConfirm={() =>
           form.handleSubmit((data) => {
-            updateCase({
+            updateStage({
               ...data,
-              class: 'control-incident',
-            } as CaseUpdateDto)
+              class: 'stage',
+            } as ControlStageUpdateDto)
               .unwrap()
               .then(() => {
-                dispatch(setCaseFormValuesEmpty());
-                dispatch(setCaseFormState('close'));
-                toast.success('Заявка изменена');
+                dispatch(setStageFormValuesEmpty());
+                dispatch(setStageFormState('close'));
+                toast.success('Этап изменен');
               })
               .catch((rejected: any) => {
-                dispatch(setCaseFormValuesEmpty());
-                dispatch(setCaseFormState('close'));
-                toast.error('Не удалось изменить заявку', {
+                dispatch(setStageFormValuesEmpty());
+                dispatch(setStageFormState('close'));
+                toast.error('Не удалось изменить этап', {
                   description: rejected.data?.message || 'Неизвестная ошибка',
                 });
               });
@@ -152,4 +154,4 @@ const CreateCaseDialog = ({
   );
 };
 
-export { CreateCaseDialog };
+export { CreateStageDialog };

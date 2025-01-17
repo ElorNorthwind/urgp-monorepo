@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
+import { startOfToday } from 'date-fns';
 
 // ================ ЭТАПЫ (STAGES) ================
 
@@ -11,23 +12,13 @@ export const controlStageCreate = z.object({
   doneDate: z.coerce
     .date({ message: 'Дата обязательна' })
     .or(z.number())
-    .default(new Date().setHours(0, 0, 0, 0)),
+    .or(z.string().date())
+    .default(startOfToday().toISOString()),
   num: z.string().default(''),
   description: z.string().default(''),
-  approverId: z.coerce.number().nullable().default(null),
+  approverId: z.coerce.number().nullable().optional().default(null),
 });
 export type ControlStageCreateDto = z.infer<typeof controlStageCreate>;
-
-export const controlStageCreateFormValues = controlStageCreate.pick({
-  typeId: true,
-  doneDate: true,
-  num: true,
-  description: true,
-  approverId: true,
-});
-export type ControlStageCreateFormValuesDto = z.infer<
-  typeof controlStageCreateFormValues
->;
 
 // изменение этапа
 export const controlStageUpdate = controlStageCreate
@@ -40,15 +31,25 @@ export const controlStageUpdate = controlStageCreate
   })
   .partial()
   .extend({
-    typeId: z.undefined().optional(),
     id: z.coerce.number(),
   });
 export type ControlStageUpdateDto = z.infer<typeof controlStageUpdate>;
 
-export const controlStageUpdateFormValues =
-  controlStageCreateFormValues.partial();
-export type ControlStageUpdateFormValuesDto = z.infer<
-  typeof controlStageUpdateFormValues
+export const controlStageFormValuesDto = controlStageCreate
+  .pick({
+    class: true,
+    typeId: true,
+    doneDate: true,
+    num: true,
+    description: true,
+    approverId: true,
+  })
+  .extend({
+    id: z.coerce.number().nullable().default(null),
+    caseId: z.coerce.number().nullable().default(null),
+  });
+export type ControlStageFormValuesDto = z.infer<
+  typeof controlStageFormValuesDto
 >;
 
 // ================ ПОРУЧЕНИЯ (DISPATCHES) ================
@@ -106,18 +107,6 @@ export const dispatchUpdate = dispatchCreate
     typeId: z.undefined().optional(),
   });
 export type DispatchUpdateDto = z.infer<typeof dispatchUpdate>;
-
-// export const dispatchUpdateFormValues = dispatchUpdate
-//   .omit({ dateDescription: true })
-//   .partial()
-//   .extend({
-//     dateDescription: z
-//       .string()
-//       .min(1, { message: 'Необходимо указать причину переноса срока' }),
-//   });
-// export type DispatchUpdateFormValuesDto = z.infer<
-//   typeof dispatchUpdateFormValues
-// >;
 
 // ================ НАПОМИНАНИЯ (REMINDERS) ================
 // создание напоминаний
