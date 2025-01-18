@@ -207,7 +207,13 @@ const controlSlice = createSlice({
       state,
       { payload }: PayloadAction<ReminderFormValuesDto & { saved?: boolean }>,
     ) => {
-      state.reminderForm.values = payload;
+      state.reminderForm.values = {
+        ...payload,
+        observerId:
+          payload?.observerId === 0
+            ? store.getState().auth.user?.id
+            : payload?.observerId,
+      };
     },
     //   extraReducers: {},
   },

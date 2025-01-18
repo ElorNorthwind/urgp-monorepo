@@ -30,6 +30,5 @@ export * from './ControlSidePanel';
 export * from './ConfirmationButton';
 export * from './FormField';
 export * from './ApproveDialog';
-export * from './CreateDispatchDialog';
 export * from './CreateReminderDialog';
 export * from './FormDialog';

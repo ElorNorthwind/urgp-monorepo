@@ -41,4 +41,4 @@ const EditedStageDisplayElement = ({
   ) : null;
 };
 
-export { EditedStageDisplayElement as EditedStageDusplayElement };
+export { EditedStageDisplayElement };

@@ -1,81 +1,78 @@
 import {
-  selectStageFormState,
-  selectStageFormValues,
-  setStageFormState,
-  setStageFormValuesEmpty,
-  setStageFormValuesFromDto,
+  selectCurrentUser,
+  selectDispatchFormState,
+  selectDispatchFormValues,
+  setDispatchFormState,
+  setDispatchFormValuesEmpty,
+  setDispatchFormValuesFromDto,
 } from '@urgp/client/shared';
 import {
-  useCurrentUserApprovers,
-  useOperationTypesFlat,
-} from '../../classificators';
-import {
-  ControlStageFormValuesDto,
-  controlStageFormValuesDto,
+  DispatchFormValuesDto,
+  dispatchFormValuesDto,
 } from '@urgp/shared/entities';
 
 import { FormDialog, FormDialogProps } from '@urgp/client/widgets';
 import {
-  useCreateControlStage,
+  useCreateDispatch,
   useDeleteOperation,
-  useUpdateControlStage,
+  useUpdateDispatch,
 } from '../api/operationsApi';
-import { StageFormFieldArray } from './StageFormElements/StageFormFieldArray';
 import { useSelector } from 'react-redux';
-import { EditedStageDusplayElement } from './StageFormElements/EditedStageDisplayElement';
+import { DispatchFormFieldArray } from './DispatchFormElements/DispatchFormFieldArray';
+import { EditedDispatchDisplayElement } from './DispatchFormElements/EditedDispatchDisplayElement';
 
-type CreateStageDialogProps = {
+type CreateDispatchDialogProps = {
   className?: string;
 };
 
-const CreateStageDialog = ({
+const CreateDispatchDialog = ({
   className,
-}: CreateStageDialogProps): JSX.Element | null => {
-  const { data: approvers } = useCurrentUserApprovers();
-  const { data: operationTypes } = useOperationTypesFlat();
-  const isEdit = useSelector(selectStageFormState) === 'edit';
+}: CreateDispatchDialogProps): JSX.Element | null => {
+  const isEdit = useSelector(selectDispatchFormState) === 'edit';
+  const user = useSelector(selectCurrentUser);
 
   const dialogProps = {
     isEdit,
     entityType: 'operation',
-    dto: controlStageFormValuesDto,
-    valuesSelector: selectStageFormValues,
-    stateSelector: selectStageFormState,
-    stateDispatch: setStageFormState,
-    valuesEmptyDispatch: setStageFormValuesEmpty,
-    valuesDtoDispatch: setStageFormValuesFromDto,
-    updateHook: useUpdateControlStage,
-    createHook: useCreateControlStage,
+    dto: dispatchFormValuesDto,
+    valuesSelector: selectDispatchFormValues,
+    stateSelector: selectDispatchFormState,
+    stateDispatch: setDispatchFormState,
+    valuesEmptyDispatch: setDispatchFormValuesEmpty,
+    valuesDtoDispatch: setDispatchFormValuesFromDto,
+    updateHook: useUpdateDispatch,
+    createHook: useCreateDispatch,
     deleteHook: useDeleteOperation,
-    FieldsArray: StageFormFieldArray,
-    customizeDefaultValues: (values: ControlStageFormValuesDto) => ({
+    FieldsArray: DispatchFormFieldArray,
+    customizeDefaultValues: (values: DispatchFormValuesDto) => ({
       ...values,
-      class: 'stage',
-      approverId: values?.approverId || approvers?.operations?.[0]?.value,
+      class: 'dispatch',
     }),
-    customizeCreateValues: (values: ControlStageFormValuesDto) => ({
+    customizeCreateValues: (values: DispatchFormValuesDto) => ({
       ...values,
-      class: 'stage',
+      class: 'dispatch',
+      controllerId:
+        values.controller === 'author' ? user?.id : values.executorId,
     }),
-    customizeUpdateValues: (values: ControlStageFormValuesDto) => ({
+    customizeUpdateValues: (values: DispatchFormValuesDto) => ({
       ...values,
-      class: 'stage',
-      approverId: operationTypes?.find((operation) => {
-        return operation.id === values.typeId;
-      })?.autoApprove
-        ? null
-        : values.approverId,
+      class: 'dispatch',
+      dateDescription:
+        values.dateDescription ||
+        (values?.dueDate === useSelector(selectDispatchFormValues)?.dueDate
+          ? 'Корректировка без уточнения срока'
+          : ''),
     }),
-    displayedElement: <EditedStageDusplayElement />,
+    displayedElement: <EditedDispatchDisplayElement />,
     dialogWidth: '600px',
     className,
-    createTitle: 'Добавить операцию',
-    editTitle: 'Изменить операцию',
-    createDescription: 'Внесите данные для создания операции',
-    editDescription: 'Внесите изменения в запись об операции',
-  } as unknown as FormDialogProps<ControlStageFormValuesDto>;
+    createTitle: 'Добавить поручение',
+    editTitle: 'Изменить поручение',
+    createDescription: 'Внесите данные для создания поручения',
+    editDescription: 'Внесите изменения в запись об поручении',
+  } as unknown as FormDialogProps<DispatchFormValuesDto>;
 
   return <FormDialog {...dialogProps} />;
 };
 
-export { CreateStageDialog };
+export { CreateDispatchDialog };

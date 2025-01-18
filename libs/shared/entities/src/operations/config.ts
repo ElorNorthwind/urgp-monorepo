@@ -1,6 +1,5 @@
 import { startOfToday } from 'date-fns';
 import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
-import { store } from '@urgp/client/shared';
 
 export const emptyStage = {
   id: 0,
@@ -30,7 +29,8 @@ export const emptyReminder = {
   caseId: 0,
   class: 'reminder' as 'reminder',
   typeId: 11,
-  observerId: store.getState().auth.user?.id || 0,
+  // observerId: store.getState().auth.user?.id || 0,
+  observerId: 0,
   description: '',
   dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
   doneDate: null,

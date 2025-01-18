@@ -1,5 +1,9 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { CreateCaseDialog, CreateStageDialog } from '@urgp/client/entities';
+import {
+  CreateCaseDialog,
+  CreateDispatchDialog,
+  CreateStageDialog,
+} from '@urgp/client/entities';
 import { ControlCasesPage } from '@urgp/client/pages';
 import { SidebarProvider, store, usePageMeta } from '@urgp/client/shared';
 import { ControlNavbar } from '@urgp/client/widgets';
@@ -28,6 +32,7 @@ export const Route = createFileRoute('/control')({
         <ControlCasesPage />
         <CreateCaseDialog />
         <CreateStageDialog />
+        <CreateDispatchDialog />
       </SidebarProvider>
     );
   },

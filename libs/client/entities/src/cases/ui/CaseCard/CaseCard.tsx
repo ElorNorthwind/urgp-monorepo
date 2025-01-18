@@ -15,16 +15,14 @@ import { caseStatusStyles, caseTypeStyles } from '../../config/caseStyles';
 import { ExternalCasesList } from '../ExternalCasesList';
 import { CaseDirectionsList } from '../CaseDirectionsList';
 import {
+  CreateDispatchButton,
   StagesHeader,
   StagesList,
   useDispatches,
   useStages,
 } from '../../../operations';
 import { CaseCardFooter } from './CaseCardFooter';
-import {
-  CreateDispatchDialog,
-  CreateReminderDialog,
-} from '@urgp/client/widgets';
+import { CreateReminderDialog } from '@urgp/client/widgets';
 import { ControlDispatchesList } from '../ControlDispatchesList';
 
 type CaseCardProps = {
@@ -154,21 +152,10 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
         </AccordionItem>
         <AccordionItem value="dispatches" className="relative">
           <AccordionTrigger>Поручения</AccordionTrigger>
-          {i.can('create', 'Dispatch') && (
-            <CreateDispatchDialog
-              caseId={controlCase?.id}
+          {controlCase?.id && (
+            <CreateDispatchButton
               className="absolute right-6 top-3 h-8 px-2 py-1"
-              displayedElement={
-                <div>
-                  <CaseCardHeader
-                    controlCase={controlCase}
-                    className="rounded-t"
-                  />
-                  <div className="bg-sidebar/80 max-h-50 overflow-hidden rounded-b border-t p-4">
-                    {controlCase?.payload?.description}
-                  </div>
-                </div>
-              }
+              caseId={controlCase.id}
             />
           )}
           <AccordionContent>

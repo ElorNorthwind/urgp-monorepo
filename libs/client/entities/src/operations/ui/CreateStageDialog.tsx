@@ -22,7 +22,7 @@ import {
 } from '../api/operationsApi';
 import { StageFormFieldArray } from './StageFormElements/StageFormFieldArray';
 import { useSelector } from 'react-redux';
-import { EditedStageDusplayElement } from './StageFormElements/EditedStageDisplayElement';
+import { EditedStageDisplayElement } from './StageFormElements/EditedStageDisplayElement';
 
 type CreateStageDialogProps = {
   className?: string;
@@ -66,7 +66,7 @@ const CreateStageDialog = ({
         ? null
         : values.approverId,
     }),
-    displayedElement: <EditedStageDusplayElement />,
+    displayedElement: <EditedStageDisplayElement />,
     dialogWidth: '600px',
     className,
     createTitle: 'Добавить операцию',
