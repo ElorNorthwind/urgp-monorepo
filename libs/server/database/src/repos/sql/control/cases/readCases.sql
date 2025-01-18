@@ -45,7 +45,7 @@ SELECT
 	GREATEST((c.payload->-1->>'updatedAt')::timestamp with time zone, o.updated) as "lastEdit",
 	rem.seen as "lastSeen",
 	CASE
-		WHEN rem.seen IS NULL THEN 'unwatched'
+		WHEN rem.seen IS NULL OR rem.done IS NOT NULL THEN 'unwatched'
 		WHEN GREATEST((c.payload->-1->>'updatedAt')::timestamp with time zone, o.updated) <= rem.seen THEN 'unchanged'
 		WHEN rem.count = 1 THEN 'new'
 		ELSE 'changed'
@@ -89,7 +89,11 @@ LEFT JOIN control.case_status_types s ON s.id =
 		ELSE 2 -- "направлено"
 	END
 LEFT JOIN (SELECT case_id, COUNT(*) as count, MAX((payload->-1->>'updatedAt')::timestamp with time zone) as updated FROM control.operations WHERE class = ANY(ARRAY['operation', 'dispatch']) GROUP BY case_id) o ON o.case_id = c.id
-LEFT JOIN (SELECT DISTINCT ON(case_id) case_id, jsonb_array_length(payload) as count, MAX((payload->-1->>'lastSeenDate')::timestamp with time zone) as seen FROM control.operations WHERE class = ANY(ARRAY['reminder']) AND (payload->-1->>'observerId')::integer = ${userId} GROUP BY case_id, jsonb_array_length(payload)) rem ON rem.case_id = c.id
+LEFT JOIN (SELECT DISTINCT ON(case_id) case_id, 
+                                       jsonb_array_length(payload) as count, 
+									   MAX((payload->-1->>'lastSeenDate')::timestamp with time zone) as seen,
+									   MAX((payload->-1->>'doneDate')::timestamp with time zone) as done
+			FROM control.operations WHERE class = ANY(ARRAY['reminder']) AND (payload->-1->>'observerId')::integer = ${userId} GROUP BY case_id, jsonb_array_length(payload)) rem ON rem.case_id = c.id
 LEFT JOIN dispatches dis ON dis.case_id = c.id
 WHERE (c.payload->-1->>'isDeleted')::boolean IS DISTINCT FROM true
 AND (c.payload->-1->>'approveStatus' = 'approved' OR c.author_id = ${userId} OR (c.payload->-1->>'approverId')::integer = ${userId} OR ${readAll} = true)
