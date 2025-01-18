@@ -19,7 +19,7 @@ export function usePageMeta(title: string, favicon: string) {
     link.href = favicon;
 
     return () => {
-      document.title = originalTitle.current;
+      document.title = originalTitle?.current || '';
     };
   }, []);
 }

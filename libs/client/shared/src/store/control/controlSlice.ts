@@ -9,14 +9,15 @@ import {
   GET_DEFAULT_CONTROL_DUE_DATE,
   ControlStageFormValuesDto,
   emptyStage,
+  DispatchFormValuesDto,
+  ReminderFormValuesDto,
+  emptyDispatch,
+  emptyReminder,
 } from '@urgp/shared/entities';
-import { RootState } from '../store';
+import { RootState, store } from '../store';
 
 export type DialogFormState = 'create' | 'edit' | 'close';
 type ControlState = {
-  editStage: 'new' | ControlStage | null;
-  editDispatch: 'new' | ControlDispatch | null;
-  editReminder: 'new' | ControlReminder | null;
   caseForm: {
     state: DialogFormState;
     values: CaseFormValuesDto & { saved?: boolean };
@@ -25,12 +26,17 @@ type ControlState = {
     state: DialogFormState;
     values: ControlStageFormValuesDto & { saved?: boolean };
   };
+  dispatchForm: {
+    state: DialogFormState;
+    values: DispatchFormValuesDto & { saved?: boolean };
+  };
+  reminderForm: {
+    state: DialogFormState;
+    values: ReminderFormValuesDto & { saved?: boolean };
+  };
 };
 
 const initialState: ControlState = {
-  editStage: null,
-  editDispatch: null,
-  editReminder: null,
   caseForm: {
     state: 'close',
     values: emptyCase,
@@ -39,12 +45,21 @@ const initialState: ControlState = {
     state: 'close',
     values: emptyStage,
   },
+  dispatchForm: {
+    state: 'close',
+    values: emptyDispatch,
+  },
+  reminderForm: {
+    state: 'close',
+    values: emptyReminder,
+  },
 };
 
 const controlSlice = createSlice({
   name: 'control',
   initialState,
   reducers: {
+    // ================================= CASE =================================
     setCaseFormState: (state, { payload }: PayloadAction<DialogFormState>) => {
       state.caseForm.state = payload;
     },
@@ -78,6 +93,7 @@ const controlSlice = createSlice({
         // dueDate: payload.dueDate,
       };
     },
+    // ================================= STAGE =================================
     setStageFormState: (state, { payload }: PayloadAction<DialogFormState>) => {
       state.stageForm.state = payload;
     },
@@ -97,8 +113,8 @@ const controlSlice = createSlice({
         class: payload?.class,
         typeId: payload?.payload?.type?.id,
         doneDate: payload?.payload?.doneDate,
-        num: payload?.payload?.num,
-        description: payload?.payload?.description,
+        num: payload?.payload?.num || '',
+        description: payload?.payload?.description || '',
         approverId: payload?.payload?.approver?.id,
       };
     },
@@ -109,36 +125,95 @@ const controlSlice = createSlice({
         payload,
       }: PayloadAction<ControlStageFormValuesDto & { saved?: boolean }>,
     ) => {
-      state.stageForm.values = {
-        ...payload,
-        // dueDate: payload.dueDate,
+      state.stageForm.values = payload;
+    },
+
+    // ================================= DISPATCH =================================
+    setDispatchFormState: (
+      state,
+      { payload }: PayloadAction<DialogFormState>,
+    ) => {
+      state.dispatchForm.state = payload;
+    },
+    setDispatchFormCaseId: (state, { payload }: PayloadAction<number>) => {
+      state.dispatchForm.values.caseId = payload;
+    },
+    setDispatchFormValuesEmpty: (state) => {
+      state.dispatchForm.values = emptyDispatch;
+    },
+    setDispatchFormValuesFromDispatch: (
+      state,
+      { payload }: PayloadAction<ControlDispatch>,
+    ) => {
+      state.dispatchForm.values = {
+        id: payload?.id,
+        caseId: payload?.caseId,
+        class: payload?.class,
+        typeId: payload?.payload?.type?.id,
+        description: payload?.payload?.description,
+        dateDescription: 'Без переноса срока', // payload?.payload?.dateDescription,
+        dueDate: payload?.payload?.dueDate?.toISOString(), // new Date(ec.date).toISOString()
+        executorId: payload?.payload?.executor?.id,
+        controller:
+          payload?.payload?.controller?.id === store.getState()?.auth?.user?.id
+            ? 'author'
+            : 'executor',
       };
     },
-
-    setEditStage: (
+    setDispatchFormValuesFromDto: (
       state,
-      { payload }: PayloadAction<'new' | ControlStage | null>,
+      { payload }: PayloadAction<DispatchFormValuesDto & { saved?: boolean }>,
     ) => {
-      state.editStage = payload;
+      state.dispatchForm.values = payload;
     },
 
-    setEditDispatch: (
+    // ================================= REMINDER =================================
+    setReminderFormState: (
       state,
-      { payload }: PayloadAction<'new' | ControlDispatch | null>,
+      { payload }: PayloadAction<DialogFormState>,
     ) => {
-      state.editDispatch = payload;
+      state.reminderForm.state = payload;
     },
-    setEditReminder: (
+    setReminderFormCaseId: (state, { payload }: PayloadAction<number>) => {
+      state.reminderForm.values.caseId = payload;
+    },
+    setReminderFormDueDate: (state, { payload }: PayloadAction<Date>) => {
+      state.reminderForm.values.dueDate = payload.toISOString();
+    },
+    setReminderFormValuesEmpty: (state) => {
+      state.reminderForm.values = emptyReminder;
+    },
+    setReminderFormValuesFromReminder: (
       state,
-      { payload }: PayloadAction<'new' | ControlReminder | null>,
+      { payload }: PayloadAction<ControlReminder>,
     ) => {
-      state.editReminder = payload;
+      state.reminderForm.values = {
+        id: payload?.id,
+        caseId: payload?.caseId,
+        class: payload?.class,
+        typeId: payload?.payload?.type?.id,
+        observerId:
+          payload?.payload?.observer?.id ||
+          store.getState()?.auth?.user?.id ||
+          0,
+        description: payload?.payload?.description,
+        dueDate:
+          payload?.payload?.dueDate?.toISOString() ||
+          GET_DEFAULT_CONTROL_DUE_DATE(), // new Date(ec.date).toISOString()
+        doneDate: null, // Потому что редактируя напоминалку - мы возвращаем ее в незакрытое состояние
+      };
     },
-
+    setReminderFormValuesFromDto: (
+      state,
+      { payload }: PayloadAction<ReminderFormValuesDto & { saved?: boolean }>,
+    ) => {
+      state.reminderForm.values = payload;
+    },
     //   extraReducers: {},
   },
 });
 
+// ================================= CASE =================================
 export const {
   setCaseFormState,
   setCaseFormValuesEmpty,
@@ -150,6 +225,7 @@ export const selectCaseFormValues = (state: RootState) =>
 export const selectCaseFormState = (state: RootState) =>
   state.control.caseForm.state;
 
+// ================================= STAGE =================================
 export const {
   setStageFormState,
   setStageFormCaseId,
@@ -162,11 +238,31 @@ export const selectStageFormValues = (state: RootState) =>
 export const selectStageFormState = (state: RootState) =>
   state.control.stageForm.state;
 
-export const { setEditStage, setEditDispatch, setEditReminder } =
-  controlSlice.actions;
-export const selectEditStage = (state: RootState) => state.control.editStage;
-export const selectEditDispatch = (state: RootState) =>
-  state.control.editDispatch;
-export const selectEditReminder = (state: RootState) =>
-  state.control.editReminder;
+// ================================= DISPATCH =================================
+export const {
+  setDispatchFormState,
+  setDispatchFormCaseId,
+  setDispatchFormValuesEmpty,
+  setDispatchFormValuesFromDispatch,
+  setDispatchFormValuesFromDto,
+} = controlSlice.actions;
+export const selectDispatchFormValues = (state: RootState) =>
+  state.control.dispatchForm.values;
+export const selectDispatchFormState = (state: RootState) =>
+  state.control.dispatchForm.state;
+
+// ================================= REMINDER =================================
+export const {
+  setReminderFormState,
+  setReminderFormCaseId,
+  setReminderFormDueDate,
+  setReminderFormValuesEmpty,
+  setReminderFormValuesFromReminder,
+  setReminderFormValuesFromDto,
+} = controlSlice.actions;
+export const selectReminderFormValues = (state: RootState) =>
+  state.control.reminderForm.values;
+export const selectReminderFormState = (state: RootState) =>
+  state.control.reminderForm.state;
+
 export default controlSlice.reducer;

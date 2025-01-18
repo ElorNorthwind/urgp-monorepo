@@ -37,6 +37,7 @@ export type ControlStageUpdateDto = z.infer<typeof controlStageUpdate>;
 
 export const controlStageFormValuesDto = controlStageCreate
   .pick({
+    caseId: true,
     class: true,
     typeId: true,
     doneDate: true,
@@ -46,7 +47,6 @@ export const controlStageFormValuesDto = controlStageCreate
   })
   .extend({
     id: z.coerce.number().nullable().default(null),
-    caseId: z.coerce.number().nullable().default(null),
   });
 export type ControlStageFormValuesDto = z.infer<
   typeof controlStageFormValuesDto
@@ -69,26 +69,6 @@ export const dispatchCreate = z.object({
 });
 export type DispatchCreateDto = z.infer<typeof dispatchCreate>;
 
-export const dispatchCreateFormValues = dispatchCreate
-  .pick({
-    executorId: true,
-    dueDate: true,
-    description: true,
-  })
-  .extend({
-    controller: z
-      .literal('author')
-      .or(z.literal('executor'))
-      .optional()
-      .default('executor'),
-    dateDescription: z
-      .string()
-      .min(1, { message: 'Необходимо указать причину переноса срока' }),
-  });
-export type DispatchCreateFormValuesDto = z.infer<
-  typeof dispatchCreateFormValues
->;
-
 // изменение поручения
 export const dispatchUpdate = dispatchCreate
   .pick({
@@ -100,13 +80,33 @@ export const dispatchUpdate = dispatchCreate
   .partial()
   .extend({
     id: z.coerce.number(),
-    // doneDate: z.coerce.date().nullable().default(null),
     dateDescription: z
       .string()
       .min(1, { message: 'Необходимо указать причину переноса срока' }),
-    typeId: z.undefined().optional(),
   });
 export type DispatchUpdateDto = z.infer<typeof dispatchUpdate>;
+
+export const dispatchFormValuesDto = dispatchCreate
+  .pick({
+    caseId: true,
+    class: true,
+    typeId: true,
+    dueDate: true,
+    description: true,
+    executorId: true,
+  })
+  .extend({
+    id: z.coerce.number().nullable().default(null),
+    dateDescription: z
+      .string()
+      .min(1, { message: 'Необходимо указать причину переноса срока' }),
+    controller: z
+      .literal('author')
+      .or(z.literal('executor'))
+      .optional()
+      .default('executor'),
+  });
+export type DispatchFormValuesDto = z.infer<typeof dispatchFormValuesDto>;
 
 // ================ НАПОМИНАНИЯ (REMINDERS) ================
 // создание напоминаний
@@ -124,14 +124,6 @@ export const reminderCreate = z.object({
 });
 export type ReminderCreateDto = z.infer<typeof reminderCreate>;
 
-export const reminderCreateFormValues = reminderCreate.pick({
-  dueDate: true,
-  description: true,
-});
-export type ReminderCreateFormValuesDto = z.infer<
-  typeof reminderCreateFormValues
->;
-
 // изменение поручения
 export const reminderUpdate = reminderCreate
   .pick({
@@ -143,12 +135,27 @@ export const reminderUpdate = reminderCreate
   .partial()
   .extend({
     id: z.coerce.number(),
-    doneDate: z.coerce.date().nullable().default(null),
-    // typeId: z.undefined().optional(),
+    doneDate: z.coerce
+      .date()
+      .or(z.number())
+      .or(z.string().date())
+      .nullable()
+      .default(null),
   });
 export type ReminderUpdateDto = z.infer<typeof reminderUpdate>;
 
-export const reminderUpdateFormValues = reminderCreateFormValues.partial();
-export type ReminderUpdateFormValuesDto = z.infer<
-  typeof reminderUpdateFormValues
->;
+export const reminderFormValues = reminderCreate
+  .pick({
+    caseId: true,
+    class: true,
+    typeId: true,
+    description: true,
+    observerId: true,
+    dueDate: true,
+  })
+  .partial()
+  .extend({
+    id: z.coerce.number().nullable().default(null),
+    doneDate: z.coerce.date().nullable().default(null),
+  });
+export type ReminderFormValuesDto = z.infer<typeof reminderFormValues>;

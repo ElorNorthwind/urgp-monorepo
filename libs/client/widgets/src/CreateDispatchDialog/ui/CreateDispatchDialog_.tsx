@@ -21,7 +21,7 @@ import { CalendarCog, CalendarPlus } from 'lucide-react';
 import { forwardRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ControlDispatch } from '@urgp/shared/entities';
-import { CreateDispatchForm } from './CreateDispatchForm';
+import { CreateDispatchForm } from './CreateDispatchForm_';
 
 type CreateDispatchDialogProps = {
   caseId: number;
