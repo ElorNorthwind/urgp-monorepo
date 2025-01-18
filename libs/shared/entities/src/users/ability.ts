@@ -14,9 +14,10 @@ import {
   ControlStageSlim,
 } from '../operations/types';
 import { Case, CaseSlim } from '../cases/types';
-import { CaseCreateDto, CaseUpdateDto } from '../cases/dto';
+import { CaseCreateDto, CaseFormValuesDto, CaseUpdateDto } from '../cases/dto';
 import {
   ControlStageCreateDto,
+  ControlStageFormValuesDto,
   ControlStageUpdateDto,
   DispatchCreateDto,
   DispatchUpdateDto,

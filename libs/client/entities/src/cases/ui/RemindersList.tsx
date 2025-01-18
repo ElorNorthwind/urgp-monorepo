@@ -59,7 +59,8 @@ const RemindersList = (props: RemindersListProps): JSX.Element => {
                   paddingStyle,
                   index === reminders.length - 1 ? 'border-b-0' : 'border-b',
                   'bg-background',
-                  'col-span-1 border-r line-through',
+                  'col-span-1 border-r',
+                  rem.payload?.doneDate && 'line-through',
                 )}
               >
                 {'следит с ' +
@@ -83,8 +84,10 @@ const RemindersList = (props: RemindersListProps): JSX.Element => {
                     'bg-muted-foreground/5',
                   )}
                 >
-                  {'видел ' +
-                    format(rem.payload?.lastSeenDate, 'dd.MM.yyyy HH:mm')}
+                  {rem.payload?.lastSeenDate
+                    ? 'видел ' +
+                      format(rem.payload?.lastSeenDate, 'dd.MM.yyyy HH:mm')
+                    : 'еще не видел'}
                 </div>
               )}
             </Fragment>

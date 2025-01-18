@@ -42,29 +42,29 @@ const EditDispatchButton = ({
     );
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          variant="link"
-          className={cn('flex h-5 flex-row gap-2 p-0', className)}
-          onClick={() => {
-            dispatch(setDispatchFormValuesFromDispatch(controlDispatch));
-            dispatch(setDispatchFormState('edit'));
-          }}
-        >
-          <span>
-            {controlDispatch.payload?.dueDate
-              ? format(controlDispatch.payload?.dueDate, 'dd.MM.yyyy')
-              : '-'}
-          </span>
-          {controlDispatch.payload.dueDateChanged && (
-            <Repeat className="size-4 opacity-50" />
-          )}
-          <CalendarCog className={cn('hidden size-4 group-hover:block')} />
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent>Редактировать поручение</TooltipContent>
-    </Tooltip>
+    // <Tooltip>
+    //   <TooltipTrigger asChild>
+    <Button
+      variant="link"
+      className={cn('flex h-5 flex-row gap-2 p-0', className)}
+      onClick={() => {
+        dispatch(setDispatchFormValuesFromDispatch(controlDispatch));
+        dispatch(setDispatchFormState('edit'));
+      }}
+    >
+      <span>
+        {controlDispatch.payload?.dueDate
+          ? format(controlDispatch.payload?.dueDate, 'dd.MM.yyyy')
+          : '-'}
+      </span>
+      {controlDispatch.payload.dueDateChanged && (
+        <Repeat className="size-4 opacity-50" />
+      )}
+      <CalendarCog className={cn('hidden size-4 group-hover:block')} />
+    </Button>
+    //   </TooltipTrigger>
+    //   <TooltipContent>Редактировать поручение</TooltipContent>
+    // </Tooltip>
 
     // {i.can('update', d) ? (
     // <Button

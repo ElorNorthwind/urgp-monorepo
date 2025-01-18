@@ -74,6 +74,7 @@ export const dispatchUpdate = dispatchCreate
   .pick({
     class: true,
     executorId: true,
+    controllerId: true,
     dueDate: true,
     description: true,
   })
@@ -144,7 +145,7 @@ export const reminderUpdate = reminderCreate
   });
 export type ReminderUpdateDto = z.infer<typeof reminderUpdate>;
 
-export const reminderFormValues = reminderCreate
+export const reminderFormValuesDto = reminderCreate
   .pick({
     caseId: true,
     class: true,
@@ -158,4 +159,4 @@ export const reminderFormValues = reminderCreate
     id: z.coerce.number().nullable().default(null),
     doneDate: z.coerce.date().nullable().default(null),
   });
-export type ReminderFormValuesDto = z.infer<typeof reminderFormValues>;
+export type ReminderFormValuesDto = z.infer<typeof reminderFormValuesDto>;

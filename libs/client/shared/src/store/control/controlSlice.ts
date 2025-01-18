@@ -13,8 +13,16 @@ import {
   ReminderFormValuesDto,
   emptyDispatch,
   emptyReminder,
+  User,
 } from '@urgp/shared/entities';
 import { RootState, store } from '../store';
+import { formatISO } from 'date-fns';
+import {
+  clearUser,
+  guestUser,
+  initialUserState,
+  setUser,
+} from '../auth/authSlice';
 
 export type DialogFormState = 'create' | 'edit' | 'close';
 type ControlState = {
@@ -34,6 +42,7 @@ type ControlState = {
     state: DialogFormState;
     values: ReminderFormValuesDto & { saved?: boolean };
   };
+  user: User | null;
 };
 
 const initialState: ControlState = {
@@ -53,6 +62,7 @@ const initialState: ControlState = {
     state: 'close',
     values: emptyReminder,
   },
+  user: initialUserState.user,
 };
 
 const controlSlice = createSlice({
@@ -152,10 +162,10 @@ const controlSlice = createSlice({
         typeId: payload?.payload?.type?.id,
         description: payload?.payload?.description,
         dateDescription: 'Без переноса срока', // payload?.payload?.dateDescription,
-        dueDate: payload?.payload?.dueDate?.toISOString(), // new Date(ec.date).toISOString()
+        dueDate: formatISO(payload?.payload?.dueDate), // new Date(ec.date).toISOString()
         executorId: payload?.payload?.executor?.id,
         controller:
-          payload?.payload?.controller?.id === store.getState()?.auth?.user?.id
+          payload?.payload?.controller?.id === state.user.id
             ? 'author'
             : 'executor',
       };
@@ -177,8 +187,8 @@ const controlSlice = createSlice({
     setReminderFormCaseId: (state, { payload }: PayloadAction<number>) => {
       state.reminderForm.values.caseId = payload;
     },
-    setReminderFormDueDate: (state, { payload }: PayloadAction<Date>) => {
-      state.reminderForm.values.dueDate = payload.toISOString();
+    setReminderFormDueDate: (state, { payload }: PayloadAction<string>) => {
+      state.reminderForm.values.dueDate = payload;
     },
     setReminderFormValuesEmpty: (state) => {
       state.reminderForm.values = emptyReminder;
@@ -192,14 +202,9 @@ const controlSlice = createSlice({
         caseId: payload?.caseId,
         class: payload?.class,
         typeId: payload?.payload?.type?.id,
-        observerId:
-          payload?.payload?.observer?.id ||
-          store.getState()?.auth?.user?.id ||
-          0,
+        observerId: payload?.payload?.observer?.id || state.user.id,
         description: payload?.payload?.description,
-        dueDate:
-          payload?.payload?.dueDate?.toISOString() ||
-          GET_DEFAULT_CONTROL_DUE_DATE(), // new Date(ec.date).toISOString()
+        dueDate: payload?.payload?.dueDate || null, // new Date(ec.date).toISOString()
         doneDate: null, // Потому что редактируя напоминалку - мы возвращаем ее в незакрытое состояние
       };
     },
@@ -210,12 +215,17 @@ const controlSlice = createSlice({
       state.reminderForm.values = {
         ...payload,
         observerId:
-          payload?.observerId === 0
-            ? store.getState().auth.user?.id
-            : payload?.observerId,
+          payload?.observerId === 0 ? state.user.id : payload?.observerId,
       };
     },
-    //   extraReducers: {},
+  },
+  extraReducers: (builder) => {
+    builder.addCase(setUser, (state, action) => {
+      state.user = action.payload;
+    });
+    builder.addCase(clearUser, (state) => {
+      state.user = guestUser;
+    });
   },
 });
 

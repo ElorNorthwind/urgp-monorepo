@@ -32,6 +32,6 @@ export const emptyReminder = {
   // observerId: store.getState().auth.user?.id || 0,
   observerId: 0,
   description: '',
-  dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
+  dueDate: null, // GET_DEFAULT_CONTROL_DUE_DATE(),
   doneDate: null,
 };

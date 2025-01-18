@@ -22,13 +22,13 @@ export const guestUser = {
 const initialUser =
   JSON.parse(localStorage.getItem(lsKeys.USER_KEY)) || guestUser;
 
-const initialState: UserState = {
+export const initialUserState: UserState = {
   user: initialUser,
 };
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState,
+  initialState: initialUserState,
   reducers: {
     setUser: (state, { payload }: PayloadAction<User>) => {
       localStorage.setItem(lsKeys.USER_KEY, JSON.stringify(payload));

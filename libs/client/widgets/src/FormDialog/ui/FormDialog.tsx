@@ -87,12 +87,14 @@ export type FormDialogProps<TDto extends FieldValues> = {
   updateHook: UseAnyMutation;
   createHook: UseAnyMutation;
   deleteHook: UseAnyMutation;
+  allowDelete?: boolean;
 
   FieldsArray: (props: FieldsArrayProps<TDto>) => ReactElement;
 
   customizeDefaultValues?: (values: DefaultValues<TDto>) => DefaultValues<TDto>;
   customizeCreateValues?: (values: TDto) => TDto;
   customizeUpdateValues?: (values: TDto) => TDto;
+  customizeDeleteValues?: (values: TDto) => any;
 
   dialogWidth?: string;
   className?: string;
@@ -104,6 +106,9 @@ export type FormDialogProps<TDto extends FieldValues> = {
   editTitle?: string;
   createDescription?: string;
   editDescription?: string;
+  cancelButtonLabel?: string;
+  deleteButtonLabel?: string;
+  saveButtonLabel?: string;
 };
 
 const FormDialog = <TDto extends FieldValues>(
@@ -121,10 +126,12 @@ const FormDialog = <TDto extends FieldValues>(
     updateHook,
     createHook,
     deleteHook,
+    allowDelete = false,
     FieldsArray,
     customizeDefaultValues,
     customizeCreateValues,
     customizeUpdateValues,
+    customizeDeleteValues,
     dialogWidth = '600px',
     className,
     skeletonClassName = 'h-[35rem] w-full',
@@ -134,6 +141,9 @@ const FormDialog = <TDto extends FieldValues>(
     editTitle = 'Изменить запись',
     createDescription = 'Внесите данные для создания записи',
     editDescription = 'Внесите изменения в запись',
+    cancelButtonLabel = 'Отмена',
+    deleteButtonLabel = 'Удалить',
+    saveButtonLabel = 'Сохранить',
   } = props;
 
   const dispatch = useDispatch();
@@ -202,16 +212,35 @@ const FormDialog = <TDto extends FieldValues>(
       );
   }
 
+  async function onDelete(data: TDto) {
+    deleteEntity &&
+      deleteEntity(customizeDeleteValues ? customizeDeleteValues(data) : data)
+        .unwrap()
+        .then(() => {
+          toast.success('Запись удалена');
+          closeAndReset();
+        })
+        .catch((rejected: any) =>
+          toast.error('Не удалось удалить запись', {
+            description: rejected.data?.message || 'Неизвестная ошибка',
+          }),
+        );
+  }
+
   async function onSubmit(data: TDto) {
     isEdit ? onEdit(data) : onCreate(data);
   }
 
   const onOpenChange = (open: boolean) => {
     const dirty = form.formState.isDirty;
+    form.trigger();
+    const isValid = form.formState.isValid; // Очень очень нестабильно. Проверить дебаунсы?
     if (open === false) {
       if (dirty) {
         formState === 'edit'
-          ? setConfirmationOpen(true)
+          ? isValid
+            ? setConfirmationOpen(true)
+            : form.trigger()
           : dispatch(stateDispatch('close')) &&
             dispatch(
               valuesDtoDispatch({
@@ -241,7 +270,7 @@ const FormDialog = <TDto extends FieldValues>(
         style={contentStyle}
         onEscapeKeyDown={(e) => e.preventDefault()}
         className={cn(
-          'max-h-[calc(100vh-0.5rem)] overflow-y-auto', // TODO: Отрефактори со скролл эриа как белый человек йопт
+          'max-h-[calc(100vh-0.5rem)]', // TODO: Отрефактори со скролл эриа как белый человек йопт
           isMobile
             ? 'w-[var(--dialog-width)] max-w-[100vw] sm:w-[var(--dialog-width)] sm:max-w-[100vw]'
             : `w-[var(--dialog-width)] max-w-[calc(100vw-3rem)]`,
@@ -275,15 +304,28 @@ const FormDialog = <TDto extends FieldValues>(
                 disabled={isCreateLoading || isUpdateLoading}
                 onClick={closeAndReset}
               >
-                Отмена
+                {cancelButtonLabel}
               </Button>
+              {allowDelete && (
+                <Button
+                  className="flex-1"
+                  type="button"
+                  variant={'destructive'}
+                  disabled={
+                    isCreateLoading || isUpdateLoading || isDeleteLoading
+                  }
+                  onClick={() => onDelete(form.getValues())}
+                >
+                  {deleteButtonLabel}
+                </Button>
+              )}
               <Button
                 type="submit"
                 className="flex-1"
                 disabled={isCreateLoading || isUpdateLoading}
                 onClick={form.handleSubmit(onSubmit as any)}
               >
-                Сохранить
+                {saveButtonLabel}
               </Button>
             </Footer>
           </form>

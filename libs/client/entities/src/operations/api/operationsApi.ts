@@ -230,6 +230,36 @@ export const operationsApi = rtkApi.injectEndpoints({
       },
     }),
 
+    markReminderAsDone: build.mutation<ControlReminder, ReminderUpdateDto>({
+      query: (dto) => ({
+        url: '/control/operation/reminder',
+        method: 'PATCH',
+        body: { ...dto, doneDate: new Date() },
+      }),
+      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        const { data: updatedOperation } = await queryFulfilled;
+        updatedOperation?.caseId &&
+          updatedOperation?.id &&
+          dispatch(
+            operationsApi.util.updateQueryData(
+              'getRemindersByCaseId',
+              updatedOperation.caseId,
+              (draft) => {
+                const index = draft.findIndex(
+                  (stage) => stage.id === updatedOperation.id,
+                );
+                return [
+                  ...draft.slice(0, index),
+                  updatedOperation,
+                  ...draft.slice(index + 1),
+                ];
+              },
+            ),
+          );
+        RefetchCachedCase(dispatch, updatedOperation?.caseId);
+      },
+    }),
+
     deleteOperation: build.mutation<ControlOperation, UserInputDeleteDto>({
       query: (dto) => ({
         url: '/control/operation',
@@ -323,5 +353,6 @@ export const {
   useUpdateStageMutation: useUpdateControlStage,
   useUpdateDispatchMutation: useUpdateDispatch,
   useUpdateReminderMutation: useUpdateReminder,
+  useMarkReminderAsDoneMutation: useMarkReminderAsDone,
   useApproveOperationMutation: useApproveOperation,
 } = operationsApi;

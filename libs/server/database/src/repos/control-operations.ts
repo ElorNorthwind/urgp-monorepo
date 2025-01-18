@@ -19,6 +19,7 @@ import { IDatabase, IMain } from 'pg-promise';
 import { operations } from './sql/sql';
 import { toDate } from 'date-fns';
 import { Logger } from '@nestjs/common';
+import { control } from 'leaflet';
 
 // @Injectable()
 export class ControlOperationsRepository {
@@ -142,6 +143,7 @@ export class ControlOperationsRepository {
       authorId,
       dueDate: dto.dueDate,
       executorId: dto.executorId || authorId,
+      controllerId: dto.controllerId || authorId,
       description: dto.description,
       dateDescription: dto.dateDescription,
     };

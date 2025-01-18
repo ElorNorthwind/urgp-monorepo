@@ -3,6 +3,7 @@ SET payload = payload || (payload->-1 ||
     jsonb_build_object(
             'dueDate', ${dueDate},
             'executorId', ${executorId},
+            'controllerId', ${controllerId},
             'description', ${description},
             'dateDescription', ${dateDescription},
             'updatedAt', NOW(),

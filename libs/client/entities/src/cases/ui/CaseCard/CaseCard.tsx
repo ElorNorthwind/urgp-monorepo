@@ -16,13 +16,13 @@ import { ExternalCasesList } from '../ExternalCasesList';
 import { CaseDirectionsList } from '../CaseDirectionsList';
 import {
   CreateDispatchButton,
+  ManageReminderButton,
   StagesHeader,
   StagesList,
   useDispatches,
   useStages,
 } from '../../../operations';
 import { CaseCardFooter } from './CaseCardFooter';
-import { CreateReminderDialog } from '@urgp/client/widgets';
 import { ControlDispatchesList } from '../ControlDispatchesList';
 
 type CaseCardProps = {
@@ -139,10 +139,14 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
       >
         <AccordionItem value="description" className="relative">
           <AccordionTrigger>Описание проблемы</AccordionTrigger>
-          <CreateReminderDialog
-            className="absolute right-6 top-3 h-8 px-2 py-1"
+          <ManageReminderButton
             caseId={controlCase?.id}
-            expectedDueDate={controlCase?.dispatches?.[0]?.dueDate || null}
+            className="absolute right-6 top-3 h-8 px-2 py-1"
+            expectedDate={
+              controlCase?.dispatches?.[0]?.dueDate
+                ? (controlCase?.dispatches?.[0]?.dueDate as unknown as string)
+                : undefined
+            }
           />
           {controlCase && (
             <AccordionContent className="bg-background rounded-t-lg border border-b-0 p-2">
