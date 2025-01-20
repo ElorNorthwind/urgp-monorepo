@@ -8,16 +8,16 @@ function DirectionCell(props: CellContext<Case, string>): JSX.Element {
   const payload = props.row.original.payload;
   return (
     <Tooltip>
-      <TooltipTrigger>
+      <TooltipTrigger className="flex-wrap overflow-hidden">
         <CaseDirectionsList
           directions={payload?.directions}
-          variant="list"
-          className="max-h-12 overflow-hidden"
+          variant="compact"
+          className="max-h-14 overflow-hidden"
           // className="bg-red-300"
         />
       </TooltipTrigger>
       <TooltipPortal>
-        <TooltipContent side="bottom">
+        <TooltipContent side="bottom" className="p-3">
           <TooltipArrow />
           <CaseDirectionsList
             directions={payload?.directions}

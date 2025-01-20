@@ -105,7 +105,7 @@ export const controlCasesColumns = [
     {
       id: 'directions',
       header: 'Направления',
-      size: 190,
+      size: 140,
       enableSorting: true,
       cell: (props) => {
         return <DirectionCell {...props} />;

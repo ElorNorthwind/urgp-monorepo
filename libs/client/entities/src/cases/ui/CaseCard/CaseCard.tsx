@@ -64,7 +64,10 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
 
   const [markAsSeen, { isLoading: isSeenLoading }] = useMarkReminderAsSeen();
   useEffect(() => {
-    !isSeenLoading && markAsSeen && markAsSeen([controlCase?.id]);
+    !isSeenLoading &&
+      markAsSeen &&
+      controlCase?.id &&
+      markAsSeen([controlCase?.id]);
   }, [controlCase]);
 
   return (
@@ -125,8 +128,8 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
                 )}
               </TooltipContent>
             </Tooltip>
-            <div className="bg-muted-foreground/5 truncate border-r px-2 py-1 text-right font-bold">
-              Тема:
+            <div className="bg-muted-foreground/5 flex items-center truncate border-r px-2 py-1 text-right font-bold">
+              <span className="">Темы:</span>
             </div>
             <CaseDirectionsList
               directions={controlCase?.payload?.directions}

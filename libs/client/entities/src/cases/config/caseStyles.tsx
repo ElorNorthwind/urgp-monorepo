@@ -1,3 +1,4 @@
+import { cn } from '@urgp/client/shared';
 import { Case } from '@urgp/shared/entities';
 import {
   Circle,
@@ -79,32 +80,42 @@ export const directionCategoryStyles = {
   УРЖП: {
     icon: Circle,
     iconStyle: 'bg-cyan-500 rounded-full text-cyan-500',
-    badgeStyle:
-      'bg-background border-cyan-500 border px-1 text-cyan-600 hover:bg-cyan-50',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-cyan-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-cyan-500 before:mr-1",
+    ),
   },
   УВЖУ: {
     icon: Circle,
     iconStyle: 'bg-emerald-500 rounded-full text-emerald-500',
-    badgeStyle:
-      'bg-background border-emerald-500 border px-1 text-emerald-600 hover:bg-emerald-50',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-emerald-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-emerald-500 before:mr-1",
+    ),
   },
   УПГУ: {
     icon: Circle,
     iconStyle: 'bg-amber-500 rounded-full text-amber-500',
-    badgeStyle:
-      'bg-background border-amber-500 border px-1 text-amber-600 hover:bg-amber-50',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-amber-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-amber-500 before:mr-1",
+    ),
   },
   УП: {
     icon: Circle,
     iconStyle: 'bg-slate-500 rounded-full text-slate-500',
-    badgeStyle:
-      'bg-background border-slate-500 border px-1 text-slate-600 hover:bg-slate-50',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-slate-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-slate-500 before:mr-1",
+    ),
   },
   УОЖП: {
     icon: Circle,
     iconStyle: 'bg-violet-500 rounded-full text-violet-500',
-    badgeStyle:
-      'bg-background border-violet-500 border px-1 text-violet-600 hover:bg-violet-50',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-violet-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-violet-500 before:mr-1",
+    ),
   },
 } as Record<string, StyleData>;
 

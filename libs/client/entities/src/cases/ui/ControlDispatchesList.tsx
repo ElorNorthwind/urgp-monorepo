@@ -56,7 +56,9 @@ const ControlDispatchesList = (
                   paddingStyle,
                   'border-r',
                   'bg-muted-foreground/5',
-                  !d.payload?.description && 'border-b',
+                  index < dispatches.length - 1 &&
+                    !d.payload?.description &&
+                    'border-b',
                 )}
               >
                 {d.payload?.executor?.fio}
@@ -68,7 +70,9 @@ const ControlDispatchesList = (
                       paddingStyle,
                       'bg-background group flex flex-row items-center gap-1',
                       sameController ? 'col-span-2' : 'col-span-1 border-r',
-                      !d.payload?.description && 'border-b',
+                      index < dispatches.length - 1 &&
+                        !d.payload?.description &&
+                        'border-b',
                     )}
                   >
                     <EditDispatchButton controlDispatch={d} />
@@ -86,7 +90,9 @@ const ControlDispatchesList = (
                   className={cn(
                     paddingStyle,
                     'bg-muted-foreground/5',
-                    !d.payload?.description && 'border-b',
+                    index < dispatches.length - 1 &&
+                      !d.payload?.description &&
+                      'border-b',
                   )}
                 >
                   {'от: ' + d.payload?.controller?.fio}
