@@ -97,4 +97,4 @@ LEFT JOIN (SELECT DISTINCT ON(case_id) case_id,
 LEFT JOIN dispatches dis ON dis.case_id = c.id
 WHERE (c.payload->-1->>'isDeleted')::boolean IS DISTINCT FROM true
 AND (c.payload->-1->>'approveStatus' = 'approved' OR c.author_id = ${userId} OR (c.payload->-1->>'approverId')::integer = ${userId} OR ${readAll} = true)
-ORDER BY c.created_at ASC;
+ORDER BY c.created_at DESC, c.id DESC;
