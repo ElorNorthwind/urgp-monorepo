@@ -29,7 +29,9 @@ const EditDispatchButton = ({
 
   if (i.cannot('update', controlDispatch))
     return (
-      <div className={className}>
+      <div
+        className={cn('flex h-5 flex-row items-center gap-2 p-0', className)}
+      >
         <span>
           {controlDispatch.payload?.dueDate
             ? format(controlDispatch.payload?.dueDate, 'dd.MM.yyyy')
@@ -46,7 +48,7 @@ const EditDispatchButton = ({
     //   <TooltipTrigger asChild>
     <Button
       variant="link"
-      className={cn('flex h-5 flex-row gap-2 p-0', className)}
+      className={cn('flex h-5 flex-row items-center gap-2 p-0', className)}
       onClick={() => {
         dispatch(setDispatchFormValuesFromDispatch(controlDispatch));
         dispatch(setDispatchFormState('edit'));

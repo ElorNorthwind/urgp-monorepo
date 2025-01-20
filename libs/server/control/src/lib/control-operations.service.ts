@@ -23,6 +23,7 @@ import {
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 import { ControlClassificatorsService } from './control-classificators.service';
+import { sub } from 'date-fns';
 
 @Injectable()
 export class ControlOperationsService {
@@ -183,8 +184,15 @@ export class ControlOperationsService {
     userId: number,
     dueDate?: Date | string | number,
   ) {
+    // Список людей, которым должны уйти напоминалки
+    let reminderList = new Map([
+      [slimCase?.authorId, 'Напоминание автору заявки'],
+    ]);
+
     // Создаем по поручению и напоминалке на каждого из исполнителей
     const directions = await this.classificators.getCaseDirectionTypes();
+
+    // Ищем исполнителей
     const flatDirections = directions.flatMap((d) => d.items);
     const executors = slimCase.payload.directionIds.reduce((prev, cur) => {
       const executor =
@@ -192,7 +200,8 @@ export class ControlOperationsService {
         undefined;
       return executor && !prev.includes(executor) ? [...prev, executor] : prev;
     }, [] as number[]);
-    executors.map(async (executor) => {
+
+    executors.forEach(async (executor) => {
       await this.createDispatch(
         {
           caseId: slimCase.id,
@@ -205,29 +214,42 @@ export class ControlOperationsService {
         },
         userId,
       );
-      await this.createReminder(
-        {
-          caseId: slimCase.id,
-          class: 'reminder',
-          typeId: 11,
-          dueDate: dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
-          description: 'Напоминание исполнителю',
-          observerId: executor,
-        },
-        userId,
-      );
+      // Добавляем адресата в список напоминалок
+      reminderList.set(executor, 'Напоминание исполнителю');
     });
-    // Создаем напоминалку автору
-    this.createReminder(
-      {
-        caseId: slimCase.id,
-        class: 'reminder',
-        typeId: 11,
-        dueDate: dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
-        description: 'Напоминание автору заявки',
-        observerId: userId,
-      },
+
+    const directionSubscribers =
+      await this.classificators.getDirectionSubscribers(
+        slimCase?.payload?.directionIds,
+      );
+
+    directionSubscribers.forEach((subscriber) => {
+      !reminderList.has(subscriber.id) &&
+        reminderList.set(
+          subscriber.id,
+          'Напоминание по интересующему направлению',
+        );
+    });
+
+    const existingReminders = await this.readOperationsByCaseId(
+      slimCase.id,
       userId,
+      'reminder',
     );
+
+    reminderList.forEach((value, key) => {
+      !existingReminders.map((r) => r.id).includes(key) &&
+        this.createReminder(
+          {
+            caseId: slimCase.id,
+            class: 'reminder',
+            typeId: 11,
+            dueDate: dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
+            description: value,
+            observerId: key,
+          },
+          userId,
+        );
+    });
   }
 }

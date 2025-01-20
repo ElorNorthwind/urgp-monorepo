@@ -6,6 +6,7 @@ import {
   TypeInfo,
   UserControlApprovers,
   UserControlData,
+  UserControlSettings,
 } from '@urgp/shared/entities';
 
 export const classificatorsApi = rtkApi.injectEndpoints({
@@ -14,6 +15,19 @@ export const classificatorsApi = rtkApi.injectEndpoints({
       query: () => ({
         url: '/control/classificators/user-data',
         method: 'GET',
+      }),
+    }),
+    getCurrentUserSettings: build.query<UserControlSettings, void>({
+      query: () => ({
+        url: '/control/classificators/user-settings',
+        method: 'GET',
+      }),
+    }),
+    setCurrentUserDirections: build.mutation<UserControlSettings, number[]>({
+      query: (directions) => ({
+        url: '/control/classificators/user-settings/directions',
+        method: 'PATCH',
+        body: { directions },
       }),
     }),
     getCurrentUserApprovers: build.query<UserControlApprovers, void>({
@@ -70,6 +84,8 @@ export const classificatorsApi = rtkApi.injectEndpoints({
 
 export const {
   useGetCurrentUserDataQuery: useCurrentUserData,
+  useGetCurrentUserSettingsQuery: useCurrentUserSettings,
+  useSetCurrentUserDirectionsMutation: useSetCurrentUserDirections,
   useGetCurrentUserApproversQuery: useCurrentUserApprovers,
   useGetControlExecutorsQuery: useControlExecutors,
   useGetCaseTypesQuery: useCaseTypes,

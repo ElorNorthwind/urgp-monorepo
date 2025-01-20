@@ -1,3 +1,5 @@
+import { CasesPageFiler } from '../cases/dto';
+
 export type User = {
   id: number;
   login: string;
@@ -42,6 +44,14 @@ export type UserControlData = {
   };
   roles: string[];
   priority?: number;
+};
+
+export type UserControlSettings = {
+  directions: number[];
+  department: string;
+  filters: {
+    cases: CasesPageFiler;
+  };
 };
 
 export type SelectOption<T> = {

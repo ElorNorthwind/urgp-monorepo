@@ -60,4 +60,8 @@ export class ControlClassificatorsRepository {
   readDepartmentTypes(): Promise<NestedClassificatorInfoString[]> {
     return this.db.any(classificators.readDepartmentTypes);
   }
+
+  readDirectionSubscribers(directions: number[]): Promise<TypeInfo[]> {
+    return this.db.any(classificators.readDirectionSubscribers, { directions });
+  }
 }

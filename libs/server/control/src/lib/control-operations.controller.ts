@@ -142,7 +142,7 @@ export class ControlOperationsController {
     @Param('id') id: number,
   ): Promise<ControlStage[]> {
     // Считаем дело отсмотренным, если по нему загрузились этапы
-    this.controlOperations.updateRemindersByCaseIds([id], req.user.id);
+    // this.controlOperations.updateRemindersByCaseIds([id], req.user.id);
     return this.controlOperations.readOperationsByCaseId(
       id,
       req.user.id,

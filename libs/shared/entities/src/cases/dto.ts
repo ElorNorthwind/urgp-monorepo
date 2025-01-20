@@ -82,11 +82,8 @@ const queryStringArray = z
   .pipe(z.string().array())
   .or(z.string().array());
 
-export const casesPageSearch = z
+export const casesPageFilter = z
   .object({
-    selectedCase: z.coerce.number(),
-    sortKey: z.string(),
-    sortDir: z.enum(['asc', 'desc']),
     query: z.string(),
     num: z.string(),
     status: quetyNumberArray,
@@ -96,6 +93,15 @@ export const casesPageSearch = z
     dueFrom: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
     dueTo: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
     viewStatus: z.array(z.enum(['unwatched', 'unchanged', 'new', 'changed'])),
+  })
+  .partial();
+export type CasesPageFiler = z.infer<typeof casesPageFilter>;
+
+export const casesPageSearch = casesPageFilter
+  .extend({
+    selectedCase: z.coerce.number(),
+    sortKey: z.string(),
+    sortDir: z.enum(['asc', 'desc']),
   })
   .partial();
 export type CasesPageSearchDto = z.infer<typeof casesPageSearch>;

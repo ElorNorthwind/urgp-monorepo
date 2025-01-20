@@ -20,10 +20,13 @@ import {
   StagesHeader,
   StagesList,
   useDispatches,
+  useMarkReminderAsDone,
+  useMarkReminderAsSeen,
   useStages,
 } from '../../../operations';
 import { CaseCardFooter } from './CaseCardFooter';
 import { ControlDispatchesList } from '../ControlDispatchesList';
+import { useEffect } from 'react';
 
 type CaseCardProps = {
   controlCase: Case;
@@ -59,7 +62,10 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     isFetching: isDispatchesFetching,
   } = useDispatches(controlCase?.id, { skip: !controlCase?.id });
 
-  const i = useUserAbility();
+  const [markAsSeen, { isLoading: isSeenLoading }] = useMarkReminderAsSeen();
+  useEffect(() => {
+    !isSeenLoading && markAsSeen && markAsSeen([controlCase?.id]);
+  }, [controlCase]);
 
   return (
     <>

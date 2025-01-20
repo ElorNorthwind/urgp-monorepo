@@ -1,21 +1,14 @@
-import { IDatabase, IMain, ColumnSet } from 'pg-promise';
-import { DbUser } from '../models/types';
-import { SelectRenamedColumns } from '../lib/select-renamed-columns';
-import {
-  ExternalCredentials,
-  ExternalLookup,
-  ExternalSessionInfo,
-} from '@urgp/server/entities';
 import {
   CreateUserDto,
   GetUserByIdDto,
   GetUserByLoginDto,
   SelectOption,
-  User,
   UserControlApprovers,
   UserControlData,
+  UserControlSettings,
   UserWithCredentials,
 } from '@urgp/shared/entities';
+import { IDatabase, IMain } from 'pg-promise';
 import { users } from './sql/sql';
 
 export class RenovationUsersRepository {
@@ -51,7 +44,23 @@ export class RenovationUsersRepository {
 
   async getControlData(id: number): Promise<UserControlData> {
     const reply = await this.db.oneOrNone(users.getUserControlData, { id });
-    return reply.data;
+    return reply?.data;
+  }
+
+  async getControlSettings(id: number): Promise<UserControlSettings> {
+    const reply = await this.db.oneOrNone(users.getUserControlSettings, { id });
+    return reply?.data;
+  }
+
+  async setControlDirections(
+    id: number,
+    directions: number[],
+  ): Promise<UserControlSettings> {
+    const reply = await this.db.oneOrNone(users.setUserControlDirections, {
+      id,
+      directions,
+    });
+    return reply?.data;
   }
 
   async getUserApprovers(id: number): Promise<UserControlApprovers> {

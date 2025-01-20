@@ -5,6 +5,7 @@ import {
   ControlOperation,
   ControlOperationPayloadHistoryData,
   ControlReminder,
+  ControlReminderSlim,
   ControlStage,
   ControlStageCreateDto,
   ControlStageUpdateDto,
@@ -230,6 +231,59 @@ export const operationsApi = rtkApi.injectEndpoints({
       },
     }),
 
+    markReminderAsSeen: build.mutation<ControlReminderSlim, number[]>({
+      query: (caseIds) => ({
+        url: '/control/operation/mark-as-seen',
+        method: 'PATCH',
+        body: { caseIds },
+      }),
+      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        const { data: updatedOperation } = await queryFulfilled;
+        if (!updatedOperation?.caseId || !updatedOperation?.id) return;
+        dispatch(
+          operationsApi.util.updateQueryData(
+            'getRemindersByCaseId',
+            updatedOperation.caseId,
+            (draft) => {
+              const index = draft.findIndex(
+                (reminder) => reminder.id === updatedOperation.id,
+              );
+              return [
+                ...draft.slice(0, index),
+                {
+                  ...draft[index],
+                  payload: {
+                    ...draft[index].payload,
+                    lastSeenDate: updatedOperation?.payload?.lastSeenDate,
+                  },
+                },
+                ...draft.slice(index + 1),
+              ];
+            },
+          ),
+        );
+        dispatch(
+          casesApi.util.updateQueryData('getCases', undefined, (draft) => {
+            const index = draft.findIndex(
+              (stage) => stage.id === updatedOperation?.caseId,
+            );
+            return [
+              ...draft.slice(0, index),
+              {
+                ...draft[index],
+                lastSeen: updatedOperation?.payload?.lastSeenDate,
+                viewStatus:
+                  draft[index].viewStatus === 'unwatched'
+                    ? 'unwatched'
+                    : 'unchanged',
+              },
+              ...draft.slice(index + 1),
+            ];
+          }),
+        );
+      },
+    }),
+
     markReminderAsDone: build.mutation<ControlReminder, ReminderUpdateDto>({
       query: (dto) => ({
         url: '/control/operation/reminder',
@@ -353,6 +407,7 @@ export const {
   useUpdateStageMutation: useUpdateControlStage,
   useUpdateDispatchMutation: useUpdateDispatch,
   useUpdateReminderMutation: useUpdateReminder,
+  useMarkReminderAsSeenMutation: useMarkReminderAsSeen,
   useMarkReminderAsDoneMutation: useMarkReminderAsDone,
   useApproveOperationMutation: useApproveOperation,
 } = operationsApi;

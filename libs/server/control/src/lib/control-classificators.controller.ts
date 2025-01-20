@@ -2,8 +2,9 @@ import {
   Body,
   Controller,
   Get,
-  Logger,
   Param,
+  ParseArrayPipe,
+  Patch,
   Query,
   Req,
   UnauthorizedException,
@@ -19,12 +20,11 @@ import {
   controlOperationClass,
   SelectOption,
   NestedClassificatorInfoString,
+  UserControlSettings,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
 import { CacheTTL } from '@nestjs/cache-manager';
-import { ZodValidationPipe } from '@urgp/server/pipes';
-import { z } from 'zod';
 
 @Controller('control/classificators')
 @CacheTTL(1000 * 60 * 60)
@@ -66,6 +66,39 @@ export class ControlClassificatorsController {
       );
     }
     return this.classificators.getControlData(id);
+  }
+
+  @Get('user-settings')
+  async getCurrentUserSettings(
+    @Req() req: RequestWithUserData,
+  ): Promise<UserControlSettings> {
+    const userId = req.user.id;
+    return await this.classificators.getControlSettings(userId);
+  }
+
+  @Get('user-settings/:id')
+  async getUserSettings(
+    @Req() req: RequestWithUserData,
+    @Param('id') id: number,
+  ): Promise<UserControlSettings> {
+    const userId = req.user.id;
+    const controlData = await this.classificators.getControlData(userId);
+    if (userId !== id && !controlData.roles.includes('admin')) {
+      throw new UnauthorizedException(
+        'Операция не разрешена. Настройки пользователя доступны только ему самому или администратору!',
+      );
+    }
+    return this.classificators.getControlSettings(id);
+  }
+
+  @Patch('user-settings/directions')
+  async setCurrentUserDirections(
+    @Req() req: RequestWithUserData,
+    @Body('direcrtions', new ParseArrayPipe({ items: Number, separator: ',' }))
+    directions: number[],
+  ): Promise<UserControlSettings> {
+    const userId = req.user.id;
+    return this.classificators.setControlDirections(req.user.id, directions);
   }
 
   @Get('case-types')

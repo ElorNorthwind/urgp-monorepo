@@ -9,6 +9,7 @@ import {
   ControlOperationClass,
   SelectOption,
   NestedClassificatorInfoString,
+  UserControlSettings,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -21,6 +22,22 @@ export class ControlClassificatorsService {
 
   public async getControlData(userId: number): Promise<UserControlData> {
     return this.dbServise.db.renovationUsers.getControlData(userId);
+  }
+
+  public async getControlSettings(
+    userId: number,
+  ): Promise<UserControlSettings> {
+    return this.dbServise.db.renovationUsers.getControlSettings(userId);
+  }
+
+  public async setControlDirections(
+    userId: number,
+    directions: number[],
+  ): Promise<UserControlSettings> {
+    return this.dbServise.db.renovationUsers.setControlDirections(
+      userId,
+      directions,
+    );
   }
 
   public async getUserApprovers(userId: number): Promise<UserControlApprovers> {
@@ -61,5 +78,13 @@ export class ControlClassificatorsService {
 
   public async getDepartmentTypes(): Promise<NestedClassificatorInfoString[]> {
     return this.dbServise.db.controlClassificators.readDepartmentTypes();
+  }
+
+  public async getDirectionSubscribers(
+    directions: number[],
+  ): Promise<TypeInfo[]> {
+    return this.dbServise.db.controlClassificators.readDirectionSubscribers(
+      directions,
+    );
   }
 }

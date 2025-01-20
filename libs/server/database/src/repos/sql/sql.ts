@@ -65,6 +65,8 @@ export const users = {
   incrementTokenVersion: sql('sql/users/incrementTokenVersion.sql'),
   changePassword: sql('sql/users/changePassword.sql'),
   getUserControlData: sql('sql/users/getUserControlData.sql'),
+  getUserControlSettings: sql('sql/users/getUserControlSettings.sql'),
+  setUserControlDirections: sql('sql/users/setUserControlDirections.sql'),
   getUserApprovers: sql('sql/users/getUserApprovers.sql'),
   getControlExecutors: sql('sql/users/getControlExecutors.sql'),
 };
@@ -122,5 +124,8 @@ export const classificators = {
   ),
   readDepartmentTypes: sql(
     'sql/control/classificators/readDepartmentTypes.sql',
+  ),
+  readDirectionSubscribers: sql(
+    'sql/control/classificators/readDirectionSubscribers.sql',
   ),
 };
