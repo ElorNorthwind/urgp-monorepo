@@ -1,4 +1,10 @@
-import { Badge, cn } from '@urgp/client/shared';
+import {
+  Badge,
+  cn,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@urgp/client/shared';
 import { Case } from '@urgp/shared/entities';
 import { directionCategoryStyles } from '../config/caseStyles';
 import { forwardRef } from 'react';
@@ -18,68 +24,148 @@ const CaseDirectionsList = forwardRef<
 
   if (variant === 'table') {
     return (
-      <div className={cn('flex flex-col gap-2', className)} ref={ref}>
-        {label && <div className="mb-1 font-bold">{label}</div>}
+      <>
+        {label && <div className="mb-2 font-bold">{label}</div>}
+        <div
+          className={cn(
+            'flex max-h-96 flex-col flex-wrap gap-2 gap-x-8',
+            className,
+          )}
+          ref={ref}
+        >
+          {[...directions]
+            .sort((a, b) => {
+              const dif1 = (a?.category || '').localeCompare(b?.category || '');
+              const dif2 = (a?.name || '').localeCompare(b?.name || '');
+              return dif1 > 0
+                ? 1
+                : dif1 < 0
+                  ? -1
+                  : dif2 > 0
+                    ? 1
+                    : dif2 < 0
+                      ? -1
+                      : 0;
+            })
+            .map(
+              (d) =>
+                d?.id && (
+                  <div className="flex items-center justify-between" key={d.id}>
+                    <Badge
+                      variant={'outline'}
+                      className={cn(
+                        d?.category &&
+                          directionCategoryStyles[d.category].badgeStyle,
+                        'mr-2',
+                      )}
+                    >
+                      {d.name}
+                    </Badge>
+                    <span className="text-muted-foreground ml-1 font-normal">
+                      {d?.category && '(' + d.category + ')'}
+                    </span>
+                  </div>
+                ),
+            )}
+        </div>
+      </>
+    );
+  }
+
+  if (variant === 'list') {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'flex flex-wrap items-start justify-start gap-1',
+          className,
+        )}
+      >
+        {label && <div className="font-bold">{label}</div>}
         {directions?.map(
           (d) =>
             d?.id && (
-              <div className="flex items-center justify-between" key={d.id}>
-                <Badge
-                  variant={'outline'}
-                  className={cn(
-                    d?.category &&
-                      directionCategoryStyles[d.category].badgeStyle,
-                    'mr-2',
-                  )}
-                >
-                  {d.name}
-                </Badge>
-                <span className="text-muted-foreground ml-1 font-normal">
-                  {d?.category && '(' + d.category + ')'}
-                </span>
-              </div>
+              <Tooltip key={'t' + d?.id}>
+                <TooltipTrigger>
+                  <Badge
+                    variant={'outline'}
+                    className={cn(
+                      'text-nowrap',
+                      d?.category &&
+                        directionCategoryStyles[d.category].badgeStyle,
+                    )}
+                    key={d?.id}
+                  >
+                    {d?.name && d.name}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent side="left">
+                  <span>{d?.fullname}</span>
+                  <span className="text-muted-foreground/80 ml-2">
+                    {d?.category && `(${d.category})`}
+                  </span>
+                </TooltipContent>
+              </Tooltip>
             ),
         )}
       </div>
     );
   }
 
-  const visibleDirections =
-    variant === 'compact' ? directions.slice(0, 2) : directions;
+  const reducedDirectionsMap = directions.reduce((acc, cur) => {
+    return acc.set(cur.category, (acc.get(cur.category) || 0) + 1);
+  }, new Map());
+  const reducedDirections = Array.from(
+    reducedDirectionsMap,
+    ([name, value]) => ({ name, value }),
+  );
 
   return (
     <div
       ref={ref}
       className={cn(
-        // variant === 'compact' ? 'flex-wrap-reverse' : 'flex-wrap',
-        'flex-wrap',
-        'flex items-start justify-start gap-1',
+        'flex flex-wrap items-start justify-start gap-1',
         className,
       )}
     >
       {label && <div className="font-bold">{label}</div>}
-      {visibleDirections?.map(
-        (d) =>
-          d?.id && (
-            <Badge
-              variant={'outline'}
-              className={cn(
-                'text-nowrap',
-                d?.category && directionCategoryStyles[d.category].badgeStyle,
-              )}
-              key={d?.id}
-            >
-              {variant === 'compact' && directions?.length > 2
-                ? directions.filter((dir) => dir.category === d.category).length
-                : d?.name && d.name}
-            </Badge>
-          ),
-      )}
-      {/* {variant === 'compact' && directions?.length > 2 && (
-        <Badge variant={'outline'} className="flex-shrink p-1 px-3">
+      {directions.length > 2
+        ? reducedDirections.slice(0, 3).map(
+            (d) =>
+              d?.name && (
+                <Badge
+                  variant={'outline'}
+                  className={cn(
+                    'text-nowrap',
+                    directionCategoryStyles[d.name].badgeStyle,
+                  )}
+                  key={d?.name}
+                >
+                  {d.value}
+                </Badge>
+              ),
+          )
+        : directions?.map(
+            (d) =>
+              d?.id && (
+                <Badge
+                  variant={'outline'}
+                  className={cn(
+                    'text-nowrap',
+                    d?.category &&
+                      directionCategoryStyles[d.category].badgeStyle,
+                  )}
+                  key={d?.id}
+                >
+                  {d?.name && d.name}
+                </Badge>
+              ),
+          )}
+      {directions.length > 2 && reducedDirections.length > 3 && (
+        <Badge variant={'outline'} className="flex-shrink p-1 px-[0.85rem]">
           ...
         </Badge>
-      )} */}
+      )}
     </div>
   );
 });

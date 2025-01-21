@@ -32,7 +32,7 @@ export const casesApi = rtkApi.injectEndpoints({
         createdCase?.id &&
           dispatch(
             casesApi.util.updateQueryData('getCases', undefined, (draft) => {
-              draft?.push(createdCase);
+              draft?.unshift(createdCase);
             }),
           );
       },

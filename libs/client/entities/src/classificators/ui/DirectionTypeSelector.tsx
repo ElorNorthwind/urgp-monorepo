@@ -55,8 +55,8 @@ const DirectionTypeSelector = (
         return (
           <div
             className={cn(
-              'bg-muted-foreground/5 size-4 flex-shrink-0 rounded-full',
-              directionCategoryStyles?.[item?.category || '']?.badgeStyle || '',
+              'size-4 flex-shrink-0',
+              directionCategoryStyles?.[item?.category || '']?.iconStyle || '',
             )}
           />
         );
