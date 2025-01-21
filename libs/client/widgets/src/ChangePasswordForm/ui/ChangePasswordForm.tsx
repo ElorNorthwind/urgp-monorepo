@@ -66,17 +66,6 @@ const ChangePasswordForm = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className={cn('grid gap-4 text-center', className)}>
-          {/* <FormField
-            control={form.control}
-            name="id"
-            render={({ field }) => (
-              <FormItem className="">
-                <FormControl>
-                  <Input {...field} value={user?.id || 0} type="hidden" />
-                </FormControl>
-              </FormItem>
-            )}
-          /> */}
           <FormField
             control={form.control}
             name="oldPassword"
@@ -152,7 +141,6 @@ const ChangePasswordForm = ({
           <div className="text-red-500">
             {isError && ((error as any).data.message as string)}
           </div>
-          {/* <div className="text-red-500">{isError && JSON.stringify(error)}</div> */}
         </div>
       </form>
     </Form>

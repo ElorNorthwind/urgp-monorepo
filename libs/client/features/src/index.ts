@@ -7,3 +7,4 @@ export * from './ResetCacheButton';
 export * from './ClassificatorFilter';
 export * from './ColumnVisibilitySelector';
 export * from './ConfirmationAlertDialog';
+export * from './InfoBox';

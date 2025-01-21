@@ -22,8 +22,10 @@ const DepartmentsFilter = (props: DepartmentsFilterProps): JSX.Element => {
     accordionItemValue = 'departments',
   } = props;
 
-  const navigate = useNavigate({ from: '/control' });
-  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
+  const navigate = useNavigate({ from: '/control/cases' });
+  const search = getRouteApi(
+    '/control/cases',
+  ).useSearch() as CasesPageSearchDto;
   const { data, isLoading, isFetching } = useDepartmentTypes();
 
   return (

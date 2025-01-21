@@ -10,8 +10,10 @@ type ResetFilterProps = {
 
 const ResetFilter = (props: ResetFilterProps): JSX.Element => {
   const { className, variant = 'full' } = props;
-  const navigate = useNavigate({ from: '/control' });
-  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
+  const navigate = useNavigate({ from: '/control/cases' });
+  const search = getRouteApi(
+    '/control/cases',
+  ).useSearch() as CasesPageSearchDto;
   const paramLength = Object.keys(search).filter(
     (key) => !['selectedCase', 'sortKey', 'sortDir'].includes(key),
   ).length;

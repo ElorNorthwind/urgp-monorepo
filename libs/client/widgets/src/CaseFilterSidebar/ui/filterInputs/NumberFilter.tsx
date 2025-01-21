@@ -9,8 +9,10 @@ type NumberFilterProps = {
 
 const NumberFilter = (props: NumberFilterProps): JSX.Element => {
   const { className } = props;
-  const navigate = useNavigate({ from: '/control' });
-  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
+  const navigate = useNavigate({ from: '/control/cases' });
+  const search = getRouteApi(
+    '/control/cases',
+  ).useSearch() as CasesPageSearchDto;
 
   return (
     <Input

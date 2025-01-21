@@ -22,8 +22,10 @@ const StatusFilter = (props: StatusFilterProps): JSX.Element => {
     accordionItemValue = 'status',
   } = props;
 
-  const navigate = useNavigate({ from: '/control' });
-  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
+  const navigate = useNavigate({ from: '/control/cases' });
+  const search = getRouteApi(
+    '/control/cases',
+  ).useSearch() as CasesPageSearchDto;
   const { data, isLoading, isFetching } = useCaseStatusTypes();
 
   return (

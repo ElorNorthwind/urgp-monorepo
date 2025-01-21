@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 import {
   CreateCaseDialog,
   CreateDispatchDialog,
@@ -30,7 +30,8 @@ export const Route = createFileRoute('/control')({
     return (
       <SidebarProvider cookieName="filter-sidebar" defaultOpen={false}>
         <ControlNavbar />
-        <ControlCasesPage />
+        <Outlet />
+        {/* <ControlCasesPage /> */}
         <CreateCaseDialog />
         <CreateStageDialog />
         <CreateDispatchDialog />
@@ -38,7 +39,7 @@ export const Route = createFileRoute('/control')({
       </SidebarProvider>
     );
   },
-  validateSearch: (search) => {
-    return casesPageSearch.parse(search);
-  },
+  // validateSearch: (search) => {
+  //   return casesPageSearch.parse(search);
+  // },
 });

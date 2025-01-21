@@ -17,7 +17,7 @@ import {
 import { Drama, Menu } from 'lucide-react';
 import { items } from '../config/items';
 import { buttonVariants } from '@urgp/client/shared';
-import { UserMenu } from '../../UserMenu';
+import { ControlUserMenu } from '../../ControlUserMenu';
 
 const ControlNavbar = (): JSX.Element => {
   const router = useRouterState();
@@ -59,7 +59,6 @@ const ControlNavbar = (): JSX.Element => {
                   buttonVariants({ variant: 'ghost' }),
                   'text-muted-foreground flex size-9 w-full items-center justify-start gap-2 p-4',
                   router.location.pathname === item.url &&
-                    item.title === 'Home' &&
                     'bg-muted-foreground/10 text-sidebar-foreground pointer-events-none cursor-auto',
                 )}
                 href={item.url}
@@ -115,7 +114,6 @@ const ControlNavbar = (): JSX.Element => {
                   buttonVariants({ variant: 'ghost' }),
                   'text-muted-foreground flex size-9 p-0',
                   router.location.pathname === item.url &&
-                    item.title === 'Home' &&
                     'bg-muted-foreground/10 text-sidebar-foreground pointer-events-none cursor-auto',
                 )}
                 href={item.url}
@@ -128,7 +126,7 @@ const ControlNavbar = (): JSX.Element => {
             </TooltipPortal>
           </Tooltip>
         ))}
-        <UserMenu className="mt-auto" />
+        <ControlUserMenu className="mt-auto" />
       </nav>
     </TooltipProvider>
   );

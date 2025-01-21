@@ -18,7 +18,7 @@ import { CasesPageSearchDto, Case } from '@urgp/shared/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
 import { CasesPageHeader } from './CasesPageHeader';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 const ControlCasesPage = (): JSX.Element => {
@@ -38,8 +38,10 @@ const ControlCasesPage = (): JSX.Element => {
   const user = useSelector(selectCurrentUser);
 
   // const isMobile = useIsMobile();
-  const navigate = useNavigate({ from: '/control' });
-  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
+  const navigate = useNavigate({ from: '/control/cases' });
+  const search = getRouteApi(
+    '/control/cases',
+  ).useSearch() as CasesPageSearchDto;
 
   // ID прошлого и текущего дела
   const currentIndex = filtered?.findIndex(

@@ -18,14 +18,20 @@ import { Route as LoginImport } from './routes/login'
 import { Route as RenovationRouteImport } from './routes/renovation/route'
 import { Route as ControlRouteImport } from './routes/control/route'
 import { Route as RenovationIndexImport } from './routes/renovation/index'
+import { Route as ControlIndexImport } from './routes/control/index'
 import { Route as RenovationStagesImport } from './routes/renovation/stages'
 import { Route as RenovationOldbuildingsImport } from './routes/renovation/oldbuildings'
 import { Route as RenovationOldapartmentsImport } from './routes/renovation/oldapartments'
 import { Route as RenovationMessagesImport } from './routes/renovation/messages'
 import { Route as RenovationBuildingRelocationMapImport } from './routes/renovation/building-relocation-map'
+import { Route as ControlProblemsImport } from './routes/control/problems'
+import { Route as ControlCasesImport } from './routes/control/cases'
 import { Route as RenovationSettingsRouteImport } from './routes/renovation/settings/route'
+import { Route as ControlSettingsRouteImport } from './routes/control/settings/route'
 import { Route as RenovationSettingsIndexImport } from './routes/renovation/settings/index'
+import { Route as ControlSettingsIndexImport } from './routes/control/settings/index'
 import { Route as RenovationSettingsChangePasswordImport } from './routes/renovation/settings/change-password'
+import { Route as ControlSettingsChangePasswordImport } from './routes/control/settings/change-password'
 
 // Create Virtual Routes
 
@@ -90,6 +96,12 @@ const RenovationIndexRoute = RenovationIndexImport.update({
   getParentRoute: () => RenovationRouteRoute,
 } as any)
 
+const ControlIndexRoute = ControlIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ControlRouteRoute,
+} as any)
+
 const RenovationStagesRoute = RenovationStagesImport.update({
   id: '/stages',
   path: '/stages',
@@ -121,10 +133,28 @@ const RenovationBuildingRelocationMapRoute =
     getParentRoute: () => RenovationRouteRoute,
   } as any)
 
+const ControlProblemsRoute = ControlProblemsImport.update({
+  id: '/problems',
+  path: '/problems',
+  getParentRoute: () => ControlRouteRoute,
+} as any)
+
+const ControlCasesRoute = ControlCasesImport.update({
+  id: '/cases',
+  path: '/cases',
+  getParentRoute: () => ControlRouteRoute,
+} as any)
+
 const RenovationSettingsRouteRoute = RenovationSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => RenovationRouteRoute,
+} as any)
+
+const ControlSettingsRouteRoute = ControlSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ControlRouteRoute,
 } as any)
 
 const RenovationSettingsIndexRoute = RenovationSettingsIndexImport.update({
@@ -133,11 +163,24 @@ const RenovationSettingsIndexRoute = RenovationSettingsIndexImport.update({
   getParentRoute: () => RenovationSettingsRouteRoute,
 } as any)
 
+const ControlSettingsIndexRoute = ControlSettingsIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ControlSettingsRouteRoute,
+} as any)
+
 const RenovationSettingsChangePasswordRoute =
   RenovationSettingsChangePasswordImport.update({
     id: '/change-password',
     path: '/change-password',
     getParentRoute: () => RenovationSettingsRouteRoute,
+  } as any)
+
+const ControlSettingsChangePasswordRoute =
+  ControlSettingsChangePasswordImport.update({
+    id: '/change-password',
+    path: '/change-password',
+    getParentRoute: () => ControlSettingsRouteRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -200,12 +243,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MapLazyImport
       parentRoute: typeof rootRoute
     }
+    '/control/settings': {
+      id: '/control/settings'
+      path: '/settings'
+      fullPath: '/control/settings'
+      preLoaderRoute: typeof ControlSettingsRouteImport
+      parentRoute: typeof ControlRouteImport
+    }
     '/renovation/settings': {
       id: '/renovation/settings'
       path: '/settings'
       fullPath: '/renovation/settings'
       preLoaderRoute: typeof RenovationSettingsRouteImport
       parentRoute: typeof RenovationRouteImport
+    }
+    '/control/cases': {
+      id: '/control/cases'
+      path: '/cases'
+      fullPath: '/control/cases'
+      preLoaderRoute: typeof ControlCasesImport
+      parentRoute: typeof ControlRouteImport
+    }
+    '/control/problems': {
+      id: '/control/problems'
+      path: '/problems'
+      fullPath: '/control/problems'
+      preLoaderRoute: typeof ControlProblemsImport
+      parentRoute: typeof ControlRouteImport
     }
     '/renovation/building-relocation-map': {
       id: '/renovation/building-relocation-map'
@@ -242,6 +306,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RenovationStagesImport
       parentRoute: typeof RenovationRouteImport
     }
+    '/control/': {
+      id: '/control/'
+      path: '/'
+      fullPath: '/control/'
+      preLoaderRoute: typeof ControlIndexImport
+      parentRoute: typeof ControlRouteImport
+    }
     '/renovation/': {
       id: '/renovation/'
       path: '/'
@@ -249,12 +320,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RenovationIndexImport
       parentRoute: typeof RenovationRouteImport
     }
+    '/control/settings/change-password': {
+      id: '/control/settings/change-password'
+      path: '/change-password'
+      fullPath: '/control/settings/change-password'
+      preLoaderRoute: typeof ControlSettingsChangePasswordImport
+      parentRoute: typeof ControlSettingsRouteImport
+    }
     '/renovation/settings/change-password': {
       id: '/renovation/settings/change-password'
       path: '/change-password'
       fullPath: '/renovation/settings/change-password'
       preLoaderRoute: typeof RenovationSettingsChangePasswordImport
       parentRoute: typeof RenovationSettingsRouteImport
+    }
+    '/control/settings/': {
+      id: '/control/settings/'
+      path: '/'
+      fullPath: '/control/settings/'
+      preLoaderRoute: typeof ControlSettingsIndexImport
+      parentRoute: typeof ControlSettingsRouteImport
     }
     '/renovation/settings/': {
       id: '/renovation/settings/'
@@ -267,6 +352,37 @@ declare module '@tanstack/react-router' {
 }
 
 // Create and export the route tree
+
+interface ControlSettingsRouteRouteChildren {
+  ControlSettingsChangePasswordRoute: typeof ControlSettingsChangePasswordRoute
+  ControlSettingsIndexRoute: typeof ControlSettingsIndexRoute
+}
+
+const ControlSettingsRouteRouteChildren: ControlSettingsRouteRouteChildren = {
+  ControlSettingsChangePasswordRoute: ControlSettingsChangePasswordRoute,
+  ControlSettingsIndexRoute: ControlSettingsIndexRoute,
+}
+
+const ControlSettingsRouteRouteWithChildren =
+  ControlSettingsRouteRoute._addFileChildren(ControlSettingsRouteRouteChildren)
+
+interface ControlRouteRouteChildren {
+  ControlSettingsRouteRoute: typeof ControlSettingsRouteRouteWithChildren
+  ControlCasesRoute: typeof ControlCasesRoute
+  ControlProblemsRoute: typeof ControlProblemsRoute
+  ControlIndexRoute: typeof ControlIndexRoute
+}
+
+const ControlRouteRouteChildren: ControlRouteRouteChildren = {
+  ControlSettingsRouteRoute: ControlSettingsRouteRouteWithChildren,
+  ControlCasesRoute: ControlCasesRoute,
+  ControlProblemsRoute: ControlProblemsRoute,
+  ControlIndexRoute: ControlIndexRoute,
+}
+
+const ControlRouteRouteWithChildren = ControlRouteRoute._addFileChildren(
+  ControlRouteRouteChildren,
+)
 
 interface RenovationSettingsRouteRouteChildren {
   RenovationSettingsChangePasswordRoute: typeof RenovationSettingsChangePasswordRoute
@@ -311,60 +427,76 @@ const RenovationRouteRouteWithChildren = RenovationRouteRoute._addFileChildren(
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
-  '/control': typeof ControlRouteRoute
+  '/control': typeof ControlRouteRouteWithChildren
   '/renovation': typeof RenovationRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/oldbuildings': typeof OldbuildingsRoute
   '/about': typeof AboutLazyRoute
   '/bticalc': typeof BticalcLazyRoute
   '/map': typeof MapLazyRoute
+  '/control/settings': typeof ControlSettingsRouteRouteWithChildren
   '/renovation/settings': typeof RenovationSettingsRouteRouteWithChildren
+  '/control/cases': typeof ControlCasesRoute
+  '/control/problems': typeof ControlProblemsRoute
   '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
   '/renovation/messages': typeof RenovationMessagesRoute
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
   '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
   '/renovation/stages': typeof RenovationStagesRoute
+  '/control/': typeof ControlIndexRoute
   '/renovation/': typeof RenovationIndexRoute
+  '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
+  '/control/settings/': typeof ControlSettingsIndexRoute
   '/renovation/settings/': typeof RenovationSettingsIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
-  '/control': typeof ControlRouteRoute
   '/login': typeof LoginRoute
   '/oldbuildings': typeof OldbuildingsRoute
   '/about': typeof AboutLazyRoute
   '/bticalc': typeof BticalcLazyRoute
   '/map': typeof MapLazyRoute
+  '/control/cases': typeof ControlCasesRoute
+  '/control/problems': typeof ControlProblemsRoute
   '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
   '/renovation/messages': typeof RenovationMessagesRoute
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
   '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
   '/renovation/stages': typeof RenovationStagesRoute
+  '/control': typeof ControlIndexRoute
   '/renovation': typeof RenovationIndexRoute
+  '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
+  '/control/settings': typeof ControlSettingsIndexRoute
   '/renovation/settings': typeof RenovationSettingsIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
-  '/control': typeof ControlRouteRoute
+  '/control': typeof ControlRouteRouteWithChildren
   '/renovation': typeof RenovationRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/oldbuildings': typeof OldbuildingsRoute
   '/about': typeof AboutLazyRoute
   '/bticalc': typeof BticalcLazyRoute
   '/map': typeof MapLazyRoute
+  '/control/settings': typeof ControlSettingsRouteRouteWithChildren
   '/renovation/settings': typeof RenovationSettingsRouteRouteWithChildren
+  '/control/cases': typeof ControlCasesRoute
+  '/control/problems': typeof ControlProblemsRoute
   '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
   '/renovation/messages': typeof RenovationMessagesRoute
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
   '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
   '/renovation/stages': typeof RenovationStagesRoute
+  '/control/': typeof ControlIndexRoute
   '/renovation/': typeof RenovationIndexRoute
+  '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
+  '/control/settings/': typeof ControlSettingsIndexRoute
   '/renovation/settings/': typeof RenovationSettingsIndexRoute
 }
 
@@ -379,31 +511,41 @@ export interface FileRouteTypes {
     | '/about'
     | '/bticalc'
     | '/map'
+    | '/control/settings'
     | '/renovation/settings'
+    | '/control/cases'
+    | '/control/problems'
     | '/renovation/building-relocation-map'
     | '/renovation/messages'
     | '/renovation/oldapartments'
     | '/renovation/oldbuildings'
     | '/renovation/stages'
+    | '/control/'
     | '/renovation/'
+    | '/control/settings/change-password'
     | '/renovation/settings/change-password'
+    | '/control/settings/'
     | '/renovation/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/control'
     | '/login'
     | '/oldbuildings'
     | '/about'
     | '/bticalc'
     | '/map'
+    | '/control/cases'
+    | '/control/problems'
     | '/renovation/building-relocation-map'
     | '/renovation/messages'
     | '/renovation/oldapartments'
     | '/renovation/oldbuildings'
     | '/renovation/stages'
+    | '/control'
     | '/renovation'
+    | '/control/settings/change-password'
     | '/renovation/settings/change-password'
+    | '/control/settings'
     | '/renovation/settings'
   id:
     | '__root__'
@@ -415,21 +557,27 @@ export interface FileRouteTypes {
     | '/about'
     | '/bticalc'
     | '/map'
+    | '/control/settings'
     | '/renovation/settings'
+    | '/control/cases'
+    | '/control/problems'
     | '/renovation/building-relocation-map'
     | '/renovation/messages'
     | '/renovation/oldapartments'
     | '/renovation/oldbuildings'
     | '/renovation/stages'
+    | '/control/'
     | '/renovation/'
+    | '/control/settings/change-password'
     | '/renovation/settings/change-password'
+    | '/control/settings/'
     | '/renovation/settings/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
-  ControlRouteRoute: typeof ControlRouteRoute
+  ControlRouteRoute: typeof ControlRouteRouteWithChildren
   RenovationRouteRoute: typeof RenovationRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
   OldbuildingsRoute: typeof OldbuildingsRoute
@@ -440,7 +588,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
-  ControlRouteRoute: ControlRouteRoute,
+  ControlRouteRoute: ControlRouteRouteWithChildren,
   RenovationRouteRoute: RenovationRouteRouteWithChildren,
   LoginRoute: LoginRoute,
   OldbuildingsRoute: OldbuildingsRoute,
@@ -473,7 +621,13 @@ export const routeTree = rootRoute
       "filePath": "index.lazy.tsx"
     },
     "/control": {
-      "filePath": "control/route.tsx"
+      "filePath": "control/route.tsx",
+      "children": [
+        "/control/settings",
+        "/control/cases",
+        "/control/problems",
+        "/control/"
+      ]
     },
     "/renovation": {
       "filePath": "renovation/route.tsx",
@@ -502,6 +656,14 @@ export const routeTree = rootRoute
     "/map": {
       "filePath": "map.lazy.tsx"
     },
+    "/control/settings": {
+      "filePath": "control/settings/route.tsx",
+      "parent": "/control",
+      "children": [
+        "/control/settings/change-password",
+        "/control/settings/"
+      ]
+    },
     "/renovation/settings": {
       "filePath": "renovation/settings/route.tsx",
       "parent": "/renovation",
@@ -509,6 +671,14 @@ export const routeTree = rootRoute
         "/renovation/settings/change-password",
         "/renovation/settings/"
       ]
+    },
+    "/control/cases": {
+      "filePath": "control/cases.tsx",
+      "parent": "/control"
+    },
+    "/control/problems": {
+      "filePath": "control/problems.tsx",
+      "parent": "/control"
     },
     "/renovation/building-relocation-map": {
       "filePath": "renovation/building-relocation-map.tsx",
@@ -530,13 +700,25 @@ export const routeTree = rootRoute
       "filePath": "renovation/stages.tsx",
       "parent": "/renovation"
     },
+    "/control/": {
+      "filePath": "control/index.tsx",
+      "parent": "/control"
+    },
     "/renovation/": {
       "filePath": "renovation/index.tsx",
       "parent": "/renovation"
     },
+    "/control/settings/change-password": {
+      "filePath": "control/settings/change-password.tsx",
+      "parent": "/control/settings"
+    },
     "/renovation/settings/change-password": {
       "filePath": "renovation/settings/change-password.tsx",
       "parent": "/renovation/settings"
+    },
+    "/control/settings/": {
+      "filePath": "control/settings/index.tsx",
+      "parent": "/control/settings"
     },
     "/renovation/settings/": {
       "filePath": "renovation/settings/index.tsx",

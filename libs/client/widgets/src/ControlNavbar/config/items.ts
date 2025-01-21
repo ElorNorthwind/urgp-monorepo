@@ -1,30 +1,25 @@
-import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react';
+import { BriefcaseBusiness, CircuitBoard, LayoutDashboard } from 'lucide-react';
 
 // Menu items.
 export const items = [
   {
-    title: 'Home',
+    title: 'Дашборд',
     url: '/control',
-    icon: Home,
+    icon: LayoutDashboard,
   },
   {
-    title: 'Inbox',
-    url: '/control',
-    icon: Inbox,
+    title: 'Дела',
+    url: '/control/cases',
+    icon: BriefcaseBusiness,
   },
   {
-    title: 'Calendar',
-    url: '/control',
-    icon: Calendar,
+    title: 'Системные проблемы',
+    url: '/control/problems',
+    icon: CircuitBoard,
   },
-  {
-    title: 'Search',
-    url: '/control',
-    icon: Search,
-  },
-  {
-    title: 'Settings',
-    url: '/control',
-    icon: Settings,
-  },
+  // {
+  //   title: 'Требует решения',
+  //   url: '/control',
+  //   icon: Search,
+  // },
 ];
