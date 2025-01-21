@@ -56,6 +56,12 @@ export class RenovationUsersRepository {
     id: number,
     directions: number[],
   ): Promise<UserControlSettings> {
+    // const q = this.pgp.as.format(users.setUserControlDirections, {
+    //   id,
+    //   directions,
+    // });
+    // console.log(q);
+
     const reply = await this.db.oneOrNone(users.setUserControlDirections, {
       id,
       directions,

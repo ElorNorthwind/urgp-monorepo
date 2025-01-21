@@ -14,11 +14,11 @@ import {
 } from '@urgp/shared/entities';
 import { UseFormReturn } from 'react-hook-form';
 import { FormInputLabel } from './components/FormInputLabel';
-import { FormInputSkeleton } from './components/FormInputSkeleton';
 import { formFieldStatusClassName, formItemClassName } from './config/formItem';
 import { useMemo, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import { CommandList, Command as CommandPrimitive } from 'cmdk';
+import { InputSkeleton } from '@urgp/client/features';
 
 type MultiSelectFormFieldProps<T> = {
   fieldName: string;
@@ -34,6 +34,7 @@ type MultiSelectFormFieldProps<T> = {
   addItemBadge?: (item: ClassificatorInfo | undefined) => JSX.Element | null;
   addBadgeStyle?: (item: ClassificatorInfo | undefined) => string | null;
   dirtyIndicator?: boolean;
+  side?: 'top' | 'right' | 'bottom' | 'left';
 };
 
 const MultiSelectFormField = <T extends string | number>(
@@ -84,7 +85,7 @@ const MultiSelectFormField = <T extends string | number>(
           <FormItem className={cn(formItemClassName, className)}>
             {label && <FormInputLabel fieldState={fieldState} label={label} />}
             {isLoading || !options ? (
-              <FormInputSkeleton />
+              <InputSkeleton />
             ) : (
               <Command
                 filter={(value, search, keywords) => {

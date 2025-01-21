@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Logger,
   Param,
   ParseArrayPipe,
   Patch,
@@ -94,10 +95,11 @@ export class ControlClassificatorsController {
   @Patch('user-settings/directions')
   async setCurrentUserDirections(
     @Req() req: RequestWithUserData,
-    @Body('direcrtions', new ParseArrayPipe({ items: Number, separator: ',' }))
+    // TODO Fix me!
+    // @Body('direcrtions', new ParseArrayPipe({ items: Number, separator: ',' }))
+    @Body('directions')
     directions: number[],
   ): Promise<UserControlSettings> {
-    const userId = req.user.id;
     return this.classificators.setControlDirections(req.user.id, directions);
   }
 

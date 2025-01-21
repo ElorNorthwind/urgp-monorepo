@@ -29,6 +29,17 @@ export const classificatorsApi = rtkApi.injectEndpoints({
         method: 'PATCH',
         body: { directions },
       }),
+      async onQueryStarted(ids, { dispatch }) {
+        dispatch(
+          classificatorsApi.util.updateQueryData(
+            'getCurrentUserSettings',
+            undefined,
+            (draft) => {
+              return { ...draft, directions: ids };
+            },
+          ),
+        );
+      },
     }),
     getCurrentUserApprovers: build.query<UserControlApprovers, void>({
       query: () => ({

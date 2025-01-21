@@ -12,11 +12,11 @@ import {
 import { CalendarIcon } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
 import { FormInputLabel } from './components/FormInputLabel';
-import { FormInputSkeleton } from './components/FormInputSkeleton';
 import { format } from 'date-fns';
 import { formFieldStatusClassName, formItemClassName } from './config/formItem';
 import { use } from 'passport';
 import { useState } from 'react';
+import { InputSkeleton } from '@urgp/client/features';
 
 type DateFormFieldProps = {
   form: UseFormReturn<any, any>;
@@ -59,7 +59,7 @@ const DateFormField = (props: DateFormFieldProps): JSX.Element => {
         <FormItem className={cn(formItemClassName, className)}>
           {label && <FormInputLabel fieldState={fieldState} label={label} />}
           {isLoading ? (
-            <FormInputSkeleton />
+            <InputSkeleton />
           ) : (
             <FormControl>
               <Popover open={open} onOpenChange={setOpen}>

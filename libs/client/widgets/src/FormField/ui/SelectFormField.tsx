@@ -12,8 +12,8 @@ import {
 import { SelectOption } from '@urgp/shared/entities';
 import { UseFormReturn } from 'react-hook-form';
 import { FormInputLabel } from './components/FormInputLabel';
-import { FormInputSkeleton } from './components/FormInputSkeleton';
 import { formFieldStatusClassName, formItemClassName } from './config/formItem';
+import { InputSkeleton } from '@urgp/client/features';
 
 type SelectFormFieldProps<T> = {
   fieldName: string;
@@ -28,6 +28,7 @@ type SelectFormFieldProps<T> = {
   disabled?: boolean;
   dirtyIndicator?: boolean;
   valueType?: 'string' | 'number';
+  side?: 'top' | 'right' | 'bottom' | 'left';
 };
 
 const SelectFormField = <T extends string | number>(
@@ -46,6 +47,7 @@ const SelectFormField = <T extends string | number>(
     disabled = false,
     dirtyIndicator = false,
     valueType = 'number',
+    side,
   } = props;
 
   return (
@@ -58,7 +60,7 @@ const SelectFormField = <T extends string | number>(
             <FormInputLabel fieldState={fieldState} label={label} />
           )}
           {!options ? null : isLoading ? (
-            <FormInputSkeleton />
+            <InputSkeleton />
           ) : (
             <Select
               onValueChange={
@@ -84,7 +86,7 @@ const SelectFormField = <T extends string | number>(
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
               </FormControl>
-              <SelectContent style={{ minWidth: popoverMinWidth }}>
+              <SelectContent style={{ minWidth: popoverMinWidth }} side={side}>
                 {options.map((option) => (
                   <SelectItem
                     key={option.value}

@@ -1,4 +1,7 @@
-import { useCurrentUserApprovers } from '@urgp/client/entities';
+import {
+  DirectionTypeSelector,
+  useCurrentUserApprovers,
+} from '@urgp/client/entities';
 import { InfoBox } from '@urgp/client/features';
 import {
   Button,
@@ -10,6 +13,7 @@ import {
   selectCurrentUser,
   Separator,
 } from '@urgp/client/shared';
+import { ChangeDirectionsForm } from '@urgp/client/widgets';
 import { useSelector } from 'react-redux';
 
 const ControlAccountPage = (): JSX.Element => {
@@ -28,7 +32,7 @@ const ControlAccountPage = (): JSX.Element => {
       </CardHeader>
       <CardContent className="space-y-8">
         {/* <h2 className="text-xl">Общие сведения</h2> */}
-        <Separator />
+        {/* <Separator /> */}
         <div className="flex flex-row justify-between gap-8 text-nowrap">
           <InfoBox label="ID:" value={user?.id} />
           <InfoBox label="Логин:" value={user?.login} />
@@ -51,6 +55,7 @@ const ControlAccountPage = (): JSX.Element => {
             )
             .join(', ')}
         />
+        <ChangeDirectionsForm />
       </CardContent>
     </Card>
   );

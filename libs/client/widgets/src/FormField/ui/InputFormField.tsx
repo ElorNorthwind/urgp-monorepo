@@ -7,8 +7,8 @@ import {
 } from '@urgp/client/shared';
 import { UseFormReturn } from 'react-hook-form';
 import { FormInputLabel } from './components/FormInputLabel';
-import { FormInputSkeleton } from './components/FormInputSkeleton';
 import { formFieldStatusClassName, formItemClassName } from './config/formItem';
+import { InputSkeleton } from '@urgp/client/features';
 
 type InputFormFieldProps = {
   form: UseFormReturn<any, any>;
@@ -45,7 +45,7 @@ const InputFormField = (props: InputFormFieldProps): JSX.Element => {
         <FormItem className={cn(formItemClassName, className)}>
           {label && <FormInputLabel fieldState={fieldState} label={label} />}
           {isLoading ? (
-            <FormInputSkeleton />
+            <InputSkeleton />
           ) : (
             <FormControl>
               <Input

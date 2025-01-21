@@ -135,7 +135,11 @@ const ChangePasswordForm = ({
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="ml-auto mt-2 px-12"
+            disabled={isLoading}
+          >
             Сменить пароль
           </Button>
           <div className="text-red-500">

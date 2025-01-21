@@ -19,10 +19,9 @@ import { NestedClassificatorInfo } from '@urgp/shared/entities';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
 import { FormInputLabel } from './components/FormInputLabel';
-import { FormInputSkeleton } from './components/FormInputSkeleton';
 import { formFieldStatusClassName, formItemClassName } from './config/formItem';
-import { PopoverClose } from '@radix-ui/react-popover';
 import { useState } from 'react';
+import { InputSkeleton } from '@urgp/client/features';
 
 type ClassificatorFormFieldProps = {
   form: UseFormReturn<any, any>;
@@ -75,7 +74,7 @@ const ClassificatorFormField = (
         >
           {label && <FormInputLabel fieldState={fieldState} label={label} />}
           {isLoading || !classificator ? (
-            <FormInputSkeleton />
+            <InputSkeleton />
           ) : (
             <Popover modal={true} open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
