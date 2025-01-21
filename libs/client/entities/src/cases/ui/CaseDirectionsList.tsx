@@ -28,6 +28,7 @@ const CaseDirectionsList = forwardRef<
         {label && <div className="mb-2 font-bold">{label}</div>}
         <div
           className={cn(
+            'pointer-events-none',
             'flex max-h-96 flex-col flex-wrap gap-2 gap-x-8',
             className,
           )}
@@ -124,6 +125,7 @@ const CaseDirectionsList = forwardRef<
     <div
       ref={ref}
       className={cn(
+        'pointer-events-none',
         'flex flex-wrap items-start justify-start gap-1',
         className,
       )}
