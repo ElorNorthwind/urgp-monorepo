@@ -13,6 +13,7 @@ type StatusFilterProps = {
   variant?: 'popover' | 'checkbox' | 'accordion';
   className?: string;
   accordionItemValue?: string;
+  route?: '/control/cases' | '/control/settings/filter';
 };
 
 const StatusFilter = (props: StatusFilterProps): JSX.Element => {
@@ -20,12 +21,11 @@ const StatusFilter = (props: StatusFilterProps): JSX.Element => {
     className,
     variant = 'accordion',
     accordionItemValue = 'status',
+    route = '/control/cases',
   } = props;
 
-  const navigate = useNavigate({ from: '/control/cases' });
-  const search = getRouteApi(
-    '/control/cases',
-  ).useSearch() as CasesPageSearchDto;
+  const navigate = useNavigate({ from: route });
+  const search = getRouteApi(route).useSearch() as CasesPageSearchDto;
   const { data, isLoading, isFetching } = useCaseStatusTypes();
 
   return (

@@ -31,6 +31,7 @@ import { Route as ControlSettingsRouteImport } from './routes/control/settings/r
 import { Route as RenovationSettingsIndexImport } from './routes/renovation/settings/index'
 import { Route as ControlSettingsIndexImport } from './routes/control/settings/index'
 import { Route as RenovationSettingsChangePasswordImport } from './routes/renovation/settings/change-password'
+import { Route as ControlSettingsFilterImport } from './routes/control/settings/filter'
 import { Route as ControlSettingsChangePasswordImport } from './routes/control/settings/change-password'
 
 // Create Virtual Routes
@@ -175,6 +176,12 @@ const RenovationSettingsChangePasswordRoute =
     path: '/change-password',
     getParentRoute: () => RenovationSettingsRouteRoute,
   } as any)
+
+const ControlSettingsFilterRoute = ControlSettingsFilterImport.update({
+  id: '/filter',
+  path: '/filter',
+  getParentRoute: () => ControlSettingsRouteRoute,
+} as any)
 
 const ControlSettingsChangePasswordRoute =
   ControlSettingsChangePasswordImport.update({
@@ -327,6 +334,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ControlSettingsChangePasswordImport
       parentRoute: typeof ControlSettingsRouteImport
     }
+    '/control/settings/filter': {
+      id: '/control/settings/filter'
+      path: '/filter'
+      fullPath: '/control/settings/filter'
+      preLoaderRoute: typeof ControlSettingsFilterImport
+      parentRoute: typeof ControlSettingsRouteImport
+    }
     '/renovation/settings/change-password': {
       id: '/renovation/settings/change-password'
       path: '/change-password'
@@ -355,11 +369,13 @@ declare module '@tanstack/react-router' {
 
 interface ControlSettingsRouteRouteChildren {
   ControlSettingsChangePasswordRoute: typeof ControlSettingsChangePasswordRoute
+  ControlSettingsFilterRoute: typeof ControlSettingsFilterRoute
   ControlSettingsIndexRoute: typeof ControlSettingsIndexRoute
 }
 
 const ControlSettingsRouteRouteChildren: ControlSettingsRouteRouteChildren = {
   ControlSettingsChangePasswordRoute: ControlSettingsChangePasswordRoute,
+  ControlSettingsFilterRoute: ControlSettingsFilterRoute,
   ControlSettingsIndexRoute: ControlSettingsIndexRoute,
 }
 
@@ -446,6 +462,7 @@ export interface FileRoutesByFullPath {
   '/control/': typeof ControlIndexRoute
   '/renovation/': typeof RenovationIndexRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
+  '/control/settings/filter': typeof ControlSettingsFilterRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
   '/control/settings/': typeof ControlSettingsIndexRoute
   '/renovation/settings/': typeof RenovationSettingsIndexRoute
@@ -468,6 +485,7 @@ export interface FileRoutesByTo {
   '/control': typeof ControlIndexRoute
   '/renovation': typeof RenovationIndexRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
+  '/control/settings/filter': typeof ControlSettingsFilterRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
   '/control/settings': typeof ControlSettingsIndexRoute
   '/renovation/settings': typeof RenovationSettingsIndexRoute
@@ -495,6 +513,7 @@ export interface FileRoutesById {
   '/control/': typeof ControlIndexRoute
   '/renovation/': typeof RenovationIndexRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
+  '/control/settings/filter': typeof ControlSettingsFilterRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
   '/control/settings/': typeof ControlSettingsIndexRoute
   '/renovation/settings/': typeof RenovationSettingsIndexRoute
@@ -523,6 +542,7 @@ export interface FileRouteTypes {
     | '/control/'
     | '/renovation/'
     | '/control/settings/change-password'
+    | '/control/settings/filter'
     | '/renovation/settings/change-password'
     | '/control/settings/'
     | '/renovation/settings/'
@@ -544,6 +564,7 @@ export interface FileRouteTypes {
     | '/control'
     | '/renovation'
     | '/control/settings/change-password'
+    | '/control/settings/filter'
     | '/renovation/settings/change-password'
     | '/control/settings'
     | '/renovation/settings'
@@ -569,6 +590,7 @@ export interface FileRouteTypes {
     | '/control/'
     | '/renovation/'
     | '/control/settings/change-password'
+    | '/control/settings/filter'
     | '/renovation/settings/change-password'
     | '/control/settings/'
     | '/renovation/settings/'
@@ -661,6 +683,7 @@ export const routeTree = rootRoute
       "parent": "/control",
       "children": [
         "/control/settings/change-password",
+        "/control/settings/filter",
         "/control/settings/"
       ]
     },
@@ -710,6 +733,10 @@ export const routeTree = rootRoute
     },
     "/control/settings/change-password": {
       "filePath": "control/settings/change-password.tsx",
+      "parent": "/control/settings"
+    },
+    "/control/settings/filter": {
+      "filePath": "control/settings/filter.tsx",
       "parent": "/control/settings"
     },
     "/renovation/settings/change-password": {

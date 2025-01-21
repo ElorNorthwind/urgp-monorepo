@@ -16,10 +16,12 @@ const dto = z.object({ directions: z.array(z.number()) });
 
 type ChangeDirectionsFormProps = {
   className?: string;
+  popoverMinWidth?: string;
 };
 
 const ChangeDirectionsForm = ({
   className,
+  popoverMinWidth,
 }: ChangeDirectionsFormProps): JSX.Element | null => {
   const { data: settings, isLoading: isSettingsLoading } =
     useCurrentUserSettings();
@@ -68,7 +70,9 @@ const ChangeDirectionsForm = ({
           <DirectionTypeSelector
             form={form}
             fieldName="directions"
-            label="Подписаться на заявки по направлениям"
+            label={null}
+            // label="Подписаться на заявки по направлениям"
+            popoverMinWidth={popoverMinWidth}
           />
         )}
         <div className="flex w-full items-center justify-between gap-2">

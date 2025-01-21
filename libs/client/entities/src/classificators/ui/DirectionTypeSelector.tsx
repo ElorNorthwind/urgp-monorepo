@@ -7,7 +7,7 @@ import { directionCategoryStyles } from '../../cases/config/caseStyles';
 type DirectionTypeSelectorProps = {
   className?: string;
   triggerClassName?: string;
-  popoverClassName?: string;
+  popoverMinWidth?: string;
   disabled?: boolean;
   form: UseFormReturn<any, any>;
   fieldName: string;
@@ -22,7 +22,7 @@ const DirectionTypeSelector = (
   const {
     className,
     triggerClassName,
-    popoverClassName,
+    popoverMinWidth,
     disabled,
     form,
     fieldName,
@@ -43,7 +43,7 @@ const DirectionTypeSelector = (
       options={data}
       isLoading={isLoading || isFetching || !data}
       className={className}
-      popoverClassName={popoverClassName}
+      popoverMinWidth={popoverMinWidth}
       dirtyIndicator={dirtyIndicator}
       addBadgeStyle={(item) => {
         return cn(

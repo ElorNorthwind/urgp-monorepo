@@ -11,6 +11,7 @@ type DirectionsFilterProps = {
   variant?: 'popover' | 'checkbox' | 'accordion';
   className?: string;
   accordionItemValue?: string;
+  route?: '/control/cases' | '/control/settings/filter';
 };
 
 const DirectionsFilter = (props: DirectionsFilterProps): JSX.Element => {
@@ -18,12 +19,11 @@ const DirectionsFilter = (props: DirectionsFilterProps): JSX.Element => {
     className,
     variant = 'accordion',
     accordionItemValue = 'directions',
+    route = '/control/cases',
   } = props;
 
-  const navigate = useNavigate({ from: '/control/cases' });
-  const search = getRouteApi(
-    '/control/cases',
-  ).useSearch() as CasesPageSearchDto;
+  const navigate = useNavigate({ from: route });
+  const search = getRouteApi(route).useSearch() as CasesPageSearchDto;
   const { data, isLoading, isFetching } = useCaseDirectionTypes();
 
   return (

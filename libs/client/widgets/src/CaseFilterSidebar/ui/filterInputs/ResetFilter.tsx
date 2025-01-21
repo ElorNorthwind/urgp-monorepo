@@ -6,14 +6,14 @@ import { X } from 'lucide-react';
 type ResetFilterProps = {
   className?: string;
   variant?: 'full' | 'mini';
+  route?: '/control/cases' | '/control/settings/filter';
 };
 
 const ResetFilter = (props: ResetFilterProps): JSX.Element => {
-  const { className, variant = 'full' } = props;
-  const navigate = useNavigate({ from: '/control/cases' });
-  const search = getRouteApi(
-    '/control/cases',
-  ).useSearch() as CasesPageSearchDto;
+  const { className, variant = 'full', route = '/control/cases' } = props;
+  const navigate = useNavigate({ from: route });
+  const search = getRouteApi(route).useSearch() as CasesPageSearchDto;
+
   const paramLength = Object.keys(search).filter(
     (key) => !['selectedCase', 'sortKey', 'sortDir'].includes(key),
   ).length;

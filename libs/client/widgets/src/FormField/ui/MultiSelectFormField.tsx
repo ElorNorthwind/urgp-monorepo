@@ -7,6 +7,9 @@ import {
   FormControl,
   FormField,
   FormItem,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from '@urgp/client/shared';
 import {
   ClassificatorInfo,
@@ -26,7 +29,7 @@ type MultiSelectFormFieldProps<T> = {
   options?: Array<NestedClassificatorInfo>;
   className?: string;
   triggerClassName?: string;
-  popoverClassName?: string;
+  popoverMinWidth?: string;
   isLoading?: boolean;
   label?: string | null;
   placeholder?: string;
@@ -44,7 +47,7 @@ const MultiSelectFormField = <T extends string | number>(
     options = [],
     className,
     triggerClassName,
-    popoverClassName,
+    popoverMinWidth,
     isLoading,
     form,
     fieldName,
@@ -87,107 +90,132 @@ const MultiSelectFormField = <T extends string | number>(
             {isLoading || !options ? (
               <InputSkeleton />
             ) : (
-              <Command
-                filter={(value, search, keywords) => {
-                  const extendValue = (
-                    keywords ? value + ' ' + keywords.join(' ') : value
-                  ).toLowerCase();
-                  if (extendValue.includes(search.toLowerCase())) return 1;
-                  return 0;
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Delete' || e.key === 'Backspace') {
-                    if (inputValue === '') {
-                      field.onChange([...(field.value.slice(0, -1) || [])]);
+              <Popover open={open}>
+                <Command
+                  filter={(value, search, keywords) => {
+                    const extendValue = (
+                      keywords ? value + ' ' + keywords.join(' ') : value
+                    ).toLowerCase();
+                    if (extendValue.includes(search.toLowerCase())) return 1;
+                    return 0;
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Delete' || e.key === 'Backspace') {
+                      if (inputValue === '') {
+                        field.onChange([...(field.value.slice(0, -1) || [])]);
+                      }
                     }
-                  }
-                  // This is not a default behaviour of the <input /> field
-                  if (e.key === 'Escape') {
-                    inputRef.current?.blur();
-                  }
-                }}
-                className="overflow-visible bg-transparent"
-              >
-                <div
-                  className={cn(
-                    'border-input ring-offset-background focus-within:ring-ring group rounded-md border px-3 py-2 text-sm focus-within:ring-2 focus-within:ring-offset-2',
-                    formFieldStatusClassName({ dirtyIndicator, fieldState }),
-                    triggerClassName,
-                  )}
+                    // This is not a default behaviour of the <input /> field
+                    if (e.key === 'Escape') {
+                      inputRef.current?.blur();
+                    }
+                  }}
+                  className="overflow-visible bg-transparent"
+                  onFocus={() => {
+                    inputRef.current?.focus();
+                    setOpen(true);
+                  }}
+                  onBlur={() => setOpen(false)}
                 >
-                  <div className="flex flex-wrap gap-1">
-                    {field.value?.map((option: number) => {
-                      return (
-                        <Badge
-                          key={option}
-                          variant="secondary"
-                          className={cn(
-                            addBadgeStyle &&
-                              addBadgeStyle(
-                                flatOptions.find((o) => o.value === option),
-                              ),
-                          )}
-                        >
-                          {flatOptions.find((o) => o.value === option)?.label}
-                          <button
-                            tabIndex={-1}
-                            className="ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                field.onChange(
-                                  field.value.filter(
-                                    (v: number) => v !== option,
-                                  ),
-                                );
-                              }
-                            }}
-                            onMouseDown={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                            }}
-                            onClick={() =>
-                              field.onChange(
-                                field.value.filter((o: number) => o !== option),
-                              )
-                            }
-                          >
-                            <X className="text-muted-foreground hover:text-foreground h-3 w-3" />
-                          </button>
-                        </Badge>
-                      );
-                    })}
-                    {/* Avoid having the "Search" Icon */}
-                    <FormControl>
-                      <CommandPrimitive.Input
-                        ref={(e) => {
-                          field.ref(e);
-                          // @ts-expect-error oh boy
-                          inputRef.current = e;
-                        }}
-                        value={inputValue}
-                        disabled={disabled}
-                        onValueChange={setInputValue}
-                        onBlur={() => setOpen(false)}
-                        onFocus={() => setOpen(true)}
-                        placeholder={placeholder || 'Выберите значение'}
-                        className="placeholder:text-muted-foreground ml-2 flex-1 bg-transparent outline-none"
-                      />
-                    </FormControl>
-                  </div>
-                </div>
-                <div className="relative mt-2">
-                  <CommandList
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                  >
+                  <PopoverTrigger asChild>
                     <div
                       className={cn(
-                        'bg-popover text-popover-foreground animate-in top-0 z-10 max-h-80 w-full overflow-auto rounded-md border shadow-md outline-none',
-                        open && selectables.length > 0 ? 'absolute' : 'hidden',
-                        popoverClassName,
+                        'bg-background',
+                        'border-input ring-offset-background focus-within:ring-ring group rounded-md border px-3 py-2 text-sm focus-within:ring-2 focus-within:ring-offset-2',
+                        formFieldStatusClassName({
+                          dirtyIndicator,
+                          fieldState,
+                        }),
+                        triggerClassName,
                       )}
+                    >
+                      <div className="flex flex-wrap gap-1">
+                        {field.value?.map((option: number) => {
+                          return (
+                            <Badge
+                              key={option}
+                              variant="secondary"
+                              className={cn(
+                                addBadgeStyle &&
+                                  addBadgeStyle(
+                                    flatOptions.find((o) => o.value === option),
+                                  ),
+                              )}
+                            >
+                              {
+                                flatOptions.find((o) => o.value === option)
+                                  ?.label
+                              }
+                              <button
+                                tabIndex={-1}
+                                className="ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2"
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    field.onChange(
+                                      field.value.filter(
+                                        (v: number) => v !== option,
+                                      ),
+                                    );
+                                  }
+                                }}
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                }}
+                                onClick={() =>
+                                  field.onChange(
+                                    field.value.filter(
+                                      (o: number) => o !== option,
+                                    ),
+                                  )
+                                }
+                              >
+                                <X className="text-muted-foreground hover:text-foreground h-3 w-3" />
+                              </button>
+                            </Badge>
+                          );
+                        })}
+                        {/* Avoid having the "Search" Icon */}
+                        <FormControl>
+                          <CommandPrimitive.Input
+                            ref={(e) => {
+                              field.ref(e);
+                              // @ts-expect-error oh boy
+                              inputRef.current = e;
+                            }}
+                            value={inputValue}
+                            disabled={disabled}
+                            onValueChange={setInputValue}
+                            // onBlur={() => setOpen(false)}
+                            // onFocus={() => setOpen(true)}
+                            placeholder={placeholder || 'Выберите значение'}
+                            className="placeholder:text-muted-foreground ml-2 flex-1 bg-transparent outline-none"
+                          />
+                        </FormControl>
+                      </div>
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    sideOffset={8}
+                    className={cn('p-0')} // popoverClassName
+                    side="bottom"
+                    style={{
+                      // width: 'calc(600px - 3rem)',
+                      minWidth: popoverMinWidth,
+                      // minWidth: '600px',
+                    }}
+
+                    // className={cn(
+                    //   'bg-popover text-popover-foreground animate-in top-0 z-10 max-h-80 w-full overflow-auto rounded-md border shadow-md outline-none',
+                    //   open && selectables.length > 0 ? 'absolute' : 'hidden',
+                    // )}
+                  >
+                    <CommandList
+                      className="max-h-80 overflow-auto"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
                     >
                       {selectables.map((category) => {
                         return (
@@ -229,10 +257,10 @@ const MultiSelectFormField = <T extends string | number>(
                           </CommandGroup>
                         );
                       })}
-                    </div>
-                  </CommandList>
-                </div>
-              </Command>
+                    </CommandList>
+                  </PopoverContent>
+                </Command>
+              </Popover>
             )}
           </FormItem>
         );

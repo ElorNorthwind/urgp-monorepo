@@ -44,6 +44,7 @@ const CaseFormFieldArray = ({
         placeholder="Направления работы"
         fieldName="directionIds"
         dirtyIndicator={isEdit}
+        popoverMinWidth={popoverMinWidth}
       />
       <ExternalCaseFieldArray form={form} fieldArrayName="externalCases" />
       <div className="flex w-full flex-row gap-2">

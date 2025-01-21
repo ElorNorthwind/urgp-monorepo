@@ -76,7 +76,7 @@ const ClassificatorFormField = (
           {isLoading || !classificator ? (
             <InputSkeleton />
           ) : (
-            <Popover modal={true} open={open} onOpenChange={setOpen}>
+            <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <FormControl>
                   <Button

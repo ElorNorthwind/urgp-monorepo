@@ -13,6 +13,7 @@ type DepartmentsFilterProps = {
   variant?: 'popover' | 'checkbox' | 'accordion';
   className?: string;
   accordionItemValue?: string;
+  route?: '/control/cases' | '/control/settings/filter';
 };
 
 const DepartmentsFilter = (props: DepartmentsFilterProps): JSX.Element => {
@@ -20,12 +21,11 @@ const DepartmentsFilter = (props: DepartmentsFilterProps): JSX.Element => {
     className,
     variant = 'accordion',
     accordionItemValue = 'departments',
+    route = '/control/cases',
   } = props;
 
-  const navigate = useNavigate({ from: '/control/cases' });
-  const search = getRouteApi(
-    '/control/cases',
-  ).useSearch() as CasesPageSearchDto;
+  const navigate = useNavigate({ from: route });
+  const search = getRouteApi(route).useSearch() as CasesPageSearchDto;
   const { data, isLoading, isFetching } = useDepartmentTypes();
 
   return (

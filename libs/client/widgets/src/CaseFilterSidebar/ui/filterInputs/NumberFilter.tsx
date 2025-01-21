@@ -5,14 +5,13 @@ import { FileSearch2, Search } from 'lucide-react';
 
 type NumberFilterProps = {
   className?: string;
+  route?: '/control/cases' | '/control/settings/filter';
 };
 
 const NumberFilter = (props: NumberFilterProps): JSX.Element => {
-  const { className } = props;
-  const navigate = useNavigate({ from: '/control/cases' });
-  const search = getRouteApi(
-    '/control/cases',
-  ).useSearch() as CasesPageSearchDto;
+  const { className, route = '/control/cases' } = props;
+  const navigate = useNavigate({ from: route });
+  const search = getRouteApi(route).useSearch() as CasesPageSearchDto;
 
   return (
     <Input

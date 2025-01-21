@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 import { ControlSettingsNavbar, SettingsNavbar } from '@urgp/client/pages';
-import { cn, Separator, store } from '@urgp/client/shared';
+import { cn, ScrollArea, Separator, store } from '@urgp/client/shared';
 
 export const Route = createFileRoute('/control/settings')({
   beforeLoad: async ({ location }) => {
@@ -18,9 +18,9 @@ export const Route = createFileRoute('/control/settings')({
     }
   },
   component: () => (
-    <main
+    <ScrollArea
       className={cn(
-        'bg-muted-foreground/5 relative flex min-h-screen flex-1 flex-col',
+        'bg-muted-foreground/5  flex h-screen min-h-screen flex-1 flex-col overflow-auto',
       )}
     >
       <div className="block space-y-6 p-10 pb-16">
@@ -33,13 +33,13 @@ export const Route = createFileRoute('/control/settings')({
         <Separator className="my-6" />
         <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
           <aside className="lg:-mx-4 lg:w-1/5">
-            <ControlSettingsNavbar />
+            <ControlSettingsNavbar className="sticky top-4" />
           </aside>
-          <div className="flex-1 lg:max-w-2xl">
+          <div className="flex-1 overflow-y-auto lg:max-w-2xl">
             <Outlet />
           </div>
         </div>
       </div>
-    </main>
+    </ScrollArea>
   ),
 });
