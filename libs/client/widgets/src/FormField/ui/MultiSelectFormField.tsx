@@ -175,7 +175,12 @@ const MultiSelectFormField = <T extends string | number>(
                   </div>
                 </div>
                 <div className="relative mt-2">
-                  <CommandList>
+                  <CommandList
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                  >
                     <div
                       className={cn(
                         'bg-popover text-popover-foreground animate-in top-0 z-10 max-h-80 w-full overflow-auto rounded-md border shadow-md outline-none',
