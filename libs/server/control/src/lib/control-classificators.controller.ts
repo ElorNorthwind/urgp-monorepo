@@ -22,10 +22,13 @@ import {
   SelectOption,
   NestedClassificatorInfoString,
   UserControlSettings,
+  casesPageFilter,
+  CasesPageFilter,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
 import { CacheTTL } from '@nestjs/cache-manager';
+import { ZodValidationPipe } from '@urgp/server/pipes';
 
 @Controller('control/classificators')
 @CacheTTL(1000 * 60 * 60)
@@ -101,6 +104,14 @@ export class ControlClassificatorsController {
     directions: number[],
   ): Promise<UserControlSettings> {
     return this.classificators.setControlDirections(req.user.id, directions);
+  }
+
+  @Patch('user-settings/case-filter')
+  async setCurrentUserCaseFilter(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(casesPageFilter)) dto: CasesPageFilter,
+  ): Promise<UserControlSettings> {
+    return this.classificators.setCaseFilter(req.user.id, dto);
   }
 
   @Get('case-types')

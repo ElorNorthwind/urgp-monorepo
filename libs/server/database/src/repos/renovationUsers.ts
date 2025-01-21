@@ -1,4 +1,5 @@
 import {
+  CasesPageFilter,
   CreateUserDto,
   GetUserByIdDto,
   GetUserByLoginDto,
@@ -65,6 +66,23 @@ export class RenovationUsersRepository {
     const reply = await this.db.oneOrNone(users.setUserControlDirections, {
       id,
       directions,
+    });
+    return reply?.data;
+  }
+
+  async setCaseFilter(
+    id: number,
+    filter: CasesPageFilter,
+  ): Promise<UserControlSettings> {
+    // const q = this.pgp.as.format(users.setUserCaseFilter, {
+    //   id,
+    //   filter,
+    // });
+    // console.log(q);
+
+    const reply = await this.db.oneOrNone(users.setUserCaseFilter, {
+      id,
+      filter,
     });
     return reply?.data;
   }

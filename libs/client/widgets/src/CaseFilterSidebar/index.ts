@@ -8,3 +8,4 @@ export * from './ui/filterInputs/ResetFilter';
 export * from './ui/filterInputs/StatusFilter';
 export * from './ui/filterInputs/DirectionsFilter';
 export * from './ui/filterInputs/ViewStatusFilter';
+export * from './ui/filterInputs/UserFilter';

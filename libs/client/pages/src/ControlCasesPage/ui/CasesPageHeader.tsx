@@ -13,7 +13,7 @@ import {
   useIsMobile,
   useUserAbility,
 } from '@urgp/client/shared';
-import { QueryFilter, ResetFilter } from '@urgp/client/widgets';
+import { QueryFilter, ResetFilter, UserFilter } from '@urgp/client/widgets';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
 import { Dispatch } from 'react';
 import { ColumnVisibilitySelector } from '@urgp/client/features';
@@ -50,6 +50,7 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
           {paramLength}
         </div>
       )}
+      <UserFilter variant="mini" />
       <ResetFilter variant="mini" className="" />
       <Separator orientation="vertical" className="mr-2 h-4 shrink-0" />
       <Breadcrumb className="shrink-0">

@@ -1,5 +1,6 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
+  CasesPageFilter,
   NestedClassificatorInfo,
   NestedClassificatorInfoString,
   SelectOption,
@@ -36,6 +37,27 @@ export const classificatorsApi = rtkApi.injectEndpoints({
             undefined,
             (draft) => {
               return { ...draft, directions: ids };
+            },
+          ),
+        );
+      },
+    }),
+    setCurrentUserCaseFilter: build.mutation<
+      UserControlSettings,
+      CasesPageFilter
+    >({
+      query: (filter) => ({
+        url: '/control/classificators/user-settings/case-filter',
+        method: 'PATCH',
+        body: filter,
+      }),
+      async onQueryStarted(filter, { dispatch }) {
+        dispatch(
+          classificatorsApi.util.updateQueryData(
+            'getCurrentUserSettings',
+            undefined,
+            (draft) => {
+              return { ...draft, casesFilter: filter };
             },
           ),
         );
@@ -97,6 +119,7 @@ export const {
   useGetCurrentUserDataQuery: useCurrentUserData,
   useGetCurrentUserSettingsQuery: useCurrentUserSettings,
   useSetCurrentUserDirectionsMutation: useSetCurrentUserDirections,
+  useSetCurrentUserCaseFilterMutation: useSetCurrentUserCaseFilter,
   useGetCurrentUserApproversQuery: useCurrentUserApprovers,
   useGetControlExecutorsQuery: useControlExecutors,
   useGetCaseTypesQuery: useCaseTypes,

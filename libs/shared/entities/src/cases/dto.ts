@@ -95,7 +95,7 @@ export const casesPageFilter = z
     viewStatus: z.array(z.enum(['unwatched', 'unchanged', 'new', 'changed'])),
   })
   .partial();
-export type CasesPageFiler = z.infer<typeof casesPageFilter>;
+export type CasesPageFilter = z.infer<typeof casesPageFilter>;
 
 export const casesPageSearch = casesPageFilter
   .extend({

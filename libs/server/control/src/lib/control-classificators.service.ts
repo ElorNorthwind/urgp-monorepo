@@ -10,6 +10,7 @@ import {
   SelectOption,
   NestedClassificatorInfoString,
   UserControlSettings,
+  CasesPageFilter,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -38,6 +39,13 @@ export class ControlClassificatorsService {
       userId,
       directions,
     );
+  }
+
+  public async setCaseFilter(
+    userId: number,
+    filter: CasesPageFilter,
+  ): Promise<UserControlSettings> {
+    return this.dbServise.db.renovationUsers.setCaseFilter(userId, filter);
   }
 
   public async getUserApprovers(userId: number): Promise<UserControlApprovers> {
