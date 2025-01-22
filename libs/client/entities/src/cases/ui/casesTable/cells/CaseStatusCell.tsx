@@ -15,6 +15,9 @@ import { CaseDispatchesList } from '../../CaseDispatchesList';
 function CaseStatusCell(props: CellContext<Case, string>): JSX.Element {
   const status = props.row.original?.status;
   const dispatches = props.row.original?.dispatches || [];
+  const approveStatus =
+    props.row.original?.payload?.approveStatus || 'approved';
+  const approverFio = props.row.original?.payload?.approver?.fio || '-';
   const { icon: StatusIcon, iconStyle } = caseStatusStyles?.[
     status?.id || 0
   ] || {
@@ -47,9 +50,11 @@ function CaseStatusCell(props: CellContext<Case, string>): JSX.Element {
             <div className="truncate">{status?.name || ''}</div>
             <div className="text-muted-foreground">
               <span className="">
-                {dispatches?.length > 0
-                  ? 'срок: ' + format(dispatches?.[0]?.dueDate, 'dd.MM.yyyy')
-                  : 'нет поручений'}
+                {approveStatus !== 'approved'
+                  ? approverFio
+                  : dispatches?.length > 0
+                    ? 'срок: ' + format(dispatches?.[0]?.dueDate, 'dd.MM.yyyy')
+                    : 'нет поручений'}
               </span>
             </div>
           </div>

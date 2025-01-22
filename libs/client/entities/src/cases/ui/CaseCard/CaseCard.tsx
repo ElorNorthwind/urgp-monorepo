@@ -117,9 +117,11 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
                 {controlCase?.payload?.approver?.fio && (
                   <>
                     <p>
-                      {controlCase?.payload?.approveStatus === 'pending'
-                        ? 'На утверждении: '
-                        : 'Согласовано: '}
+                      {controlCase?.payload?.approveStatus === 'approved'
+                        ? 'Утверждено: '
+                        : controlCase?.payload?.approveStatus === 'rejected'
+                          ? 'Не согласовано: '
+                          : 'На утверждении: '}
                     </p>
                     <p className="font-bold">
                       {controlCase?.payload?.approver?.fio}
