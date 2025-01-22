@@ -29,14 +29,7 @@ export class ControlCaseService {
   ): Promise<Case> {
     const createdCase: CaseSlim =
       await this.dbServise.db.controlCases.createCase(dto, userId, approved);
-
-    if (approved) {
-      this.operations.createDispatchesAndReminderForCase(
-        createdCase,
-        userId,
-        dto.dueDate,
-      );
-    }
+    this.operations.createReminderForAuthor(createdCase, userId, dto.dueDate);
 
     return this.dbServise.db.controlCases.readFullCaseById(
       createdCase.id,

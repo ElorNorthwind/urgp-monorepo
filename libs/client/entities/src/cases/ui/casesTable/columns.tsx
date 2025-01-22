@@ -101,7 +101,7 @@ export const controlCasesColumns = [
   }),
 
   columnHelper.accessor(
-    (row) => row?.payload?.directions?.map((d) => d.name)?.join(', ') || '-',
+    (row) => row?.payload?.directions?.map((d) => d?.name)?.join(', ') || '-',
     {
       id: 'directions',
       header: 'Направления',

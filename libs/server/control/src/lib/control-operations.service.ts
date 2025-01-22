@@ -62,9 +62,14 @@ export class ControlOperationsService {
   public async createReminder(
     dto: ReminderCreateDto,
     userId: number,
+    seen?: boolean,
   ): Promise<ControlReminder> {
     const createdReminder =
-      await this.dbServise.db.controlOperations.createReminder(dto, userId);
+      await this.dbServise.db.controlOperations.createReminder(
+        dto,
+        userId,
+        seen,
+      );
     return this.dbServise.db.controlOperations.readFullOperationById(
       createdReminder.id,
     ) as Promise<ControlReminder>;
@@ -185,8 +190,8 @@ export class ControlOperationsService {
     dueDate?: Date | string | number,
   ) {
     // Список людей, которым должны уйти напоминалки
-    let reminderList = new Map([
-      [slimCase?.authorId, 'Напоминание автору заявки'],
+    let reminderList = new Map<number, string>([
+      // [slimCase?.authorId, 'Напоминание автору заявки'],
     ]);
 
     // Создаем по поручению и напоминалке на каждого из исполнителей
@@ -251,5 +256,29 @@ export class ControlOperationsService {
           userId,
         );
     });
+  }
+  public async createReminderForAuthor(
+    slimCase: CaseSlim,
+    userId: number,
+    dueDate?: Date | string | number,
+  ) {
+    const existingReminders = await this.readOperationsByCaseId(
+      slimCase.id,
+      userId,
+      'reminder',
+    );
+    !existingReminders.map((r) => r.id).includes(userId) &&
+      this.createReminder(
+        {
+          caseId: slimCase.id,
+          class: 'reminder',
+          typeId: 11,
+          dueDate: dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
+          description: 'Напоминание автору заявки',
+          observerId: userId,
+        },
+        userId,
+        true,
+      );
   }
 }

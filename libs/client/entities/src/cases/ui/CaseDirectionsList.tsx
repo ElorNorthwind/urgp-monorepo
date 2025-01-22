@@ -19,8 +19,10 @@ type CaseDirectionsListProps = {
 const CaseDirectionsList = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & CaseDirectionsListProps
->((props: CaseDirectionsListProps, ref): JSX.Element => {
+>((props: CaseDirectionsListProps, ref): JSX.Element | null => {
   const { className, variant = 'list', directions, label } = props;
+
+  if (!directions?.length) return null;
 
   if (variant === 'table') {
     return (
@@ -56,11 +58,11 @@ const CaseDirectionsList = forwardRef<
                       variant={'outline'}
                       className={cn(
                         d?.category &&
-                          directionCategoryStyles[d.category].badgeStyle,
+                          directionCategoryStyles[d?.category].badgeStyle,
                         'mr-2',
                       )}
                     >
-                      {d.name}
+                      {d?.name}
                     </Badge>
                     <span className="text-muted-foreground ml-1 font-normal">
                       {d?.category && '(' + d.category + ')'}
@@ -114,7 +116,7 @@ const CaseDirectionsList = forwardRef<
   }
 
   const reducedDirectionsMap = directions.reduce((acc, cur) => {
-    return acc.set(cur.category, (acc.get(cur.category) || 0) + 1);
+    return acc.set(cur?.category, (acc.get(cur?.category) || 0) + 1);
   }, new Map());
   const reducedDirections = Array.from(
     reducedDirectionsMap,
@@ -139,7 +141,7 @@ const CaseDirectionsList = forwardRef<
                   variant={'outline'}
                   className={cn(
                     'text-nowrap',
-                    directionCategoryStyles[d.name].badgeStyle,
+                    directionCategoryStyles[d?.name].badgeStyle,
                   )}
                   key={d?.name}
                 >

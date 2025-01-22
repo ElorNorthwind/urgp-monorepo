@@ -7,8 +7,8 @@ VALUES
                     'typeId', ${typeId},
                     'observerId', ${observerId},
                     'description', ${description},
-                    -- 'lastSeenDate', NOW(),
-                    'lastSeenDate', null,
+                    'lastSeenDate', ${seen},
+                    -- 'lastSeenDate', null,
                     'dueDate', ${dueDate},
                     'doneDate', null,
 

@@ -71,16 +71,21 @@ export class ControlOperationsRepository {
   createReminder(
     dto: ReminderCreateDto,
     authorId: number,
+    seen?: boolean,
   ): Promise<ControlReminderSlim> {
-    const newDispatch = {
+    const newReminder = {
       authorId,
       caseId: dto.caseId,
       typeId: dto.typeId || 11,
       observerId: dto.observerId || authorId,
       description: dto.description,
       dueDate: dto.dueDate,
+      seen: seen === true ? new Date() : null,
     };
-    return this.db.one(operations.createReminder, newDispatch);
+    // const q = this.pgp.as.format(operations.createReminder, newReminder);
+    // Logger.log(q);
+
+    return this.db.one(operations.createReminder, newReminder);
   }
 
   readSlimOperationById(id: number): Promise<ControlOperationSlim | null> {
