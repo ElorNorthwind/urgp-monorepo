@@ -86,6 +86,7 @@ export const casesPageFilter = z
   .object({
     query: z.string(),
     num: z.string(),
+    author: z.string(),
     status: quetyNumberArray,
     direction: quetyNumberArray,
     type: quetyNumberArray,

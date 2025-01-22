@@ -10,6 +10,7 @@ export function caseGlobalFilterFn(
   const {
     query,
     num,
+    author,
     status,
     direction,
     type,
@@ -48,6 +49,12 @@ export function caseGlobalFilterFn(
       }, '')
       .toLowerCase()
       .includes(num.toLowerCase())
+  ) {
+    allowed = false;
+  }
+  if (
+    author &&
+    !row.original.author.fio?.toLocaleLowerCase().includes(author.toLowerCase())
   ) {
     allowed = false;
   }

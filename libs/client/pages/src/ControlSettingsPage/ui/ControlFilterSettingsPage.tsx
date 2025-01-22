@@ -15,6 +15,7 @@ import {
   ScrollArea,
 } from '@urgp/client/shared';
 import {
+  AuthorFilter,
   CaseTypesFilter,
   DepartmentsFilter,
   DirectionsFilter,
@@ -60,8 +61,8 @@ const ControlFilterSettingsPage = (): JSX.Element => {
         <CardDescription>Мои условия поиска заявок</CardDescription>
       </CardHeader>
       <CardContent className="space-y-8">
-        <ScrollArea className={cn('h-full')}>
-          <div className="flex h-full flex-col gap-2">
+        <ScrollArea className={cn('-m-3 h-full')}>
+          <div className="m-3 flex h-full flex-col gap-2">
             {/* <span>{JSON.stringify(userSettings?.casesFilter || {})}</span>
             <span>{JSON.stringify(search || {})}</span>
             <span>{isDirty ? 'Dirty' : 'Clean'}</span> */}
@@ -77,6 +78,10 @@ const ControlFilterSettingsPage = (): JSX.Element => {
               className="flex-shrink-0"
               route="/control/settings/filter"
             /> */}
+            <AuthorFilter
+              className="h-8 flex-shrink-0"
+              route="/control/settings/filter"
+            />
             <Accordion type="multiple" defaultValue={['departments']}>
               <DepartmentsFilter
                 variant="accordion"
