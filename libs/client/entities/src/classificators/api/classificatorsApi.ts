@@ -10,110 +10,115 @@ import {
   UserControlSettings,
 } from '@urgp/shared/entities';
 
-export const classificatorsApi = rtkApi.injectEndpoints({
-  endpoints: (build) => ({
-    getCurrentUserData: build.query<UserControlData, void>({
-      query: () => ({
-        url: '/control/classificators/user-data',
-        method: 'GET',
+export const classificatorsApi = rtkApi
+  // .enhanceEndpoints({ addTagTypes: ['user-data', 'user-settings'] })
+  .injectEndpoints({
+    endpoints: (build) => ({
+      getCurrentUserData: build.query<UserControlData, void>({
+        query: () => ({
+          url: '/control/classificators/user-data',
+          method: 'GET',
+        }),
+        providesTags: ['user-data'],
+      }),
+      getCurrentUserSettings: build.query<UserControlSettings, void>({
+        query: () => ({
+          url: '/control/classificators/user-settings',
+          method: 'GET',
+        }),
+        providesTags: ['user-settings'],
+      }),
+      setCurrentUserDirections: build.mutation<UserControlSettings, number[]>({
+        query: (directions) => ({
+          url: '/control/classificators/user-settings/directions',
+          method: 'PATCH',
+          body: { directions },
+        }),
+        invalidatesTags: ['user-settings'],
+        // async onQueryStarted(ids, { dispatch }) {
+        //   dispatch(
+        //     classificatorsApi.util.updateQueryData(
+        //       'getCurrentUserSettings',
+        //       undefined,
+        //       (draft) => {
+        //         return { ...draft, directions: ids };
+        //       },
+        //     ),
+        //   );
+        // },
+      }),
+      setCurrentUserCaseFilter: build.mutation<
+        UserControlSettings,
+        CasesPageFilter
+      >({
+        query: (filter) => ({
+          url: '/control/classificators/user-settings/case-filter',
+          method: 'PATCH',
+          body: filter,
+        }),
+        async onQueryStarted(filter, { dispatch }) {
+          dispatch(
+            classificatorsApi.util.updateQueryData(
+              'getCurrentUserSettings',
+              undefined,
+              (draft) => {
+                return { ...draft, casesFilter: filter };
+              },
+            ),
+          );
+        },
+      }),
+      getCurrentUserApprovers: build.query<UserControlApprovers, void>({
+        query: () => ({
+          url: '/control/classificators/user-approvers',
+          method: 'GET',
+        }),
+      }),
+      getControlExecutors: build.query<SelectOption<number>[], void>({
+        query: () => ({
+          url: '/control/classificators/executors',
+          method: 'GET',
+        }),
+      }),
+      getCaseTypes: build.query<NestedClassificatorInfo[], void>({
+        query: () => ({
+          url: '/control/classificators/case-types',
+          method: 'GET',
+        }),
+      }),
+      getOperationTypes: build.query<NestedClassificatorInfo[], void>({
+        query: () => ({
+          url: '/control/classificators/operation-types',
+          method: 'GET',
+        }),
+      }),
+      getOperationTypesFlat: build.query<TypeInfo[], void>({
+        query: () => ({
+          url: '/control/classificators/operation-types-flat',
+          method: 'GET',
+        }),
+      }),
+      getCaseStatusTypes: build.query<NestedClassificatorInfo[], void>({
+        query: () => ({
+          url: '/control/classificators/case-status-types',
+          method: 'GET',
+        }),
+      }),
+      getCaseDirectionTypes: build.query<NestedClassificatorInfo[], void>({
+        query: () => ({
+          url: '/control/classificators/case-direction-types',
+          method: 'GET',
+        }),
+      }),
+      getDepartmentTypes: build.query<NestedClassificatorInfoString[], void>({
+        query: () => ({
+          url: '/control/classificators/case-department-types',
+          method: 'GET',
+        }),
       }),
     }),
-    getCurrentUserSettings: build.query<UserControlSettings, void>({
-      query: () => ({
-        url: '/control/classificators/user-settings',
-        method: 'GET',
-      }),
-    }),
-    setCurrentUserDirections: build.mutation<UserControlSettings, number[]>({
-      query: (directions) => ({
-        url: '/control/classificators/user-settings/directions',
-        method: 'PATCH',
-        body: { directions },
-      }),
-      async onQueryStarted(ids, { dispatch }) {
-        dispatch(
-          classificatorsApi.util.updateQueryData(
-            'getCurrentUserSettings',
-            undefined,
-            (draft) => {
-              return { ...draft, directions: ids };
-            },
-          ),
-        );
-      },
-    }),
-    setCurrentUserCaseFilter: build.mutation<
-      UserControlSettings,
-      CasesPageFilter
-    >({
-      query: (filter) => ({
-        url: '/control/classificators/user-settings/case-filter',
-        method: 'PATCH',
-        body: filter,
-      }),
-      async onQueryStarted(filter, { dispatch }) {
-        dispatch(
-          classificatorsApi.util.updateQueryData(
-            'getCurrentUserSettings',
-            undefined,
-            (draft) => {
-              return { ...draft, casesFilter: filter };
-            },
-          ),
-        );
-      },
-    }),
-    getCurrentUserApprovers: build.query<UserControlApprovers, void>({
-      query: () => ({
-        url: '/control/classificators/user-approvers',
-        method: 'GET',
-      }),
-    }),
-    getControlExecutors: build.query<SelectOption<number>[], void>({
-      query: () => ({
-        url: '/control/classificators/executors',
-        method: 'GET',
-      }),
-    }),
-    getCaseTypes: build.query<NestedClassificatorInfo[], void>({
-      query: () => ({
-        url: '/control/classificators/case-types',
-        method: 'GET',
-      }),
-    }),
-    getOperationTypes: build.query<NestedClassificatorInfo[], void>({
-      query: () => ({
-        url: '/control/classificators/operation-types',
-        method: 'GET',
-      }),
-    }),
-    getOperationTypesFlat: build.query<TypeInfo[], void>({
-      query: () => ({
-        url: '/control/classificators/operation-types-flat',
-        method: 'GET',
-      }),
-    }),
-    getCaseStatusTypes: build.query<NestedClassificatorInfo[], void>({
-      query: () => ({
-        url: '/control/classificators/case-status-types',
-        method: 'GET',
-      }),
-    }),
-    getCaseDirectionTypes: build.query<NestedClassificatorInfo[], void>({
-      query: () => ({
-        url: '/control/classificators/case-direction-types',
-        method: 'GET',
-      }),
-    }),
-    getDepartmentTypes: build.query<NestedClassificatorInfoString[], void>({
-      query: () => ({
-        url: '/control/classificators/case-department-types',
-        method: 'GET',
-      }),
-    }),
-  }),
-  overrideExisting: false,
-});
+    overrideExisting: false,
+  });
 
 export const {
   useGetCurrentUserDataQuery: useCurrentUserData,

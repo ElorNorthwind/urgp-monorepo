@@ -28,6 +28,7 @@ export const authApi = rtkApi.injectEndpoints({
         url: '/auth/logout',
         method: 'GET',
       }),
+      invalidatesTags: ['user-data', 'user-settings'],
     }),
   }),
   overrideExisting: false,

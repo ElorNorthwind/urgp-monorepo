@@ -25,41 +25,43 @@ export const operationsApi = rtkApi.injectEndpoints({
         url: '/control/operation/stage/by-case/' + id.toString(),
         method: 'GET',
       }),
-
+      providesTags: ['stage'],
       // Этот эндпоинт провоцирует статус "отсмотренности"
       // Делаем оптимистичный апдейт операции новой датой просмотра
-      async onQueryStarted(id, { dispatch }) {
-        dispatch(
-          casesApi.util.updateQueryData('getCases', undefined, (draft) => {
-            const index = draft.findIndex((stage) => stage.id === id);
-            if (!index || !id) return draft;
-            return [
-              ...draft.slice(0, index),
-              {
-                ...draft[index],
-                lastSeen: new Date().toISOString(),
-                viewStatus:
-                  draft[index]?.viewStatus === 'unwatched'
-                    ? 'unwatched'
-                    : 'unchanged',
-              },
-              ...draft.slice(index + 1),
-            ] as Case[];
-          }),
-        );
-      },
+      // async onQueryStarted(id, { dispatch }) {
+      //   dispatch(
+      //     casesApi.util.updateQueryData('getCases', undefined, (draft) => {
+      //       const index = draft.findIndex((stage) => stage.id === id);
+      //       if (!index || !id) return draft;
+      //       return [
+      //         ...draft.slice(0, index),
+      //         {
+      //           ...draft[index],
+      //           lastSeen: new Date().toISOString(),
+      //           viewStatus:
+      //             draft[index]?.viewStatus === 'unwatched'
+      //               ? 'unwatched'
+      //               : 'unchanged',
+      //         },
+      //         ...draft.slice(index + 1),
+      //       ] as Case[];
+      //     }),
+      //   );
+      // },
     }),
     getDispatchesByCaseId: build.query<ControlDispatch[], number>({
       query: (id) => ({
         url: '/control/operation/dispatch/by-case/' + id.toString(),
         method: 'GET',
       }),
+      providesTags: ['dispatch'],
     }),
     getRemindersByCaseId: build.query<ControlReminder[], number>({
       query: (id) => ({
         url: '/control/operation/reminder/by-case/' + id.toString(),
         method: 'GET',
       }),
+      providesTags: ['reminder'],
     }),
 
     getOperationPayloadHistroy: build.query<
@@ -78,19 +80,20 @@ export const operationsApi = rtkApi.injectEndpoints({
         method: 'POST',
         body: dto,
       }),
+      invalidatesTags: ['stage'],
       async onQueryStarted({}, { dispatch, queryFulfilled }) {
         const { data: createdOperation } = await queryFulfilled;
-        createdOperation?.caseId &&
-          createdOperation?.id &&
-          dispatch(
-            operationsApi.util.updateQueryData(
-              'getStagesByCaseId',
-              createdOperation.caseId,
-              (draft) => {
-                return [createdOperation, ...draft];
-              },
-            ),
-          );
+        // createdOperation?.caseId &&
+        //   createdOperation?.id &&
+        //   dispatch(
+        //     operationsApi.util.updateQueryData(
+        //       'getStagesByCaseId',
+        //       createdOperation.caseId,
+        //       (draft) => {
+        //         return [createdOperation, ...draft];
+        //       },
+        //     ),
+        //   );
         RefetchCachedCase(dispatch, createdOperation?.caseId);
       },
     }),
@@ -147,26 +150,27 @@ export const operationsApi = rtkApi.injectEndpoints({
         method: 'PATCH',
         body: dto,
       }),
+      invalidatesTags: ['stage'],
       async onQueryStarted({}, { dispatch, queryFulfilled }) {
         const { data: updatedOperation } = await queryFulfilled;
-        updatedOperation?.caseId &&
-          updatedOperation?.id &&
-          dispatch(
-            operationsApi.util.updateQueryData(
-              'getStagesByCaseId',
-              updatedOperation.caseId,
-              (draft) => {
-                const index = draft.findIndex(
-                  (stage) => stage.id === updatedOperation.id,
-                );
-                return [
-                  ...draft.slice(0, index),
-                  updatedOperation,
-                  ...draft.slice(index + 1),
-                ];
-              },
-            ),
-          );
+        // updatedOperation?.caseId &&
+        //   updatedOperation?.id &&
+        //   dispatch(
+        //     operationsApi.util.updateQueryData(
+        //       'getStagesByCaseId',
+        //       updatedOperation.caseId,
+        //       (draft) => {
+        //         const index = draft.findIndex(
+        //           (stage) => stage.id === updatedOperation.id,
+        //         );
+        //         return [
+        //           ...draft.slice(0, index),
+        //           updatedOperation,
+        //           ...draft.slice(index + 1),
+        //         ];
+        //       },
+        //     ),
+        //   );
         RefetchCachedCase(dispatch, updatedOperation?.caseId);
       },
     }),

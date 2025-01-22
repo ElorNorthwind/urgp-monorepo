@@ -76,4 +76,12 @@ export const rtkApi = createApi({
   // }),
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({}),
+  tagTypes: [
+    'user-data',
+    'user-settings',
+    'case',
+    'stage',
+    'dispatch',
+    'reminder',
+  ],
 });
