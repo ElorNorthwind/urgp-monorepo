@@ -8,6 +8,7 @@ import {
   Case,
   UserInputApproveDto,
   GET_DEFAULT_CONTROL_DUE_DATE,
+  CaseWithPendingInfo,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 import { ControlOperationsService } from './control-operations.service';
@@ -47,6 +48,12 @@ export class ControlCaseService {
 
   public async readCases(userId: number, readAll: boolean): Promise<Case[]> {
     return this.dbServise.db.controlCases.readCases(userId, readAll);
+  }
+
+  public async readPendingCases(
+    userId: number,
+  ): Promise<CaseWithPendingInfo[]> {
+    return this.dbServise.db.controlCases.readPendingCases(userId);
   }
 
   public async updateCase(dto: CaseUpdateDto, userId: number): Promise<Case> {

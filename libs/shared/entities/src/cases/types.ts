@@ -1,3 +1,4 @@
+import { Stage } from '../messages/types';
 import {
   BasicPayloadDataSlim,
   ExternalCase,
@@ -58,4 +59,9 @@ export type Case = {
 export type CaseSlim = Omit<Case, 'payload' | 'author'> & {
   authorId: number;
   payload: CasePayloadSlim;
+};
+
+export type CaseWithPendingInfo = Case & {
+  action: string;
+  pendingStage: Stage | null;
 };

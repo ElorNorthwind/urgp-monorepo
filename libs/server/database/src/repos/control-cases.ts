@@ -4,6 +4,8 @@ import {
   CaseUpdateDto,
   Case,
   UserInputApproveDto,
+  Stage,
+  CaseWithPendingInfo,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { cases } from './sql/sql';
@@ -67,6 +69,10 @@ export class ControlCasesRepository {
 
   readCases(userId: number, readAll: boolean): Promise<Case[]> {
     return this.db.any(cases.readCases, { userId, readAll });
+  }
+
+  readPendingCases(userId: number): Promise<CaseWithPendingInfo[]> {
+    return this.db.any(cases.readPendingCases, { userId });
   }
   updateCase(dto: CaseUpdateDto, userId: number): Promise<CaseSlim> {
     const externalCases =

@@ -82,6 +82,11 @@ export class ControlCasesController {
     return this.controlCases.readCases(req.user.id, readAll);
   }
 
+  @Get('pending')
+  async readPendingCases(@Req() req: RequestWithUserData) {
+    return this.controlCases.readPendingCases(req.user.id);
+  }
+
   @Get(':id')
   getCaseById(
     @Req() req: RequestWithUserData,

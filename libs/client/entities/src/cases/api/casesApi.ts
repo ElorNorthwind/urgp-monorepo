@@ -3,6 +3,7 @@ import {
   Case,
   CaseCreateDto,
   CaseUpdateDto,
+  CaseWithPendingInfo,
   UserInputApproveDto,
   UserInputDeleteDto,
 } from '@urgp/shared/entities';
@@ -14,12 +15,21 @@ export const casesApi = rtkApi.injectEndpoints({
         url: '/control/case/all',
         method: 'GET',
       }),
+      providesTags: ['case'],
+    }),
+    getPendingCases: build.query<CaseWithPendingInfo[], void>({
+      query: () => ({
+        url: '/control/case/pending',
+        method: 'GET',
+      }),
+      providesTags: ['case'],
     }),
     getCaseById: build.query<Case, number>({
       query: (id) => ({
         url: '/control/case/' + id.toString(),
         method: 'GET',
       }),
+      providesTags: ['case'],
     }),
     createCase: build.mutation<Case, CaseCreateDto>({
       query: (dto) => ({
