@@ -1,10 +1,12 @@
 import { CellContext } from '@tanstack/react-table';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@urgp/client/shared';
-import { Case } from '@urgp/shared/entities';
+import { Case, CaseOrPending } from '@urgp/shared/entities';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { format } from 'date-fns';
 
-function CaseDesctiptionCell(props: CellContext<Case, string>): JSX.Element {
+function CaseDesctiptionCell(
+  props: CellContext<CaseOrPending, string>,
+): JSX.Element {
   const controlCase = props.row?.original;
 
   return (

@@ -1,4 +1,5 @@
 import { Stage } from '../messages/types';
+import { ControlStage } from '../operations/types';
 import {
   BasicPayloadDataSlim,
   ExternalCase,
@@ -63,5 +64,9 @@ export type CaseSlim = Omit<Case, 'payload' | 'author'> & {
 
 export type CaseWithPendingInfo = Case & {
   action: string;
-  pendingStage: Stage | null;
+  pendingStage: ControlStage | null;
 };
+
+type satisfy<base, t extends base> = t;
+
+export type CaseOrPending = satisfy<Case, CaseWithPendingInfo>;

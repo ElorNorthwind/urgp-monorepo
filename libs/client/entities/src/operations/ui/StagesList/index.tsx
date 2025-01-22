@@ -36,4 +36,4 @@ const StagesList = (props: StagesListProps): JSX.Element => {
   );
 };
 
-export { StagesList };
+export { StagesList, StageItem };

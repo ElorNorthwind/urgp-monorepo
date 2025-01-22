@@ -1,17 +1,17 @@
+import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { CellContext } from '@tanstack/react-table';
 import {
-  Badge,
   cn,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { Case } from '@urgp/shared/entities';
-import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
-import { format } from 'date-fns';
+import { CaseOrPending } from '@urgp/shared/entities';
 import { ExternalCasesList } from '../../ExternalCasesList';
 
-function ExternalCasesCell(props: CellContext<Case, string>): JSX.Element {
+function ExternalCasesCell(
+  props: CellContext<CaseOrPending, string>,
+): JSX.Element {
   const externalCases = props.row.original?.payload?.externalCases;
 
   if (externalCases === undefined || externalCases?.length === 0) {

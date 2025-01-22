@@ -1,18 +1,18 @@
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import { DateRangeSelect } from '@urgp/client/features';
-import { cn, Input } from '@urgp/client/shared';
+import { CaseRoutes, cn, Input } from '@urgp/client/shared';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 
 type DueDateFilterProps = {
   className?: string;
-  route?: '/control/cases' | '/control/settings/filter';
 };
 
 const DueDateFilter = (props: DueDateFilterProps): JSX.Element => {
-  const { className, route = '/control/cases' } = props;
-  const navigate = useNavigate({ from: route });
-  const search = getRouteApi(route).useSearch() as CasesPageSearchDto;
+  const { className } = props;
+  const pathname = useLocation().pathname as CaseRoutes;
+  const navigate = useNavigate({ from: pathname });
+  const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
 
   return (
     <DateRangeSelect

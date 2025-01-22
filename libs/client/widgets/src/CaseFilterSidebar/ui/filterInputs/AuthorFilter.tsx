@@ -1,17 +1,25 @@
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import { cn, Input } from '@urgp/client/shared';
+import {
+  getRouteApi,
+  useLocation,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router';
+import { CaseRoutes, cn, Input } from '@urgp/client/shared';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
 import { User } from 'lucide-react';
 
 type AuthorFilterProps = {
   className?: string;
-  route?: '/control/cases' | '/control/settings/filter';
 };
 
 const AuthorFilter = (props: AuthorFilterProps): JSX.Element => {
-  const { className, route = '/control/cases' } = props;
-  const navigate = useNavigate({ from: route });
-  const search = getRouteApi(route).useSearch() as CasesPageSearchDto;
+  const { className } = props;
+  const pathname = useLocation().pathname as CaseRoutes;
+
+  const navigate = useNavigate({ from: pathname });
+  const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
+  const router = useRouter();
+  router.routesByPath;
 
   return (
     <Input

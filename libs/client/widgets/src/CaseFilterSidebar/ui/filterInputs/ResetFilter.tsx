@@ -1,18 +1,19 @@
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import { Button, cn } from '@urgp/client/shared';
+import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
+import { Button, CaseRoutes, cn } from '@urgp/client/shared';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
 import { X } from 'lucide-react';
 
 type ResetFilterProps = {
   className?: string;
   variant?: 'full' | 'mini';
-  route?: '/control/cases' | '/control/settings/filter';
 };
 
 const ResetFilter = (props: ResetFilterProps): JSX.Element => {
-  const { className, variant = 'full', route = '/control/cases' } = props;
-  const navigate = useNavigate({ from: route });
-  const search = getRouteApi(route).useSearch() as CasesPageSearchDto;
+  const { className, variant = 'full' } = props;
+  const pathname = useLocation().pathname as CaseRoutes;
+
+  const navigate = useNavigate({ from: pathname });
+  const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
 
   const paramLength = Object.keys(search).filter(
     (key) => !['selectedCase', 'sortKey', 'sortDir'].includes(key),

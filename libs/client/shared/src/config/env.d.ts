@@ -19,3 +19,5 @@ declare module '@tanstack/table-core' {
     cellClass?: string;
   }
 }
+
+export type CaseRoutes = (typeof CASE_ROUTES)[number];

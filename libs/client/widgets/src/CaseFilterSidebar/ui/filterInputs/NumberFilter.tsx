@@ -1,17 +1,18 @@
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
-import { cn, Input } from '@urgp/client/shared';
+import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
+import { CaseRoutes, cn, Input } from '@urgp/client/shared';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
 import { FileSearch2, Search } from 'lucide-react';
 
 type NumberFilterProps = {
   className?: string;
-  route?: '/control/cases' | '/control/settings/filter';
 };
 
 const NumberFilter = (props: NumberFilterProps): JSX.Element => {
-  const { className, route = '/control/cases' } = props;
-  const navigate = useNavigate({ from: route });
-  const search = getRouteApi(route).useSearch() as CasesPageSearchDto;
+  const { className } = props;
+  const pathname = useLocation().pathname as CaseRoutes;
+
+  const navigate = useNavigate({ from: pathname });
+  const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
 
   return (
     <Input

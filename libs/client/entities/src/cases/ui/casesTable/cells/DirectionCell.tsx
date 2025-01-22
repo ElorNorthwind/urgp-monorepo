@@ -1,10 +1,10 @@
+import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { CellContext } from '@tanstack/react-table';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@urgp/client/shared';
-import { Case } from '@urgp/shared/entities';
-import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
+import { CaseOrPending } from '@urgp/shared/entities';
 import { CaseDirectionsList } from '../../CaseDirectionsList';
 
-function DirectionCell(props: CellContext<Case, string>): JSX.Element {
+function DirectionCell(props: CellContext<CaseOrPending, string>): JSX.Element {
   const payload = props.row.original.payload;
   return (
     <Tooltip>

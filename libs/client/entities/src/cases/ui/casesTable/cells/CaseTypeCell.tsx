@@ -1,3 +1,5 @@
+import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
+import { getRouteApi } from '@tanstack/react-router';
 import { CellContext } from '@tanstack/react-table';
 import {
   cn,
@@ -5,13 +7,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { CasesPageSearchDto, Case } from '@urgp/shared/entities';
-import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
-import { caseTypeStyles } from '../../../config/caseStyles';
-import { getRouteApi } from '@tanstack/react-router';
+import { CaseOrPending, CasesPageSearchDto } from '@urgp/shared/entities';
 import { ChevronLeft, MessageSquare } from 'lucide-react';
+import { caseTypeStyles } from '../../../config/caseStyles';
 
-function CaseTypeCell(props: CellContext<Case, string>): JSX.Element {
+function CaseTypeCell(props: CellContext<CaseOrPending, string>): JSX.Element {
   const payload = props.row.original?.payload;
   const { icon: TypeIcon, iconStyle } = caseTypeStyles?.[payload?.type?.id] || {
     icon: MessageSquare,

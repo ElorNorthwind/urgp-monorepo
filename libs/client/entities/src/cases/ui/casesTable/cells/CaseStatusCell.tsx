@@ -1,3 +1,4 @@
+import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { CellContext } from '@tanstack/react-table';
 import {
   cn,
@@ -5,14 +6,15 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { Case } from '@urgp/shared/entities';
-import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
-import { caseStatusStyles, viewStatusStyles } from '../../../config/caseStyles';
-import { Circle } from 'lucide-react';
+import { CaseOrPending } from '@urgp/shared/entities';
 import { format } from 'date-fns';
+import { Circle } from 'lucide-react';
+import { caseStatusStyles, viewStatusStyles } from '../../../config/caseStyles';
 import { CaseDispatchesList } from '../../CaseDispatchesList';
 
-function CaseStatusCell(props: CellContext<Case, string>): JSX.Element {
+function CaseStatusCell(
+  props: CellContext<CaseOrPending, string>,
+): JSX.Element {
   const status = props.row.original?.status;
   const dispatches = props.row.original?.dispatches || [];
   const approveStatus =

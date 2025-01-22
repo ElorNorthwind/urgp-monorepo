@@ -1,4 +1,4 @@
-import { getRouteApi } from '@tanstack/react-router';
+import { getRouteApi, useLocation } from '@tanstack/react-router';
 import { VisibilityState } from '@tanstack/react-table';
 import {
   Breadcrumb,
@@ -7,11 +7,11 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
+  CaseRoutes,
   cn,
   Separator,
   SidebarTrigger,
   useIsMobile,
-  useUserAbility,
 } from '@urgp/client/shared';
 import { QueryFilter, ResetFilter, UserFilter } from '@urgp/client/widgets';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
@@ -30,9 +30,9 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
   const { total, filtered, className, columnVisibility, setColumnVisibility } =
     props;
   const isMobile = useIsMobile();
-  const i = useUserAbility();
+  const pathname = useLocation().pathname as CaseRoutes;
 
-  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
+  const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
   const paramLength = Object.keys(search).filter(
     (key) => !['selectedCase', 'sortKey', 'sortDir'].includes(key),
   ).length;
@@ -60,7 +60,9 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
           </BreadcrumbItem>
           <BreadcrumbSeparator className="hidden md:block" />
           <BreadcrumbItem>
-            <BreadcrumbPage>Дела</BreadcrumbPage>
+            <BreadcrumbPage>
+              {pathname === '/control/cases' ? 'Дела' : 'Ожидают решения'}
+            </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

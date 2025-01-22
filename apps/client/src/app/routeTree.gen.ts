@@ -25,6 +25,7 @@ import { Route as RenovationOldapartmentsImport } from './routes/renovation/olda
 import { Route as RenovationMessagesImport } from './routes/renovation/messages'
 import { Route as RenovationBuildingRelocationMapImport } from './routes/renovation/building-relocation-map'
 import { Route as ControlProblemsImport } from './routes/control/problems'
+import { Route as ControlPendingImport } from './routes/control/pending'
 import { Route as ControlCasesImport } from './routes/control/cases'
 import { Route as RenovationSettingsRouteImport } from './routes/renovation/settings/route'
 import { Route as ControlSettingsRouteImport } from './routes/control/settings/route'
@@ -137,6 +138,12 @@ const RenovationBuildingRelocationMapRoute =
 const ControlProblemsRoute = ControlProblemsImport.update({
   id: '/problems',
   path: '/problems',
+  getParentRoute: () => ControlRouteRoute,
+} as any)
+
+const ControlPendingRoute = ControlPendingImport.update({
+  id: '/pending',
+  path: '/pending',
   getParentRoute: () => ControlRouteRoute,
 } as any)
 
@@ -271,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ControlCasesImport
       parentRoute: typeof ControlRouteImport
     }
+    '/control/pending': {
+      id: '/control/pending'
+      path: '/pending'
+      fullPath: '/control/pending'
+      preLoaderRoute: typeof ControlPendingImport
+      parentRoute: typeof ControlRouteImport
+    }
     '/control/problems': {
       id: '/control/problems'
       path: '/problems'
@@ -385,6 +399,7 @@ const ControlSettingsRouteRouteWithChildren =
 interface ControlRouteRouteChildren {
   ControlSettingsRouteRoute: typeof ControlSettingsRouteRouteWithChildren
   ControlCasesRoute: typeof ControlCasesRoute
+  ControlPendingRoute: typeof ControlPendingRoute
   ControlProblemsRoute: typeof ControlProblemsRoute
   ControlIndexRoute: typeof ControlIndexRoute
 }
@@ -392,6 +407,7 @@ interface ControlRouteRouteChildren {
 const ControlRouteRouteChildren: ControlRouteRouteChildren = {
   ControlSettingsRouteRoute: ControlSettingsRouteRouteWithChildren,
   ControlCasesRoute: ControlCasesRoute,
+  ControlPendingRoute: ControlPendingRoute,
   ControlProblemsRoute: ControlProblemsRoute,
   ControlIndexRoute: ControlIndexRoute,
 }
@@ -453,6 +469,7 @@ export interface FileRoutesByFullPath {
   '/control/settings': typeof ControlSettingsRouteRouteWithChildren
   '/renovation/settings': typeof RenovationSettingsRouteRouteWithChildren
   '/control/cases': typeof ControlCasesRoute
+  '/control/pending': typeof ControlPendingRoute
   '/control/problems': typeof ControlProblemsRoute
   '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
   '/renovation/messages': typeof RenovationMessagesRoute
@@ -476,6 +493,7 @@ export interface FileRoutesByTo {
   '/bticalc': typeof BticalcLazyRoute
   '/map': typeof MapLazyRoute
   '/control/cases': typeof ControlCasesRoute
+  '/control/pending': typeof ControlPendingRoute
   '/control/problems': typeof ControlProblemsRoute
   '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
   '/renovation/messages': typeof RenovationMessagesRoute
@@ -504,6 +522,7 @@ export interface FileRoutesById {
   '/control/settings': typeof ControlSettingsRouteRouteWithChildren
   '/renovation/settings': typeof RenovationSettingsRouteRouteWithChildren
   '/control/cases': typeof ControlCasesRoute
+  '/control/pending': typeof ControlPendingRoute
   '/control/problems': typeof ControlProblemsRoute
   '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
   '/renovation/messages': typeof RenovationMessagesRoute
@@ -533,6 +552,7 @@ export interface FileRouteTypes {
     | '/control/settings'
     | '/renovation/settings'
     | '/control/cases'
+    | '/control/pending'
     | '/control/problems'
     | '/renovation/building-relocation-map'
     | '/renovation/messages'
@@ -555,6 +575,7 @@ export interface FileRouteTypes {
     | '/bticalc'
     | '/map'
     | '/control/cases'
+    | '/control/pending'
     | '/control/problems'
     | '/renovation/building-relocation-map'
     | '/renovation/messages'
@@ -581,6 +602,7 @@ export interface FileRouteTypes {
     | '/control/settings'
     | '/renovation/settings'
     | '/control/cases'
+    | '/control/pending'
     | '/control/problems'
     | '/renovation/building-relocation-map'
     | '/renovation/messages'
@@ -647,6 +669,7 @@ export const routeTree = rootRoute
       "children": [
         "/control/settings",
         "/control/cases",
+        "/control/pending",
         "/control/problems",
         "/control/"
       ]
@@ -697,6 +720,10 @@ export const routeTree = rootRoute
     },
     "/control/cases": {
       "filePath": "control/cases.tsx",
+      "parent": "/control"
+    },
+    "/control/pending": {
+      "filePath": "control/pending.tsx",
       "parent": "/control"
     },
     "/control/problems": {

@@ -1,14 +1,13 @@
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import { caseTypeStyles, useCaseTypes } from '@urgp/client/entities';
 import { ClassificatorFilter } from '@urgp/client/features';
-import { cn } from '@urgp/client/shared';
+import { CaseRoutes, cn } from '@urgp/client/shared';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
 
 type CaseTypesFilterProps = {
   variant?: 'popover' | 'checkbox' | 'accordion';
   className?: string;
   accordionItemValue?: string;
-  route?: '/control/cases' | '/control/settings/filter';
 };
 
 const CaseTypesFilter = (props: CaseTypesFilterProps): JSX.Element => {
@@ -16,11 +15,11 @@ const CaseTypesFilter = (props: CaseTypesFilterProps): JSX.Element => {
     className,
     variant = 'accordion',
     accordionItemValue = 'caseTypes',
-    route = '/control/cases',
   } = props;
+  const pathname = useLocation().pathname as CaseRoutes;
 
-  const navigate = useNavigate({ from: route });
-  const search = getRouteApi(route).useSearch() as CasesPageSearchDto;
+  const navigate = useNavigate({ from: pathname });
+  const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
   const { data, isLoading, isFetching } = useCaseTypes();
 
   return (

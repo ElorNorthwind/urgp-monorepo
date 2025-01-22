@@ -68,41 +68,20 @@ const ControlFilterSettingsPage = (): JSX.Element => {
             <span>{isDirty ? 'Dirty' : 'Clean'}</span> */}
             {/* <QueryFilter
               className="h-8 flex-shrink-0"
-              route="/control/settings/filter"
             />
             <NumberFilter
               className="h-8 flex-shrink-0"
-              route="/control/settings/filter"
             />
             <DueDateFilter
               className="flex-shrink-0"
-              route="/control/settings/filter"
             /> */}
-            <AuthorFilter
-              className="h-8 flex-shrink-0"
-              route="/control/settings/filter"
-            />
+            <AuthorFilter className="h-8 flex-shrink-0" />
             <Accordion type="multiple" defaultValue={['departments']}>
-              <DepartmentsFilter
-                variant="accordion"
-                route="/control/settings/filter"
-              />
-              <StatusFilter
-                variant="accordion"
-                route="/control/settings/filter"
-              />
-              <DirectionsFilter
-                variant="accordion"
-                route="/control/settings/filter"
-              />
-              <CaseTypesFilter
-                variant="accordion"
-                route="/control/settings/filter"
-              />
-              <ViewStatusFilter
-                variant="accordion"
-                route="/control/settings/filter"
-              />
+              <DepartmentsFilter variant="accordion" />
+              <StatusFilter variant="accordion" />
+              <DirectionsFilter variant="accordion" />
+              <CaseTypesFilter variant="accordion" />
+              <ViewStatusFilter variant="accordion" />
             </Accordion>
             {isDirty && (
               <Button

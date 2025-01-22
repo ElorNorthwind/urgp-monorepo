@@ -117,6 +117,7 @@ export const casesApi = rtkApi.injectEndpoints({
 
 export const {
   useGetCasesQuery: useCases,
+  useGetPendingCasesQuery: usePendingCases,
   useGetCaseByIdQuery: useCaseById,
   useCreateCaseMutation: useCreateCase,
   useUpdateCaseMutation: useUpdateCase,

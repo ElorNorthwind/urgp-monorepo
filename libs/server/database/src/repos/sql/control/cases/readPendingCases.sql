@@ -26,10 +26,10 @@ LEFT JOIN renovation.users u4 ON u4.id = (o.payload->-1->>'updatedById')::intege
 LEFT JOIN renovation.users u5 ON u5.id = (o.payload->-1->>'controllerId')::integer
 LEFT JOIN renovation.users u6 ON u6.id = (o.payload->-1->>'executorId')::integer
 LEFT JOIN renovation.users u7 ON u7.id = (o.payload->-1->>'observerId')::integer
-
 WHERE class = 'stage' 
-AND o.payload->-1->>'approveStatus' = 'pending'
-AND (o.payload->-1->>'approverId')::integer = ${userId}
+    AND (o.payload->-1->>'isDeleted')::boolean IS DISTINCT FROM true
+	AND o.payload->-1->>'approveStatus' = 'pending'
+	AND (o.payload->-1->>'approverId')::integer = ${userId}
 ), directions AS (
 	SELECT  
 		c.id,

@@ -1,6 +1,6 @@
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useCurrentUserSettings } from '@urgp/client/entities';
-import { Button, cn, Skeleton } from '@urgp/client/shared';
+import { Button, CaseRoutes, cn, Skeleton } from '@urgp/client/shared';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
 
 type UserFilterProps = {
@@ -10,8 +10,8 @@ type UserFilterProps = {
 
 const UserFilter = (props: UserFilterProps): JSX.Element | null => {
   const { className, variant = 'full' } = props;
-  const route = '/control/cases';
-  const navigate = useNavigate({ from: route });
+  const pathname = useLocation().pathname as CaseRoutes;
+  const navigate = useNavigate({ from: pathname });
   const {
     data: userSettings,
     isLoading,

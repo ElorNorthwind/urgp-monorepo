@@ -1,35 +1,36 @@
 import { Row, VisibilityState } from '@tanstack/react-table';
 
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
   CaseCard,
   caseGlobalFilterFn,
   controlCasesColumns,
-  useCases,
+  pendingCasesColumns,
+  usePendingCases,
 } from '@urgp/client/entities';
 import {
   cn,
   NAVBAR_WIDTH,
-  selectCurrentUser,
   SidebarInset,
   TooltipProvider,
   VirtualDataTable,
 } from '@urgp/client/shared';
-import { CasesPageSearchDto, Case } from '@urgp/shared/entities';
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
-import { CasesPageHeader } from './CasesPageHeader';
+import { CasesPageSearchDto, CaseWithPendingInfo } from '@urgp/shared/entities';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { CasesPageHeader } from '../../ControlCasesPage/ui/CasesPageHeader';
 
-const ControlCasesPage = (): JSX.Element => {
-  const { data: cases, isLoading, isFetching } = useCases();
-  const [selected, setSelected] = useState<Row<Case>[]>([]); // Этот селектед не тот селектед!
-  const [filtered, setFiltered] = useState<Row<Case>[]>([]);
+const defaultHiddenColumns = ['externalCases', 'type'];
+
+const PendingCasesPage = (): JSX.Element => {
+  const { data: cases, isLoading, isFetching } = usePendingCases();
+  const [selected, setSelected] = useState<Row<CaseWithPendingInfo>[]>([]); // Этот селектед не тот селектед!
+  const [filtered, setFiltered] = useState<Row<CaseWithPendingInfo>[]>([]);
 
   // const isMobile = useIsMobile();
-  const navigate = useNavigate({ from: '/control/cases' });
+  const navigate = useNavigate({ from: '/control/pending' });
   const search = getRouteApi(
-    '/control/cases',
+    '/control/pending',
   ).useSearch() as CasesPageSearchDto;
 
   // ID прошлого и текущего дела
@@ -60,13 +61,16 @@ const ControlCasesPage = (): JSX.Element => {
     }
   };
 
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-    controlCasesColumns
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    ...controlCasesColumns
       .filter((col) => col.enableHiding !== false)
       .reduce((acc, cur) => {
         return cur.id ? { ...acc, [cur.id]: true } : acc;
-      }, {}) as VisibilityState,
-  );
+      }, {}),
+    ...defaultHiddenColumns.reduce((acc, cur) => {
+      return { ...acc, [cur]: false };
+    }, {}),
+  } as VisibilityState);
 
   return (
     <TooltipProvider delayDuration={50}>
@@ -89,7 +93,7 @@ const ControlCasesPage = (): JSX.Element => {
             className={cn(
               'h-[calc(100vh-3rem)] flex-1 duration-200 ease-linear',
             )}
-            columns={controlCasesColumns}
+            columns={pendingCasesColumns}
             data={cases || []}
             isFetching={isLoading || isFetching}
             totalCount={cases?.length ?? 0}
@@ -156,4 +160,4 @@ const ControlCasesPage = (): JSX.Element => {
   );
 };
 
-export { ControlCasesPage };
+export { PendingCasesPage };

@@ -16,7 +16,7 @@ type CaseCardHeaderProps = {
 
 const CaseCardHeader = (props: CaseCardHeaderProps): JSX.Element => {
   const { className, controlCase, onClose, onNextCase, onPrevCase } = props;
-  const navigate = useNavigate({ from: '/control/cases' });
+  // const navigate = useNavigate({ from: '/control/cases' });
 
   return (
     <div
