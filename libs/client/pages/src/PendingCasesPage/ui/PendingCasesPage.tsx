@@ -62,7 +62,7 @@ const PendingCasesPage = (): JSX.Element => {
   };
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    ...controlCasesColumns
+    ...pendingCasesColumns
       .filter((col) => col.enableHiding !== false)
       .reduce((acc, cur) => {
         return cur.id ? { ...acc, [cur.id]: true } : acc;

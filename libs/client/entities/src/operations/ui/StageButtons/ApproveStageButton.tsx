@@ -11,11 +11,13 @@ import { StageItem } from '../StagesList/StageItem';
 type ApproveStageButtonProps = {
   stage: ControlStage;
   className?: string;
+  variant?: 'mini' | 'default';
 };
 
 const ApproveStageButton = ({
   stage,
   className,
+  variant = 'mini',
 }: ApproveStageButtonProps): JSX.Element | null => {
   const i = useUserAbility();
   if (i.cannot('approve', stage)) return null;
@@ -27,7 +29,7 @@ const ApproveStageButton = ({
           className={className}
           entityId={stage.id}
           entityType="operation"
-          variant={'mini'}
+          variant={variant}
           displayedElement={<StageItem stage={stage} hover={false} />}
         />
       </TooltipTrigger>

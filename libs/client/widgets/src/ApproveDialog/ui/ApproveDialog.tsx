@@ -21,13 +21,14 @@ import { ApproveForm } from './ApproveForm';
 
 type ApproveDialogProps = {
   entityId: number;
-  variant?: 'default' | 'mini';
+  variant?: 'default' | 'mini' | 'ghost' | 'outline';
+  buttonLabel?: string;
   entityType?: 'operation' | 'case';
   displayedElement?: JSX.Element | null;
   className?: string;
 };
 
-type DialogButtonProps = Pick<ApproveDialogProps, 'variant'> & {
+type DialogButtonProps = Pick<ApproveDialogProps, 'variant' | 'buttonLabel'> & {
   onClick: () => void;
 };
 
@@ -36,10 +37,10 @@ const DIALOG_WIDTH = '600px';
 const DialogButton = forwardRef<
   HTMLButtonElement,
   React.HTMLAttributes<HTMLButtonElement> & DialogButtonProps
->(({ variant, onClick }, ref) => {
+>(({ variant, buttonLabel = 'Решение', className, onClick }, ref) => {
   return variant === 'mini' ? (
     <Button
-      className="size-6 rounded-full p-0"
+      className={cn('size-6 rounded-full p-0', className)}
       variant={'ghost'}
       onClick={onClick}
     >
@@ -47,13 +48,13 @@ const DialogButton = forwardRef<
     </Button>
   ) : (
     <Button
-      variant="default"
+      variant={variant}
       role="button"
-      className="flex flex-grow flex-row gap-2"
+      className={cn('flex flex-grow flex-row gap-2', className)}
       onClick={onClick}
     >
-      <Scale className="size-5" />
-      <span>Решение</span>
+      <Scale className="size-5 flex-shrink-0" />
+      <span className="truncate">{buttonLabel}</span>
     </Button>
   );
 });
@@ -66,6 +67,7 @@ const ApproveDialog = forwardRef<HTMLButtonElement, ApproveDialogProps>(
       entityType = 'case',
       displayedElement,
       className,
+      buttonLabel,
     }: ApproveDialogProps,
     ref,
   ): JSX.Element | null => {
@@ -95,6 +97,8 @@ const ApproveDialog = forwardRef<HTMLButtonElement, ApproveDialogProps>(
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <DialogButton
+              className={className}
+              buttonLabel={buttonLabel}
               variant={variant}
               onClick={() => setOpen(true)}
               ref={ref}
@@ -115,7 +119,7 @@ const ApproveDialog = forwardRef<HTMLButtonElement, ApproveDialogProps>(
             <ApproveForm
               entityId={entityId}
               entityType={entityType}
-              className={className}
+              // className={className}
               onClose={() => setOpen(false)}
               popoverMinWidth={`calc(${DIALOG_WIDTH} - 3rem)`}
             />
@@ -126,7 +130,12 @@ const ApproveDialog = forwardRef<HTMLButtonElement, ApproveDialogProps>(
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <DialogButton variant={variant} onClick={() => setOpen(true)} />
+          <DialogButton
+            className={className}
+            variant={variant}
+            buttonLabel={buttonLabel}
+            onClick={() => setOpen(true)}
+          />
         </DialogTrigger>
         <DialogContent
           style={contentStyle}
@@ -141,7 +150,6 @@ const ApproveDialog = forwardRef<HTMLButtonElement, ApproveDialogProps>(
           <ApproveForm
             entityId={entityId}
             entityType={entityType}
-            className={className}
             onClose={() => setOpen(false)}
             popoverMinWidth={`calc(${DIALOG_WIDTH} - 3rem)`}
           />

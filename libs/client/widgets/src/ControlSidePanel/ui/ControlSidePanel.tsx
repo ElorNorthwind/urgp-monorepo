@@ -16,7 +16,6 @@ const ControlSidePanel = (props: ControlSidePanelProps): JSX.Element => {
     <div
       className={cn(
         'transform[width] duration-200 ease-linear',
-
         'bg-sidebar text-sidebar-foreground relative h-screen overflow-hidden border-l p-0',
         // isOpen ? (isMobile ? 'w-full' : `w-[${SIDEBAR_WIDTH}]`) : 'w-0',
         className,

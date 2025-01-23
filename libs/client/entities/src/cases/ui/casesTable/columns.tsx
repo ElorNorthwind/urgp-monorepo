@@ -6,6 +6,7 @@ import { CaseTypeCell } from './cells/CaseTypeCell';
 import { ExternalCasesCell } from './cells/ExternalCasesCell';
 import { CaseStatusCell } from './cells/CaseStatusCell';
 import { CaseDesctiptionCell } from './cells/CaseDescriptionCell';
+import { CheckboxCell } from './cells/CheckboxCell';
 
 const columnHelper = createColumnHelper<Case>();
 
@@ -27,21 +28,24 @@ export const controlCasesColumns = [
         onClick={table.getToggleAllRowsSelectedHandler()}
       />
     ),
-    cell: ({ row }) => {
-      return (
-        <div
-          className="flex h-14 items-center justify-center"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Checkbox
-            className="size-5"
-            checked={row.getIsSelected()}
-            disabled={!row.getCanSelect()}
-            onClick={row.getToggleSelectedHandler()}
-          />
-        </div>
-      );
+    cell: (props) => {
+      return <CheckboxCell {...props} />;
     },
+    // cell: ({ row }) => {
+    //   return (
+    //     <div
+    //       className="flex h-14 items-center justify-center"
+    //       onClick={(e) => e.stopPropagation()}
+    //     >
+    //       <Checkbox
+    //         className="size-5"
+    //         checked={row.getIsSelected()}
+    //         disabled={!row.getCanSelect()}
+    //         onClick={row.getToggleSelectedHandler()}
+    //       />
+    //     </div>
+    //   );
+    // },
   }),
 
   columnHelper.accessor(
@@ -53,7 +57,7 @@ export const controlCasesColumns = [
       size: 100,
       enableSorting: true,
       cell: (props) => {
-        return <ExternalCasesCell {...props} />;
+        return <ExternalCasesCell {...(props as any)} />;
       },
       sortingFn: (rowA, rowB) => {
         const dif = (
@@ -71,7 +75,7 @@ export const controlCasesColumns = [
     enableSorting: true,
     enableHiding: false,
     cell: (props) => {
-      return <CaseDesctiptionCell {...props} />;
+      return <CaseDesctiptionCell {...(props as any)} />;
     },
     sortingFn: (rowA, rowB) => {
       const dif = (rowA.original?.payload?.fio || '').localeCompare(
@@ -87,7 +91,7 @@ export const controlCasesColumns = [
     size: 150,
     enableSorting: true,
     cell: (props) => {
-      return <CaseStatusCell {...props} />;
+      return <CaseStatusCell {...(props as any)} />;
     },
     sortingFn: (rowA, rowB) => {
       const dif1 =
@@ -108,7 +112,7 @@ export const controlCasesColumns = [
       size: 140,
       enableSorting: true,
       cell: (props) => {
-        return <DirectionCell {...props} />;
+        return <DirectionCell {...(props as any)} />;
       },
       sortingFn: (rowA, rowB) => {
         const dif = (
@@ -125,7 +129,7 @@ export const controlCasesColumns = [
     size: 200,
     enableSorting: true,
     cell: (props) => {
-      return <CaseTypeCell {...props} />;
+      return <CaseTypeCell {...(props as any)} />;
     },
     sortingFn: (rowA, rowB) => {
       const dif = rowA.original.payload?.type?.priority;

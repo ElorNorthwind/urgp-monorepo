@@ -1,5 +1,4 @@
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
-import { getRouteApi } from '@tanstack/react-router';
 import { CellContext } from '@tanstack/react-table';
 import {
   cn,
@@ -7,9 +6,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { CaseOrPending, CasesPageSearchDto } from '@urgp/shared/entities';
-import { ChevronLeft, MessageSquare } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 import { caseTypeStyles } from '../../../config/caseStyles';
+import { CaseOrPending } from '@urgp/shared/entities';
 
 function CaseTypeCell(props: CellContext<CaseOrPending, string>): JSX.Element {
   const payload = props.row.original?.payload;
@@ -17,7 +16,7 @@ function CaseTypeCell(props: CellContext<CaseOrPending, string>): JSX.Element {
     icon: MessageSquare,
     iconStyle: 'text-slate-500',
   };
-  const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
+  // const search = getRouteApi('/control').useSearch() as CasesPageSearchDto;
 
   return (
     <Tooltip>
@@ -30,12 +29,12 @@ function CaseTypeCell(props: CellContext<CaseOrPending, string>): JSX.Element {
               Системная прорблема ...
             </div>
           </div>
-          {search?.selectedCase === props.row.original?.id && (
+          {/* {search?.selectedCase === props.row.original?.id && (
             <ChevronLeft className="text-muted-foreground absolute right-0 size-8" />
           )}
           {search?.selectedCase === props.row.original?.id && (
             <div className="border-muted-foreground pointer-events-none absolute inset-0 border" />
-          )}
+          )} */}
         </div>
       </TooltipTrigger>
       <TooltipPortal>

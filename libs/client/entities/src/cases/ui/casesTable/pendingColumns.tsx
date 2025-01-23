@@ -7,6 +7,8 @@ import { CaseTypeCell } from './cells/CaseTypeCell';
 import { DirectionCell } from './cells/DirectionCell';
 import { ExternalCasesCell } from './cells/ExternalCasesCell';
 import { PendingOperationCell } from './cells/PendingOperationCell';
+import { SmartApproveCell } from './cells/SmartApproveCell';
+import { CheckboxCell } from './cells/CheckboxCell';
 
 const columnHelper = createColumnHelper<CaseWithPendingInfo>();
 
@@ -28,20 +30,19 @@ export const pendingCasesColumns = [
         onClick={table.getToggleAllRowsSelectedHandler()}
       />
     ),
-    cell: ({ row }) => {
-      return (
-        <div
-          className="flex h-14 items-center justify-center"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Checkbox
-            className="size-5"
-            checked={row.getIsSelected()}
-            disabled={!row.getCanSelect()}
-            onClick={row.getToggleSelectedHandler()}
-          />
-        </div>
-      );
+    cell: (props) => {
+      return <CheckboxCell {...props} />;
+    },
+  }),
+
+  columnHelper.display({
+    id: 'smartApprove',
+    header: 'Решение',
+    size: 100,
+    enableHiding: false,
+    enableSorting: false,
+    cell: (props) => {
+      return <SmartApproveCell {...props} />;
     },
   }),
 
@@ -123,7 +124,7 @@ export const pendingCasesColumns = [
   columnHelper.accessor('payload.type.name', {
     id: 'type',
     header: 'Тип проблемы',
-    size: 200,
+    size: 150,
     enableSorting: true,
     cell: (props) => {
       return <CaseTypeCell {...props} />;
