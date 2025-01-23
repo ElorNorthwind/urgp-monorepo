@@ -15,7 +15,7 @@ import {
   emptyReminder,
   User,
 } from '@urgp/shared/entities';
-import { RootState, store } from '../store';
+import { RootState } from '../store';
 import { formatISO } from 'date-fns';
 import {
   clearUser,
@@ -25,6 +25,8 @@ import {
 } from '../auth/authSlice';
 
 export type DialogFormState = 'create' | 'edit' | 'close';
+export type ApproveFormState = 'operation' | 'case' | 'close';
+
 type ControlState = {
   caseForm: {
     state: DialogFormState;
@@ -41,6 +43,10 @@ type ControlState = {
   reminderForm: {
     state: DialogFormState;
     values: ReminderFormValuesDto & { saved?: boolean };
+  };
+  approveForm: {
+    state: ApproveFormState;
+    entityId: number;
   };
   user: User | null;
 };
@@ -61,6 +67,10 @@ const initialState: ControlState = {
   reminderForm: {
     state: 'close',
     values: emptyReminder,
+  },
+  approveForm: {
+    state: 'close',
+    entityId: 0,
   },
   user: initialUserState.user,
 };
@@ -218,6 +228,17 @@ const controlSlice = createSlice({
           payload?.observerId === 0 ? state.user.id : payload?.observerId,
       };
     },
+
+    // ================================= APPROVE =================================
+    setApproveFormState: (
+      state,
+      { payload }: PayloadAction<ApproveFormState>,
+    ) => {
+      state.approveForm.state = payload;
+    },
+    setApproveFormEntityId: (state, { payload }: PayloadAction<number>) => {
+      state.approveForm.entityId = payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(setUser, (state, action) => {
@@ -280,5 +301,13 @@ export const selectReminderFormValues = (state: RootState) =>
   state.control.reminderForm.values;
 export const selectReminderFormState = (state: RootState) =>
   state.control.reminderForm.state;
+
+// ================================= APPROVE =================================
+export const { setApproveFormState, setApproveFormEntityId } =
+  controlSlice.actions;
+export const selectApproveFormEntityId = (state: RootState) =>
+  state.control.approveForm.entityId;
+export const selectApproveFormState = (state: RootState) =>
+  state.control.approveForm.state;
 
 export default controlSlice.reducer;

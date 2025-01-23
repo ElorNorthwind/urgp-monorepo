@@ -34,12 +34,11 @@ export const pendingCasesColumns = [
       return <CheckboxCell {...props} />;
     },
   }),
-
   columnHelper.display({
     id: 'smartApprove',
     header: 'Решение',
-    size: 100,
-    enableHiding: false,
+    size: 90,
+    enableHiding: true,
     enableSorting: false,
     cell: (props) => {
       return <SmartApproveCell {...props} />;
@@ -150,17 +149,5 @@ export const pendingCasesColumns = [
     cell: (props) => {
       return <PendingOperationCell {...props} />;
     },
-    // sortingFn: (rowA, rowB) => {
-    //   const dif = rowA.original.pendingStage?.payload?.doneDate;
-    //   // const dif = rowA.original.payload?.type?.priority;
-
-    //   const dif1 =
-    //     (rowA.original.payload?.type?.priority || 0) -
-    //     (rowB.original.payload?.type?.priority || 0);
-    //   const dif2 = (rowA.original.payload?.type?.name || '').localeCompare(
-    //     rowB.original.payload?.type?.name || '',
-    //   );
-    //   return dif1 > 0 ? 1 : dif1 < 0 ? -1 : dif2 > 0 ? 1 : dif2 < 0 ? -1 : 0;
-    // },
   }),
 ];

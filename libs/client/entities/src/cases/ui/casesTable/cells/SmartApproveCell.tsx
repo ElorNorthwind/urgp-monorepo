@@ -1,6 +1,6 @@
 import { CellContext } from '@tanstack/react-table';
 import { CaseOrPending, CaseWithPendingInfo } from '@urgp/shared/entities';
-import { SmartApproveButton } from '../../CaseButtons/SmartApproveButton';
+import { CaseSmartApproveButton } from '../../CaseButtons/CaseSmartApproveButton';
 
 function SmartApproveCell(
   props: CellContext<CaseOrPending, unknown>,
@@ -9,10 +9,14 @@ function SmartApproveCell(
 
   return (
     <div onClick={(e) => e.stopPropagation()} className="flex w-full">
-      <SmartApproveButton
+      <CaseSmartApproveButton
         variant="outline"
         controlCase={controlCase}
-        className="w-full flex-shrink overflow-hidden truncate"
+        className="w-full overflow-hidden truncate"
+        approveCaseLabel="Дело"
+        approveOperationLabel="Этап"
+        rejectLabel=""
+        buttonClassName="px-2"
       />
     </div>
   );

@@ -8,8 +8,8 @@ import {
 } from '../../config/operationStyles';
 import { StagesHistory } from '../StageHistory';
 import { DeleteStageButton } from '../StageButtons/DeleteStageButton';
-import { ApproveStageButton } from '../StageButtons/ApproveStageButton';
 import { EditStageButton } from '../StageButtons/EditStageButton';
+import { ApproveButton } from '@urgp/client/widgets';
 
 type StageItemProps = {
   stage: ControlStage | null;
@@ -68,18 +68,23 @@ const StageItem = (props: StageItemProps): JSX.Element => {
           stage.payload.approveStatus === 'approved' && 'hidden',
         )}
       >
-        <span className="font-medium">{label}</span>
-        {(stage?.payload?.approveBy?.fio || stage?.payload?.approver?.fio) && (
-          <span className="text-nowrap">
-            {': ' +
-              (stage?.payload?.approveBy?.fio || stage?.payload?.approver?.fio)}
-          </span>
+        <span className="font-medium">{label + ': '}</span>
+        {stage?.payload?.approver?.fio && (
+          <span className="text-nowrap">{stage?.payload?.approver?.fio}</span>
         )}
+
         {stage?.payload?.approveDate && (
           <span className="ml-auto text-nowrap">
             {format(stage.payload.approveDate, 'dd.MM.yyyy HH:mm')}
           </span>
         )}
+        {stage?.payload?.approveBy?.fio &&
+          stage?.payload?.approveBy?.id !== stage?.payload?.approver?.id && (
+            <>
+              <span className="col-span-1 font-medium">Перенаправил:</span>
+              <span>{stage?.payload?.approveBy?.fio}</span>
+            </>
+          )}
         {stage?.payload?.approveNotes && (
           <span className="col-span-3 italic">
             {stage.payload.approveNotes}
@@ -90,7 +95,7 @@ const StageItem = (props: StageItemProps): JSX.Element => {
       {hover && (
         <div className="bg-background absolute bottom-3 right-4 hidden flex-row items-center gap-2 rounded-full p-1 text-right text-xs font-thin shadow-sm group-hover:flex">
           <DeleteStageButton stage={stage} />
-          <ApproveStageButton stage={stage} />
+          <ApproveButton entity={stage} variant="mini" />
           <EditStageButton stage={stage} />
           <span>{format(stage?.payload?.updatedAt || 0, 'dd.MM.yyyy')}</span>
           <StagesHistory stage={stage} />

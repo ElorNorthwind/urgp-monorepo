@@ -58,9 +58,11 @@ type Subject =
   | 'unknown'
   | 'all';
 
-const subjectMap = {
+export const subjectVariants = {
   stage: 'ControlStage',
   'control-incident': 'Case',
+  dispanch: 'Dispatch',
+  reminder: 'Reminder',
 };
 
 export function defineControlAbilityFor(user: User) {
@@ -123,7 +125,7 @@ export function defineControlAbilityFor(user: User) {
 
   return build({
     detectSubjectType: (item) =>
-      (subjectMap?.[item?.class as keyof typeof subjectMap] ||
+      (subjectVariants?.[item?.class as keyof typeof subjectVariants] ||
         'unknown') as ExtractSubjectType<Subject>,
   });
 }

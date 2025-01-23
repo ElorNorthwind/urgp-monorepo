@@ -7,7 +7,7 @@ import {
 } from '@urgp/client/entities';
 import { ControlCasesPage } from '@urgp/client/pages';
 import { SidebarProvider, store, usePageMeta } from '@urgp/client/shared';
-import { ControlNavbar } from '@urgp/client/widgets';
+import { ApproveDialog, ControlNavbar } from '@urgp/client/widgets';
 import { casesPageSearch } from '@urgp/shared/entities';
 
 export const Route = createFileRoute('/control')({
@@ -31,15 +31,12 @@ export const Route = createFileRoute('/control')({
       <SidebarProvider cookieName="filter-sidebar" defaultOpen={false}>
         <ControlNavbar />
         <Outlet />
-        {/* <ControlCasesPage /> */}
         <CreateCaseDialog />
         <CreateStageDialog />
         <CreateDispatchDialog />
         <CreateReminderDialog />
+        <ApproveDialog />
       </SidebarProvider>
     );
   },
-  // validateSearch: (search) => {
-  //   return casesPageSearch.parse(search);
-  // },
 });

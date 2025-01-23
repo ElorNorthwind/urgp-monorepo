@@ -20,6 +20,13 @@ import { casesApi } from '../../cases';
 
 export const operationsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
+    getOperationById: build.query<ControlOperation, number>({
+      query: (id) => ({
+        url: '/control/operation/' + id.toString(),
+        method: 'GET',
+      }),
+      providesTags: ['stage', 'dispatch', 'reminder'],
+    }),
     getStagesByCaseId: build.query<ControlStage[], number>({
       query: (id) => ({
         url: '/control/operation/stage/by-case/' + id.toString(),
@@ -400,6 +407,7 @@ export const operationsApi = rtkApi.injectEndpoints({
 });
 
 export const {
+  useGetOperationByIdQuery: useOperationById,
   useGetStagesByCaseIdQuery: useStages,
   useGetDispatchesByCaseIdQuery: useDispatches,
   useGetRemindersByCaseIdQuery: useReminders,

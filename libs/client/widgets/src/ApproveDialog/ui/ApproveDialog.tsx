@@ -4,159 +4,232 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  Form,
+  selectApproveFormEntityId,
+  selectApproveFormState,
+  selectCurrentUser,
+  setApproveFormEntityId,
+  setApproveFormState,
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
   useIsMobile,
 } from '@urgp/client/shared';
-import { Scale } from 'lucide-react';
-import { forwardRef, useState } from 'react';
-import { ApproveForm } from './ApproveForm';
+import {
+  GET_DEFAULT_CONTROL_DUE_DATE,
+  userInputApproveFormValues,
+  UserInputApproveFormValuesDto,
+} from '@urgp/shared/entities';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  useApproveCase,
+  useApproveOperation,
+  useCurrentUserApprovers,
+} from '@urgp/client/entities';
+import {
+  ControlFormDisplayElement,
+  DateFormField,
+  SelectFormField,
+  TextAreaFormField,
+} from '@urgp/client/widgets';
+import { ThumbsDown, ThumbsUp } from 'lucide-react';
+import { useEffect, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'sonner';
 
 type ApproveDialogProps = {
-  entityId: number;
-  variant?: 'default' | 'mini' | 'ghost' | 'outline';
-  buttonLabel?: string;
-  entityType?: 'operation' | 'case';
-  displayedElement?: JSX.Element | null;
   className?: string;
+  dialogWidth?: string;
 };
 
-type DialogButtonProps = Pick<ApproveDialogProps, 'variant' | 'buttonLabel'> & {
-  onClick: () => void;
-};
+const ApproveDialog = ({
+  className,
+  dialogWidth = '600px',
+}: ApproveDialogProps): JSX.Element | null => {
+  const isMobile = useIsMobile();
+  const dispatch = useDispatch();
+  const contentStyle = {
+    '--dialog-width': dialogWidth,
+  } as React.CSSProperties;
 
-const DIALOG_WIDTH = '600px';
+  const { data: approvers, isLoading: isApproversLoading } =
+    useCurrentUserApprovers();
 
-const DialogButton = forwardRef<
-  HTMLButtonElement,
-  React.HTMLAttributes<HTMLButtonElement> & DialogButtonProps
->(({ variant, buttonLabel = 'Решение', className, onClick }, ref) => {
-  return variant === 'mini' ? (
-    <Button
-      className={cn('size-6 rounded-full p-0', className)}
-      variant={'ghost'}
-      onClick={onClick}
-    >
-      <Scale className="size-4" />
-    </Button>
-  ) : (
-    <Button
-      variant={variant}
-      role="button"
-      className={cn('flex flex-grow flex-row gap-2', className)}
-      onClick={onClick}
-    >
-      <Scale className="size-5 flex-shrink-0" />
-      <span className="truncate">{buttonLabel}</span>
-    </Button>
-  );
-});
+  const user = useSelector(selectCurrentUser);
+  const formState = useSelector(selectApproveFormState);
+  const isOperation = formState === 'operation';
+  const entityId = useSelector(selectApproveFormEntityId);
 
-const ApproveDialog = forwardRef<HTMLButtonElement, ApproveDialogProps>(
-  (
-    {
-      entityId,
-      variant = 'default',
-      entityType = 'case',
-      displayedElement,
-      className,
-      buttonLabel,
-    }: ApproveDialogProps,
-    ref,
-  ): JSX.Element | null => {
-    const isMobile = useIsMobile();
-    const [open, setOpen] = useState(false);
-
-    const entityTitles = {
-      case: [
-        'Согласование заявки',
-        'Вынесение решения по заявке, ожидающей согласования',
-      ],
-      operation: [
-        'Согласование операции',
-        'Вынесение решения по операции, ожидающей согласования',
-      ],
+  const defaultValues = useMemo(() => {
+    return {
+      nextApproverId:
+        // TODO: Refactor approvers!
+        approvers?.cases?.[0].value || null,
+      approveNotes: '',
+      dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
     };
+  }, [approvers]);
 
-    const title = entityTitles[entityType][0] || 'Согласование';
-    const subTitle = entityTitles[entityType][1] || 'Вынести решение';
+  const form = useForm<UserInputApproveFormValuesDto>({
+    resolver: zodResolver(userInputApproveFormValues),
+    defaultValues,
+  });
+  const watchApprover = form.watch('nextApproverId');
 
-    const contentStyle = {
-      '--dialog-width': DIALOG_WIDTH,
-    } as React.CSSProperties;
+  const title = isOperation ? 'Согласование операции' : 'Согласование заявки';
+  const subTitle = isOperation
+    ? 'Решение по операции, ожидающей согласования'
+    : 'Решение по заявке, ожидающей согласования';
 
-    if (isMobile)
-      return (
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <DialogButton
-              className={className}
-              buttonLabel={buttonLabel}
-              variant={variant}
-              onClick={() => setOpen(true)}
-              ref={ref}
-            />
-          </SheetTrigger>
-          <SheetContent
-            style={contentStyle}
-            onEscapeKeyDown={(e) => e.preventDefault()}
-            className={cn(
-              `w-[var(--dialog-width)] max-w-[100vw] sm:w-[var(--dialog-width)] sm:max-w-[100vw]`,
-            )}
-          >
-            <SheetHeader className="mb-2 text-left">
-              <SheetTitle>{title}</SheetTitle>
-              <SheetDescription>{subTitle}</SheetDescription>
-            </SheetHeader>
-            {displayedElement}
-            <ApproveForm
-              entityId={entityId}
-              entityType={entityType}
-              // className={className}
-              onClose={() => setOpen(false)}
-              popoverMinWidth={`calc(${DIALOG_WIDTH} - 3rem)`}
-            />
-          </SheetContent>
-        </Sheet>
+  const [approveCase, { isLoading: isApproveCaseLoading }] = useApproveCase();
+  const [approveOperation, { isLoading: isApproveOperationLoading }] =
+    useApproveOperation();
+
+  const isLoading = isApproveCaseLoading || isApproveOperationLoading;
+
+  const closeAndReset = () => {
+    dispatch(setApproveFormEntityId(0));
+    dispatch(setApproveFormState('close'));
+  };
+  const onOpenChange = (open: boolean) => {
+    if (open === false) closeAndReset();
+  };
+
+  async function onSubmit(
+    data: UserInputApproveFormValuesDto,
+    approve: boolean,
+  ) {
+    const approveEntity = isOperation ? approveOperation : approveCase;
+    approveEntity({
+      ...data,
+      id: entityId,
+      approveStatus: approve ? 'approved' : 'rejected',
+    })
+      .unwrap()
+      .then(() => {
+        toast.success('Одобрено');
+      })
+      .catch((rejected: any) =>
+        toast.error('Не удалось одобрить', {
+          description: rejected.data?.message || 'Неизвестная ошибка',
+        }),
       );
+    closeAndReset();
+  }
 
-    return (
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <DialogButton
-            className={className}
-            variant={variant}
-            buttonLabel={buttonLabel}
-            onClick={() => setOpen(true)}
-          />
-        </DialogTrigger>
-        <DialogContent
-          style={contentStyle}
-          onEscapeKeyDown={(e) => e.preventDefault()}
-          className={cn(`w-[var(--dialog-width)] max-w-[calc(100vw-3rem)]`)}
-        >
-          <DialogHeader className="mb-2 text-left">
-            <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>{subTitle}</DialogDescription>
-          </DialogHeader>
-          {displayedElement}
-          <ApproveForm
-            entityId={entityId}
-            entityType={entityType}
-            onClose={() => setOpen(false)}
-            popoverMinWidth={`calc(${DIALOG_WIDTH} - 3rem)`}
-          />
-        </DialogContent>
-      </Dialog>
-    );
-  },
-);
+  useEffect(() => {
+    form.reset(defaultValues);
+  }, [formState]);
+
+  const Wrapper = isMobile ? Sheet : Dialog;
+  const Content = isMobile ? SheetContent : DialogContent;
+  const Footer = isMobile ? SheetFooter : DialogFooter;
+  const Header = isMobile ? SheetHeader : DialogHeader;
+  const Title = isMobile ? SheetTitle : DialogTitle;
+  const Description = isMobile ? SheetDescription : DialogDescription;
+
+  return (
+    <Wrapper open={formState !== 'close'} onOpenChange={onOpenChange}>
+      <Content
+        style={contentStyle}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+        className={cn(
+          'max-h-[calc(100vh-0.5rem)]', // TODO: Отрефактори со скролл эриа как белый человек йопт
+          isMobile
+            ? 'w-[var(--dialog-width)] max-w-[100vw] sm:w-[var(--dialog-width)] sm:max-w-[100vw]'
+            : `w-[var(--dialog-width)] max-w-[calc(100vw-3rem)]`,
+        )}
+      >
+        <Header className="bg-muted-foreground/5 -m-6 mb-0 px-6 py-4 text-left">
+          <Title>{title}</Title>
+          <Description>{subTitle}</Description>
+        </Header>
+        <ControlFormDisplayElement
+          entityType={isOperation ? 'operation' : 'case'}
+          entityId={entityId}
+        />
+        <Form {...form}>
+          <form className={cn('relative flex flex-col gap-2', className)}>
+            <TextAreaFormField
+              form={form}
+              fieldName={'approveNotes'}
+              label="Комментарий"
+              placeholder="Комментарий к заключению"
+            />
+            <div className="flex w-full flex-row gap-2">
+              <SelectFormField
+                form={form}
+                fieldName={'nextApproverId'}
+                options={approvers?.operations}
+                isLoading={isApproversLoading}
+                label="Следующий согласующий"
+                placeholder="Выбор следующего согласующего"
+                popoverMinWidth={`calc(${dialogWidth} - 3rem)`}
+                valueType="number"
+                className="flex-grow"
+              />
+              <DateFormField
+                form={form}
+                fieldName={'dueDate'}
+                label="Срок решения"
+                placeholder="Контрольный срок"
+                className={cn(
+                  'flex-shrink-0',
+                  (user?.id !== watchApprover || isOperation) && 'hidden',
+                )}
+                disabled={user?.id !== watchApprover || isOperation}
+              />
+            </div>
+            <Footer
+              className={cn(
+                'bg-muted-foreground/5 -m-6 mt-4 px-6 py-4',
+                isMobile && 'flex-shrink-0 gap-2',
+              )}
+            >
+              <Button
+                className="flex flex-grow flex-row gap-2"
+                type="button"
+                variant={'outline'}
+                disabled={isLoading}
+                onClick={closeAndReset}
+              >
+                Отмена
+              </Button>
+
+              <Button
+                type="button"
+                className="flex flex-grow flex-row gap-2"
+                variant="destructive"
+                disabled={isLoading}
+                onClick={form.handleSubmit((data) => onSubmit(data, false))}
+              >
+                <ThumbsDown className="size-5 flex-shrink-0" />
+                <span>Отклонить</span>
+              </Button>
+              <Button
+                type="button"
+                className="flex flex-grow flex-row gap-2"
+                variant="default"
+                disabled={isLoading}
+                onClick={form.handleSubmit((data) => onSubmit(data, true))}
+              >
+                <ThumbsUp className="size-5 flex-shrink-0" />
+                <span>Одобрить</span>
+              </Button>
+            </Footer>
+          </form>
+        </Form>
+      </Content>
+    </Wrapper>
+  );
+};
 
 export { ApproveDialog };

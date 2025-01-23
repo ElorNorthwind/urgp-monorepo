@@ -126,6 +126,16 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
                     <p className="font-bold">
                       {controlCase?.payload?.approver?.fio}
                     </p>
+                    {controlCase?.payload?.approveBy?.fio &&
+                      controlCase?.payload?.approveBy?.id !==
+                        controlCase?.payload?.approver?.id && (
+                        <>
+                          <p>Перенаправил:</p>
+                          <p className="font-bold">
+                            {controlCase?.payload?.approveBy?.fio}
+                          </p>
+                        </>
+                      )}
                   </>
                 )}
               </TooltipContent>

@@ -1,8 +1,16 @@
-import { cn, useUserAbility } from '@urgp/client/shared';
+import {
+  cn,
+  guestUser,
+  selectCurrentUser,
+  useUserAbility,
+} from '@urgp/client/shared';
 import { Case } from '@urgp/shared/entities';
 import { DeleteCaseButton } from '../CaseButtons/DeleteCaseButton';
 import { EditCaseButton } from '../CaseButtons/EditCaseButton';
-import { ApproveCaseButton } from '../CaseButtons/ApproveCaseButton';
+import { ApproveButton } from '@urgp/client/widgets';
+import { useStages } from '../../../operations';
+import { useSelector } from 'react-redux';
+import { CaseSmartApproveButton } from '../CaseButtons/CaseSmartApproveButton';
 
 type CaseCardFooterProps = {
   className?: string;
@@ -11,13 +19,26 @@ type CaseCardFooterProps = {
 
 const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element | null => {
   const { className, controlCase } = props;
+  const { data: stages } = useStages(controlCase?.id, {
+    skip: !controlCase?.id,
+  });
+  const user = useSelector(selectCurrentUser) || guestUser;
+  const myPendingStage = stages?.find(
+    (stage) =>
+      stage.payload?.approveStatus === 'pending' &&
+      stage.payload?.isDeleted !== true &&
+      stage.payload?.approver?.id === user?.id,
+  );
+
   const i = useUserAbility();
 
   if (
     !controlCase ||
     (i.cannot('delete', controlCase) &&
       i.cannot('update', controlCase) &&
-      i.cannot('approve', controlCase))
+      i.cannot('approve', controlCase) &&
+      myPendingStage &&
+      i.cannot('approve', myPendingStage))
   ) {
     return null;
   }
@@ -31,7 +52,7 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element | null => {
     >
       <DeleteCaseButton controlCase={controlCase} />
       <EditCaseButton controlCase={controlCase} />
-      <ApproveCaseButton controlCase={controlCase} />
+      <CaseSmartApproveButton controlCase={controlCase} variant="default" />
     </div>
   );
 };

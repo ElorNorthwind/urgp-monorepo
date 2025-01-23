@@ -83,6 +83,7 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
       {setColumnVisibility && columnVisibility && (
         <ColumnVisibilitySelector
           columnNames={{
+            smartApprove: 'Решение',
             externalCases: 'Обращение',
             desctiption: 'Описание',
             status: 'Статус',
