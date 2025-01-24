@@ -9,6 +9,7 @@ import { ExternalCasesCell } from './cells/ExternalCasesCell';
 import { PendingOperationCell } from './cells/PendingOperationCell';
 import { SmartApproveCell } from './cells/SmartApproveCell';
 import { CheckboxCell } from './cells/CheckboxCell';
+import { isBefore } from 'date-fns';
 
 const columnHelper = createColumnHelper<CaseWithPendingInfo>();
 
@@ -36,7 +37,7 @@ export const pendingCasesColumns = [
   }),
   columnHelper.display({
     id: 'smartApprove',
-    header: 'Решение',
+    header: 'Действие',
     size: 90,
     enableHiding: true,
     enableSorting: false,
@@ -129,8 +130,6 @@ export const pendingCasesColumns = [
       return <CaseTypeCell {...props} />;
     },
     sortingFn: (rowA, rowB) => {
-      const dif = rowA.original.payload?.type?.priority;
-
       const dif1 =
         (rowA.original.payload?.type?.priority || 0) -
         (rowB.original.payload?.type?.priority || 0);
@@ -148,6 +147,25 @@ export const pendingCasesColumns = [
     enableSorting: true,
     cell: (props) => {
       return <PendingOperationCell {...props} />;
+    },
+
+    sortingFn: (rowA, rowB) => {
+      const dif1 = (rowA.original?.action || '').localeCompare(
+        rowB.original?.action || '',
+      );
+      // const dif2 =
+      //   (rowA.original.payload?.type?.priority || 0) -
+      //   (rowB.original.payload?.type?.priority || 0);
+      return dif1 > 0
+        ? 1
+        : dif1 < 0
+          ? -1
+          : isBefore(
+                rowA.original?.pendingStage?.payload?.doneDate || 0,
+                rowB.original?.pendingStage?.payload?.doneDate || 0,
+              )
+            ? 1
+            : -1;
     },
   }),
 ];

@@ -21,7 +21,7 @@ import {
   StagesList,
   useDispatches,
   useMarkReminderAsDone,
-  useMarkReminderAsSeen,
+  useMarkRemindersAsSeen,
   useStages,
 } from '../../../operations';
 import { CaseCardFooter } from './CaseCardFooter';
@@ -62,7 +62,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     isFetching: isDispatchesFetching,
   } = useDispatches(controlCase?.id, { skip: !controlCase?.id });
 
-  const [markAsSeen, { isLoading: isSeenLoading }] = useMarkReminderAsSeen();
+  const [markAsSeen, { isLoading: isSeenLoading }] = useMarkRemindersAsSeen();
   useEffect(() => {
     !isSeenLoading &&
       markAsSeen &&

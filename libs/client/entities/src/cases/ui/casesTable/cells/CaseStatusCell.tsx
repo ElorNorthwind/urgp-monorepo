@@ -51,13 +51,16 @@ function CaseStatusCell(
           <div className="flex flex-1 flex-col items-start justify-start truncate">
             <div className="truncate">{status?.name || ''}</div>
             <div className="text-muted-foreground">
-              <span className="">
-                {approveStatus !== 'approved'
-                  ? approverFio
-                  : dispatches?.length > 0
-                    ? 'срок: ' + format(dispatches?.[0]?.dueDate, 'dd.MM.yyyy')
-                    : 'нет поручений'}
-              </span>
+              {status?.category !== 'рассмотрено' && (
+                <span className="">
+                  {approveStatus !== 'approved'
+                    ? approverFio
+                    : dispatches?.length > 0
+                      ? 'срок: ' +
+                        format(dispatches?.[0]?.dueDate, 'dd.MM.yyyy')
+                      : 'нет поручений'}
+                </span>
+              )}
             </div>
           </div>
         </div>

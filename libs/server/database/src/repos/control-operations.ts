@@ -181,6 +181,15 @@ export class ControlOperationsRepository {
       authorId,
     });
   }
+  markRemindersAsDoneByCaseIds(
+    caseIds: number[],
+    authorId: number,
+  ): Promise<ControlReminderSlim[]> {
+    return this.db.any(operations.markRemindersAsDoneByCaseIds, {
+      caseIds: caseIds.join(','),
+      authorId,
+    });
+  }
 
   deleteOperation(id: number, userId: number): Promise<ControlOperationSlim> {
     return this.db.one(operations.deleteOperation, { id, userId });

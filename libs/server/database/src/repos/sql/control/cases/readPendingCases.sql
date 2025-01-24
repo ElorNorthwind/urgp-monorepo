@@ -104,6 +104,7 @@ SELECT
 		WHEN c.payload->-1->>'approveStatus' = 'pending' AND ps.id IS NOT NULL THEN 'both-approve' 
 		WHEN c.payload->-1->>'approveStatus' = 'pending' THEN 'case-approve'
 		WHEN ps.id IS NOT NULL THEN 'operation-approve'
+		WHEN s.category = 'рассмотрено' AND (rem.seen IS NOT NULL OR rem.done IS NULL) THEN 'done-reminder'
 		ELSE 'unknown'
 	END as action
 FROM control.cases c
@@ -138,5 +139,6 @@ WHERE (c.payload->-1->>'isDeleted')::boolean IS DISTINCT FROM true
 	   AND (
 	   	   (c.payload->-1->>'approveStatus' = 'pending' AND (c.payload->-1->>'approverId')::integer = ${userId})
 		    OR ps.id IS NOT NULL
+			OR (s.category = 'рассмотрено' AND (rem.seen IS NOT NULL OR rem.done IS NULL))
 	       )	   
 ORDER BY c.created_at DESC, c.id DESC;

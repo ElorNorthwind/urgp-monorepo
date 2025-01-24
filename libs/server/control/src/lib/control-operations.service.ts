@@ -157,6 +157,16 @@ export class ControlOperationsService {
     // ) as Promise<ControlReminder[]>;
   }
 
+  public async markRemindersAsDoneByCaseIds(
+    caseIds: number[],
+    userId: number,
+  ): Promise<ControlReminderSlim[]> {
+    return this.dbServise.db.controlOperations.markRemindersAsDoneByCaseIds(
+      caseIds,
+      userId,
+    );
+  }
+
   public async deleteOperation(
     id: number,
     userId: number,

@@ -105,6 +105,9 @@ export const operations = {
   updateRemindersByCaseIds: sql(
     'sql/control/operations/updateRemindersByCaseIds.sql',
   ),
+  markRemindersAsDoneByCaseIds: sql(
+    'sql/control/operations/markRemindersAsDoneByCaseIds.sql',
+  ),
   approveOperation: sql('sql/control/operations/approveOperation.sql'),
   deleteOperation: sql('sql/control/operations/deleteOperation.sql'),
   readOperationPayloadHistory: sql(

@@ -260,7 +260,7 @@ export class ControlOperationsController {
     return this.controlOperations.updateReminder(dto, req.user.id);
   }
 
-  @Patch('mark-as-seen')
+  @Patch('reminder/mark-as-seen')
   async markRemindersAsSeen(
     @Req() req: RequestWithUserData,
     @Body('caseIds', new ParseArrayPipe({ items: Number, separator: ',' }))
@@ -271,6 +271,22 @@ export class ControlOperationsController {
       throw new UnauthorizedException('Нет прав на изменение');
     }
     return this.controlOperations.updateRemindersByCaseIds(
+      caseIds,
+      req.user.id,
+    );
+  }
+
+  @Patch('reminder/mark-as-done')
+  async markRemindersAsDone(
+    @Req() req: RequestWithUserData,
+    @Body('caseIds', new ParseArrayPipe({ items: Number, separator: ',' }))
+    caseIds: number[],
+  ) {
+    const i = defineControlAbilityFor(req.user);
+    if (i.cannot('update', 'Reminder')) {
+      throw new UnauthorizedException('Нет прав на изменение');
+    }
+    return this.controlOperations.markRemindersAsDoneByCaseIds(
       caseIds,
       req.user.id,
     );
