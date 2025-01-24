@@ -1,6 +1,8 @@
 import { CasesPageSearchDto, Case } from '@urgp/shared/entities';
 import { Row } from '@tanstack/react-table';
 import { toDate } from 'date-fns';
+import { store } from '@urgp/client/shared';
+import { classificatorsApi } from '../../classificators';
 
 export function caseGlobalFilterFn(
   row: Row<Case>,
@@ -18,7 +20,13 @@ export function caseGlobalFilterFn(
     viewStatus,
     dueFrom,
     dueTo,
+    relevant,
   } = filterValue;
+  const userId = store.getState().auth.user?.id;
+  // const userSettings = await store.dispatch(
+  //   classificatorsApi.endpoints.getCurrentUserSettings.initiate(),
+  // );
+
   let allowed = true;
 
   if (
@@ -91,6 +99,20 @@ export function caseGlobalFilterFn(
   if (
     dueTo &&
     !(toDate(row?.original?.dispatches?.[0]?.dueDate ?? 0) <= toDate(dueTo))
+  ) {
+    allowed = false;
+  }
+
+  if (
+    relevant &&
+    row?.original?.author?.id !== userId && // Автор
+    row?.original?.payload?.approveBy?.id !== userId && // Согласовал
+    row?.original?.payload?.approver?.id !== userId && // Рассматривает
+    row?.original?.viewStatus === 'unwatched' && // Следит за делом
+    !row?.original?.dispatches?.some((d) => d?.executor?.id === userId) // Исполнитель по любому из поручений (в т.ч. закрытым)
+    // && !userSettings.data?.directions.some((d) =>
+    //   row?.original?.payload?.directions.some((cd) => cd.id === d),
+    // ) // Нет тем из списка отслеживаемых
   ) {
     allowed = false;
   }

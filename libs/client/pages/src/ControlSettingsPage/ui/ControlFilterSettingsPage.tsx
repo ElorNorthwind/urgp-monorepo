@@ -19,6 +19,7 @@ import {
   CaseTypesFilter,
   DepartmentsFilter,
   DirectionsFilter,
+  RelevantFilter,
   StatusFilter,
   ViewStatusFilter,
 } from '@urgp/client/widgets';
@@ -76,6 +77,7 @@ const ControlFilterSettingsPage = (): JSX.Element => {
               className="flex-shrink-0"
             /> */}
             <AuthorFilter className="h-8 flex-shrink-0" />
+            <RelevantFilter className="h-8 flex-shrink-0" />
             <Accordion type="multiple" defaultValue={['departments']}>
               <DepartmentsFilter variant="accordion" />
               <StatusFilter variant="accordion" />

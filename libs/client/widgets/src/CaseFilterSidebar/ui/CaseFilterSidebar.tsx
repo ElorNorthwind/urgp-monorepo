@@ -22,6 +22,7 @@ import { ResetFilter } from './filterInputs/ResetFilter';
 import { StatusFilter } from './filterInputs/StatusFilter';
 import { ViewStatusFilter } from './filterInputs/ViewStatusFilter';
 import { AuthorFilter } from './filterInputs/AuthorFilter';
+import { RelevantFilter } from './filterInputs/RelevantFilter';
 
 type ControlSidebarProps = {
   side?: 'left' | 'right';
@@ -56,6 +57,7 @@ const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
             <NumberFilter className="h-8 flex-shrink-0" />
             <AuthorFilter className="h-8 flex-shrink-0" />
             <DueDateFilter className="flex-shrink-0" />
+            <RelevantFilter className="h-8 flex-shrink-0" />
             <Accordion type="multiple" defaultValue={['departments']}>
               <DepartmentsFilter variant="accordion" />
               <StatusFilter variant="accordion" />

@@ -63,7 +63,7 @@ export type CaseFormValuesDto = z.infer<typeof caseFormValuesDto>;
 // export type CaseUpdateFormValuesDto = z.infer<typeof caseUpdateFormValues>;
 
 // Параметры поиска на странице
-const quetyNumberArray = z
+const queryNumberArray = z
   .string()
   .transform((value) => value.split(','))
   .pipe(
@@ -87,10 +87,11 @@ export const casesPageFilter = z
     query: z.string(),
     num: z.string(),
     author: z.string(),
-    status: quetyNumberArray,
-    direction: quetyNumberArray,
-    type: quetyNumberArray,
+    status: queryNumberArray,
+    direction: queryNumberArray,
+    type: queryNumberArray,
     department: queryStringArray,
+    relevant: z.boolean(),
     dueFrom: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
     dueTo: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
     viewStatus: z.array(z.enum(['unwatched', 'unchanged', 'new', 'changed'])),
