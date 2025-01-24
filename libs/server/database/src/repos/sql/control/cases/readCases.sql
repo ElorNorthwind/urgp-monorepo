@@ -43,9 +43,10 @@ SELECT
 	to_jsonb(u) as author,
 	c.created_at as "createdAt", 
 	GREATEST((c.payload->-1->>'updatedAt')::timestamp with time zone, o.updated) as "lastEdit",
+	rem.count as "remCount",
 	rem.seen as "lastSeen",
 	CASE
-		WHEN rem.seen IS NULL OR rem.done IS NOT NULL THEN 'unwatched'
+		WHEN rem.count IS NULL OR rem.done IS NOT NULL THEN 'unwatched'
 		WHEN GREATEST((c.payload->-1->>'updatedAt')::timestamp with time zone, o.updated) <= rem.seen THEN 'unchanged'
 		WHEN rem.count = 1 THEN 'new'
 		ELSE 'changed'

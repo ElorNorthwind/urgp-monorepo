@@ -244,7 +244,7 @@ export const operationsApi = rtkApi.injectEndpoints({
 
     markRemindersAsSeen: build.mutation<ControlReminderSlim, number[]>({
       query: (caseIds) => ({
-        url: '/control/operation/reminder/mark-as-seen',
+        url: '/control/operation/mark-reminders-as-seen',
         method: 'PATCH',
         body: { caseIds },
       }),
@@ -297,7 +297,7 @@ export const operationsApi = rtkApi.injectEndpoints({
 
     markReminderAsDoneByCaseIds: build.mutation<ControlReminder, number[]>({
       query: (caseIds) => ({
-        url: '/control/operation/reminder/mark-as-done',
+        url: '/control/operation/mark-reminders-as-done',
         method: 'PATCH',
         body: { caseIds },
       }),
@@ -349,7 +349,7 @@ export const operationsApi = rtkApi.injectEndpoints({
 
     markReminderAsDone: build.mutation<ControlReminder, ReminderUpdateDto>({
       query: (dto) => ({
-        url: '/control/operation/reminder/mark-as-done',
+        url: '/control/operation/reminder',
         method: 'PATCH',
         body: { ...dto, doneDate: new Date() },
       }),

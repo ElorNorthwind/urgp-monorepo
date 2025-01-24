@@ -76,7 +76,7 @@ SELECT
 	GREATEST((c.payload->-1->>'updatedAt')::timestamp with time zone, o.updated) as "lastEdit",
 	rem.seen as "lastSeen",
 	CASE
-		WHEN rem.seen IS NULL OR rem.done IS NOT NULL THEN 'unwatched'
+		WHEN rem.count IS NULL OR rem.done IS NOT NULL THEN 'unwatched'
 		WHEN GREATEST((c.payload->-1->>'updatedAt')::timestamp with time zone, o.updated) <= rem.seen THEN 'unchanged'
 		WHEN rem.count = 1 THEN 'new'
 		ELSE 'changed'
@@ -104,7 +104,8 @@ SELECT
 		WHEN c.payload->-1->>'approveStatus' = 'pending' AND ps.id IS NOT NULL THEN 'both-approve' 
 		WHEN c.payload->-1->>'approveStatus' = 'pending' THEN 'case-approve'
 		WHEN ps.id IS NOT NULL THEN 'operation-approve'
-		WHEN s.category = 'рассмотрено' AND (rem.seen IS NOT NULL OR rem.done IS NULL) THEN 'done-reminder'
+		WHEN s.category = 'рассмотрено' AND (rem.seen IS NOT NULL OR rem.done IS NULL) THEN 'reminder-done'
+		WHEN (s.category <> 'рассмотрено' AND rem.due < current_date) THEN 'reminder-overdue'
 		ELSE 'unknown'
 	END as action
 FROM control.cases c
@@ -131,6 +132,7 @@ LEFT JOIN (SELECT case_id, COUNT(*) as count, MAX((payload->-1->>'updatedAt')::t
 LEFT JOIN (SELECT DISTINCT ON(case_id) case_id, 
                                        jsonb_array_length(payload) as count, 
 									   MAX((payload->-1->>'lastSeenDate')::timestamp with time zone) as seen,
+									   MIN((payload->-1->>'dueDate')::timestamp with time zone) as due,
 									   MAX((payload->-1->>'doneDate')::timestamp with time zone) as done
 			FROM control.operations WHERE class = ANY(ARRAY['reminder']) AND (payload->-1->>'observerId')::integer = ${userId} GROUP BY case_id, jsonb_array_length(payload)) rem ON rem.case_id = c.id
 LEFT JOIN dispatches dis ON dis.case_id = c.id 
@@ -139,6 +141,7 @@ WHERE (c.payload->-1->>'isDeleted')::boolean IS DISTINCT FROM true
 	   AND (
 	   	   (c.payload->-1->>'approveStatus' = 'pending' AND (c.payload->-1->>'approverId')::integer = ${userId})
 		    OR ps.id IS NOT NULL
-			OR (s.category = 'рассмотрено' AND (rem.seen IS NOT NULL OR rem.done IS NULL))
+			OR (s.category = 'рассмотрено' AND rem.done IS NULL)
+			OR (s.category <> 'рассмотрено' AND rem.done IS NULL AND rem.due < current_date)
 	       )	   
 ORDER BY c.created_at DESC, c.id DESC;

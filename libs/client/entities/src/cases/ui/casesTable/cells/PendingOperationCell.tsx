@@ -25,9 +25,17 @@ function PendingOperationCell(
     caseTypeStyles?.[props.row.original?.payload?.type?.id] ||
     Object.values(caseTypeStyles)[0];
 
-  if (props.row.original?.action === 'done-reminder') {
+  if (props.row.original?.action === 'reminder-overdue') {
     return (
-      <div className="text-muted-foreground/50 gap-1 font-semibold leading-tight">
+      <div className="gap-1 font-semibold leading-tight text-rose-400">
+        Не решено в ожидавшийся срок
+      </div>
+    );
+  }
+
+  if (props.row.original?.action === 'reminder-done') {
+    return (
+      <div className="gap-1 font-semibold leading-tight text-emerald-400">
         Исполнитель принял решение
       </div>
     );

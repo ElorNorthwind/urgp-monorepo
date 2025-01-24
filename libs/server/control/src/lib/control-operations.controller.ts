@@ -260,9 +260,11 @@ export class ControlOperationsController {
     return this.controlOperations.updateReminder(dto, req.user.id);
   }
 
-  @Patch('reminder/mark-as-seen')
+  @Patch('mark-reminders-as-seen')
   async markRemindersAsSeen(
     @Req() req: RequestWithUserData,
+    // TODO Fix me!
+    // @Body('caseIds')
     @Body('caseIds', new ParseArrayPipe({ items: Number, separator: ',' }))
     caseIds: number[],
   ) {
@@ -276,9 +278,11 @@ export class ControlOperationsController {
     );
   }
 
-  @Patch('reminder/mark-as-done')
+  @Patch('mark-reminders-as-done')
   async markRemindersAsDone(
     @Req() req: RequestWithUserData,
+    // TODO Fix me!
+    // @Body('caseIds')
     @Body('caseIds', new ParseArrayPipe({ items: Number, separator: ',' }))
     caseIds: number[],
   ) {

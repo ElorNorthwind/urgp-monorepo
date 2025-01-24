@@ -18,9 +18,19 @@ function SmartApproveCell(
   const [markAsDone, { isLoading: isMarkLoading }] =
     useMarkCaseRemindersAsDone();
 
+  if (controlCase.action === 'reminder-overdue')
+    //TODO: Кнопка с эскалацией или продлением срока
+    return (
+      <div className="w-full truncate rounded bg-red-50 px-2 py-2 text-center">
+        Нет решения
+      </div>
+    );
+
   return (
     <div onClick={(e) => e.stopPropagation()} className="flex w-full">
-      {controlCase.action === 'done-reminder' ? (
+      {controlCase.action === 'reminder-overdue' ? (
+        <div>Время вышло</div>
+      ) : controlCase.action === 'reminder-done' ? (
         <Button
           role="button"
           variant="outline"
