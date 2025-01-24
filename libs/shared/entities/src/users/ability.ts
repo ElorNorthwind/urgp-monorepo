@@ -111,7 +111,7 @@ export function defineControlAbilityFor(user: User) {
   }
 
   cannot('approve', 'all', {
-    'payload.approveStatus': { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
+    'payload.approveStatus': { $eq: 'approved' }, // нельзя согласовывать то что уже согласовано
   });
   can('set-approver', 'all', {
     approverId: null, // без согласующего можно создавать все
