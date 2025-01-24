@@ -46,6 +46,13 @@ export class ControlCaseService {
     return this.dbServise.db.controlCases.readFullCaseById(id, userId);
   }
 
+  public async readPendingCaseById(
+    id: number,
+    userId: number,
+  ): Promise<CaseWithPendingInfo> {
+    return this.dbServise.db.controlCases.readPendingCaseById(id, userId);
+  }
+
   public async readCases(userId: number, readAll: boolean): Promise<Case[]> {
     return this.dbServise.db.controlCases.readCases(userId, readAll);
   }

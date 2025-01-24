@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
   cn,
+  getApproveInfo,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -70,6 +71,8 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
       markAsSeen([controlCase?.id]);
   }, [controlCase]);
 
+  const caseApproveInfo = getApproveInfo(controlCase?.payload);
+
   return (
     <>
       <CaseCardHeader
@@ -114,32 +117,28 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
                 </div>
               </TooltipTrigger>
               <TooltipContent side="bottom">
-                {controlCase?.payload?.approver?.fio && (
-                  <>
-                    <p>
-                      {controlCase?.payload?.approveStatus === 'approved'
-                        ? 'Утверждено: '
-                        : controlCase?.payload?.approveStatus === 'rejected'
-                          ? 'Не согласовано: '
-                          : 'На утверждении: '}
-                    </p>
-                    <p className="font-bold">
-                      {controlCase?.payload?.approver?.fio}
-                    </p>
-                    {controlCase?.payload?.approveBy?.fio &&
-                      controlCase?.payload?.approveBy?.id !==
-                        controlCase?.payload?.approver?.id && (
+                {caseApproveInfo?.currentFio &&
+                  caseApproveInfo?.approveText && (
+                    <>
+                      <p>{caseApproveInfo.approveText + ': '}</p>
+                      <p className="font-bold">{caseApproveInfo?.currentFio}</p>
+                      {caseApproveInfo?.previousFio && (
                         <>
                           <p>Перенаправил:</p>
                           <p className="font-bold">
-                            {controlCase?.payload?.approveBy?.fio}
+                            {caseApproveInfo.previousFio}
                           </p>
                         </>
                       )}
-                  </>
-                )}
+                    </>
+                  )}
               </TooltipContent>
             </Tooltip>
+            {caseApproveInfo?.rejectNotes && (
+              <div className="col-span-4 border-b bg-rose-50 px-2 py-1 text-sm">
+                <span>{caseApproveInfo.rejectNotes}</span>
+              </div>
+            )}
             <div className="bg-muted-foreground/5 flex items-center truncate border-r px-2 py-1 text-right font-bold">
               <span className="">Темы:</span>
             </div>

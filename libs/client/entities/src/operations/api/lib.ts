@@ -7,7 +7,7 @@ export const RefetchCachedCase = async (
 ): Promise<void> => {
   if (caseId) {
     const changedCase = await dispatch(
-      casesApi.endpoints.getCaseById.initiate(caseId),
+      casesApi.endpoints.getPendingCaseById.initiate(caseId),
     );
     dispatch(
       casesApi.util.updateQueryData('getCases', undefined, (draft) => {
@@ -17,7 +17,20 @@ export const RefetchCachedCase = async (
         );
         return [
           ...draft.slice(0, index),
-          changedCase.data,
+          { ...changedCase.data, action: undefined, pendingStage: undefined },
+          ...draft.slice(index + 1),
+        ];
+      }),
+    );
+    dispatch(
+      casesApi.util.updateQueryData('getPendingCases', undefined, (draft) => {
+        if (!changedCase?.data) return draft;
+        const index = draft.findIndex(
+          (stage) => stage.id === changedCase?.data?.id,
+        );
+        return [
+          ...draft.slice(0, index),
+          { ...changedCase.data },
           ...draft.slice(index + 1),
         ];
       }),

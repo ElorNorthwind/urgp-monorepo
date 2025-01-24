@@ -2,6 +2,7 @@ import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { CellContext } from '@tanstack/react-table';
 import {
   cn,
+  getApproveInfo,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -20,6 +21,7 @@ function CaseStatusCell(
   const approveStatus =
     props.row.original?.payload?.approveStatus || 'approved';
   const approverFio = props.row.original?.payload?.approver?.fio || '-';
+  const approveByFio = props.row.original?.payload?.approveBy?.fio || '-';
   const { icon: StatusIcon, iconStyle } = caseStatusStyles?.[
     status?.id || 0
   ] || {
@@ -34,6 +36,8 @@ function CaseStatusCell(
     iconStyle: '',
     badgeStyle: 'hidden',
   };
+
+  const caseApproveInfo = getApproveInfo(props.row.original?.payload);
 
   return (
     <Tooltip>
@@ -54,7 +58,7 @@ function CaseStatusCell(
               {status?.category !== 'рассмотрено' && (
                 <span className="">
                   {approveStatus !== 'approved'
-                    ? approverFio
+                    ? caseApproveInfo?.currentFio
                     : dispatches?.length > 0
                       ? 'срок: ' +
                         format(dispatches?.[0]?.dueDate, 'dd.MM.yyyy')

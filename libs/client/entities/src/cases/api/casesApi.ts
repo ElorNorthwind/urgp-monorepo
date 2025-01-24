@@ -19,7 +19,7 @@ export const casesApi = rtkApi.injectEndpoints({
     }),
     getPendingCases: build.query<CaseWithPendingInfo[], void>({
       query: () => ({
-        url: '/control/case/pending',
+        url: '/control/case/pending/all-pending',
         method: 'GET',
       }),
       providesTags: ['case'],
@@ -27,6 +27,13 @@ export const casesApi = rtkApi.injectEndpoints({
     getCaseById: build.query<Case, number>({
       query: (id) => ({
         url: '/control/case/' + id.toString(),
+        method: 'GET',
+      }),
+      providesTags: ['case'],
+    }),
+    getPendingCaseById: build.query<CaseWithPendingInfo, number>({
+      query: (id) => ({
+        url: '/control/case/pending/' + id.toString(),
         method: 'GET',
       }),
       providesTags: ['case'],
@@ -67,6 +74,26 @@ export const casesApi = rtkApi.injectEndpoints({
                 ...draft.slice(index + 1),
               ];
             }),
+          ) &&
+          dispatch(
+            casesApi.util.updateQueryData(
+              'getPendingCases',
+              undefined,
+              (draft) => {
+                const index = draft.findIndex(
+                  (stage) => stage.id === updatedCase.id,
+                );
+                return [
+                  ...draft.slice(0, index),
+                  {
+                    ...updatedCase,
+                    action: draft[index].action,
+                    pendingStage: draft[index].pendingStage,
+                  },
+                  ...draft.slice(index + 1),
+                ];
+              },
+            ),
           );
       },
     }),
@@ -76,7 +103,6 @@ export const casesApi = rtkApi.injectEndpoints({
         method: 'DELETE',
         body: dto,
       }),
-
       async onQueryStarted({}, { dispatch, queryFulfilled }) {
         const { data: deletedCase } = await queryFulfilled;
         deletedCase?.id &&
@@ -84,6 +110,15 @@ export const casesApi = rtkApi.injectEndpoints({
             casesApi.util.updateQueryData('getCases', undefined, (draft) => {
               return draft.filter((stage) => stage.id !== deletedCase.id);
             }),
+          ) &&
+          dispatch(
+            casesApi.util.updateQueryData(
+              'getPendingCases',
+              undefined,
+              (draft) => {
+                return draft.filter((stage) => stage.id !== deletedCase.id);
+              },
+            ),
           );
       },
     }),
@@ -108,6 +143,36 @@ export const casesApi = rtkApi.injectEndpoints({
                 ...draft.slice(index + 1),
               ];
             }),
+          ) &&
+          dispatch(
+            casesApi.util.updateQueryData(
+              'getPendingCases',
+              undefined,
+              (draft) => {
+                const index = draft.findIndex(
+                  (stage) => stage.id === approvedCase.id,
+                );
+                const newRecord = {
+                  ...approvedCase,
+                  action:
+                    draft[index].action === 'both-approve'
+                      ? 'operation-approve'
+                      : draft[index].action,
+                  pendingStage: draft[index].pendingStage,
+                };
+
+                if (newRecord.action === 'case-approve')
+                  // Если дело требовало одобрения, то удаляем его из списка на рассмотрение
+                  return draft.filter((stage) => stage.id !== approvedCase.id);
+
+                return [
+                  // В противном случае (чисто гипотетический) - обновляем данные
+                  ...draft.slice(0, index),
+                  newRecord,
+                  ...draft.slice(index + 1),
+                ];
+              },
+            ),
           );
       },
     }),

@@ -93,3 +93,14 @@ export const nestedClassificatorInfoString = z.object({
 export type NestedClassificatorInfoString = z.infer<
   typeof nestedClassificatorInfoString
 >;
+
+export const approveStatusData = approveStatusDataSlim
+  .omit({
+    approveById: true,
+    approverId: true,
+  })
+  .extend({
+    approver: userInfo,
+    approveBy: userInfo,
+  });
+export type ApproveStatusData = z.infer<typeof approveStatusData>;

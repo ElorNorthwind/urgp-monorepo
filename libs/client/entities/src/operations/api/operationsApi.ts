@@ -292,6 +292,29 @@ export const operationsApi = rtkApi.injectEndpoints({
             ];
           }),
         );
+        dispatch(
+          casesApi.util.updateQueryData(
+            'getPendingCases',
+            undefined,
+            (draft) => {
+              const index = draft.findIndex(
+                (stage) => stage.id === updatedOperation?.caseId,
+              );
+              return [
+                ...draft.slice(0, index),
+                {
+                  ...draft[index],
+                  lastSeen: updatedOperation?.payload?.lastSeenDate,
+                  viewStatus:
+                    draft[index].viewStatus === 'unwatched'
+                      ? 'unwatched'
+                      : 'unchanged',
+                },
+                ...draft.slice(index + 1),
+              ];
+            },
+          ),
+        );
       },
     }),
 

@@ -137,11 +137,4 @@ LEFT JOIN (SELECT DISTINCT ON(case_id) case_id,
 			FROM control.operations WHERE class = ANY(ARRAY['reminder']) AND (payload->-1->>'observerId')::integer = ${userId} GROUP BY case_id, jsonb_array_length(payload)) rem ON rem.case_id = c.id
 LEFT JOIN dispatches dis ON dis.case_id = c.id 
 LEFT JOIN pending_stages ps ON ps."caseId" = c.id
-WHERE (c.payload->-1->>'isDeleted')::boolean IS DISTINCT FROM true 
-	   AND (
-	   	   (c.payload->-1->>'approveStatus' = 'pending' AND (c.payload->-1->>'approverId')::integer = ${userId})
-		    OR ps.id IS NOT NULL
-			OR (s.category = 'рассмотрено' AND rem.done IS NULL)
-			OR (s.category <> ALL(ARRAY['рассмотрено', 'проект']) AND rem.done IS NULL AND rem.due < current_date)
-	       )	   
-ORDER BY c.created_at DESC, c.id DESC;
+WHERE c.id = ${id};

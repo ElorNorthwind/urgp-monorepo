@@ -2,7 +2,6 @@ import { cn } from '@urgp/client/shared';
 import { Case } from '@urgp/shared/entities';
 import {
   Circle,
-  CircleAlert,
   CircleArrowUp,
   CircleCheck,
   CircleDashed,
@@ -19,7 +18,6 @@ import {
   MessageSquarePlus,
   MessageSquareX,
 } from 'lucide-react';
-import { ReactNode } from 'react';
 
 export type StyleData = {
   icon?: React.ForwardRefExoticComponent<

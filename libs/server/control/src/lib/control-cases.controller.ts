@@ -25,6 +25,7 @@ import {
   UserInputDeleteDto,
   defineControlAbilityFor,
   Case,
+  CaseWithPendingInfo,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
@@ -82,9 +83,17 @@ export class ControlCasesController {
     return this.controlCases.readCases(req.user.id, readAll);
   }
 
-  @Get('pending')
+  @Get('pending/all-pending')
   async readPendingCases(@Req() req: RequestWithUserData) {
     return this.controlCases.readPendingCases(req.user.id);
+  }
+
+  @Get('pending/:id')
+  getPendingCaseById(
+    @Req() req: RequestWithUserData,
+    @Param('id') id: number,
+  ): Promise<CaseWithPendingInfo> {
+    return this.controlCases.readPendingCaseById(id, req.user.id);
   }
 
   @Get(':id')
