@@ -50,6 +50,7 @@ export * from './lib/formatDate';
 export * from './lib/getDatesInterval';
 export * from './lib/curve';
 export * from './lib/getApproverInfo';
+export * from './lib/numericText';
 
 // export config
 export * from './config/env.d';

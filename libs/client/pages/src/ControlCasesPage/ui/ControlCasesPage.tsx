@@ -1,5 +1,6 @@
 import { Row, VisibilityState } from '@tanstack/react-table';
 
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
   CaseCard,
   caseGlobalFilterFn,
@@ -9,17 +10,14 @@ import {
 import {
   cn,
   NAVBAR_WIDTH,
-  selectCurrentUser,
   SidebarInset,
   TooltipProvider,
   VirtualDataTable,
 } from '@urgp/client/shared';
-import { CasesPageSearchDto, Case } from '@urgp/shared/entities';
-import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
-import { CasesPageHeader } from './CasesPageHeader';
+import { Case, CasesPageSearchDto } from '@urgp/shared/entities';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { CasesPageHeader } from './CasesPageHeader';
 
 const ControlCasesPage = (): JSX.Element => {
   const { data: cases, isLoading, isFetching } = useCases();

@@ -12,3 +12,4 @@ export * from './PendingStagesPage';
 export * from './ControlCasesPage';
 export * from './ControlSettingsPage';
 export * from './PendingCasesPage';
+export * from './ControlDashboardPage';
