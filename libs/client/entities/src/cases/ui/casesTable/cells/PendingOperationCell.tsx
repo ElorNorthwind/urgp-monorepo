@@ -25,6 +25,14 @@ function PendingOperationCell(
     caseTypeStyles?.[props.row.original?.payload?.type?.id] ||
     Object.values(caseTypeStyles)[0];
 
+  if (props.row.original?.action === 'case-rejected')
+    //TODO: Кнопка с эскалацией или продлением срока
+    return (
+      <div className="gap-1 font-semibold leading-tight text-amber-500">
+        Проект дела не утвержден
+      </div>
+    );
+
   if (props.row.original?.action === 'reminder-overdue') {
     return (
       <div className="gap-1 font-semibold leading-tight text-rose-400">

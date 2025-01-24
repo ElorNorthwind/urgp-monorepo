@@ -103,6 +103,7 @@ SELECT
 	CASE 
 		WHEN c.payload->-1->>'approveStatus' = 'pending' AND ps.id IS NOT NULL THEN 'both-approve' 
 		WHEN c.payload->-1->>'approveStatus' = 'pending' THEN 'case-approve'
+		WHEN c.payload->-1->>'approveStatus' = 'rejected' THEN 'case-rejected'
 		WHEN ps.id IS NOT NULL THEN 'operation-approve'
 		WHEN s.category = 'рассмотрено' AND (rem.seen IS NOT NULL OR rem.done IS NULL) THEN 'reminder-done'
 		WHEN (s.category <> 'рассмотрено' AND rem.due < current_date) THEN 'reminder-overdue'
@@ -143,5 +144,6 @@ WHERE (c.payload->-1->>'isDeleted')::boolean IS DISTINCT FROM true
 		    OR ps.id IS NOT NULL
 			OR (s.category = 'рассмотрено' AND rem.done IS NULL)
 			OR (s.category <> ALL(ARRAY['рассмотрено', 'проект']) AND rem.done IS NULL AND rem.due < current_date)
+			OR c.author_id = ${userId} AND c.payload->-1->>'approveStatus' = 'rejected'
 	       )	   
 ORDER BY c.created_at DESC, c.id DESC;
