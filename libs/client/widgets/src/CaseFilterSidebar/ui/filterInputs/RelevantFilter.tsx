@@ -19,7 +19,7 @@ const RelevantFilter = (props: RelevantFilterProps): JSX.Element => {
       <div className="flex items-center space-x-2">
         <Switch
           id="relevant"
-          // checked={search?.relevant === true}
+          checked={search?.relevant === true}
           onCheckedChange={(event) => {
             console.log(JSON.stringify(event));
             navigate({
