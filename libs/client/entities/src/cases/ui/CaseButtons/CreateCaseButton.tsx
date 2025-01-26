@@ -10,10 +10,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 type CreateCaseButtonProps = {
   className?: string;
+  label?: string;
 };
 
 const CreateCaseButton = ({
   className,
+  label,
 }: CreateCaseButtonProps): JSX.Element | null => {
   const emptyValues = useSelector(selectCaseFormValues);
   const dispatch = useDispatch();
@@ -28,7 +30,13 @@ const CreateCaseButton = ({
       onClick={() => dispatch(setCaseFormState('create'))}
     >
       <SquarePlus className="mr-1 size-4" />
-      <p>{emptyValues?.saved ? 'Продолжить заполнение' : 'Добавить'}</p>
+      <p>
+        {label
+          ? label
+          : emptyValues?.saved
+            ? 'Продолжить заполнение'
+            : 'Добавить'}
+      </p>
     </Button>
   );
 };

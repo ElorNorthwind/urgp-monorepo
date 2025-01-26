@@ -14,7 +14,7 @@ import { isThisWeek } from 'date-fns';
 import { CircleCheck, CirclePlay, CircleSlash, CircleX } from 'lucide-react';
 import { useMemo } from 'react';
 
-const byStatus = (status: number[], cases?: Case[]) => {
+const countByStatus = (status: number[], cases?: Case[]) => {
   return {
     total: cases?.filter((c) => status.includes(c?.status?.id))?.length || 0,
     thisWeek:
@@ -48,7 +48,7 @@ const TotalNumberCards = (): JSX.Element => {
         key: 'inProgress',
         label: 'На рассмотрении',
         search: { status: [2, 3, 4] },
-        ...byStatus([2, 3, 4], cases),
+        ...countByStatus([2, 3, 4], cases),
         icon: (
           <CirclePlay
             className={cn(
@@ -64,7 +64,7 @@ const TotalNumberCards = (): JSX.Element => {
         key: 'rejected',
         label: 'Отклонено',
         search: { status: [5] },
-        ...byStatus([5], cases),
+        ...countByStatus([5], cases),
         icon: (
           <CircleSlash
             className={cn(
@@ -80,7 +80,7 @@ const TotalNumberCards = (): JSX.Element => {
         key: 'done',
         label: 'Решено',
         search: { status: [6] },
-        ...byStatus([6], cases),
+        ...countByStatus([6], cases),
         icon: (
           <CircleCheck
             className={cn(
@@ -96,7 +96,7 @@ const TotalNumberCards = (): JSX.Element => {
         key: 'unsolved',
         label: 'Не удалось решить',
         search: { status: [7] },
-        ...byStatus([7], cases),
+        ...countByStatus([7], cases),
         icon: (
           <CircleX
             className={cn(
@@ -116,6 +116,7 @@ const TotalNumberCards = (): JSX.Element => {
       {totals.map((value) => {
         return (
           <Card
+            key={value.key}
             className={cn(
               'relative overflow-hidden',
               'hover:from-muted hover:to-background/25 cursor-pointer hover:bg-gradient-to-tl',

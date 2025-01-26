@@ -10,3 +10,4 @@ export * from './ConfirmationAlertDialog';
 export * from './InfoBox';
 export * from './InputSkeleton';
 export * from './MultiSelect';
+export * from './SimpleBarChart';
