@@ -242,7 +242,7 @@ export const operationsApi = rtkApi.injectEndpoints({
       },
     }),
 
-    markRemindersAsSeen: build.mutation<ControlReminderSlim, number[]>({
+    markRemindersAsSeen: build.mutation<ControlReminderSlim[], number[]>({
       query: (caseIds) => ({
         url: '/control/operation/mark-reminders-as-seen',
         method: 'PATCH',
@@ -250,14 +250,15 @@ export const operationsApi = rtkApi.injectEndpoints({
       }),
       async onQueryStarted({}, { dispatch, queryFulfilled }) {
         const { data: updatedOperation } = await queryFulfilled;
-        if (!updatedOperation?.caseId || !updatedOperation?.id) return;
+        if (!updatedOperation?.[0]?.caseId || !updatedOperation?.[0]?.id)
+          return;
         dispatch(
           operationsApi.util.updateQueryData(
             'getRemindersByCaseId',
-            updatedOperation.caseId,
+            updatedOperation?.[0]?.caseId,
             (draft) => {
               const index = draft.findIndex(
-                (reminder) => reminder.id === updatedOperation.id,
+                (reminder) => reminder.id === updatedOperation?.[0]?.id,
               );
               return [
                 ...draft.slice(0, index),
@@ -265,7 +266,7 @@ export const operationsApi = rtkApi.injectEndpoints({
                   ...draft[index],
                   payload: {
                     ...draft[index].payload,
-                    lastSeenDate: updatedOperation?.payload?.lastSeenDate,
+                    lastSeenDate: updatedOperation?.[0]?.payload?.lastSeenDate,
                   },
                 },
                 ...draft.slice(index + 1),
@@ -276,13 +277,13 @@ export const operationsApi = rtkApi.injectEndpoints({
         dispatch(
           casesApi.util.updateQueryData('getCases', undefined, (draft) => {
             const index = draft.findIndex(
-              (stage) => stage.id === updatedOperation?.caseId,
+              (stage) => stage.id === updatedOperation?.[0]?.caseId,
             );
             return [
               ...draft.slice(0, index),
               {
                 ...draft[index],
-                lastSeen: updatedOperation?.payload?.lastSeenDate,
+                lastSeen: updatedOperation?.[0]?.payload?.lastSeenDate,
                 viewStatus:
                   draft[index].viewStatus === 'unwatched'
                     ? 'unwatched'
@@ -298,13 +299,13 @@ export const operationsApi = rtkApi.injectEndpoints({
             undefined,
             (draft) => {
               const index = draft.findIndex(
-                (stage) => stage.id === updatedOperation?.caseId,
+                (stage) => stage.id === updatedOperation?.[0]?.caseId,
               );
               return [
                 ...draft.slice(0, index),
                 {
                   ...draft[index],
-                  lastSeen: updatedOperation?.payload?.lastSeenDate,
+                  lastSeen: updatedOperation?.[0]?.payload?.lastSeenDate,
                   viewStatus:
                     draft[index].viewStatus === 'unwatched'
                       ? 'unwatched'

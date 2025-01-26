@@ -88,7 +88,7 @@ LEFT JOIN control.case_status_types s ON s.id =
 		WHEN ls.id IS NOT NULL THEN 3 -- "в работе"
 		ELSE 2 -- "направлено"
 	END
-LEFT JOIN (SELECT case_id, COUNT(*) as count, MAX((payload->-1->>'updatedAt')::timestamp with time zone) as updated FROM control.operations WHERE class = ANY(ARRAY['operation', 'dispatch']) GROUP BY case_id) o ON o.case_id = c.id
+LEFT JOIN (SELECT case_id, COUNT(*) as count, MAX((payload->-1->>'updatedAt')::timestamp with time zone) as updated FROM control.operations WHERE class = ANY(ARRAY['stage', 'dispatch']) GROUP BY case_id) o ON o.case_id = c.id
 LEFT JOIN (SELECT DISTINCT ON(case_id) case_id, 
                                        jsonb_array_length(payload) as count, 
 									   MAX((payload->-1->>'lastSeenDate')::timestamp with time zone) as seen,

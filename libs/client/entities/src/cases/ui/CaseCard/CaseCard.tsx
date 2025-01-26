@@ -8,7 +8,6 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-  useUserAbility,
 } from '@urgp/client/shared';
 import { Case } from '@urgp/shared/entities';
 import { CaseCardHeader } from './CaseCardHeader';
@@ -21,13 +20,13 @@ import {
   StagesHeader,
   StagesList,
   useDispatches,
-  useMarkReminderAsDone,
   useMarkRemindersAsSeen,
   useStages,
 } from '../../../operations';
 import { CaseCardFooter } from './CaseCardFooter';
 import { ControlDispatchesList } from '../ControlDispatchesList';
 import { useEffect } from 'react';
+import { format } from 'date-fns';
 
 type CaseCardProps = {
   controlCase: Case;
@@ -63,13 +62,13 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     isFetching: isDispatchesFetching,
   } = useDispatches(controlCase?.id, { skip: !controlCase?.id });
 
-  const [markAsSeen, { isLoading: isSeenLoading }] = useMarkRemindersAsSeen();
-  useEffect(() => {
-    !isSeenLoading &&
-      markAsSeen &&
-      controlCase?.id &&
-      markAsSeen([controlCase?.id]);
-  }, [controlCase]);
+  // const [markAsSeen, { isLoading: isSeenLoading }] = useMarkRemindersAsSeen();
+  // useEffect(() => {
+  //   !isSeenLoading &&
+  //     markAsSeen &&
+  //     controlCase?.id &&
+  //     markAsSeen([controlCase?.id]);
+  // }, [controlCase]);
 
   const caseApproveInfo = getApproveInfo(controlCase?.payload);
 
@@ -132,6 +131,14 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
                       )}
                     </>
                   )}
+                {controlCase?.lastEdit && (
+                  <>
+                    <p>Последнее действие:</p>
+                    <p className="font-bold">
+                      {format(controlCase.lastEdit, 'dd.MM.yyyy HH:mm')}
+                    </p>
+                  </>
+                )}
               </TooltipContent>
             </Tooltip>
             {caseApproveInfo?.rejectNotes && (

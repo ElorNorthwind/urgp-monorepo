@@ -72,6 +72,7 @@ export const classificatorsApi = rtkApi
         query: () => ({
           url: '/control/classificators/user-approvers',
           method: 'GET',
+          providesTags: ['user-data'],
         }),
       }),
       getControlExecutors: build.query<SelectOption<number>[], void>({

@@ -176,6 +176,11 @@ export class ControlOperationsRepository {
     caseIds: number[],
     authorId: number,
   ): Promise<ControlReminderSlim[]> {
+    // const q = this.pgp.as.format(operations.updateRemindersByCaseIds, {
+    //   caseIds: caseIds.join(','),
+    //   authorId,
+    // });
+    // console.log(q);
     return this.db.any(operations.updateRemindersByCaseIds, {
       caseIds: caseIds.join(','),
       authorId,

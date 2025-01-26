@@ -5,10 +5,8 @@ import {
   CreateReminderDialog,
   CreateStageDialog,
 } from '@urgp/client/entities';
-import { ControlCasesPage } from '@urgp/client/pages';
 import { SidebarProvider, store, usePageMeta } from '@urgp/client/shared';
 import { ApproveDialog, ControlNavbar } from '@urgp/client/widgets';
-import { casesPageSearch } from '@urgp/shared/entities';
 
 export const Route = createFileRoute('/control')({
   beforeLoad: async ({ location }) => {

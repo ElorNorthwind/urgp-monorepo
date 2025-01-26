@@ -18,6 +18,7 @@ import { Eye, ScanEye } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useReminders } from '../../api/operationsApi';
 import { RemindersList } from '../../../cases';
+import { format } from 'date-fns';
 
 type ManageReminderButtonProps = {
   caseId: number;

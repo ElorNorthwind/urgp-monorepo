@@ -7,7 +7,8 @@ SET payload = payload || (payload->-1 ||
                     ))
 WHERE   class = 'reminder' 
         AND case_id = ANY(ARRAY[${caseIds:raw}]) 
-        AND author_id = ${authorId} 
+        AND (payload->-1->>'observerId')::integer = ${authorId} 
+        -- AND author_id = ${authorId} 
         AND (payload->-1->>'isDeleted')::boolean = 'false'
         AND (payload->-1->>'doneDate')::date IS NULL
 RETURNING id, author_id as "authorId", case_id as "caseId",
