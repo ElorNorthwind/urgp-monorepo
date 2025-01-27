@@ -1,5 +1,5 @@
 export * from './api/casesApi';
-export * from './ui/casesTable/columns';
+export * from './ui/casesTable/caseColumns';
 export * from './ui/casesTable/pendingColumns';
 export * from './ui/CaseCard/CaseCard';
 export * from './config/caseGlobalFilterFn';
