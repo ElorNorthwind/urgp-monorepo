@@ -40,7 +40,7 @@ const ControlAccountPage = (): JSX.Element => {
             <InfoBox label="Логин:" value={user?.login} />
             <InfoBox label="ФИО:" value={user?.fio} />
           </div>
-          <InfoBox label="Роли:" value={user?.controlData?.roles.join(', ')} />
+          <InfoBox label="Роли:" value={user?.controlData?.roles?.join(', ')} />
           <InfoBox
             isLoading={isApproversLoading || isApproversFetching}
             label="Согласующие по заявкам:"

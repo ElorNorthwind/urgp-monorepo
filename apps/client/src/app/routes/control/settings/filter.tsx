@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { ControlFilterSettingsPage } from '@urgp/client/pages';
-import { casesPageFilter, casesPageSearch } from '@urgp/shared/entities';
+import { casesPageFilter } from '@urgp/shared/entities';
 
 export const Route = createFileRoute('/control/settings/filter')({
   component: () => <ControlFilterSettingsPage />,

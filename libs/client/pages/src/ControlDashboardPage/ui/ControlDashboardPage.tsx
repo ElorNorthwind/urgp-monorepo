@@ -8,32 +8,34 @@ import { DepartmentChart } from './cards/DepartmentChart';
 const ControlDashboardPage = (): JSX.Element => {
   return (
     <div className="bg-muted-foreground/5 block w-full space-y-6 p-10">
-      <div className="space-y-0.5">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-2xl font-bold tracking-tight">Дашборд</h2>
-        </div>
-        <p className="text-muted-foreground">
-          Общие сведения о выявленных проблемах
-        </p>
-      </div>
-      <Separator className="my-6" />
-      {/* <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0"> */}
-      <div className="flex flex-col space-y-6">
-        <TotalNumberCards />
-        <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
-          <PendingStatusChart className="col-span-2" />
-          <DepartmentChart className="col-span-2 md:col-span-1" />
-          <div className="col-span-2 flex flex-col justify-start gap-3 md:col-span-1">
-            <ViewStatusChart className="grid-col-1" />
-            <CreateCaseButton
-              label="Добавить новую заявку"
-              className="flex-grow rounded-lg py-6 text-base shadow-sm"
-            />
+      <div className="mx-auto max-w-7xl">
+        <div className="space-y-0.5">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="text-2xl font-bold tracking-tight">Дашборд</h2>
           </div>
-          {/* <ViewStatusChartRecharts
+          <p className="text-muted-foreground">
+            Общие сведения о выявленных проблемах
+          </p>
+        </div>
+        <Separator className="my-6" />
+        {/* <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0"> */}
+        <div className="flex flex-col space-y-6">
+          <TotalNumberCards />
+          <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            <PendingStatusChart className="col-span-2" />
+            <DepartmentChart className="col-span-2 md:col-span-1" />
+            <div className="col-span-2 flex flex-col justify-start gap-3 md:col-span-1">
+              <ViewStatusChart className="grid-col-1" />
+              <CreateCaseButton
+                label="Добавить новую заявку"
+                className="flex-grow rounded-lg py-6 text-base shadow-sm"
+              />
+            </div>
+            {/* <ViewStatusChartRecharts
             className="grid-col-1"
             chartClassName="h-24"
           /> */}
+          </div>
         </div>
       </div>
     </div>
