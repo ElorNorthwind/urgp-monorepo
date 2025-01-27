@@ -95,6 +95,18 @@ export const casesPageFilter = z
     dueFrom: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
     dueTo: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
     viewStatus: z.array(z.enum(['unwatched', 'unchanged', 'new', 'changed'])),
+    action: queryStringArray,
+    // action: z.array(
+    //   z.enum([
+    //     'unknown',
+    //     'case-approve',
+    //     'both-approve',
+    //     'operation-approve',
+    //     'case-rejected',
+    //     'reminder-done',
+    //     'reminder-overdue',
+    //   ]),
+    // ),
   })
   .partial();
 export type CasesPageFilter = z.infer<typeof casesPageFilter>;

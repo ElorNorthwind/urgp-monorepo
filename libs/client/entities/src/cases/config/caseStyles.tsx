@@ -12,6 +12,12 @@ import {
   CircleSlash,
   CircleStop,
   CircleX,
+  Clipboard,
+  ClipboardCheck,
+  ClipboardMinus,
+  ClipboardPen,
+  ClipboardPenLine,
+  ClipboardX,
   LucideProps,
   MessageSquareHeart,
   MessageSquareMore,
@@ -68,6 +74,16 @@ export const viewStatusStyles = {
     badgeStyle: 'bg-stone-600',
   },
 } as Record<Case['viewStatus'], StyleData>;
+
+export const pendingActionStyles = {
+  unknown: { icon: Clipboard },
+  'case-approve': { icon: ClipboardPen },
+  'both-approve': { icon: ClipboardPen },
+  'operation-approve': { icon: ClipboardPenLine },
+  'case-rejected': { icon: ClipboardMinus },
+  'reminder-done': { icon: ClipboardCheck },
+  'reminder-overdue': { icon: ClipboardX },
+} as Record<string, StyleData>;
 
 export const directionCategoryStyles = {
   // УРЖП: { badgeStyle: 'bg-cyan-50 border-cyan-200 hover:bg-cyan-100' },

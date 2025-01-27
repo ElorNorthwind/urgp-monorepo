@@ -13,20 +13,20 @@ import { CaseWithPendingInfo } from '@urgp/shared/entities';
 import { ServerCrash } from 'lucide-react';
 import { useMemo } from 'react';
 
-const countByPendingStatus = (
+const countByPendingAction = (
   status: string,
   cases?: CaseWithPendingInfo[],
 ) => {
   return cases?.filter((c) => c?.action === status)?.length || 0;
 };
 
-type PendingStatusChartProps = {
+type PendingActionChartProps = {
   className?: string;
 };
 
-const PendingStatusChart = ({
+const PendingActionChart = ({
   className,
-}: PendingStatusChartProps): JSX.Element => {
+}: PendingActionChartProps): JSX.Element => {
   const {
     data: cases,
     isLoading: isCasesLoading,
@@ -41,30 +41,30 @@ const PendingStatusChart = ({
         key: 'case-approve',
         label: 'Проекты заявок ожидают моего утверждения',
         value:
-          countByPendingStatus('case-approve', cases) +
-          countByPendingStatus('both-approve', cases),
+          countByPendingAction('case-approve', cases) +
+          countByPendingAction('both-approve', cases),
       },
       {
         key: 'operation-approve',
         label: 'Решения по заявкам ожидают моего утверждения',
-        value: countByPendingStatus('operation-approve', cases),
+        value: countByPendingAction('operation-approve', cases),
       },
       {
         key: 'case-rejected',
         label: 'По моим заявкам отказали в согласовании',
-        value: countByPendingStatus('case-rejected', cases),
+        value: countByPendingAction('case-rejected', cases),
         // style: 'bg-yellow-200',
       },
       {
         key: 'reminder-done',
         label: 'По заявкам, за которыми я слежу, приняты решения',
-        value: countByPendingStatus('reminder-done', cases),
+        value: countByPendingAction('reminder-done', cases),
         // style: 'bg-green-200',
       },
       {
         key: 'reminder-overdue',
         label: 'Истек срок напоминания по заявкам за которыми я слежу',
-        value: countByPendingStatus('reminder-overdue', cases),
+        value: countByPendingAction('reminder-overdue', cases),
         // style: 'bg-rose-200',
       },
     ];
@@ -97,7 +97,7 @@ const PendingStatusChart = ({
           onBarClick={(key) =>
             navigate({
               to: './pending',
-              // search: { pendingStatus: [key] },
+              search: { action: [key] },
             })
           }
         />
@@ -121,4 +121,4 @@ const PendingStatusChart = ({
   );
 };
 
-export { PendingStatusChart };
+export { PendingActionChart };

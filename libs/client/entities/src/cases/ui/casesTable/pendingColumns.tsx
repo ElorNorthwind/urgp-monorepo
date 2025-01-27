@@ -35,12 +35,12 @@ export const pendingCasesColumns = [
       return <CheckboxCell {...props} />;
     },
   }),
-  columnHelper.display({
+  columnHelper.accessor('action', {
     id: 'smartApprove',
     header: 'Действие',
     size: 90,
     enableHiding: true,
-    enableSorting: false,
+    enableSorting: true,
     cell: (props) => {
       return <SmartApproveCell {...props} />;
     },

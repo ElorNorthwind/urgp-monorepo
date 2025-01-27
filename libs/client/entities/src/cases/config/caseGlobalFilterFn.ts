@@ -1,4 +1,8 @@
-import { CasesPageSearchDto, Case } from '@urgp/shared/entities';
+import {
+  CasesPageSearchDto,
+  Case,
+  CaseWithPendingInfo,
+} from '@urgp/shared/entities';
 import { Row } from '@tanstack/react-table';
 import { toDate } from 'date-fns';
 import { store } from '@urgp/client/shared';
@@ -22,6 +26,7 @@ export function caseGlobalFilterFn(
     dueTo,
     relevant,
     selectedCase,
+    action,
   } = filterValue;
   const userId = store.getState().auth.user?.id;
   // const userSettings = await store.dispatch(
@@ -115,9 +120,20 @@ export function caseGlobalFilterFn(
     row?.original?.payload?.approver?.id !== userId && // Рассматривает
     row?.original?.viewStatus === 'unwatched' && // Следит за делом
     !row?.original?.dispatches?.some((d) => d?.executor?.id === userId) // Исполнитель по любому из поручений (в т.ч. закрытым)
-    // && !userSettings.data?.directions.some((d) =>
-    //   row?.original?.payload?.directions.some((cd) => cd.id === d),
-    // ) // Нет тем из списка отслеживаемых
+  ) {
+    allowed = false;
+  }
+
+  // Super shitty...
+  const rowAction = (row?.original as CaseWithPendingInfo)?.action;
+  if (
+    action &&
+    rowAction &&
+    !action.includes(rowAction) &&
+    !(
+      action.some((a) => a === 'case-approve' || a === 'operation-approve') &&
+      rowAction === 'both-approve'
+    )
   ) {
     allowed = false;
   }

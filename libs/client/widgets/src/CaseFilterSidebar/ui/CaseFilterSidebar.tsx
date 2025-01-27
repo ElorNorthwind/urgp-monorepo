@@ -23,6 +23,9 @@ import { StatusFilter } from './filterInputs/StatusFilter';
 import { ViewStatusFilter } from './filterInputs/ViewStatusFilter';
 import { AuthorFilter } from './filterInputs/AuthorFilter';
 import { RelevantFilter } from './filterInputs/RelevantFilter';
+import { useLocation } from '@tanstack/react-router';
+import { PendingActionChart } from 'libs/client/pages/src/ControlDashboardPage/ui/cards/PendingActionsChart';
+import { PendingActionsFilter } from './filterInputs/PendingActionsFilter';
 
 type ControlSidebarProps = {
   side?: 'left' | 'right';
@@ -30,6 +33,7 @@ type ControlSidebarProps = {
 };
 
 const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
+  const { pathname } = useLocation();
   const { side = 'left', className } = props;
   const { setOpen } = useSidebar();
   return (
@@ -58,7 +62,15 @@ const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
             <AuthorFilter className="h-8 flex-shrink-0" />
             <DueDateFilter className="flex-shrink-0" />
             <RelevantFilter className="h-8 flex-shrink-0" />
-            <Accordion type="multiple" defaultValue={['departments']}>
+            <Accordion
+              type="multiple"
+              defaultValue={
+                pathname === '/control/pending' ? ['action'] : ['departments']
+              }
+            >
+              {pathname === '/control/pending' && (
+                <PendingActionsFilter variant="accordion" />
+              )}
               <DepartmentsFilter variant="accordion" />
               <StatusFilter variant="accordion" />
               <DirectionsFilter variant="accordion" />

@@ -2,8 +2,8 @@ import { Separator } from '@urgp/client/shared';
 import { TotalNumberCards } from './cards/TotalNumberCards';
 import { ViewStatusChart } from './cards/ViewStatusChart';
 import { CreateCaseButton } from '@urgp/client/entities';
-import { PendingStatusChart } from './cards/PendingStatusChart';
 import { DepartmentChart } from './cards/DepartmentChart';
+import { PendingActionChart } from './cards/PendingActionsChart';
 
 const ControlDashboardPage = (): JSX.Element => {
   return (
@@ -22,7 +22,7 @@ const ControlDashboardPage = (): JSX.Element => {
         <div className="flex flex-col space-y-6">
           <TotalNumberCards />
           <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
-            <PendingStatusChart className="col-span-2" />
+            <PendingActionChart className="col-span-2" />
             <DepartmentChart className="col-span-2 md:col-span-1" />
             <div className="col-span-2 flex flex-col justify-start gap-3 md:col-span-1">
               <ViewStatusChart className="grid-col-1" />
