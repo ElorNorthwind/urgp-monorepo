@@ -19,7 +19,9 @@ const countByStatus = (status: number[], cases?: Case[]) => {
     total: cases?.filter((c) => status.includes(c?.status?.id))?.length || 0,
     thisWeek:
       cases?.filter(
-        (c) => status.includes(c?.status?.id) && isThisWeek(c.createdAt),
+        (c) =>
+          status.includes(c?.status?.id) &&
+          isThisWeek(c.createdAt, { weekStartsOn: 1 }),
       )?.length || 0,
   };
 };
