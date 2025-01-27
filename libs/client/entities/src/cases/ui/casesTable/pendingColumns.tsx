@@ -10,6 +10,8 @@ import { PendingOperationCell } from './cells/PendingOperationCell';
 import { SmartApproveCell } from './cells/SmartApproveCell';
 import { CheckboxCell } from './cells/CheckboxCell';
 import { isBefore } from 'date-fns';
+import { Eye } from 'lucide-react';
+import { ViewStatusCell } from './cells/ViewStatusCell';
 
 const columnHelper = createColumnHelper<CaseWithPendingInfo>();
 
@@ -66,6 +68,18 @@ export const pendingCasesColumns = [
     },
   ),
 
+  columnHelper.accessor('viewStatus', {
+    id: 'viewStatus',
+    header: () => {
+      return <Eye />;
+    },
+    size: 40,
+    enableSorting: true,
+    enableHiding: true,
+    cell: (props) => {
+      return <ViewStatusCell {...(props as any)} />;
+    },
+  }),
   columnHelper.accessor('payload.description', {
     id: 'description',
     header: 'Описание',

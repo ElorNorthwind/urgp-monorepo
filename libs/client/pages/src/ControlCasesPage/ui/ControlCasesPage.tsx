@@ -19,6 +19,8 @@ import { Case, CasesPageSearchDto } from '@urgp/shared/entities';
 import { useState } from 'react';
 import { CasesPageHeader } from './CasesPageHeader';
 
+const defaultHiddenColumns = ['viewStatus'];
+
 const ControlCasesPage = (): JSX.Element => {
   const { data: cases, isLoading, isFetching } = useCases();
   const [selected, setSelected] = useState<Row<Case>[]>([]); // Этот селектед не тот селектед!
@@ -58,13 +60,16 @@ const ControlCasesPage = (): JSX.Element => {
     }
   };
 
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-    controlCasesColumns
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    ...controlCasesColumns
       .filter((col) => col.enableHiding !== false)
       .reduce((acc, cur) => {
         return cur.id ? { ...acc, [cur.id]: true } : acc;
-      }, {}) as VisibilityState,
-  );
+      }, {}),
+    ...defaultHiddenColumns.reduce((acc, cur) => {
+      return { ...acc, [cur]: false };
+    }, {}),
+  } as VisibilityState);
 
   return (
     <TooltipProvider delayDuration={50}>

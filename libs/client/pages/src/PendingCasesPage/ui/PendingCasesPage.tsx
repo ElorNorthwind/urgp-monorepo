@@ -20,7 +20,7 @@ import { CasesPageSearchDto, CaseWithPendingInfo } from '@urgp/shared/entities';
 import { useState } from 'react';
 import { CasesPageHeader } from '../../ControlCasesPage/ui/CasesPageHeader';
 
-const defaultHiddenColumns = ['externalCases', 'type'];
+const defaultHiddenColumns = ['viewStatus', 'externalCases', 'type'];
 
 const PendingCasesPage = (): JSX.Element => {
   const { data: cases, isLoading, isFetching } = usePendingCases();

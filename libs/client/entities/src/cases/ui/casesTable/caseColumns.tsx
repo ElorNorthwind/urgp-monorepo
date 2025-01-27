@@ -7,6 +7,8 @@ import { ExternalCasesCell } from './cells/ExternalCasesCell';
 import { CaseStatusCell } from './cells/CaseStatusCell';
 import { CaseDesctiptionCell } from './cells/CaseDescriptionCell';
 import { CheckboxCell } from './cells/CheckboxCell';
+import { ViewStatusCell } from './cells/ViewStatusCell';
+import { Eye } from 'lucide-react';
 
 const columnHelper = createColumnHelper<Case>();
 
@@ -68,6 +70,18 @@ export const controlCasesColumns = [
     },
   ),
 
+  columnHelper.accessor('viewStatus', {
+    id: 'viewStatus',
+    header: () => {
+      return <Eye />;
+    },
+    size: 40,
+    enableSorting: true,
+    enableHiding: true,
+    cell: (props) => {
+      return <ViewStatusCell {...(props as any)} />;
+    },
+  }),
   columnHelper.accessor('payload.description', {
     id: 'description',
     header: 'Описание',

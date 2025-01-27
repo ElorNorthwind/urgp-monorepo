@@ -88,6 +88,7 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
             smartApprove: 'Решение',
             externalCases: 'Обращение',
             desctiption: 'Описание',
+            viewStatus: 'Статус отслеживания',
             status: 'Статус',
             directions: 'Направления',
             type: 'Тип проблемы',
