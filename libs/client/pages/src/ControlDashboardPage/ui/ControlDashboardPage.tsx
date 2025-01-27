@@ -18,7 +18,6 @@ const ControlDashboardPage = (): JSX.Element => {
           </p>
         </div>
         <Separator className="my-6" />
-        {/* <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0"> */}
         <div className="flex flex-col space-y-6">
           <TotalNumberCards />
           <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
@@ -31,10 +30,6 @@ const ControlDashboardPage = (): JSX.Element => {
                 className="flex-grow rounded-lg py-6 text-base shadow-sm"
               />
             </div>
-            {/* <ViewStatusChartRecharts
-            className="grid-col-1"
-            chartClassName="h-24"
-          /> */}
           </div>
         </div>
       </div>

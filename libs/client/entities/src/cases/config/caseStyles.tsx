@@ -86,11 +86,6 @@ export const pendingActionStyles = {
 } as Record<string, StyleData>;
 
 export const directionCategoryStyles = {
-  // УРЖП: { badgeStyle: 'bg-cyan-50 border-cyan-200 hover:bg-cyan-100' },
-  // УВЖУ: { badgeStyle: 'bg-emerald-50 border-emerald-200 hover:bg-emerald-100' },
-  // УПГУ: { badgeStyle: 'bg-amber-50 border-amber-200 hover:bg-amber-100' },
-  // УП: { badgeStyle: 'bg-slate-50 border-slate-200 hover:bg-slate-100' },
-  // УОЖП: { badgeStyle: 'bg-violet-50 border-violet-200 hover:bg-violet-100' },
   УРЖП: {
     icon: Circle,
     iconStyle: 'bg-cyan-500 rounded-full text-cyan-500',

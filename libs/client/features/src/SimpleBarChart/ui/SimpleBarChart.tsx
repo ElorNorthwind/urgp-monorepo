@@ -11,12 +11,17 @@ import {
 } from '@urgp/client/shared';
 import { useMemo } from 'react';
 import { BarRow } from './BarRow';
+import { LucideProps } from 'lucide-react';
 
 type SimpleBarValue = {
   key: string | number;
   value: number;
   label?: string;
   style?: string;
+  icon?: React.ForwardRefExoticComponent<
+    Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
+  >;
+  iconStyle?: string;
 };
 
 type SimpleBarChartProps = {
@@ -25,6 +30,7 @@ type SimpleBarChartProps = {
   className?: string;
   barRowClassName?: string;
   barClassName?: string;
+  iconClassName?: string;
   isLoading?: boolean;
   skeletonCount?: number;
   isError?: boolean;
@@ -48,6 +54,7 @@ const SimpleBarChart = ({
   className,
   barRowClassName,
   barClassName,
+  iconClassName,
   isLoading = false,
   isError = false,
   skeletonCount = 1,
@@ -82,7 +89,21 @@ const SimpleBarChart = ({
                     value={entry.value}
                     max={maxValue}
                     label={
-                      <BarLabel label={entry.label || ''} value={entry.value} />
+                      <>
+                        {entry.icon && (
+                          <entry.icon
+                            className={cn(
+                              'size-4 shrink-0',
+                              iconClassName,
+                              entry.iconStyle,
+                            )}
+                          />
+                        )}
+                        <BarLabel
+                          label={entry.label || ''}
+                          value={entry.value}
+                        />
+                      </>
                     }
                     labelFit={labelFit}
                     className={cn('h-8', barRowClassName)}

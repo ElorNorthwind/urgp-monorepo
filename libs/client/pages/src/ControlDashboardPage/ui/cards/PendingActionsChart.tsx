@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { usePendingCases } from '@urgp/client/entities';
+import { pendingActionStyles, usePendingCases } from '@urgp/client/entities';
 import { SimpleBarChart } from '@urgp/client/features';
 import {
   Card,
@@ -40,6 +40,7 @@ const PendingActionChart = ({
       {
         key: 'case-approve',
         label: 'Проекты заявок ожидают моего утверждения',
+        icon: pendingActionStyles['case-approve']?.icon,
         value:
           countByPendingAction('case-approve', cases) +
           countByPendingAction('both-approve', cases),
@@ -47,23 +48,27 @@ const PendingActionChart = ({
       {
         key: 'operation-approve',
         label: 'Решения по заявкам ожидают моего утверждения',
+        icon: pendingActionStyles['operation-approve']?.icon,
         value: countByPendingAction('operation-approve', cases),
       },
       {
         key: 'case-rejected',
         label: 'По моим заявкам отказали в согласовании',
+        icon: pendingActionStyles['case-rejected']?.icon,
         value: countByPendingAction('case-rejected', cases),
         // style: 'bg-yellow-200',
       },
       {
         key: 'reminder-done',
         label: 'По заявкам, за которыми я слежу, приняты решения',
+        icon: pendingActionStyles['reminder-done']?.icon,
         value: countByPendingAction('reminder-done', cases),
         // style: 'bg-green-200',
       },
       {
         key: 'reminder-overdue',
         label: 'Истек срок напоминания по заявкам за которыми я слежу',
+        icon: pendingActionStyles['reminder-overdue']?.icon,
         value: countByPendingAction('reminder-overdue', cases),
         // style: 'bg-rose-200',
       },
@@ -79,7 +84,7 @@ const PendingActionChart = ({
         className,
       )}
     >
-      <CardHeader className="">
+      <CardHeader className="z-10">
         <CardTitle>Ожидает моего решения</CardTitle>
         <CardDescription>
           Вопросы, которые мне требуется рассмотреть
@@ -105,7 +110,7 @@ const PendingActionChart = ({
           className={cn(
             'select-none text-8xl font-semibold text-stone-200',
             // '-mr-2 -mt-[100%] flex-shrink-0 ',
-            'absolute right-2 top-0 z-0',
+            'absolute right-3 top-0 z-0',
           )}
         >
           {isError ? (

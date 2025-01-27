@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { useCases } from '@urgp/client/entities';
+import { useCases, viewStatusStyles } from '@urgp/client/entities';
 import { SimpleBarChart } from '@urgp/client/features';
 import {
   Card,
@@ -36,16 +36,19 @@ const ViewStatusChart = ({ className }: ViewStatusChartProps): JSX.Element => {
         key: 'unchanged',
         label: 'Без изменений',
         value: countByViewStatus('unchanged', cases),
+        icon: viewStatusStyles.unchanged.icon,
       },
       {
         key: 'new',
         label: 'Новое дело',
         value: countByViewStatus('new', cases),
+        icon: viewStatusStyles.new.icon,
       },
       {
         key: 'changed',
         label: 'Есть изменения',
         value: countByViewStatus('changed', cases),
+        icon: viewStatusStyles.changed.icon,
       },
     ];
   }, [cases, isLoading]);
@@ -59,7 +62,7 @@ const ViewStatusChart = ({ className }: ViewStatusChartProps): JSX.Element => {
         className,
       )}
     >
-      <CardHeader className="">
+      <CardHeader className="z-10">
         <CardTitle>Я отслеживаю</CardTitle>
         <CardDescription>Дела, на которые я подписан</CardDescription>
       </CardHeader>
@@ -83,7 +86,7 @@ const ViewStatusChart = ({ className }: ViewStatusChartProps): JSX.Element => {
           className={cn(
             'select-none text-8xl font-semibold text-slate-200',
             // '-mr-2 -mt-[100%] flex-shrink-0 ',
-            'absolute right-2 top-0 z-0',
+            'absolute right-3 top-0 z-0',
           )}
         >
           {isError ? (
