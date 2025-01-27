@@ -1,7 +1,8 @@
 import { TooltipPortal } from '@radix-ui/react-tooltip';
-import { useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import {
   Button,
+  buttonVariants,
   clearUser,
   cn,
   DropdownMenu,
@@ -16,6 +17,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  useIsMobile,
   useLogoutMutation,
 } from '@urgp/client/shared';
 import { CircleUser, KeyRound, LogOut, PenLine, User } from 'lucide-react';
@@ -30,6 +32,68 @@ const ControlUserMenu = ({ className }: ControlUserMenuProps): JSX.Element => {
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
   const user = selectCurrentUser(store.getState());
+  const isMobile = useIsMobile();
+  const router = useRouterState();
+
+  if (isMobile) {
+    return (
+      <>
+        {!user || user?.fio === 'Гость' ? (
+          <Link
+            to="/login"
+            className={cn(
+              buttonVariants({ variant: 'ghost' }),
+              'text-muted-foreground flex size-9 w-full items-center justify-start gap-2 p-6',
+              router.location.pathname === '/login' &&
+                'bg-muted-foreground/10 text-sidebar-foreground pointer-events-none cursor-auto',
+            )}
+            search={() => ({
+              redirect: location.pathname,
+            })}
+          >
+            <KeyRound />
+            <span>Войти</span>
+          </Link>
+        ) : (
+          <>
+            <Link
+              to="/control/settings"
+              className={cn(
+                buttonVariants({ variant: 'ghost' }),
+                'text-muted-foreground flex size-9 w-full items-center justify-start gap-2 p-6',
+                router.location.pathname.includes('/control/settings') &&
+                  'bg-muted-foreground/10 text-sidebar-foreground pointer-events-none cursor-auto',
+              )}
+            >
+              <User />
+              <span>Настройки</span>
+            </Link>
+            <span
+              className={cn(
+                buttonVariants({ variant: 'ghost' }),
+                'text-muted-foreground flex size-9 w-full items-center justify-start gap-2 p-6',
+                router.location.pathname === '/login' &&
+                  'bg-muted-foreground/10 text-sidebar-foreground pointer-events-none cursor-auto',
+              )}
+              onClick={() => {
+                logout();
+                dispatch(clearUser());
+                navigate({
+                  to: '/login',
+                  search: {
+                    redirect: location.pathname,
+                  },
+                });
+              }}
+            >
+              <LogOut />
+              <span>Выйти</span>
+            </span>
+          </>
+        )}
+      </>
+    );
+  }
 
   return (
     <DropdownMenu>

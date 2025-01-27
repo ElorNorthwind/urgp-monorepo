@@ -1,11 +1,14 @@
 import { TooltipPortal, TooltipProvider } from '@radix-ui/react-tooltip';
-import { useRouterState } from '@tanstack/react-router';
+import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import {
   Button,
   cn,
   NAVBAR_WIDTH,
+  selectCurrentUser,
+  Separator,
   Sheet,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -14,15 +17,16 @@ import {
   TooltipTrigger,
   useIsMobile,
 } from '@urgp/client/shared';
-import { Drama, Menu } from 'lucide-react';
+import { Drama, KeyRound, Menu, User } from 'lucide-react';
 import { items } from '../config/items';
 import { buttonVariants } from '@urgp/client/shared';
 import { ControlUserMenu } from '../../ControlUserMenu';
+import { useSelector } from 'react-redux';
 
 const ControlNavbar = (): JSX.Element => {
   const router = useRouterState();
-  // const navigate = useNavigate();
-  // const user = useSelector(selectCurrentUser);
+  const navigate = useNavigate();
+  const user = useSelector(selectCurrentUser);
   const isMobile = useIsMobile();
 
   if (isMobile) {
@@ -51,13 +55,13 @@ const ControlNavbar = (): JSX.Element => {
               <span>ИС Кон(троль)</span>
             </SheetTitle>
           </SheetHeader>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 p-2 pb-6">
             {items.map((item, index) => (
               <a
                 key={item.url + index}
                 className={cn(
                   buttonVariants({ variant: 'ghost' }),
-                  'text-muted-foreground flex size-9 w-full items-center justify-start gap-2 p-4',
+                  'text-muted-foreground flex size-9 w-full items-center justify-start gap-2 p-6',
                   router.location.pathname === item.url &&
                     'bg-muted-foreground/10 text-sidebar-foreground pointer-events-none cursor-auto',
                 )}
@@ -67,7 +71,8 @@ const ControlNavbar = (): JSX.Element => {
                 <span>{item.title}</span>
               </a>
             ))}
-            {/* <UserMenu className="mt-auto" /> */}
+            <Separator className="my-4" />
+            <ControlUserMenu className="mb-4" />
           </div>
         </SheetContent>
       </Sheet>
@@ -88,24 +93,6 @@ const ControlNavbar = (): JSX.Element => {
           } as React.CSSProperties
         }
       >
-        {/* <Tooltip>
-          <TooltipTrigger asChild>
-            <a
-              className={cn(
-                buttonVariants({ variant: 'default' }),
-                'size-10 flex p-0',
-                // router.location.pathname === '/control' &&
-                //   'pointer-events-none cursor-auto',
-              )}
-              href={'/control'}
-            >
-              <Drama />
-            </a>
-          </TooltipTrigger>
-          <TooltipPortal>
-            <TooltipContent side="right">Дашборд ИС Кон(троль)</TooltipContent>
-          </TooltipPortal>
-        </Tooltip> */}
         {items.map((item, index) => (
           <Tooltip key={item.url + index}>
             <TooltipTrigger asChild>

@@ -1,9 +1,4 @@
-import {
-  BriefcaseBusiness,
-  CircuitBoard,
-  LayoutDashboard,
-  Scale,
-} from 'lucide-react';
+import { BriefcaseBusiness, LayoutDashboard, Scale } from 'lucide-react';
 
 // Menu items.
 export const items = [
@@ -28,3 +23,5 @@ export const items = [
     icon: Scale,
   },
 ];
+
+export const userMenuItems = [];
