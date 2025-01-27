@@ -21,6 +21,7 @@ export function caseGlobalFilterFn(
     dueFrom,
     dueTo,
     relevant,
+    selectedCase,
   } = filterValue;
   const userId = store.getState().auth.user?.id;
   // const userSettings = await store.dispatch(
@@ -28,6 +29,10 @@ export function caseGlobalFilterFn(
   // );
 
   let allowed = true;
+
+  if (selectedCase && selectedCase === row.original.id) {
+    return true;
+  }
 
   if (
     query &&
@@ -116,5 +121,6 @@ export function caseGlobalFilterFn(
   ) {
     allowed = false;
   }
+
   return allowed;
 }
