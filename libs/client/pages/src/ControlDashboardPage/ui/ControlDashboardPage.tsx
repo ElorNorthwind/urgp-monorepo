@@ -1,14 +1,15 @@
-import { Separator } from '@urgp/client/shared';
+import { cn, ScrollArea, Separator } from '@urgp/client/shared';
 import { TotalNumberCards } from './cards/TotalNumberCards';
 import { ViewStatusChart } from './cards/ViewStatusChart';
 import { CreateCaseButton } from '@urgp/client/entities';
 import { DepartmentChart } from './cards/DepartmentChart';
 import { PendingActionChart } from './cards/PendingActionsChart';
+import { DashboardFooter } from './DashboardFooter';
 
 const ControlDashboardPage = (): JSX.Element => {
   return (
-    <div className="bg-muted-foreground/5 block w-full space-y-6 p-10">
-      <div className="mx-auto max-w-7xl">
+    <ScrollArea className="bg-muted-foreground/5 h-screen w-full">
+      <div className="relatve mx-auto max-w-7xl space-y-6 p-10">
         <div className="space-y-0.5">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-2xl font-bold tracking-tight">Дашборд</h2>
@@ -33,7 +34,7 @@ const ControlDashboardPage = (): JSX.Element => {
           </div>
         </div>
       </div>
-    </div>
+    </ScrollArea>
   );
 };
 export { ControlDashboardPage };
