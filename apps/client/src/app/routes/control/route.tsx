@@ -26,15 +26,17 @@ export const Route = createFileRoute('/control')({
   component: () => {
     usePageMeta('Кон(троль)', '/control.ico');
     return (
-      <SidebarProvider cookieName="filter-sidebar" defaultOpen={false}>
-        <ControlNavbar />
-        <Outlet />
-        <CreateCaseDialog />
-        <CreateStageDialog />
-        <CreateDispatchDialog />
-        <CreateReminderDialog />
-        <ApproveDialog />
-      </SidebarProvider>
+      <div className="font-roboto">
+        <SidebarProvider cookieName="filter-sidebar" defaultOpen={false}>
+          <ControlNavbar />
+          <Outlet />
+          <CreateCaseDialog />
+          <CreateStageDialog />
+          <CreateDispatchDialog />
+          <CreateReminderDialog />
+          <ApproveDialog />
+        </SidebarProvider>
+      </div>
     );
   },
 });
