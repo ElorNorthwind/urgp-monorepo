@@ -142,7 +142,7 @@ WHERE (c.payload->-1->>'isDeleted')::boolean IS DISTINCT FROM true
 	   AND (
 	   	   (c.payload->-1->>'approveStatus' = 'pending' AND (c.payload->-1->>'approverId')::integer = ${userId})
 		    OR ps.id IS NOT NULL
-			OR (s.category = 'рассмотрено' AND rem.done IS NULL)
+			OR (s.category = 'рассмотрено' AND rem.done IS NULL AND rem.count IS NOT NULL)
 			OR (s.category <> ALL(ARRAY['рассмотрено', 'проект']) AND rem.done IS NULL AND rem.due < current_date)
 			OR c.author_id = ${userId} AND c.payload->-1->>'approveStatus' = 'rejected'
 	       )	   
