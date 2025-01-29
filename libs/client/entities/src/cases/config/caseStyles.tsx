@@ -2,6 +2,7 @@ import { cn } from '@urgp/client/shared';
 import { Case } from '@urgp/shared/entities';
 import {
   Circle,
+  CircleAlert,
   CircleArrowUp,
   CircleCheck,
   CircleDashed,
@@ -41,8 +42,9 @@ export const caseStatusStyles = {
   4: { icon: CircleDivide, iconStyle: 'text-sky-500' },
   5: { icon: CircleSlash, iconStyle: 'text-amber-500' },
   6: { icon: CircleCheck, iconStyle: 'text-emerald-500' },
-  7: { icon: CircleX, iconStyle: 'text-rose-500' },
+  7: { icon: CircleX, iconStyle: 'text-pink-500' },
   10: { icon: CircleStop, iconStyle: 'text-red-500' },
+  11: { icon: CircleAlert, iconStyle: 'text-orange-500' },
 } as Record<number, StyleData>;
 
 export const caseTypeStyles = {

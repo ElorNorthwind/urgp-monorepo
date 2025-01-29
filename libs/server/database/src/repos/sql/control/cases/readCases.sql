@@ -77,18 +77,6 @@ LEFT JOIN (SELECT id, fio FROM renovation.users) u ON u.id = c.author_id
 LEFT JOIN (SELECT id, fio FROM renovation.users) u2 ON u2.id = (c.payload->-1->>'approverId')::integer
 LEFT JOIN (SELECT id, fio FROM renovation.users) u3 ON u3.id = (c.payload->-1->>'approveById')::integer
 LEFT JOIN (SELECT id, fio FROM renovation.users) u4 ON u4.id = (c.payload->-1->>'updatedById')::integer
-LEFT JOIN control.case_status_types s ON s.id = 
-	CASE 
-		WHEN c.payload->-1->>'approveStatus' = 'pending' THEN 1 -- "на утверждении"
-		WHEN c.payload->-1->>'approveStatus' = 'rejected' THEN 10 -- "отказано в согласовании"
-		WHEN ls."approveStatus" = 'pending' THEN 4 -- "проект решения"
-		-- Эти вот штуки лучше бы прописать через специальное поле в control.operation_types ?
-		WHEN (ls.type->>'id')::integer = 7 THEN 5 -- "отклонено"
-		WHEN (ls.type->>'id')::integer = 8 THEN 6 -- "решено"
-		WHEN (ls.type->>'id')::integer = 9 THEN 7 -- "не решено"
-		WHEN ls.id IS NOT NULL THEN 3 -- "в работе"
-		ELSE 2 -- "направлено"
-	END
 LEFT JOIN (SELECT case_id, COUNT(*) as count, MAX((payload->-1->>'updatedAt')::timestamp with time zone) as updated FROM control.operations WHERE class = ANY(ARRAY['stage', 'dispatch']) GROUP BY case_id) o ON o.case_id = c.id
 LEFT JOIN (SELECT DISTINCT ON(case_id) case_id, 
                                        jsonb_array_length(payload) as count, 
@@ -96,6 +84,19 @@ LEFT JOIN (SELECT DISTINCT ON(case_id) case_id,
 									   MAX((payload->-1->>'doneDate')::timestamp with time zone) as done
 			FROM control.operations WHERE class = ANY(ARRAY['reminder']) AND (payload->-1->>'observerId')::integer = ${userId} GROUP BY case_id, jsonb_array_length(payload)) rem ON rem.case_id = c.id
 LEFT JOIN dispatches dis ON dis.case_id = c.id
+LEFT JOIN control.case_status_types s ON s.id = 
+	CASE 
+		WHEN c.payload->-1->>'approveStatus' = 'pending' THEN 1 -- "на утверждении"
+		WHEN c.payload->-1->>'approveStatus' = 'rejected' THEN 10 -- "отказано в согласовании"
+		-- Эти вот штуки лучше бы прописать через специальное поле в control.operation_types ?
+		WHEN (ls.type->>'id')::integer = 7 AND ls."approveStatus" = 'approved' THEN 5 -- "отклонено"
+		WHEN (ls.type->>'id')::integer = 8 AND ls."approveStatus" = 'approved' THEN 6 -- "решено"
+		WHEN (ls.type->>'id')::integer = 9 AND ls."approveStatus" = 'approved' THEN 7 -- "не решено"
+		WHEN (dis.dispatches->1->>'dueDate')::date < current_date THEN 11 -- "просрочка"
+		WHEN ls."approveStatus" = 'pending' THEN 4 -- "проект решения"
+		WHEN ls.id IS NOT NULL THEN 3 -- "в работе"
+		ELSE 2 -- "направлено"
+	END
 WHERE (c.payload->-1->>'isDeleted')::boolean IS DISTINCT FROM true
 AND (c.payload->-1->>'approveStatus' = 'approved' OR c.author_id = ${userId} OR (c.payload->-1->>'approverId')::integer = ${userId} OR ${readAll} = true)
 ORDER BY c.created_at DESC, c.id DESC;

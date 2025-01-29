@@ -49,8 +49,8 @@ const TotalNumberCards = (): JSX.Element => {
       {
         key: 'inProgress',
         label: 'На рассмотрении',
-        search: { status: [2, 3, 4] },
-        ...countByStatus([2, 3, 4], cases),
+        search: { status: [2, 3, 4, 11] },
+        ...countByStatus([2, 3, 4, 11], cases),
         icon: (
           <CirclePlay
             className={cn(
