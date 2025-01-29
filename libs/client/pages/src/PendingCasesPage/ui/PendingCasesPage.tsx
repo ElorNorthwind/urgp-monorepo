@@ -84,6 +84,7 @@ const PendingCasesPage = (): JSX.Element => {
             setColumnVisibility={setColumnVisibility}
           />
           <VirtualDataTable
+            autofocus
             columnVisibility={columnVisibility}
             setSelectedRows={setSelected}
             setFilteredRows={setFiltered}

@@ -55,6 +55,7 @@ interface VirtualDataTableProps<TData, TValue> {
   setSelectedRows?: Dispatch<Row<TData>[]> | undefined;
   setNeighborRows?: Dispatch<Row<TData>[]> | undefined;
   columnVisibility?: VisibilityState;
+  autofocus?: boolean;
   // onColumnVisibilityChange?: Dispatch<VisibilityState> | undefined;
 }
 
@@ -81,6 +82,7 @@ export function VirtualDataTable<TData, TValue>({
   setFilteredRows,
   setSelectedRows,
   columnVisibility,
+  autofocus = false,
   // onColumnVisibilityChange,
 }: VirtualDataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
@@ -162,6 +164,11 @@ export function VirtualDataTable<TData, TValue>({
     },
     [data.length, isFetching, totalCount, callbackFn, callbackMargin],
   );
+
+  useEffect(() => {
+    // Focus the input element
+    if (autofocus) tableContainerRef.current.focus();
+  }, []);
 
   //a check on mount and after a fetch to see if the table is already scrolled to the bottom and immediately needs to fetch more data
   useEffect(() => {
