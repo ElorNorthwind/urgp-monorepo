@@ -8,6 +8,8 @@ import {
 import { ControlDispatch } from '@urgp/shared/entities';
 import { Fragment } from 'react/jsx-runtime';
 import { EditDispatchButton } from '../../operations';
+import { isBefore } from 'date-fns';
+import { useMemo } from 'react';
 
 type ControlDispatchesListProps = {
   dispatches?: ControlDispatch[];
@@ -29,6 +31,16 @@ const ControlDispatchesList = (
   } = props;
   const paddingStyle = cn(compact ? 'px-2' : 'px-4 py-1');
 
+  const sortedDispatches = useMemo(() => {
+    return [...dispatches].sort((a, b) => {
+      const dif1 =
+        (a?.payload?.controller?.priority || 0) -
+        (b?.payload?.controller?.priority || 0);
+      const dif2 = isBefore(a?.payload?.dueDate || 0, b?.payload?.dueDate || 0);
+      return dif1 > 0 ? 1 : dif1 < 0 ? -1 : dif2 ? -1 : 1;
+    });
+  }, [dispatches]);
+
   if (isLoading) {
     return <Skeleton className="h-10 w-full" />;
   }
@@ -46,7 +58,7 @@ const ControlDispatchesList = (
           className,
         )}
       >
-        {dispatches.map((d, index) => {
+        {sortedDispatches.map((d, index) => {
           const sameController =
             d?.payload?.executor?.id === d.payload?.controller?.id;
           return (

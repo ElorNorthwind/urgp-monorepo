@@ -47,7 +47,7 @@ WHERE class = 'stage'
 			-- 'description', o.payload->-1->>'description',
 			'executor', to_jsonb(e),
 			'controller', to_jsonb(c)
-		) ORDER BY c.priority DESC, (o.payload->-1->>'dueDate')::date DESC ) as dispatches
+		) ORDER BY c.priority DESC, (o.payload->-1->>'dueDate')::date ASC ) as dispatches
 	FROM control.operations o
 	LEFT JOIN (SELECT id, fio, (control_data->>'priority')::integer as priority FROM renovation.users) e ON e.id = (o.payload->-1->>'executorId')::integer
 	LEFT JOIN (SELECT id, fio, (control_data->>'priority')::integer as priority FROM renovation.users) c ON c.id = (o.payload->-1->>'controllerId')::integer

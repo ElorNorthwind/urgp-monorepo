@@ -20,12 +20,10 @@ import {
   StagesHeader,
   StagesList,
   useDispatches,
-  useMarkRemindersAsSeen,
   useStages,
 } from '../../../operations';
 import { CaseCardFooter } from './CaseCardFooter';
 import { ControlDispatchesList } from '../ControlDispatchesList';
-import { useEffect } from 'react';
 import { format } from 'date-fns';
 
 type CaseCardProps = {
