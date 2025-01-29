@@ -65,7 +65,7 @@ const ControlAccountPage = (): JSX.Element => {
           <h2 className="tracking-tigh text-2xl font-semibold leading-none">
             Отслеживать на заявки по направлениям:
           </h2>
-          <ChangeDirectionsForm popoverMinWidth="39rem" />
+          <ChangeDirectionsForm popoverMinWidth="39rem" className="w-full" />
         </CardFooter>
       </CardContent>
     </Card>
