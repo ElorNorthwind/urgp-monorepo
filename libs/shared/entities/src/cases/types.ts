@@ -55,6 +55,7 @@ export type Case = {
   lastSeen: Date | null;
   dispatches: CaseDispatchInfo[];
   controllerIds: number[];
+  controlLevel: number;
   viewStatus: 'unwatched' | 'unchanged' | 'new' | 'changed';
 };
 
@@ -67,6 +68,7 @@ export type CaseSlim = Omit<
   | 'lastSeen'
   | 'dispatches'
   | 'controllerIds'
+  | 'controlLevel'
   | 'viewStatus'
 > & {
   authorId: number;

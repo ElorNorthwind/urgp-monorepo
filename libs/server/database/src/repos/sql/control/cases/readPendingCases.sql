@@ -40,6 +40,7 @@ WHERE class = 'stage'
 ), dispatches AS (
 	SELECT 
 		case_id,
+		MAX(control_level) as control_level,
 		jsonb_agg(DISTINCT (dispatch->'controller'->>'id')::integer) FILTER (WHERE (dispatch->'controller'->>'priority')::integer = control_level) as controllers,
 		jsonb_agg(dispatch ORDER BY (dispatch->'controller'->>'priority')::integer DESC, (dispatch->>'dueDate')::date ASC) as dispatches
 	FROM (
@@ -95,6 +96,7 @@ SELECT
 	) as status,
 	dis.dispatches as dispatches,
 	dis.controllers as "controllerIds",
+	COALESCE(dis.control_level, 0) as "controlLevel",
 -- 	to_jsonb(ls) as "lastStage",
 	ls.id as "lastStageId",
 	c.payload->-1 
