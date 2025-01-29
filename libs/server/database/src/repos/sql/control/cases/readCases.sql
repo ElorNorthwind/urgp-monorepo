@@ -92,7 +92,7 @@ LEFT JOIN control.case_status_types s ON s.id =
 		WHEN (ls.type->>'id')::integer = 7 AND ls."approveStatus" = 'approved' THEN 5 -- "отклонено"
 		WHEN (ls.type->>'id')::integer = 8 AND ls."approveStatus" = 'approved' THEN 6 -- "решено"
 		WHEN (ls.type->>'id')::integer = 9 AND ls."approveStatus" = 'approved' THEN 7 -- "не решено"
-		WHEN (dis.dispatches->1->>'dueDate')::date < current_date THEN 11 -- "просрочка"
+		WHEN (dis.dispatches->0->>'dueDate')::date < current_date THEN 11 -- "просрочка"
 		WHEN ls."approveStatus" = 'pending' THEN 4 -- "проект решения"
 		WHEN ls.id IS NOT NULL THEN 3 -- "в работе"
 		ELSE 2 -- "направлено"

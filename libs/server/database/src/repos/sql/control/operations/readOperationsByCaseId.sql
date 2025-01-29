@@ -13,7 +13,7 @@ SELECT
 			|| jsonb_build_object('controller', json_build_object('id', u5.id, 'fio', u5.fio))
 			|| jsonb_build_object('executor', json_build_object('id', u6.id, 'fio', u6.fio))
 			|| jsonb_build_object('observer', json_build_object('id', u7.id, 'fio', u7.fio))
-			|| jsonb_build_object('dueDateChanged', (o.payload->-1->>'dueDate')::date <> (o.payload->1->>'dueDate')::date)
+			|| jsonb_build_object('dueDateChanged', (o.payload->-1->>'dueDate')::date <> (o.payload->0->>'dueDate')::date)
 			as payload,
 	jsonb_array_length(o.payload) as version
 FROM control.operations o
