@@ -14,10 +14,9 @@ import {
   ControlStageSlim,
 } from '../operations/types';
 import { Case, CaseSlim } from '../cases/types';
-import { CaseCreateDto, CaseFormValuesDto, CaseUpdateDto } from '../cases/dto';
+import { CaseCreateDto, CaseUpdateDto } from '../cases/dto';
 import {
   ControlStageCreateDto,
-  ControlStageFormValuesDto,
   ControlStageUpdateDto,
   DispatchCreateDto,
   DispatchUpdateDto,
@@ -33,6 +32,7 @@ type Action =
   | 'delete'
   | 'approve'
   | 'set-approver'
+  | 'resolve'
   | 'manage';
 type Subject =
   | 'Case'
@@ -64,6 +64,8 @@ export const subjectVariants = {
   dispanch: 'Dispatch',
   reminder: 'Reminder',
 };
+
+export const CONTROL_THRASHOLD = 3;
 
 export function defineControlAbilityFor(user: User) {
   const { can, cannot, build } = new AbilityBuilder(
@@ -97,6 +99,14 @@ export function defineControlAbilityFor(user: User) {
     can('update', 'Dispatch', { 'payload.controller.id': { $eq: user.id } }); // FE Можно менять поручения, которые ты контролируешь
     can('update', 'Reminder', { 'payload.observerId': { $eq: user.id } }); // BE Можно менять свои напоминалки
     can('update', 'Reminder', { 'payload.observer.id': { $eq: user.id } }); // FE Можно менять свои напоминалки
+    can('resolve', 'Case', {
+      controllerIds: {
+        $elemMatch: { $eq: user.id },
+      },
+    }); // Решение по делу уровня контроля выше заданного порога может принять только контролер
+    can('resolve', 'Case', {
+      controlLevel: { $lt: CONTROL_THRASHOLD },
+    }); // Решение по делу уровня контроля ниже заданного могут принимать все (с поправкой на иные права)
   }
 
   if (
