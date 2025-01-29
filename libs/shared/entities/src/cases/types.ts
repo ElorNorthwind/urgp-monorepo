@@ -54,10 +54,21 @@ export type Case = {
   lastEdit: Date | null;
   lastSeen: Date | null;
   dispatches: CaseDispatchInfo[];
+  controllerIds: number[];
   viewStatus: 'unwatched' | 'unchanged' | 'new' | 'changed';
 };
 
-export type CaseSlim = Omit<Case, 'payload' | 'author'> & {
+export type CaseSlim = Omit<
+  Case,
+  | 'payload'
+  | 'author'
+  | 'lastStageId'
+  | 'lastEdit'
+  | 'lastSeen'
+  | 'dispatches'
+  | 'controllerIds'
+  | 'viewStatus'
+> & {
   authorId: number;
   payload: CasePayloadSlim;
 };

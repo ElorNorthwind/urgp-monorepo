@@ -7,20 +7,26 @@ WITH directions AS (
 	GROUP BY c.id
 ), dispatches AS (
 	SELECT 
-		o.case_id,
-		jsonb_agg(jsonb_build_object(
-			'id', o.id,
-			'class', o.class,
-			'dueDate', (o.payload->-1->>'dueDate')::date,
-			-- 'description', o.payload->-1->>'description',
-			'executor', to_jsonb(e),
-			'controller', to_jsonb(c)
-		) ORDER BY c.priority DESC, (o.payload->-1->>'dueDate')::date ASC ) as dispatches
-	FROM control.operations o
-	LEFT JOIN (SELECT id, fio, (control_data->>'priority')::integer as priority FROM renovation.users) e ON e.id = (o.payload->-1->>'executorId')::integer
-	LEFT JOIN (SELECT id, fio, (control_data->>'priority')::integer as priority FROM renovation.users) c ON c.id = (o.payload->-1->>'controllerId')::integer
-	WHERE class = 'dispatch' AND (o.payload->-1->>'isDeleted')::boolean IS NOT DISTINCT FROM false
-	GROUP BY o.case_id
+		case_id,
+		jsonb_agg(DISTINCT (dispatch->'controller'->>'id')::integer) FILTER (WHERE (dispatch->'controller'->>'priority')::integer = control_level) as controllers,
+		jsonb_agg(dispatch ORDER BY (dispatch->'controller'->>'priority')::integer DESC, (dispatch->>'dueDate')::date ASC) as dispatches
+	FROM (
+		SELECT 
+			o.case_id,
+			MAX(c.priority) OVER (PARTITION BY o.case_id) as control_level,
+			jsonb_build_object(
+				'id', o.id,
+				'class', o.class,
+				'dueDate', (o.payload->-1->>'dueDate')::date,
+				'executor', to_jsonb(e),
+				'controller', to_jsonb(c)
+			) as  dispatch
+		FROM control.operations o
+		LEFT JOIN (SELECT id, fio, (control_data->>'priority')::integer as priority FROM renovation.users) e ON e.id = (o.payload->-1->>'executorId')::integer
+		LEFT JOIN (SELECT id, fio, (control_data->>'priority')::integer as priority FROM renovation.users) c ON c.id = (o.payload->-1->>'controllerId')::integer
+		WHERE class = 'dispatch' AND (o.payload->-1->>'isDeleted')::boolean IS NOT DISTINCT FROM false
+		) d
+	GROUP BY case_id
 ), last_stage AS (
 	SELECT case_id, id, class, "doneDate", "approveStatus", type
 	FROM ( SELECT
@@ -58,6 +64,7 @@ SELECT
 		'fullName', s.fullname
 	) as status,
 	dis.dispatches as dispatches,
+	dis.controllers as "controllerIds",
 -- 	to_jsonb(ls) as "lastStage",
 	ls.id as "lastStageId",
 	c.payload->-1 
