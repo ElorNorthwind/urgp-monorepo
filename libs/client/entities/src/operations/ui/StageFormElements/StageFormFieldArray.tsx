@@ -1,40 +1,26 @@
 import {
-  Button,
   cn,
-  Form,
+  guestUser,
   selectCurrentUser,
-  selectStageFormState,
-  selectStageFormValues,
-  setStageFormState,
-  setStageFormValuesEmpty,
-  Skeleton,
+  useUserAbility,
 } from '@urgp/client/shared';
 
-import { UseFormReturn } from 'react-hook-form';
-import { toast } from 'sonner';
-import {
-  useCreateControlStage,
-  useStages,
-  useUpdateControlStage,
-} from '../../api/operationsApi';
-import {
-  OperationTypeSelector,
-  useCurrentUserApprovers,
-  useOperationTypesFlat,
-} from '../../../classificators';
 import {
   DateFormField,
   InputFormField,
   SelectFormField,
   TextAreaFormField,
 } from '@urgp/client/widgets';
-import { StageHistoryItem } from '../StagesList/StageHistoryItem';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  ControlStageFormValuesDto,
-  ControlStageUpdateDto,
-} from '@urgp/shared/entities';
+import { ControlStageFormValuesDto } from '@urgp/shared/entities';
+import { UseFormReturn } from 'react-hook-form';
 import { Fragment } from 'react/jsx-runtime';
+import {
+  OperationTypeSelector,
+  useCurrentUserApprovers,
+  useOperationTypesFlat,
+} from '../../../classificators';
+import { useCaseById } from '../../../cases';
+import { useSelector } from 'react-redux';
 
 type StageFormFieldArrayProps = {
   form: UseFormReturn<ControlStageFormValuesDto, any, undefined>;
@@ -51,6 +37,19 @@ const StageFormFieldArray = ({
     useOperationTypesFlat();
   const { data: approvers, isLoading: isApproversLoading } =
     useCurrentUserApprovers();
+
+  // Запрет на решение дел с контролем высокого уровня
+  const { data: controlCase, isLoading: isStageLoading } = useCaseById(
+    form.watch('caseId') || 0,
+    { skip: !form.watch('caseId') || form.watch('caseId') === 0 },
+  );
+  const user = useSelector(selectCurrentUser) || guestUser;
+  const i = useUserAbility();
+  const filteredApprovers = controlCase
+    ? approvers?.operations.filter((approver) => {
+        return approver.value !== user.id || i.can('resolve', controlCase);
+      })
+    : approvers?.operations;
 
   const watchType = form.watch('typeId');
 
@@ -90,8 +89,10 @@ const StageFormFieldArray = ({
       <SelectFormField
         form={form}
         fieldName={'approverId'}
-        options={approvers?.operations}
-        isLoading={isApproversLoading || isOperationTypesLoading}
+        options={filteredApprovers}
+        isLoading={
+          isApproversLoading || isOperationTypesLoading || isStageLoading
+        }
         label="Согласующий"
         placeholder="Выбор согласующего"
         popoverMinWidth={popoverMinWidth}

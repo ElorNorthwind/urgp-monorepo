@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   Form,
+  guestUser,
   selectApproveFormEntityId,
   selectApproveFormState,
   selectCurrentUser,
@@ -20,6 +21,7 @@ import {
   SheetHeader,
   SheetTitle,
   useIsMobile,
+  useUserAbility,
 } from '@urgp/client/shared';
 import {
   GET_DEFAULT_CONTROL_DUE_DATE,
@@ -31,6 +33,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   useApproveCase,
   useApproveOperation,
+  useCaseByOperationId,
   useCurrentUserApprovers,
 } from '@urgp/client/entities';
 import {
@@ -63,10 +66,22 @@ const ApproveDialog = ({
   const { data: approvers, isLoading: isApproversLoading } =
     useCurrentUserApprovers();
 
-  const user = useSelector(selectCurrentUser);
+  const user = useSelector(selectCurrentUser) || guestUser;
   const formState = useSelector(selectApproveFormState);
   const isOperation = formState === 'operation';
   const entityId = useSelector(selectApproveFormEntityId);
+
+  // Запрет на решение дел с контролем высокого уровня
+  const { data: controlCase, isLoading: isStageLoading } = useCaseByOperationId(
+    entityId,
+    { skip: !isOperation || !entityId || entityId === 0 },
+  );
+  const i = useUserAbility();
+  const filteredOperationApprovers = controlCase
+    ? approvers?.operations.filter((approver) => {
+        return approver.value !== user.id || i.can('resolve', controlCase);
+      })
+    : approvers?.operations;
 
   const defaultValues = useMemo(() => {
     return {
@@ -168,7 +183,9 @@ const ApproveDialog = ({
               <SelectFormField
                 form={form}
                 fieldName={'nextApproverId'}
-                options={approvers?.operations}
+                options={
+                  isOperation ? filteredOperationApprovers : approvers?.cases
+                }
                 isLoading={isApproversLoading}
                 label="Следующий согласующий"
                 placeholder="Выбор следующего согласующего"

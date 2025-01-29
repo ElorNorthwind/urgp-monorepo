@@ -45,12 +45,14 @@ import {
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlOperationsService } from './control-operations.service';
 import { ControlClassificatorsService } from './control-classificators.service';
+import { ControlCaseService } from './control-cases.service';
 
 @Controller('control/operation')
 @UseGuards(AccessTokenGuard)
 export class ControlOperationsController {
   constructor(
     private readonly controlOperations: ControlOperationsService,
+    private readonly controlCases: ControlCaseService,
     private readonly classificators: ControlClassificatorsService,
   ) {}
 
@@ -86,6 +88,18 @@ export class ControlOperationsController {
       throw new UnauthorizedException(
         'Операция не разрешена. Согласующий не доступен пользователю!',
       );
+    }
+
+    if (dto?.caseId && !autoApproved && correctApproverId === req.user.id) {
+      const affectedCase = await this.controlCases.readFullCaseById(
+        dto.caseId,
+        req.user.id,
+      );
+      if (i.cannot('resolve', affectedCase)) {
+        throw new UnauthorizedException(
+          'Операция не разрешена. Решение по делу может принять только установившим высокий контроль.',
+        );
+      }
     }
 
     const approved = autoApproved || correctApproverId === req.user.id;
@@ -211,6 +225,18 @@ export class ControlOperationsController {
       throw new UnauthorizedException(
         'Операция не разрешена. Согласующий не доступен пользователю!',
       );
+    }
+
+    if (dto.approverId === req.user.id) {
+      const affectedCase = await this.controlCases.readFullCaseByOperationId(
+        dto.id,
+        req.user.id,
+      );
+      if (affectedCase && i.cannot('resolve', affectedCase)) {
+        throw new UnauthorizedException(
+          'Операция не разрешена. Решение по делу может принять только установившим высокий контроль.',
+        );
+      }
     }
 
     return this.controlOperations.updateStage(dto, req.user.id);
@@ -362,6 +388,20 @@ export class ControlOperationsController {
         }),
       );
       throw new UnauthorizedException('Согласующий недоступен пользователю!');
+    }
+
+    if (newApproverId === req.user.id) {
+      const affectedCase = currentOperation?.caseId
+        ? await this.controlCases.readFullCaseById(
+            currentOperation.caseId,
+            req.user.id,
+          )
+        : null;
+      if (affectedCase && i.cannot('resolve', affectedCase)) {
+        throw new UnauthorizedException(
+          'Операция не разрешена. Решение по делу может принять только установившим высокий контроль.',
+        );
+      }
     }
 
     return this.controlOperations.approveOperation(

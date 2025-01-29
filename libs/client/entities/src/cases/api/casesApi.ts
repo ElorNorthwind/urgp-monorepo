@@ -31,6 +31,13 @@ export const casesApi = rtkApi.injectEndpoints({
       }),
       providesTags: ['case'],
     }),
+    getCaseByOperationId: build.query<Case, number>({
+      query: (id) => ({
+        url: '/control/case/by-operation/' + id.toString(),
+        method: 'GET',
+      }),
+      providesTags: ['case'],
+    }),
     getPendingCaseById: build.query<CaseWithPendingInfo, number>({
       query: (id) => ({
         url: '/control/case/pending/' + id.toString(),
@@ -184,6 +191,7 @@ export const {
   useGetCasesQuery: useCases,
   useGetPendingCasesQuery: usePendingCases,
   useGetCaseByIdQuery: useCaseById,
+  useGetCaseByOperationIdQuery: useCaseByOperationId,
   useCreateCaseMutation: useCreateCase,
   useUpdateCaseMutation: useUpdateCase,
   useDeleteCaseMutation: useDeleteCase,

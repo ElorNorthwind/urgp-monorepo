@@ -104,6 +104,14 @@ export class ControlCasesController {
     return this.controlCases.readFullCaseById(id, req.user.id);
   }
 
+  @Get('by-operaion/:id')
+  getCaseByOperationId(
+    @Req() req: RequestWithUserData,
+    @Param('id') id: number,
+  ): Promise<Case> {
+    return this.controlCases.readFullCaseByOperationId(id, req.user.id);
+  }
+
   @Patch()
   async updateCase(
     @Req() req: RequestWithUserData,

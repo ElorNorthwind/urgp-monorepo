@@ -67,6 +67,10 @@ export class ControlCasesRepository {
     return this.db.one(cases.readFullCaseById, { id, userId });
   }
 
+  readFullCaseByOperationId(id: number, userId: number): Promise<Case> {
+    return this.db.one(cases.readFullCaseByOperationId, { id, userId });
+  }
+
   readPendingCaseById(
     id: number,
     userId: number,
