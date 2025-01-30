@@ -270,18 +270,32 @@ export class ControlOperationsController {
     @Body(new ZodValidationPipe(reminderUpdate)) dto: ReminderUpdateDto,
   ) {
     const i = defineControlAbilityFor(req.user);
-    const currentReminder = await this.controlOperations.readSlimOperationById(
+    const currentReminder = (await this.controlOperations.readSlimOperationById(
       dto.id,
-    );
+    )) as ControlReminderSlim;
 
     if (
       i.cannot('update', {
         ...currentReminder,
         class: 'reminder',
       } as ControlReminderSlim) ||
-      i.cannot('update', { ...dto, class: 'reminder' })
+      i.cannot('update', {
+        ...dto,
+        observerId: req.user.id,
+        class: 'reminder',
+      })
     ) {
-      throw new UnauthorizedException('Нет прав на изменение');
+      Logger.warn(
+        'Нет прав на изменение напоминания',
+        JSON.stringify({
+          currentObserver: currentReminder.payload?.observerId,
+          dtoApprover: req.user.id,
+          userFio: req.user.fio,
+          current: currentReminder,
+          new: { ...dto, observerId: req.user.id, class: 'reminder' },
+        }),
+      );
+      throw new UnauthorizedException('Нет прав на изменение напоминания');
     }
     return this.controlOperations.updateReminder(dto, req.user.id);
   }
