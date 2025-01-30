@@ -5,6 +5,7 @@ import {
   CircleAlert,
   CircleArrowUp,
   CircleCheck,
+  CircleChevronRight,
   CircleDashed,
   CircleDivide,
   CircleFadingPlus,
@@ -37,9 +38,9 @@ export type StyleData = {
 
 export const caseStatusStyles = {
   1: { icon: CircleHelp, iconStyle: 'text-slate-500' },
-  2: { icon: CirclePlay, iconStyle: 'text-sky-500' },
+  2: { icon: CircleChevronRight, iconStyle: 'text-blue-500' },
   3: { icon: CirclePlay, iconStyle: 'text-sky-500' },
-  4: { icon: CircleDivide, iconStyle: 'text-sky-500' },
+  4: { icon: CircleDivide, iconStyle: 'text-cyan-500' },
   5: { icon: CircleSlash, iconStyle: 'text-amber-500' },
   6: { icon: CircleCheck, iconStyle: 'text-emerald-500' },
   7: { icon: CircleX, iconStyle: 'text-pink-500' },

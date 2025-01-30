@@ -238,7 +238,6 @@ export class ControlOperationsController {
         );
       }
     }
-
     return this.controlOperations.updateStage(dto, req.user.id);
   }
 

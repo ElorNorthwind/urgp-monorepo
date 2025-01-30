@@ -16,7 +16,7 @@ import { useMemo } from 'react';
 const countByDepartment = (department: string, cases?: Case[]) => {
   return (
     cases?.filter((c) =>
-      c?.payload?.directions.some((dir) => dir.category === department),
+      c?.payload?.directions.some((dir) => dir?.category === department),
     )?.length || 0
   );
 };

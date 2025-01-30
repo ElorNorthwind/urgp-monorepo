@@ -94,12 +94,13 @@ export function defineControlAbilityFor(user: User) {
     cannot('update', 'all', {
       'payload.approveStatus': { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
     });
-    cannot('create', 'Dispatch');
-    can('update', 'Dispatch', { controllerId: { $eq: user.id } }); // FRM Можно менять поручения, которые ты контролируешь
+    // cannot('create', 'Dispatch');
+    can('update', 'Dispatch', { controllerId: { $eq: user.id } }); // FORM Можно менять поручения, которые ты контролируешь
     can('update', 'Dispatch', { 'payload.controllerId': { $eq: user.id } }); // BE Можно менять поручения, которые ты контролируешь
     can('update', 'Dispatch', { 'payload.controller.id': { $eq: user.id } }); // FE Можно менять поручения, которые ты контролируешь
-    can('create', 'Reminder'); // Можно создавать напоминалки
-    can('update', 'Reminder', { observerId: { $eq: user.id } }); // FRM Можно менять свои напоминалки
+    can('create', 'Reminder', { type: { $eq: 11 } }); // Можно создавать напоминалки
+    // cannot('create', 'Reminder', { type: { $eq: 12 } }); // Нельзя создавать направления боссу ПОДУМАЙ
+    can('update', 'Reminder', { observerId: { $eq: user.id } }); // FORM Можно менять свои напоминалки
     can('update', 'Reminder', { 'payload.observee.id': { $eq: user.id } }); // BE Можно менять свои напоминалки
     can('update', 'Reminder', { 'payload.observerId': { $eq: user.id } }); // FE Можно менять свои напоминалки
     can('resolve', 'Case', {
@@ -117,6 +118,7 @@ export function defineControlAbilityFor(user: User) {
     user?.controlData?.roles?.includes('boss')
   ) {
     can('create', 'Dispatch'); // начальники могут создавать поручения
+    can('create', 'Reminder', { type: { $eq: 12 } }); // Начальники могут создавать направления боссу
   }
 
   if (user?.controlData?.roles?.includes('controller')) {

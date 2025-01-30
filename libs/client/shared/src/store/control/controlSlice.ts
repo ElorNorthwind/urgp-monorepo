@@ -200,6 +200,9 @@ const controlSlice = createSlice({
     setReminderFormDueDate: (state, { payload }: PayloadAction<string>) => {
       state.reminderForm.values.dueDate = payload;
     },
+    setReminderFormType: (state, { payload }: PayloadAction<11 | 12>) => {
+      state.reminderForm.values.typeId = payload;
+    },
     setReminderFormValuesEmpty: (state) => {
       state.reminderForm.values = emptyReminder;
     },
