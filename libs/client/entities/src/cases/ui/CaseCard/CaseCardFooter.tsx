@@ -11,6 +11,7 @@ import { ApproveButton } from '@urgp/client/widgets';
 import { useStages } from '../../../operations';
 import { useSelector } from 'react-redux';
 import { CaseSmartApproveButton } from '../CaseButtons/CaseSmartApproveButton';
+import { CaseSmartActions } from '../CaseButtons/CaseSmartActions';
 
 type CaseCardFooterProps = {
   className?: string;
@@ -50,6 +51,7 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element | null => {
         className,
       )}
     >
+      {/* {controlCase?.id && <CaseSmartActions caseId={controlCase.id} />} */}
       <DeleteCaseButton controlCase={controlCase} />
       <EditCaseButton controlCase={controlCase} />
       <CaseSmartApproveButton controlCase={controlCase} variant="default" />

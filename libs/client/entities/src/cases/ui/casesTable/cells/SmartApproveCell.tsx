@@ -2,14 +2,10 @@ import { CellContext } from '@tanstack/react-table';
 import { CaseOrPending, CaseWithPendingInfo } from '@urgp/shared/entities';
 import { CaseSmartApproveButton } from '../../CaseButtons/CaseSmartApproveButton';
 // import { ManageReminderButton } from 'libs/client/entities/src/operations';
-import {
-  ManageReminderButton,
-  useMarkCaseRemindersAsDone,
-  useReminders,
-} from '../../../../operations';
-import { toast } from 'sonner';
 import { Button } from '@urgp/client/shared';
 import { EyeOff } from 'lucide-react';
+import { toast } from 'sonner';
+import { useMarkCaseRemindersAsDone } from '../../../../operations';
 
 function SmartApproveCell(
   props: CellContext<CaseOrPending, unknown>,

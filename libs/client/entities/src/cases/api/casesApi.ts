@@ -191,6 +191,7 @@ export const {
   useGetCasesQuery: useCases,
   useGetPendingCasesQuery: usePendingCases,
   useGetCaseByIdQuery: useCaseById,
+  useGetPendingCaseByIdQuery: usePendingCaseById,
   useGetCaseByOperationIdQuery: useCaseByOperationId,
   useCreateCaseMutation: useCreateCase,
   useUpdateCaseMutation: useUpdateCase,

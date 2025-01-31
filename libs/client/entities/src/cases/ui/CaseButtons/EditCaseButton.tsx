@@ -12,11 +12,13 @@ import { useDispatch } from 'react-redux';
 type EditCaseButtonProps = {
   controlCase: Case;
   className?: string;
+  label?: string;
 };
 
 const EditCaseButton = ({
   controlCase,
   className,
+  label = 'Редактировать',
 }: EditCaseButtonProps): JSX.Element | null => {
   const dispatch = useDispatch();
   const i = useUserAbility();
@@ -33,7 +35,7 @@ const EditCaseButton = ({
       }}
     >
       <Edit className="size-5 flex-shrink-0" />
-      <span>Редактировать</span>
+      <span>{label}</span>
     </Button>
   );
 };

@@ -25,6 +25,8 @@ import {
 import { CaseCardFooter } from './CaseCardFooter';
 import { ControlDispatchesList } from '../ControlDispatchesList';
 import { format } from 'date-fns';
+import { usePendingCaseById } from '../../api/casesApi';
+import { CaseSmartActions } from '../CaseButtons/CaseSmartActions';
 
 type CaseCardProps = {
   controlCase: Case;
@@ -59,14 +61,6 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     isLoading: isDispatchesLoading,
     isFetching: isDispatchesFetching,
   } = useDispatches(controlCase?.id, { skip: !controlCase?.id });
-
-  // const [markAsSeen, { isLoading: isSeenLoading }] = useMarkRemindersAsSeen();
-  // useEffect(() => {
-  //   !isSeenLoading &&
-  //     markAsSeen &&
-  //     controlCase?.id &&
-  //     markAsSeen([controlCase?.id]);
-  // }, [controlCase]);
 
   const caseApproveInfo = getApproveInfo(controlCase?.payload);
 

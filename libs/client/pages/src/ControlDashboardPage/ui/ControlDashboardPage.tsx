@@ -4,7 +4,6 @@ import { ViewStatusChart } from './cards/ViewStatusChart';
 import { CreateCaseButton } from '@urgp/client/entities';
 import { DepartmentChart } from './cards/DepartmentChart';
 import { PendingActionChart } from './cards/PendingActionsChart';
-import { DashboardFooter } from './DashboardFooter';
 
 const ControlDashboardPage = (): JSX.Element => {
   return (
