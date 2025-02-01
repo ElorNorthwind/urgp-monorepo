@@ -108,6 +108,7 @@ INSERT INTO control.operations_
 	updated_at,
 	due_date,
 	done_date,
+
 	control_from_id,
 	control_to_id,
 	title,
@@ -135,7 +136,12 @@ SELECT
 
 	(o.payload->0->>'dueDate')::timestamp with time zone,
 	(o.payload->0->>'doneDate')::timestamp with time zone,
-	(o.payload->0->>'controllerId')::integer,
+
+	CASE 
+		WHEN o.class = 'reminder' 
+		THEN (o.payload->0->>'observerId')::integer
+		ELSE (o.payload->0->>'controllerId')::integer
+	END,
 	(o.payload->0->>'executorId')::integer,
 
 	o.payload->0->>'num',
@@ -175,7 +181,13 @@ SET
 
 	due_date = (o.payload->-1->>'dueDate')::timestamp with time zone,
 	done_date = (o.payload->-1->>'doneDate')::timestamp with time zone,
-	control_from_id = (o.payload->-1->>'controllerId')::integer,
+
+	control_from_id = 
+		CASE 
+			WHEN o.class = 'reminder' 
+			THEN (o.payload->-1->>'observerId')::integer
+			ELSE (o.payload->-1->>'controllerId')::integer
+		END,
 	control_to_id = (o.payload->-1->>'executorId')::integer,
 
 	title = o.payload->-1->>'num',
