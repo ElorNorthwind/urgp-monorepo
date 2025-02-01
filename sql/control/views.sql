@@ -49,7 +49,7 @@ WHERE o.archive_date IS NULL;
 
 ALTER TABLE control.full_operations
     OWNER TO renovation_user;
-	
+
 
 -- 2. Гидрированный список дел
 DROP VIEW IF EXISTS control.full_cases CASCADE;
@@ -78,9 +78,9 @@ SELECT
 	c.class,
 	to_jsonb(t) as type,
 	to_jsonb(u) as author,
-	to_jsonb(u2) as updatedBy,
-	to_jsonb(u3) as approveFrom,
-	to_jsonb(u4) as approveTo,
+	to_jsonb(u2) as "updatedBy",
+	to_jsonb(u3) as "approveFrom",
+	to_jsonb(u4) as "approveTo",
 	c.approve_status as "approveStatus",
 	c.approve_date as "approveDate",
 	c.approve_notes as "approveNotes",
@@ -122,3 +122,4 @@ LEFT JOIN (SELECT id, name, category, fullname as "fullName" FROM control.case_s
 		ELSE 2 -- "направлено"
 	END
 WHERE c.archive_date IS NULL;
+-- ORDER BY c.created_at DESC, c.id DESC
