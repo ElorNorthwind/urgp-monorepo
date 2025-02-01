@@ -1,7 +1,49 @@
-import { z } from 'zod';
-import { externalCase } from '../userInput/types';
-import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
 import { format } from 'date-fns';
+import { z } from 'zod';
+import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
+import { externalCase } from '../userInput/types';
+
+const fullCaseSelector = z
+  .enum(['default', 'all', 'pending'])
+  .or(z.coerce.number())
+  .or(
+    z.preprocess((obj) => {
+      if (Array.isArray(obj)) {
+        return obj;
+      } else if (typeof obj === 'string') {
+        return obj.split(',');
+      } else {
+        return null;
+        // return [];
+      }
+    }, z.array(z.coerce.number()).or(z.string()).default('default')),
+  )
+  .default('default');
+
+const slimCaseSelector = z.coerce.number().or(
+  z.preprocess((obj) => {
+    if (Array.isArray(obj)) {
+      return obj;
+    } else if (typeof obj === 'string') {
+      return obj.split(',');
+    } else {
+      return null;
+      // return [];
+    }
+  }, z.array(z.coerce.number())),
+);
+
+export const readFullCase = z.object({
+  selector: fullCaseSelector,
+});
+export const readSlimCase = z.object({
+  selector: slimCaseSelector,
+});
+
+export type FullCaseSelector = z.infer<typeof fullCaseSelector>;
+export type SlimCaseSelector = z.infer<typeof slimCaseSelector>;
+export type ReadFullCaseDto = z.infer<typeof readFullCase>;
+export type ReadSlimCaseDto = z.infer<typeof readSlimCase>;
 
 // создание заявки
 export const caseCreate = z.object({

@@ -9,6 +9,8 @@ import {
   UserInputApproveDto,
   GET_DEFAULT_CONTROL_DUE_DATE,
   CaseWithPendingInfo,
+  SlimCaseSelector,
+  FullCaseSelector,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 import { ControlOperationsService } from './control-operations.service';
@@ -38,12 +40,34 @@ export class ControlCaseService {
     ) as Promise<Case>;
   }
 
+  public async readSlimCase(
+    selector: SlimCaseSelector,
+  ): Promise<CaseSlim[] | CaseSlim> {
+    return this.dbServise.db.controlCases.readSlimCase(selector);
+  }
+
+  public async readFullCase(
+    selector: FullCaseSelector,
+    userId: number,
+  ): Promise<Case[] | Case> {
+    return this.dbServise.db.controlCases.readFullCase(selector, userId);
+  }
+
   public async readSlimCaseById(id: number): Promise<CaseSlim> {
-    return this.dbServise.db.controlCases.readSlimCaseById(id);
+    return this.dbServise.db.controlCases.readSlimCase(id) as Promise<CaseSlim>;
+  }
+
+  public async readSlimCasesByIds(ids: number[]): Promise<CaseSlim[]> {
+    return this.dbServise.db.controlCases.readSlimCase(ids) as Promise<
+      CaseSlim[]
+    >;
   }
 
   public async readFullCaseById(id: number, userId: number): Promise<Case> {
-    return this.dbServise.db.controlCases.readFullCaseById(id, userId);
+    return this.dbServise.db.controlCases.readFullCase(
+      id,
+      userId,
+    ) as Promise<Case>;
   }
 
   public async readFullCaseByOperationId(

@@ -1,15 +1,17 @@
 import {
-  CaseSlim,
-  CaseCreateDto,
-  CaseUpdateDto,
   Case,
-  UserInputApproveDto,
-  Stage,
+  CaseCreateDto,
+  CaseSlim,
+  CaseUpdateDto,
   CaseWithPendingInfo,
+  FullCaseSelector,
+  SlimCaseSelector,
+  UserInputApproveDto,
 } from '@urgp/shared/entities';
+import { toDate } from 'date-fns';
 import { IDatabase, IMain } from 'pg-promise';
 import { cases } from './sql/sql';
-import { toDate } from 'date-fns';
+import { Logger } from '@nestjs/common';
 
 // @Injectable()
 export class ControlCasesRepository {
@@ -57,6 +59,83 @@ export class ControlCasesRepository {
     };
 
     return this.db.one(cases.createCase, newCase);
+  }
+
+  readSlimCase(selector: SlimCaseSelector): Promise<CaseSlim[] | CaseSlim> {
+    //  Выборка по массиву ID
+    if (Array.isArray(selector)) {
+      const q = this.pgp.as.format(cases.readSlimCase, {
+        conditions: this.pgp.as.format(
+          `AND c.id = ANY(ARRAY[$1:list]) 
+          ORDER BY c.created_at DESC, c.id DESC`,
+          [selector],
+        ),
+      });
+      return this.db.any(q);
+    }
+    // Выборка по 1 ID
+    return this.db.one(cases.readSlimCase, {
+      conditions: this.pgp.as.format(`AND c.id = $1`, selector),
+    });
+  }
+
+  readFullCase(
+    selector: FullCaseSelector,
+    userId: number,
+  ): Promise<Case[] | Case> {
+    //  Выборка по массиву ID
+    if (Array.isArray(selector)) {
+      const q = this.pgp.as.format(cases.readFullCase, {
+        conditions: this.pgp.as.format(
+          `AND c.id = ANY(ARRAY[$1]) 
+        ORDER BY c.created_at DESC, c.id DESC`,
+          selector,
+        ),
+        userId,
+      });
+      return this.db.any(q);
+    }
+
+    // Выборка по 1 ID
+    if (typeof selector === 'number') {
+      const q = this.pgp.as.format(cases.readFullCase, {
+        conditions: this.pgp.as.format(
+          `AND c.id = $1
+        ORDER BY c.created_at DESC, c.id DESC`,
+          selector,
+        ),
+        userId,
+      });
+      return this.db.one(q);
+    }
+
+    if (selector === 'pending') {
+      return this.db.any(cases.readFullCase, {
+        conditions: this.pgp.as.format(
+          `AND (
+          (c.approve_status = 'pending' AND c.approve_to_id::integer = ${userId})
+          OR o."myPendingStage" IS NOT NULL
+          OR (s.category = 'рассмотрено' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL)
+          OR (s.category <> ALL(ARRAY['рассмотрено', 'проект']) AND (o."myReminder"->>'dueDate')::date < current_date AND o."myReminder"->>'doneDate' IS NULL)
+          OR c.author_id = $1 AND c.approve_status = 'rejected'
+          )`,
+          userId,
+        ),
+        userId,
+      });
+    }
+
+    // Выборка всех дел со стандартной сортировкой
+    return this.db.any(cases.readFullCase, {
+      conditions: this.pgp.as.format(
+        `AND c.approve_status = 'approved' 
+         OR $1 = ANY(ARRAY[c.author_id,c.approve_from_id, c.approve_to_id]) 
+         OR $2 
+         ORDER BY c.created_at DESC, c.id DESC`,
+        [userId, selector === 'all'],
+      ),
+      userId,
+    });
   }
 
   readSlimCaseById(id: number): Promise<CaseSlim> {

@@ -5,11 +5,14 @@ import {
   Get,
   Logger,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UnauthorizedException,
   UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 import { ControlCaseService } from './control-cases.service';
 import { ZodValidationPipe } from '@urgp/server/pipes';
@@ -26,6 +29,10 @@ import {
   defineControlAbilityFor,
   Case,
   CaseWithPendingInfo,
+  readFullCase,
+  ReadFullCaseDto,
+  readSlimCase,
+  ReadSlimCaseDto,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
@@ -76,6 +83,24 @@ export class ControlCasesController {
     );
   }
 
+  @UsePipes(new ZodValidationPipe(readFullCase))
+  @Get('full')
+  async getFullCase(
+    @Req() req: RequestWithUserData,
+    @Query() { selector }: ReadFullCaseDto,
+  ) {
+    const i = defineControlAbilityFor(req.user);
+    if (selector === 'all' && i.cannot('read-all', 'Case'))
+      throw new UnauthorizedException('Нет прав на чтение скрытых дел');
+    return this.controlCases.readFullCase(selector, req.user.id);
+  }
+
+  @UsePipes(new ZodValidationPipe(readSlimCase))
+  @Get('slim')
+  async getSlimCase(@Query() { selector }: ReadSlimCaseDto) {
+    return this.controlCases.readSlimCase(selector);
+  }
+
   @Get('all')
   async readCases(@Req() req: RequestWithUserData) {
     const i = defineControlAbilityFor(req.user);
@@ -96,10 +121,18 @@ export class ControlCasesController {
     return this.controlCases.readPendingCaseById(id, req.user.id);
   }
 
+  // @Get(':id')
+  // getCaseById(
+  //   @Req() req: RequestWithUserData,
+  //   @Param('id') id:  number,
+  // ): Promise<Case> {
+  //   return this.controlCases.readFullCaseById(id, req.user.id);
+  // }
+
   @Get(':id')
   getCaseById(
     @Req() req: RequestWithUserData,
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<Case> {
     return this.controlCases.readFullCaseById(id, req.user.id);
   }
