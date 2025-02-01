@@ -91,8 +91,8 @@ CREATE TABLE control.operations_
 	created_at timestamp with time zone DEFAULT (now())::timestamp(0) with time zone,
 	updated_at timestamp with time zone DEFAULT (now())::timestamp(0) with time zone,
 
-	due_date timestamp with time zone,
-	done_date timestamp with time zone,
+	due_date date,
+	done_date date,
 
 	control_from_id integer REFERENCES renovation.users(id) ON DELETE SET NULL,
 	control_to_id integer REFERENCES renovation.users(id) ON DELETE SET NULL,
