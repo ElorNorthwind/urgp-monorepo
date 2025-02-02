@@ -5,7 +5,7 @@ import { externalCaseSchema } from '../userInput/types';
 
 export const DISPATCH_PREFIX = 'dispatch-';
 
-const fullCaseSelector = z
+const fullCaseSelectorSchema = z
   .enum(['default', 'all', 'pending'])
   .or(z.coerce.number())
   .or(
@@ -31,7 +31,7 @@ const fullCaseSelector = z
   )
   .default('default');
 
-const slimCaseSelector = z.coerce.number().or(
+const slimCaseSelectorSchema = z.coerce.number().or(
   z.preprocess((obj) => {
     if (Array.isArray(obj)) {
       return obj;
@@ -44,17 +44,17 @@ const slimCaseSelector = z.coerce.number().or(
   }, z.array(z.coerce.number())),
 );
 
-export const readFullCase = z.object({
-  selector: fullCaseSelector,
+export const readFullCaseSchema = z.object({
+  selector: fullCaseSelectorSchema,
 });
-export const readSlimCase = z.object({
-  selector: slimCaseSelector,
+export const readSlimCaseSchema = z.object({
+  selector: slimCaseSelectorSchema,
 });
 
-export type FullCaseSelector = z.infer<typeof fullCaseSelector>;
-export type SlimCaseSelector = z.infer<typeof slimCaseSelector>;
-export type ReadFullCaseDto = z.infer<typeof readFullCase>;
-export type ReadSlimCaseDto = z.infer<typeof readSlimCase>;
+export type FullCaseSelector = z.infer<typeof fullCaseSelectorSchema>;
+export type SlimCaseSelector = z.infer<typeof slimCaseSelectorSchema>;
+export type ReadFullCaseDto = z.infer<typeof readFullCaseSchema>;
+export type ReadSlimCaseDto = z.infer<typeof readSlimCaseSchema>;
 
 // создание заявки
 export const caseCreate = z.object({

@@ -31,7 +31,7 @@ export class ControlCaseService {
   ): Promise<CaseFull> {
     const createdCase: CaseSlim =
       await this.dbServise.db.controlCases.createCase(dto, userId, approved);
-    this.operations.createReminderForAuthor(createdCase, userId, dto.dueDate);
+    // this.operations.createReminderForAuthor(createdCase, userId, dto.dueDate);
 
     return this.dbServise.db.controlCases.readFullCase(
       createdCase.id,
@@ -88,13 +88,13 @@ export class ControlCaseService {
       newApproverId,
     );
 
-    if (dto.approveStatus === 'approved') {
-      this.operations.createDispatchesAndReminderForCase(
-        approvedCase,
-        userId,
-        dto.dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
-      );
-    }
+    // if (dto.approveStatus === 'approved') {
+    //   this.operations.createDispatchesAndReminderForCase(
+    //     approvedCase,
+    //     userId,
+    //     dto.dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
+    //   );
+    // }
 
     return this.dbServise.db.controlCases.readFullCase(
       approvedCase.id,

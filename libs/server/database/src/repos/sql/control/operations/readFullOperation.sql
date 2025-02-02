@@ -1,0 +1,23 @@
+SELECT 
+	o.id,
+	o."caseId",
+	o.class,
+	o.type,
+	o.author,
+	o."updatedBy",
+	o."controlFrom",
+	o."controlTo",
+	o."approveFrom",
+	o."approveTo",
+	o."approveStatus",
+	o."approveDate",
+	o."approveNotes",
+	o."createdAt",
+	o."updatedAt",
+	o."dueDate",
+	o."doneDate",
+	o.title,
+	o.notes,
+	o.extra
+FROM control.full_operations o
+${conditions:raw};

@@ -2,6 +2,46 @@ import { z } from 'zod';
 import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
 import { startOfToday } from 'date-fns';
 
+export const readOperationSchema = z.object({
+  // mode: z.enum(['full', 'slim']).default('full'),
+  class: z.enum(['all', 'dispatch', 'reminder', 'stage']).default('stage'),
+  operation: z.coerce
+    .number()
+    .or(
+      z.preprocess((obj) => {
+        if (Array.isArray(obj)) {
+          return obj;
+        } else if (typeof obj === 'string') {
+          return obj.split(',');
+        } else {
+          return null;
+          // return [];
+        }
+      }, z.array(z.coerce.number())),
+    )
+    .nullable()
+    .default(null)
+    .optional(),
+  case: z.coerce
+    .number()
+    .or(
+      z.preprocess((obj) => {
+        if (Array.isArray(obj)) {
+          return obj;
+        } else if (typeof obj === 'string') {
+          return obj.split(',');
+        } else {
+          return null;
+          // return [];
+        }
+      }, z.array(z.coerce.number())),
+    )
+    .nullable()
+    .default(null)
+    .optional(),
+});
+export type ReadOperationDto = z.infer<typeof readOperationSchema>;
+
 // ================ ЭТАПЫ (STAGES) ================
 
 // создание этапа

@@ -8,13 +8,12 @@ import {
   ReminderUpdateDto,
   OperationSlim,
   OperationFull,
-  OperationClass,
+  ReadOperationDto,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { operations } from './sql/sql';
 import { toDate } from 'date-fns';
-import { Logger } from '@nestjs/common';
-import { control } from 'leaflet';
+import { BadRequestException, Logger } from '@nestjs/common';
 
 // @Injectable()
 export class ControlOperationsRepository {
@@ -83,40 +82,95 @@ export class ControlOperationsRepository {
     return this.db.one(operations.createReminder, newReminder);
   }
 
-  readSlimOperationById(id: number): Promise<OperationSlim | null> {
-    return this.db.oneOrNone(operations.readSlimOperationById, { id });
+  readOperation(
+    dto: ReadOperationDto,
+    mode: 'full' | 'slim' = 'full',
+  ): Promise<
+    OperationSlim | OperationSlim[] | OperationFull | OperationFull[]
+  > {
+    const baseQuery =
+      mode === 'slim'
+        ? operations.readSlimOperation
+        : operations.readFullOperation;
+    const caseIdSQL = mode === 'slim' ? 'o.case_id' : 'o."caseId"';
+    const operationIdSQL = mode === 'slim' ? 'o.id' : 'o.id';
+    const classSQL =
+      dto.class === 'all'
+        ? ''
+        : this.pgp.as.format(`AND o.class = $1`, dto.class);
+
+    //  Выборка по массиву ID дел
+    if (dto?.case && Array.isArray(dto?.case)) {
+      const q = this.pgp.as.format(baseQuery, {
+        conditions: this.pgp.as.format(
+          `WHERE ${caseIdSQL} = ANY(ARRAY[$1:list]) 
+          ${classSQL}
+          ORDER BY o.done_date DESC NULLS FIRST, o.created_at DESC`,
+          [dto.case],
+        ),
+      });
+      return this.db.any(q) as Promise<OperationSlim[]>;
+
+      // Выборка по 1 ID дела
+    } else if (dto?.case && typeof dto?.case === 'number') {
+      const q = this.pgp.as.format(baseQuery, {
+        conditions: this.pgp.as.format(
+          `WHERE ${caseIdSQL} = $1 ${classSQL}`,
+          dto.case,
+        ),
+      });
+      return this.db.any(q) as Promise<OperationSlim[]>;
+
+      // Выборка по массиву ID операций
+    } else if (dto?.operation && Array.isArray(dto?.operation)) {
+      const q = this.pgp.as.format(baseQuery, {
+        conditions: this.pgp.as.format(
+          `WHERE ${operationIdSQL} = ANY(ARRAY[$1:list]) 
+          ${classSQL}
+          ORDER BY o.done_date DESC NULLS FIRST, o.created_at DESC`,
+          [dto.operation],
+        ),
+      });
+      return this.db.any(q) as Promise<OperationSlim[]>;
+
+      // Выборка по 1 ID операции
+    } else if (dto?.operation && typeof dto?.operation === 'number') {
+      const q = this.pgp.as.format(baseQuery, {
+        conditions: this.pgp.as.format(
+          `WHERE ${operationIdSQL} = $1`,
+          dto.operation,
+        ),
+      });
+      return this.db.oneOrNone(q) as Promise<OperationSlim>;
+    }
+
+    throw new BadRequestException(
+      'Неверные параметры запроса: нужен хотя бы 1 id дела или операции',
+    );
   }
 
-  readFullOperationById(id: number): Promise<OperationFull | null> {
-    return this.db.oneOrNone(operations.readFullOperationById, { id });
-  }
-
-  readFullOperationsByIds(ids: number[]): Promise<OperationFull[] | null> {
-    return this.db.any(operations.readFullOperationById, {
-      ids: ids.join(','),
-    });
-  }
-
-  readOperationPayloadHistory(id: number): Promise<OperationFull[] | null> {
-    return this.db.any(operations.readOperationPayloadHistory, { id });
-  }
-
-  readOperationsByCaseId(
+  readOperationHistory(
     id: number,
-    userId: number,
-    operationClass?: OperationClass | null,
-  ): Promise<OperationFull[]> {
-    const operationClassText =
-      operationClass && typeof operationClass === 'string'
-        ? this.pgp.as.format(` AND class = $1`, operationClass)
-        : '';
-
-    return this.db.any(operations.readOperationsByCaseId, {
-      id,
-      userId,
-      operationClassText,
-    });
+  ): Promise<Array<OperationFull & { revisionId: number }>> {
+    return this.db.any(operations.readOperationHistory, { id });
   }
+
+  // readOperationsByCaseId(
+  //   id: number,
+  //   userId: number,
+  //   operationClass?: OperationClass | null,
+  // ): Promise<OperationFull[]> {
+  //   const operationClassText =
+  //     operationClass && typeof operationClass === 'string'
+  //       ? this.pgp.as.format(` AND class = $1`, operationClass)
+  //       : '';
+
+  //   return this.db.any(operations.readOperationsByCaseId, {
+  //     id,
+  //     userId,
+  //     operationClassText,
+  //   });
+  // }
 
   updateStage(
     dto: ControlStageUpdateDto,

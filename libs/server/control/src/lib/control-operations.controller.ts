@@ -9,9 +9,11 @@ import {
   ParseArrayPipe,
   Patch,
   Post,
+  Query,
   Req,
   UnauthorizedException,
   UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
@@ -36,6 +38,8 @@ import {
   CaseFull,
   OperationFull,
   OperationSlim,
+  readOperationSchema,
+  ReadOperationDto,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlOperationsService } from './control-operations.service';
@@ -51,99 +55,105 @@ export class ControlOperationsController {
     private readonly classificators: ControlClassificatorsService,
   ) {}
 
-  @Post('stage')
-  async createStage(
-    @Req() req: RequestWithUserData,
-    @Body(new ZodValidationPipe(controlStageCreate)) dto: ControlStageCreateDto,
-  ) {
-    const i = defineControlAbilityFor(req.user);
+  // @Post('stage')
+  // async createStage(
+  //   @Req() req: RequestWithUserData,
+  //   @Body(new ZodValidationPipe(controlStageCreate)) dto: ControlStageCreateDto,
+  // ) {
+  //   const i = defineControlAbilityFor(req.user);
 
-    if (i.cannot('create', dto)) {
-      throw new UnauthorizedException('Нет прав на создание');
-    }
+  //   if (i.cannot('create', dto)) {
+  //     throw new UnauthorizedException('Нет прав на создание');
+  //   }
 
-    const operationTypes = await this.classificators.getOperationTypesFlat();
+  //   const operationTypes = await this.classificators.getOperationTypesFlat();
 
-    const autoApproved = !!operationTypes.find((operation) => {
-      return operation.id === dto.typeId;
-    })?.autoApprove;
+  //   const autoApproved = !!operationTypes.find((operation) => {
+  //     return operation.id === dto.typeId;
+  //   })?.autoApprove;
 
-    const correctApproverId =
-      dto?.approverId ??
-      req.user?.controlData?.approvers?.operations?.[0] ??
-      (autoApproved ? req.user.id : null);
+  //   const correctApproverId =
+  //     dto?.approverId ??
+  //     req.user?.controlData?.approvers?.operations?.[0] ??
+  //     (autoApproved ? req.user.id : null);
 
-    const subject = {
-      ...dto,
-      approver: correctApproverId,
-      class: 'control-incident',
-    };
+  //   const subject = {
+  //     ...dto,
+  //     approver: correctApproverId,
+  //     class: 'control-incident',
+  //   };
 
-    if (!autoApproved && i.cannot('set-approver', subject)) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Согласующий не доступен пользователю!',
-      );
-    }
+  //   if (!autoApproved && i.cannot('set-approver', subject)) {
+  //     throw new UnauthorizedException(
+  //       'Операция не разрешена. Согласующий не доступен пользователю!',
+  //     );
+  //   }
 
-    if (dto?.caseId && !autoApproved && correctApproverId === req.user.id) {
-      const affectedCase = (await this.controlCases.readFullCase(
-        dto.caseId,
-        req.user.id,
-      )) as CaseFull;
-      if (i.cannot('resolve', affectedCase)) {
-        throw new UnauthorizedException(
-          'Операция не разрешена. Решение по делу может принять только установившим высокий контроль.',
-        );
-      }
-    }
+  //   if (dto?.caseId && !autoApproved && correctApproverId === req.user.id) {
+  //     const affectedCase = (await this.controlCases.readFullCase(
+  //       dto.caseId,
+  //       req.user.id,
+  //     )) as CaseFull;
+  //     if (i.cannot('resolve', affectedCase)) {
+  //       throw new UnauthorizedException(
+  //         'Операция не разрешена. Решение по делу может принять только установившим высокий контроль.',
+  //       );
+  //     }
+  //   }
 
-    const approved = autoApproved || correctApproverId === req.user.id;
+  //   const approved = autoApproved || correctApproverId === req.user.id;
 
-    return this.controlOperations.createStage(
-      {
-        ...dto,
-        approverId: correctApproverId,
-      },
-      req.user.id,
-      approved,
-    );
-  }
-
-  @Post('dispatch')
-  async createDispatch(
-    @Req() req: RequestWithUserData,
-    @Body(new ZodValidationPipe(dispatchCreate)) dto: DispatchCreateDto,
-  ) {
-    const i = defineControlAbilityFor(req.user);
-    if (i.cannot('create', dto)) {
-      throw new UnauthorizedException('Нет прав на создание');
-    }
-    // return this.controlOperations.createDispatch(dto, req.user.id);
-  }
-
-  @Post('reminder')
-  async createReminder(
-    @Req() req: RequestWithUserData,
-    @Body(new ZodValidationPipe(reminderCreate)) dto: ReminderCreateDto,
-  ) {
-    const i = defineControlAbilityFor(req.user);
-    if (i.cannot('create', dto)) {
-      throw new UnauthorizedException('Нет прав на создание');
-    }
-    // return this.controlOperations.createReminder(dto, req.user.id);
-  }
-
-  // @Get(':id')
-  // getOperationById(@Param('id') id: number): Promise<OperationFull> {
-  //   // return this.controlOperations.readFullOperationById(id);
+  //   return this.controlOperations.createStage(
+  //     {
+  //       ...dto,
+  //       approverId: correctApproverId,
+  //     },
+  //     req.user.id,
+  //     approved,
+  //   );
   // }
 
-  // TBD
+  // @Post('dispatch')
+  // async createDispatch(
+  //   @Req() req: RequestWithUserData,
+  //   @Body(new ZodValidationPipe(dispatchCreate)) dto: DispatchCreateDto,
+  // ) {
+  //   const i = defineControlAbilityFor(req.user);
+  //   if (i.cannot('create', dto)) {
+  //     throw new UnauthorizedException('Нет прав на создание');
+  //   }
+  //   // return this.controlOperations.createDispatch(dto, req.user.id);
+  // }
+
+  // @Post('reminder')
+  // async createReminder(
+  //   @Req() req: RequestWithUserData,
+  //   @Body(new ZodValidationPipe(reminderCreate)) dto: ReminderCreateDto,
+  // ) {
+  //   const i = defineControlAbilityFor(req.user);
+  //   if (i.cannot('create', dto)) {
+  //     throw new UnauthorizedException('Нет прав на создание');
+  //   }
+  //   // return this.controlOperations.createReminder(dto, req.user.id);
+  // }
+
+  @UsePipes(new ZodValidationPipe(readOperationSchema))
+  @Get()
+  async getFullOperation(@Query() dto: ReadOperationDto) {
+    return this.controlOperations.readOperation(dto, 'full');
+  }
+
+  @UsePipes(new ZodValidationPipe(readOperationSchema))
+  @Get('slim')
+  async getSlimOperation(@Query() dto: ReadOperationDto) {
+    return this.controlOperations.readOperation(dto, 'slim');
+  }
+
   @Get(':id/history')
   getOperationPayloadHistory(
     @Param('id') id: number,
-  ): Promise<OperationFull[]> {
-    return this.controlOperations.readOperationPayloadHistory(id);
+  ): Promise<Array<OperationFull & { revisionId: number }>> {
+    return this.controlOperations.readOperationHistory(id);
   }
 
   // @Get('stage/by-case/:id')
@@ -295,135 +305,135 @@ export class ControlOperationsController {
   //   return this.controlOperations.updateReminder(dto, req.user.id);
   // }
 
-  @Patch('mark-reminders-as-seen')
-  async markRemindersAsSeen(
-    @Req() req: RequestWithUserData,
-    // TODO Fix me!
-    // @Body('caseIds')
-    @Body('caseIds', new ParseArrayPipe({ items: Number, separator: ',' }))
-    caseIds: number[],
-  ) {
-    const i = defineControlAbilityFor(req.user);
-    if (i.cannot('update', 'Reminder')) {
-      throw new UnauthorizedException('Нет прав на изменение');
-    }
-    // return this.controlOperations.updateRemindersByCaseIds(
-    //   caseIds,
-    //   req.user.id,
-    // );
-  }
+  // @Patch('mark-reminders-as-seen')
+  // async markRemindersAsSeen(
+  //   @Req() req: RequestWithUserData,
+  //   // TODO Fix me!
+  //   // @Body('caseIds')
+  //   @Body('caseIds', new ParseArrayPipe({ items: Number, separator: ',' }))
+  //   caseIds: number[],
+  // ) {
+  //   const i = defineControlAbilityFor(req.user);
+  //   if (i.cannot('update', 'Reminder')) {
+  //     throw new UnauthorizedException('Нет прав на изменение');
+  //   }
+  //   // return this.controlOperations.updateRemindersByCaseIds(
+  //   //   caseIds,
+  //   //   req.user.id,
+  //   // );
+  // }
 
-  @Patch('mark-reminders-as-done')
-  async markRemindersAsDone(
-    @Req() req: RequestWithUserData,
-    // TODO Fix me!
-    // @Body('caseIds')
-    @Body('caseIds', new ParseArrayPipe({ items: Number, separator: ',' }))
-    caseIds: number[],
-  ) {
-    const i = defineControlAbilityFor(req.user);
-    if (i.cannot('update', 'Reminder')) {
-      throw new UnauthorizedException('Нет прав на изменение');
-    }
-    return this.controlOperations.markRemindersAsDoneByCaseIds(
-      caseIds,
-      req.user.id,
-    );
-  }
+  // @Patch('mark-reminders-as-done')
+  // async markRemindersAsDone(
+  //   @Req() req: RequestWithUserData,
+  //   // TODO Fix me!
+  //   // @Body('caseIds')
+  //   @Body('caseIds', new ParseArrayPipe({ items: Number, separator: ',' }))
+  //   caseIds: number[],
+  // ) {
+  //   const i = defineControlAbilityFor(req.user);
+  //   if (i.cannot('update', 'Reminder')) {
+  //     throw new UnauthorizedException('Нет прав на изменение');
+  //   }
+  //   return this.controlOperations.markRemindersAsDoneByCaseIds(
+  //     caseIds,
+  //     req.user.id,
+  //   );
+  // }
 
-  @Delete()
-  async deleteOperation(
-    @Req() req: RequestWithUserData,
-    @Body(new ZodValidationPipe(deleteControlEntirySchema))
-    dto: DeleteControlEntityDto,
-  ) {
-    const i = defineControlAbilityFor(req.user);
-    // const currentOperation =
-    //   (await this.controlOperations.readSlimOperationById(
-    //     dto.id,
-    //   )) as OperationSlim;
+  // @Delete()
+  // async deleteOperation(
+  //   @Req() req: RequestWithUserData,
+  //   @Body(new ZodValidationPipe(deleteControlEntirySchema))
+  //   dto: DeleteControlEntityDto,
+  // ) {
+  //   const i = defineControlAbilityFor(req.user);
+  //   // const currentOperation =
+  //   //   (await this.controlOperations.readSlimOperationById(
+  //   //     dto.id,
+  //   //   )) as OperationSlim;
 
-    // if (i.cannot('delete', currentOperation)) {
-    //   throw new BadRequestException('Нет прав на удаление!');
-    // }
+  //   // if (i.cannot('delete', currentOperation)) {
+  //   //   throw new BadRequestException('Нет прав на удаление!');
+  //   // }
 
-    // return this.controlOperations.deleteOperation(dto.id, req.user.id);
-  }
+  //   // return this.controlOperations.deleteOperation(dto.id, req.user.id);
+  // }
 
-  @Patch('approve')
-  async approveOperation(
-    @Req() req: RequestWithUserData,
-    @Body(new ZodValidationPipe(approveControlEntitySchema))
-    dto: ApproveControlEntityDto,
-  ) {
-    //   const i = defineControlAbilityFor(req.user);
-    //   const currentOperation =
-    //     (await this.controlOperations.readSlimOperationById(
-    //       dto.id,
-    //     )) as OperationSlim;
-    //   if (
-    //     i.cannot('approve', {
-    //       ...currentOperation,
-    //       class: 'stage',
-    //     })
-    //   ) {
-    //     throw new UnauthorizedException(
-    //       'Операция не разрешена. Нет прав на редактирование!',
-    //     );
-    //   }
-    //   const newApproverId =
-    //     dto.approveStatus === 'rejected'
-    //       ? currentOperation.authorId
-    //       : dto?.approveToId ||
-    //         req.user?.controlData?.approvers?.cases?.[0] ||
-    //         null;
-    //   if (
-    //     i.cannot('set-approver', {
-    //       ...currentOperation,
-    //       class: 'stage',
-    //     }) ||
-    //     i.cannot('set-approver', {
-    //       ...dto,
-    //       approverId: newApproverId,
-    //       class: 'stage',
-    //     })
-    //   ) {
-    //     Logger.warn(
-    //       'Согласующий недоступен',
-    //       JSON.stringify({
-    //         currentApprover: currentOperation.approveToId,
-    //         dtoApprover: newApproverId,
-    //         userFio: req.user.fio,
-    //         userApprovers: req.user.controlData?.approvers?.cases,
-    //       }),
-    //     );
-    //     throw new UnauthorizedException('Согласующий недоступен пользователю!');
-    //   }
-    //   if (newApproverId === req.user.id) {
-    //     const affectedCase = currentOperation?.caseId
-    //       ? ((await this.controlCases.readFullCase(
-    //           currentOperation.caseId,
-    //           req.user.id,
-    //         )) as CaseFull)
-    //       : null;
-    //     if (affectedCase && i.cannot('resolve', affectedCase)) {
-    //       throw new UnauthorizedException(
-    //         'Операция не разрешена. Решение по делу может принять только установившим высокий контроль.',
-    //       );
-    //     }
-    //   }
-    //   return this.controlOperations.approveOperation(
-    //     {
-    //       ...dto,
-    //       approveStatus:
-    //         dto.approveStatus === 'rejected'
-    //           ? 'rejected'
-    //           : newApproverId === req.user.id
-    //             ? dto.approveStatus
-    //             : 'pending',
-    //     },
-    //     req.user.id,
-    //     newApproverId,
-    //   );
-  }
+  // @Patch('approve')
+  // async approveOperation(
+  //   @Req() req: RequestWithUserData,
+  //   @Body(new ZodValidationPipe(approveControlEntitySchema))
+  //   dto: ApproveControlEntityDto,
+  // ) {
+  //   //   const i = defineControlAbilityFor(req.user);
+  //   //   const currentOperation =
+  //   //     (await this.controlOperations.readSlimOperationById(
+  //   //       dto.id,
+  //   //     )) as OperationSlim;
+  //   //   if (
+  //   //     i.cannot('approve', {
+  //   //       ...currentOperation,
+  //   //       class: 'stage',
+  //   //     })
+  //   //   ) {
+  //   //     throw new UnauthorizedException(
+  //   //       'Операция не разрешена. Нет прав на редактирование!',
+  //   //     );
+  //   //   }
+  //   //   const newApproverId =
+  //   //     dto.approveStatus === 'rejected'
+  //   //       ? currentOperation.authorId
+  //   //       : dto?.approveToId ||
+  //   //         req.user?.controlData?.approvers?.cases?.[0] ||
+  //   //         null;
+  //   //   if (
+  //   //     i.cannot('set-approver', {
+  //   //       ...currentOperation,
+  //   //       class: 'stage',
+  //   //     }) ||
+  //   //     i.cannot('set-approver', {
+  //   //       ...dto,
+  //   //       approverId: newApproverId,
+  //   //       class: 'stage',
+  //   //     })
+  //   //   ) {
+  //   //     Logger.warn(
+  //   //       'Согласующий недоступен',
+  //   //       JSON.stringify({
+  //   //         currentApprover: currentOperation.approveToId,
+  //   //         dtoApprover: newApproverId,
+  //   //         userFio: req.user.fio,
+  //   //         userApprovers: req.user.controlData?.approvers?.cases,
+  //   //       }),
+  //   //     );
+  //   //     throw new UnauthorizedException('Согласующий недоступен пользователю!');
+  //   //   }
+  //   //   if (newApproverId === req.user.id) {
+  //   //     const affectedCase = currentOperation?.caseId
+  //   //       ? ((await this.controlCases.readFullCase(
+  //   //           currentOperation.caseId,
+  //   //           req.user.id,
+  //   //         )) as CaseFull)
+  //   //       : null;
+  //   //     if (affectedCase && i.cannot('resolve', affectedCase)) {
+  //   //       throw new UnauthorizedException(
+  //   //         'Операция не разрешена. Решение по делу может принять только установившим высокий контроль.',
+  //   //       );
+  //   //     }
+  //   //   }
+  //   //   return this.controlOperations.approveOperation(
+  //   //     {
+  //   //       ...dto,
+  //   //       approveStatus:
+  //   //         dto.approveStatus === 'rejected'
+  //   //           ? 'rejected'
+  //   //           : newApproverId === req.user.id
+  //   //             ? dto.approveStatus
+  //   //             : 'pending',
+  //   //     },
+  //   //     req.user.id,
+  //   //     newApproverId,
+  //   //   );
+  // }
 }

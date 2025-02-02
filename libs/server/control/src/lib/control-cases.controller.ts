@@ -27,9 +27,9 @@ import {
   deleteControlEntirySchema,
   DeleteControlEntityDto,
   defineControlAbilityFor,
-  readFullCase,
+  readFullCaseSchema,
   ReadFullCaseDto,
-  readSlimCase,
+  readSlimCaseSchema,
   ReadSlimCaseDto,
   CaseSlim,
 } from '@urgp/shared/entities';
@@ -82,7 +82,7 @@ export class ControlCasesController {
     );
   }
 
-  @UsePipes(new ZodValidationPipe(readFullCase))
+  @UsePipes(new ZodValidationPipe(readFullCaseSchema))
   @Get()
   async getFullCase(
     @Req() req: RequestWithUserData,
@@ -94,7 +94,7 @@ export class ControlCasesController {
     return this.controlCases.readFullCase(selector, req.user.id);
   }
 
-  @UsePipes(new ZodValidationPipe(readSlimCase))
+  @UsePipes(new ZodValidationPipe(readSlimCaseSchema))
   @Get('slim')
   async getSlimCase(@Query() { selector }: ReadSlimCaseDto) {
     return this.controlCases.readSlimCase(selector);
