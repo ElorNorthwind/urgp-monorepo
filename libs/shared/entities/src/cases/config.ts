@@ -1,5 +1,5 @@
 import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
-import { Case } from './types';
+import { ExternalCase } from '../userInput/types';
 
 export const emptyCase = {
   id: 0,
@@ -9,8 +9,8 @@ export const emptyCase = {
     {
       system: 'NONE',
       num: '',
-      date: new Date().toISOString() as unknown as Date,
-    } as Case['payload']['externalCases'][0],
+      date: new Date().toISOString(),
+    } as ExternalCase,
   ],
   directionIds: [],
   problemIds: [],

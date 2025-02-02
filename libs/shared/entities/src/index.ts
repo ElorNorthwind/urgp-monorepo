@@ -17,8 +17,6 @@ export * from './userInput/types';
 export * from './userInput/dto';
 export * from './userInput/config';
 
-export * from './problems/types';
-
 export * from './cases/types';
 export * from './cases/dto';
 export * from './cases/config';

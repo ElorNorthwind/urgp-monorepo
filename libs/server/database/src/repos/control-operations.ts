@@ -1,19 +1,14 @@
 import {
-  ControlStageSlim,
   ControlStageCreateDto,
-  ControlStage,
-  ControlOperationClass,
   ControlStageUpdateDto,
-  ControlOperationSlim,
-  UserInputApproveDto,
-  ControlOperation,
-  ControlOperationPayloadHistoryData,
+  ApproveControlEntityDto,
   DispatchCreateDto,
-  ControlDispatchSlim,
   ReminderCreateDto,
-  ControlReminderSlim,
   DispatchUpdateDto,
   ReminderUpdateDto,
+  OperationSlim,
+  OperationFull,
+  OperationClass,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { operations } from './sql/sql';
@@ -32,7 +27,7 @@ export class ControlOperationsRepository {
     dto: ControlStageCreateDto,
     authorId: number,
     approved: boolean,
-  ): Promise<ControlStageSlim> {
+  ): Promise<OperationSlim> {
     const newStage = {
       authorId,
       caseId: dto.caseId,
@@ -51,7 +46,7 @@ export class ControlOperationsRepository {
   createDispatch(
     dto: DispatchCreateDto,
     authorId: number,
-  ): Promise<ControlDispatchSlim> {
+  ): Promise<OperationSlim> {
     const newDispatch = {
       authorId,
       caseId: dto.caseId,
@@ -72,7 +67,7 @@ export class ControlOperationsRepository {
     dto: ReminderCreateDto,
     authorId: number,
     seen?: boolean,
-  ): Promise<ControlReminderSlim> {
+  ): Promise<OperationSlim> {
     const newReminder = {
       authorId,
       caseId: dto.caseId,
@@ -88,31 +83,29 @@ export class ControlOperationsRepository {
     return this.db.one(operations.createReminder, newReminder);
   }
 
-  readSlimOperationById(id: number): Promise<ControlOperationSlim | null> {
+  readSlimOperationById(id: number): Promise<OperationSlim | null> {
     return this.db.oneOrNone(operations.readSlimOperationById, { id });
   }
 
-  readFullOperationById(id: number): Promise<ControlOperation | null> {
+  readFullOperationById(id: number): Promise<OperationFull | null> {
     return this.db.oneOrNone(operations.readFullOperationById, { id });
   }
 
-  readFullOperationsByIds(ids: number[]): Promise<ControlOperation[] | null> {
+  readFullOperationsByIds(ids: number[]): Promise<OperationFull[] | null> {
     return this.db.any(operations.readFullOperationById, {
       ids: ids.join(','),
     });
   }
 
-  readOperationPayloadHistory(
-    id: number,
-  ): Promise<ControlOperationPayloadHistoryData[] | null> {
+  readOperationPayloadHistory(id: number): Promise<OperationFull[] | null> {
     return this.db.any(operations.readOperationPayloadHistory, { id });
   }
 
   readOperationsByCaseId(
     id: number,
     userId: number,
-    operationClass?: ControlOperationClass | null,
-  ): Promise<ControlStage[]> {
+    operationClass?: OperationClass | null,
+  ): Promise<OperationFull[]> {
     const operationClassText =
       operationClass && typeof operationClass === 'string'
         ? this.pgp.as.format(` AND class = $1`, operationClass)
@@ -128,7 +121,7 @@ export class ControlOperationsRepository {
   updateStage(
     dto: ControlStageUpdateDto,
     authorId: number,
-  ): Promise<ControlStageSlim> {
+  ): Promise<OperationSlim> {
     const updatedStage = {
       id: dto.id,
       authorId,
@@ -142,7 +135,7 @@ export class ControlOperationsRepository {
   updateDispatch(
     dto: DispatchUpdateDto,
     authorId: number,
-  ): Promise<ControlDispatchSlim> {
+  ): Promise<OperationSlim> {
     const updatedDispatch = {
       id: dto.id,
       authorId,
@@ -162,7 +155,7 @@ export class ControlOperationsRepository {
   updateReminder(
     dto: ReminderUpdateDto,
     authorId: number,
-  ): Promise<ControlReminderSlim> {
+  ): Promise<OperationSlim> {
     const updatedReminder = {
       id: dto.id,
       authorId,
@@ -175,7 +168,7 @@ export class ControlOperationsRepository {
   updateRemindersByCaseIds(
     caseIds: number[],
     authorId: number,
-  ): Promise<ControlReminderSlim[]> {
+  ): Promise<OperationSlim[]> {
     // const q = this.pgp.as.format(operations.updateRemindersByCaseIds, {
     //   caseIds: caseIds.join(','),
     //   authorId,
@@ -189,22 +182,22 @@ export class ControlOperationsRepository {
   markRemindersAsDoneByCaseIds(
     caseIds: number[],
     authorId: number,
-  ): Promise<ControlReminderSlim[]> {
+  ): Promise<OperationSlim[]> {
     return this.db.any(operations.markRemindersAsDoneByCaseIds, {
       caseIds: caseIds.join(','),
       authorId,
     });
   }
 
-  deleteOperation(id: number, userId: number): Promise<ControlOperationSlim> {
+  deleteOperation(id: number, userId: number): Promise<OperationSlim> {
     return this.db.one(operations.deleteOperation, { id, userId });
   }
 
   approveOperation(
-    dto: UserInputApproveDto,
+    dto: ApproveControlEntityDto,
     userId: number,
     newApproverId: number | null,
-  ): Promise<ControlOperationSlim> {
+  ): Promise<OperationSlim> {
     const approvedOperation = {
       userId,
       newApproverId,

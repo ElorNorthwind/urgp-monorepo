@@ -4,7 +4,7 @@ import {
   useUserAbility,
 } from '@urgp/client/shared';
 import { ApproveButton } from '@urgp/client/widgets';
-import { Case } from '@urgp/shared/entities';
+import { CaseFull } from '@urgp/shared/entities';
 import { useSelector } from 'react-redux';
 import { useStages } from '../../../operations';
 

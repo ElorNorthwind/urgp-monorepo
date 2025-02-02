@@ -22,13 +22,11 @@ import {
   caseCreate,
   caseUpdate,
   CaseUpdateDto,
-  userInputApprove,
-  UserInputApproveDto,
-  userInputDelete,
-  UserInputDeleteDto,
+  approveControlEntitySchema,
+  ApproveControlEntityDto,
+  deleteControlEntirySchema,
+  DeleteControlEntityDto,
   defineControlAbilityFor,
-  Case,
-  CaseWithPendingInfo,
   readFullCase,
   ReadFullCaseDto,
   readSlimCase,
@@ -85,7 +83,7 @@ export class ControlCasesController {
   }
 
   @UsePipes(new ZodValidationPipe(readFullCase))
-  @Get('full')
+  @Get()
   async getFullCase(
     @Req() req: RequestWithUserData,
     @Query() { selector }: ReadFullCaseDto,
@@ -108,10 +106,12 @@ export class ControlCasesController {
     @Body(new ZodValidationPipe(caseUpdate)) dto: CaseUpdateDto,
   ) {
     const i = defineControlAbilityFor(req.user);
-    const currentCase = await this.controlCases.readSlimCase(dto.id);
+    const currentCase = (await this.controlCases.readSlimCase(
+      dto.id,
+    )) as CaseSlim;
     if (
       i.cannot('update', {
-        ...(currentCase as CaseSlim),
+        ...currentCase,
         class: 'control-incident',
       })
     ) {
@@ -119,7 +119,7 @@ export class ControlCasesController {
     }
     if (
       i.cannot('set-approver', {
-        ...(currentCase as CaseSlim),
+        ...currentCase,
         class: 'control-incident',
       }) ||
       i.cannot('set-approver', { ...dto, class: 'control-incident' })
@@ -127,7 +127,7 @@ export class ControlCasesController {
       Logger.warn(
         'Согласующий недоступен',
         JSON.stringify({
-          currentApprover: (currentCase as CaseSlim).payload.approverId,
+          currentApprover: currentCase.approveToId,
           dtoApprover: dto?.approverId,
           userFio: req.user.fio,
           userApprovers: req.user.controlData?.approvers?.cases,
@@ -142,7 +142,8 @@ export class ControlCasesController {
   @Delete()
   async deleteCase(
     @Req() req: RequestWithUserData,
-    @Body(new ZodValidationPipe(userInputDelete)) dto: UserInputDeleteDto,
+    @Body(new ZodValidationPipe(deleteControlEntirySchema))
+    dto: DeleteControlEntityDto,
   ) {
     const i = defineControlAbilityFor(req.user);
     const currentCase = (await this.controlCases.readSlimCase(
@@ -158,7 +159,8 @@ export class ControlCasesController {
   @Patch('approve')
   async approveCase(
     @Req() req: RequestWithUserData,
-    @Body(new ZodValidationPipe(userInputApprove)) dto: UserInputApproveDto,
+    @Body(new ZodValidationPipe(approveControlEntitySchema))
+    dto: ApproveControlEntityDto,
   ) {
     const i = defineControlAbilityFor(req.user);
     const currentCase = (await this.controlCases.readSlimCase(
@@ -174,15 +176,15 @@ export class ControlCasesController {
     if (
       i.cannot('set-approver', {
         ...dto,
-        approverId: dto.nextApproverId,
+        approverId: dto.approveToId,
         class: 'control-incident',
       })
     ) {
       Logger.warn(
         'Согласующий недоступен',
         JSON.stringify({
-          currentApprover: currentCase.payload.approverId,
-          dtoApprover: dto?.nextApproverId,
+          currentApprover: currentCase.approveToId,
+          dtoApprover: dto?.approveToId,
           userFio: req.user.fio,
           userApprovers: req.user.controlData?.approvers?.cases,
         }),
@@ -193,7 +195,7 @@ export class ControlCasesController {
     const newApprover =
       dto.approveStatus === 'rejected'
         ? currentCase.authorId
-        : dto?.nextApproverId ||
+        : dto?.approveToId ||
           req.user?.controlData?.approvers?.cases?.[0] ||
           null;
 

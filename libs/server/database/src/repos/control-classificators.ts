@@ -1,9 +1,8 @@
 import {
-  ClassificatorInfo,
-  ControlOperationClass,
   NestedClassificatorInfo,
   NestedClassificatorInfoString,
-  TypeInfo,
+  Classificator,
+  OperationClass,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { classificators } from './sql/sql';
@@ -20,7 +19,7 @@ export class ControlClassificatorsRepository {
   }
 
   readOperationTypes(
-    operationClass?: ControlOperationClass,
+    operationClass?: OperationClass,
   ): Promise<NestedClassificatorInfo[]> {
     const operationClassText =
       operationClass && typeof operationClass === 'string'
@@ -38,8 +37,8 @@ export class ControlClassificatorsRepository {
   }
 
   readOperationTypesFlat(
-    operationClass?: ControlOperationClass,
-  ): Promise<TypeInfo[]> {
+    operationClass?: OperationClass,
+  ): Promise<Classificator[]> {
     const operationClassText =
       operationClass && typeof operationClass === 'string'
         ? this.pgp.as.format(` WHERE class = $1`, operationClass)
@@ -61,7 +60,7 @@ export class ControlClassificatorsRepository {
     return this.db.any(classificators.readDepartmentTypes);
   }
 
-  readDirectionSubscribers(directions: number[]): Promise<TypeInfo[]> {
+  readDirectionSubscribers(directions: number[]): Promise<Classificator[]> {
     return this.db.any(classificators.readDirectionSubscribers, { directions });
   }
 }

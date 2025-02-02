@@ -1,40 +1,34 @@
 import { z } from 'zod';
 
-export const approveStatusDataSlim = z.object({
-  approveStatus: z.enum(['pending', 'approved', 'rejected']).default('pending'),
-  approveDate: z.coerce.date().nullable().default(null),
-  approveById: z.number().nullable().default(null),
-  approveNotes: z.string().nullable().default(null),
-  approverId: z.coerce.number().nullable().default(null),
-});
-export type ApproveStatusDataSlim = z.infer<typeof approveStatusDataSlim>;
+export const caseClassSchema = z
+  .enum(['control-incident'])
+  .default('control-incident');
+export type CaseClass = z.infer<typeof caseClassSchema>;
 
-export const basicPayloadDataSlim = approveStatusDataSlim.extend({
-  updatedAt: z.coerce.date(),
-  updatedById: z.coerce.number(),
-  isDeleted: z.boolean().default(false),
-});
-export type BasicPayloadDataSlim = z.infer<typeof basicPayloadDataSlim>;
+export const operationClassSchema = z
+  .enum(['stage', 'dispatch', 'reminder'])
+  .default('stage');
+export type OperationClass = z.infer<typeof operationClassSchema>;
 
-export const externalCase = z
+export const entityClassSchema = caseClassSchema
+  .or(operationClassSchema)
+  .default('control-incident');
+export type EntityClass = z.infer<typeof entityClassSchema>;
+
+export const externalCaseSchema = z
   .object({
-    id: z.coerce.number().or(z.string()).nullable().default(null).optional(),
+    id: z.coerce.number().or(z.string()).nullable().default(null),
     num: z.string().nullable().default(null),
-    date: z.coerce
-      .date()
-      .or(z.number())
-      .or(z.string())
-      .nullable()
-      .default(null),
+    date: z.string().datetime().nullable().default(null),
     system: z.enum(['EDO', 'SPD', 'SPD2', 'HOTLINE', 'CONSULTATION', 'NONE']),
   })
   .refine(
     ({ system, num }) => !['EDO', 'SPD', 'SPD2'].includes(system) || !!num,
     { message: 'Внешний номер обязателен для систем ЭДО и СПД', path: ['num'] },
   );
-export type ExternalCase = z.infer<typeof externalCase>;
+export type ExternalCase = z.infer<typeof externalCaseSchema>;
 
-export const typeInfo = z.object({
+export const classificatorSchema = z.object({
   id: z.coerce.number(),
   name: z.string(),
   category: z.string().nullable().optional(),
@@ -43,18 +37,59 @@ export const typeInfo = z.object({
   priority: z.coerce.number().nullable().optional(),
   autoApprove: z.coerce.boolean().nullable().optional(),
 });
-export type TypeInfo = z.infer<typeof typeInfo>;
+export type Classificator = z.infer<typeof classificatorSchema>;
 
-export const userInfo = z.object({
-  id: z.coerce.number().nullable(),
-  fio: z.string().nullable(),
+export const userInfoSchema = z.object({
+  id: z.coerce.number(),
+  fio: z.string(),
   priority: z.coerce.number().nullable().optional(),
 });
-export type UserInfo = z.infer<typeof userInfo>;
+export type UserInfo = z.infer<typeof userInfoSchema>;
+
+export const entitySlimSchema = z.object({
+  id: z.number().int().positive(), // Positive integer
+  class: z.enum(['control-incident', 'stage', 'dispatch', 'reminder']),
+  typeId: z.number().int().positive(),
+  authorId: z.number().int().positive(),
+  updatedById: z.number().int().positive().nullable(),
+  approveFromId: z.number().int().positive().nullable(),
+  approveToId: z.number().int().positive().nullable(),
+  approveStatus: z
+    .enum(['project', 'approved', 'pending', 'rejected'])
+    .default('project'),
+  approveDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
+  approveNotes: z.string().nullable().default(null),
+  createdAt: z.string().datetime(), // ISO 8601 date string
+  updatedAt: z.string().datetime().nullable().default(null), // ISO 8601 date string
+  title: z.string().nullable().default(null),
+  notes: z.string().nullable().default(null),
+  extra: z.string().nullable().default(null),
+});
+export type EntitySlim = z.infer<typeof entitySlimSchema>;
+
+export const entityFullSchema = entitySlimSchema
+  .omit({
+    typeId: true,
+    authorId: true,
+    updatedById: true,
+    approveFromId: true,
+    approveToId: true,
+  })
+  .extend({
+    type: classificatorSchema,
+    author: userInfoSchema,
+    updatedBy: userInfoSchema.nullable().default(null),
+    approveFrom: userInfoSchema.nullable().default(null),
+    approveTo: userInfoSchema.nullable().default(null),
+  });
+export type EntityFull = z.infer<typeof entityFullSchema>;
+export type EntityApproveData = Pick<
+  EntityFull,
+  'approveStatus' | 'approveDate' | 'approveNotes' | 'approveFrom' | 'approveTo'
+>;
 
 // Чисто для всяких селектов в интерфейсах
-
-export const classificatorInfo = typeInfo
+export const classificatorInfoSchema = classificatorSchema
   .omit({
     id: true,
     name: true,
@@ -69,38 +104,42 @@ export const classificatorInfo = typeInfo
     category: z.string(),
     defaultExecutorId: z.coerce.number().nullable().optional(),
   });
-export type ClassificatorInfo = z.infer<typeof classificatorInfo>;
+export type ClassificatorInfo = z.infer<typeof classificatorInfoSchema>;
 
-export const classificatorInfoString = classificatorInfo
+export const classificatorInfoStringSchema = classificatorInfoSchema
   .omit({ value: true })
   .extend({
     value: z.string(),
   });
-export type ClassificatorInfoString = z.infer<typeof classificatorInfoString>;
+export type ClassificatorInfoString = z.infer<
+  typeof classificatorInfoStringSchema
+>;
 
-export const nestedClassificatorInfo = z.object({
+export const nestedClassificatorInfoSchema = z.object({
   value: z.string(),
   label: z.string(),
-  items: z.array(classificatorInfo),
+  items: z.array(classificatorInfoSchema),
 });
-export type NestedClassificatorInfo = z.infer<typeof nestedClassificatorInfo>;
+export type NestedClassificatorInfo = z.infer<
+  typeof nestedClassificatorInfoSchema
+>;
 
 export const nestedClassificatorInfoString = z.object({
   value: z.string(),
   label: z.string(),
-  items: z.array(classificatorInfoString),
+  items: z.array(classificatorInfoStringSchema),
 });
 export type NestedClassificatorInfoString = z.infer<
   typeof nestedClassificatorInfoString
 >;
 
-export const approveStatusData = approveStatusDataSlim
-  .omit({
-    approveById: true,
-    approverId: true,
-  })
-  .extend({
-    approver: userInfo,
-    approveBy: userInfo,
-  });
-export type ApproveStatusData = z.infer<typeof approveStatusData>;
+// export const approveStatusData = approveStatusDataSlim
+//   .omit({
+//     approveById: true,
+//     approverId: true,
+//   })
+//   .extend({
+//     approver: userInfo,
+//     approveBy: userInfo,
+//   });
+// export type ApproveStatusData = z.infer<typeof approveStatusData>;

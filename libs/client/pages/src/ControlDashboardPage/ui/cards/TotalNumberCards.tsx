@@ -9,7 +9,7 @@ import {
   numericCases,
   Skeleton,
 } from '@urgp/client/shared';
-import { Case } from '@urgp/shared/entities';
+import { CaseFull } from '@urgp/shared/entities';
 import { isThisWeek } from 'date-fns';
 import { CircleCheck, CirclePlay, CircleSlash, CircleX } from 'lucide-react';
 import { useMemo } from 'react';

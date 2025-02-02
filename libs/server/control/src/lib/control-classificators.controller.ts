@@ -16,14 +16,14 @@ import {
   UserControlData,
   NestedClassificatorInfo,
   UserControlApprovers,
-  TypeInfo,
-  ControlOperationClass,
-  controlOperationClass,
+  Classificator,
   SelectOption,
   NestedClassificatorInfoString,
   UserControlSettings,
   casesPageFilter,
   CasesPageFilter,
+  OperationClass,
+  operationClassSchema,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
@@ -122,18 +122,18 @@ export class ControlClassificatorsController {
   @Get('operation-types')
   async getOperationTypes(
     @Query('class')
-    operationClass: ControlOperationClass,
+    operationClass: OperationClass,
   ): Promise<NestedClassificatorInfo[]> {
-    const correctClass = controlOperationClass.safeParse(operationClass).data;
+    const correctClass = operationClassSchema.parse(operationClass);
     return this.classificators.getOperationTypes(correctClass || 'stage');
   }
 
   @Get('operation-types-flat')
   async getOperationTypesFlat(
     @Query('class')
-    operationClass: ControlOperationClass,
-  ): Promise<TypeInfo[]> {
-    const correctClass = controlOperationClass.safeParse(operationClass).data;
+    operationClass: OperationClass,
+  ): Promise<Classificator[]> {
+    const correctClass = operationClassSchema.parse(operationClass);
     return this.classificators.getOperationTypesFlat(correctClass || 'stage');
   }
 

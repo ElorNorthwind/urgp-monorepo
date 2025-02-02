@@ -1,5 +1,5 @@
 import { cn } from '@urgp/client/shared';
-import { Case } from '@urgp/shared/entities';
+import { CaseFull } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import { Fragment } from 'react/jsx-runtime';
 

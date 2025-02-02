@@ -1,5 +1,5 @@
 import { createColumnHelper } from '@tanstack/react-table';
-import { Case } from '@urgp/shared/entities';
+import { CaseFull } from '@urgp/shared/entities';
 import { DirectionCell } from './cells/DirectionCell';
 import { Checkbox } from '@urgp/client/shared';
 import { CaseTypeCell } from './cells/CaseTypeCell';

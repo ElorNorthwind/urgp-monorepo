@@ -25,8 +25,8 @@ import {
 } from '@urgp/client/shared';
 import {
   GET_DEFAULT_CONTROL_DUE_DATE,
-  userInputApproveFormValues,
-  UserInputApproveFormValuesDto,
+  approveControlEntityFormSchema,
+  ApproveControlEntityFormDto,
 } from '@urgp/shared/entities';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -93,8 +93,8 @@ const ApproveDialog = ({
     };
   }, [approvers]);
 
-  const form = useForm<UserInputApproveFormValuesDto>({
-    resolver: zodResolver(userInputApproveFormValues),
+  const form = useForm<ApproveControlEntityFormDto>({
+    resolver: zodResolver(approveControlEntityFormSchema),
     defaultValues,
   });
   const watchApprover = form.watch('nextApproverId');
@@ -118,10 +118,7 @@ const ApproveDialog = ({
     if (open === false) closeAndReset();
   };
 
-  async function onSubmit(
-    data: UserInputApproveFormValuesDto,
-    approve: boolean,
-  ) {
+  async function onSubmit(data: ApproveControlEntityFormDto, approve: boolean) {
     const approveEntity = isOperation ? approveOperation : approveCase;
     approveEntity({
       ...data,

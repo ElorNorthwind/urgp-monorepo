@@ -5,7 +5,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { Case } from '@urgp/shared/entities';
+import { CaseFull } from '@urgp/shared/entities';
 import { directionCategoryStyles } from '../config/caseStyles';
 import { forwardRef } from 'react';
 

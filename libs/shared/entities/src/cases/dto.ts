@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { z } from 'zod';
 import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
-import { externalCase } from '../userInput/types';
+import { externalCaseSchema } from '../userInput/types';
 
 export const DISPATCH_PREFIX = 'dispatch-';
 
@@ -60,7 +60,7 @@ export type ReadSlimCaseDto = z.infer<typeof readSlimCase>;
 export const caseCreate = z.object({
   class: z.coerce.string().default('control-incedent'),
   typeId: z.coerce.number().default(4),
-  externalCases: z.array(externalCase).default([]),
+  externalCases: z.array(externalCaseSchema).default([]),
   directionIds: z.array(z.coerce.number()).default([]),
   problemIds: z.array(z.coerce.number()).nullable().default(null),
   description: z.string().min(1, { message: 'Описание не может быть пустым' }),

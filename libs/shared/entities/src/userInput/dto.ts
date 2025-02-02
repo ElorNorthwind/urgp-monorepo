@@ -1,23 +1,19 @@
 import { z } from 'zod';
 
-export const userInputApprove = z.object({
+export const approveControlEntitySchema = z.object({
   id: z.coerce.number(),
   approveStatus: z
-    .literal('pending')
-    .or(z.literal('approved'))
-    .or(z.literal('rejected')),
+    .enum(['project', 'approved', 'pending', 'rejected'])
+    .default('project'),
   approveNotes: z.string().nullable().optional(),
-  nextApproverId: z.coerce.number().nullable().optional(),
-  dueDate: z.coerce
-    .date()
-    .or(z.number())
-    .or(z.string().date())
-    .nullable()
-    .optional(),
+  approveToId: z.coerce.number().nullable().optional(),
+  dueDate: z.string().datetime().nullable().optional(),
 });
-export type UserInputApproveDto = z.infer<typeof userInputApprove>;
+export type ApproveControlEntityDto = z.infer<
+  typeof approveControlEntitySchema
+>;
 
-export const userInputApproveFormValues = z.object({
+export const approveControlEntityFormSchema = z.object({
   nextApproverId: z.coerce.number().nullable(),
   approveNotes: z.string().optional(),
   dueDate: z.coerce
@@ -27,12 +23,12 @@ export const userInputApproveFormValues = z.object({
     .nullable()
     .optional(),
 });
-export type UserInputApproveFormValuesDto = z.infer<
-  typeof userInputApproveFormValues
+export type ApproveControlEntityFormDto = z.infer<
+  typeof approveControlEntityFormSchema
 >;
 
 // удаление сущности по id
-export const userInputDelete = z.object({
+export const deleteControlEntirySchema = z.object({
   id: z.coerce.number(),
 });
-export type UserInputDeleteDto = z.infer<typeof userInputDelete>;
+export type DeleteControlEntityDto = z.infer<typeof deleteControlEntirySchema>;

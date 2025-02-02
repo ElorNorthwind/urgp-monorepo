@@ -13,7 +13,7 @@ import {
   ChartTooltipContent,
   cn,
 } from '@urgp/client/shared';
-import { Case } from '@urgp/shared/entities';
+import { CaseFull } from '@urgp/shared/entities';
 import { Circle, TrendingUp } from 'lucide-react';
 import { useMemo } from 'react';
 import { Bar, BarChart, LabelList, XAxis, YAxis } from 'recharts';

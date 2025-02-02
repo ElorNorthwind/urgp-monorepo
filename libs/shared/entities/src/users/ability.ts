@@ -5,15 +5,8 @@ import {
   ExtractSubjectType,
 } from '@casl/ability';
 import { User } from './types';
-import {
-  ControlDispatch,
-  ControlDispatchSlim,
-  ControlReminder,
-  ControlReminderSlim,
-  ControlStage,
-  ControlStageSlim,
-} from '../operations/types';
-import { Case, CaseSlim } from '../cases/types';
+import { OperationFull, OperationSlim } from '../operations/types';
+import { CaseFull, CaseSlim } from '../cases/types';
 import { CaseCreateDto, CaseUpdateDto } from '../cases/dto';
 import {
   ControlStageCreateDto,
@@ -36,23 +29,19 @@ type Action =
   | 'manage';
 type Subject =
   | 'Case'
-  | Case
+  | CaseFull
   | CaseSlim
   | CaseCreateDto
   | CaseUpdateDto
   | 'Stage'
-  | ControlStage
-  | ControlStageSlim
+  | OperationFull
+  | OperationSlim
   | ControlStageCreateDto
   | ControlStageUpdateDto
   | 'Dispatch'
-  | ControlDispatch
-  | ControlDispatchSlim
   | DispatchCreateDto
   | DispatchUpdateDto
   | 'Reminder'
-  | ControlReminder
-  | ControlReminderSlim
   | ReminderCreateDto
   | ReminderUpdateDto
   | 'unknown'

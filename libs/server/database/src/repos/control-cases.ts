@@ -1,17 +1,17 @@
 import {
-  Case,
   CaseCreateDto,
   CaseSlim,
   CaseUpdateDto,
   DISPATCH_PREFIX,
   FullCaseSelector,
   SlimCaseSelector,
-  UserInputApproveDto,
+  ApproveControlEntityDto,
+  CaseFull,
 } from '@urgp/shared/entities';
 import { toDate } from 'date-fns';
 import { IDatabase, IMain } from 'pg-promise';
 import { cases } from './sql/sql';
-import { BadRequestException, Logger } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { z } from 'zod';
 
 // @Injectable()
@@ -83,7 +83,7 @@ export class ControlCasesRepository {
   readFullCase(
     selector: FullCaseSelector,
     userId: number,
-  ): Promise<Case[] | Case> {
+  ): Promise<CaseFull[] | CaseFull> {
     //  Выборка по массиву ID
     if (Array.isArray(selector)) {
       const q = this.pgp.as.format(cases.readFullCase, {
@@ -94,7 +94,7 @@ export class ControlCasesRepository {
         ),
         userId,
       });
-      return this.db.any(q) as Promise<Case[]>;
+      return this.db.any(q) as Promise<CaseFull[]>;
     }
 
     // Выборка по 1 ID
@@ -107,7 +107,7 @@ export class ControlCasesRepository {
         ),
         userId,
       });
-      return this.db.oneOrNone(q) as Promise<Case>;
+      return this.db.oneOrNone(q) as Promise<CaseFull>;
     }
 
     // Выборка дела по ID поручения
@@ -123,7 +123,7 @@ export class ControlCasesRepository {
           ),
           userId,
         });
-        return this.db.oneOrNone(q) as Promise<Case>;
+        return this.db.oneOrNone(q) as Promise<CaseFull>;
       } catch (e) {
         throw new BadRequestException('Некорректный ID поручения');
       }
@@ -142,7 +142,7 @@ export class ControlCasesRepository {
           userId,
         ),
         userId,
-      }) as Promise<Case[]>;
+      }) as Promise<CaseFull[]>;
     }
 
     // Выборка всех дел со стандартной сортировкой
@@ -155,7 +155,7 @@ export class ControlCasesRepository {
         [userId, selector === 'all'],
       ),
       userId,
-    }) as Promise<Case[]>;
+    }) as Promise<CaseFull[]>;
   }
   updateCase(dto: CaseUpdateDto, userId: number): Promise<CaseSlim> {
     const externalCases =
@@ -197,7 +197,7 @@ export class ControlCasesRepository {
   }
 
   approveCase(
-    dto: UserInputApproveDto,
+    dto: ApproveControlEntityDto,
     userId: number,
     newApproverId: number | null,
   ): Promise<CaseSlim> {

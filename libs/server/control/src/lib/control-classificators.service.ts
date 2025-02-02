@@ -4,13 +4,13 @@ import { DatabaseService } from '@urgp/server/database';
 import {
   UserControlData,
   NestedClassificatorInfo,
-  TypeInfo,
+  Classificator,
   UserControlApprovers,
-  ControlOperationClass,
   SelectOption,
   NestedClassificatorInfoString,
   UserControlSettings,
   CasesPageFilter,
+  OperationClass,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -61,7 +61,7 @@ export class ControlClassificatorsService {
   }
 
   public async getOperationTypes(
-    operationClass?: ControlOperationClass,
+    operationClass?: OperationClass,
   ): Promise<NestedClassificatorInfo[]> {
     return this.dbServise.db.controlClassificators.readOperationTypes(
       operationClass,
@@ -69,8 +69,8 @@ export class ControlClassificatorsService {
   }
 
   public async getOperationTypesFlat(
-    operationClass?: ControlOperationClass,
-  ): Promise<TypeInfo[]> {
+    operationClass?: OperationClass,
+  ): Promise<Classificator[]> {
     return this.dbServise.db.controlClassificators.readOperationTypesFlat(
       operationClass,
     );
@@ -90,7 +90,7 @@ export class ControlClassificatorsService {
 
   public async getDirectionSubscribers(
     directions: number[],
-  ): Promise<TypeInfo[]> {
+  ): Promise<Classificator[]> {
     return this.dbServise.db.controlClassificators.readDirectionSubscribers(
       directions,
     );

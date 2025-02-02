@@ -36,7 +36,7 @@ SELECT
 	c.approve_date as "approveDate",
 	c.approve_notes as "approveNotes",
 	c.external_cases as "externalCases",
-	d.val as directions,
+	COALESCE(d.val, '[]'::jsonb) as directions,
 	c.title,
 	c.notes,
 	c.extra,
@@ -50,7 +50,7 @@ SELECT
 	GREATEST(o."lastEdit", c.updated_at) as "lastEdit",
 	o."myReminder" as "myReminder",
 	o."lastStage" as "lastStage",
-	o."dispatches" as "dispatches",
+	COALESCE(o."dispatches", '[]'::jsonb) as "dispatches",
 	o."myPendingStage" as "myPendingStage"
 
 FROM control.cases_ c

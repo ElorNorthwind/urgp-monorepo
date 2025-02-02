@@ -4,7 +4,7 @@ import {
   selectCurrentUser,
   useUserAbility,
 } from '@urgp/client/shared';
-import { Case } from '@urgp/shared/entities';
+import { CaseFull } from '@urgp/shared/entities';
 import { DeleteCaseButton } from '../CaseButtons/DeleteCaseButton';
 import { EditCaseButton } from '../CaseButtons/EditCaseButton';
 import { ApproveButton } from '@urgp/client/widgets';

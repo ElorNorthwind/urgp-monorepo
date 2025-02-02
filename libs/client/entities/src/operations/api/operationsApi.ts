@@ -13,7 +13,7 @@ import {
   DispatchUpdateDto,
   ReminderCreateDto,
   ReminderUpdateDto,
-  UserInputDeleteDto,
+  DeleteControlEntityDto,
 } from '@urgp/shared/entities';
 import { RefetchCachedCase } from './lib';
 import { casesApi } from '../../cases';
@@ -401,7 +401,7 @@ export const operationsApi = rtkApi.injectEndpoints({
       },
     }),
 
-    deleteOperation: build.mutation<ControlOperation, UserInputDeleteDto>({
+    deleteOperation: build.mutation<ControlOperation, DeleteControlEntityDto>({
       query: (dto) => ({
         url: '/control/operation',
         method: 'DELETE',
@@ -447,7 +447,7 @@ export const operationsApi = rtkApi.injectEndpoints({
       },
     }),
 
-    approveOperation: build.mutation<ControlOperation, UserInputDeleteDto>({
+    approveOperation: build.mutation<ControlOperation, DeleteControlEntityDto>({
       query: (dto) => ({
         url: '/control/operation/approve',
         method: 'PATCH',

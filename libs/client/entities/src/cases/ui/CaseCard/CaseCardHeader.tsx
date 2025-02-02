@@ -1,7 +1,7 @@
 import { Separator } from '@radix-ui/react-separator';
 import { useNavigate } from '@tanstack/react-router';
 import { Button, cn } from '@urgp/client/shared';
-import { Case } from '@urgp/shared/entities';
+import { CaseFull } from '@urgp/shared/entities';
 import { ChevronDown, X } from 'lucide-react';
 
 type CaseCardHeaderProps = {

@@ -1,85 +1,31 @@
-import { Stage } from '../messages/types';
-import { ControlStage } from '../operations/types';
+import { z } from 'zod';
 import {
-  BasicPayloadDataSlim,
-  ExternalCase,
-  TypeInfo,
-  UserInfo,
+  classificatorInfoSchema,
+  classificatorSchema,
+  entityFullSchema,
+  entitySlimSchema,
+  externalCaseSchema,
 } from '../userInput/types';
 
-type CasePayloadSlim = {
-  externalCases: ExternalCase[]; // связанные номера
-  typeId: number; // тип дела
-  directionIds: number[]; // направления работы
-  problemIds: number[]; // системные проблемы
-  description: string; // собственно описание проблемы
-  fio: string;
-  adress: string | null;
-} & BasicPayloadDataSlim;
-
-type CasePayload = Omit<
-  CasePayloadSlim,
-  | 'typeId'
-  | 'directionIds'
-  | 'problemIds'
-  | 'approverId'
-  | 'approveById'
-  | 'updatedById'
-> & {
-  type: TypeInfo;
-  directions: TypeInfo[];
-  problems: TypeInfo[];
-  approver: UserInfo;
-  approveBy: UserInfo;
-  updatedBy: UserInfo;
+const caseSlimFields = {
+  externalCases: z.array(externalCaseSchema).default([]), // Array of externalCaseSchema objects
+  directionIds: z.array(z.number().int().positive()).default([]), // Array of positive integers
 };
 
-type CaseDispatchInfo = {
-  id: number;
-  class: 'dispatch';
-  dueDate: Date;
-  executor: UserInfo;
-  controller: UserInfo;
-  description?: string;
+const caseFullFields = {
+  externalCases: z.array(externalCaseSchema).default([]), // Array of externalCaseSchema objects
+  directionIds: z.array(z.number().int().positive()).default([]), // Array of positive integers
+  status: classificatorSchema,
+  viewStatus: z.string(),
+  lastEdit: z.string().datetime().nullable(), // ISO 8601 date string
+  myReminder: z.any().nullable(),
+  lastStage: z.any().nullable(),
+  dispatches: z.array(z.coerce.number()).default([]),
+  myPendingStage: z.any().nullable(),
 };
 
-export type Case = {
-  id: number;
-  class: string;
-  createdAt: Date;
-  status: TypeInfo;
-  author: UserInfo;
-  payload: CasePayload; // возвращаем только последний пейлоуд, а вообще тут массив
-  lastStageId: number | null;
-  lastEdit: Date | null;
-  lastSeen: Date | null;
-  dispatches: CaseDispatchInfo[];
-  controllerIds: number[];
-  controlLevel: number;
-  viewStatus: 'unwatched' | 'unchanged' | 'new' | 'changed';
-};
+export const caseSlimSchema = entitySlimSchema.extend(caseSlimFields);
+export type CaseSlim = z.infer<typeof caseSlimSchema>;
 
-export type CaseSlim = Omit<
-  Case,
-  | 'payload'
-  | 'author'
-  | 'lastStageId'
-  | 'lastEdit'
-  | 'lastSeen'
-  | 'dispatches'
-  | 'controllerIds'
-  | 'controlLevel'
-  | 'viewStatus'
-> & {
-  authorId: number;
-  payload: CasePayloadSlim;
-};
-
-export type CaseWithPendingInfo = Case & {
-  action: string;
-  pendingStage: ControlStage | null;
-};
-
-type satisfy<base, t extends base> = t;
-
-export type CaseOrPending = satisfy<Case, CaseWithPendingInfo>;
+export const caseSchema = entityFullSchema.extend(caseFullFields);
+export type CaseFull = z.infer<typeof caseSchema>;

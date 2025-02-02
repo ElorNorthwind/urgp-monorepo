@@ -4,7 +4,7 @@ import {
   NestedClassificatorInfo,
   NestedClassificatorInfoString,
   SelectOption,
-  TypeInfo,
+  Classificator,
   UserControlApprovers,
   UserControlData,
   UserControlSettings,
@@ -93,7 +93,7 @@ export const classificatorsApi = rtkApi
           method: 'GET',
         }),
       }),
-      getOperationTypesFlat: build.query<TypeInfo[], void>({
+      getOperationTypesFlat: build.query<Classificator[], void>({
         query: () => ({
           url: '/control/classificators/operation-types-flat',
           method: 'GET',

@@ -1,4 +1,4 @@
-import { ApproveStatusData } from '@urgp/shared/entities';
+import { EntityApproveData } from '@urgp/shared/entities';
 
 const statusTextVariants = {
   pending: 'На утверждении',
@@ -14,17 +14,10 @@ type ApproveInfo = {
   rejectNotes?: string;
 };
 
-export const getApproveInfo = (payload: ApproveStatusData): ApproveInfo => {
+export const getApproveInfo = (payload: EntityApproveData): ApproveInfo => {
   const approveText = statusTextVariants[payload?.approveStatus];
-  const currentFio =
-    payload?.approveStatus === 'pending'
-      ? payload?.approver?.fio
-      : payload?.approveBy?.fio;
-  const previousFio =
-    payload?.approveStatus === 'pending' &&
-    payload?.approveBy?.id !== payload?.approver?.id
-      ? payload?.approveBy?.fio
-      : undefined;
+  const currentFio = payload?.approveTo?.fio;
+  const previousFio = payload?.approveFrom?.fio;
   return {
     approveText,
     currentFio,

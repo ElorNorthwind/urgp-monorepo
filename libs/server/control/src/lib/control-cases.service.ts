@@ -5,12 +5,11 @@ import {
   CaseSlim,
   CaseCreateDto,
   CaseUpdateDto,
-  Case,
-  UserInputApproveDto,
+  ApproveControlEntityDto,
   GET_DEFAULT_CONTROL_DUE_DATE,
-  CaseWithPendingInfo,
   SlimCaseSelector,
   FullCaseSelector,
+  CaseFull,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 import { ControlOperationsService } from './control-operations.service';
@@ -29,7 +28,7 @@ export class ControlCaseService {
     dto: CaseCreateDto,
     userId: number,
     approved: boolean,
-  ): Promise<Case> {
+  ): Promise<CaseFull> {
     const createdCase: CaseSlim =
       await this.dbServise.db.controlCases.createCase(dto, userId, approved);
     this.operations.createReminderForAuthor(createdCase, userId, dto.dueDate);
@@ -37,7 +36,7 @@ export class ControlCaseService {
     return this.dbServise.db.controlCases.readFullCase(
       createdCase.id,
       userId,
-    ) as Promise<Case>;
+    ) as Promise<CaseFull>;
   }
 
   public async readSlimCase(
@@ -49,11 +48,14 @@ export class ControlCaseService {
   public async readFullCase(
     selector: FullCaseSelector,
     userId: number,
-  ): Promise<Case[] | Case> {
+  ): Promise<CaseFull[] | CaseFull> {
     return this.dbServise.db.controlCases.readFullCase(selector, userId);
   }
 
-  public async updateCase(dto: CaseUpdateDto, userId: number): Promise<Case> {
+  public async updateCase(
+    dto: CaseUpdateDto,
+    userId: number,
+  ): Promise<CaseFull> {
     const updatedCase = await this.dbServise.db.controlCases.updateCase(
       dto,
       userId,
@@ -61,10 +63,10 @@ export class ControlCaseService {
     return this.dbServise.db.controlCases.readFullCase(
       updatedCase.id,
       userId,
-    ) as Promise<Case>;
+    ) as Promise<CaseFull>;
   }
 
-  public async deleteCase(id: number, userId: number): Promise<Case> {
+  public async deleteCase(id: number, userId: number): Promise<CaseFull> {
     const deletedCase = await this.dbServise.db.controlCases.deleteCase(
       id,
       userId,
@@ -72,14 +74,14 @@ export class ControlCaseService {
     return this.dbServise.db.controlCases.readFullCase(
       deletedCase.id,
       userId,
-    ) as Promise<Case>;
+    ) as Promise<CaseFull>;
   }
 
   public async approveCase(
-    dto: UserInputApproveDto,
+    dto: ApproveControlEntityDto,
     userId: number,
     newApproverId: number | null,
-  ): Promise<Case> {
+  ): Promise<CaseFull> {
     const approvedCase = await this.dbServise.db.controlCases.approveCase(
       dto,
       userId,
@@ -97,6 +99,6 @@ export class ControlCaseService {
     return this.dbServise.db.controlCases.readFullCase(
       approvedCase.id,
       userId,
-    ) as Promise<Case>;
+    ) as Promise<CaseFull>;
   }
 }
