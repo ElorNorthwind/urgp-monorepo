@@ -10,7 +10,7 @@ WITH user_info AS (SELECT id, fio FROM renovation.users), -- (control_data->>'pr
 				FILTER (WHERE o."class" = 'stage' AND o."approveStatus" = 'pending' AND o."statusOrder" = ${userId} AND o."approveToId" = 1))->0  as "myPendingStage",
 			(jsonb_agg(to_jsonb(o) - '{caseOrder, statusOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[])
 				FILTER (WHERE o."class" = 'stage' AND o."caseOrder" = 1))->0  as "lastStage",
-			json_agg(to_jsonb(o) - '{caseOrder, statusOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]
+			jsonb_agg(to_jsonb(o) - '{caseOrder, statusOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]
 				ORDER BY (o."controlFrom"->>'priority')::integer DESC, o."dueDate" ASC )
 				FILTER (WHERE o."class" = 'dispatch') as dispatches,
 			MAX(o."updatedAt") FILTER (WHERE o."class" = ANY(ARRAY['stage', 'dispatch'])) as "lastEdit"
@@ -76,7 +76,4 @@ LEFT JOIN (SELECT id, name, category, fullname as "fullName" FROM control.case_s
 		ELSE 2 -- "направлено"
 	END
 WHERE c.archive_date IS NULL
-${conditions:raw}
-;
-
--- ORDER BY c.created_at DESC, c.id DESC
+${conditions:raw};

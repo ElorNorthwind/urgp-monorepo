@@ -3,9 +3,20 @@ import { z } from 'zod';
 import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
 import { externalCase } from '../userInput/types';
 
+export const DISPATCH_PREFIX = 'dispatch-';
+
 const fullCaseSelector = z
   .enum(['default', 'all', 'pending'])
   .or(z.coerce.number())
+  .or(
+    z.preprocess((obj) => {
+      if (typeof obj === 'string' && obj.startsWith(DISPATCH_PREFIX)) {
+        return obj;
+      } else {
+        return null;
+      }
+    }, z.string()),
+  )
   .or(
     z.preprocess((obj) => {
       if (Array.isArray(obj)) {

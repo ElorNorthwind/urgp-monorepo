@@ -18,5 +18,4 @@ SELECT
 	extra
 FROM control.cases_ c
 WHERE archive_date IS NULL
-${conditions:raw}
-;
+${conditions:raw};

@@ -33,6 +33,7 @@ import {
   ReadFullCaseDto,
   readSlimCase,
   ReadSlimCaseDto,
+  CaseSlim,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
@@ -101,68 +102,32 @@ export class ControlCasesController {
     return this.controlCases.readSlimCase(selector);
   }
 
-  @Get('all')
-  async readCases(@Req() req: RequestWithUserData) {
-    const i = defineControlAbilityFor(req.user);
-    const readAll = i.can('read-all', 'Case'); // Наверное лучше сделать 2 эндпоинта
-    return this.controlCases.readCases(req.user.id, readAll);
-  }
-
-  @Get('pending/all-pending')
-  async readPendingCases(@Req() req: RequestWithUserData) {
-    return this.controlCases.readPendingCases(req.user.id);
-  }
-
-  @Get('pending/:id')
-  getPendingCaseById(
-    @Req() req: RequestWithUserData,
-    @Param('id') id: number,
-  ): Promise<CaseWithPendingInfo> {
-    return this.controlCases.readPendingCaseById(id, req.user.id);
-  }
-
-  // @Get(':id')
-  // getCaseById(
-  //   @Req() req: RequestWithUserData,
-  //   @Param('id') id:  number,
-  // ): Promise<Case> {
-  //   return this.controlCases.readFullCaseById(id, req.user.id);
-  // }
-
-  @Get(':id')
-  getCaseById(
-    @Req() req: RequestWithUserData,
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<Case> {
-    return this.controlCases.readFullCaseById(id, req.user.id);
-  }
-
-  @Get('by-operaion/:id')
-  getCaseByOperationId(
-    @Req() req: RequestWithUserData,
-    @Param('id') id: number,
-  ): Promise<Case> {
-    return this.controlCases.readFullCaseByOperationId(id, req.user.id);
-  }
-
   @Patch()
   async updateCase(
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(caseUpdate)) dto: CaseUpdateDto,
   ) {
     const i = defineControlAbilityFor(req.user);
-    const currentCase = await this.controlCases.readSlimCaseById(dto.id);
-    if (i.cannot('update', { ...currentCase, class: 'control-incident' })) {
+    const currentCase = await this.controlCases.readSlimCase(dto.id);
+    if (
+      i.cannot('update', {
+        ...(currentCase as CaseSlim),
+        class: 'control-incident',
+      })
+    ) {
       throw new UnauthorizedException('Недостаточно прав для изменения');
     }
     if (
-      i.cannot('set-approver', { ...currentCase, class: 'control-incident' }) ||
+      i.cannot('set-approver', {
+        ...(currentCase as CaseSlim),
+        class: 'control-incident',
+      }) ||
       i.cannot('set-approver', { ...dto, class: 'control-incident' })
     ) {
       Logger.warn(
         'Согласующий недоступен',
         JSON.stringify({
-          currentApprover: currentCase.payload.approverId,
+          currentApprover: (currentCase as CaseSlim).payload.approverId,
           dtoApprover: dto?.approverId,
           userFio: req.user.fio,
           userApprovers: req.user.controlData?.approvers?.cases,
@@ -180,7 +145,9 @@ export class ControlCasesController {
     @Body(new ZodValidationPipe(userInputDelete)) dto: UserInputDeleteDto,
   ) {
     const i = defineControlAbilityFor(req.user);
-    const currentCase = await this.controlCases.readSlimCaseById(dto.id);
+    const currentCase = (await this.controlCases.readSlimCase(
+      dto.id,
+    )) as CaseSlim;
 
     if (i.cannot('delete', { ...currentCase, class: 'control-incident' })) {
       throw new UnauthorizedException('Недостаточно прав для удаления');
@@ -194,7 +161,9 @@ export class ControlCasesController {
     @Body(new ZodValidationPipe(userInputApprove)) dto: UserInputApproveDto,
   ) {
     const i = defineControlAbilityFor(req.user);
-    const currentCase = await this.controlCases.readSlimCaseById(dto.id);
+    const currentCase = (await this.controlCases.readSlimCase(
+      dto.id,
+    )) as CaseSlim;
 
     if (i.cannot('approve', { ...currentCase, class: 'control-incident' })) {
       throw new UnauthorizedException(

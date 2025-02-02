@@ -41,6 +41,7 @@ import {
   ControlStage,
   ControlReminder,
   reminderCreate,
+  Case,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlOperationsService } from './control-operations.service';
@@ -91,10 +92,10 @@ export class ControlOperationsController {
     }
 
     if (dto?.caseId && !autoApproved && correctApproverId === req.user.id) {
-      const affectedCase = await this.controlCases.readFullCaseById(
+      const affectedCase = (await this.controlCases.readFullCase(
         dto.caseId,
         req.user.id,
-      );
+      )) as Case;
       if (i.cannot('resolve', affectedCase)) {
         throw new UnauthorizedException(
           'Операция не разрешена. Решение по делу может принять только установившим высокий контроль.',
@@ -228,10 +229,10 @@ export class ControlOperationsController {
     }
 
     if (dto.approverId === req.user.id) {
-      const affectedCase = await this.controlCases.readFullCaseByOperationId(
-        dto.id,
+      const affectedCase = (await this.controlCases.readFullCase(
+        'dispatch-' + dto.id,
         req.user.id,
-      );
+      )) as Case;
       if (affectedCase && i.cannot('resolve', affectedCase)) {
         throw new UnauthorizedException(
           'Операция не разрешена. Решение по делу может принять только установившим высокий контроль.',
@@ -405,10 +406,10 @@ export class ControlOperationsController {
 
     if (newApproverId === req.user.id) {
       const affectedCase = currentOperation?.caseId
-        ? await this.controlCases.readFullCaseById(
+        ? ((await this.controlCases.readFullCase(
             currentOperation.caseId,
             req.user.id,
-          )
+          )) as Case)
         : null;
       if (affectedCase && i.cannot('resolve', affectedCase)) {
         throw new UnauthorizedException(

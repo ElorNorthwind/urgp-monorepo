@@ -34,7 +34,7 @@ export class ControlCaseService {
       await this.dbServise.db.controlCases.createCase(dto, userId, approved);
     this.operations.createReminderForAuthor(createdCase, userId, dto.dueDate);
 
-    return this.dbServise.db.controlCases.readFullCaseById(
+    return this.dbServise.db.controlCases.readFullCase(
       createdCase.id,
       userId,
     ) as Promise<Case>;
@@ -53,53 +53,12 @@ export class ControlCaseService {
     return this.dbServise.db.controlCases.readFullCase(selector, userId);
   }
 
-  public async readSlimCaseById(id: number): Promise<CaseSlim> {
-    return this.dbServise.db.controlCases.readSlimCase(id) as Promise<CaseSlim>;
-  }
-
-  public async readSlimCasesByIds(ids: number[]): Promise<CaseSlim[]> {
-    return this.dbServise.db.controlCases.readSlimCase(ids) as Promise<
-      CaseSlim[]
-    >;
-  }
-
-  public async readFullCaseById(id: number, userId: number): Promise<Case> {
-    return this.dbServise.db.controlCases.readFullCase(
-      id,
-      userId,
-    ) as Promise<Case>;
-  }
-
-  public async readFullCaseByOperationId(
-    id: number,
-    userId: number,
-  ): Promise<Case> {
-    return this.dbServise.db.controlCases.readFullCaseByOperationId(id, userId);
-  }
-
-  public async readPendingCaseById(
-    id: number,
-    userId: number,
-  ): Promise<CaseWithPendingInfo> {
-    return this.dbServise.db.controlCases.readPendingCaseById(id, userId);
-  }
-
-  public async readCases(userId: number, readAll: boolean): Promise<Case[]> {
-    return this.dbServise.db.controlCases.readCases(userId, readAll);
-  }
-
-  public async readPendingCases(
-    userId: number,
-  ): Promise<CaseWithPendingInfo[]> {
-    return this.dbServise.db.controlCases.readPendingCases(userId);
-  }
-
   public async updateCase(dto: CaseUpdateDto, userId: number): Promise<Case> {
     const updatedCase = await this.dbServise.db.controlCases.updateCase(
       dto,
       userId,
     );
-    return this.dbServise.db.controlCases.readFullCaseById(
+    return this.dbServise.db.controlCases.readFullCase(
       updatedCase.id,
       userId,
     ) as Promise<Case>;
@@ -110,7 +69,7 @@ export class ControlCaseService {
       id,
       userId,
     );
-    return this.dbServise.db.controlCases.readFullCaseById(
+    return this.dbServise.db.controlCases.readFullCase(
       deletedCase.id,
       userId,
     ) as Promise<Case>;
@@ -135,7 +94,7 @@ export class ControlCaseService {
       );
     }
 
-    return this.dbServise.db.controlCases.readFullCaseById(
+    return this.dbServise.db.controlCases.readFullCase(
       approvedCase.id,
       userId,
     ) as Promise<Case>;

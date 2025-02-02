@@ -3,7 +3,7 @@ import {
   CaseCreateDto,
   CaseSlim,
   CaseUpdateDto,
-  CaseWithPendingInfo,
+  DISPATCH_PREFIX,
   FullCaseSelector,
   SlimCaseSelector,
   UserInputApproveDto,
@@ -11,7 +11,8 @@ import {
 import { toDate } from 'date-fns';
 import { IDatabase, IMain } from 'pg-promise';
 import { cases } from './sql/sql';
-import { Logger } from '@nestjs/common';
+import { BadRequestException, Logger } from '@nestjs/common';
+import { z } from 'zod';
 
 // @Injectable()
 export class ControlCasesRepository {
@@ -71,12 +72,12 @@ export class ControlCasesRepository {
           [selector],
         ),
       });
-      return this.db.any(q);
+      return this.db.any(q) as Promise<CaseSlim[]>;
     }
     // Выборка по 1 ID
     return this.db.one(cases.readSlimCase, {
       conditions: this.pgp.as.format(`AND c.id = $1`, selector),
-    });
+    }) as Promise<CaseSlim>;
   }
 
   readFullCase(
@@ -93,7 +94,7 @@ export class ControlCasesRepository {
         ),
         userId,
       });
-      return this.db.any(q);
+      return this.db.any(q) as Promise<Case[]>;
     }
 
     // Выборка по 1 ID
@@ -106,7 +107,26 @@ export class ControlCasesRepository {
         ),
         userId,
       });
-      return this.db.one(q);
+      return this.db.oneOrNone(q) as Promise<Case>;
+    }
+
+    // Выборка дела по ID поручения
+    if (typeof selector === 'string' && selector.startsWith(DISPATCH_PREFIX)) {
+      try {
+        const dispatchId = z.coerce
+          .number()
+          .parse(selector.split(DISPATCH_PREFIX)[1]);
+        const q = this.pgp.as.format(cases.readFullCase, {
+          conditions: this.pgp.as.format(
+            `AND o.dispatches @> '[{"id": $1}]'::jsonb`,
+            dispatchId,
+          ),
+          userId,
+        });
+        return this.db.oneOrNone(q) as Promise<Case>;
+      } catch (e) {
+        throw new BadRequestException('Некорректный ID поручения');
+      }
     }
 
     if (selector === 'pending') {
@@ -122,7 +142,7 @@ export class ControlCasesRepository {
           userId,
         ),
         userId,
-      });
+      }) as Promise<Case[]>;
     }
 
     // Выборка всех дел со стандартной сортировкой
@@ -135,34 +155,7 @@ export class ControlCasesRepository {
         [userId, selector === 'all'],
       ),
       userId,
-    });
-  }
-
-  readSlimCaseById(id: number): Promise<CaseSlim> {
-    return this.db.one(cases.readSlimCaseById, { id });
-  }
-
-  readFullCaseById(id: number, userId: number): Promise<Case> {
-    return this.db.one(cases.readFullCaseById, { id, userId });
-  }
-
-  readFullCaseByOperationId(id: number, userId: number): Promise<Case> {
-    return this.db.one(cases.readFullCaseByOperationId, { id, userId });
-  }
-
-  readPendingCaseById(
-    id: number,
-    userId: number,
-  ): Promise<CaseWithPendingInfo> {
-    return this.db.one(cases.readPendingCaseById, { id, userId });
-  }
-
-  readCases(userId: number, readAll: boolean): Promise<Case[]> {
-    return this.db.any(cases.readCases, { userId, readAll });
-  }
-
-  readPendingCases(userId: number): Promise<CaseWithPendingInfo[]> {
-    return this.db.any(cases.readPendingCases, { userId });
+    }) as Promise<Case[]>;
   }
   updateCase(dto: CaseUpdateDto, userId: number): Promise<CaseSlim> {
     const externalCases =
