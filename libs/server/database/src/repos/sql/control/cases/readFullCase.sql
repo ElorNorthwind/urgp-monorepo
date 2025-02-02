@@ -1,4 +1,4 @@
-WITH user_info AS (SELECT id, fio FROM renovation.users),
+WITH user_info AS (SELECT id, fio FROM renovation.users), -- (control_data->>'priority')::integer as priority
      operation_info AS (
 		SELECT 
 			o."caseId",
@@ -21,7 +21,7 @@ GROUP BY o."caseId"),
 			c.id,
 			jsonb_agg(d) as val
 		FROM control.cases_ c
-		LEFT JOIN control.direction_types d ON d.id = ANY(c.direction_ids)
+		LEFT JOIN (SELECT id, name, category, fullname as "fullName", default_executor_id as "executorId" FROM control.direction_types) d ON d.id = ANY(c.direction_ids)
 		GROUP BY c.id)
 
 SELECT
