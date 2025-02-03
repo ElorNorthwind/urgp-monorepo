@@ -1,13 +1,11 @@
-UPDATE control.cases
-SET payload = payload || (payload->-1 || 
-    jsonb_build_object(
-        'approverId',      ${newApproverId},
-        'approveStatus', ${approveStatus},
-        'approveNotes',  ${approveNotes},
-        'approveDate',   NOW(),
-        'approveById',     ${userId},
-        'updatedAt',     NOW(),
-        'updatedById',     ${userId}
-                    ))
+UPDATE control.cases_
+SET
+    updated_by_id = ${userId},
+    approve_from_id = ${userId},
+    approve_to_id = ${approveToId},
+    approve_status = ${approveStatus},
+    approve_date = ${approveDate},
+    approve_notes = ${approveNotes},
+    updated_at = NOW()
 WHERE id = ${id}
-RETURNING id, class, author_id as "authorId", created_at as "createdAt", payload->-1 as payload;
+RETURNING id

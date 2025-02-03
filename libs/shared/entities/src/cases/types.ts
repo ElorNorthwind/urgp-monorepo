@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import {
-  classificatorInfoSchema,
   classificatorSchema,
   entityFullSchema,
   entitySlimSchema,
@@ -10,11 +9,11 @@ import {
 const caseSlimFields = {
   externalCases: z.array(externalCaseSchema).default([]), // Array of externalCaseSchema objects
   directionIds: z.array(z.number().int().positive()).default([]), // Array of positive integers
+  title: z.string().min(1, { message: 'Заголовок не может быть пустым' }),
+  notes: z.string().min(1, { message: 'Описание не может быть пустым' }),
 };
 
-const caseFullFields = {
-  externalCases: z.array(externalCaseSchema).default([]), // Array of externalCaseSchema objects
-  directionIds: z.array(z.number().int().positive()).default([]), // Array of positive integers
+const caseFullFields = caseSlimFields && {
   status: classificatorSchema,
   viewStatus: z.string(),
   lastEdit: z.string().datetime().nullable(), // ISO 8601 date string
@@ -24,8 +23,12 @@ const caseFullFields = {
   myPendingStage: z.any().nullable(),
 };
 
-export const caseSlimSchema = entitySlimSchema.extend(caseSlimFields);
+export const caseSlimSchema = entitySlimSchema
+  .omit({ title: true, notes: true })
+  .extend(caseSlimFields);
 export type CaseSlim = z.infer<typeof caseSlimSchema>;
 
-export const caseSchema = entityFullSchema.extend(caseFullFields);
+export const caseSchema = entityFullSchema
+  .omit({ title: true, notes: true })
+  .extend(caseFullFields);
 export type CaseFull = z.infer<typeof caseSchema>;

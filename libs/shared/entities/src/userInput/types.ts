@@ -1,5 +1,10 @@
 import { z } from 'zod';
 
+export const approveStatusSchema = z
+  .enum(['project', 'approved', 'pending', 'rejected'])
+  .default('project');
+export type ApproveStatus = z.infer<typeof approveStatusSchema>;
+
 export const caseClassSchema = z
   .enum(['control-incident'])
   .default('control-incident');
@@ -48,15 +53,13 @@ export type UserInfo = z.infer<typeof userInfoSchema>;
 
 export const entitySlimSchema = z.object({
   id: z.number().int().positive(), // Positive integer
-  class: z.enum(['control-incident', 'stage', 'dispatch', 'reminder']),
+  class: entityClassSchema,
   typeId: z.number().int().positive(),
   authorId: z.number().int().positive(),
   updatedById: z.number().int().positive().nullable(),
   approveFromId: z.number().int().positive().nullable(),
   approveToId: z.number().int().positive().nullable(),
-  approveStatus: z
-    .enum(['project', 'approved', 'pending', 'rejected'])
-    .default('project'),
+  approveStatus: approveStatusSchema,
   approveDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
   approveNotes: z.string().nullable().default(null),
   createdAt: z.string().datetime(), // ISO 8601 date string

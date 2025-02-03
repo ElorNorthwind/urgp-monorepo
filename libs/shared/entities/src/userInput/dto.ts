@@ -6,7 +6,7 @@ export const approveControlEntitySchema = z.object({
     .enum(['project', 'approved', 'pending', 'rejected'])
     .default('project'),
   approveNotes: z.string().nullable().optional(),
-  approveToId: z.coerce.number().nullable().optional(),
+  approveToId: z.coerce.number().nullable(),
   dueDate: z.string().datetime().nullable().optional(),
 });
 export type ApproveControlEntityDto = z.infer<

@@ -9,7 +9,6 @@ import {
   ReminderCreateDto,
   DispatchUpdateDto,
   ReminderUpdateDto,
-  CaseCreateDto,
   CaseSlim,
   GET_DEFAULT_CONTROL_DUE_DATE,
   OperationFull,

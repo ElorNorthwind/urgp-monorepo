@@ -1,14 +1,14 @@
 import {
-  CaseCreateDto,
   CaseSlim,
-  CaseUpdateDto,
   DISPATCH_PREFIX,
   FullCaseSelector,
   SlimCaseSelector,
-  ApproveControlEntityDto,
   CaseFull,
+  CreateCaseDto,
+  UpdateCaseDto,
+  EntityApproveData,
+  ApproveControlEntityDto,
 } from '@urgp/shared/entities';
-import { toDate } from 'date-fns';
 import { IDatabase, IMain } from 'pg-promise';
 import { cases } from './sql/sql';
 import { BadRequestException } from '@nestjs/common';
@@ -21,45 +21,8 @@ export class ControlCasesRepository {
     private pgp: IMain,
   ) {}
 
-  createCase(
-    dto: CaseCreateDto,
-    authorId: number,
-    approved: boolean,
-  ): Promise<CaseSlim> {
-    const externalCases =
-      `jsonb_build_array(` +
-      dto.externalCases
-        .map((c) => {
-          return this.pgp.as.format(
-            `jsonb_build_object('id', $1, 'num', $2, 'date', $3, 'system', $4)`,
-            [c.id, c.num, c.date, c.system],
-          );
-        })
-        .join(', ') +
-      `)`;
-    const directionIds = this.pgp.as.format(`jsonb_build_array($1:list)`, [
-      dto.directionIds,
-    ]);
-    const problemIds = this.pgp.as.format(`jsonb_build_array($1:list)`, [
-      dto.problemIds,
-    ]);
-
-    const newCase = {
-      authorId,
-      externalCases,
-      typeId: dto.typeId,
-      directionIds,
-      problemIds,
-      description: dto.description,
-      fio: dto.fio,
-      adress: dto.adress,
-      approverId: dto.approverId,
-      approveStatus: approved ? 'approved' : 'pending',
-      approveDate: approved ? toDate(new Date()) : null,
-      approveById: approved ? authorId : null,
-    };
-
-    return this.db.one(cases.createCase, newCase);
+  createCase(dto: CreateCaseDto, authorId: number): Promise<number> {
+    return this.db.one(cases.createCase, { ...dto, authorId });
   }
 
   readSlimCase(selector: SlimCaseSelector): Promise<CaseSlim[] | CaseSlim> {
@@ -157,57 +120,15 @@ export class ControlCasesRepository {
       userId,
     }) as Promise<CaseFull[]>;
   }
-  updateCase(dto: CaseUpdateDto, userId: number): Promise<CaseSlim> {
-    const externalCases =
-      `jsonb_build_array(` +
-      (dto.externalCases || [])
-        .map((c) => {
-          return this.pgp.as.format(
-            `jsonb_build_object('id', $1, 'num', $2, 'date', $3, 'system', $4)`,
-            [c.id, c.num, c.date, c.system],
-          );
-        })
-        .join(', ') +
-      `)`;
-    const directionIds = this.pgp.as.format(`jsonb_build_array($1:list)`, [
-      dto.directionIds,
-    ]);
-    const problemIds = this.pgp.as.format(`jsonb_build_array($1:list)`, [
-      dto.problemIds,
-    ]);
-
-    const updatedCase = {
-      id: dto.id,
-      userId,
-      externalCases,
-      typeId: dto.typeId,
-      directionIds,
-      problemIds,
-      description: dto.description,
-      fio: dto.fio,
-      adress: dto.adress,
-      approverId: dto.approverId,
-    };
-
-    return this.db.one(cases.updateCase, updatedCase);
+  updateCase(dto: UpdateCaseDto, updatedById: number): Promise<number> {
+    return this.db.one(cases.updateCase, { dto, updatedById });
+  }
+  approveCase(dto: ApproveControlEntityDto, userId: number): Promise<number> {
+    // userId заменяет updated_by_id и approve_from_id
+    return this.db.one(cases.approveCase, { dto, userId });
   }
 
-  deleteCase(id: number, userId: number): Promise<CaseSlim> {
-    return this.db.one(cases.deleteCase, { id, userId });
-  }
-
-  approveCase(
-    dto: ApproveControlEntityDto,
-    userId: number,
-    newApproverId: number | null,
-  ): Promise<CaseSlim> {
-    const approvedCase = {
-      userId,
-      newApproverId,
-      id: dto.id,
-      approveStatus: dto.approveStatus,
-      approveNotes: dto.approveNotes,
-    };
-    return this.db.one(cases.approveCase, approvedCase);
+  deleteCase(id: number, updatedById: number): Promise<number> {
+    return this.db.one(cases.deleteCase, { id, updatedById });
   }
 }

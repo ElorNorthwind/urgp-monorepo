@@ -18,10 +18,6 @@ import { ControlCaseService } from './control-cases.service';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
   RequestWithUserData,
-  CaseCreateDto,
-  caseCreate,
-  caseUpdate,
-  CaseUpdateDto,
   approveControlEntitySchema,
   ApproveControlEntityDto,
   deleteControlEntirySchema,
@@ -32,9 +28,15 @@ import {
   readSlimCaseSchema,
   ReadSlimCaseDto,
   CaseSlim,
+  createCaseSchema,
+  CreateCaseDto,
+  ApproveStatus,
+  updateCaseSchema,
+  UpdateCaseDto,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
+import { getCorrectApproveData } from './helper-functions/getCorrectApproveData';
 
 @Controller('control/case')
 @UseGuards(AccessTokenGuard)
@@ -47,38 +49,19 @@ export class ControlCasesController {
   @Post()
   async createCase(
     @Req() req: RequestWithUserData,
-    @Body(new ZodValidationPipe(caseCreate)) dto: CaseCreateDto,
+    @Body(new ZodValidationPipe(createCaseSchema)) dto: CreateCaseDto,
   ) {
-    const correctApproverId =
-      dto?.approverId ?? req.user?.controlData?.approvers?.cases?.[0] ?? null;
-
     const i = defineControlAbilityFor(req.user);
-    const subject = {
-      ...dto,
-      approver: correctApproverId,
-      class: 'control-incident',
-    };
-
-    if (i.cannot('create', subject)) {
+    if (i.cannot('create', dto)) {
       throw new UnauthorizedException('Нет прав на создание');
     }
-    if (i.cannot('set-approver', subject)) {
-      Logger.warn(
-        'Согласующий недоступен',
-        JSON.stringify({
-          dtoApprover: dto?.approverId,
-          userFio: req.user.fio,
-          userApprovers: req.user.controlData?.approvers?.cases,
-        }),
-      );
-      throw new UnauthorizedException('Согласующий недоступен');
-    }
-
-    const approved = correctApproverId === req.user.id;
+    const approveData = getCorrectApproveData({ user: req.user, dto });
     return this.controlCases.createCase(
-      { ...dto, approverId: correctApproverId },
+      {
+        ...dto,
+        ...approveData,
+      },
       req.user.id,
-      approved,
     );
   }
 
@@ -103,40 +86,40 @@ export class ControlCasesController {
   @Patch()
   async updateCase(
     @Req() req: RequestWithUserData,
-    @Body(new ZodValidationPipe(caseUpdate)) dto: CaseUpdateDto,
+    @Body(new ZodValidationPipe(updateCaseSchema)) dto: UpdateCaseDto,
   ) {
     const i = defineControlAbilityFor(req.user);
-    const currentCase = (await this.controlCases.readSlimCase(
-      dto.id,
-    )) as CaseSlim;
+    const curCase = (await this.controlCases.readSlimCase(dto.id)) as CaseSlim;
     if (
       i.cannot('update', {
-        ...currentCase,
-        class: 'control-incident',
+        ...curCase,
       })
     ) {
       throw new UnauthorizedException('Недостаточно прав для изменения');
     }
-    if (
-      i.cannot('set-approver', {
-        ...currentCase,
-        class: 'control-incident',
-      }) ||
-      i.cannot('set-approver', { ...dto, class: 'control-incident' })
-    ) {
-      Logger.warn(
-        'Согласующий недоступен',
-        JSON.stringify({
-          currentApprover: currentCase.approveToId,
-          dtoApprover: dto?.approverId,
-          userFio: req.user.fio,
-          userApprovers: req.user.controlData?.approvers?.cases,
-        }),
+
+    const changesApproval =
+      (dto?.approveDate && dto?.approveDate !== curCase.approveDate) ||
+      (dto?.approveStatus && dto?.approveStatus !== curCase.approveStatus) ||
+      (dto?.approveNotes && dto?.approveNotes !== curCase.approveNotes) ||
+      (dto?.approveToId && dto?.approveToId !== curCase.approveToId) ||
+      (dto?.approveFromId && dto?.approveFromId !== curCase.approveFromId);
+
+    if (changesApproval && i.cannot('approve', curCase)) {
+      throw new UnauthorizedException(
+        'Операция не разрешена. Нет прав на согласование.',
       );
-      throw new UnauthorizedException('Согласующий недоступен');
     }
 
-    return this.controlCases.updateCase(dto, req.user.id);
+    const approveData = getCorrectApproveData({
+      user: req.user,
+      dto,
+    });
+
+    return this.controlCases.updateCase(
+      { ...dto, ...(changesApproval ? approveData : {}) },
+      req.user.id,
+    );
   }
 
   @Delete()
@@ -150,9 +133,10 @@ export class ControlCasesController {
       dto.id,
     )) as CaseSlim;
 
-    if (i.cannot('delete', { ...currentCase, class: 'control-incident' })) {
+    if (i.cannot('delete', currentCase)) {
       throw new UnauthorizedException('Недостаточно прав для удаления');
     }
+
     return this.controlCases.deleteCase(dto.id, req.user.id);
   }
 
@@ -163,54 +147,28 @@ export class ControlCasesController {
     dto: ApproveControlEntityDto,
   ) {
     const i = defineControlAbilityFor(req.user);
+
     const currentCase = (await this.controlCases.readSlimCase(
       dto.id,
     )) as CaseSlim;
 
-    if (i.cannot('approve', { ...currentCase, class: 'control-incident' })) {
+    if (i.cannot('approve', currentCase)) {
       throw new UnauthorizedException(
         'Операция не разрешена. Нет прав на согласование.',
       );
     }
 
-    if (
-      i.cannot('set-approver', {
-        ...dto,
-        approverId: dto.approveToId,
-        class: 'control-incident',
-      })
-    ) {
-      Logger.warn(
-        'Согласующий недоступен',
-        JSON.stringify({
-          currentApprover: currentCase.approveToId,
-          dtoApprover: dto?.approveToId,
-          userFio: req.user.fio,
-          userApprovers: req.user.controlData?.approvers?.cases,
-        }),
-      );
-      throw new UnauthorizedException('Согласующий недоступен');
-    }
-
-    const newApprover =
-      dto.approveStatus === 'rejected'
-        ? currentCase.authorId
-        : dto?.approveToId ||
-          req.user?.controlData?.approvers?.cases?.[0] ||
-          null;
+    const approveData = getCorrectApproveData({
+      user: req.user,
+      dto,
+    });
 
     return this.controlCases.approveCase(
       {
         ...dto,
-        approveStatus:
-          dto.approveStatus === 'rejected'
-            ? 'rejected'
-            : newApprover === req.user.id
-              ? dto.approveStatus
-              : 'pending',
+        ...approveData,
       },
       req.user.id,
-      newApprover,
     );
   }
 }

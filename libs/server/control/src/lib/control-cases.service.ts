@@ -3,13 +3,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import {
   CaseSlim,
-  CaseCreateDto,
-  CaseUpdateDto,
   ApproveControlEntityDto,
   GET_DEFAULT_CONTROL_DUE_DATE,
   SlimCaseSelector,
   FullCaseSelector,
   CaseFull,
+  CreateCaseDto,
+  UpdateCaseDto,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 import { ControlOperationsService } from './control-operations.service';
@@ -25,17 +25,23 @@ export class ControlCaseService {
   ) {}
 
   public async createCase(
-    dto: CaseCreateDto,
-    userId: number,
-    approved: boolean,
+    dto: CreateCaseDto,
+    authorId: number,
   ): Promise<CaseFull> {
-    const createdCase: CaseSlim =
-      await this.dbServise.db.controlCases.createCase(dto, userId, approved);
-    // this.operations.createReminderForAuthor(createdCase, userId, dto.dueDate);
+    const createdCaseId: number =
+      await this.dbServise.db.controlCases.createCase(dto, authorId);
+
+    // if (dto.approveStatus === 'approved') {
+    //   this.operations.createDispatchesAndReminderForCase(
+    //     approvedCase,
+    //     userId,
+    //     dto.dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
+    //   );
+    // }
 
     return this.dbServise.db.controlCases.readFullCase(
-      createdCase.id,
-      userId,
+      createdCaseId,
+      authorId,
     ) as Promise<CaseFull>;
   }
 
@@ -53,16 +59,25 @@ export class ControlCaseService {
   }
 
   public async updateCase(
-    dto: CaseUpdateDto,
-    userId: number,
+    dto: UpdateCaseDto,
+    updatedById: number,
   ): Promise<CaseFull> {
-    const updatedCase = await this.dbServise.db.controlCases.updateCase(
+    const updatedCaseId = await this.dbServise.db.controlCases.updateCase(
       dto,
-      userId,
+      updatedById,
     );
+
+    // if (dto.approveStatus === 'approved') {
+    //   this.operations.createDispatchesAndReminderForCase(
+    //     approvedCase,
+    //     userId,
+    //     dto.dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
+    //   );
+    // }
+
     return this.dbServise.db.controlCases.readFullCase(
-      updatedCase.id,
-      userId,
+      updatedCaseId,
+      updatedById,
     ) as Promise<CaseFull>;
   }
 
@@ -80,12 +95,10 @@ export class ControlCaseService {
   public async approveCase(
     dto: ApproveControlEntityDto,
     userId: number,
-    newApproverId: number | null,
   ): Promise<CaseFull> {
     const approvedCase = await this.dbServise.db.controlCases.approveCase(
       dto,
       userId,
-      newApproverId,
     );
 
     // if (dto.approveStatus === 'approved') {

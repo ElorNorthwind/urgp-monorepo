@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import { z } from 'zod';
 import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
 import { externalCaseSchema } from '../userInput/types';
+import { caseSchema, caseSlimSchema } from './types';
 
 export const DISPATCH_PREFIX = 'dispatch-';
 
@@ -56,61 +57,82 @@ export type SlimCaseSelector = z.infer<typeof slimCaseSelectorSchema>;
 export type ReadFullCaseDto = z.infer<typeof readFullCaseSchema>;
 export type ReadSlimCaseDto = z.infer<typeof readSlimCaseSchema>;
 
-// создание заявки
-export const caseCreate = z.object({
-  class: z.coerce.string().default('control-incedent'),
-  typeId: z.coerce.number().default(4),
-  externalCases: z.array(externalCaseSchema).default([]),
-  directionIds: z.array(z.coerce.number()).default([]),
-  problemIds: z.array(z.coerce.number()).nullable().default(null),
-  description: z.string().min(1, { message: 'Описание не может быть пустым' }),
-  fio: z.string().min(1, { message: 'ФИО не может быть пустым' }),
-  adress: z.string().nullable().default(''),
-  approverId: z.coerce.number().nullable().default(null),
-  dueDate: z.coerce
-    .date({ message: 'Дата обязательна' })
-    .or(z.number())
-    .or(z.string().date())
-    .default(GET_DEFAULT_CONTROL_DUE_DATE()),
+export const createCaseSchema = caseSlimSchema.omit({
+  id: true,
+  authorId: true,
+  updatedById: true,
+  updatedAt: true,
 });
-export type CaseCreateDto = z.infer<typeof caseCreate>;
+export type CreateCaseDto = z.infer<typeof createCaseSchema>;
 
-// изменение заявки
-export const caseUpdate = caseCreate
-  .pick({
-    class: true,
-    externalCases: true,
-    typeId: true,
-    directionIds: true,
-    problemIds: true,
-    description: true,
-    approverId: true,
-    fio: true,
-    adress: true,
+export const updateCaseSchema = caseSlimSchema
+  .omit({
+    id: true,
+    authorId: true,
+    updatedById: true,
+    updatedAt: true,
   })
   .partial()
   .extend({
-    id: z.coerce.number(),
+    id: z.coerce.number().int().positive(),
   });
-export type CaseUpdateDto = z.infer<typeof caseUpdate>;
+export type UpdateCaseDto = z.infer<typeof updateCaseSchema>;
 
-export const caseFormValuesDto = caseCreate
-  .pick({
-    class: true,
-    typeId: true,
-    externalCases: true,
-    directionIds: true,
-    problemIds: true,
-    description: true,
-    fio: true,
-    adress: true,
-    dueDate: true,
-    approverId: true,
-  })
-  .extend({
-    id: z.coerce.number().nullable().default(null),
-  });
-export type CaseFormValuesDto = z.infer<typeof caseFormValuesDto>;
+// // создание заявки
+// export const caseCreate = z.object({
+//   class: z.coerce.string().default('control-incedent'),
+//   typeId: z.coerce.number().default(4),
+//   externalCases: z.array(externalCaseSchema).default([]),
+//   directionIds: z.array(z.coerce.number()).default([]),
+//   problemIds: z.array(z.coerce.number()).nullable().default(null),
+//   description: z.string().min(1, { message: 'Описание не может быть пустым' }),
+//   fio: z.string().min(1, { message: 'ФИО не может быть пустым' }),
+//   adress: z.string().nullable().default(''),
+//   approverId: z.coerce.number().nullable().default(null),
+//   dueDate: z.coerce
+//     .date({ message: 'Дата обязательна' })
+//     .or(z.number())
+//     .or(z.string().date())
+//     .default(GET_DEFAULT_CONTROL_DUE_DATE()),
+// });
+// export type CaseCreateDto = z.infer<typeof caseCreate>;
+
+// // изменение заявки
+// export const caseUpdate = caseCreate
+//   .pick({
+//     class: true,
+//     externalCases: true,
+//     typeId: true,
+//     directionIds: true,
+//     problemIds: true,
+//     description: true,
+//     approverId: true,
+//     fio: true,
+//     adress: true,
+//   })
+//   .partial()
+//   .extend({
+//     id: z.coerce.number(),
+//   });
+// export type CaseUpdateDto = z.infer<typeof caseUpdate>;
+
+// export const caseFormValuesDto = caseCreate
+//   .pick({
+//     class: true,
+//     typeId: true,
+//     externalCases: true,
+//     directionIds: true,
+//     problemIds: true,
+//     description: true,
+//     fio: true,
+//     adress: true,
+//     dueDate: true,
+//     approverId: true,
+//   })
+//   .extend({
+//     id: z.coerce.number().nullable().default(null),
+//   });
+// export type CaseFormValuesDto = z.infer<typeof caseFormValuesDto>;
 
 // export const caseUpdateFormValues = caseCreateFormValues.partial();
 // export type CaseUpdateFormValuesDto = z.infer<typeof caseUpdateFormValues>;

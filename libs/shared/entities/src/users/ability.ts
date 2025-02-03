@@ -7,7 +7,7 @@ import {
 import { User } from './types';
 import { OperationFull, OperationSlim } from '../operations/types';
 import { CaseFull, CaseSlim } from '../cases/types';
-import { CaseCreateDto, CaseUpdateDto } from '../cases/dto';
+// import { CaseCreateDto, CaseUpdateDto } from '../cases/dto';
 import {
   ControlStageCreateDto,
   ControlStageUpdateDto,
@@ -16,6 +16,8 @@ import {
   ReminderCreateDto,
   ReminderUpdateDto,
 } from '../operations/dto';
+import { CreateCaseDto, UpdateCaseDto } from '../cases/dto';
+import { ApproveControlEntityDto } from '../userInput/dto';
 
 type Action =
   | 'create'
@@ -31,8 +33,8 @@ type Subject =
   | 'Case'
   | CaseFull
   | CaseSlim
-  | CaseCreateDto
-  | CaseUpdateDto
+  | CreateCaseDto
+  | UpdateCaseDto
   | 'Stage'
   | OperationFull
   | OperationSlim
