@@ -36,7 +36,6 @@ import {
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
-import { getCorrectApproveData } from './helper-functions/getCorrectApproveData';
 
 @Controller('control/case')
 @UseGuards(AccessTokenGuard)
@@ -52,10 +51,13 @@ export class ControlCasesController {
     @Body(new ZodValidationPipe(createCaseSchema)) dto: CreateCaseDto,
   ) {
     const i = defineControlAbilityFor(req.user);
-    if (i.cannot('create', dto)) {
+    if (i.cannot('create', dto))
       throw new UnauthorizedException('Нет прав на создание');
-    }
-    const approveData = getCorrectApproveData({ user: req.user, dto });
+    const approveData = this.classificators.getCorrectApproveData({
+      user: req.user,
+      dto,
+      isOperation: false,
+    });
     return this.controlCases.createCase(
       {
         ...dto,
@@ -105,15 +107,10 @@ export class ControlCasesController {
       (dto?.approveToId && dto?.approveToId !== curCase.approveToId) ||
       (dto?.approveFromId && dto?.approveFromId !== curCase.approveFromId);
 
-    if (changesApproval && i.cannot('approve', curCase)) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Нет прав на согласование.',
-      );
-    }
-
-    const approveData = getCorrectApproveData({
+    const approveData = this.classificators.getCorrectApproveData({
       user: req.user,
       dto,
+      isOperation: false,
     });
 
     return this.controlCases.updateCase(
@@ -146,23 +143,11 @@ export class ControlCasesController {
     @Body(new ZodValidationPipe(approveControlEntitySchema))
     dto: ApproveControlEntityDto,
   ) {
-    const i = defineControlAbilityFor(req.user);
-
-    const currentCase = (await this.controlCases.readSlimCase(
-      dto.id,
-    )) as CaseSlim;
-
-    if (i.cannot('approve', currentCase)) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Нет прав на согласование.',
-      );
-    }
-
-    const approveData = getCorrectApproveData({
+    const approveData = this.classificators.getCorrectApproveData({
       user: req.user,
       dto,
+      isOperation: false,
     });
-
     return this.controlCases.approveCase(
       {
         ...dto,

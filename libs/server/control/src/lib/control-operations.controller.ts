@@ -40,7 +40,6 @@ import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlOperationsService } from './control-operations.service';
 import { ControlClassificatorsService } from './control-classificators.service';
 import { ControlCaseService } from './control-cases.service';
-import { getCorrectApproveData } from './helper-functions/getCorrectApproveData';
 
 @Controller('control/operation')
 @UseGuards(AccessTokenGuard)
@@ -61,35 +60,11 @@ export class ControlOperationsController {
       throw new UnauthorizedException('Нет прав на создание');
     }
 
-    const operationTypes = await this.classificators.getOperationTypesFlat();
-    const autoApproved = !!operationTypes.find((operation) => {
-      return operation.id === dto.typeId;
-    })?.autoApprove;
-
-    const approveData = autoApproved
-      ? {
-          approveStatus: 'approved' as ApproveStatus,
-          approveFromId: req.user.id,
-          approveToId: req.user.id,
-          approveDate: new Date().toISOString(),
-          approveNotes: 'Операция не требует согласования',
-        }
-      : getCorrectApproveData({
-          user: req.user,
-          dto,
-        });
-
-    if (!autoApproved && approveData.approveStatus === 'approved') {
-      const affectedCase = (await this.controlCases.readFullCase(
-        dto.caseId,
-        req.user.id,
-      )) as CaseFull;
-      if (i.cannot('resolve', affectedCase)) {
-        throw new UnauthorizedException(
-          'Операция не разрешена. Решение по делу может принять только установившим высокий контроль.',
-        );
-      }
-    }
+    const approveData = this.classificators.getCorrectApproveData({
+      user: req.user,
+      dto,
+      isOperation: true,
+    });
 
     return this.controlOperations.createOperation(
       {
@@ -125,41 +100,34 @@ export class ControlOperationsController {
     @Body(new ZodValidationPipe(updateOperationSchema)) dto: UpdateOperationDto,
   ) {
     const i = defineControlAbilityFor(req.user);
-    const currentOperation = (await this.controlOperations.readOperation(
+    const curentOp = (await this.controlOperations.readOperation(
       {
         operation: dto.id,
         class: 'all',
       },
       'slim',
     )) as OperationSlim;
-    if (i.cannot('update', currentOperation)) {
+    if (i.cannot('update', curentOp)) {
       throw new UnauthorizedException('Нет прав на изменение');
     }
 
-    const approveData = getCorrectApproveData({
+    const changesApproval =
+      (dto?.approveDate && dto?.approveDate !== curentOp.approveDate) ||
+      (dto?.approveStatus && dto?.approveStatus !== curentOp.approveStatus) ||
+      (dto?.approveNotes && dto?.approveNotes !== curentOp.approveNotes) ||
+      (dto?.approveToId && dto?.approveToId !== curentOp.approveToId) ||
+      (dto?.approveFromId && dto?.approveFromId !== curentOp.approveFromId);
+
+    const approveData = this.classificators.getCorrectApproveData({
       user: req.user,
       dto,
+      isOperation: true,
     });
 
-    // TO DO Подумать на свежую голову
-    if (approveData.approveStatus === 'approved') {
-      const operationTypes = await this.classificators.getOperationTypesFlat();
-      const autoApproved = !!operationTypes.find((operation) => {
-        return operation.id === dto.typeId;
-      })?.autoApprove;
-
-      const affectedCase = (await this.controlCases.readFullCase(
-        currentOperation.caseId,
-        req.user.id,
-      )) as CaseFull;
-
-      if (i.cannot('resolve', affectedCase) && !autoApproved) {
-        throw new UnauthorizedException(
-          'Операция не разрешена. Решение по делу может принять только установившим высокий контроль.',
-        );
-      }
-    }
-    return this.controlOperations.updateOperation(dto, req.user.id);
+    return this.controlOperations.updateOperation(
+      { ...dto, ...approveData },
+      req.user.id,
+    );
   }
 
   @Patch('mark-operation')
@@ -195,32 +163,11 @@ export class ControlOperationsController {
     @Body(new ZodValidationPipe(approveControlEntitySchema))
     dto: ApproveControlEntityDto,
   ) {
-    const i = defineControlAbilityFor(req.user);
-    const currentOperation = (await this.controlOperations.readOperation(
-      { operation: dto.id, class: 'all' },
-      'slim',
-    )) as OperationSlim;
-    if (i.cannot('approve', currentOperation)) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Нет прав на редактирование!',
-      );
-    }
-
-    const approveData = getCorrectApproveData({
+    const approveData = this.classificators.getCorrectApproveData({
       user: req.user,
       dto,
+      isOperation: true,
     });
-
-    const affectedCase = (await this.controlCases.readFullCase(
-      currentOperation.caseId,
-      req.user.id,
-    )) as CaseFull;
-
-    if (i.cannot('resolve', affectedCase)) {
-      throw new UnauthorizedException(
-        'Операция не разрешена. Решение по делу может принять только установившим высокий контроль.',
-      );
-    }
 
     return this.controlOperations.approveOperation(
       {
