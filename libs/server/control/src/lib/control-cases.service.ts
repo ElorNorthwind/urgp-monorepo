@@ -20,8 +20,8 @@ export class ControlCaseService {
   constructor(
     private readonly dbServise: DatabaseService,
     private readonly operations: ControlOperationsService,
-    private readonly classificators: ControlClassificatorsService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    // private readonly classificators: ControlClassificatorsService,
+    // @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   public async createCase(
@@ -31,13 +31,21 @@ export class ControlCaseService {
     const createdCaseId: number =
       await this.dbServise.db.controlCases.createCase(dto, authorId);
 
-    // if (dto.approveStatus === 'approved') {
-    //   this.operations.createDispatchesAndReminderForCase(
-    //     approvedCase,
-    //     userId,
-    //     dto.dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
-    //   );
-    // }
+    // Напоминание автору
+    this.operations.createReminderForAuthor(
+      createdCaseId,
+      authorId,
+      dto?.dueDate,
+    );
+
+    // Напоминания и поручения исполнителям и подписавшимся
+    if (dto.approveStatus === 'approved') {
+      this.operations.createDispatchesAndReminderForCase(
+        createdCaseId,
+        authorId,
+        dto?.dueDate,
+      );
+    }
 
     return this.dbServise.db.controlCases.readFullCase(
       createdCaseId,
@@ -67,13 +75,13 @@ export class ControlCaseService {
       updatedById,
     );
 
-    // if (dto.approveStatus === 'approved') {
-    //   this.operations.createDispatchesAndReminderForCase(
-    //     approvedCase,
-    //     userId,
-    //     dto.dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
-    //   );
-    // }
+    if (dto.approveStatus === 'approved') {
+      this.operations.createDispatchesAndReminderForCase(
+        updatedCaseId,
+        updatedById,
+        dto?.dueDate,
+      );
+    }
 
     return this.dbServise.db.controlCases.readFullCase(
       updatedCaseId,
@@ -96,21 +104,21 @@ export class ControlCaseService {
     dto: ApproveControlEntityDto,
     userId: number,
   ): Promise<CaseFull> {
-    const approvedCase = await this.dbServise.db.controlCases.approveCase(
+    const approvedCaseId = (await this.dbServise.db.controlCases.approveCase(
       dto,
       userId,
-    );
+    )) as number;
 
-    // if (dto.approveStatus === 'approved') {
-    //   this.operations.createDispatchesAndReminderForCase(
-    //     approvedCase,
-    //     userId,
-    //     dto.dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
-    //   );
-    // }
+    if (dto.approveStatus === 'approved') {
+      this.operations.createDispatchesAndReminderForCase(
+        approvedCaseId,
+        userId,
+        dto.dueDate,
+      );
+    }
 
     return this.dbServise.db.controlCases.readFullCase(
-      approvedCase.id,
+      approvedCaseId,
       userId,
     ) as Promise<CaseFull>;
   }

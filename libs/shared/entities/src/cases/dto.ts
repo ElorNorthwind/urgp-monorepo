@@ -57,12 +57,17 @@ export type SlimCaseSelector = z.infer<typeof slimCaseSelectorSchema>;
 export type ReadFullCaseDto = z.infer<typeof readFullCaseSchema>;
 export type ReadSlimCaseDto = z.infer<typeof readSlimCaseSchema>;
 
-export const createCaseSchema = caseSlimSchema.omit({
-  id: true,
-  authorId: true,
-  updatedById: true,
-  updatedAt: true,
-});
+export const createCaseSchema = caseSlimSchema
+  .omit({
+    id: true,
+    authorId: true,
+    updatedById: true,
+    updatedAt: true,
+    createdAt: true,
+  })
+  .extend({
+    dueDate: z.string().datetime().optional(), // ISO 8601 date string
+  });
 export type CreateCaseDto = z.infer<typeof createCaseSchema>;
 
 export const updateCaseSchema = caseSlimSchema
@@ -71,10 +76,12 @@ export const updateCaseSchema = caseSlimSchema
     authorId: true,
     updatedById: true,
     updatedAt: true,
+    createdAt: true,
   })
   .partial()
   .extend({
     id: z.coerce.number().int().positive(),
+    dueDate: z.string().datetime().optional(), // ISO 8601 date string
   });
 export type UpdateCaseDto = z.infer<typeof updateCaseSchema>;
 

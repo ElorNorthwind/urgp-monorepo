@@ -1,8 +1,7 @@
-UPDATE control.operations
-SET payload = payload || (payload->-1 || 
- jsonb_build_object('updatedAt', NOW(),
-                    'updatedById', ${userId},
-                    'isDeleted', true))
-WHERE id = ${id} 
-RETURNING id, author_id as "authorId", case_id as "caseId", 
-          created_at as "createdAt", class, payload->-1 as payload;
+UPDATE control.operations_
+SET 
+    archive_date = NOW()
+    updated_at = NOW()
+    updated_by_id = ${updatedById}
+WHERE id = ${id}
+RETURNING id;

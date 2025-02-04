@@ -7,8 +7,8 @@ import {
 
 const operationSlimFields = {
   caseId: z.number().int().positive(),
-  controlFrom: userInfoSchema.nullable().default(null),
-  controlTo: userInfoSchema.nullable().default(null),
+  controlFromId: z.number().int().positive().nullable().default(null),
+  controlToId: z.number().int().positive().nullable().default(null),
   dueDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
   doneDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
 };

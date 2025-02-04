@@ -3,14 +3,21 @@ import {
   ApproveControlEntityDto,
   ApproveStatus,
   CreateCaseDto,
+  CreateOperationDto,
   defineControlAbilityFor,
   UpdateCaseDto,
+  UpdateOperationDto,
   User,
 } from '@urgp/shared/entities';
 
 type approversProps = {
   user: User;
-  dto: ApproveControlEntityDto | CreateCaseDto | UpdateCaseDto;
+  dto:
+    | ApproveControlEntityDto
+    | CreateCaseDto
+    | UpdateCaseDto
+    | CreateOperationDto
+    | UpdateOperationDto;
 };
 
 export const getCorrectApproveData = ({
@@ -58,7 +65,7 @@ export const getCorrectApproveData = ({
           approveFromId: user.id,
           approveToId: user.id,
           approveDate: new Date().toISOString(),
-          approveNotes: 'Одоберно автором при создании заявки',
+          approveNotes: 'Одоберно автором при создании',
         }
       : {
           // Направлено указанному согласующему

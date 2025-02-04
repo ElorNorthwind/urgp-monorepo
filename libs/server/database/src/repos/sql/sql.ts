@@ -82,26 +82,15 @@ export const cases = {
 };
 
 export const operations = {
-  createStage: sql('sql/control/operations/createStage.sql'),
-  createDispatch: sql('sql/control/operations/createDispatch.sql'),
-  createReminder: sql('sql/control/operations/createReminder.sql'),
+  createOperation: sql('sql/control/operations/createOperation.sql'),
   readFullOperation: sql('sql/control/operations/readFullOperation.sql'),
   readSlimOperation: sql('sql/control/operations/readSlimOperation.sql'),
   readOperationHistory: sql('sql/control/operations/readOperationHistory.sql'),
-  updateStage: sql('sql/control/operations/updateStage.sql'),
-  updateDispatch: sql('sql/control/operations/updateDispatch.sql'),
-  updateReminder: sql('sql/control/operations/updateReminder.sql'),
-  updateRemindersByCaseIds: sql(
-    'sql/control/operations/updateRemindersByCaseIds.sql',
-  ),
-  markRemindersAsDoneByCaseIds: sql(
-    'sql/control/operations/markRemindersAsDoneByCaseIds.sql',
-  ),
-  approveOperation: sql('sql/control/operations/approveOperation.sql'),
+  updateOperation: sql('sql/control/operations/updateOperation.sql'),
   deleteOperation: sql('sql/control/operations/deleteOperation.sql'),
-  readOperationPayloadHistory: sql(
-    'sql/control/operations/readOperationPayloadHistory.sql',
-  ),
+  markAsDone: sql('sql/control/operations/markAsDone.sql'),
+  markAsSeen: sql('sql/control/operations/markAsSeen.sql'),
+  approveOperation: sql('sql/control/operations/approveOperation.sql'),
 };
 
 export const classificators = {

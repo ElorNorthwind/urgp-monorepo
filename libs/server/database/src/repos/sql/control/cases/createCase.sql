@@ -26,7 +26,7 @@ VALUES (
     ${approveNotes},
     ${externalCases:json}::jsonb
     -- ${externalCases:raw},
-    ${directionIds:list},
+    ARRAY[${directionIds:list}],
     ${title},
     ${notes},
     ${extra}

@@ -8,16 +8,17 @@ import { User } from './types';
 import { OperationFull, OperationSlim } from '../operations/types';
 import { CaseFull, CaseSlim } from '../cases/types';
 // import { CaseCreateDto, CaseUpdateDto } from '../cases/dto';
-import {
-  ControlStageCreateDto,
-  ControlStageUpdateDto,
-  DispatchCreateDto,
-  DispatchUpdateDto,
-  ReminderCreateDto,
-  ReminderUpdateDto,
-} from '../operations/dto';
+// import {
+//   ControlStageCreateDto,
+//   ControlStageUpdateDto,
+//   DispatchCreateDto,
+//   DispatchUpdateDto,
+//   ReminderCreateDto,
+//   ReminderUpdateDto,
+// } from '../operations/dto';
 import { CreateCaseDto, UpdateCaseDto } from '../cases/dto';
 import { ApproveControlEntityDto } from '../userInput/dto';
+import { CreateOperationDto, UpdateOperationDto } from '../operations/dto';
 
 type Action =
   | 'create'
@@ -36,16 +37,12 @@ type Subject =
   | CreateCaseDto
   | UpdateCaseDto
   | 'Stage'
+  | 'Dispatch'
+  | 'Reminder'
   | OperationFull
   | OperationSlim
-  | ControlStageCreateDto
-  | ControlStageUpdateDto
-  | 'Dispatch'
-  | DispatchCreateDto
-  | DispatchUpdateDto
-  | 'Reminder'
-  | ReminderCreateDto
-  | ReminderUpdateDto
+  | CreateOperationDto
+  | UpdateOperationDto
   | 'unknown'
   | 'all';
 
@@ -77,10 +74,10 @@ export function defineControlAbilityFor(user: User) {
       authorId: { $eq: user.id }, // BE // Все могу менять или удалять то, что они создали
     });
     can(['update', 'approve'], 'all', {
-      'payload.approver.id': { $eq: user.id }, // FE // Все могут менять или согласовывать то, что у них на согле
+      'payload.approveTo.id': { $eq: user.id }, // FE // Все могут менять или согласовывать то, что у них на согле
     });
     can(['update', 'approve'], 'all', {
-      'payload.approverId': { $eq: user.id }, // BE // Все могут менять или согласовывать то, что у них на согле
+      'payload.approveToId': { $eq: user.id }, // BE // Все могут менять или согласовывать то, что у них на согле
     });
     cannot('update', 'all', {
       'payload.approveStatus': { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
@@ -120,13 +117,13 @@ export function defineControlAbilityFor(user: User) {
     'payload.approveStatus': { $eq: 'approved' }, // нельзя согласовывать то что уже согласовано
   });
   can('set-approver', 'all', {
-    approverId: null, // без согласующего можно создавать все
+    approveToId: null, // без согласующего можно создавать все
   });
   can('set-approver', 'Case', {
-    approverId: { $in: caseApprovers }, // Никто не может создавать или ставить дела на утверждении не своих согласующих
+    approveToId: { $in: caseApprovers }, // Никто не может создавать или ставить дела на утверждении не своих согласующих
   });
   can('set-approver', 'Stage', {
-    approverId: { $in: operationApprovers }, // Никто не может создавать или ставить операции на утверждении не своих согласующих
+    approveToId: { $in: operationApprovers }, // Никто не может создавать или ставить операции на утверждении не своих согласующих
   });
 
   return build({
