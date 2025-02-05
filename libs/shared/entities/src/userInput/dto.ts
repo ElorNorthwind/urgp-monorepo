@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { entityClassesValues } from './config';
+// const entityClassesValues: ["control-incident" | "control-problem" | "stage" | "reminder" | "dispatch"]
 
 export const approveControlEntitySchema = z.object({
   id: z.coerce.number(),
@@ -32,3 +34,52 @@ export const deleteControlEntirySchema = z.object({
   id: z.coerce.number(),
 });
 export type DeleteControlEntityDto = z.infer<typeof deleteControlEntirySchema>;
+
+// Универсальный селектор на сущности
+
+// Helper function to preprocess arrays or comma-separated strings
+const preprocessArrayOrString = (obj: unknown) => {
+  if (Array.isArray(obj)) return obj;
+  if (typeof obj === 'string') return obj.split(',');
+  if (typeof obj === 'number') return [obj];
+  return null;
+};
+
+// Schema for a number or an array of numbers
+// const numberOrArraySchema2 = z
+//   .preprocess(preprocessArrayOrString, z.array(z.coerce.number()))
+//   .nullable()
+//   .default(null)
+//   .optional();
+
+const numberOrArraySchema = z.preprocess(
+  preprocessArrayOrString,
+  z.array(z.coerce.number()).nullable().default(null).optional(),
+);
+
+// Schema for a string or an array of strings
+// const controlClassOrArraySchema = z
+//   .literal('all')
+//   .or(
+//     z.preprocess(preprocessArrayOrString, z.array(z.enum(entityClassesValues))),
+//   )
+//   .nullable()
+//   .default(null)
+//   .optional();
+const controlClassOrArraySchema = z.preprocess(
+  preprocessArrayOrString,
+  z.array(z.enum(entityClassesValues)).nullable().default(null).optional(),
+);
+
+export const readEntitySchema = z.object({
+  mode: z.enum(['full', 'slim']).nullable().optional().default('full'),
+  class: controlClassOrArraySchema,
+  case: numberOrArraySchema,
+  operation: numberOrArraySchema,
+  visibility: z
+    .enum(['all', 'visible', 'pending'])
+    .nullable()
+    .optional()
+    .default('visible'), // ignored in slim mode
+});
+export type ReadEntityDto = z.infer<typeof readEntitySchema>;
