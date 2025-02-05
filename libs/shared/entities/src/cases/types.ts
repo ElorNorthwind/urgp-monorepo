@@ -14,6 +14,7 @@ const caseSlimFields = {
 };
 
 const caseFullFields = caseSlimFields && {
+  operationIds: z.array(z.coerce.number().int().positive()).default([]),
   status: classificatorSchema,
   viewStatus: z.string(),
   lastEdit: z.string().datetime().nullable(), // ISO 8601 date string

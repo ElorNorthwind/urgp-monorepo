@@ -2,6 +2,7 @@ WITH user_info AS (SELECT id, fio FROM renovation.users), -- (control_data->>'pr
      operation_info AS (
 		SELECT 
 			o."caseId",
+			array_agg(o.id) as "operationIds",
 			MAX(o."controlLevel") FILTER (WHERE (o."class" = 'dispatch')) as "controlLevel",
 			array_agg(DISTINCT o."controlFromId") FILTER (WHERE o."controlLevel" = o."maxControlLevel") as "controllerIds",
 			(jsonb_agg(to_jsonb(o) - '{caseOrder, statusOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]) 
@@ -40,6 +41,7 @@ SELECT
 	c.title,
 	c.notes,
 	c.extra,
+	o."operationIds",
 	to_jsonb(s) as status,
 	CASE
 		WHEN o."myReminder" IS NULL OR o."myReminder"->>'doneDate' IS NOT NULL THEN 'unwatched'
