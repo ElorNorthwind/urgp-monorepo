@@ -21,16 +21,14 @@ import {
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 import { ControlClassificatorsService } from './control-classificators.service';
-import { sub } from 'date-fns';
-import { ZodValidationPipe } from '@urgp/server/pipes';
-import { ControlCaseService } from './control-cases.service';
+import { ControlCasesService } from './control-cases.service';
 
 @Injectable()
 export class ControlOperationsService {
   constructor(
     private readonly dbServise: DatabaseService,
+    // private readonly controlCases: ControlCasesService,
     private readonly classificators: ControlClassificatorsService,
-    private readonly cases: ControlCaseService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
@@ -108,7 +106,9 @@ export class ControlOperationsService {
     dueDate?: string,
   ) {
     // Забираем дело (поскольку теперь при создании мы возвращаем только id)
-    const slimCase = (await this.cases.readSlimCase(caseId)) as CaseSlim;
+    const slimCase = (await this.dbServise.db.controlCases.readSlimCase(
+      caseId,
+    )) as CaseSlim;
     if (!slimCase) throw new NotFoundException('Дело не найдено');
 
     // Список людей, которым должны уйти напоминалки
@@ -183,7 +183,9 @@ export class ControlOperationsService {
     dueDate?: string,
   ) {
     // Забираем дело (поскольку теперь при создании мы возвращаем только id)
-    const slimCase = (await this.cases.readSlimCase(caseId)) as CaseSlim;
+    const slimCase = (await this.dbServise.db.controlCases.readSlimCase(
+      caseId,
+    )) as CaseSlim;
     if (!slimCase) throw new NotFoundException('Дело не найдено');
 
     const existingReminders = (await this.readOperation(

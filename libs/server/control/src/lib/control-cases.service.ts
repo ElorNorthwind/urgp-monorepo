@@ -16,12 +16,12 @@ import { ControlOperationsService } from './control-operations.service';
 import { ControlClassificatorsService } from './control-classificators.service';
 
 @Injectable()
-export class ControlCaseService {
+export class ControlCasesService {
   constructor(
     private readonly dbServise: DatabaseService,
     private readonly operations: ControlOperationsService,
     // private readonly classificators: ControlClassificatorsService,
-    // @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   public async createCase(
@@ -90,12 +90,12 @@ export class ControlCaseService {
   }
 
   public async deleteCase(id: number, userId: number): Promise<CaseFull> {
-    const deletedCase = await this.dbServise.db.controlCases.deleteCase(
+    const deletedCaseId = await this.dbServise.db.controlCases.deleteCase(
       id,
       userId,
     );
     return this.dbServise.db.controlCases.readFullCase(
-      deletedCase.id,
+      deletedCaseId,
       userId,
     ) as Promise<CaseFull>;
   }

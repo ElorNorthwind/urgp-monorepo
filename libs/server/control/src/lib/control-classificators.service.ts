@@ -31,7 +31,7 @@ import {
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 import { ControlOperationsService } from './control-operations.service';
-import { ControlCaseService } from './control-cases.service';
+import { ControlCasesService } from './control-cases.service';
 
 // type GetCorectApproveDataOperationProps = {
 //   user: User;
@@ -69,8 +69,8 @@ type ApproveData = Omit<ApproveControlEntityDto, 'id'> & {
 export class ControlClassificatorsService {
   constructor(
     private readonly dbServise: DatabaseService,
-    private readonly operations: ControlOperationsService,
-    private readonly cases: ControlCaseService,
+    // private readonly operations: ControlOperationsService,
+    // private readonly cases: ControlCasesService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
@@ -149,14 +149,16 @@ export class ControlClassificatorsService {
     );
   }
 
-  private async getEntity(dto: any, isOperation?: boolean) {
+  async getEntity(dto: any, isOperation?: boolean) {
     if ('id' in dto) {
       return isOperation
-        ? ((await this.operations.readOperation(
+        ? ((await this.dbServise.db.controlOperations.readOperation(
             { operation: dto.id, class: 'all' },
             'slim',
           )) as OperationSlim)
-        : ((await this.cases.readSlimCase(dto.id)) as CaseSlim);
+        : ((await this.dbServise.db.controlCases.readSlimCase(
+            dto.id,
+          )) as CaseSlim);
     }
     return null;
   }
@@ -176,16 +178,15 @@ export class ControlClassificatorsService {
   //     ?.autoApprove;
   // }
 
-  private async isAutoApproved(
-    entity?: CaseSlim | OperationSlim | null,
+  public async isAutoApproved(
+    // entity?: CaseSlim | OperationSlim | null,
     dto?: any | null,
   ): Promise<boolean> {
     const typeId =
-      entity && 'typeId' in entity
-        ? entity.typeId
-        : dto && 'typeId' in dto
-          ? dto.typeId
-          : undefined;
+      // entity && 'typeId' in entity
+      //   ? entity.typeId
+      //   :
+      dto && 'typeId' in dto ? dto.typeId : undefined;
     if (!typeId) return false;
     const operationTypes = await this.getOperationTypesFlat();
     return !!operationTypes.find((operation) => operation.id === typeId)
@@ -201,7 +202,7 @@ export class ControlClassificatorsService {
 
     // Подгружаем сущность для определения прав на изменение
     const entity = await this.getEntity(dto, isOperation);
-    const autoApproved = await this.isAutoApproved(entity, dto);
+    const autoApproved = await this.isAutoApproved(dto);
 
     if (autoApproved)
       return {
@@ -227,11 +228,6 @@ export class ControlClassificatorsService {
         approveNotes: null,
       };
 
-    if (i.cannot('approve', dto)) {
-      throw new UnauthorizedException(
-        'Действие не разрешено. Нет прав на рассмотрение!',
-      );
-    }
     if (i.cannot('set-approver', dto)) {
       throw new UnauthorizedException(
         'Выбранный согласующий недоступен пользователю',
@@ -240,7 +236,7 @@ export class ControlClassificatorsService {
 
     if (
       dto.approveToId !== user.id &&
-      !['approved', 'rejected'].includes('approved')
+      !['approved', 'rejected'].includes(dto?.approveStatus || 'pending')
     )
       return {
         // Направлено указанному согласующему
@@ -251,6 +247,12 @@ export class ControlClassificatorsService {
         approveNotes: null,
       };
 
+    if (i.cannot('approve', dto)) {
+      throw new UnauthorizedException(
+        'Действие не разрешено. Нет прав на рассмотрение!',
+      );
+    }
+
     // Доп праверка на наличие прав принимать решения по родительскому делу
     if (
       isOperation &&
@@ -258,7 +260,7 @@ export class ControlClassificatorsService {
       (entity as OperationSlim)?.caseId &&
       (dto as UpdateOperationDto)?.id
     ) {
-      const affectedCase = (await this.cases.readFullCase(
+      const affectedCase = (await this.dbServise.db.controlCases.readFullCase(
         (entity as OperationSlim).caseId,
         user.id,
       )) as CaseFull;

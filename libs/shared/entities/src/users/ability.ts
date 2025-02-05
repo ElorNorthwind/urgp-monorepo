@@ -47,7 +47,7 @@ type Subject =
   | 'all';
 
 export const subjectVariants = {
-  stage: 'ControlStage',
+  stage: 'Stage',
   'control-incident': 'Case',
   dispanch: 'Dispatch',
   reminder: 'Reminder',

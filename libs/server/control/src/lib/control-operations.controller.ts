@@ -39,14 +39,14 @@ import {
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlOperationsService } from './control-operations.service';
 import { ControlClassificatorsService } from './control-classificators.service';
-import { ControlCaseService } from './control-cases.service';
+import { ControlCasesService } from './control-cases.service';
 
 @Controller('control/operation')
 @UseGuards(AccessTokenGuard)
 export class ControlOperationsController {
   constructor(
     private readonly controlOperations: ControlOperationsService,
-    private readonly controlCases: ControlCaseService,
+    // private readonly controlCases: ControlCasesService,
     private readonly classificators: ControlClassificatorsService,
   ) {}
 

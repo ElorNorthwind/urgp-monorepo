@@ -14,7 +14,7 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { ControlCaseService } from './control-cases.service';
+import { ControlCasesService } from './control-cases.service';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
   RequestWithUserData,
@@ -41,7 +41,7 @@ import { ControlClassificatorsService } from './control-classificators.service';
 @UseGuards(AccessTokenGuard)
 export class ControlCasesController {
   constructor(
-    private readonly controlCases: ControlCaseService,
+    private readonly controlCases: ControlCasesService,
     private readonly classificators: ControlClassificatorsService,
   ) {}
 
