@@ -17,7 +17,6 @@ import { CaseFull, CaseSlim } from '../cases/types';
 //   ReminderUpdateDto,
 // } from '../operations/dto';
 import { CreateCaseDto, UpdateCaseDto } from '../cases/dto';
-import { ApproveControlEntityDto } from '../userInput/dto';
 import { CreateOperationDto, UpdateOperationDto } from '../operations/dto';
 
 type Action =
