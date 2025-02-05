@@ -72,14 +72,14 @@ const controlClassOrArraySchema = z.preprocess(
 );
 
 export const readEntitySchema = z.object({
-  mode: z.enum(['full', 'slim']).nullable().optional().default('full'),
+  mode: z.enum(['full', 'slim']).nullable().default('full').optional(),
   class: controlClassOrArraySchema,
   case: numberOrArraySchema,
   operation: numberOrArraySchema,
   visibility: z
     .enum(['all', 'visible', 'pending'])
     .nullable()
-    .optional()
-    .default('visible'), // ignored in slim mode
+    .default('visible') // ignored in slim mode
+    .optional(),
 });
 export type ReadEntityDto = z.infer<typeof readEntitySchema>;

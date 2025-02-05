@@ -35,6 +35,8 @@ import {
   UpdateOperationDto,
   markOperationSchema,
   MarkOperationDto,
+  readEntitySchema,
+  ReadEntityDto,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlOperationsService } from './control-operations.service';
@@ -75,16 +77,13 @@ export class ControlOperationsController {
     );
   }
 
-  @UsePipes(new ZodValidationPipe(readOperationSchema))
+  @UsePipes(new ZodValidationPipe(readEntitySchema))
   @Get()
-  async getFullOperation(@Query() dto: ReadOperationDto) {
-    return this.controlOperations.readOperation(dto, 'full');
-  }
-
-  @UsePipes(new ZodValidationPipe(readOperationSchema))
-  @Get('slim')
-  async getSlimOperation(@Query() dto: ReadOperationDto) {
-    return this.controlOperations.readOperation(dto, 'slim');
+  async getOperations(
+    @Req() req: RequestWithUserData,
+    @Query() dto: ReadEntityDto,
+  ) {
+    return this.controlOperations.readOperations(dto, req.user.id);
   }
 
   @Get(':id/history')
@@ -100,12 +99,8 @@ export class ControlOperationsController {
     @Body(new ZodValidationPipe(updateOperationSchema)) dto: UpdateOperationDto,
   ) {
     const i = defineControlAbilityFor(req.user);
-    const curentOp = (await this.controlOperations.readOperation(
-      {
-        operation: dto.id,
-        class: 'all',
-      },
-      'slim',
+    const curentOp = (await this.controlOperations.readSlimOperationById(
+      dto.id,
     )) as OperationSlim;
     if (i.cannot('update', curentOp)) {
       throw new UnauthorizedException('Нет прав на изменение');
@@ -125,7 +120,7 @@ export class ControlOperationsController {
     });
 
     return this.controlOperations.updateOperation(
-      { ...dto, ...approveData },
+      { ...dto, ...(changesApproval ? approveData : {}) },
       req.user.id,
     );
   }
@@ -145,10 +140,9 @@ export class ControlOperationsController {
     dto: DeleteControlEntityDto,
   ) {
     const i = defineControlAbilityFor(req.user);
-    const currentOperation = (await this.controlOperations.readOperation(
-      { operation: dto.id, class: 'all' },
-      'slim',
-    )) as OperationSlim;
+    const currentOperation = await this.controlOperations.readSlimOperationById(
+      dto.id,
+    );
 
     if (i.cannot('delete', currentOperation)) {
       throw new BadRequestException('Нет прав на удаление!');

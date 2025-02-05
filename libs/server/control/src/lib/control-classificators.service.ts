@@ -149,44 +149,8 @@ export class ControlClassificatorsService {
     );
   }
 
-  async getEntity(dto: any, isOperation?: boolean) {
-    if ('id' in dto) {
-      return isOperation
-        ? ((await this.dbServise.db.controlOperations.readOperation(
-            { operation: dto.id, class: 'all' },
-            'slim',
-          )) as OperationSlim)
-        : ((await this.dbServise.db.controlCases.readSlimCase(
-            dto.id,
-          )) as CaseSlim);
-    }
-    return null;
-  }
-
-  // private async isAutoApproved(typeId: number | undefined): Promise<boolean> {
-
-  //   // const typeId =
-  //   //   entity && 'typeId' in entity
-  //   //     ? entity.typeId
-  //   //     : 'typeId' in dto
-  //   //       ? dto.typeId
-  //   //       : undefined;
-
-  //   if (!typeId) return false;
-  //   const operationTypes = await this.getOperationTypesFlat();
-  //   return !!operationTypes.find((operation) => operation.id === typeId)
-  //     ?.autoApprove;
-  // }
-
-  public async isAutoApproved(
-    // entity?: CaseSlim | OperationSlim | null,
-    dto?: any | null,
-  ): Promise<boolean> {
-    const typeId =
-      // entity && 'typeId' in entity
-      //   ? entity.typeId
-      //   :
-      dto && 'typeId' in dto ? dto.typeId : undefined;
+  public async isAutoApproved(dto?: any | null): Promise<boolean> {
+    const typeId = dto && 'typeId' in dto ? dto.typeId : undefined;
     if (!typeId) return false;
     const operationTypes = await this.getOperationTypesFlat();
     return !!operationTypes.find((operation) => operation.id === typeId)
@@ -201,7 +165,7 @@ export class ControlClassificatorsService {
     const i = defineControlAbilityFor(user);
 
     // Подгружаем сущность для определения прав на изменение
-    const entity = await this.getEntity(dto, isOperation);
+    // const entity = await this.getEntity(dto, isOperation);
     const autoApproved = await this.isAutoApproved(dto);
 
     if (autoApproved)
@@ -254,17 +218,13 @@ export class ControlClassificatorsService {
     }
 
     // Доп праверка на наличие прав принимать решения по родительскому делу
-    if (
-      isOperation &&
-      entity &&
-      (entity as OperationSlim)?.caseId &&
-      (dto as UpdateOperationDto)?.id
-    ) {
-      const affectedCase = (await this.dbServise.db.controlCases.readFullCase(
-        (entity as OperationSlim).caseId,
+    if (isOperation && 'id' in dto) {
+      const affectedCases = (await this.dbServise.db.controlCases.readCases(
+        { mode: 'full', operation: [dto.id] },
         user.id,
-      )) as CaseFull;
-      if (i.cannot('resolve', affectedCase)) {
+      )) as CaseFull[];
+
+      if (i.cannot('resolve', affectedCases?.[0])) {
         throw new UnauthorizedException(
           'Операция не разрешена. Решение по делу может принять только установившим высокий контроль.',
         );

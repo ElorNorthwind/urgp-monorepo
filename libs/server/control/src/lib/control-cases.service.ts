@@ -1,5 +1,10 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import {
   CaseSlim,
@@ -10,6 +15,7 @@ import {
   CaseFull,
   CreateCaseDto,
   UpdateCaseDto,
+  ReadEntityDto,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 import { ControlOperationsService } from './control-operations.service';
@@ -47,23 +53,54 @@ export class ControlCasesService {
       );
     }
 
-    return this.dbServise.db.controlCases.readFullCase(
-      createdCaseId,
-      authorId,
-    ) as Promise<CaseFull>;
+    return this.readFullCaseById(createdCaseId, authorId) as Promise<CaseFull>;
   }
 
-  public async readSlimCase(
-    selector: SlimCaseSelector,
-  ): Promise<CaseSlim[] | CaseSlim> {
-    return this.dbServise.db.controlCases.readSlimCase(selector);
+  public async readCases(
+    dto: ReadEntityDto,
+    userId?: number,
+  ): Promise<CaseSlim[] | CaseFull[]> {
+    return this.dbServise.db.controlCases.readCases(dto, userId);
   }
 
-  public async readFullCase(
-    selector: FullCaseSelector,
+  public async readSlimCaseById(caseId: number): Promise<CaseSlim> {
+    const cases = (await this.readCases({
+      mode: 'slim',
+      case: [caseId],
+    })) as CaseSlim[];
+    if (cases.length === 0)
+      throw new NotFoundException(`Дело ${caseId || '-'} не найдено`);
+    return cases[0];
+  }
+
+  public async readFullCaseById(
+    caseId: number,
     userId: number,
-  ): Promise<CaseFull[] | CaseFull> {
-    return this.dbServise.db.controlCases.readFullCase(selector, userId);
+  ): Promise<CaseFull> {
+    const cases = (await this.readCases(
+      {
+        mode: 'full',
+        case: [caseId],
+      },
+      userId,
+    )) as CaseFull[];
+    if (cases.length === 0)
+      throw new NotFoundException(`Дело ${caseId || '-'} не найдено`);
+    return cases[0];
+  }
+
+  public async readSlimCaseByOperationId(
+    operationId: number,
+  ): Promise<CaseSlim> {
+    const cases = (await this.readCases({
+      mode: 'slim',
+      operation: [operationId],
+    })) as CaseSlim[];
+    if (cases.length === 0)
+      throw new NotFoundException(
+        `Дело с операцией ${operationId || '-'} не найдено`,
+      );
+    return cases[0];
   }
 
   public async updateCase(
@@ -83,7 +120,7 @@ export class ControlCasesService {
       );
     }
 
-    return this.dbServise.db.controlCases.readFullCase(
+    return this.readFullCaseById(
       updatedCaseId,
       updatedById,
     ) as Promise<CaseFull>;
@@ -94,10 +131,7 @@ export class ControlCasesService {
       id,
       userId,
     );
-    return this.dbServise.db.controlCases.readFullCase(
-      deletedCaseId,
-      userId,
-    ) as Promise<CaseFull>;
+    return this.readFullCaseById(deletedCaseId, userId) as Promise<CaseFull>;
   }
 
   public async approveCase(
@@ -117,9 +151,6 @@ export class ControlCasesService {
       );
     }
 
-    return this.dbServise.db.controlCases.readFullCase(
-      approvedCaseId,
-      userId,
-    ) as Promise<CaseFull>;
+    return this.readFullCaseById(approvedCaseId, userId) as Promise<CaseFull>;
   }
 }

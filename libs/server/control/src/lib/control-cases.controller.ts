@@ -33,6 +33,8 @@ import {
   ApproveStatus,
   updateCaseSchema,
   UpdateCaseDto,
+  readEntitySchema,
+  ReadEntityDto,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
@@ -67,22 +69,16 @@ export class ControlCasesController {
     );
   }
 
-  @UsePipes(new ZodValidationPipe(readFullCaseSchema))
+  @UsePipes(new ZodValidationPipe(readEntitySchema))
   @Get()
   async getFullCase(
     @Req() req: RequestWithUserData,
-    @Query() { selector }: ReadFullCaseDto,
+    @Query() dto: ReadEntityDto,
   ) {
     const i = defineControlAbilityFor(req.user);
-    if (selector === 'all' && i.cannot('read-all', 'Case'))
+    if (dto?.visibility === 'all' && i.cannot('read-all', 'Case'))
       throw new UnauthorizedException('Нет прав на чтение скрытых дел');
-    return this.controlCases.readFullCase(selector, req.user.id);
-  }
-
-  @UsePipes(new ZodValidationPipe(readSlimCaseSchema))
-  @Get('slim')
-  async getSlimCase(@Query() { selector }: ReadSlimCaseDto) {
-    return this.controlCases.readSlimCase(selector);
+    return this.controlCases.readCases(dto, req.user.id);
   }
 
   @Patch()
@@ -91,7 +87,9 @@ export class ControlCasesController {
     @Body(new ZodValidationPipe(updateCaseSchema)) dto: UpdateCaseDto,
   ) {
     const i = defineControlAbilityFor(req.user);
-    const curCase = (await this.controlCases.readSlimCase(dto.id)) as CaseSlim;
+    const curCase = (await this.controlCases.readSlimCaseById(
+      dto.id,
+    )) as CaseSlim;
     if (
       i.cannot('update', {
         ...curCase,
@@ -126,7 +124,7 @@ export class ControlCasesController {
     dto: DeleteControlEntityDto,
   ) {
     const i = defineControlAbilityFor(req.user);
-    const currentCase = (await this.controlCases.readSlimCase(
+    const currentCase = (await this.controlCases.readSlimCaseById(
       dto.id,
     )) as CaseSlim;
 

@@ -8,7 +8,7 @@ WITH user_info AS (SELECT id, fio FROM renovation.users), -- (control_data->>'pr
 			(jsonb_agg(to_jsonb(o) - '{caseOrder, statusOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]) 
 				FILTER (WHERE o."class" = 'reminder' AND o."statusOrder" = 1 AND o."controlFromId" =  ${userId}))->0  as "myReminder",
 			(jsonb_agg(to_jsonb(o) - '{caseOrder, statusOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]) 
-				FILTER (WHERE o."class" = 'stage' AND o."approveStatus" = 'pending' AND o."statusOrder" = ${userId} AND o."approveToId" = 1))->0  as "myPendingStage",
+				FILTER (WHERE o."class" = 'stage' AND o."approveStatus" = 'pending' AND o."statusOrder" = 1 AND o."approveToId" = ${userId}))->0  as "myPendingStage",
 			(jsonb_agg(to_jsonb(o) - '{caseOrder, statusOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[])
 				FILTER (WHERE o."class" = 'stage' AND o."caseOrder" = 1))->0  as "lastStage",
 			jsonb_agg(to_jsonb(o) - '{caseOrder, statusOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]

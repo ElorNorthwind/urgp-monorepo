@@ -11,10 +11,12 @@ import {
   ApproveControlEntityDto,
   CaseSlim,
   CreateOperationDto,
+  EntityClasses,
   GET_DEFAULT_CONTROL_DUE_DATE,
   MarkOperationDto,
   OperationFull,
   OperationSlim,
+  ReadEntityDto,
   ReadOperationDto,
   readOperationSchema,
   UpdateOperationDto,
@@ -41,19 +43,40 @@ export class ControlOperationsService {
         dto,
         userId,
       )) as number;
-    return this.dbServise.db.controlOperations.readOperation(
-      { operation: createdOperationId, class: 'all' },
-      'full',
-    ) as Promise<OperationFull>;
+    return this.readFullOperationById(createdOperationId);
   }
 
-  public async readOperation(
-    dto: ReadOperationDto,
-    mode: 'full' | 'slim' = 'full',
-  ): Promise<
-    OperationSlim | OperationSlim[] | OperationFull | OperationFull[]
-  > {
-    return this.dbServise.db.controlOperations.readOperation(dto, mode);
+  public async readOperations(
+    dto: ReadEntityDto,
+    userId?: number,
+  ): Promise<OperationSlim[] | OperationFull[]> {
+    return this.dbServise.db.controlOperations.readOperations(dto, userId);
+  }
+
+  public async readFullOperationById(
+    id: number,
+    userId?: number,
+  ): Promise<OperationFull> {
+    const operations = (await this.readOperations(
+      { operation: [id] },
+      userId,
+    )) as OperationFull[];
+    if (operations.length === 0)
+      throw new NotFoundException(`Операция ${id || '-'} не найдена`);
+    return operations[0];
+  }
+
+  public async readSlimOperationById(
+    id: number,
+    userId?: number,
+  ): Promise<OperationSlim> {
+    const operations = (await this.readOperations(
+      { operation: [id], mode: 'slim' },
+      userId,
+    )) as OperationSlim[];
+    if (operations.length === 0)
+      throw new NotFoundException(`Операция ${id || '-'} не найдена`);
+    return operations[0];
   }
 
   public async readOperationHistory(
@@ -71,10 +94,7 @@ export class ControlOperationsService {
         dto,
         updatedById,
       )) as number;
-    return this.dbServise.db.controlOperations.readOperation(
-      { operation: updatedOperationId, class: 'all' },
-      'full',
-    ) as Promise<OperationFull>;
+    return this.readFullOperationById(updatedOperationId);
   }
 
   public async markOperation(
@@ -106,10 +126,12 @@ export class ControlOperationsService {
     dueDate?: string,
   ) {
     // Забираем дело (поскольку теперь при создании мы возвращаем только id)
-    const slimCase = (await this.dbServise.db.controlCases.readSlimCase(
-      caseId,
-    )) as CaseSlim;
-    if (!slimCase) throw new NotFoundException('Дело не найдено');
+    const slimCases = (await this.dbServise.db.controlCases.readCases({
+      mode: 'slim',
+      case: [caseId],
+    })) as CaseSlim[];
+    if (!slimCases || slimCases.length === 0)
+      throw new NotFoundException('Дело не найдено');
 
     // Список людей, которым должны уйти напоминалки
     let reminderList = new Map<number, string>([]);
@@ -119,7 +141,7 @@ export class ControlOperationsService {
 
     // Ищем исполнителей
     const flatDirections = directions.flatMap((d) => d.items);
-    const controlToList = slimCase?.directionIds.reduce((prev, cur) => {
+    const controlToList = slimCases[0]?.directionIds.reduce((prev, cur) => {
       const controlTo =
         flatDirections.find((d) => d.value === cur)?.defaultExecutorId ||
         undefined;
@@ -133,7 +155,9 @@ export class ControlOperationsService {
     });
 
     const directionSubscribers =
-      await this.classificators.getDirectionSubscribers(slimCase?.directionIds);
+      await this.classificators.getDirectionSubscribers(
+        slimCases[0]?.directionIds,
+      );
 
     directionSubscribers.forEach((subscriber) => {
       !reminderList.has(subscriber.id) &&
@@ -143,13 +167,11 @@ export class ControlOperationsService {
         );
     });
 
-    const existingReminders = (await this.readOperation(
-      {
-        case: slimCase.id,
-        class: 'reminder',
-      },
-      'slim',
-    )) as OperationSlim[];
+    const existingReminders = (await this.readOperations({
+      case: [slimCases[0].id],
+      mode: 'slim',
+      class: [EntityClasses.reminder],
+    })) as OperationSlim[];
 
     reminderList.forEach((value, key) => {
       !existingReminders.map((r) => r.id).includes(key) &&
@@ -183,18 +205,18 @@ export class ControlOperationsService {
     dueDate?: string,
   ) {
     // Забираем дело (поскольку теперь при создании мы возвращаем только id)
-    const slimCase = (await this.dbServise.db.controlCases.readSlimCase(
-      caseId,
-    )) as CaseSlim;
-    if (!slimCase) throw new NotFoundException('Дело не найдено');
+    const slimCases = (await this.dbServise.db.controlCases.readCases({
+      mode: 'slim',
+      case: [caseId],
+    })) as CaseSlim[];
+    if (!slimCases || slimCases.length === 0)
+      throw new NotFoundException('Дело не найдено');
 
-    const existingReminders = (await this.readOperation(
-      {
-        case: slimCase.id,
-        class: 'reminder',
-      },
-      'slim',
-    )) as OperationSlim[];
+    const existingReminders = (await this.readOperations({
+      case: [slimCases[0].id],
+      mode: 'slim',
+      class: [EntityClasses.reminder],
+    })) as OperationSlim[];
 
     !existingReminders.map((r) => r.id).includes(userId) &&
       this.createOperation(
