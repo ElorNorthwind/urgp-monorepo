@@ -10,7 +10,9 @@ SELECT
 	ROW_NUMBER() OVER (PARTITION BY o.case_id, o.class 
 					ORDER BY t.priority DESC, o.done_date DESC)  as "caseOrder",
 	ROW_NUMBER() OVER (PARTITION BY o.case_id, o.class, o.approve_status, o.approve_to_id 
-					ORDER BY o.created_at DESC) as "statusOrder",
+					ORDER BY o.created_at DESC) as "approveToOrder",
+	ROW_NUMBER() OVER (PARTITION BY o.case_id, o.class, o.approve_status, o.control_from_id 
+					ORDER BY o.created_at DESC) as "controlFromOrder",
 	MAX(u3.priority) OVER (PARTITION BY o.case_id, o.class) as "maxControlLevel",
 	u3.priority as "controlLevel",
 	o.control_from_id as "controlFromId",

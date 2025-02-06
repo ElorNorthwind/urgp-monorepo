@@ -1,186 +1,91 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
-  Case,
-  CaseCreateDto,
-  CaseUpdateDto,
-  CaseWithPendingInfo,
   ApproveControlEntityDto,
+  CaseFull,
+  CreateCaseDto,
   DeleteControlEntityDto,
+  ReadEntityDto,
+  UpdateCaseDto,
 } from '@urgp/shared/entities';
+import { deleteCachedCase, insertCachedCase, updateCachedCase } from './lib';
 
 export const casesApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    getCases: build.query<Case[], void>({
-      query: () => ({
-        url: '/control/case/all',
+    getCases: build.query<CaseFull[], ReadEntityDto['visibility']>({
+      query: (visibility) => ({
+        url: '/control/case',
         method: 'GET',
+        search: {
+          mode: 'full',
+          class: 'control-incident',
+          visibility: visibility ?? 'visible',
+        },
       }),
-      providesTags: ['case'],
+      providesTags: ['control-incident'],
     }),
-    getPendingCases: build.query<CaseWithPendingInfo[], void>({
-      query: () => ({
-        url: '/control/case/pending/all-pending',
-        method: 'GET',
-      }),
-      providesTags: ['case'],
-    }),
-    getCaseById: build.query<Case, number>({
+
+    getCaseById: build.query<CaseFull, number>({
       query: (id) => ({
-        url: '/control/case/' + id.toString(),
+        url: `/control/case/${id.toString()}/full`,
         method: 'GET',
       }),
-      providesTags: ['case'],
+      providesTags: ['control-incident'],
     }),
-    getCaseByOperationId: build.query<Case, number>({
+
+    getCaseByOperationId: build.query<CaseFull, number>({
       query: (id) => ({
-        url: '/control/case/by-operation/' + id.toString(),
+        url: `/control/case/${id.toString()}/by-operation`,
         method: 'GET',
       }),
-      providesTags: ['case'],
+      providesTags: ['control-incident'],
     }),
-    getPendingCaseById: build.query<CaseWithPendingInfo, number>({
-      query: (id) => ({
-        url: '/control/case/pending/' + id.toString(),
-        method: 'GET',
-      }),
-      providesTags: ['case'],
-    }),
-    createCase: build.mutation<Case, CaseCreateDto>({
+
+    createCase: build.mutation<CaseFull, CreateCaseDto>({
       query: (dto) => ({
         url: '/control/case',
         method: 'POST',
         body: dto,
       }),
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
-        const { data: createdCase } = await queryFulfilled;
-        createdCase?.id &&
-          dispatch(
-            casesApi.util.updateQueryData('getCases', undefined, (draft) => {
-              draft?.unshift(createdCase);
-            }),
-          );
+
+      async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
+        const { data: newCase } = await queryFulfilled;
+        insertCachedCase(newCase, dispatch, getState);
       },
     }),
-    updateCase: build.mutation<Case, CaseUpdateDto>({
+
+    updateCase: build.mutation<CaseFull, UpdateCaseDto>({
       query: (dto) => ({
         url: '/control/case',
         method: 'PATCH',
         body: dto,
       }),
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
-        const { data: updatedCase } = await queryFulfilled;
-        updatedCase?.id &&
-          dispatch(
-            casesApi.util.updateQueryData('getCases', undefined, (draft) => {
-              const index = draft.findIndex(
-                (stage) => stage.id === updatedCase.id,
-              );
-              return [
-                ...draft.slice(0, index),
-                updatedCase,
-                ...draft.slice(index + 1),
-              ];
-            }),
-          ) &&
-          dispatch(
-            casesApi.util.updateQueryData(
-              'getPendingCases',
-              undefined,
-              (draft) => {
-                const index = draft.findIndex(
-                  (stage) => stage.id === updatedCase.id,
-                );
-                return [
-                  ...draft.slice(0, index),
-                  {
-                    ...updatedCase,
-                    action: draft[index].action,
-                    pendingStage: draft[index].pendingStage,
-                  },
-                  ...draft.slice(index + 1),
-                ];
-              },
-            ),
-          );
+      async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
+        const { data: newCase } = await queryFulfilled;
+        updateCachedCase(newCase, dispatch, getState);
       },
     }),
-    deleteCase: build.mutation<Case, DeleteControlEntityDto>({
+
+    deleteCase: build.mutation<CaseFull, DeleteControlEntityDto>({
       query: (dto) => ({
         url: '/control/case',
         method: 'DELETE',
         body: dto,
       }),
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
-        const { data: deletedCase } = await queryFulfilled;
-        deletedCase?.id &&
-          dispatch(
-            casesApi.util.updateQueryData('getCases', undefined, (draft) => {
-              return draft.filter((stage) => stage.id !== deletedCase.id);
-            }),
-          ) &&
-          dispatch(
-            casesApi.util.updateQueryData(
-              'getPendingCases',
-              undefined,
-              (draft) => {
-                return draft.filter((stage) => stage.id !== deletedCase.id);
-              },
-            ),
-          );
+      async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
+        const { data: newCase } = await queryFulfilled;
+        deleteCachedCase(newCase, dispatch, getState);
       },
     }),
 
-    approveCase: build.mutation<Case, ApproveControlEntityDto>({
+    approveCase: build.mutation<CaseFull, ApproveControlEntityDto>({
       query: (dto) => ({
         url: '/control/case/approve',
         method: 'PATCH',
         body: dto,
       }),
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
-        const { data: approvedCase } = await queryFulfilled;
-        approvedCase?.id &&
-          dispatch(
-            casesApi.util.updateQueryData('getCases', undefined, (draft) => {
-              const index = draft.findIndex(
-                (stage) => stage.id === approvedCase.id,
-              );
-              return [
-                ...draft.slice(0, index),
-                approvedCase,
-                ...draft.slice(index + 1),
-              ];
-            }),
-          ) &&
-          dispatch(
-            casesApi.util.updateQueryData(
-              'getPendingCases',
-              undefined,
-              (draft) => {
-                const index = draft.findIndex(
-                  (stage) => stage.id === approvedCase.id,
-                );
-                const newRecord = {
-                  ...approvedCase,
-                  action:
-                    draft[index].action === 'both-approve'
-                      ? 'operation-approve'
-                      : draft[index].action,
-                  pendingStage: draft[index].pendingStage,
-                };
-
-                if (newRecord.action === 'case-approve')
-                  // Если дело требовало одобрения, то удаляем его из списка на рассмотрение
-                  return draft.filter((stage) => stage.id !== approvedCase.id);
-
-                return [
-                  // В противном случае (чисто гипотетический) - обновляем данные
-                  ...draft.slice(0, index),
-                  newRecord,
-                  ...draft.slice(index + 1),
-                ];
-              },
-            ),
-          );
+      async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
+        const { data: newCase } = await queryFulfilled;
+        updateCachedCase(newCase, dispatch, getState);
       },
     }),
   }),
@@ -189,9 +94,7 @@ export const casesApi = rtkApi.injectEndpoints({
 
 export const {
   useGetCasesQuery: useCases,
-  useGetPendingCasesQuery: usePendingCases,
   useGetCaseByIdQuery: useCaseById,
-  useGetPendingCaseByIdQuery: usePendingCaseById,
   useGetCaseByOperationIdQuery: useCaseByOperationId,
   useCreateCaseMutation: useCreateCase,
   useUpdateCaseMutation: useUpdateCase,

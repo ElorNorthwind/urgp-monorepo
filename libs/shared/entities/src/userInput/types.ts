@@ -15,9 +15,8 @@ export const operationClassSchema = z
   .default('stage');
 export type OperationClass = z.infer<typeof operationClassSchema>;
 
-export const entityClassSchema = caseClassSchema
-  .or(operationClassSchema)
-  .default('control-incident');
+export const entityClassSchema = caseClassSchema.or(operationClassSchema);
+// .default('control-incident');
 export type EntityClass = z.infer<typeof entityClassSchema>;
 
 export const externalCaseSchema = z
@@ -53,7 +52,7 @@ export type UserInfo = z.infer<typeof userInfoSchema>;
 
 export const entitySlimSchema = z.object({
   id: z.number().int().positive(), // Positive integer
-  class: entityClassSchema,
+  // class: entityClassSchema,
   typeId: z.number().int().positive(),
   authorId: z.number().int().positive(),
   updatedById: z.number().int().positive().nullable(),

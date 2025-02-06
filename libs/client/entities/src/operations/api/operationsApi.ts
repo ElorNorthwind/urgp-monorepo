@@ -1,78 +1,51 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
-  Case,
-  ControlDispatch,
-  ControlOperation,
-  ControlOperationPayloadHistoryData,
-  ControlReminder,
-  ControlReminderSlim,
-  ControlStage,
-  ControlStageCreateDto,
-  ControlStageUpdateDto,
-  DispatchCreateDto,
-  DispatchUpdateDto,
-  ReminderCreateDto,
-  ReminderUpdateDto,
+  ApproveControlEntityDto,
+  CreateOperationDto,
   DeleteControlEntityDto,
+  EntityClasses,
+  OperationClasses,
+  OperationFull,
+  UpdateOperationDto,
 } from '@urgp/shared/entities';
-import { RefetchCachedCase } from './lib';
-import { casesApi } from '../../cases';
+import { markCachedCase, refetchCachedCase } from '../../cases/api/lib';
 
 export const operationsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    getOperationById: build.query<ControlOperation, number>({
+    getOperationById: build.query<OperationFull, number>({
       query: (id) => ({
-        url: '/control/operation/' + id.toString(),
+        url: `/control/operation/${id.toString()}/full`,
         method: 'GET',
       }),
       providesTags: ['stage', 'dispatch', 'reminder'],
     }),
-    getStagesByCaseId: build.query<ControlStage[], number>({
-      query: (id) => ({
-        url: '/control/operation/stage/by-case/' + id.toString(),
+
+    getOperationsByCaseId: build.query<
+      OperationFull[],
+      { class: OperationClasses | undefined; case: number | number[] }
+    >({
+      query: (dto) => ({
+        url: '/control/operation',
         method: 'GET',
+        search: {
+          mode: 'full',
+          case: dto.case,
+          class: dto.class,
+        },
       }),
-      providesTags: ['stage'],
-      // Этот эндпоинт провоцирует статус "отсмотренности"
-      // Делаем оптимистичный апдейт операции новой датой просмотра
-      // async onQueryStarted(id, { dispatch }) {
-      //   dispatch(
-      //     casesApi.util.updateQueryData('getCases', undefined, (draft) => {
-      //       const index = draft.findIndex((stage) => stage.id === id);
-      //       if (!index || !id) return draft;
-      //       return [
-      //         ...draft.slice(0, index),
-      //         {
-      //           ...draft[index],
-      //           lastSeen: new Date().toISOString(),
-      //           viewStatus:
-      //             draft[index]?.viewStatus === 'unwatched'
-      //               ? 'unwatched'
-      //               : 'unchanged',
-      //         },
-      //         ...draft.slice(index + 1),
-      //       ] as Case[];
-      //     }),
-      //   );
-      // },
-    }),
-    getDispatchesByCaseId: build.query<ControlDispatch[], number>({
-      query: (id) => ({
-        url: '/control/operation/dispatch/by-case/' + id.toString(),
-        method: 'GET',
-      }),
-      providesTags: ['dispatch'],
-    }),
-    getRemindersByCaseId: build.query<ControlReminder[], number>({
-      query: (id) => ({
-        url: '/control/operation/reminder/by-case/' + id.toString(),
-        method: 'GET',
-      }),
-      providesTags: ['reminder'],
+      providesTags: (_, __, dto) => {
+        if (
+          !dto?.class ||
+          !['stage', 'dispatch', 'reminder'].includes(dto.class)
+        )
+          return [];
+        return [dto.class];
+      },
+      // providesTags: ['stage', 'dispatch', 'reminder'],
     }),
 
-    getOperationPayloadHistroy: build.query<
-      ControlOperationPayloadHistoryData[],
+    getOperationHistroy: build.query<
+      Array<OperationFull & { revisionId: number }>,
       number
     >({
       query: (id) => ({
@@ -81,401 +54,137 @@ export const operationsApi = rtkApi.injectEndpoints({
       }),
     }),
 
-    creteStage: build.mutation<ControlStage, ControlStageCreateDto>({
+    createOperation: build.mutation<OperationFull, CreateOperationDto>({
       query: (dto) => ({
-        url: '/control/operation/stage',
+        url: '/control/operation',
         method: 'POST',
         body: dto,
       }),
-      invalidatesTags: ['stage'],
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+      invalidatesTags: (_, __, { class: opClass }) => {
+        if (!opClass || !['stage', 'dispatch', 'reminder'].includes(opClass))
+          return [];
+        return [opClass];
+      },
+      async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
         const { data: createdOperation } = await queryFulfilled;
-        // createdOperation?.caseId &&
-        //   createdOperation?.id &&
-        //   dispatch(
-        //     operationsApi.util.updateQueryData(
-        //       'getStagesByCaseId',
-        //       createdOperation.caseId,
-        //       (draft) => {
-        //         return [createdOperation, ...draft];
-        //       },
-        //     ),
-        //   );
-        RefetchCachedCase(dispatch, createdOperation?.caseId);
+        refetchCachedCase(createdOperation?.caseId, dispatch, getState);
       },
     }),
 
-    createDispatch: build.mutation<ControlDispatch, DispatchCreateDto>({
+    updateOperation: build.mutation<OperationFull, UpdateOperationDto>({
       query: (dto) => ({
-        url: '/control/operation/dispatch',
-        method: 'POST',
-        body: dto,
-      }),
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
-        const { data: createdOperation } = await queryFulfilled;
-        createdOperation?.caseId &&
-          createdOperation?.id &&
-          dispatch(
-            operationsApi.util.updateQueryData(
-              'getDispatchesByCaseId',
-              createdOperation.caseId,
-              (draft) => {
-                return [createdOperation, ...draft];
-              },
-            ),
-          );
-        RefetchCachedCase(dispatch, createdOperation?.caseId);
-      },
-    }),
-
-    createReminder: build.mutation<ControlReminder, ReminderCreateDto>({
-      query: (dto) => ({
-        url: '/control/operation/reminder',
-        method: 'POST',
-        body: dto,
-      }),
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
-        const { data: createdOperation } = await queryFulfilled;
-        createdOperation?.caseId &&
-          createdOperation?.id &&
-          dispatch(
-            operationsApi.util.updateQueryData(
-              'getRemindersByCaseId',
-              createdOperation.caseId,
-              (draft) => {
-                return [createdOperation, ...draft];
-              },
-            ),
-          );
-        RefetchCachedCase(dispatch, createdOperation?.caseId);
-      },
-    }),
-
-    updateStage: build.mutation<ControlStage, ControlStageUpdateDto>({
-      query: (dto) => ({
-        url: '/control/operation/stage',
+        url: '/control/operation',
         method: 'PATCH',
         body: dto,
       }),
-      invalidatesTags: ['stage'],
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+      invalidatesTags: (_, __, { class: opClass }) => {
+        if (!opClass || !['stage', 'dispatch', 'reminder'].includes(opClass))
+          return [];
+        return [opClass];
+      },
+      async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
         const { data: updatedOperation } = await queryFulfilled;
-        // updatedOperation?.caseId &&
-        //   updatedOperation?.id &&
-        //   dispatch(
-        //     operationsApi.util.updateQueryData(
-        //       'getStagesByCaseId',
-        //       updatedOperation.caseId,
-        //       (draft) => {
-        //         const index = draft.findIndex(
-        //           (stage) => stage.id === updatedOperation.id,
-        //         );
-        //         return [
-        //           ...draft.slice(0, index),
-        //           updatedOperation,
-        //           ...draft.slice(index + 1),
-        //         ];
-        //       },
-        //     ),
-        //   );
-        RefetchCachedCase(dispatch, updatedOperation?.caseId);
+        refetchCachedCase(updatedOperation?.caseId, dispatch, getState);
       },
     }),
 
-    updateDispatch: build.mutation<ControlDispatch, DispatchUpdateDto>({
+    markReminders: build.mutation<
+      number[],
+      { mode: 'seen' | 'done'; case: number[] }
+    >({
       query: (dto) => ({
-        url: '/control/operation/dispatch',
+        url: '/control/operation/mark-operation',
         method: 'PATCH',
-        body: dto,
+        body: {
+          mode: dto.mode,
+          operation: null,
+          case: dto.case,
+          class: [EntityClasses.reminder],
+        },
       }),
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
-        const { data: updatedOperation } = await queryFulfilled;
-        updatedOperation?.caseId &&
-          updatedOperation?.id &&
-          dispatch(
-            operationsApi.util.updateQueryData(
-              'getDispatchesByCaseId',
-              updatedOperation.caseId,
-              (draft) => {
-                const index = draft.findIndex(
-                  (stage) => stage.id === updatedOperation.id,
-                );
-                return [
-                  ...draft.slice(0, index),
-                  updatedOperation,
-                  ...draft.slice(index + 1),
-                ];
-              },
-            ),
-          );
-        RefetchCachedCase(dispatch, updatedOperation?.caseId);
-      },
-    }),
 
-    updateReminder: build.mutation<ControlReminder, ReminderUpdateDto>({
-      query: (dto) => ({
-        url: '/control/operation/reminder',
-        method: 'PATCH',
-        body: dto,
-      }),
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
-        const { data: updatedOperation } = await queryFulfilled;
-        updatedOperation?.caseId &&
-          updatedOperation?.id &&
-          dispatch(
-            operationsApi.util.updateQueryData(
-              'getRemindersByCaseId',
-              updatedOperation.caseId,
-              (draft) => {
-                const index = draft.findIndex(
-                  (stage) => stage.id === updatedOperation.id,
-                );
-                return [
-                  ...draft.slice(0, index),
-                  updatedOperation,
-                  ...draft.slice(index + 1),
-                ];
-              },
-            ),
-          );
-        RefetchCachedCase(dispatch, updatedOperation?.caseId);
-      },
-    }),
-
-    markRemindersAsSeen: build.mutation<ControlReminderSlim[], number[]>({
-      query: (caseIds) => ({
-        url: '/control/operation/mark-reminders-as-seen',
-        method: 'PATCH',
-        body: { caseIds },
-      }),
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
-        const { data: updatedOperation } = await queryFulfilled;
-        if (!updatedOperation?.[0]?.caseId || !updatedOperation?.[0]?.id)
-          return;
+      async onQueryStarted(dto, { dispatch, getState }) {
         dispatch(
           operationsApi.util.updateQueryData(
-            'getRemindersByCaseId',
-            updatedOperation?.[0]?.caseId,
+            'getOperationsByCaseId',
+            { class: EntityClasses.reminder, case: dto.case },
             (draft) => {
-              const index = draft.findIndex(
-                (reminder) => reminder.id === updatedOperation?.[0]?.id,
-              );
-              return [
-                ...draft.slice(0, index),
-                {
-                  ...draft[index],
-                  payload: {
-                    ...draft[index].payload,
-                    lastSeenDate: updatedOperation?.[0]?.payload?.lastSeenDate,
-                  },
-                },
-                ...draft.slice(index + 1),
-              ];
+              return draft.map((op) => {
+                if (dto.case.includes(op.caseId))
+                  return {
+                    ...op,
+                    updatedAt: new Date().toISOString(),
+                    doneDate:
+                      dto.mode === 'done'
+                        ? new Date().toISOString()
+                        : op.doneDate,
+                  };
+                return op;
+              });
             },
           ),
         );
-        dispatch(
-          casesApi.util.updateQueryData('getCases', undefined, (draft) => {
-            const index = draft.findIndex(
-              (stage) => stage.id === updatedOperation?.[0]?.caseId,
-            );
-            return [
-              ...draft.slice(0, index),
-              {
-                ...draft[index],
-                lastSeen: updatedOperation?.[0]?.payload?.lastSeenDate,
-                viewStatus:
-                  draft[index].viewStatus === 'unwatched'
-                    ? 'unwatched'
-                    : 'unchanged',
-              },
-              ...draft.slice(index + 1),
-            ];
-          }),
-        );
-        dispatch(
-          casesApi.util.updateQueryData(
-            'getPendingCases',
-            undefined,
-            (draft) => {
-              const index = draft.findIndex(
-                (stage) => stage.id === updatedOperation?.[0]?.caseId,
-              );
-              return [
-                ...draft.slice(0, index),
-                {
-                  ...draft[index],
-                  lastSeen: updatedOperation?.[0]?.payload?.lastSeenDate,
-                  viewStatus:
-                    draft[index].viewStatus === 'unwatched'
-                      ? 'unwatched'
-                      : 'unchanged',
-                },
-                ...draft.slice(index + 1),
-              ];
-            },
-          ),
-        );
+
+        markCachedCase(dto, dispatch, getState);
       },
     }),
 
-    markReminderAsDoneByCaseIds: build.mutation<ControlReminder, number[]>({
-      query: (caseIds) => ({
-        url: '/control/operation/mark-reminders-as-done',
-        method: 'PATCH',
-        body: { caseIds },
-      }),
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
-        const { data: updatedOperation } = await queryFulfilled;
-        if (!updatedOperation?.caseId || !updatedOperation?.id) return;
-        dispatch(
-          operationsApi.util.updateQueryData(
-            'getRemindersByCaseId',
-            updatedOperation.caseId,
-            (draft) => {
-              const index = draft.findIndex(
-                (reminder) => reminder.id === updatedOperation.id,
-              );
-              return [
-                ...draft.slice(0, index),
-                {
-                  ...draft[index],
-                  payload: {
-                    ...draft[index].payload,
-                    lastSeenDate: updatedOperation?.payload?.lastSeenDate,
-                    doneDate: updatedOperation?.payload?.doneDate,
-                    description: updatedOperation?.payload?.description,
-                  },
-                },
-                ...draft.slice(index + 1),
-              ];
-            },
-          ),
-        );
-        dispatch(
-          casesApi.util.updateQueryData('getCases', undefined, (draft) => {
-            const index = draft.findIndex(
-              (stage) => stage.id === updatedOperation?.caseId,
-            );
-            return [
-              ...draft.slice(0, index),
-              {
-                ...draft[index],
-                lastSeen: updatedOperation?.payload?.lastSeenDate,
-                viewStatus: 'unwatched',
-              },
-              ...draft.slice(index + 1),
-            ];
-          }),
-        );
-      },
-    }),
-
-    markReminderAsDone: build.mutation<ControlReminder, ReminderUpdateDto>({
-      query: (dto) => ({
-        url: '/control/operation/reminder',
-        method: 'PATCH',
-        body: { ...dto, doneDate: new Date() },
-      }),
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
-        const { data: updatedOperation } = await queryFulfilled;
-        updatedOperation?.caseId &&
-          updatedOperation?.id &&
-          dispatch(
-            operationsApi.util.updateQueryData(
-              'getRemindersByCaseId',
-              updatedOperation.caseId,
-              (draft) => {
-                const index = draft.findIndex(
-                  (stage) => stage.id === updatedOperation.id,
-                );
-                return [
-                  ...draft.slice(0, index),
-                  updatedOperation,
-                  ...draft.slice(index + 1),
-                ];
-              },
-            ),
-          );
-        RefetchCachedCase(dispatch, updatedOperation?.caseId);
-      },
-    }),
-
-    deleteOperation: build.mutation<ControlOperation, DeleteControlEntityDto>({
+    deleteOperation: build.mutation<OperationFull, DeleteControlEntityDto>({
       query: (dto) => ({
         url: '/control/operation',
         method: 'DELETE',
         body: dto,
       }),
 
-      async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ id }, { dispatch, queryFulfilled, getState }) {
         const { data: deletedOperation } = await queryFulfilled;
-        deletedOperation?.class === 'stage' &&
-          deletedOperation?.caseId &&
-          dispatch(
-            operationsApi.util.updateQueryData(
-              'getStagesByCaseId',
-              deletedOperation.caseId,
-              (draft) => {
-                return draft.filter((stage) => stage.id !== id);
-              },
-            ),
-          );
-        deletedOperation?.class === 'dispatch' &&
-          deletedOperation?.caseId &&
-          dispatch(
-            operationsApi.util.updateQueryData(
-              'getDispatchesByCaseId',
-              deletedOperation.caseId,
-              (draft) => {
-                return draft.filter((stage) => stage.id !== id);
-              },
-            ),
-          );
-        deletedOperation?.class === 'reminder' &&
-          deletedOperation?.caseId &&
-          dispatch(
-            operationsApi.util.updateQueryData(
-              'getRemindersByCaseId',
-              deletedOperation.caseId,
-              (draft) => {
-                return draft.filter((stage) => stage.id !== id);
-              },
-            ),
-          );
-        RefetchCachedCase(dispatch, deletedOperation?.caseId);
+        dispatch(
+          operationsApi.util.updateQueryData(
+            'getOperationsByCaseId',
+            {
+              class: deletedOperation.class,
+              case: deletedOperation.id,
+            },
+            (draft) => {
+              return draft.filter((stage) => stage.id !== id);
+            },
+          ),
+        );
+        refetchCachedCase(deletedOperation?.caseId, dispatch, getState);
       },
     }),
 
-    approveOperation: build.mutation<ControlOperation, DeleteControlEntityDto>({
+    approveOperation: build.mutation<OperationFull, ApproveControlEntityDto>({
       query: (dto) => ({
         url: '/control/operation/approve',
         method: 'PATCH',
         body: dto,
       }),
 
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+      async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
         const { data: approvedOperation } = await queryFulfilled;
-        approvedOperation?.caseId &&
-          approvedOperation?.id &&
-          approvedOperation?.class === 'stage' &&
-          dispatch(
-            operationsApi.util.updateQueryData(
-              'getStagesByCaseId',
-              approvedOperation.caseId,
-              (draft) => {
-                const index = draft.findIndex(
-                  (stage) => stage.id === approvedOperation.id,
-                );
-                return [
-                  ...draft.slice(0, index),
-                  approvedOperation,
-                  ...draft.slice(index + 1),
-                ];
-              },
-            ),
-          );
-        RefetchCachedCase(dispatch, approvedOperation?.caseId);
+
+        dispatch(
+          operationsApi.util.updateQueryData(
+            'getOperationsByCaseId',
+            {
+              class: approvedOperation.class,
+              case: approvedOperation.id,
+            },
+            (draft) => {
+              const index = draft.findIndex(
+                (stage) => stage.id === approvedOperation.id,
+              );
+              return [
+                ...draft.slice(0, index),
+                approvedOperation,
+                ...draft.slice(index + 1),
+              ];
+            },
+          ),
+        );
+
+        refetchCachedCase(approvedOperation?.caseId, dispatch, getState);
       },
     }),
   }),
@@ -483,20 +192,12 @@ export const operationsApi = rtkApi.injectEndpoints({
 });
 
 export const {
+  useCreateOperationMutation: useCreateOperation,
   useGetOperationByIdQuery: useOperationById,
-  useGetStagesByCaseIdQuery: useStages,
-  useGetDispatchesByCaseIdQuery: useDispatches,
-  useGetRemindersByCaseIdQuery: useReminders,
-  useGetOperationPayloadHistroyQuery: useOperationPayloadHistroy,
+  useGetOperationsByCaseIdQuery: useOperations,
+  useGetOperationHistroyQuery: useOperationHistory,
+  useUpdateOperationMutation: useUpdateOperation,
+  useMarkRemindersMutation: useMarkReminders,
   useDeleteOperationMutation: useDeleteOperation,
-  useCreteStageMutation: useCreateControlStage,
-  useCreateDispatchMutation: useCreateDispatch,
-  useCreateReminderMutation: useCreateReminder,
-  useUpdateStageMutation: useUpdateControlStage,
-  useUpdateDispatchMutation: useUpdateDispatch,
-  useUpdateReminderMutation: useUpdateReminder,
-  useMarkRemindersAsSeenMutation: useMarkRemindersAsSeen,
-  useMarkReminderAsDoneMutation: useMarkReminderAsDone,
-  useMarkReminderAsDoneByCaseIdsMutation: useMarkCaseRemindersAsDone,
   useApproveOperationMutation: useApproveOperation,
 } = operationsApi;

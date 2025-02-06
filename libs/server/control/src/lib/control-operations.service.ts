@@ -17,13 +17,10 @@ import {
   OperationFull,
   OperationSlim,
   ReadEntityDto,
-  ReadOperationDto,
-  readOperationSchema,
   UpdateOperationDto,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 import { ControlClassificatorsService } from './control-classificators.service';
-import { ControlCasesService } from './control-cases.service';
 
 @Injectable()
 export class ControlOperationsService {
@@ -100,12 +97,10 @@ export class ControlOperationsService {
   public async markOperation(
     dto: MarkOperationDto,
     updatedById: number,
-    mode: 'seen' | 'done' = 'seen',
   ): Promise<number | number[]> {
     return await this.dbServise.db.controlOperations.markOperation(
       dto,
       updatedById,
-      mode,
     );
   }
 

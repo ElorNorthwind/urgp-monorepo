@@ -5,13 +5,13 @@ WITH user_info AS (SELECT id, fio FROM renovation.users), -- (control_data->>'pr
 			array_agg(o.id) as "operationIds",
 			MAX(o."controlLevel") FILTER (WHERE (o."class" = 'dispatch')) as "controlLevel",
 			array_agg(DISTINCT o."controlFromId") FILTER (WHERE o."controlLevel" = o."maxControlLevel") as "controllerIds",
-			(jsonb_agg(to_jsonb(o) - '{caseOrder, statusOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]) 
-				FILTER (WHERE o."class" = 'reminder' AND o."statusOrder" = 1 AND o."controlFromId" =  ${userId}))->0  as "myReminder",
-			(jsonb_agg(to_jsonb(o) - '{caseOrder, statusOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]) 
-				FILTER (WHERE o."class" = 'stage' AND o."approveStatus" = 'pending' AND o."statusOrder" = 1 AND o."approveToId" = ${userId}))->0  as "myPendingStage",
-			(jsonb_agg(to_jsonb(o) - '{caseOrder, statusOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[])
+			(jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]) 
+				FILTER (WHERE o."class" = 'reminder' AND o."controlFromOrder" = 1 AND o."controlFromId" =  ${userId}))->0  as "myReminder",
+			(jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]) 
+				FILTER (WHERE o."class" = 'stage' AND o."approveStatus" = 'pending' AND o."approveToOrder" = 1 AND o."approveToId" = ${userId}))->0  as "myPendingStage",
+			(jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[])
 				FILTER (WHERE o."class" = 'stage' AND o."caseOrder" = 1))->0  as "lastStage",
-			jsonb_agg(to_jsonb(o) - '{caseOrder, statusOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]
+			jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]
 				ORDER BY (o."controlFrom"->>'priority')::integer DESC, o."dueDate" ASC )
 				FILTER (WHERE o."class" = 'dispatch') as dispatches,
 			MAX(o."updatedAt") FILTER (WHERE o."class" = ANY(ARRAY['stage', 'dispatch'])) as "lastEdit"
@@ -54,16 +54,15 @@ SELECT
 	o."lastStage" as "lastStage",
 	COALESCE(o."dispatches", '[]'::jsonb) as "dispatches",
 	o."myPendingStage" as "myPendingStage",
-	CASE 
-		WHEN c.approve_status = 'pending' AND o."myPendingStage" IS NOT NULL THEN 'both-approve' 
-		WHEN c.approve_status = 'pending' THEN 'case-approve'
-		WHEN c.approve_status = 'rejected' THEN 'case-rejected'
-		WHEN o."myPendingStage" IS NOT NULL THEN 'operation-approve'
-		WHEN o."lastStage"->>'category' = 'рассмотрено' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL THEN 'reminder-done'
-		WHEN (o."lastStage"->>'category' <> 'рассмотрено' AND (o."myReminder"->>'doneDate')::date < current_date) THEN 'reminder-overdue'
-		ELSE 'unknown'
-	END as action
-
+	ARRAY_REMOVE(
+		ARRAY[
+			  CASE WHEN c.approve_status = 'pending' THEN 'case-approve' ELSE null END
+			, CASE WHEN c.approve_status = 'rejected' THEN 'case-rejected' ELSE null END
+			, CASE WHEN o."myPendingStage" IS NOT NULL THEN 'operation-approve' ELSE null END
+			, CASE WHEN o."lastStage"->'type'->>'category' = 'рассмотрено' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL THEN 'reminder-done' ELSE null END
+			, CASE WHEN (o."lastStage"->'type'->>'category' <> 'рассмотрено' AND (o."myReminder"->>'dueDate')::date < current_date) THEN 'reminder-overdue' ELSE null END
+		]
+	, null) as actions
 FROM control.cases_ c
 
 LEFT JOIN control.case_types t ON t.id = c.type_id

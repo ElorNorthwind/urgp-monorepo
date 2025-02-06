@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { entityClassesValues } from './config';
+import { entityClassesValues, operationClassesValues } from './config';
 // const entityClassesValues: ["control-incident" | "control-problem" | "stage" | "reminder" | "dispatch"]
 
 export const approveControlEntitySchema = z.object({
@@ -45,27 +45,16 @@ const preprocessArrayOrString = (obj: unknown) => {
   return null;
 };
 
-// Schema for a number or an array of numbers
-// const numberOrArraySchema2 = z
-//   .preprocess(preprocessArrayOrString, z.array(z.coerce.number()))
-//   .nullable()
-//   .default(null)
-//   .optional();
-
-const numberOrArraySchema = z.preprocess(
+export const numberOrArraySchema = z.preprocess(
   preprocessArrayOrString,
   z.array(z.coerce.number()).nullable().default(null).optional(),
 );
 
-// Schema for a string or an array of strings
-// const controlClassOrArraySchema = z
-//   .literal('all')
-//   .or(
-//     z.preprocess(preprocessArrayOrString, z.array(z.enum(entityClassesValues))),
-//   )
-//   .nullable()
-//   .default(null)
-//   .optional();
+export const operationClassOrArraySchema = z.preprocess(
+  preprocessArrayOrString,
+  z.array(z.enum(operationClassesValues)).default(['reminder']).optional(),
+);
+
 const controlClassOrArraySchema = z.preprocess(
   preprocessArrayOrString,
   z.array(z.enum(entityClassesValues)).nullable().default(null).optional(),

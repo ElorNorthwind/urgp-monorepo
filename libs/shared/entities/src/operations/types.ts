@@ -4,8 +4,10 @@ import {
   entitySlimSchema,
   userInfoSchema,
 } from '../userInput/types';
+import { OperationClasses, operationClassesValues } from '../userInput/config';
 
 const operationSlimFields = {
+  class: z.enum(operationClassesValues),
   caseId: z.number().int().positive(),
   controlFromId: z.number().int().positive().nullable().default(null),
   controlToId: z.number().int().positive().nullable().default(null),
@@ -14,6 +16,7 @@ const operationSlimFields = {
 };
 
 const operationFullFields = {
+  class: z.enum(operationClassesValues),
   caseId: z.number().int().positive(),
   controlFrom: userInfoSchema.nullable().default(null),
   controlTo: userInfoSchema.nullable().default(null),

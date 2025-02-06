@@ -27,8 +27,6 @@ import {
   CaseFull,
   OperationFull,
   OperationSlim,
-  readOperationSchema,
-  ReadOperationDto,
   createOperationSchema,
   CreateOperationDto,
   ApproveStatus,
@@ -103,7 +101,7 @@ export class ControlOperationsController {
   }
 
   @Get(':id/history')
-  getOperationPayloadHistory(
+  getOperationHistory(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<Array<OperationFull & { revisionId: number }>> {
     return this.controlOperations.readOperationHistory(id);
@@ -161,7 +159,7 @@ export class ControlOperationsController {
     );
 
     if (i.cannot('delete', currentOperation)) {
-      throw new BadRequestException('Нет прав на удаление!');
+      throw new UnauthorizedException('Нет прав на удаление!');
     }
 
     return this.controlOperations.deleteOperation(dto.id, req.user.id);

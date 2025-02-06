@@ -5,7 +5,6 @@ import {
   NestedClassificatorInfoString,
   SelectOption,
   Classificator,
-  UserControlApprovers,
   UserControlData,
   UserControlSettings,
 } from '@urgp/shared/entities';
@@ -21,6 +20,14 @@ export const classificatorsApi = rtkApi
         }),
         providesTags: ['user-data'],
       }),
+      getCurrentUserApprovers: build.query<number[], void>({
+        query: () => ({
+          url: '/control/classificators/user-approvers',
+          method: 'GET',
+          providesTags: ['user-data'],
+        }),
+      }),
+
       getCurrentUserSettings: build.query<UserControlSettings, void>({
         query: () => ({
           url: '/control/classificators/user-settings',
@@ -68,54 +75,55 @@ export const classificatorsApi = rtkApi
           );
         },
       }),
-      getCurrentUserApprovers: build.query<UserControlApprovers, void>({
-        query: () => ({
-          url: '/control/classificators/user-approvers',
-          method: 'GET',
-          providesTags: ['user-data'],
-        }),
-      }),
+
       getControlExecutors: build.query<SelectOption<number>[], void>({
         query: () => ({
           url: '/control/classificators/executors',
           method: 'GET',
         }),
+        providesTags: ['classificator'],
       }),
       getCaseTypes: build.query<NestedClassificatorInfo[], void>({
         query: () => ({
           url: '/control/classificators/case-types',
           method: 'GET',
         }),
+        providesTags: ['classificator'],
       }),
       getOperationTypes: build.query<NestedClassificatorInfo[], void>({
         query: () => ({
           url: '/control/classificators/operation-types',
           method: 'GET',
         }),
+        providesTags: ['classificator'],
       }),
       getOperationTypesFlat: build.query<Classificator[], void>({
         query: () => ({
           url: '/control/classificators/operation-types-flat',
           method: 'GET',
         }),
+        providesTags: ['classificator'],
       }),
       getCaseStatusTypes: build.query<NestedClassificatorInfo[], void>({
         query: () => ({
           url: '/control/classificators/case-status-types',
           method: 'GET',
         }),
+        providesTags: ['classificator'],
       }),
       getCaseDirectionTypes: build.query<NestedClassificatorInfo[], void>({
         query: () => ({
           url: '/control/classificators/case-direction-types',
           method: 'GET',
         }),
+        providesTags: ['classificator'],
       }),
       getDepartmentTypes: build.query<NestedClassificatorInfoString[], void>({
         query: () => ({
           url: '/control/classificators/case-department-types',
           method: 'GET',
         }),
+        providesTags: ['classificator'],
       }),
     }),
     overrideExisting: false,

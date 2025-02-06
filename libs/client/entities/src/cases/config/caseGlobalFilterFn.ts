@@ -1,15 +1,11 @@
-import {
-  CasesPageSearchDto,
-  Case,
-  CaseWithPendingInfo,
-} from '@urgp/shared/entities';
+import { CaseFull, CasesPageSearchDto } from '@urgp/shared/entities';
 import { Row } from '@tanstack/react-table';
 import { toDate } from 'date-fns';
 import { store } from '@urgp/client/shared';
 import { classificatorsApi } from '../../classificators';
 
 export function caseGlobalFilterFn(
-  row: Row<Case>,
+  row: Row<CaseFull>,
   columnId: string,
   filterValue: CasesPageSearchDto,
 ): boolean {
@@ -42,14 +38,10 @@ export function caseGlobalFilterFn(
   if (
     query &&
     !(
-      row.original.payload.description
-        ?.toLowerCase()
-        .includes(query.toLowerCase()) ||
-      row.original.payload.fio?.toLowerCase().includes(query.toLowerCase()) ||
-      row.original.payload.adress
-        ?.toLowerCase()
-        .includes(query.toLowerCase()) ||
-      row.original.payload.externalCases
+      row.original.notes?.toLowerCase().includes(query.toLowerCase()) ||
+      row.original.title?.toLowerCase().includes(query.toLowerCase()) ||
+      row.original.extra?.toLowerCase().includes(query.toLowerCase()) ||
+      row.original.externalCases
         .reduce((prev, cur) => {
           return prev + ' ' + cur.num;
         }, '')
@@ -61,7 +53,7 @@ export function caseGlobalFilterFn(
   }
   if (
     num &&
-    !row.original.payload.externalCases
+    !row.original.externalCases
       .reduce((prev, cur) => {
         return prev + ' ' + cur.num;
       }, '')
@@ -82,19 +74,19 @@ export function caseGlobalFilterFn(
   if (viewStatus && !viewStatus.includes(row.original?.viewStatus)) {
     allowed = false;
   }
-  if (type && !type.includes(row.original?.payload?.type?.id)) {
+  if (type && !type.includes(row.original?.type?.id)) {
     allowed = false;
   }
   if (
     direction &&
-    row.original?.payload?.directions.filter((d) => direction.includes(d.id))
-      .length === 0
+    row.original?.directions.filter((d) => direction.includes(d.id)).length ===
+      0
   ) {
     allowed = false;
   }
   if (
     department &&
-    row.original?.payload?.directions.filter((d) =>
+    row.original?.directions.filter((d) =>
       department.includes(d.category || '-'),
     ).length === 0
   ) {
@@ -116,25 +108,16 @@ export function caseGlobalFilterFn(
   if (
     relevant &&
     row?.original?.author?.id !== userId && // Автор
-    row?.original?.payload?.approveBy?.id !== userId && // Согласовал
-    row?.original?.payload?.approver?.id !== userId && // Рассматривает
+    row?.original?.approveFrom?.id !== userId && // Направлено от (согласование)
+    row?.original?.approveTo?.id !== userId && // Направлено к (согласование)
     row?.original?.viewStatus === 'unwatched' && // Следит за делом
-    !row?.original?.dispatches?.some((d) => d?.executor?.id === userId) // Исполнитель по любому из поручений (в т.ч. закрытым)
+    !row?.original?.dispatches?.some((d) => d?.controlTo?.id === userId) // Исполнитель по любому из поручений (в т.ч. закрытым)
   ) {
     allowed = false;
   }
 
-  // Super shitty...
-  const rowAction = (row?.original as CaseWithPendingInfo)?.action;
-  if (
-    action &&
-    rowAction &&
-    !action.includes(rowAction) &&
-    !(
-      action.some((a) => a === 'case-approve' || a === 'operation-approve') &&
-      rowAction === 'both-approve'
-    )
-  ) {
+  const rowActions = row?.original?.actions || [];
+  if (action && !rowActions?.some((a) => action.includes(a))) {
     allowed = false;
   }
 

@@ -2,7 +2,6 @@ import {
   ApproveControlEntityDto,
   OperationSlim,
   OperationFull,
-  ReadOperationDto,
   CreateOperationDto,
   UpdateOperationDto,
   MarkOperationDto,
@@ -91,54 +90,33 @@ export class ControlOperationsRepository {
     return this.db.one(operations.updateOperation, { ...dto, updatedById });
   }
 
-  markOperation(
-    dto: MarkOperationDto,
-    updatedById: number,
-    mode: 'seen' | 'done' = 'seen',
-  ): Promise<number | number[]> {
+  markOperation(dto: MarkOperationDto, updatedById: number): Promise<number[]> {
     const baseQuery =
-      mode === 'done' ? operations.markAsDone : operations.markAsSeen;
+      dto.mode === 'done' ? operations.markAsDone : operations.markAsSeen;
 
-    //  Отметка по массиву ID дел
-    if (dto?.case && Array.isArray(dto?.case)) {
-      const q = this.pgp.as.format(baseQuery, {
-        conditions: this.pgp.as.format(`case_id = ANY(ARRAY[$1:list])`, [
-          [dto.case],
-        ]),
-        updatedById,
-      });
-      return this.db.any(q) as Promise<number[]>;
+    if (!dto?.class || (!dto?.case && !dto?.operation))
+      throw new BadRequestException(
+        'Неверные параметры запроса: нужен класс операции + id дела или операции',
+      );
 
-      // Отметка по 1 ID дела
-    } else if (dto?.case && typeof dto?.case === 'number') {
-      const q = this.pgp.as.format(baseQuery, {
-        conditions: this.pgp.as.format(`WHERE case_id = $1`, dto.case),
-        updatedById,
-      });
-      return this.db.any(q) as Promise<number[]>;
+    const conditions: string[] = [
+      this.pgp.as.format('class = ANY(ARRAY[$1:list])', [dto.class]),
+    ];
 
-      // Отметка по массиву ID операций
-    } else if (dto?.operation && Array.isArray(dto?.operation)) {
-      const q = this.pgp.as.format(baseQuery, {
-        conditions: this.pgp.as.format(`WHERE id = ANY(ARRAY[$1:list])`, [
-          dto.operation,
-        ]),
-        updatedById,
-      });
-      return this.db.any(q) as Promise<number[]>;
+    if (dto.case)
+      conditions.push(
+        this.pgp.as.format('case_id = ANY(ARRAY[$1:list])', [dto.case]),
+      );
 
-      // Отметка по 1 ID операции
-    } else if (dto?.operation && typeof dto?.operation === 'number') {
-      const q = this.pgp.as.format(baseQuery, {
-        conditions: this.pgp.as.format(`WHERE id = $1`, dto.operation),
-        updatedById,
-      });
-      return this.db.oneOrNone(q) as Promise<number>;
-    }
+    if (dto.operation)
+      conditions.push(
+        this.pgp.as.format('id = ANY(ARRAY[$1:list])', [dto.operation]),
+      );
 
-    throw new BadRequestException(
-      'Неверные параметры запроса: нужен хотя бы 1 id дела или операции',
-    );
+    return this.db.any(baseQuery, {
+      conditions: conditions.join(' AND '),
+      updatedById,
+    }) as Promise<number[]>;
   }
 
   deleteOperation(id: number, userId: number): Promise<number> {

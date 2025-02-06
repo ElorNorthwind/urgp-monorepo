@@ -1,5 +1,5 @@
 import { cn } from '@urgp/client/shared';
-import { CaseFull } from '@urgp/shared/entities';
+import { ViewStatus } from '@urgp/shared/entities';
 import {
   Circle,
   CircleAlert,
@@ -76,7 +76,7 @@ export const viewStatusStyles = {
     iconStyle: 'text-foreground',
     badgeStyle: 'bg-stone-600',
   },
-} as Record<Case['viewStatus'], StyleData>;
+} as Record<ViewStatus, StyleData>;
 
 export const pendingActionStyles = {
   unknown: { icon: Clipboard },

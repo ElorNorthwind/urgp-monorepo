@@ -1,6 +1,9 @@
 import { format } from 'date-fns';
 import { z } from 'zod';
-import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
+import {
+  GET_DEFAULT_CONTROL_DUE_DATE,
+  viewStatusValues,
+} from '../userInput/config';
 import { externalCaseSchema } from '../userInput/types';
 import { caseSchema, caseSlimSchema } from './types';
 
@@ -176,7 +179,7 @@ export const casesPageFilter = z
     relevant: z.boolean(),
     dueFrom: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
     dueTo: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
-    viewStatus: z.array(z.enum(['unwatched', 'unchanged', 'new', 'changed'])),
+    viewStatus: z.enum(viewStatusValues),
     action: queryStringArray,
     // action: z.array(
     //   z.enum([

@@ -79,9 +79,10 @@ export const rtkApi = createApi({
   tagTypes: [
     'user-data',
     'user-settings',
-    'case',
+    'control-incident',
     'stage',
     'dispatch',
     'reminder',
+    'classificator',
   ],
 });

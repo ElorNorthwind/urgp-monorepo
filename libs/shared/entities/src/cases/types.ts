@@ -5,10 +5,15 @@ import {
   entitySlimSchema,
   externalCaseSchema,
 } from '../userInput/types';
-import { caseActionsValues, viewStatusValues } from '../userInput/config';
+import {
+  caseActionsValues,
+  caseClassesValues,
+  viewStatusValues,
+} from '../userInput/config';
 import { operationFullSchema } from '../operations/types';
 
 const caseSlimFields = {
+  class: z.enum(caseClassesValues),
   externalCases: z.array(externalCaseSchema).default([]), // Array of externalCaseSchema objects
   directionIds: z.array(z.number().int().positive()).default([]), // Array of positive integers
   title: z.string().min(1, { message: 'Заголовок не может быть пустым' }),
@@ -16,6 +21,7 @@ const caseSlimFields = {
 };
 
 const caseFullFields = {
+  class: z.enum(caseClassesValues),
   externalCases: z.array(externalCaseSchema).default([]), // Array of externalCaseSchema objects
   directions: z.array(classificatorSchema).default([]),
   title: z.string().min(1, { message: 'Заголовок не может быть пустым' }),
@@ -28,7 +34,7 @@ const caseFullFields = {
   lastStage: z.any().nullable(),
   dispatches: z.array(operationFullSchema).default([]),
   myPendingStage: z.any().nullable(),
-  action: z.enum(caseActionsValues),
+  actions: z.array(z.enum(caseActionsValues)).default([]),
 };
 
 export const caseSlimSchema = entitySlimSchema

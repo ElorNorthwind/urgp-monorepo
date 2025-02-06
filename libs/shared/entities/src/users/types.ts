@@ -37,11 +37,12 @@ export type RequestWithUserData = Request & {
 };
 
 export type UserControlData = {
-  approvers?: {
-    cases?: number[];
-    problems?: number[];
-    operations?: number[];
-  };
+  // approvers?: {
+  //   cases?: number[];
+  //   problems?: number[];
+  //   operations?: number[];
+  // };
+  approveTo: number[];
   roles: string[];
   priority?: number;
 };
@@ -57,11 +58,11 @@ export type SelectOption<T> = {
   value: T;
 };
 
-export type UserControlApprovers = {
-  cases: Array<SelectOption<number>>;
-  problems: Array<SelectOption<number>>;
-  operations: Array<SelectOption<number>>;
-};
+// export type UserControlApprovers = {
+//   cases: Array<SelectOption<number>>;
+//   problems: Array<SelectOption<number>>;
+//   operations: Array<SelectOption<number>>;
+// };
 
 // export type RequestWithAccessToken = Request & {
 //   user: UserAccessTokenInfo;
