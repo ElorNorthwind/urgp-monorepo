@@ -5,6 +5,7 @@ import {
   Logger,
   Param,
   ParseArrayPipe,
+  ParseIntPipe,
   Patch,
   Query,
   Req,
@@ -60,7 +61,7 @@ export class ControlClassificatorsController {
   @Get('user-data/:id')
   async getUserData(
     @Req() req: RequestWithUserData,
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<UserControlData> {
     const userId = req.user.id;
     const controlData = await this.classificators.getControlData(userId);
@@ -83,7 +84,7 @@ export class ControlClassificatorsController {
   @Get('user-settings/:id')
   async getUserSettings(
     @Req() req: RequestWithUserData,
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<UserControlSettings> {
     const userId = req.user.id;
     const controlData = await this.classificators.getControlData(userId);

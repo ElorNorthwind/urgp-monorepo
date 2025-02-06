@@ -35,6 +35,7 @@ import {
   UpdateCaseDto,
   readEntitySchema,
   ReadEntityDto,
+  CaseFull,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
@@ -67,6 +68,27 @@ export class ControlCasesController {
       },
       req.user.id,
     );
+  }
+
+  @Get(':id/slim')
+  getSlimCaseById(@Param('id', ParseIntPipe) id: number): Promise<CaseSlim> {
+    return this.controlCases.readSlimCaseById(id);
+  }
+
+  @Get(':id/full')
+  getFullCaseById(
+    @Req() req: RequestWithUserData,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<CaseFull> {
+    return this.controlCases.readFullCaseById(id, req.user.id);
+  }
+
+  @Get(':id/by-operation')
+  getFullCaseByOperationId(
+    @Req() req: RequestWithUserData,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<CaseFull> {
+    return this.controlCases.readFullCaseByOperationId(id, req.user.id);
   }
 
   @UsePipes(new ZodValidationPipe(readEntitySchema))

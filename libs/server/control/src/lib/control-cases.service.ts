@@ -103,6 +103,21 @@ export class ControlCasesService {
     return cases[0];
   }
 
+  public async readFullCaseByOperationId(
+    operationId: number,
+    userId: number,
+  ): Promise<CaseFull> {
+    const cases = (await this.readCases({
+      mode: 'full',
+      operation: [operationId],
+    })) as CaseFull[];
+    if (cases.length === 0)
+      throw new NotFoundException(
+        `Дело с операцией ${operationId || '-'} не найдено`,
+      );
+    return cases[0];
+  }
+
   public async updateCase(
     dto: UpdateCaseDto,
     updatedById: number,

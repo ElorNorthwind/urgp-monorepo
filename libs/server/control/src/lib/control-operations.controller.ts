@@ -7,6 +7,7 @@ import {
   Logger,
   Param,
   ParseArrayPipe,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -86,9 +87,24 @@ export class ControlOperationsController {
     return this.controlOperations.readOperations(dto, req.user.id);
   }
 
+  @Get(':id/slim')
+  getSlimOperationById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<OperationSlim> {
+    return this.controlOperations.readSlimOperationById(id);
+  }
+
+  @Get(':id/full')
+  getFullOperationById(
+    @Req() req: RequestWithUserData,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<OperationFull> {
+    return this.controlOperations.readFullOperationById(id, req.user.id);
+  }
+
   @Get(':id/history')
   getOperationPayloadHistory(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<Array<OperationFull & { revisionId: number }>> {
     return this.controlOperations.readOperationHistory(id);
   }
