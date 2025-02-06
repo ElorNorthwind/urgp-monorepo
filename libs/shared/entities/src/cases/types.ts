@@ -5,6 +5,8 @@ import {
   entitySlimSchema,
   externalCaseSchema,
 } from '../userInput/types';
+import { caseActionsValues, viewStatusValues } from '../userInput/config';
+import { operationFullSchema } from '../operations/types';
 
 const caseSlimFields = {
   externalCases: z.array(externalCaseSchema).default([]), // Array of externalCaseSchema objects
@@ -13,15 +15,20 @@ const caseSlimFields = {
   notes: z.string().min(1, { message: 'Описание не может быть пустым' }),
 };
 
-const caseFullFields = caseSlimFields && {
+const caseFullFields = {
+  externalCases: z.array(externalCaseSchema).default([]), // Array of externalCaseSchema objects
+  directions: z.array(classificatorSchema).default([]),
+  title: z.string().min(1, { message: 'Заголовок не может быть пустым' }),
+  notes: z.string().min(1, { message: 'Описание не может быть пустым' }),
   operationIds: z.array(z.coerce.number().int().positive()).default([]),
   status: classificatorSchema,
-  viewStatus: z.string(),
+  viewStatus: z.enum(viewStatusValues),
   lastEdit: z.string().datetime().nullable(), // ISO 8601 date string
   myReminder: z.any().nullable(),
   lastStage: z.any().nullable(),
-  dispatches: z.array(z.coerce.number()).default([]),
+  dispatches: z.array(operationFullSchema).default([]),
   myPendingStage: z.any().nullable(),
+  action: z.enum(caseActionsValues),
 };
 
 export const caseSlimSchema = entitySlimSchema

@@ -53,7 +53,16 @@ SELECT
 	o."myReminder" as "myReminder",
 	o."lastStage" as "lastStage",
 	COALESCE(o."dispatches", '[]'::jsonb) as "dispatches",
-	o."myPendingStage" as "myPendingStage"
+	o."myPendingStage" as "myPendingStage",
+	CASE 
+		WHEN c.approve_status = 'pending' AND o."myPendingStage" IS NOT NULL THEN 'both-approve' 
+		WHEN c.approve_status = 'pending' THEN 'case-approve'
+		WHEN c.approve_status = 'rejected' THEN 'case-rejected'
+		WHEN o."myPendingStage" IS NOT NULL THEN 'operation-approve'
+		WHEN o."lastStage"->>'category' = 'рассмотрено' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL THEN 'reminder-done'
+		WHEN (o."lastStage"->>'category' <> 'рассмотрено' AND (o."myReminder"->>'doneDate')::date < current_date) THEN 'reminder-overdue'
+		ELSE 'unknown'
+	END as action
 
 FROM control.cases_ c
 

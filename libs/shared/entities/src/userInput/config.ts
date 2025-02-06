@@ -27,3 +27,24 @@ export const operationClassesValues = getValues(OperationClasses);
 export const EntityClasses = { ...CaseClasses, ...OperationClasses } as const;
 export type EntityClasses = (typeof EntityClasses)[keyof typeof EntityClasses];
 export const entityClassesValues = getValues(EntityClasses);
+
+export const ViewStatus = {
+  unwatched: 'unwatched',
+  unchanged: 'unchanged',
+  new: 'new',
+  changed: 'changed',
+} as const;
+export type ViewStatus = (typeof ViewStatus)[keyof typeof ViewStatus];
+export const viewStatusValues = getValues(ViewStatus);
+
+export const CaseActions = {
+  unknown: 'unknown',
+  caseApprove: 'case-approve',
+  bothApprove: 'both-approve',
+  operationApprove: 'operation-approve',
+  caseRejected: 'case-rejected',
+  reminderDone: 'reminder-done',
+  reminderOverdue: 'reminder-overdue',
+} as const;
+export type CaseActions = (typeof CaseActions)[keyof typeof CaseActions];
+export const caseActionsValues = getValues(CaseActions);
