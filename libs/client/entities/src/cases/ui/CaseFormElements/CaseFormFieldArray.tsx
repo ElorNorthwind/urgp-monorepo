@@ -1,5 +1,4 @@
 import { cn, selectCurrentUser } from '@urgp/client/shared';
-import { CaseFormValuesDto } from '@urgp/shared/entities';
 import {
   DateFormField,
   FieldsArrayProps,
@@ -11,21 +10,22 @@ import { useSelector } from 'react-redux';
 import {
   CaseTypeSelector,
   DirectionTypeSelector,
-  useCurrentUserApprovers,
+  useGetCurrentUserApproveto,
 } from '../../../classificators';
 import { ExternalCaseFieldArray } from './ExternalCaseFieldArray';
 import { Fragment } from 'react/jsx-runtime';
+import { CaseFormDto } from '@urgp/shared/entities';
 
 const CaseFormFieldArray = ({
   form,
   isEdit,
   popoverMinWidth,
-}: FieldsArrayProps<CaseFormValuesDto>): JSX.Element | null => {
+}: FieldsArrayProps<CaseFormDto>): JSX.Element | null => {
   const user = useSelector(selectCurrentUser);
 
-  const watchApprover = form.watch('approverId');
+  const watchApproveTo = form.watch('approveToId');
   const { data: approvers, isLoading: isApproversLoading } =
-    useCurrentUserApprovers();
+    useGetCurrentUserApproveto();
 
   return (
     <Fragment>
@@ -77,7 +77,7 @@ const CaseFormFieldArray = ({
           form={form}
           isLoading={isApproversLoading}
           fieldName={'approverId'}
-          options={approvers?.operations}
+          options={approvers}
           label="Согласующий"
           placeholder="Выбор согласующего"
           popoverMinWidth={popoverMinWidth}
@@ -90,10 +90,10 @@ const CaseFormFieldArray = ({
           fieldName={'dueDate'}
           label="Срок решения"
           placeholder="Контрольный срок"
-          disabled={isEdit || user?.id !== watchApprover}
+          disabled={isEdit || user?.id !== watchApproveTo}
           className={cn(
             'flex-shrink-0',
-            (user?.id !== watchApprover || user?.id !== watchApprover) &&
+            (user?.id !== watchApproveTo || user?.id !== watchApproveTo) &&
               'hidden',
           )}
         />

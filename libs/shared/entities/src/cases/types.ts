@@ -49,4 +49,4 @@ export const caseSchema = entityFullSchema
 
 // export type CaseFull = z.infer<typeof caseSchema>;
 const caseFullFieldsSchema = z.object(caseFullFields);
-export type OperationFull = EntityFull & z.infer<typeof caseFullFieldsSchema>;
+export type CaseFull = EntityFull & z.infer<typeof caseFullFieldsSchema>;

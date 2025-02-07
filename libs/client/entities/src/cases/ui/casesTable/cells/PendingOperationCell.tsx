@@ -1,6 +1,6 @@
 import { CellContext } from '@tanstack/react-table';
 import { cn } from '@urgp/client/shared';
-import { CaseWithPendingInfo, ControlStage } from '@urgp/shared/entities';
+import { CaseFull } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import {
   approveStatusStyles,
@@ -9,23 +9,25 @@ import {
 import { caseTypeStyles } from '../../../config/caseStyles';
 
 function PendingOperationCell(
-  props: CellContext<CaseWithPendingInfo, Date>,
-): JSX.Element {
-  const stage = props.row.original?.pendingStage as ControlStage;
+  props: CellContext<CaseFull, string>,
+): JSX.Element | null {
+  const stage = props.row.original?.myPendingStage;
+
+  if (!stage) return null;
 
   const { icon: StageIcon, iconStyle } =
-    operationTypeStyles?.[stage?.payload.type.id] ||
+    operationTypeStyles?.[stage?.type.id] ||
     Object.values(operationTypeStyles)[0];
 
   const { bgStyle, fontStyle, badgeStyle, label } =
-    approveStatusStyles?.[stage?.payload.approveStatus] ||
+    approveStatusStyles?.[stage?.approveStatus] ||
     Object.values(approveStatusStyles)[0];
 
   const { icon: TypeIcon, iconStyle: typeIconStyle } =
-    caseTypeStyles?.[props.row.original?.payload?.type?.id] ||
+    caseTypeStyles?.[props.row.original?.type?.id] ||
     Object.values(caseTypeStyles)[0];
 
-  if (props.row.original?.action === 'case-rejected')
+  if (props.row.original?.actions.includes('case-rejected'))
     //TODO: Кнопка с эскалацией или продлением срока
     return (
       <div className="gap-1 font-semibold leading-tight text-amber-500">
@@ -33,7 +35,7 @@ function PendingOperationCell(
       </div>
     );
 
-  if (props.row.original?.action === 'reminder-overdue') {
+  if (props.row.original?.actions.includes('reminder-overdue')) {
     return (
       <div className="gap-1 font-semibold leading-tight text-rose-400">
         Не решено в ожидавшийся срок
@@ -41,7 +43,7 @@ function PendingOperationCell(
     );
   }
 
-  if (props.row.original?.action === 'reminder-done') {
+  if (props.row.original?.actions.includes('reminder-done')) {
     return (
       <div className="gap-1 font-semibold leading-tight text-emerald-400">
         Исполнитель принял решение
@@ -61,24 +63,24 @@ function PendingOperationCell(
     <div className="w-full">
       <div className="tuncate flex flex-row items-center justify-start gap-2 text-xs">
         <span className={cn('text-muted-foreground flex-shrink-0')}>
-          {format(stage.payload.doneDate, 'dd.MM.yyyy')}
+          {stage?.doneDate ? format(stage.doneDate, 'dd.MM.yyyy') : ''}
         </span>
         <span className={cn('text-muted-foreground flex-shrink truncate')}>
-          {stage.payload?.num ? '№ ' + stage.payload.num : ''}
+          {stage?.title ? '№ ' + stage.title : ''}
         </span>
         <span
           className={cn('text-muted-foreground ml-auto flex-shrink-0')}
-        >{`[${stage.author?.fio}]`}</span>
+        >{`[${stage?.author?.fio}]`}</span>
       </div>
       <div className="flex flex-row items-center gap-1">
         {StageIcon && (
           <StageIcon className={cn('size-4 flex-shrink-0', iconStyle)} />
         )}
         <span className={cn('truncate text-sm font-bold', fontStyle)}>
-          {stage.payload.type.fullname}
+          {stage?.type?.fullname}
         </span>
       </div>
-      <div className={cn('truncate')}>{stage.payload?.description || ''}</div>
+      <div className={cn('truncate')}>{stage?.notes || ''}</div>
 
       {/* <StageItem stage={pengingStage} hover={false} />; */}
     </div>

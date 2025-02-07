@@ -6,13 +6,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { CaseOrPending } from '@urgp/shared/entities';
+import { CaseFull } from '@urgp/shared/entities';
 import { ExternalCasesList } from '../../ExternalCasesList';
 
-function ExternalCasesCell(
-  props: CellContext<CaseOrPending, string>,
-): JSX.Element {
-  const externalCases = props.row.original?.payload?.externalCases;
+function ExternalCasesCell(props: CellContext<CaseFull, string>): JSX.Element {
+  const externalCases = props.row.original?.externalCases;
 
   if (externalCases === undefined || externalCases?.length === 0) {
     return <div className="text-muted-foreground line-clamp-1">-</div>;

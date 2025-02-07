@@ -7,21 +7,16 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { CaseOrPending } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import { Circle } from 'lucide-react';
 import { caseStatusStyles, viewStatusStyles } from '../../../config/caseStyles';
 import { CaseDispatchesList } from '../../CaseDispatchesList';
+import { CaseFull } from '@urgp/shared/entities';
 
-function CaseStatusCell(
-  props: CellContext<CaseOrPending, string>,
-): JSX.Element {
+function CaseStatusCell(props: CellContext<CaseFull, string>): JSX.Element {
   const status = props.row.original?.status;
   const dispatches = props.row.original?.dispatches || [];
-  const approveStatus =
-    props.row.original?.payload?.approveStatus || 'approved';
-  const approverFio = props.row.original?.payload?.approver?.fio || '-';
-  const approveByFio = props.row.original?.payload?.approveBy?.fio || '-';
+  const approveStatus = props.row.original?.approveStatus || 'approved';
   const { icon: StatusIcon, iconStyle } = caseStatusStyles?.[
     status?.id || 0
   ] || {
@@ -37,7 +32,7 @@ function CaseStatusCell(
     badgeStyle: 'hidden',
   };
 
-  const caseApproveInfo = getApproveInfo(props.row.original?.payload);
+  const caseApproveInfo = getApproveInfo(props.row.original);
 
   return (
     <Tooltip>
@@ -59,9 +54,8 @@ function CaseStatusCell(
                 <span className="">
                   {approveStatus !== 'approved'
                     ? caseApproveInfo?.currentFio
-                    : dispatches?.length > 0
-                      ? 'срок: ' +
-                        format(dispatches?.[0]?.dueDate, 'dd.MM.yyyy')
+                    : dispatches?.length > 0 && dispatches?.[0]?.dueDate
+                      ? 'срок: ' + format(dispatches[0].dueDate, 'dd.MM.yyyy')
                       : 'нет поручений'}
                 </span>
               )}

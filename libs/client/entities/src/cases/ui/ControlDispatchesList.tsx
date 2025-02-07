@@ -1,18 +1,12 @@
-import {
-  cn,
-  Skeleton,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@urgp/client/shared';
-import { ControlDispatch } from '@urgp/shared/entities';
+import { cn, Skeleton, Tooltip, TooltipTrigger } from '@urgp/client/shared';
 import { Fragment } from 'react/jsx-runtime';
 import { EditDispatchButton } from '../../operations';
 import { isBefore } from 'date-fns';
 import { useMemo } from 'react';
+import { OperationFull } from '@urgp/shared/entities';
 
 type ControlDispatchesListProps = {
-  dispatches?: ControlDispatch[];
+  dispatches?: OperationFull[];
   isLoading?: boolean;
   className?: string;
   compact?: boolean;
@@ -34,9 +28,8 @@ const ControlDispatchesList = (
   const sortedDispatches = useMemo(() => {
     return [...dispatches].sort((a, b) => {
       const dif1 =
-        (a?.payload?.controller?.priority || 0) -
-        (b?.payload?.controller?.priority || 0);
-      const dif2 = isBefore(a?.payload?.dueDate || 0, b?.payload?.dueDate || 0);
+        (a?.controlFrom?.priority || 0) - (b?.controlFrom?.priority || 0);
+      const dif2 = isBefore(a?.dueDate || 0, b?.dueDate || 0);
       return dif1 > 0 ? 1 : dif1 < 0 ? -1 : dif2 ? -1 : 1;
     });
   }, [dispatches]);
@@ -59,8 +52,7 @@ const ControlDispatchesList = (
         )}
       >
         {sortedDispatches.map((d, index) => {
-          const sameController =
-            d?.payload?.executor?.id === d.payload?.controller?.id;
+          const sameController = d?.controlTo?.id === d?.controlFrom?.id;
           return (
             <Fragment key={d.id}>
               <div
@@ -68,12 +60,10 @@ const ControlDispatchesList = (
                   paddingStyle,
                   'border-r',
                   'bg-muted-foreground/5',
-                  index < dispatches.length - 1 &&
-                    !d.payload?.description &&
-                    'border-b',
+                  index < dispatches.length - 1 && !d.notes && 'border-b',
                 )}
               >
-                {d.payload?.executor?.fio}
+                {d?.controlFrom?.fio}
               </div>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -82,35 +72,31 @@ const ControlDispatchesList = (
                       paddingStyle,
                       'bg-background group flex flex-row items-center gap-1',
                       sameController ? 'col-span-2' : 'col-span-1 border-r',
-                      index < dispatches.length - 1 &&
-                        !d.payload?.description &&
-                        'border-b',
+                      index < dispatches.length - 1 && !d.notes && 'border-b',
                     )}
                   >
                     <EditDispatchButton controlDispatch={d} />
                   </div>
                 </TooltipTrigger>
-                {d.payload.dueDateChanged && (
+                {/* {d.payload.dueDateChanged && (
                   <TooltipContent side="top">
                     <span className="font-bold">Причина переноса: </span>
                     <span>{d.payload.dateDescription}</span>
                   </TooltipContent>
-                )}
+                )} */}
               </Tooltip>
               {!sameController && (
                 <div
                   className={cn(
                     paddingStyle,
                     'bg-muted-foreground/5',
-                    index < dispatches.length - 1 &&
-                      !d.payload?.description &&
-                      'border-b',
+                    index < dispatches.length - 1 && !d.notes && 'border-b',
                   )}
                 >
-                  {'от: ' + d.payload?.controller?.fio}
+                  {'от: ' + d?.controlFrom?.fio}
                 </div>
               )}
-              {d.payload?.description && (
+              {d?.notes && (
                 <div
                   className={cn(
                     paddingStyle,
@@ -118,7 +104,7 @@ const ControlDispatchesList = (
                     'text-muted-foreground bg-background/50 col-span-3 border-t text-xs',
                   )}
                 >
-                  {d.payload?.description}
+                  {d?.notes}
                 </div>
               )}
             </Fragment>

@@ -1,12 +1,12 @@
 import { cn } from '@urgp/client/shared';
-import { CaseFull } from '@urgp/shared/entities';
+import { ExternalCase } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import { externalSystemStyles } from '../config/caseStyles';
 
 type ExternalCasesListProps = {
   className?: string;
   compact?: boolean;
-  externalCases: Case['payload']['externalCases'];
+  externalCases: ExternalCase[];
 };
 
 const ExternalCasesList = (

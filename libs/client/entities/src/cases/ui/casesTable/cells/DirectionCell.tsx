@@ -1,11 +1,11 @@
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { CellContext } from '@tanstack/react-table';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@urgp/client/shared';
-import { CaseOrPending } from '@urgp/shared/entities';
+import { CaseFull } from '@urgp/shared/entities';
 import { CaseDirectionsList } from '../../CaseDirectionsList';
 
-function DirectionCell(props: CellContext<CaseOrPending, string>): JSX.Element {
-  const payload = props.row.original.payload;
+function DirectionCell(props: CellContext<CaseFull, string>): JSX.Element {
+  const payload = props.row.original;
   return (
     <Tooltip>
       <TooltipTrigger className="flex-wrap overflow-hidden">

@@ -1,11 +1,11 @@
 import { cn, Skeleton } from '@urgp/client/shared';
-import { ControlReminder } from '@urgp/shared/entities';
+import { OperationFull } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 
 import { Fragment } from 'react/jsx-runtime';
 
 type RemindersListProps = {
-  reminders?: ControlReminder[];
+  reminders?: OperationFull[];
   isLoading?: boolean;
   className?: string;
   compact?: boolean;
@@ -52,7 +52,7 @@ const RemindersList = (props: RemindersListProps): JSX.Element => {
                   'bg-muted-foreground/5',
                 )}
               >
-                {rem.payload?.observer?.fio}
+                {rem?.controlFrom?.fio}
               </div>
               <div
                 className={cn(
@@ -60,13 +60,13 @@ const RemindersList = (props: RemindersListProps): JSX.Element => {
                   index === reminders.length - 1 ? 'border-b-0' : 'border-b',
                   'bg-background',
                   'col-span-1 border-r',
-                  rem.payload?.doneDate && 'line-through',
+                  rem?.doneDate && 'line-through',
                 )}
               >
                 {'следит с ' +
                   (rem.createdAt ? format(rem.createdAt, 'dd.MM.yyyy') : '-')}
               </div>
-              {rem.payload?.doneDate ? (
+              {rem?.doneDate ? (
                 <div
                   className={cn(
                     paddingStyle,
@@ -74,7 +74,7 @@ const RemindersList = (props: RemindersListProps): JSX.Element => {
                     'bg-muted-foreground/5',
                   )}
                 >
-                  {'не следит с ' + format(rem.payload?.doneDate, 'dd.MM.yyyy')}
+                  {'не следит с ' + format(rem?.doneDate, 'dd.MM.yyyy')}
                 </div>
               ) : (
                 <div
@@ -84,9 +84,8 @@ const RemindersList = (props: RemindersListProps): JSX.Element => {
                     'bg-muted-foreground/5',
                   )}
                 >
-                  {rem.payload?.lastSeenDate
-                    ? 'видел ' +
-                      format(rem.payload?.lastSeenDate, 'dd.MM.yyyy HH:mm')
+                  {rem?.updatedAt
+                    ? 'видел ' + format(rem?.updatedAt, 'dd.MM.yyyy HH:mm')
                     : 'еще не видел'}
                 </div>
               )}

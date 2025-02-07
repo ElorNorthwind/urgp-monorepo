@@ -5,12 +5,11 @@ import {
   useUserAbility,
 } from '@urgp/client/shared';
 import { ApproveButton } from '@urgp/client/widgets';
-import { CaseFull } from '@urgp/shared/entities';
-import { useSelector } from 'react-redux';
-import { useStages } from '../../../operations';
+import { CaseFull, OperationClasses } from '@urgp/shared/entities';
+import { useOperations } from '../../../operations';
 
 type CaseSmartApproveButtonProps = {
-  controlCase: Case;
+  controlCase: CaseFull;
   variant?: 'mini' | 'default' | 'outline' | 'separated';
   className?: string;
   buttonClassName?: string;
@@ -18,6 +17,7 @@ type CaseSmartApproveButtonProps = {
   approveCaseLabel?: string;
   approveOperationLabel?: string;
   rejectLabel?: string;
+  isLoading?: boolean;
 };
 
 const CaseSmartApproveButton = ({
@@ -29,23 +29,12 @@ const CaseSmartApproveButton = ({
   className,
   buttonClassName,
   iconClassName,
+  isLoading,
 }: CaseSmartApproveButtonProps): JSX.Element | null => {
-  const {
-    data: stages,
-    isLoading,
-    isFetching,
-  } = useStages(controlCase.id, { skip: !controlCase?.id });
-  const user = useAuth();
-  const myPendingStage = stages?.find(
-    (stage) =>
-      stage.payload?.approveStatus === 'pending' &&
-      stage.payload?.isDeleted !== true &&
-      stage.payload?.approver.id === user.id,
-  );
-
+  const myPendingStage = controlCase?.myPendingStage;
   const i = useUserAbility();
 
-  if (isLoading || isFetching) return null;
+  if (isLoading) return null;
 
   if (i.can('approve', controlCase)) {
     return (

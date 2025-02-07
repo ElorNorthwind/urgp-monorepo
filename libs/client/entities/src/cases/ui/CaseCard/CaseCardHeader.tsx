@@ -6,7 +6,7 @@ import { ChevronDown, X } from 'lucide-react';
 
 type CaseCardHeaderProps = {
   className?: string;
-  controlCase: Case;
+  controlCase: CaseFull;
   onClose?: () => void;
   total?: number;
   filtered?: number;
@@ -25,12 +25,10 @@ const CaseCardHeader = (props: CaseCardHeaderProps): JSX.Element => {
         className,
       )}
     >
-      {controlCase && (
-        <h1 className="font-bold">{controlCase?.payload?.fio}</h1>
-      )}
+      {controlCase && <h1 className="font-bold">{controlCase?.title}</h1>}
       {controlCase && (
         <p className="border-foreground/20 text-muted-foreground h-full flex-shrink truncate border-l pl-2">
-          {controlCase?.payload?.adress}
+          {controlCase?.extra}
         </p>
       )}
       {onClose && (

@@ -1,6 +1,5 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { Checkbox } from '@urgp/client/shared';
-import { CaseWithPendingInfo } from '@urgp/shared/entities';
 import { CaseDesctiptionCell } from './cells/CaseDescriptionCell';
 import { CaseStatusCell } from './cells/CaseStatusCell';
 import { CaseTypeCell } from './cells/CaseTypeCell';
@@ -12,8 +11,9 @@ import { CheckboxCell } from './cells/CheckboxCell';
 import { isBefore } from 'date-fns';
 import { Eye } from 'lucide-react';
 import { ViewStatusCell } from './cells/ViewStatusCell';
+import { CaseFull } from '@urgp/shared/entities';
 
-const columnHelper = createColumnHelper<CaseWithPendingInfo>();
+const columnHelper = createColumnHelper<CaseFull>();
 
 export const pendingCasesColumns = [
   columnHelper.display({
@@ -37,9 +37,9 @@ export const pendingCasesColumns = [
       return <CheckboxCell {...props} />;
     },
   }),
-  columnHelper.accessor('action', {
+  columnHelper.accessor((row) => row?.actions.join(', '), {
     id: 'smartApprove',
-    header: 'Действие',
+    header: 'Действия',
     size: 90,
     enableHiding: true,
     enableSorting: true,
@@ -49,8 +49,7 @@ export const pendingCasesColumns = [
   }),
 
   columnHelper.accessor(
-    (row): string =>
-      row?.payload?.externalCases?.map((d) => d.num)?.join(', ') || '',
+    (row): string => row?.externalCases?.map((d) => d.num)?.join(', ') || '',
     {
       id: 'externalCases',
       header: 'Обращение',
@@ -60,9 +59,9 @@ export const pendingCasesColumns = [
         return <ExternalCasesCell {...props} />;
       },
       sortingFn: (rowA, rowB) => {
-        const dif = (
-          rowA.original.payload?.externalCases?.[0]?.num || ''
-        ).localeCompare(rowB.original.payload?.externalCases?.[0]?.num || '');
+        const dif = (rowA.original.externalCases?.[0]?.num || '').localeCompare(
+          rowB.original.externalCases?.[0]?.num || '',
+        );
         return dif > 0 ? 1 : dif < 0 ? -1 : 0;
       },
     },
@@ -80,7 +79,7 @@ export const pendingCasesColumns = [
       return <ViewStatusCell {...(props as any)} />;
     },
   }),
-  columnHelper.accessor('payload.description', {
+  columnHelper.accessor('notes', {
     id: 'description',
     header: 'Описание',
     size: 250,
@@ -90,14 +89,14 @@ export const pendingCasesColumns = [
       return <CaseDesctiptionCell {...props} />;
     },
     sortingFn: (rowA, rowB) => {
-      const dif = (rowA.original?.payload?.fio || '').localeCompare(
-        rowB.original.payload?.fio || '',
+      const dif = (rowA.original?.title || '').localeCompare(
+        rowB.original?.title || '',
       );
       return dif > 0 ? 1 : dif < 0 ? -1 : 0;
     },
   }),
 
-  columnHelper.accessor((row): string => 'status.name', {
+  columnHelper.accessor('status.name', {
     id: 'status',
     header: 'Статус',
     size: 150,
@@ -117,7 +116,7 @@ export const pendingCasesColumns = [
   }),
 
   columnHelper.accessor(
-    (row) => row?.payload?.directions?.map((d) => d?.name)?.join(', ') || '-',
+    (row) => row?.directions?.map((d) => d?.name)?.join(', ') || '-',
     {
       id: 'directions',
       header: 'Направления',
@@ -127,15 +126,15 @@ export const pendingCasesColumns = [
         return <DirectionCell {...props} />;
       },
       sortingFn: (rowA, rowB) => {
-        const dif = (
-          rowA.original.payload?.directions?.[0]?.name || ''
-        ).localeCompare(rowB.original.payload?.directions?.[0]?.name || '');
+        const dif = (rowA.original.directions?.[0]?.name || '').localeCompare(
+          rowB.original.directions?.[0]?.name || '',
+        );
         return dif > 0 ? 1 : dif < 0 ? -1 : 0;
       },
     },
   ),
 
-  columnHelper.accessor('payload.type.name', {
+  columnHelper.accessor('type.name', {
     id: 'type',
     header: 'Тип проблемы',
     size: 150,
@@ -145,16 +144,16 @@ export const pendingCasesColumns = [
     },
     sortingFn: (rowA, rowB) => {
       const dif1 =
-        (rowA.original.payload?.type?.priority || 0) -
-        (rowB.original.payload?.type?.priority || 0);
-      const dif2 = (rowA.original.payload?.type?.name || '').localeCompare(
-        rowB.original.payload?.type?.name || '',
+        (rowA.original?.type?.priority || 0) -
+        (rowB.original?.type?.priority || 0);
+      const dif2 = (rowA.original?.type?.name || '').localeCompare(
+        rowB.original?.type?.name || '',
       );
       return dif1 > 0 ? 1 : dif1 < 0 ? -1 : dif2 > 0 ? 1 : dif2 < 0 ? -1 : 0;
     },
   }),
 
-  columnHelper.accessor('pendingStage.payload.doneDate', {
+  columnHelper.accessor((row) => row?.myPendingStage?.doneDate || '', {
     id: 'pendingStage',
     header: 'Этап',
     size: 200,
@@ -164,8 +163,8 @@ export const pendingCasesColumns = [
     },
 
     sortingFn: (rowA, rowB) => {
-      const dif1 = (rowA.original?.action || '').localeCompare(
-        rowB.original?.action || '',
+      const dif1 = (rowA.original?.actions?.[0] || '').localeCompare(
+        rowB.original?.actions?.[0] || '',
       );
       // const dif2 =
       //   (rowA.original.payload?.type?.priority || 0) -
@@ -175,8 +174,8 @@ export const pendingCasesColumns = [
         : dif1 < 0
           ? -1
           : isBefore(
-                rowA.original?.pendingStage?.payload?.doneDate || 0,
-                rowB.original?.pendingStage?.payload?.doneDate || 0,
+                rowA.original?.myPendingStage?.doneDate || 0,
+                rowB.original?.myPendingStage?.doneDate || 0,
               )
             ? 1
             : -1;

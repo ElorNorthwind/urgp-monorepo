@@ -6,13 +6,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { CaseOrPending } from '@urgp/shared/entities';
+import { CaseFull } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import { viewStatusStyles } from '../../../config/caseStyles';
 
-function ViewStatusCell(
-  props: CellContext<CaseOrPending, string>,
-): JSX.Element {
+function ViewStatusCell(props: CellContext<CaseFull, string>): JSX.Element {
   const viewStatus = props.row.original?.viewStatus;
   const { icon: StatusIcon, iconStyle } =
     viewStatusStyles?.[viewStatus] || Object.entries(viewStatusStyles)[0];
@@ -36,9 +34,12 @@ function ViewStatusCell(
           <div>
             {viewStatus === 'unwatched'
               ? 'Вы не отслеживаете это дело'
-              : props.row.original?.lastSeen
+              : props.row.original?.myReminder?.updatedAt
                 ? 'Вы видели это дело ' +
-                  format(props.row.original?.lastSeen, 'dd.MM.yyyy HH:mm')
+                  format(
+                    props.row.original?.myReminder?.updatedAt,
+                    'dd.MM.yyyy HH:mm',
+                  )
                 : 'Вы еще не видели это дело'}
           </div>
         </TooltipContent>

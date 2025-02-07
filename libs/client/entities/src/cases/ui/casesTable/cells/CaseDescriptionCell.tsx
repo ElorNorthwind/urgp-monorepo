@@ -1,11 +1,11 @@
 import { CellContext } from '@tanstack/react-table';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@urgp/client/shared';
-import { Case, CaseOrPending } from '@urgp/shared/entities';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { format } from 'date-fns';
+import { CaseFull } from '@urgp/shared/entities';
 
 function CaseDesctiptionCell(
-  props: CellContext<CaseOrPending, string>,
+  props: CellContext<CaseFull, string>,
 ): JSX.Element {
   const controlCase = props.row?.original;
 
@@ -14,14 +14,12 @@ function CaseDesctiptionCell(
       <TooltipTrigger asChild>
         <div className="flex flex-1 flex-col items-start justify-start truncate">
           <div className="truncate">
-            <span className="font-bold">{controlCase?.payload?.fio}</span>
+            <span className="font-bold">{controlCase?.title}</span>
             <span className="text-muted-foreground ml-2 w-full truncate border-l pl-2">
-              {controlCase?.payload?.adress}
+              {controlCase?.extra}
             </span>
           </div>
-          <div className="w-full truncate text-xs">
-            {controlCase?.payload?.description}
-          </div>
+          <div className="w-full truncate text-xs">{controlCase?.notes}</div>
         </div>
       </TooltipTrigger>
       <TooltipPortal>
@@ -51,13 +49,13 @@ function CaseDesctiptionCell(
             <div className="flex items-start justify-between">
               <span>Заявитель:</span>
               <span className="text-muted-foreground ml-2 font-normal">
-                {controlCase?.payload?.fio}
+                {controlCase?.title}
               </span>
             </div>
             <div className="flex items-start justify-between">
               <span>Адрес:</span>
               <span className="text-muted-foreground ml-2 font-normal">
-                {controlCase?.payload?.adress}
+                {controlCase?.extra}
               </span>
             </div>
           </div>

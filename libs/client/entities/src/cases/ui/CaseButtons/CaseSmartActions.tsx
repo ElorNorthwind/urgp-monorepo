@@ -1,15 +1,12 @@
 import {
   Button,
-  guestUser,
-  selectCurrentUser,
   useAvaliableCaseActions,
   useUserAbility,
 } from '@urgp/client/shared';
 import { ApproveButton } from '@urgp/client/widgets';
-import { Case, CaseWithPendingInfo } from '@urgp/shared/entities';
-import { useSelector } from 'react-redux';
-import { useDispatches, useStages } from '../../../operations';
-import { usePendingCaseById } from '../../api/casesApi';
+import { OperationClasses } from '@urgp/shared/entities';
+import { useOperations } from '../../../operations';
+import { useCaseById } from '../../api/casesApi';
 import { DeleteCaseButton } from './DeleteCaseButton';
 import { EditCaseButton } from './EditCaseButton';
 
@@ -39,17 +36,21 @@ const CaseSmartActions = ({
 }: CaseSmartActionsProps): JSX.Element | null => {
   const i = useUserAbility();
   const {
-    data: pendingCase,
+    data: incident,
     isLoading: isPendingLoading,
     isFetching: isPendingFetching,
-  } = usePendingCaseById(caseId, { skip: !caseId });
+  } = useCaseById(caseId, { skip: !caseId });
+
   const {
     data: dispatches,
     isLoading: isDispatchesLoading,
     isFetching: isDispatchesFetching,
-  } = useDispatches(caseId, { skip: !caseId });
+  } = useOperations(
+    { class: OperationClasses.dispatch, case: caseId },
+    { skip: !caseId },
+  );
 
-  const avaliableActions = useAvaliableCaseActions(pendingCase);
+  const avaliableActions = useAvaliableCaseActions(incident);
 
   // const {
   //   data: stages,
@@ -70,15 +71,13 @@ const CaseSmartActions = ({
     <>
       {avaliableActions.map((action) => {
         if (action === 'delete')
-          return (
-            <DeleteCaseButton key={action} controlCase={pendingCase as Case} />
-          );
+          return <DeleteCaseButton key={action} controlCase={incident} />;
 
         if (action === 'edit-rejected')
           return (
             <EditCaseButton
               key={action}
-              controlCase={pendingCase as Case}
+              controlCase={incident}
               label={'Исправить'}
             />
           );
@@ -87,7 +86,7 @@ const CaseSmartActions = ({
           return (
             <EditCaseButton
               key={action}
-              controlCase={pendingCase as Case}
+              controlCase={incident}
               label={'Редактировать'}
             />
           );
@@ -96,7 +95,7 @@ const CaseSmartActions = ({
           return (
             <ApproveButton
               variant={'default'}
-              entity={pendingCase as Case}
+              entity={incident}
               approveLabel="Пересмотреть дело"
             />
           );
@@ -105,16 +104,16 @@ const CaseSmartActions = ({
           return (
             <ApproveButton
               variant={'default'}
-              entity={pendingCase as Case}
+              entity={incident}
               approveLabel="Рассмотреть дело"
             />
           );
 
-        if (action === 'operation-approve' && pendingCase?.pendingStage)
+        if (action === 'operation-approve' && incident?.pendingStage)
           return (
             <ApproveButton
               variant={'default'}
-              entity={pendingCase.pendingStage}
+              entity={incident.pendingStage}
               approveLabel="Утвердить решение"
             />
           );

@@ -22,7 +22,7 @@ import { useDeleteCase } from '../../api/casesApi';
 import { CaseCardHeader } from '../CaseCard/CaseCardHeader';
 
 type DeleteCaseButtonProps = {
-  controlCase: Case;
+  controlCase: CaseFull;
   className?: string;
 };
 

@@ -9,7 +9,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { CaseFull } from '@urgp/shared/entities';
+import { CaseFull, OperationClasses } from '@urgp/shared/entities';
 import { CaseCardHeader } from './CaseCardHeader';
 import { caseStatusStyles, caseTypeStyles } from '../../config/caseStyles';
 import { ExternalCasesList } from '../ExternalCasesList';
@@ -19,17 +19,15 @@ import {
   ManageReminderButton,
   StagesHeader,
   StagesList,
-  useDispatches,
-  useStages,
+  useOperations,
 } from '../../../operations';
 import { CaseCardFooter } from './CaseCardFooter';
 import { ControlDispatchesList } from '../ControlDispatchesList';
 import { format } from 'date-fns';
-import { usePendingCaseById } from '../../api/casesApi';
 import { CaseSmartActions } from '../CaseButtons/CaseSmartActions';
 
 type CaseCardProps = {
-  controlCase: Case;
+  controlCase: CaseFull;
   onPrevCase?: () => void;
   onNextCase?: () => void;
   onClose?: () => void;
@@ -37,12 +35,13 @@ type CaseCardProps = {
 
 const CaseCard = (props: CaseCardProps): JSX.Element => {
   const { controlCase, onNextCase, onPrevCase } = props;
-  const { icon: TypeIcon, iconStyle: typeIconStyle } = caseTypeStyles[
-    controlCase?.payload?.type?.id || 1
-  ] || {
-    icon: null,
-    iconStyle: '',
-  };
+  const { icon: TypeIcon, iconStyle: typeIconStyle } =
+    caseTypeStyles[controlCase?.type?.id || 1] ||
+    Object.entries(caseTypeStyles)[0];
+  // {
+  //   icon: null,
+  //   iconStyle: '',
+  // };
   const { icon: StatusIcon, iconStyle: statusIconStyle } = caseStatusStyles?.[
     controlCase?.status?.id || 1
   ] || {
@@ -54,15 +53,19 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     data: stages,
     isLoading,
     isFetching,
-  } = useStages(controlCase?.id, { skip: !controlCase?.id });
+  } = useOperations(
+    { class: OperationClasses.stage, case: controlCase?.id },
+    { skip: !controlCase?.id },
+  );
 
-  const {
-    data: dispatches,
-    isLoading: isDispatchesLoading,
-    isFetching: isDispatchesFetching,
-  } = useDispatches(controlCase?.id, { skip: !controlCase?.id });
+  // const {
+  //   data: dispatches,
+  //   isLoading: isDispatchesLoading,
+  //   isFetching: isDispatchesFetching,
+  // } = useDispatches(controlCase?.id, { skip: !controlCase?.id });
+  const dispatches = controlCase.dispatches;
 
-  const caseApproveInfo = getApproveInfo(controlCase?.payload);
+  const caseApproveInfo = getApproveInfo(controlCase);
 
   return (
     <>
@@ -85,7 +88,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
                 />
               )}
               <p className="my-auto w-full truncate text-sm">
-                {controlCase?.payload?.type?.name}
+                {controlCase?.type?.name}
               </p>
             </div>
             <div className="bg-muted-foreground/5 border-x border-b px-2 py-1 text-right font-bold">
@@ -142,13 +145,11 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
               <span className="">Темы:</span>
             </div>
             <CaseDirectionsList
-              directions={controlCase?.payload?.directions}
+              directions={controlCase?.directions}
               className="col-span-3 items-center p-2"
             />
           </div>
-          <ExternalCasesList
-            externalCases={controlCase?.payload?.externalCases}
-          />
+          <ExternalCasesList externalCases={controlCase?.externalCases} />
         </div>
       )}
       <Accordion
@@ -169,7 +170,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
           />
           {controlCase && (
             <AccordionContent className="bg-background rounded-t-lg border border-b-0 p-2">
-              {controlCase?.payload?.description}
+              {controlCase?.notes}
             </AccordionContent>
           )}
         </AccordionItem>
@@ -184,7 +185,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
           <AccordionContent>
             <ControlDispatchesList
               dispatches={dispatches}
-              isLoading={isDispatchesLoading || isDispatchesFetching}
+              // isLoading={isDispatchesLoading || isDispatchesFetching}
               className="-mb-4 rounded-b-none border-b-0"
             />
           </AccordionContent>

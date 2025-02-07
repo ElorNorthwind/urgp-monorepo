@@ -5,14 +5,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { CaseFull } from '@urgp/shared/entities';
+import { CaseFull, Classificator } from '@urgp/shared/entities';
 import { directionCategoryStyles } from '../config/caseStyles';
 import { forwardRef } from 'react';
 
 type CaseDirectionsListProps = {
   className?: string;
   variant?: 'list' | 'compact' | 'table';
-  directions: Case['payload']['directions'];
+  directions: Classificator[];
   label?: string;
 };
 

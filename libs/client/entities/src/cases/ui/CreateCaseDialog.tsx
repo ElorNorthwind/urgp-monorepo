@@ -5,14 +5,13 @@ import {
   setCaseFormValuesEmpty,
   setCaseFormValuesFromDto,
 } from '@urgp/client/shared';
-import { useCurrentUserApprovers } from '../../classificators';
-import { caseFormValuesDto, CaseFormValuesDto } from '@urgp/shared/entities';
 
 import { useCreateCase, useDeleteCase, useUpdateCase } from '../api/casesApi';
 import { FormDialog, FormDialogProps } from '@urgp/client/widgets';
 import { CaseFormFieldArray } from './CaseFormElements/CaseFormFieldArray';
-import { use } from 'passport';
 import { useSelector } from 'react-redux';
+import { useGetCurrentUserApproveto } from '../../classificators';
+import { CaseFormDto, caseFormSchema } from '@urgp/shared/entities';
 
 type CreateCaseDialogProps = {
   className?: string;
@@ -21,13 +20,13 @@ type CreateCaseDialogProps = {
 const CreateCaseDialog = ({
   className,
 }: CreateCaseDialogProps): JSX.Element | null => {
-  const { data: approvers } = useCurrentUserApprovers();
+  const { data: approveTo } = useGetCurrentUserApproveto();
   const isEdit = useSelector(selectCaseFormState) === 'edit';
 
   const dialogProps = {
     isEdit,
     entityType: 'case',
-    dto: caseFormValuesDto,
+    dto: caseFormSchema,
     valuesSelector: selectCaseFormValues,
     stateSelector: selectCaseFormState,
     stateDispatch: setCaseFormState,
@@ -37,16 +36,16 @@ const CreateCaseDialog = ({
     createHook: useCreateCase,
     deleteHook: useDeleteCase,
     FieldsArray: CaseFormFieldArray,
-    customizeDefaultValues: (values: CaseFormValuesDto) => ({
+    customizeDefaultValues: (values: CaseFormDto) => ({
       ...values,
       class: 'control-incident',
-      approverId: values?.approverId || approvers?.cases?.[0]?.value,
+      approveToId: values?.approveToId || approveTo?.[0]?.value,
     }),
-    customizeCreateValues: (values: CaseFormValuesDto) => ({
+    customizeCreateValues: (values: CaseFormDto) => ({
       ...values,
       class: 'control-incident',
     }),
-    customizeUpdateValues: (values: CaseFormValuesDto) => ({
+    customizeUpdateValues: (values: CaseFormDto) => ({
       ...values,
       class: 'control-incident',
     }),
@@ -56,7 +55,7 @@ const CreateCaseDialog = ({
     editTitle: 'Изменить дело',
     createDescription: 'Внесите данные с информации о происшествии',
     editDescription: 'Внесите изменения в запись о происшествии',
-  } as unknown as FormDialogProps<CaseFormValuesDto>;
+  } as unknown as FormDialogProps<CaseFormDto>;
 
   return <FormDialog {...dialogProps} />;
 };

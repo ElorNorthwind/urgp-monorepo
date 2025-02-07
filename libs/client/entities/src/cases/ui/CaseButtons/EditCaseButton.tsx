@@ -10,7 +10,7 @@ import { Edit } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 
 type EditCaseButtonProps = {
-  controlCase: Case;
+  controlCase: CaseFull;
   className?: string;
   label?: string;
 };

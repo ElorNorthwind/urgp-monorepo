@@ -1,10 +1,10 @@
 import { cn } from '@urgp/client/shared';
-import { CaseFull } from '@urgp/shared/entities';
+import { CaseFull, OperationFull } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import { Fragment } from 'react/jsx-runtime';
 
 type CaseDispatchesListProps = {
-  dispatches?: Case['dispatches'];
+  dispatches?: OperationFull[];
   className?: string;
   compact?: boolean;
   label?: string;
@@ -28,7 +28,7 @@ const CaseDispatchesList = (props: CaseDispatchesListProps): JSX.Element => {
         )}
       >
         {dispatches.map((d, index) => {
-          const sameController = d?.executor?.id === d.controller?.id;
+          const sameController = d?.controlTo?.id === d.controlFrom?.id;
           return (
             <Fragment key={d.id}>
               <div
@@ -39,7 +39,7 @@ const CaseDispatchesList = (props: CaseDispatchesListProps): JSX.Element => {
                   'bg-muted-foreground/5',
                 )}
               >
-                {d.executor.fio}
+                {d?.controlTo?.fio || ''}
               </div>
               <div
                 className={cn(
@@ -59,7 +59,7 @@ const CaseDispatchesList = (props: CaseDispatchesListProps): JSX.Element => {
                     'bg-muted-foreground/5',
                   )}
                 >
-                  {'от: ' + d.controller.fio}
+                  {'от: ' + d?.controlFrom?.fio}
                 </div>
               )}
             </Fragment>

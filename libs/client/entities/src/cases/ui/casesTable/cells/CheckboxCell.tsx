@@ -1,7 +1,7 @@
 import { getRouteApi, useLocation } from '@tanstack/react-router';
 import { CellContext } from '@tanstack/react-table';
 import { CaseRoutes, Checkbox } from '@urgp/client/shared';
-import { CaseOrPending, CasesPageSearchDto } from '@urgp/shared/entities';
+import { CasesPageSearchDto } from '@urgp/shared/entities';
 import { ChevronLeft } from 'lucide-react';
 
 function CheckboxCell(props: CellContext<any, unknown>): JSX.Element {

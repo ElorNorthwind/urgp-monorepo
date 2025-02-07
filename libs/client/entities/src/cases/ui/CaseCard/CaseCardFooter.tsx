@@ -1,37 +1,17 @@
-import {
-  cn,
-  guestUser,
-  selectCurrentUser,
-  useAuth,
-  useUserAbility,
-} from '@urgp/client/shared';
+import { cn, useUserAbility } from '@urgp/client/shared';
 import { CaseFull } from '@urgp/shared/entities';
+import { CaseSmartApproveButton } from '../CaseButtons/CaseSmartApproveButton';
 import { DeleteCaseButton } from '../CaseButtons/DeleteCaseButton';
 import { EditCaseButton } from '../CaseButtons/EditCaseButton';
-import { ApproveButton } from '@urgp/client/widgets';
-import { useStages } from '../../../operations';
-import { useSelector } from 'react-redux';
-import { CaseSmartApproveButton } from '../CaseButtons/CaseSmartApproveButton';
-import { CaseSmartActions } from '../CaseButtons/CaseSmartActions';
 
 type CaseCardFooterProps = {
   className?: string;
-  controlCase: Case;
+  controlCase: CaseFull;
 };
 
 const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element | null => {
   const { className, controlCase } = props;
-  const { data: stages } = useStages(controlCase?.id, {
-    skip: !controlCase?.id,
-  });
-  const user = useAuth();
-  const myPendingStage = stages?.find(
-    (stage) =>
-      stage.payload?.approveStatus === 'pending' &&
-      stage.payload?.isDeleted !== true &&
-      stage.payload?.approver?.id === user?.id,
-  );
-
+  const myPendingStage = controlCase.myPendingStage;
   const i = useUserAbility();
 
   if (
