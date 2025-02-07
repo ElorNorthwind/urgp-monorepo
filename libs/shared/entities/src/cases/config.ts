@@ -4,6 +4,7 @@ import {
   GET_DEFAULT_CONTROL_DUE_DATE,
 } from '../userInput/config';
 import { ExternalCase } from '../userInput/types';
+import { CaseFormDto } from './dto';
 
 export const emptyCase = {
   id: 0,
@@ -25,11 +26,4 @@ export const emptyCase = {
   notes: '',
   extra: '',
   dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
-};
-
-// + Server side values:
-// authorId: 1,
-// updatedById: 1,
-// approveFromId: 1,
-// createdAt: '2024-12-04T08:26:56.000Z',
-// updatedAt: '2025-01-17T16:17:11.198Z',
+} as CaseFormDto;

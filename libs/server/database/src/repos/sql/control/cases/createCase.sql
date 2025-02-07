@@ -19,7 +19,7 @@ VALUES (
     ${typeId},
     ${authorId},
     -- ${updatedById},
-    ${approveFromId},
+    ${authorId}, -- ${approveFromId},
     ${approveToId},
     ${approveStatus},
     ${approveDate},

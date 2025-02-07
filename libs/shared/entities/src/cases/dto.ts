@@ -8,6 +8,7 @@ export const createCaseSchema = caseSlimSchema
     id: true,
     authorId: true,
     updatedById: true,
+    approveFromId: true,
     updatedAt: true,
     createdAt: true,
   })
@@ -18,15 +19,16 @@ export type CreateCaseDto = z.infer<typeof createCaseSchema>;
 
 export const updateCaseSchema = caseSlimSchema
   .omit({
-    // id: true,
+    id: true,
     authorId: true,
     updatedById: true,
+    approveFromId: true,
     updatedAt: true,
     createdAt: true,
   })
   .partial()
   .extend({
-    // id: z.coerce.number().int().positive(),
+    id: z.coerce.number().int().positive(),
     dueDate: z.string().datetime().optional(), // ISO 8601 date string
     //   dueDate: z.coerce
     //     .date({ message: 'Дата обязательна' })
@@ -35,6 +37,9 @@ export const updateCaseSchema = caseSlimSchema
     //     .default(GET_DEFAULT_CONTROL_DUE_DATE()),
   });
 export type UpdateCaseDto = z.infer<typeof updateCaseSchema>;
+
+export const caseFormSchema = updateCaseSchema.required();
+export type CaseFormDto = z.infer<typeof caseFormSchema>;
 
 // Параметры поиска на странице
 const queryNumberArray = z

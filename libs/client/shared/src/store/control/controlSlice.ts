@@ -6,8 +6,13 @@ import {
   emptyDispatch,
   emptyReminder,
   User,
-  UpdateCaseDto,
   CaseFull,
+  CaseFormDto,
+  OperationFormDto,
+  OperationFull,
+  ControlOptions,
+  DialogFormState,
+  ApproveFormState,
 } from '@urgp/shared/entities';
 import { RootState } from '../store';
 import { formatISO } from 'date-fns';
@@ -18,67 +23,75 @@ import {
   setUser,
 } from '../auth/authSlice';
 
-export const DialogFormState = {
-  create: 'create',
-  edit: 'edit',
-  close: 'close',
-} as const;
-export type DialogFormState =
-  (typeof DialogFormState)[keyof typeof DialogFormState];
+const operationToForm = (payload: OperationFull) => {
+  return {
+    id: payload?.id,
+    caseId: payload?.caseId,
+    class: payload?.class,
+    typeId: payload?.type?.id,
+    doneDate: formatISO(payload?.doneDate),
+    dueDate: formatISO(payload?.dueDate),
+    title: payload?.title || '', // num
+    notes: payload?.notes || '', // descrition
+    extra: payload?.extra || '', // date_description
 
-export const ApproveFormState = {
-  operation: 'operation',
-  case: 'case',
-  close: 'close',
-} as const;
-export type ApproveFormState =
-  (typeof ApproveFormState)[keyof typeof ApproveFormState];
+    approveToId: payload?.approveTo?.id,
+    approveStatus: payload?.approveStatus,
+    approveDate: formatISO(payload?.approveDate),
+    approveNotes: formatISO(payload?.approveNotes),
+
+    constolFromId: payload?.controlFrom?.id,
+    controlToId: payload?.controlTo?.id,
+
+    controller: ControlOptions.author,
+  };
+};
 
 type ControlState = {
   caseForm: {
     state: DialogFormState;
-    values: UpdateCaseDto & { saved?: boolean };
+    values: CaseFormDto & { saved?: boolean };
   };
-  // stageForm: {
-  //   state: DialogFormState;
-  //   values: ControlStageFormValuesDto & { saved?: boolean };
-  // };
-  // dispatchForm: {
-  //   state: DialogFormState;
-  //   values: DispatchFormValuesDto & { saved?: boolean };
-  // };
-  // reminderForm: {
-  //   state: DialogFormState;
-  //   values: ReminderFormValuesDto & { saved?: boolean };
-  // };
-  // approveForm: {
-  //   state: ApproveFormState;
-  //   entityId: number;
-  // };
+  stageForm: {
+    state: DialogFormState;
+    values: OperationFormDto & { saved?: boolean };
+  };
+  dispatchForm: {
+    state: DialogFormState;
+    values: OperationFormDto & { saved?: boolean };
+  };
+  reminderForm: {
+    state: DialogFormState;
+    values: OperationFormDto & { saved?: boolean };
+  };
+  approveForm: {
+    state: ApproveFormState;
+    entityId: number;
+  };
   user: User | null;
 };
 
 const initialState: ControlState = {
   caseForm: {
-    state: 'close',
+    state: DialogFormState.close,
     values: emptyCase,
   },
-  // stageForm: {
-  //   state: 'close',
-  //   values: emptyStage,
-  // },
-  // dispatchForm: {
-  //   state: 'close',
-  //   values: emptyDispatch,
-  // },
-  // reminderForm: {
-  //   state: 'close',
-  //   values: emptyReminder,
-  // },
-  // approveForm: {
-  //   state: 'close',
-  //   entityId: 0,
-  // },
+  stageForm: {
+    state: DialogFormState.close,
+    values: emptyStage,
+  },
+  dispatchForm: {
+    state: DialogFormState.close,
+    values: emptyDispatch,
+  },
+  reminderForm: {
+    state: DialogFormState.close,
+    values: emptyReminder,
+  },
+  approveForm: {
+    state: ApproveFormState.close,
+    entityId: 0,
+  },
   user: initialUserState.user,
 };
 
@@ -106,20 +119,20 @@ const controlSlice = createSlice({
           date: new Date(ec.date).toISOString(),
         })),
         directionIds: payload?.directions?.map((d) => d?.id),
-        title: payload?.title, // fio
-        notes: payload?.notes, // descrition
-        extra: payload?.extra, // adress
+        title: payload?.title || '', // fio
+        notes: payload?.notes || '', // descrition
+        extra: payload?.extra || '', // adress
         approveToId: payload?.approveTo?.id,
         approveStatus: payload?.approveStatus,
-        approveDate: payload?.approveDate,
-        approveNotes: payload?.approveNotes,
+        approveDate: formatISO(payload?.approveDate),
+        approveNotes: formatISO(payload?.approveNotes),
         dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
       };
     },
 
     setCaseFormValuesFromDto: (
       state,
-      { payload }: PayloadAction<UpdateCaseDto & { saved?: boolean }>,
+      { payload }: PayloadAction<CaseFormDto & { saved?: boolean }>,
     ) => {
       state.caseForm.values = payload;
     },
@@ -136,29 +149,19 @@ const controlSlice = createSlice({
     },
     setStageFormValuesFromStage: (
       state,
-      { payload }: PayloadAction<ControlStage>,
+      { payload }: PayloadAction<OperationFull>,
     ) => {
-      state.stageForm.values = {
-        id: payload?.id,
-        caseId: payload?.caseId,
-        class: payload?.class,
-        typeId: payload?.payload?.type?.id,
-        doneDate: payload?.payload?.doneDate,
-        num: payload?.payload?.num || '',
-        description: payload?.payload?.description || '',
-        approverId: payload?.payload?.approver?.id,
-      };
+      state.stageForm.values = operationToForm(payload);
     },
-
     setStageFormValuesFromDto: (
       state,
-      {
-        payload,
-      }: PayloadAction<ControlStageFormValuesDto & { saved?: boolean }>,
+      { payload }: PayloadAction<OperationFormDto & { saved?: boolean }>,
     ) => {
-      state.stageForm.values = payload;
+      state.stageForm.values = {
+        ...payload,
+        controlFromId: null,
+      };
     },
-
     // ================================= DISPATCH =================================
     setDispatchFormState: (
       state,
@@ -174,28 +177,30 @@ const controlSlice = createSlice({
     },
     setDispatchFormValuesFromDispatch: (
       state,
-      { payload }: PayloadAction<ControlDispatch>,
+      { payload }: PayloadAction<OperationFull>,
     ) => {
       state.dispatchForm.values = {
-        id: payload?.id,
-        caseId: payload?.caseId,
-        class: payload?.class,
-        typeId: payload?.payload?.type?.id,
-        description: payload?.payload?.description,
-        dateDescription: 'Без переноса срока', // payload?.payload?.dateDescription,
-        dueDate: formatISO(payload?.payload?.dueDate), // new Date(ec.date).toISOString()
-        executorId: payload?.payload?.executor?.id,
+        ...operationToForm(payload),
+        extra: 'Без переноса срока',
         controller:
-          payload?.payload?.controller?.id === state.user.id
-            ? 'author'
-            : 'executor',
+          payload.controlFrom.id === state.user.id
+            ? ControlOptions.author
+            : ControlOptions.executor,
       };
     },
     setDispatchFormValuesFromDto: (
       state,
-      { payload }: PayloadAction<DispatchFormValuesDto & { saved?: boolean }>,
+      { payload }: PayloadAction<OperationFormDto & { saved?: boolean }>,
     ) => {
-      state.dispatchForm.values = payload;
+      state.dispatchForm.values = {
+        ...payload,
+        controlFromId:
+          payload.controller === ControlOptions.author
+            ? state.user.id
+            : payload.controller === ControlOptions.executor
+              ? payload.controlToId
+              : payload.controlFromId,
+      };
     },
 
     // ================================= REMINDER =================================
@@ -219,28 +224,25 @@ const controlSlice = createSlice({
     },
     setReminderFormValuesFromReminder: (
       state,
-      { payload }: PayloadAction<ControlReminder>,
+      { payload }: PayloadAction<OperationFull>,
     ) => {
       state.reminderForm.values = {
-        id: payload?.id,
-        caseId: payload?.caseId,
-        class: payload?.class,
-        typeId: payload?.payload?.type?.id,
-        observerId: payload?.payload?.observer?.id || state.user.id,
-        description: payload?.payload?.description,
-        dueDate: payload?.payload?.dueDate || null, // new Date(ec.date).toISOString()
-        doneDate: null, // Потому что редактируя напоминалку - мы возвращаем ее в незакрытое состояние
+        ...operationToForm(payload),
+        doneDate: null,
       };
     },
     setReminderFormValuesFromDto: (
       state,
-      { payload }: PayloadAction<ReminderFormValuesDto & { saved?: boolean }>,
+      { payload }: PayloadAction<OperationFormDto & { saved?: boolean }>,
     ) => {
       state.reminderForm.values = {
         ...payload,
-        observerId:
-          payload?.observerId === 0 ? state.user.id : payload?.observerId,
       };
+      //  {
+      //   ...payload,
+      //   controlFromId:
+      //     payload?.observerId === 0 ? state.user.id : payload?.observerId,
+      // };
     },
 
     // ================================= APPROVE =================================

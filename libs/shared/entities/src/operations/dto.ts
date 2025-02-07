@@ -1,5 +1,9 @@
 import { z } from 'zod';
-import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
+import {
+  ControlOptions,
+  controlOptionsValues,
+  GET_DEFAULT_CONTROL_DUE_DATE,
+} from '../userInput/config';
 import { startOfToday } from 'date-fns';
 import { operationSlimSchema } from './types';
 import {
@@ -11,6 +15,7 @@ export const createOperationSchema = operationSlimSchema.omit({
   id: true,
   authorId: true,
   updatedById: true,
+  approveFromId: true,
   updatedAt: true,
   createdAt: true,
 });
@@ -21,6 +26,7 @@ export const updateOperationSchema = operationSlimSchema
     id: true,
     authorId: true,
     updatedById: true,
+    approveFromId: true,
     updatedAt: true,
     createdAt: true,
   })
@@ -29,6 +35,15 @@ export const updateOperationSchema = operationSlimSchema
     id: z.coerce.number().int().positive(),
   });
 export type UpdateOperationDto = z.infer<typeof updateOperationSchema>;
+
+export const operationFormSchema = updateOperationSchema
+  .omit({ controlFromId: true })
+  .required()
+  .extend({
+    controlFromId: z.coerce.number().int().positive().nullable().optional(),
+    controller: z.enum(controlOptionsValues).default(ControlOptions.executor),
+  });
+export type OperationFormDto = z.infer<typeof operationFormSchema>;
 
 export const markOperationSchema = z.object({
   mode: z.enum(['seen', 'done']).default('seen'),

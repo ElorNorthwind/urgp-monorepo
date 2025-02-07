@@ -1,7 +1,7 @@
-import { addBusinessDays, startOfToday } from 'date-fns';
+import { addBusinessDays, formatISO, startOfToday } from 'date-fns';
 
 export const GET_DEFAULT_CONTROL_DUE_DATE = () =>
-  addBusinessDays(startOfToday(), 5).toISOString();
+  formatISO(addBusinessDays(startOfToday(), 5));
 
 // Хелпер функция для выборки ключей в виде массива
 function getValues<T extends Record<string, any>>(obj: T) {
@@ -57,3 +57,27 @@ export const ApproveStatus = {
 } as const;
 export type ApproveStatus = (typeof ApproveStatus)[keyof typeof ApproveStatus];
 export const approveStatusValues = getValues(ApproveStatus);
+
+export const ControlOptions = {
+  author: 'author',
+  executor: 'executor',
+} as const;
+export type ControlOptions =
+  (typeof ControlOptions)[keyof typeof ControlOptions];
+export const controlOptionsValues = getValues(ControlOptions);
+
+export const DialogFormState = {
+  create: 'create',
+  edit: 'edit',
+  close: 'close',
+} as const;
+export type DialogFormState =
+  (typeof DialogFormState)[keyof typeof DialogFormState];
+
+export const ApproveFormState = {
+  operation: 'operation',
+  case: 'case',
+  close: 'close',
+} as const;
+export type ApproveFormState =
+  (typeof ApproveFormState)[keyof typeof ApproveFormState];

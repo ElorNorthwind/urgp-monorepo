@@ -124,8 +124,8 @@ export class ControlOperationsController {
       (dto?.approveDate && dto?.approveDate !== curentOp.approveDate) ||
       (dto?.approveStatus && dto?.approveStatus !== curentOp.approveStatus) ||
       (dto?.approveNotes && dto?.approveNotes !== curentOp.approveNotes) ||
-      (dto?.approveToId && dto?.approveToId !== curentOp.approveToId) ||
-      (dto?.approveFromId && dto?.approveFromId !== curentOp.approveFromId);
+      (dto?.approveToId && dto?.approveToId !== curentOp.approveToId);
+    // || (dto?.approveFromId && dto?.approveFromId !== curentOp.approveFromId);
 
     const approveData = this.classificators.getCorrectApproveData({
       user: req.user,

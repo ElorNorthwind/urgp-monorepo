@@ -1,25 +1,16 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import {
-  CaseSlim,
   ApproveControlEntityDto,
-  GET_DEFAULT_CONTROL_DUE_DATE,
-  SlimCaseSelector,
-  FullCaseSelector,
   CaseFull,
+  CaseSlim,
   CreateCaseDto,
-  UpdateCaseDto,
   ReadEntityDto,
+  UpdateCaseDto,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 import { ControlOperationsService } from './control-operations.service';
-import { ControlClassificatorsService } from './control-classificators.service';
 
 @Injectable()
 export class ControlCasesService {

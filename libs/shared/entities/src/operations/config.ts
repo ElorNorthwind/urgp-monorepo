@@ -1,37 +1,59 @@
 import { startOfToday } from 'date-fns';
-import { GET_DEFAULT_CONTROL_DUE_DATE } from '../userInput/config';
+import {
+  ApproveStatus,
+  ControlOptions,
+  GET_DEFAULT_CONTROL_DUE_DATE,
+  OperationClasses,
+} from '../userInput/config';
+import { OperationFormDto } from './dto';
+
+const emptyOp = {
+  id: 0,
+  caseId: 0,
+  class: OperationClasses.stage,
+  typeId: 6,
+  controlFromId: null,
+  controlToId: null,
+  approveToId: null,
+  approveStatus: ApproveStatus.project,
+  approveDate: null,
+  approveNotes: null,
+  dueDate: null,
+  doneDate: null,
+  title: '',
+  notes: '',
+  extra: '',
+  controller: ControlOptions.executor,
+} as OperationFormDto;
 
 export const emptyStage = {
-  id: 0,
-  caseId: 0,
-  class: 'stage',
+  ...emptyOp,
+
+  class: OperationClasses.stage,
   typeId: 6,
   doneDate: startOfToday().toISOString(),
-  num: '',
-  description: '',
-  approverId: null,
-};
+} as OperationFormDto;
 
 export const emptyDispatch = {
-  id: 0,
-  caseId: 0,
-  class: 'dispatch' as 'dispatch',
+  ...emptyOp,
+
+  class: OperationClasses.dispatch,
   typeId: 10,
   dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
-  description: '',
-  executorId: null,
-  controller: 'executor' as 'author' | 'executor',
-  dateDescription: 'Первично установленный срок',
-};
+  extra: 'Первично установленный срок',
+} as OperationFormDto;
 
 export const emptyReminder = {
-  id: 0,
-  caseId: 0,
-  class: 'reminder' as 'reminder',
+  ...emptyOp,
+
+  class: OperationClasses.reminder,
   typeId: 11,
-  // observerId: store.getState().auth.user?.id || 0,
-  observerId: 0,
-  description: '',
-  dueDate: null, // GET_DEFAULT_CONTROL_DUE_DATE(),
-  doneDate: null,
-};
+  dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
+} as OperationFormDto;
+
+// + Server side values:
+// authorId: 1,
+// updatedById: 1,
+// approveFromId: 1,
+// createdAt: '2024-12-04T08:26:56.000Z',
+// updatedAt: '2025-01-17T16:17:11.198Z',

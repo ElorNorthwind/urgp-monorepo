@@ -24,7 +24,7 @@ VALUES (
     ${typeId}, -- type_id (required)
     ${authorId}, -- author_id (optional)
     -- ${updatedById}, -- updated_by_id (optional)
-    ${approveFromId}, -- approve_from_id (optional)
+    ${authorId}, -- ${approveFromId}, -- approve_from_id (optional)
     ${approveToId}, -- approve_to_id (optional)
     ${approveStatus}, -- approve_status (default is 'project')
     ${approveDate}, -- approve_date (optional)

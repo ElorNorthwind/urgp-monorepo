@@ -5,7 +5,7 @@ SET
     -- author_id = ${authorId},
     updated_by_id = ${updatedById},
 
-    approve_from_id = ${approveFromId},
+    approve_from_id = ${updatedById}, -- approve_from_id = ${approveFromId},
     approve_to_id = ${approveToId},
     approve_status = ${approveStatus},
     approve_date = ${approveDate},

@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Logger,
   Param,
   ParseIntPipe,
   Patch,
@@ -14,30 +13,25 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { ControlCasesService } from './control-cases.service';
+import { AccessTokenGuard } from '@urgp/server/auth';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
-  RequestWithUserData,
-  approveControlEntitySchema,
   ApproveControlEntityDto,
-  deleteControlEntirySchema,
-  DeleteControlEntityDto,
-  defineControlAbilityFor,
-  readFullCaseSchema,
-  ReadFullCaseDto,
-  readSlimCaseSchema,
-  ReadSlimCaseDto,
-  CaseSlim,
-  createCaseSchema,
-  CreateCaseDto,
-  ApproveStatus,
-  updateCaseSchema,
-  UpdateCaseDto,
-  readEntitySchema,
-  ReadEntityDto,
   CaseFull,
+  CaseSlim,
+  CreateCaseDto,
+  DeleteControlEntityDto,
+  ReadEntityDto,
+  RequestWithUserData,
+  UpdateCaseDto,
+  approveControlEntitySchema,
+  createCaseSchema,
+  defineControlAbilityFor,
+  deleteControlEntirySchema,
+  readEntitySchema,
+  updateCaseSchema,
 } from '@urgp/shared/entities';
-import { AccessTokenGuard } from '@urgp/server/auth';
+import { ControlCasesService } from './control-cases.service';
 import { ControlClassificatorsService } from './control-classificators.service';
 
 @Controller('control/case')
@@ -124,8 +118,8 @@ export class ControlCasesController {
       (dto?.approveDate && dto?.approveDate !== curCase.approveDate) ||
       (dto?.approveStatus && dto?.approveStatus !== curCase.approveStatus) ||
       (dto?.approveNotes && dto?.approveNotes !== curCase.approveNotes) ||
-      (dto?.approveToId && dto?.approveToId !== curCase.approveToId) ||
-      (dto?.approveFromId && dto?.approveFromId !== curCase.approveFromId);
+      (dto?.approveToId && dto?.approveToId !== curCase.approveToId);
+    // || (dto?.approveFromId && dto?.approveFromId !== curCase.approveFromId);
 
     const approveData = this.classificators.getCorrectApproveData({
       user: req.user,
