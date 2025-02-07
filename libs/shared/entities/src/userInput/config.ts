@@ -48,3 +48,12 @@ export const CaseActions = {
 } as const;
 export type CaseActions = (typeof CaseActions)[keyof typeof CaseActions];
 export const caseActionsValues = getValues(CaseActions);
+
+export const ApproveStatus = {
+  project: 'project',
+  pending: 'pending',
+  approved: 'approved',
+  rejected: 'rejected',
+} as const;
+export type ApproveStatus = (typeof ApproveStatus)[keyof typeof ApproveStatus];
+export const approveStatusValues = getValues(ApproveStatus);

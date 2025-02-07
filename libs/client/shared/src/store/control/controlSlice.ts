@@ -1,19 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
-  CaseFormValuesDto,
-  ControlDispatch,
-  ControlReminder,
-  ControlStage,
-  Case,
   emptyCase,
   GET_DEFAULT_CONTROL_DUE_DATE,
-  ControlStageFormValuesDto,
   emptyStage,
-  DispatchFormValuesDto,
-  ReminderFormValuesDto,
   emptyDispatch,
   emptyReminder,
   User,
+  UpdateCaseDto,
+  CaseFull,
 } from '@urgp/shared/entities';
 import { RootState } from '../store';
 import { formatISO } from 'date-fns';
@@ -24,30 +18,43 @@ import {
   setUser,
 } from '../auth/authSlice';
 
-export type DialogFormState = 'create' | 'edit' | 'close';
-export type ApproveFormState = 'operation' | 'case' | 'close';
+export const DialogFormState = {
+  create: 'create',
+  edit: 'edit',
+  close: 'close',
+} as const;
+export type DialogFormState =
+  (typeof DialogFormState)[keyof typeof DialogFormState];
+
+export const ApproveFormState = {
+  operation: 'operation',
+  case: 'case',
+  close: 'close',
+} as const;
+export type ApproveFormState =
+  (typeof ApproveFormState)[keyof typeof ApproveFormState];
 
 type ControlState = {
   caseForm: {
     state: DialogFormState;
-    values: CaseFormValuesDto & { saved?: boolean };
+    values: UpdateCaseDto & { saved?: boolean };
   };
-  stageForm: {
-    state: DialogFormState;
-    values: ControlStageFormValuesDto & { saved?: boolean };
-  };
-  dispatchForm: {
-    state: DialogFormState;
-    values: DispatchFormValuesDto & { saved?: boolean };
-  };
-  reminderForm: {
-    state: DialogFormState;
-    values: ReminderFormValuesDto & { saved?: boolean };
-  };
-  approveForm: {
-    state: ApproveFormState;
-    entityId: number;
-  };
+  // stageForm: {
+  //   state: DialogFormState;
+  //   values: ControlStageFormValuesDto & { saved?: boolean };
+  // };
+  // dispatchForm: {
+  //   state: DialogFormState;
+  //   values: DispatchFormValuesDto & { saved?: boolean };
+  // };
+  // reminderForm: {
+  //   state: DialogFormState;
+  //   values: ReminderFormValuesDto & { saved?: boolean };
+  // };
+  // approveForm: {
+  //   state: ApproveFormState;
+  //   entityId: number;
+  // };
   user: User | null;
 };
 
@@ -56,22 +63,22 @@ const initialState: ControlState = {
     state: 'close',
     values: emptyCase,
   },
-  stageForm: {
-    state: 'close',
-    values: emptyStage,
-  },
-  dispatchForm: {
-    state: 'close',
-    values: emptyDispatch,
-  },
-  reminderForm: {
-    state: 'close',
-    values: emptyReminder,
-  },
-  approveForm: {
-    state: 'close',
-    entityId: 0,
-  },
+  // stageForm: {
+  //   state: 'close',
+  //   values: emptyStage,
+  // },
+  // dispatchForm: {
+  //   state: 'close',
+  //   values: emptyDispatch,
+  // },
+  // reminderForm: {
+  //   state: 'close',
+  //   values: emptyReminder,
+  // },
+  // approveForm: {
+  //   state: 'close',
+  //   entityId: 0,
+  // },
   user: initialUserState.user,
 };
 
@@ -86,33 +93,37 @@ const controlSlice = createSlice({
     setCaseFormValuesEmpty: (state) => {
       state.caseForm.values = emptyCase;
     },
-    setCaseFormValuesFromCase: (state, { payload }: PayloadAction<Case>) => {
+    setCaseFormValuesFromCase: (
+      state,
+      { payload }: PayloadAction<CaseFull>,
+    ) => {
       state.caseForm.values = {
         id: payload?.id,
         class: payload?.class,
-        typeId: payload?.payload?.type?.id,
-        externalCases: payload?.payload?.externalCases.map((ec) => ({
+        typeId: payload?.type?.id,
+        externalCases: payload?.externalCases.map((ec) => ({
           ...ec,
           date: new Date(ec.date).toISOString(),
         })),
-        directionIds: payload?.payload?.directions?.map((d) => d?.id),
-        problemIds: payload?.payload?.problems?.map((p) => p?.id),
-        description: payload?.payload?.description,
-        fio: payload?.payload?.fio,
-        adress: payload?.payload?.adress,
-        approverId: payload?.payload?.approver?.id,
+        directionIds: payload?.directions?.map((d) => d?.id),
+        title: payload?.title, // fio
+        notes: payload?.notes, // descrition
+        extra: payload?.extra, // adress
+        approveToId: payload?.approveTo?.id,
+        approveStatus: payload?.approveStatus,
+        approveDate: payload?.approveDate,
+        approveNotes: payload?.approveNotes,
         dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
       };
     },
+
     setCaseFormValuesFromDto: (
       state,
-      { payload }: PayloadAction<CaseFormValuesDto & { saved?: boolean }>,
+      { payload }: PayloadAction<UpdateCaseDto & { saved?: boolean }>,
     ) => {
-      state.caseForm.values = {
-        ...payload,
-        // dueDate: payload.dueDate,
-      };
+      state.caseForm.values = payload;
     },
+
     // ================================= STAGE =================================
     setStageFormState: (state, { payload }: PayloadAction<DialogFormState>) => {
       state.stageForm.state = payload;

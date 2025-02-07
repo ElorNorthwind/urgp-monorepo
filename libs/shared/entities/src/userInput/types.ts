@@ -1,9 +1,10 @@
 import { z } from 'zod';
+import { approveStatusValues } from './config';
 
-export const approveStatusSchema = z
-  .enum(['project', 'approved', 'pending', 'rejected'])
-  .default('project');
-export type ApproveStatus = z.infer<typeof approveStatusSchema>;
+// export const approveStatusSchema = z
+//   .enum(['project', 'approved', 'pending', 'rejected'])
+//   .default('project');
+// export type ApproveStatus = z.infer<typeof approveStatusSchema>;
 
 export const caseClassSchema = z
   .enum(['control-incident'])
@@ -58,7 +59,7 @@ export const entitySlimSchema = z.object({
   updatedById: z.number().int().positive().nullable(),
   approveFromId: z.number().int().positive().nullable(),
   approveToId: z.number().int().positive().nullable(),
-  approveStatus: approveStatusSchema,
+  approveStatus: z.enum(approveStatusValues).default('project'),
   approveDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
   approveNotes: z.string().nullable().default(null),
   createdAt: z.string().datetime(), // ISO 8601 date string
