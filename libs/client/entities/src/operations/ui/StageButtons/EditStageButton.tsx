@@ -8,12 +8,12 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from '@urgp/client/shared';
-import { ControlStage } from '@urgp/shared/entities';
+import { OperationFull } from '@urgp/shared/entities';
 import { Pencil } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 
 type EditStageButtonProps = {
-  stage: ControlStage;
+  stage: OperationFull;
   className?: string;
 };
 

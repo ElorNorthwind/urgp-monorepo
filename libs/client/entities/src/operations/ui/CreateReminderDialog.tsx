@@ -1,6 +1,4 @@
 import {
-  guestUser,
-  selectCurrentUser,
   selectDispatchFormState,
   selectReminderFormState,
   selectReminderFormValues,
@@ -9,22 +7,22 @@ import {
   setReminderFormValuesFromDto,
   useAuth,
 } from '@urgp/client/shared';
-import {
-  ReminderFormValuesDto,
-  reminderFormValuesDto,
-} from '@urgp/shared/entities';
 
 import { FormDialog, FormDialogProps } from '@urgp/client/widgets';
 import { useSelector } from 'react-redux';
-import {
-  useCreateReminder,
-  useDeleteOperation,
-  useMarkReminderAsDone,
-  useReminders,
-  useUpdateReminder,
-} from '../api/operationsApi';
-import { EditedReminderDisplayElement } from './ReminderFormElements/EditedReminderDisplayElement';
+
 import { ReminderFormFieldArray } from './ReminderFormElements/ReminderFormFieldArray';
+import {
+  useCreateOperation,
+  useMarkReminderAsDone,
+  useOperations,
+  useUpdateOperation,
+} from '../api/operationsApi';
+import {
+  OperationClasses,
+  OperationFormDto,
+  operationFormSchema,
+} from '@urgp/shared/entities';
 
 type CreateReminderDialogProps = {
   className?: string;
@@ -40,28 +38,31 @@ const CreateReminderDialog = ({
     data: reminders,
     isLoading,
     isFetching,
-  } = useReminders(caseId, { skip: caseId === 0 });
+  } = useOperations(
+    { class: OperationClasses.reminder, case: caseId },
+    { skip: !caseId || caseId === 0 },
+  );
   const user = useAuth();
   const userReminder = reminders?.find((rem) => {
-    return rem?.payload?.observer?.id === user?.id;
+    return rem?.controlFrom?.id === user?.id;
   });
 
   const dialogProps = {
     isEdit,
     entityType: 'operation',
-    dto: reminderFormValuesDto,
+    dto: operationFormSchema,
     valuesSelector: selectReminderFormValues,
     stateSelector: selectReminderFormState,
     stateDispatch: setReminderFormState,
     valuesEmptyDispatch: setReminderFormValuesEmpty,
     valuesDtoDispatch: setReminderFormValuesFromDto,
-    updateHook: useUpdateReminder,
-    createHook: useCreateReminder,
+    updateHook: useUpdateOperation,
+    createHook: useCreateOperation,
     allowDelete:
       !isLoading &&
       !isFetching &&
       formValues?.id !== 0 &&
-      !userReminder?.payload?.doneDate,
+      !userReminder?.doneDate,
     deleteHook: useMarkReminderAsDone, // ВОТ ТУТ НАДО БЫ КРЕПКО ПОДУМАТЬ
     FieldsArray: ReminderFormFieldArray,
     dialogWidth: '600px',
@@ -72,7 +73,7 @@ const CreateReminderDialog = ({
     editDescription: 'Внесите изменения отслеживание по делу',
     deleteButtonLabel: 'Снять напоминание',
     saveButtonLabel: 'Отслеживать дело',
-  } as unknown as FormDialogProps<ReminderFormValuesDto>;
+  } as unknown as FormDialogProps<OperationFormDto>;
 
   return <FormDialog {...dialogProps} />;
 };

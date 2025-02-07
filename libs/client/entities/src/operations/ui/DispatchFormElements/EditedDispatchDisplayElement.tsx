@@ -29,7 +29,7 @@ const EditedDispatchDisplayElement = ({
     <div>
       <CaseCardHeader controlCase={controlCase} className="rounded-t" />
       <div className="bg-sidebar/80 max-h-50 overflow-hidden rounded-b border-t p-4">
-        {controlCase?.payload?.description}
+        {controlCase?.notes}
       </div>
     </div>
   ) : null;

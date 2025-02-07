@@ -10,7 +10,7 @@ import { useCreateCase, useDeleteCase, useUpdateCase } from '../api/casesApi';
 import { FormDialog, FormDialogProps } from '@urgp/client/widgets';
 import { CaseFormFieldArray } from './CaseFormElements/CaseFormFieldArray';
 import { useSelector } from 'react-redux';
-import { useGetCurrentUserApproveto } from '../../classificators';
+import { useCurrentUserApproveTo } from '../../classificators';
 import { CaseFormDto, caseFormSchema } from '@urgp/shared/entities';
 
 type CreateCaseDialogProps = {
@@ -20,7 +20,7 @@ type CreateCaseDialogProps = {
 const CreateCaseDialog = ({
   className,
 }: CreateCaseDialogProps): JSX.Element | null => {
-  const { data: approveTo } = useGetCurrentUserApproveto();
+  const { data: approveTo } = useCurrentUserApproveTo();
   const isEdit = useSelector(selectCaseFormState) === 'edit';
 
   const dialogProps = {

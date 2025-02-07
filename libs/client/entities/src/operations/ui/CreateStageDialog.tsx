@@ -6,23 +6,20 @@ import {
   setStageFormValuesFromDto,
 } from '@urgp/client/shared';
 import {
-  useCurrentUserApprovers,
+  useCurrentUserApproveTo,
   useOperationTypesFlat,
 } from '../../classificators';
-import {
-  ControlStageFormValuesDto,
-  controlStageFormValuesDto,
-} from '@urgp/shared/entities';
 
 import { FormDialog, FormDialogProps } from '@urgp/client/widgets';
 import {
-  useCreateControlStage,
+  useCreateOperation,
   useDeleteOperation,
-  useUpdateControlStage,
+  useUpdateOperation,
 } from '../api/operationsApi';
 import { StageFormFieldArray } from './StageFormElements/StageFormFieldArray';
 import { useSelector } from 'react-redux';
 import { EditedStageDisplayElement } from './StageFormElements/EditedStageDisplayElement';
+import { OperationFormDto, operationFormSchema } from '@urgp/shared/entities';
 
 type CreateStageDialogProps = {
   className?: string;
@@ -31,40 +28,40 @@ type CreateStageDialogProps = {
 const CreateStageDialog = ({
   className,
 }: CreateStageDialogProps): JSX.Element | null => {
-  const { data: approvers } = useCurrentUserApprovers();
+  const { data: approvers } = useCurrentUserApproveTo();
   const { data: operationTypes } = useOperationTypesFlat();
   const isEdit = useSelector(selectStageFormState) === 'edit';
 
   const dialogProps = {
     isEdit,
     entityType: 'operation',
-    dto: controlStageFormValuesDto,
+    dto: operationFormSchema,
     valuesSelector: selectStageFormValues,
     stateSelector: selectStageFormState,
     stateDispatch: setStageFormState,
     valuesEmptyDispatch: setStageFormValuesEmpty,
     valuesDtoDispatch: setStageFormValuesFromDto,
-    updateHook: useUpdateControlStage,
-    createHook: useCreateControlStage,
+    updateHook: useUpdateOperation,
+    createHook: useCreateOperation,
     deleteHook: useDeleteOperation,
     FieldsArray: StageFormFieldArray,
-    customizeDefaultValues: (values: ControlStageFormValuesDto) => ({
+    customizeDefaultValues: (values: OperationFormDto) => ({
       ...values,
       class: 'stage',
-      approverId: values?.approverId || approvers?.operations?.[0]?.value,
+      approveToId: values?.approveToId || approvers?.[0]?.value,
     }),
-    customizeCreateValues: (values: ControlStageFormValuesDto) => ({
+    customizeCreateValues: (values: OperationFormDto) => ({
       ...values,
       class: 'stage',
     }),
-    customizeUpdateValues: (values: ControlStageFormValuesDto) => ({
+    customizeUpdateValues: (values: OperationFormDto) => ({
       ...values,
       class: 'stage',
-      approverId: operationTypes?.find((operation) => {
+      approveToId: operationTypes?.find((operation) => {
         return operation.id === values.typeId;
       })?.autoApprove
         ? null
-        : values.approverId,
+        : values.approveToId,
     }),
     displayedElement: <EditedStageDisplayElement />,
     dialogWidth: '600px',
@@ -73,7 +70,7 @@ const CreateStageDialog = ({
     editTitle: 'Изменить операцию',
     createDescription: 'Внесите данные для создания операции',
     editDescription: 'Внесите изменения в запись об операции',
-  } as unknown as FormDialogProps<ControlStageFormValuesDto>;
+  } as unknown as FormDialogProps<OperationFormDto>;
 
   return <FormDialog {...dialogProps} />;
 };

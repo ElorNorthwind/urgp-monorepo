@@ -9,9 +9,10 @@ export const Route = createFileRoute('/control/pending')({
   validateSearch: async (search) => {
     if (search?.selectedCase && typeof search?.selectedCase === 'number') {
       await store.dispatch(
-        operationsApi.endpoints.markRemindersAsSeen.initiate([
-          search.selectedCase as number,
-        ]),
+        operationsApi.endpoints.markReminders.initiate({
+          mode: 'seen',
+          case: [search.selectedCase as number],
+        }),
       );
     }
     return casesPageSearch.parse(search);

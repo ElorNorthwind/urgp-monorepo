@@ -4,13 +4,13 @@ import {
   TooltipTrigger,
   useUserAbility,
 } from '@urgp/client/shared';
-import { ControlStage } from '@urgp/shared/entities';
 import { toast } from 'sonner';
 import { ConfirmationButton } from '@urgp/client/widgets';
 import { useDeleteOperation } from '../../api/operationsApi';
+import { OperationFull } from '@urgp/shared/entities';
 
 type DeleteStageButtonProps = {
-  stage: ControlStage;
+  stage: OperationFull;
   className?: string;
 };
 

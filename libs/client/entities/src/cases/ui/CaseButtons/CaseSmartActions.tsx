@@ -47,7 +47,7 @@ const CaseSmartActions = ({
     isFetching: isDispatchesFetching,
   } = useOperations(
     { class: OperationClasses.dispatch, case: caseId },
-    { skip: !caseId },
+    { skip: !caseId || caseId === 0 },
   );
 
   const avaliableActions = useAvaliableCaseActions(incident);
@@ -62,7 +62,8 @@ const CaseSmartActions = ({
     isPendingLoading ||
     isPendingFetching ||
     isDispatchesLoading ||
-    isDispatchesFetching
+    isDispatchesFetching ||
+    !incident
   ) {
     return null;
   }
@@ -109,11 +110,11 @@ const CaseSmartActions = ({
             />
           );
 
-        if (action === 'operation-approve' && incident?.pendingStage)
+        if (action === 'operation-approve' && incident?.myPendingStage)
           return (
             <ApproveButton
               variant={'default'}
-              entity={incident.pendingStage}
+              entity={incident?.myPendingStage}
               approveLabel="Утвердить решение"
             />
           );

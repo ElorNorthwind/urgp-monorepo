@@ -1,14 +1,14 @@
 import { cn, Skeleton } from '@urgp/client/shared';
-import { ControlStagePayloadHistoryData } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import { Circle } from 'lucide-react';
 import {
   approveStatusStyles,
   operationTypeStyles,
 } from '../../config/operationStyles';
+import { OperationFull } from '@urgp/shared/entities';
 
 type StageHistoryItemProps = {
-  item: ControlStagePayloadHistoryData | null;
+  item: OperationFull | null;
   className?: string;
 };
 
@@ -50,8 +50,10 @@ const StageHistoryItem = (props: StageHistoryItemProps): JSX.Element => {
           {item.type.fullname}
         </span>
         <div className="text-muted-foreground ml-auto flex flex-row gap-1 text-nowrap text-xs">
-          <span>{item.updatedBy.fio}</span>
-          <span>{format(item.updatedAt, 'dd.MM.yyyy HH:mm')}</span>
+          <span>{item?.updatedBy?.fio || item?.author?.fio || '-'}</span>
+          <span>
+            {format(item?.updatedAt || item?.createdAt, 'dd.MM.yyyy HH:mm')}
+          </span>
         </div>
       </div>
       <div className="text-muted-foreground bg-muted-foreground/5 -mx-4 my-1 flex flex-row justify-start gap-1 px-4 text-sm">
@@ -61,14 +63,14 @@ const StageHistoryItem = (props: StageHistoryItemProps): JSX.Element => {
             <span className="">{format(item.doneDate, 'dd.MM.yyyy')}</span>
           </>
         )}
-        {item.num && (
+        {item.title && (
           <>
             <span className="ml-auto">№</span>
-            <span className="">{item.num}</span>
+            <span className="">{item.title}</span>
           </>
         )}
       </div>
-      <div className="font-light">{item.description}</div>
+      <div className="font-light">{item.notes}</div>
 
       <div
         className={cn(
@@ -77,10 +79,8 @@ const StageHistoryItem = (props: StageHistoryItemProps): JSX.Element => {
         )}
       >
         <span className="font-medium">{label}</span>
-        {(item?.approveBy?.fio || item?.approver?.fio) && (
-          <span className="text-nowrap">
-            {': ' + (item?.approveBy?.fio || item?.approver?.fio)}
-          </span>
+        {item?.approveFrom?.fio && (
+          <span className="text-nowrap">{': ' + item?.approveFrom?.fio}</span>
         )}
         {item?.approveDate && (
           <span className="ml-auto text-nowrap">

@@ -9,6 +9,7 @@ import {
   UpdateOperationDto,
 } from '@urgp/shared/entities';
 import { markCachedCase, refetchCachedCase } from '../../cases/api/lib';
+import { casesApi } from '../../cases';
 
 export const operationsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
@@ -27,7 +28,7 @@ export const operationsApi = rtkApi.injectEndpoints({
       query: (dto) => ({
         url: '/control/operation',
         method: 'GET',
-        search: {
+        params: {
           mode: 'full',
           case: dto.case,
           class: dto.class,
@@ -129,6 +130,48 @@ export const operationsApi = rtkApi.injectEndpoints({
       },
     }),
 
+    markReminderAsDone: build.mutation<number[], number>({
+      query: (op) => ({
+        url: '/control/operation/mark-operation',
+        method: 'PATCH',
+        body: {
+          mode: 'done',
+          operation: op,
+          class: [EntityClasses.reminder],
+        },
+      }),
+
+      async onQueryStarted(opId, { dispatch, getState }) {
+        const newCase = (
+          await dispatch(casesApi.endpoints.getCaseByOperationId.initiate(opId))
+        )?.data;
+        newCase &&
+          dispatch(
+            operationsApi.util.updateQueryData(
+              'getOperationsByCaseId',
+              { class: EntityClasses.reminder, case: newCase.id },
+              (draft) => {
+                return draft.map((op) => {
+                  if (opId === op.id)
+                    return {
+                      ...op,
+                      updatedAt: new Date().toISOString(),
+                      doneDate: new Date().toISOString(),
+                    };
+                  return op;
+                });
+              },
+            ),
+          );
+        newCase &&
+          markCachedCase(
+            { mode: 'done', case: [newCase.id] },
+            dispatch,
+            getState,
+          );
+      },
+    }),
+
     deleteOperation: build.mutation<OperationFull, DeleteControlEntityDto>({
       query: (dto) => ({
         url: '/control/operation',
@@ -198,6 +241,7 @@ export const {
   useGetOperationHistroyQuery: useOperationHistory,
   useUpdateOperationMutation: useUpdateOperation,
   useMarkRemindersMutation: useMarkReminders,
+  useMarkReminderAsDoneMutation: useMarkReminderAsDone,
   useDeleteOperationMutation: useDeleteOperation,
   useApproveOperationMutation: useApproveOperation,
 } = operationsApi;

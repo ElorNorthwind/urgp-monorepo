@@ -4,10 +4,9 @@ import {
   selectStageFormValues,
   Skeleton,
 } from '@urgp/client/shared';
-import { ControlStage } from '@urgp/shared/entities';
 import { useSelector } from 'react-redux';
+import { useOperationById } from '../../api/operationsApi';
 import { StageHistoryItem } from '../StagesList/StageHistoryItem';
-import { useStages } from '../../api/operationsApi';
 
 type EditedStageDisplayElementProps = {
   className?: string;
@@ -19,10 +18,12 @@ const EditedStageDisplayElement = ({
   const isEdit = useSelector(selectStageFormState) === 'edit';
   const stageId = useSelector(selectStageFormValues)?.id || 0;
 
-  const { data: stages, isLoading: isStagesLoading } = useStages(stageId, {
-    skip: !isEdit || !stageId || stageId === 0,
-  });
-  const editStage = stages?.find((stage: ControlStage) => stage.id === stageId);
+  const { data: editStage, isLoading: isStagesLoading } = useOperationById(
+    stageId,
+    {
+      skip: !isEdit || !stageId || stageId === 0,
+    },
+  );
 
   if (!isEdit || !stageId) return null;
 
@@ -30,12 +31,7 @@ const EditedStageDisplayElement = ({
     <Skeleton className={className} />
   ) : editStage ? (
     <StageHistoryItem
-      item={{
-        ...editStage.payload,
-        class: editStage.class,
-        id: editStage.id,
-        caseId: editStage.caseId || 0,
-      }}
+      item={editStage}
       className={cn('bg-amber-50', className)}
     />
   ) : null;

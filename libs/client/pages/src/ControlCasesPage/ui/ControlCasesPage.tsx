@@ -15,16 +15,16 @@ import {
   VirtualDataTable,
 } from '@urgp/client/shared';
 import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
-import { Case, CasesPageSearchDto } from '@urgp/shared/entities';
+import { CaseFull, CasesPageSearchDto } from '@urgp/shared/entities';
 import { useState } from 'react';
 import { CasesPageHeader } from './CasesPageHeader';
 
 const defaultHiddenColumns = ['viewStatus'];
 
 const ControlCasesPage = (): JSX.Element => {
-  const { data: cases, isLoading, isFetching } = useCases();
-  const [selected, setSelected] = useState<Row<Case>[]>([]); // Этот селектед не тот селектед!
-  const [filtered, setFiltered] = useState<Row<Case>[]>([]);
+  const { data: cases, isLoading, isFetching } = useCases(undefined);
+  const [selected, setSelected] = useState<Row<CaseFull>[]>([]); // Этот селектед не тот селектед!
+  const [filtered, setFiltered] = useState<Row<CaseFull>[]>([]);
 
   // const isMobile = useIsMobile();
   const navigate = useNavigate({ from: '/control/cases' });

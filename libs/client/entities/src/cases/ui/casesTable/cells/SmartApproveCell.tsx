@@ -5,7 +5,7 @@ import { CaseSmartApproveButton } from '../../CaseButtons/CaseSmartApproveButton
 import { Button } from '@urgp/client/shared';
 import { EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
-import { useMarkReminders } from 'libs/client/entities/src/operations';
+import { useMarkReminders } from '../../../../operations';
 // import { useMarkCaseRemindersAsDone } from '../../../../operations';
 
 function SmartApproveCell(props: CellContext<CaseFull, unknown>): JSX.Element {
@@ -13,6 +13,8 @@ function SmartApproveCell(props: CellContext<CaseFull, unknown>): JSX.Element {
   const [mark, { isLoading: isMarkLoading }] = useMarkReminders();
   // const [markAsDone, { isLoading: isMarkLoading }] =
   //   useMarkCaseRemindersAsDone();
+
+  return <div>{JSON.stringify(controlCase.actions)}</div>;
 
   if (controlCase.actions.includes(CaseActions.caseRejected))
     //TODO: Кнопка с эскалацией или продлением срока

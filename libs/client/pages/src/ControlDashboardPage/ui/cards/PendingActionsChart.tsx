@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { pendingActionStyles, usePendingCases } from '@urgp/client/entities';
+import { pendingActionStyles, useCases } from '@urgp/client/entities';
 import { SimpleBarChart } from '@urgp/client/features';
 import {
   Card,
@@ -9,31 +9,36 @@ import {
   CardTitle,
   cn,
 } from '@urgp/client/shared';
-import { CaseWithPendingInfo } from '@urgp/shared/entities';
+import { CaseActions, CaseFull } from '@urgp/shared/entities';
 import { ServerCrash } from 'lucide-react';
-import { useMemo } from 'react';
+import { forwardRef, useMemo } from 'react';
 
-const countByPendingAction = (
-  status: string,
-  cases?: CaseWithPendingInfo[],
-) => {
-  return cases?.filter((c) => c?.action === status)?.length || 0;
+const countByPendingAction = (status: CaseActions, cases?: CaseFull[]) => {
+  return cases?.filter((c) => c?.actions?.includes(status))?.length || 0;
 };
 
 type PendingActionChartProps = {
   className?: string;
 };
 
-const PendingActionChart = ({
-  className,
-}: PendingActionChartProps): JSX.Element => {
+const PendingActionChart = forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & PendingActionChartProps
+>(({ className }: PendingActionChartProps, ref): JSX.Element => {
   const {
     data: cases,
     isLoading: isCasesLoading,
     isFetching: isCasesFetching,
     isError,
-  } = usePendingCases();
+  } = useCases(undefined);
   const isLoading = isCasesLoading || isCasesFetching;
+  const filteredCases = useMemo(
+    () =>
+      cases?.filter(
+        (caseItem) => caseItem?.actions && caseItem?.actions.length > 0,
+      ),
+    [cases, isLoading],
+  );
 
   const chartData = useMemo(() => {
     return [
@@ -42,20 +47,20 @@ const PendingActionChart = ({
         label: 'Проекты заявок ожидают моего утверждения',
         icon: pendingActionStyles['case-approve']?.icon,
         value:
-          countByPendingAction('case-approve', cases) +
-          countByPendingAction('both-approve', cases),
+          countByPendingAction('case-approve', filteredCases) +
+          countByPendingAction('both-approve', filteredCases),
       },
       {
         key: 'operation-approve',
         label: 'Решения по заявкам ожидают моего утверждения',
         icon: pendingActionStyles['operation-approve']?.icon,
-        value: countByPendingAction('operation-approve', cases),
+        value: countByPendingAction('operation-approve', filteredCases),
       },
       {
         key: 'case-rejected',
         label: 'По моим заявкам отказали в согласовании',
         icon: pendingActionStyles['case-rejected']?.icon,
-        value: countByPendingAction('case-rejected', cases),
+        value: countByPendingAction('case-rejected', filteredCases),
         // style: 'bg-yellow-200',
       },
       {
@@ -83,6 +88,7 @@ const PendingActionChart = ({
         'relative flex flex-col items-stretch justify-stretch overflow-hidden',
         className,
       )}
+      ref={ref}
     >
       <CardHeader className="z-10">
         <CardTitle>Ожидает моего решения</CardTitle>
@@ -124,6 +130,6 @@ const PendingActionChart = ({
       </CardContent>
     </Card>
   );
-};
+});
 
 export { PendingActionChart };

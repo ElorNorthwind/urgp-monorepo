@@ -1,12 +1,6 @@
-import {
-  guestUser,
-  selectCurrentUser,
-  useAuth,
-  useUserAbility,
-} from '@urgp/client/shared';
+import { useUserAbility } from '@urgp/client/shared';
 import { ApproveButton } from '@urgp/client/widgets';
-import { CaseFull, OperationClasses } from '@urgp/shared/entities';
-import { useOperations } from '../../../operations';
+import { CaseFull } from '@urgp/shared/entities';
 
 type CaseSmartApproveButtonProps = {
   controlCase: CaseFull;

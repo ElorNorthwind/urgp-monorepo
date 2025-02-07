@@ -1,8 +1,6 @@
 import {
   Button,
   cn,
-  guestUser,
-  selectCurrentUser,
   setReminderFormCaseId,
   setReminderFormDueDate,
   setReminderFormState,
@@ -14,12 +12,14 @@ import {
   useAuth,
   useUserAbility,
 } from '@urgp/client/shared';
-import { GET_DEFAULT_CONTROL_DUE_DATE } from '@urgp/shared/entities';
+import {
+  GET_DEFAULT_CONTROL_DUE_DATE,
+  OperationClasses,
+} from '@urgp/shared/entities';
 import { Eye, ScanEye } from 'lucide-react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useReminders } from '../../api/operationsApi';
+import { useDispatch } from 'react-redux';
 import { RemindersList } from '../../../cases';
-import { format } from 'date-fns';
+import { useOperations } from '../../api/operationsApi';
 
 type ManageReminderButtonProps = {
   caseId: number;
@@ -43,10 +43,13 @@ const ManageReminderButton = ({
     data: reminders,
     isLoading,
     isFetching,
-  } = useReminders(caseId, { skip: !caseId });
+  } = useOperations(
+    { class: OperationClasses.reminder, case: caseId },
+    { skip: !caseId || caseId === 0 },
+  );
   const user = useAuth();
   const userReminder = reminders?.find((rem) => {
-    return rem?.payload?.observer?.id === user?.id;
+    return rem?.controlFrom?.id === user?.id;
   });
 
   const onCreate = () => {
@@ -61,10 +64,7 @@ const ManageReminderButton = ({
     dispatch(
       setReminderFormValuesFromReminder({
         ...userReminder,
-        payload: {
-          ...userReminder?.payload,
-          dueDate: userReminder?.payload?.dueDate || new Date(expectedDate),
-        },
+        dueDate: userReminder?.dueDate || new Date(expectedDate).toISOString(),
       }),
     );
     dispatch(setReminderFormState('edit'));
@@ -85,7 +85,7 @@ const ManageReminderButton = ({
             userReminder ? onEdit() : onCreate();
           }}
         >
-          {!userReminder || userReminder?.payload?.doneDate ? (
+          {!userReminder || userReminder?.doneDate ? (
             <>
               <Eye className="mr-1 size-4 flex-shrink-0 opacity-50" />
               <span>Отслеживать</span>

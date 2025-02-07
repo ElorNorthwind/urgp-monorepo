@@ -1,3 +1,4 @@
+import { ApproveStatus } from '@urgp/shared/entities';
 import { CircleCheck, CircleSlash, CircleX, LucideProps } from 'lucide-react';
 
 type StyleData = {
@@ -18,23 +19,30 @@ export const operationTypeStyles = {
 } as Record<number, StyleData>;
 
 export const approveStatusStyles = {
-  pending: {
+  [ApproveStatus.project]: {
+    bgStyle: 'bg-slate-50',
+    badgeStyle:
+      'border-muted-foreground/50 bg-muted-foreground/5 text-muted-foreground',
+    fontStyle: 'opacity-70',
+    label: 'В проекте',
+  },
+  [ApproveStatus.pending]: {
     bgStyle: 'bg-slate-50',
     badgeStyle:
       'border-muted-foreground/50 bg-muted-foreground/5 text-muted-foreground',
     fontStyle: 'opacity-70',
     label: 'На согласовании',
   },
-  approved: {
+  [ApproveStatus.approved]: {
     bgStyle: 'bg-background',
     badgeStyle: 'border-emerald-500/50 bg-emerald-500/5 text-emerald-600',
     fontStyle: '',
     label: 'Согласовано',
   },
-  rejected: {
+  [ApproveStatus.rejected]: {
     bgStyle: 'bg-red-50',
     badgeStyle: 'border-red-500/50 bg-red-500/5 text-red-500',
     fontStyle: 'opacity-70 line-through',
     label: 'Отклонено',
   },
-} as Record<string, StyleData>;
+} as Record<ApproveStatus, StyleData>;

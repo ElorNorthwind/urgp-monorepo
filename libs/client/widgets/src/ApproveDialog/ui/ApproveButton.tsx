@@ -1,7 +1,7 @@
 import {
   useApproveCase,
   useApproveOperation,
-  useCurrentUserApprovers,
+  useCurrentUserApproveTo,
 } from '@urgp/client/entities';
 import {
   Button,
@@ -17,16 +17,20 @@ import {
   useUserAbility,
 } from '@urgp/client/shared';
 import {
-  Case,
-  ControlOperation,
+  CaseClasses,
+  caseClassesValues,
+  CaseFull,
   GET_DEFAULT_CONTROL_DUE_DATE,
+  OperationClasses,
+  operationClassesValues,
+  OperationFull,
 } from '@urgp/shared/entities';
 import { Scale, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
 
 type ApproveButtonProps = {
-  entity: Case | ControlOperation;
+  entity: CaseFull | OperationFull;
   approveLabel?: string;
   rejectLabel?: string;
   className?: string;
@@ -47,19 +51,18 @@ const ApproveButton = (props: ApproveButtonProps): JSX.Element | null => {
     rejectLabel = 'Отклонить',
     variant = 'default',
   } = props;
-  // not great...
-  const cl = entity?.class || '';
-  const entityType = ['control-incident'].includes(cl)
+
+  const entityType = caseClassesValues.includes(entity?.class as CaseClasses)
     ? 'case'
-    : ['stage'].includes(cl)
+    : operationClassesValues.includes(entity?.class as OperationClasses)
       ? 'operation'
       : 'unknown';
 
   const [approveCase, { isLoading: isApproveCaseLoading }] = useApproveCase();
   const [approveOperation, { isLoading: isApproveOperationLoading }] =
     useApproveOperation();
-  const { data: approvers, isLoading: isApproversLoading } =
-    useCurrentUserApprovers();
+  const { data: approveTo, isLoading: isApproversLoading } =
+    useCurrentUserApproveTo();
   const isLoading =
     isApproveCaseLoading || isApproveOperationLoading || isApproversLoading;
   const approveEntity = entityType === 'case' ? approveCase : approveOperation;
@@ -76,16 +79,12 @@ const ApproveButton = (props: ApproveButtonProps): JSX.Element | null => {
   const user = useAuth();
 
   async function onDeside(approve: boolean) {
+    // Скорее всего лишнее, я это и так делаю на бэке
     approveEntity({
       id: entity?.id,
-      nextApproverId:
-        // TODO: Refactor approvers!
-        approvers?.[entityType === 'case' ? 'cases' : 'operations']?.some(
-          (ap) => ap.value === user.id,
-        )
-          ? user.id
-          : approvers?.[entityType === 'case' ? 'cases' : 'operations']?.[0]
-              .value || null,
+      approveToId: approveTo?.some((ap) => ap.value === user.id)
+        ? user.id
+        : approveTo?.[0].value || null,
       dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
       approveStatus: approve ? 'approved' : 'rejected',
     })

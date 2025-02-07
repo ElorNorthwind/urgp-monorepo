@@ -55,7 +55,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     isFetching,
   } = useOperations(
     { class: OperationClasses.stage, case: controlCase?.id },
-    { skip: !controlCase?.id },
+    { skip: !controlCase?.id || controlCase?.id === 0 },
   );
 
   // const {
@@ -63,7 +63,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
   //   isLoading: isDispatchesLoading,
   //   isFetching: isDispatchesFetching,
   // } = useDispatches(controlCase?.id, { skip: !controlCase?.id });
-  const dispatches = controlCase.dispatches;
+  const dispatches = controlCase?.dispatches || [];
 
   const caseApproveInfo = getApproveInfo(controlCase);
 

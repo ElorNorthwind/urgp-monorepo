@@ -1,10 +1,4 @@
-import {
-  cn,
-  guestUser,
-  selectCurrentUser,
-  useAuth,
-  useUserAbility,
-} from '@urgp/client/shared';
+import { cn, useAuth, useUserAbility } from '@urgp/client/shared';
 
 import {
   DateFormField,
@@ -12,19 +6,18 @@ import {
   SelectFormField,
   TextAreaFormField,
 } from '@urgp/client/widgets';
-import { ControlStageFormValuesDto } from '@urgp/shared/entities';
 import { UseFormReturn } from 'react-hook-form';
 import { Fragment } from 'react/jsx-runtime';
 import {
   OperationTypeSelector,
-  useCurrentUserApprovers,
+  useCurrentUserApproveTo,
   useOperationTypesFlat,
 } from '../../../classificators';
 import { useCaseById } from '../../../cases';
-import { useSelector } from 'react-redux';
+import { OperationFormDto } from '@urgp/shared/entities';
 
 type StageFormFieldArrayProps = {
-  form: UseFormReturn<ControlStageFormValuesDto, any, undefined>;
+  form: UseFormReturn<OperationFormDto, any, undefined>;
   isEdit: boolean;
   popoverMinWidth?: string;
 };
@@ -36,8 +29,8 @@ const StageFormFieldArray = ({
 }: StageFormFieldArrayProps): JSX.Element | null => {
   const { data: operationTypes, isLoading: isOperationTypesLoading } =
     useOperationTypesFlat();
-  const { data: approvers, isLoading: isApproversLoading } =
-    useCurrentUserApprovers();
+  const { data: approveToList, isLoading: isApproversLoading } =
+    useCurrentUserApproveTo();
 
   // Запрет на решение дел с контролем высокого уровня
   const { data: controlCase, isLoading: isStageLoading } = useCaseById(
@@ -47,10 +40,10 @@ const StageFormFieldArray = ({
   const user = useAuth();
   const i = useUserAbility();
   const filteredApprovers = controlCase
-    ? approvers?.operations.filter((approver) => {
-        return approver.value !== user.id || i.can('resolve', controlCase);
+    ? approveToList?.filter((approveTo) => {
+        return approveTo.value !== user.id || i.can('resolve', controlCase);
       })
-    : approvers?.operations;
+    : approveToList;
 
   const watchType = form.watch('typeId');
 
@@ -73,7 +66,7 @@ const StageFormFieldArray = ({
         />
         <InputFormField
           form={form}
-          fieldName={'num'}
+          fieldName={'title'}
           label="Номер"
           placeholder="Номер документа"
           className="flex-grow"
@@ -82,14 +75,14 @@ const StageFormFieldArray = ({
       </div>
       <TextAreaFormField
         form={form}
-        fieldName={'description'}
+        fieldName={'notes'}
         label="Описание"
         placeholder="Описание операции"
         dirtyIndicator={isEdit}
       />
       <SelectFormField
         form={form}
-        fieldName={'approverId'}
+        fieldName={'approveToId'}
         options={filteredApprovers}
         isLoading={
           isApproversLoading || isOperationTypesLoading || isStageLoading

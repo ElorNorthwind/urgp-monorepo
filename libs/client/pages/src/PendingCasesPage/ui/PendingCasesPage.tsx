@@ -4,9 +4,8 @@ import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
   CaseCard,
   caseGlobalFilterFn,
-  controlCasesColumns,
   pendingCasesColumns,
-  usePendingCases,
+  useCases,
 } from '@urgp/client/entities';
 import {
   cn,
@@ -16,16 +15,24 @@ import {
   VirtualDataTable,
 } from '@urgp/client/shared';
 import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
-import { CasesPageSearchDto, CaseWithPendingInfo } from '@urgp/shared/entities';
-import { useState } from 'react';
+import { CaseFull, CasesPageSearchDto } from '@urgp/shared/entities';
+import { useMemo, useState } from 'react';
 import { CasesPageHeader } from '../../ControlCasesPage/ui/CasesPageHeader';
 
 const defaultHiddenColumns = ['viewStatus', 'externalCases', 'type'];
 
 const PendingCasesPage = (): JSX.Element => {
-  const { data: cases, isLoading, isFetching } = usePendingCases();
-  const [selected, setSelected] = useState<Row<CaseWithPendingInfo>[]>([]); // Этот селектед не тот селектед!
-  const [filtered, setFiltered] = useState<Row<CaseWithPendingInfo>[]>([]);
+  const { data: cases, isLoading, isFetching } = useCases(undefined);
+  const [selected, setSelected] = useState<Row<CaseFull>[]>([]);
+  const [filtered, setFiltered] = useState<Row<CaseFull>[]>([]);
+
+  const filteredCases = useMemo(
+    () =>
+      cases?.filter(
+        (caseItem) => caseItem?.actions && caseItem?.actions.length > 0,
+      ),
+    [cases],
+  );
 
   // const isMobile = useIsMobile();
   const navigate = useNavigate({ from: '/control/pending' });
@@ -95,7 +102,7 @@ const PendingCasesPage = (): JSX.Element => {
               'h-[calc(100vh-3rem)] flex-1 duration-200 ease-linear',
             )}
             columns={pendingCasesColumns}
-            data={cases || []}
+            data={filteredCases || []}
             isFetching={isLoading || isFetching}
             totalCount={cases?.length ?? 0}
             enableMultiRowSelection={true}

@@ -11,11 +11,11 @@ import { deleteCachedCase, insertCachedCase, updateCachedCase } from './lib';
 
 export const casesApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    getCases: build.query<CaseFull[], ReadEntityDto['visibility']>({
+    getCases: build.query<CaseFull[], ReadEntityDto['visibility'] | undefined>({
       query: (visibility) => ({
         url: '/control/case',
         method: 'GET',
-        search: {
+        params: {
           mode: 'full',
           class: 'control-incident',
           visibility: visibility ?? 'visible',

@@ -74,7 +74,7 @@ LEFT JOIN operation_info o ON o."caseId" = c.id
 LEFT JOIN directions d ON d.id = c.id
 LEFT JOIN (SELECT id, name, category, fullname as "fullName" FROM control.case_status_types) s ON s.id = 
 	CASE 
-		WHEN c.approve_status = 'pendin' THEN 1 -- "на утверждении"
+		WHEN c.approve_status = 'pending' THEN 1 -- "на утверждении"
 		WHEN c.approve_status = 'rejected' THEN 10 -- "отказано в согласовании"
 		-- Эти вот штуки лучше бы прописать через специальное поле в control.operation_types ?
 		WHEN (o."lastStage"->'type'->>'id')::integer = 7 AND o."lastStage"->>'approveStatus' = 'approved' THEN 5 -- "отклонено"

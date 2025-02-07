@@ -9,29 +9,29 @@ import {
   DialogTrigger,
   ScrollArea,
 } from '@urgp/client/shared';
-import { ControlStage } from '@urgp/shared/entities';
 import { History } from 'lucide-react';
-import { useOperationPayloadHistroy } from '../api/operationsApi';
 import { StageHistoryItem } from './StagesList/StageHistoryItem';
 import { useState } from 'react';
+import { useOperationHistory } from '../api/operationsApi';
 
 type StagesHistoryProps = {
-  stage: ControlStage;
+  stageId: number;
   className?: string;
 };
 
 const DIALOG_WIDTH = '700px';
 
 const StagesHistory = (props: StagesHistoryProps): JSX.Element => {
-  const { className, stage } = props;
+  const { className, stageId } = props;
   const [open, setOpen] = useState(false);
 
   const {
     data: payloadHistory,
     isLoading,
     isFetching,
-  } = useOperationPayloadHistroy(stage.id, { skip: !open });
-  if (stage?.version === 1) return <></>;
+  } = useOperationHistory(stageId, { skip: !open });
+
+  // if (stage?.version === 1) return <></>;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -59,7 +59,7 @@ const StagesHistory = (props: StagesHistoryProps): JSX.Element => {
             payloadHistory
               .filter((item) => item.class === 'stage')
               ?.map((item, index) => (
-                <StageHistoryItem item={item} key={stage.id + '-' + index} />
+                <StageHistoryItem item={item} key={stageId + '-' + index} />
               ))
           )}
         </ScrollArea>

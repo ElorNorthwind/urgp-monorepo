@@ -1,5 +1,4 @@
 import { cn, selectDispatchFormValues } from '@urgp/client/shared';
-import { DispatchFormValuesDto } from '@urgp/shared/entities';
 import { UseFormReturn } from 'react-hook-form';
 
 import { useControlExecutors } from '@urgp/client/entities';
@@ -11,9 +10,10 @@ import {
 import { endOfYesterday, isBefore } from 'date-fns';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { ControlOptions, OperationFormDto } from '@urgp/shared/entities';
 
 type DispatchFormFieldArrayProps = {
-  form: UseFormReturn<DispatchFormValuesDto, any, undefined>;
+  form: UseFormReturn<OperationFormDto, any, undefined>;
   isEdit: boolean;
   popoverMinWidth?: string;
 };
@@ -30,8 +30,11 @@ const DispatchFormFieldArray = ({
   const watchDueDate = form.watch('dueDate');
   const controllerList = useMemo(() => {
     return [
-      { value: 'author', label: 'Оставить контроль за собой' },
-      { value: 'executor', label: 'Оставить на контроле исполнителя' },
+      { value: ControlOptions.author, label: 'Оставить контроль за собой' },
+      {
+        value: ControlOptions.executor,
+        label: 'Оставить на контроле исполнителя',
+      },
     ];
   }, [executors]);
 
@@ -42,10 +45,7 @@ const DispatchFormFieldArray = ({
       new Date(watchDueDate || 0).setHours(0, 0, 0, 0) !==
       new Date(defaultValues?.dueDate || 0).setHours(0, 0, 0, 0);
     setDateChanged(needDescription);
-    form.setValue(
-      'dateDescription',
-      needDescription ? '' : 'Без переноса срока',
-    );
+    form.setValue('extra', needDescription ? '' : 'Без переноса срока');
   }, [watchDueDate, isEdit]);
 
   return (
@@ -54,7 +54,7 @@ const DispatchFormFieldArray = ({
         <SelectFormField
           form={form}
           isLoading={isExecutorsLoading}
-          fieldName={'executorId'}
+          fieldName={'controlToId'}
           options={executors}
           label="Исполнитель"
           placeholder="Выбор адресата поручения"
@@ -75,7 +75,7 @@ const DispatchFormFieldArray = ({
       </div>
       <SelectFormField
         form={form}
-        fieldName={'controller'}
+        fieldName={'controlFromId'}
         options={controllerList}
         label="Контроль"
         placeholder="За кем останется контроль"
@@ -86,14 +86,14 @@ const DispatchFormFieldArray = ({
       />
       <TextAreaFormField
         form={form}
-        fieldName={'description'}
+        fieldName={'notes'}
         label="Комментарий"
         placeholder="Комментарий к поручению"
         dirtyIndicator={!!isEdit}
       />
       <TextAreaFormField
         form={form}
-        fieldName={'dateDescription'}
+        fieldName={'extra'}
         label="Причина переноса срока"
         placeholder="Комментарий к изменению срока поручения"
         className={cn(dateChanged ? '' : 'hidden')}

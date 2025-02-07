@@ -1,10 +1,10 @@
 import { cn, ScrollArea } from '@urgp/client/shared';
-import { ControlStage } from '@urgp/shared/entities';
 import { Coffee } from 'lucide-react';
 import { StageItem } from './StageItem';
+import { OperationFull } from '@urgp/shared/entities';
 
 type StagesListProps = {
-  stages?: ControlStage[];
+  stages?: OperationFull[];
   className?: string;
   isLoading?: boolean;
 };

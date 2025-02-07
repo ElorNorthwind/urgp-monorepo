@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import {
   CaseTypeSelector,
   DirectionTypeSelector,
-  useGetCurrentUserApproveto,
+  useCurrentUserApproveTo,
 } from '../../../classificators';
 import { ExternalCaseFieldArray } from './ExternalCaseFieldArray';
 import { Fragment } from 'react/jsx-runtime';
@@ -25,7 +25,7 @@ const CaseFormFieldArray = ({
 
   const watchApproveTo = form.watch('approveToId');
   const { data: approvers, isLoading: isApproversLoading } =
-    useGetCurrentUserApproveto();
+    useCurrentUserApproveTo();
 
   return (
     <Fragment>
@@ -50,7 +50,7 @@ const CaseFormFieldArray = ({
       <div className="flex w-full flex-row gap-2">
         <InputFormField
           form={form}
-          fieldName={'fio'}
+          fieldName={'title'}
           label="Заявитель"
           placeholder="ФИО заявителя"
           className="flex-grow"
@@ -58,7 +58,7 @@ const CaseFormFieldArray = ({
         />
         <InputFormField
           form={form}
-          fieldName={'adress'}
+          fieldName={'extra'}
           label="Адрес"
           placeholder="Адрес заявителя"
           className="flex-grow"
@@ -67,7 +67,7 @@ const CaseFormFieldArray = ({
       </div>
       <TextAreaFormField
         form={form}
-        fieldName={'description'}
+        fieldName={'notes'}
         label="Описание"
         placeholder="Описание проблемы"
         dirtyIndicator={isEdit}
@@ -76,7 +76,7 @@ const CaseFormFieldArray = ({
         <SelectFormField
           form={form}
           isLoading={isApproversLoading}
-          fieldName={'approverId'}
+          fieldName={'approveToId'}
           options={approvers}
           label="Согласующий"
           placeholder="Выбор согласующего"

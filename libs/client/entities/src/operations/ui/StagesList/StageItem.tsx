@@ -1,5 +1,4 @@
 import { cn, Skeleton } from '@urgp/client/shared';
-import { ControlStage } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import { Circle } from 'lucide-react';
 import {
@@ -10,9 +9,10 @@ import { StagesHistory } from '../StageHistory';
 import { DeleteStageButton } from '../StageButtons/DeleteStageButton';
 import { EditStageButton } from '../StageButtons/EditStageButton';
 import { ApproveButton } from '@urgp/client/widgets';
+import { ApproveStatus, OperationFull } from '@urgp/shared/entities';
 
 type StageItemProps = {
-  stage: ControlStage | null;
+  stage: OperationFull | null;
   hover?: boolean;
   className?: string;
 };
@@ -25,14 +25,14 @@ const StageItem = (props: StageItemProps): JSX.Element => {
   }
 
   const { icon: StageIcon, iconStyle } = operationTypeStyles?.[
-    stage.payload.type.id
+    stage?.type?.id
   ] || {
     icon: Circle,
     iconStyle: 'text-muted-foreground/40',
   };
 
   const { bgStyle, fontStyle, badgeStyle, label } = approveStatusStyles?.[
-    stage.payload.approveStatus
+    stage?.approveStatus
   ] || {
     label: 'Без статуса',
     bgStyle: 'bg-background',
@@ -52,43 +52,41 @@ const StageItem = (props: StageItemProps): JSX.Element => {
       <div className="flex items-center justify-start gap-2 text-sm">
         {StageIcon && <StageIcon className={cn('-mr-1 size-4', iconStyle)} />}
         <span className={cn('truncate font-bold', fontStyle)}>
-          {stage.payload.type.fullname}
+          {stage?.type?.fullname}
         </span>
-        <span className="ml-auto font-light">{stage.payload.num}</span>
+        <span className="ml-auto font-light">{stage?.title}</span>
         <span className={cn('text-muted-foreground')}>
-          {format(stage.payload.doneDate, 'dd.MM.yyyy')}
+          {stage?.doneDate && format(stage?.doneDate, 'dd.MM.yyyy')}
         </span>
       </div>
-      <div className="font-light">{stage.payload.description}</div>
+      <div className="font-light">{stage.notes}</div>
 
       <div
         className={cn(
           'mt-2 grid grid-cols-[auto_auto_1fr] gap-1 border-l-4 px-2 py-1',
           badgeStyle,
-          stage.payload.approveStatus === 'approved' && 'hidden',
+          stage.approveStatus === ApproveStatus.approved && 'hidden',
         )}
       >
         <span className="font-medium">{label + ': '}</span>
-        {stage?.payload?.approver?.fio && (
-          <span className="text-nowrap">{stage?.payload?.approver?.fio}</span>
+        {stage?.approveTo?.fio && (
+          <span className="text-nowrap">{stage?.approveTo?.fio}</span>
         )}
 
-        {stage?.payload?.approveDate && (
+        {stage?.approveDate && (
           <span className="ml-auto text-nowrap">
-            {format(stage.payload.approveDate, 'dd.MM.yyyy HH:mm')}
+            {format(stage?.approveDate, 'dd.MM.yyyy HH:mm')}
           </span>
         )}
-        {stage?.payload?.approveBy?.fio &&
-          stage?.payload?.approveBy?.id !== stage?.payload?.approver?.id && (
+        {stage?.approveFrom?.fio &&
+          stage?.approveFrom?.id !== stage?.approveFrom?.id && (
             <>
               <span className="col-span-1 font-medium">Перенаправил:</span>
-              <span>{stage?.payload?.approveBy?.fio}</span>
+              <span>{stage?.approveFrom?.fio}</span>
             </>
           )}
-        {stage?.payload?.approveNotes && (
-          <span className="col-span-3 italic">
-            {stage.payload.approveNotes}
-          </span>
+        {stage?.approveNotes && (
+          <span className="col-span-3 italic">{stage?.approveNotes}</span>
         )}
       </div>
 
@@ -97,8 +95,10 @@ const StageItem = (props: StageItemProps): JSX.Element => {
           <DeleteStageButton stage={stage} />
           <ApproveButton entity={stage} variant="mini" />
           <EditStageButton stage={stage} />
-          <span>{format(stage?.payload?.updatedAt || 0, 'dd.MM.yyyy')}</span>
-          <StagesHistory stage={stage} />
+          <span>
+            {stage?.updatedAt && format(stage?.updatedAt || 0, 'dd.MM.yyyy')}
+          </span>
+          <StagesHistory stageId={stage.id} />
           <span className="mr-1 font-normal">{stage?.author?.fio}</span>
         </div>
       )}

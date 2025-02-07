@@ -10,13 +10,13 @@ import {
   setDispatchFormValuesFromDispatch,
   setDispatchFormState,
 } from '@urgp/client/shared';
-import { ControlDispatch, ControlStage } from '@urgp/shared/entities';
+import { OperationFull } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import { CalendarCog, Pencil, Repeat, Replace } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 
 type EditDispatchButtonProps = {
-  controlDispatch: ControlDispatch;
+  controlDispatch: OperationFull;
   className?: string;
 };
 
@@ -33,13 +33,13 @@ const EditDispatchButton = ({
         className={cn('flex h-5 flex-row items-center gap-2 p-0', className)}
       >
         <span>
-          {controlDispatch.payload?.dueDate
-            ? format(controlDispatch.payload?.dueDate, 'dd.MM.yyyy')
+          {controlDispatch?.dueDate
+            ? format(controlDispatch?.dueDate, 'dd.MM.yyyy')
             : '-'}
         </span>
-        {controlDispatch.payload.dueDateChanged && (
+        {/* {controlDispatch.payload.dueDateChanged && (
           <Repeat className="size-3" />
-        )}
+        )} */}
       </div>
     );
 
@@ -55,13 +55,13 @@ const EditDispatchButton = ({
       }}
     >
       <span>
-        {controlDispatch.payload?.dueDate
-          ? format(controlDispatch.payload?.dueDate, 'dd.MM.yyyy')
+        {controlDispatch?.dueDate
+          ? format(controlDispatch?.dueDate, 'dd.MM.yyyy')
           : '-'}
       </span>
-      {controlDispatch.payload.dueDateChanged && (
+      {/* {controlDispatch?.dueDateChanged && (
         <Repeat className="size-4 opacity-50" />
-      )}
+      )} */}
       <CalendarCog className={cn('hidden size-4 group-hover:block')} />
     </Button>
     //   </TooltipTrigger>

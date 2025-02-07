@@ -135,7 +135,7 @@ export const {
   useGetCurrentUserSettingsQuery: useCurrentUserSettings,
   useSetCurrentUserDirectionsMutation: useSetCurrentUserDirections,
   useSetCurrentUserCaseFilterMutation: useSetCurrentUserCaseFilter,
-  useGetCurrentUserApproveToQuery: useGetCurrentUserApproveto,
+  useGetCurrentUserApproveToQuery: useCurrentUserApproveTo,
   useGetControlExecutorsQuery: useControlExecutors,
   useGetCaseTypesQuery: useCaseTypes,
   useGetOperationTypesQuery: useOperationTypes,

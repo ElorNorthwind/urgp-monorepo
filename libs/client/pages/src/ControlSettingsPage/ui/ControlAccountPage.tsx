@@ -1,6 +1,6 @@
 import {
   DirectionTypeSelector,
-  useCurrentUserApprovers,
+  useCurrentUserApproveTo,
 } from '@urgp/client/entities';
 import { InfoBox } from '@urgp/client/features';
 import {
@@ -20,10 +20,10 @@ import { useSelector } from 'react-redux';
 const ControlAccountPage = (): JSX.Element => {
   const user = useSelector(selectCurrentUser);
   const {
-    data: approvers,
-    isLoading: isApproversLoading,
-    isFetching: isApproversFetching,
-  } = useCurrentUserApprovers();
+    data: approveTo,
+    isLoading: isApproveToLoading,
+    isFetching: isApproveToFetching,
+  } = useCurrentUserApproveTo();
 
   return (
     <Card>
@@ -42,19 +42,10 @@ const ControlAccountPage = (): JSX.Element => {
           </div>
           <InfoBox label="Роли:" value={user?.controlData?.roles?.join(', ')} />
           <InfoBox
-            isLoading={isApproversLoading || isApproversFetching}
-            label="Согласующие по заявкам:"
-            value={approvers?.cases
-              .map((a) =>
-                a.label === 'Утвердить лично' ? 'Утверждает сам' : a.label,
-              )
-              .join(', ')}
-          />
-          <InfoBox
-            isLoading={isApproversLoading || isApproversFetching}
-            label="Согласующие по операциям:"
-            value={approvers?.operations
-              .map((a) =>
+            isLoading={isApproveToLoading || isApproveToFetching}
+            label="Доступные согасующие:"
+            value={approveTo
+              ?.map((a) =>
                 a.label === 'Утвердить лично' ? 'Утверждает сам' : a.label,
               )
               .join(', ')}

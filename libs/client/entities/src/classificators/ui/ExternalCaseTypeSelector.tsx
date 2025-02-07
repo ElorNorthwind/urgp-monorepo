@@ -1,9 +1,6 @@
-import { UseFormReturn } from 'react-hook-form';
-import { useCaseTypes } from '../api/classificatorsApi';
-import { ClassificatorFormField, SelectFormField } from '@urgp/client/widgets';
-import { caseTypeStyles } from '../../cases/config/caseStyles';
-import { MessageSquareMore } from 'lucide-react';
 import { cn } from '@urgp/client/shared';
+import { SelectFormField } from '@urgp/client/widgets';
+import { UseFormReturn } from 'react-hook-form';
 
 // system: z.enum(['EDO', 'SPD', 'SPD2', 'HOTLINE', 'CONSULTATION', 'NONE'])
 

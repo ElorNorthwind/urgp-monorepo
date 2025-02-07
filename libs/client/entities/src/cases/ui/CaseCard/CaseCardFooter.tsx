@@ -11,7 +11,7 @@ type CaseCardFooterProps = {
 
 const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element | null => {
   const { className, controlCase } = props;
-  const myPendingStage = controlCase.myPendingStage;
+  const myPendingStage = controlCase?.myPendingStage;
   const i = useUserAbility();
 
   if (

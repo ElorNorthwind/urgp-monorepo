@@ -9,21 +9,16 @@ export const approveControlEntitySchema = z.object({
     .default('project'),
   approveNotes: z.string().nullable().optional(),
   approveToId: z.coerce.number().nullable(),
-  dueDate: z.string().datetime().optional(),
+  dueDate: z.string().datetime(),
 });
 export type ApproveControlEntityDto = z.infer<
   typeof approveControlEntitySchema
 >;
 
 export const approveControlEntityFormSchema = z.object({
-  nextApproverId: z.coerce.number().nullable(),
+  approveToId: z.coerce.number().nullable(),
   approveNotes: z.string().optional(),
-  dueDate: z.coerce
-    .date()
-    .or(z.number())
-    .or(z.string().date())
-    .nullable()
-    .optional(),
+  dueDate: z.string().datetime(),
 });
 export type ApproveControlEntityFormDto = z.infer<
   typeof approveControlEntityFormSchema

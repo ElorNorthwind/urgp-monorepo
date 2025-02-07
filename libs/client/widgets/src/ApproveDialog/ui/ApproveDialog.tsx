@@ -35,7 +35,7 @@ import {
   useApproveCase,
   useApproveOperation,
   useCaseByOperationId,
-  useCurrentUserApprovers,
+  useCurrentUserApproveTo,
 } from '@urgp/client/entities';
 import {
   ControlFormDisplayElement,
@@ -65,7 +65,7 @@ const ApproveDialog = ({
   } as React.CSSProperties;
 
   const { data: approvers, isLoading: isApproversLoading } =
-    useCurrentUserApprovers();
+    useCurrentUserApproveTo();
 
   const user = useAuth();
   const formState = useSelector(selectApproveFormState);
@@ -79,16 +79,14 @@ const ApproveDialog = ({
   );
   const i = useUserAbility();
   const filteredOperationApprovers = controlCase
-    ? approvers?.operations.filter((approver) => {
+    ? approvers?.filter((approver) => {
         return approver.value !== user.id || i.can('resolve', controlCase);
       })
-    : approvers?.operations;
+    : approvers;
 
   const defaultValues = useMemo(() => {
     return {
-      nextApproverId:
-        // TODO: Refactor approvers!
-        approvers?.cases?.[0].value || null,
+      approveToId: approvers?.[0].value || null,
       approveNotes: '',
       dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
     };
@@ -98,7 +96,7 @@ const ApproveDialog = ({
     resolver: zodResolver(approveControlEntityFormSchema),
     defaultValues,
   });
-  const watchApprover = form.watch('nextApproverId');
+  const watchApprover = form.watch('approveToId');
 
   const title = isOperation ? 'Согласование операции' : 'Согласование заявки';
   const subTitle = isOperation
@@ -181,9 +179,7 @@ const ApproveDialog = ({
               <SelectFormField
                 form={form}
                 fieldName={'nextApproverId'}
-                options={
-                  isOperation ? filteredOperationApprovers : approvers?.cases
-                }
+                options={isOperation ? filteredOperationApprovers : approvers}
                 isLoading={isApproversLoading}
                 label="Следующий согласующий"
                 placeholder="Выбор следующего согласующего"

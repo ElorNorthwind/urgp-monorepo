@@ -7,22 +7,23 @@ import {
   setDispatchFormValuesFromDto,
   useUserAbility,
 } from '@urgp/client/shared';
-import {
-  DispatchFormValuesDto,
-  dispatchFormValuesDto,
-} from '@urgp/shared/entities';
 
 import { FormDialog, FormDialogProps } from '@urgp/client/widgets';
 import {
-  useCreateDispatch,
+  useCreateOperation,
   useDeleteOperation,
-  useDispatches,
-  useUpdateDispatch,
+  useOperations,
+  useUpdateOperation,
 } from '../api/operationsApi';
 import { useSelector } from 'react-redux';
 import { DispatchFormFieldArray } from './DispatchFormElements/DispatchFormFieldArray';
 import { EditedDispatchDisplayElement } from './DispatchFormElements/EditedDispatchDisplayElement';
-import { exec } from 'child_process';
+import {
+  ControlOptions,
+  OperationClasses,
+  OperationFormDto,
+  operationFormSchema,
+} from '@urgp/shared/entities';
 
 type CreateDispatchDialogProps = {
   className?: string;
@@ -35,10 +36,10 @@ const CreateDispatchDialog = ({
   const user = useSelector(selectCurrentUser);
 
   const formValues = useSelector(selectDispatchFormValues);
-  const { data: dispatches, isLoading: isDispatshesLoading } = useDispatches(
-    formValues?.caseId || 0,
+  const { data: dispatches, isLoading: isDispatshesLoading } = useOperations(
+    { class: OperationClasses.dispatch, case: formValues?.caseId || 0 },
     {
-      skip: !formValues?.caseId,
+      skip: !formValues?.caseId || formValues?.caseId === 0,
     },
   );
   const editedDispatch = dispatches?.find((d) => d.id === formValues?.id);
@@ -53,34 +54,38 @@ const CreateDispatchDialog = ({
   const dialogProps = {
     isEdit,
     entityType: 'operation',
-    dto: dispatchFormValuesDto,
+    dto: operationFormSchema,
     valuesSelector: selectDispatchFormValues,
     stateSelector: selectDispatchFormState,
     stateDispatch: setDispatchFormState,
     valuesEmptyDispatch: setDispatchFormValuesEmpty,
     valuesDtoDispatch: setDispatchFormValuesFromDto,
-    updateHook: useUpdateDispatch,
-    createHook: useCreateDispatch,
+    updateHook: useCreateOperation,
+    createHook: useUpdateOperation,
     deleteHook: useDeleteOperation,
     allowDelete: canDelete,
     FieldsArray: DispatchFormFieldArray,
-    customizeDefaultValues: (values: DispatchFormValuesDto) => ({
+    customizeDefaultValues: (values: OperationFormDto) => ({
       ...values,
       class: 'dispatch',
     }),
-    customizeCreateValues: (values: DispatchFormValuesDto) => ({
+    customizeCreateValues: (values: OperationFormDto) => ({
       ...values,
       class: 'dispatch',
-      controllerId:
-        values.controller === 'author' ? user?.id : values.executorId,
+      controlFromId:
+        values.controller === ControlOptions.author
+          ? user?.id
+          : values.controlToId,
     }),
-    customizeUpdateValues: (values: DispatchFormValuesDto) => ({
+    customizeUpdateValues: (values: OperationFormDto) => ({
       ...values,
       class: 'dispatch',
-      controllerId:
-        values.controller === 'executor' ? values?.executorId : user?.id,
+      controlFromId:
+        values.controller === ControlOptions.executor
+          ? values?.controlToId
+          : user?.id,
       dateDescription:
-        values.dateDescription ||
+        values.extra ||
         (values?.dueDate === useSelector(selectDispatchFormValues)?.dueDate
           ? 'Корректировка без уточнения срока'
           : ''),
@@ -92,7 +97,7 @@ const CreateDispatchDialog = ({
     editTitle: 'Изменить поручение',
     createDescription: 'Внесите данные для создания поручения',
     editDescription: 'Внесите изменения в запись об поручении',
-  } as unknown as FormDialogProps<DispatchFormValuesDto>;
+  } as unknown as FormDialogProps<OperationFormDto>;
 
   return <FormDialog {...dialogProps} />;
 };

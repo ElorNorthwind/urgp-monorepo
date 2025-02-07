@@ -1,14 +1,14 @@
 import { cn } from '@urgp/client/shared';
-import { ReminderFormValuesDto } from '@urgp/shared/entities';
 import { UseFormReturn } from 'react-hook-form';
 
 import { DateFormField, TextAreaFormField } from '@urgp/client/widgets';
 import { endOfYesterday, isBefore } from 'date-fns';
 import { Fragment } from 'react';
 import { EditedReminderDisplayElement } from './EditedReminderDisplayElement';
+import { OperationFormDto } from '@urgp/shared/entities';
 
 type ReminderFormFieldArrayProps = {
-  form: UseFormReturn<ReminderFormValuesDto, any, undefined>;
+  form: UseFormReturn<OperationFormDto, any, undefined>;
   isEdit: boolean;
 };
 
@@ -32,7 +32,7 @@ const ReminderFormFieldArray = ({
       </div>
       <TextAreaFormField
         form={form}
-        fieldName={'description'}
+        fieldName={'notes'}
         label="Комментарий"
         placeholder="Комментарий к напоминанию"
         dirtyIndicator={!!isEdit}

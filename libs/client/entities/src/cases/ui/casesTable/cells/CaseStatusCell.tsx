@@ -17,12 +17,8 @@ function CaseStatusCell(props: CellContext<CaseFull, string>): JSX.Element {
   const status = props.row.original?.status;
   const dispatches = props.row.original?.dispatches || [];
   const approveStatus = props.row.original?.approveStatus || 'approved';
-  const { icon: StatusIcon, iconStyle } = caseStatusStyles?.[
-    status?.id || 0
-  ] || {
-    icon: Circle,
-    iconStyle: 'text-slate-500',
-  };
+  const { icon: StatusIcon, iconStyle } =
+    caseStatusStyles?.[status?.id] || Object.entries(caseStatusStyles)[0];
 
   const { badgeStyle: viewStatusIconStyle } = viewStatusStyles?.[
     props.row.original?.viewStatus
