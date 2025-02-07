@@ -14,7 +14,8 @@ export const guestUser = {
   roles: ['guest'],
   controlData: {
     roles: [],
-    approvers: { cases: [], problems: [], operations: [] },
+    approveTo: [],
+    // approvers: { cases: [], problems: [], operations: [] },
   },
   tokenVersion: 0,
 };
@@ -45,6 +46,6 @@ const authSlice = createSlice({
 
 export const { setUser, clearUser } = authSlice.actions;
 export const selectCurrentUser = (state: RootState) => state.auth.user;
-export const selectUserApprovers = (state: RootState) =>
-  state.auth.user.controlData?.approvers;
+export const selectUserApproveTo = (state: RootState) =>
+  state.auth.user.controlData?.approveTo;
 export default authSlice.reducer;

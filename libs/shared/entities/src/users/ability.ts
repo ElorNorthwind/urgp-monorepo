@@ -59,8 +59,7 @@ export function defineControlAbilityFor(user: User) {
     createMongoAbility<[Action, Subject], MongoQuery>,
   );
 
-  const caseApprovers = user.controlData.approvers?.cases || [];
-  const operationApprovers = user.controlData.approvers?.operations || [];
+  const approveTo = user.controlData.approveTo || [];
 
   if (user?.controlData?.roles?.includes('admin')) {
     can('manage', 'all'); // админу по дефолту можно все
@@ -115,14 +114,17 @@ export function defineControlAbilityFor(user: User) {
   cannot('approve', 'all', {
     'payload.approveStatus': { $eq: 'approved' }, // нельзя согласовывать то что уже согласовано
   });
+
   can('set-approver', 'all', {
     approveToId: null, // без согласующего можно создавать все
   });
-  can('set-approver', 'Case', {
-    approveToId: { $in: caseApprovers }, // Никто не может создавать или ставить дела на утверждении не своих согласующих
-  });
-  can('set-approver', 'Stage', {
-    approveToId: { $in: operationApprovers }, // Никто не может создавать или ставить операции на утверждении не своих согласующих
+
+  // can('set-approver', 'all', {
+  //   approveToId: 0, // без согласующего можно создавать все
+  // });
+
+  can('set-approver', 'all', {
+    approveToId: { $in: approveTo }, // Можно выставлять только доступных тебе согласующих
   });
 
   return build({

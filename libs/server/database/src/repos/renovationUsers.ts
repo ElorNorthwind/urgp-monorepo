@@ -4,7 +4,7 @@ import {
   GetUserByIdDto,
   GetUserByLoginDto,
   SelectOption,
-  UserControlApprovers,
+  UserApproveTo,
   UserControlData,
   UserControlSettings,
   UserWithCredentials,
@@ -87,8 +87,8 @@ export class RenovationUsersRepository {
     return reply?.data;
   }
 
-  async getUserApprovers(id: number): Promise<UserControlApprovers> {
-    return this.db.one(users.getUserApprovers, { id });
+  async getUserApproveTo(userId: number): Promise<UserApproveTo> {
+    return this.db.any(users.getUserApproveTo, { userId });
   }
 
   async getControlExecutors(): Promise<SelectOption<number>[]> {

@@ -58,11 +58,7 @@ export type SelectOption<T> = {
   value: T;
 };
 
-// export type UserControlApprovers = {
-//   cases: Array<SelectOption<number>>;
-//   problems: Array<SelectOption<number>>;
-//   operations: Array<SelectOption<number>>;
-// };
+export type UserApproveTo = Array<SelectOption<number>>;
 
 // export type RequestWithAccessToken = Request & {
 //   user: UserAccessTokenInfo;

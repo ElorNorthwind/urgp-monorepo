@@ -12,7 +12,7 @@ import {
   UserControlData,
   NestedClassificatorInfo,
   Classificator,
-  UserControlApprovers,
+  UserApproveTo,
   SelectOption,
   NestedClassificatorInfoString,
   UserControlSettings,
@@ -101,8 +101,8 @@ export class ControlClassificatorsService {
     return this.dbServise.db.renovationUsers.setCaseFilter(userId, filter);
   }
 
-  public async getUserApprovers(userId: number): Promise<UserControlApprovers> {
-    return this.dbServise.db.renovationUsers.getUserApprovers(userId);
+  public async getUserApproveTo(userId: number): Promise<UserApproveTo> {
+    return this.dbServise.db.renovationUsers.getUserApproveTo(userId);
   }
 
   public async getControlExecutors(): Promise<SelectOption<number>[]> {

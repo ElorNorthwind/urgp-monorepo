@@ -16,7 +16,7 @@ import {
   RequestWithUserData,
   UserControlData,
   NestedClassificatorInfo,
-  UserControlApprovers,
+  UserApproveTo,
   Classificator,
   SelectOption,
   NestedClassificatorInfoString,
@@ -45,12 +45,12 @@ export class ControlClassificatorsController {
     return await this.classificators.getControlData(userId);
   }
 
-  @Get('user-approvers')
-  async getCurrentUserApprovers(
+  @Get('user-approve-to')
+  async getCurrentUserApproveTo(
     @Req() req: RequestWithUserData,
-  ): Promise<UserControlApprovers> {
+  ): Promise<UserApproveTo> {
     const userId = req.user.id;
-    return await this.classificators.getUserApprovers(userId);
+    return await this.classificators.getUserApproveTo(userId);
   }
 
   @Get('executors')
