@@ -170,7 +170,7 @@ export class ControlOperationsService {
     })) as OperationSlim[];
 
     reminderList.forEach((value, key) => {
-      !existingReminders.map((r) => r.id).includes(key) &&
+      !existingReminders.map((r) => r.controlFromId).includes(key) &&
         this.createOperation(
           // TODO : вынести в конфиг лишние поля пустой операции
           {

@@ -23,7 +23,8 @@ BEGIN
 			title,
 			notes,
 			extra,
-			archive_date
+			archive_date,
+			delete_date
 		)
 		VALUES(
 			NEW.id,
@@ -130,7 +131,8 @@ BEGIN
 			title,
 			notes,
 			extra,
-			archive_date
+			archive_date,
+			delete_date
 		)
 		VALUES(
 			NEW.id,
@@ -153,7 +155,8 @@ BEGIN
 			NEW.title,
 			NEW.notes,
 			NEW.extra,
-			NEW.archive_date
+			NEW.archive_date,
+			null
 		);
 				
 		RETURN NEW;

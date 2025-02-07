@@ -19,7 +19,9 @@ export class ControlOperationsRepository {
   ) {}
 
   createOperation(dto: CreateOperationDto, authorId: number): Promise<number> {
-    return this.db.one(operations.createOperation, { ...dto, authorId });
+    return this.db
+      .one(operations.createOperation, { ...dto, authorId })
+      .then((result) => result.id);
   }
 
   readOperations(
@@ -87,7 +89,9 @@ export class ControlOperationsRepository {
     dto: UpdateOperationDto,
     updatedById: number,
   ): Promise<number> {
-    return this.db.one(operations.updateOperation, { ...dto, updatedById });
+    return this.db
+      .one(operations.updateOperation, { ...dto, updatedById })
+      .then((result) => result.id);
   }
 
   markOperation(dto: MarkOperationDto, updatedById: number): Promise<number[]> {
@@ -120,13 +124,17 @@ export class ControlOperationsRepository {
   }
 
   deleteOperation(id: number, userId: number): Promise<number> {
-    return this.db.one(operations.deleteOperation, { id, userId });
+    return this.db
+      .one(operations.deleteOperation, { id, userId })
+      .then((result) => result.id);
   }
 
   approveOperation(
     dto: ApproveControlEntityDto,
     userId: number,
   ): Promise<number> {
-    return this.db.one(operations.approveOperation, { dto, userId });
+    return this.db
+      .one(operations.approveOperation, { dto, userId })
+      .then((result) => result.id);
   }
 }

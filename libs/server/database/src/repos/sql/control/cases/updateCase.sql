@@ -16,4 +16,4 @@ SET
     extra = ${extra},
     updated_at = NOW()
 WHERE id = ${id}
-RETURNING id::integer;
+RETURNING id;

@@ -20,7 +20,12 @@ export class ControlCasesRepository {
   ) {}
 
   createCase(dto: CreateCaseDto, authorId: number): Promise<number> {
-    return this.db.one(cases.createCase, { ...dto, authorId });
+    return this.db
+      .one(cases.createCase, {
+        ...dto,
+        authorId,
+      })
+      .then((result) => result.id);
   }
 
   readCases(
@@ -99,15 +104,18 @@ export class ControlCasesRepository {
 
   updateCase(dto: UpdateCaseDto, updatedById: number): Promise<number> {
     const q = this.pgp.as.format(cases.updateCase, { ...dto, updatedById });
-    Logger.log(q);
-    return this.db.one(q);
+    return this.db.one(q).then((result) => result.id);
   }
   approveCase(dto: ApproveControlEntityDto, userId: number): Promise<number> {
     // userId заменяет updated_by_id и approve_from_id
-    return this.db.one(cases.approveCase, { dto, userId });
+    return this.db
+      .one(cases.approveCase, { dto, userId })
+      .then((result) => result.id);
   }
 
   deleteCase(id: number, updatedById: number): Promise<number> {
-    return this.db.one(cases.deleteCase, { id, updatedById });
+    return this.db
+      .one(cases.deleteCase, { id, updatedById })
+      .then((result) => result.id);
   }
 }

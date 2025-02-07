@@ -34,7 +34,6 @@ VALUES (
     ${controlFromId}, -- control_from_id (optional)
     ${controlToId}, -- control_to_id (optional)
     ${title}, -- title (optional)
-    ${title}, -- title (optional)
     ${notes}, -- notes (optional)
     ${extra} -- extra (optional)
     -- ${archiveDate} -- archive_date (optional)
