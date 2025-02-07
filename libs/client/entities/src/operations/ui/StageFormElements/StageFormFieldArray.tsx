@@ -2,6 +2,7 @@ import {
   cn,
   guestUser,
   selectCurrentUser,
+  useAuth,
   useUserAbility,
 } from '@urgp/client/shared';
 
@@ -43,7 +44,7 @@ const StageFormFieldArray = ({
     form.watch('caseId') || 0,
     { skip: !form.watch('caseId') || form.watch('caseId') === 0 },
   );
-  const user = useSelector(selectCurrentUser) || guestUser;
+  const user = useAuth();
   const i = useUserAbility();
   const filteredApprovers = controlCase
     ? approvers?.operations.filter((approver) => {

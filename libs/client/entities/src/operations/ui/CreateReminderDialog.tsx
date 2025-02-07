@@ -7,6 +7,7 @@ import {
   setReminderFormState,
   setReminderFormValuesEmpty,
   setReminderFormValuesFromDto,
+  useAuth,
 } from '@urgp/client/shared';
 import {
   ReminderFormValuesDto,
@@ -40,7 +41,7 @@ const CreateReminderDialog = ({
     isLoading,
     isFetching,
   } = useReminders(caseId, { skip: caseId === 0 });
-  const user = useSelector(selectCurrentUser) || guestUser;
+  const user = useAuth();
   const userReminder = reminders?.find((rem) => {
     return rem?.payload?.observer?.id === user?.id;
   });

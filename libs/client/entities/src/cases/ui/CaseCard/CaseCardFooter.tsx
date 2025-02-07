@@ -2,6 +2,7 @@ import {
   cn,
   guestUser,
   selectCurrentUser,
+  useAuth,
   useUserAbility,
 } from '@urgp/client/shared';
 import { CaseFull } from '@urgp/shared/entities';
@@ -23,7 +24,7 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element | null => {
   const { data: stages } = useStages(controlCase?.id, {
     skip: !controlCase?.id,
   });
-  const user = useSelector(selectCurrentUser) || guestUser;
+  const user = useAuth();
   const myPendingStage = stages?.find(
     (stage) =>
       stage.payload?.approveStatus === 'pending' &&

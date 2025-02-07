@@ -20,6 +20,7 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
+  useAuth,
   useIsMobile,
   useUserAbility,
 } from '@urgp/client/shared';
@@ -66,7 +67,7 @@ const ApproveDialog = ({
   const { data: approvers, isLoading: isApproversLoading } =
     useCurrentUserApprovers();
 
-  const user = useSelector(selectCurrentUser) || guestUser;
+  const user = useAuth();
   const formState = useSelector(selectApproveFormState);
   const isOperation = formState === 'operation';
   const entityId = useSelector(selectApproveFormEntityId);

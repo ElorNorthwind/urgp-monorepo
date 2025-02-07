@@ -13,6 +13,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  useAuth,
   useUserAbility,
 } from '@urgp/client/shared';
 import {
@@ -72,7 +73,7 @@ const ApproveButton = (props: ApproveButtonProps): JSX.Element | null => {
     dispatch(setApproveFormState(entityType));
     dispatch(setApproveFormEntityId(entity.id));
   };
-  const user = useSelector(selectCurrentUser) || guestUser;
+  const user = useAuth();
 
   async function onDeside(approve: boolean) {
     approveEntity({

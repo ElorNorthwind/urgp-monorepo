@@ -1,6 +1,7 @@
 import {
   guestUser,
   selectCurrentUser,
+  useAuth,
   useUserAbility,
 } from '@urgp/client/shared';
 import { ApproveButton } from '@urgp/client/widgets';
@@ -34,7 +35,7 @@ const CaseSmartApproveButton = ({
     isLoading,
     isFetching,
   } = useStages(controlCase.id, { skip: !controlCase?.id });
-  const user = useSelector(selectCurrentUser) || guestUser;
+  const user = useAuth();
   const myPendingStage = stages?.find(
     (stage) =>
       stage.payload?.approveStatus === 'pending' &&

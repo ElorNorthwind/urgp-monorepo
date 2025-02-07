@@ -11,6 +11,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  useAuth,
   useUserAbility,
 } from '@urgp/client/shared';
 import { GET_DEFAULT_CONTROL_DUE_DATE } from '@urgp/shared/entities';
@@ -43,7 +44,7 @@ const ManageReminderButton = ({
     isLoading,
     isFetching,
   } = useReminders(caseId, { skip: !caseId });
-  const user = useSelector(selectCurrentUser) || guestUser;
+  const user = useAuth();
   const userReminder = reminders?.find((rem) => {
     return rem?.payload?.observer?.id === user?.id;
   });
