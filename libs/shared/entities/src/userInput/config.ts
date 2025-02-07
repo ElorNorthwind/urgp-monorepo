@@ -1,7 +1,7 @@
 import { addBusinessDays, formatISO, startOfToday } from 'date-fns';
 
 export const GET_DEFAULT_CONTROL_DUE_DATE = () =>
-  formatISO(addBusinessDays(startOfToday(), 5));
+  addBusinessDays(startOfToday(), 5).toISOString();
 
 // Хелпер функция для выборки ключей в виде массива
 function getValues<T extends Record<string, any>>(obj: T) {

@@ -14,7 +14,7 @@ function SmartApproveCell(props: CellContext<CaseFull, unknown>): JSX.Element {
   // const [markAsDone, { isLoading: isMarkLoading }] =
   //   useMarkCaseRemindersAsDone();
 
-  return <div>{JSON.stringify(controlCase.actions)}</div>;
+  // return <div>{JSON.stringify(controlCase.actions)}</div>;
 
   if (controlCase.actions.includes(CaseActions.caseRejected))
     //TODO: Кнопка с эскалацией или продлением срока

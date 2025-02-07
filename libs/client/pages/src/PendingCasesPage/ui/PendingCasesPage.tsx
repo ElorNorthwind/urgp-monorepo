@@ -26,7 +26,7 @@ const PendingCasesPage = (): JSX.Element => {
   const [selected, setSelected] = useState<Row<CaseFull>[]>([]);
   const [filtered, setFiltered] = useState<Row<CaseFull>[]>([]);
 
-  const filteredCases = useMemo(
+  const pendingCases = useMemo(
     () =>
       cases?.filter(
         (caseItem) => caseItem?.actions && caseItem?.actions.length > 0,
@@ -85,7 +85,7 @@ const PendingCasesPage = (): JSX.Element => {
       <SidebarInset className="overflow-hidden">
         <main className="h-screen flex-col flex-wrap">
           <CasesPageHeader
-            total={cases?.length}
+            total={pendingCases?.length}
             filtered={filtered.length}
             columnVisibility={columnVisibility}
             setColumnVisibility={setColumnVisibility}
@@ -102,7 +102,7 @@ const PendingCasesPage = (): JSX.Element => {
               'h-[calc(100vh-3rem)] flex-1 duration-200 ease-linear',
             )}
             columns={pendingCasesColumns}
-            data={filteredCases || []}
+            data={pendingCases || []}
             isFetching={isLoading || isFetching}
             totalCount={cases?.length ?? 0}
             enableMultiRowSelection={true}

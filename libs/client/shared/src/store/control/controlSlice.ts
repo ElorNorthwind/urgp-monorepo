@@ -29,16 +29,16 @@ const operationToForm = (payload: OperationFull) => {
     caseId: payload?.caseId,
     class: payload?.class,
     typeId: payload?.type?.id,
-    doneDate: formatISO(payload?.doneDate),
-    dueDate: formatISO(payload?.dueDate),
+    doneDate: new Date(payload?.doneDate).toISOString(),
+    dueDate: new Date(payload?.dueDate).toISOString(),
     title: payload?.title || '', // num
     notes: payload?.notes || '', // descrition
     extra: payload?.extra || '', // date_description
 
     approveToId: payload?.approveTo?.id,
     approveStatus: payload?.approveStatus,
-    approveDate: formatISO(payload?.approveDate),
-    approveNotes: formatISO(payload?.approveNotes),
+    approveDate: new Date(payload?.approveDate).toISOString(),
+    approveNotes: payload?.approveNotes,
 
     constolFromId: payload?.controlFrom?.id,
     controlToId: payload?.controlTo?.id,
@@ -124,8 +124,8 @@ const controlSlice = createSlice({
         extra: payload?.extra || '', // adress
         approveToId: payload?.approveTo?.id,
         approveStatus: payload?.approveStatus,
-        approveDate: formatISO(payload?.approveDate),
-        approveNotes: formatISO(payload?.approveNotes),
+        approveDate: new Date(payload?.approveDate).toISOString(),
+        approveNotes: payload?.approveNotes,
         dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
       };
     },

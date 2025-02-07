@@ -9,7 +9,7 @@ export const approveControlEntitySchema = z.object({
     .default('project'),
   approveNotes: z.string().nullable().optional(),
   approveToId: z.coerce.number().nullable(),
-  dueDate: z.string().datetime(),
+  dueDate: z.string().datetime().optional(),
 });
 export type ApproveControlEntityDto = z.infer<
   typeof approveControlEntitySchema
