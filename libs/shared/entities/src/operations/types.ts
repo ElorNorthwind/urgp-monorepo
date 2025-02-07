@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import {
+  EntityFull,
   entityFullSchema,
   entitySlimSchema,
   userInfoSchema,
@@ -28,4 +29,6 @@ export const operationSlimSchema = entitySlimSchema.extend(operationSlimFields);
 export type OperationSlim = z.infer<typeof operationSlimSchema>;
 
 export const operationFullSchema = entityFullSchema.extend(operationFullFields);
-export type OperationFull = z.infer<typeof operationFullSchema>;
+const operationFullFieldsSchema = z.object(operationFullFields);
+export type OperationFull = EntityFull &
+  z.infer<typeof operationFullFieldsSchema>;

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
   classificatorSchema,
+  EntityFull,
   entityFullSchema,
   entitySlimSchema,
   externalCaseSchema,
@@ -33,7 +34,7 @@ const caseFullFields = {
   myReminder: z.any().nullable(),
   lastStage: z.any().nullable(),
   dispatches: z.array(operationFullSchema).default([]),
-  myPendingStage: z.any().nullable(),
+  myPendingStage: operationFullSchema.nullable(),
   actions: z.array(z.enum(caseActionsValues)).default([]),
 };
 
@@ -45,4 +46,7 @@ export type CaseSlim = z.infer<typeof caseSlimSchema>;
 export const caseSchema = entityFullSchema
   .omit({ title: true, notes: true })
   .extend(caseFullFields);
-export type CaseFull = z.infer<typeof caseSchema>;
+
+// export type CaseFull = z.infer<typeof caseSchema>;
+const caseFullFieldsSchema = z.object(caseFullFields);
+export type OperationFull = EntityFull & z.infer<typeof caseFullFieldsSchema>;
