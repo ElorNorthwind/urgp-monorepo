@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogDescription,
   DialogFooter,
-  DialogFormState,
   DialogHeader,
   DialogTitle,
   Form,
@@ -41,6 +40,7 @@ import { MutationDefinition } from '@reduxjs/toolkit/query';
 import { TypedUseMutation } from '@reduxjs/toolkit/dist/query/react';
 import { is } from 'date-fns/locale';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { DialogFormState } from '@urgp/shared/entities';
 
 // const entitySliceFormHelpers = {
 //   stage: {

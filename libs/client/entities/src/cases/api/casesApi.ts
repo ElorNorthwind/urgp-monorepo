@@ -46,7 +46,6 @@ export const casesApi = rtkApi.injectEndpoints({
         method: 'POST',
         body: dto,
       }),
-
       async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
         const { data: newCase } = await queryFulfilled;
         insertCachedCase(newCase, dispatch, getState);

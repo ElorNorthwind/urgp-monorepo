@@ -98,7 +98,9 @@ export class ControlCasesRepository {
   }
 
   updateCase(dto: UpdateCaseDto, updatedById: number): Promise<number> {
-    return this.db.one(cases.updateCase, { dto, updatedById });
+    const q = this.pgp.as.format(cases.updateCase, { ...dto, updatedById });
+    Logger.log(q);
+    return this.db.one(q);
   }
   approveCase(dto: ApproveControlEntityDto, userId: number): Promise<number> {
     // userId заменяет updated_by_id и approve_from_id
