@@ -29,7 +29,6 @@ const CaseFormFieldArray = ({
 
   return (
     <Fragment>
-      {JSON.stringify(form.getValues('directionIds'))}
       <CaseTypeSelector
         form={form}
         label="Тип"
