@@ -10,7 +10,7 @@ SET
     approve_notes = ${approveNotes},
 
     external_cases = ${externalCases:json}::jsonb,
-    direction_ids = ${directionIds:list}::integer[],
+    direction_ids = ARRAY[${directionIds:list}]::integer[],
     title = ${title},
     notes = ${notes},
     extra = ${extra},

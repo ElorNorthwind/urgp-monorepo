@@ -50,17 +50,23 @@ export class ControlOperationsRepository {
 
     if (caseIds)
       conditions.push(
-        this.pgp.as.format('o."caseId" = ANY(ARRAY[$1:list])', [caseIds]),
+        this.pgp.as.format('o."caseId" = ANY(ARRAY[$1:list]::integer[])', [
+          caseIds,
+        ]),
       );
 
     if (operationIds)
       conditions.push(
-        this.pgp.as.format('o."id" = ANY(ARRAY[$1:list])', [operationIds]),
+        this.pgp.as.format('o."id" = ANY(ARRAY[$1:list]::integer[])', [
+          operationIds,
+        ]),
       );
 
     if (opClass)
       conditions.push(
-        this.pgp.as.format(`o.class = ANY(ARRAY[$1:list])`, [dto.class]),
+        this.pgp.as.format(`o.class = ANY(ARRAY[$1:list]::text[])`, [
+          dto.class,
+        ]),
       );
 
     if (mode === 'full' && userId && visibility === 'pending')
@@ -108,17 +114,21 @@ export class ControlOperationsRepository {
       );
 
     const conditions: string[] = [
-      this.pgp.as.format('class = ANY(ARRAY[$1:list])', [dto.class]),
+      this.pgp.as.format('class = ANY(ARRAY[$1:list]::varchar[])', [dto.class]),
     ];
 
     if (dto.case)
       conditions.push(
-        this.pgp.as.format('case_id = ANY(ARRAY[$1:list])', [dto.case]),
+        this.pgp.as.format('case_id = ANY(ARRAY[$1:list]::integer[])', [
+          dto.case,
+        ]),
       );
 
     if (dto.operation)
       conditions.push(
-        this.pgp.as.format('id = ANY(ARRAY[$1:list])', [dto.operation]),
+        this.pgp.as.format('id = ANY(ARRAY[$1:list]::integer[])', [
+          dto.operation,
+        ]),
       );
 
     return this.db.any(baseQuery, {

@@ -46,12 +46,12 @@ export class ControlCasesRepository {
 
     if (caseIds)
       conditions.push(
-        this.pgp.as.format('c.id = ANY(ARRAY[$1:list])', [caseIds]),
+        this.pgp.as.format('c.id = ANY(ARRAY[$1:list]::integer[])', [caseIds]),
       );
 
     if (operationIds && mode === 'full') {
       conditions.push(
-        this.pgp.as.format('o."operationIds" && ARRAY[$1:list]', [
+        this.pgp.as.format('o."operationIds" && ARRAY[$1:list]::integer[]', [
           operationIds,
         ]),
       );
@@ -59,7 +59,7 @@ export class ControlCasesRepository {
 
     if (opClass)
       conditions.push(
-        this.pgp.as.format(`c.class = ANY(ARRAY[$1:list])`, [opClass]),
+        this.pgp.as.format(`c.class = ANY(ARRAY[$1:list]::text[])`, [opClass]),
       );
 
     if (visibility === 'visible' && mode === 'full' && userId) {
@@ -67,7 +67,7 @@ export class ControlCasesRepository {
         this.pgp.as.format(
           `(
             c.approve_status = 'approved' 
-            OR $1 = ANY(ARRAY[c.author_id,c.approve_from_id, c.approve_to_id]) 
+            OR $1 = ANY(ARRAY[c.author_id,c.approve_from_id,c.approve_to_id]::integer[]) 
            )`,
           userId,
         ),
@@ -81,7 +81,7 @@ export class ControlCasesRepository {
             (c.approve_status = 'pending' AND c.approve_to_id::integer = $1)
             OR o."myPendingStage" IS NOT NULL
             OR (s.category = 'рассмотрено' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL)
-            OR (s.category <> ALL(ARRAY['рассмотрено', 'проект']) AND (o."myReminder"->>'dueDate')::date < current_date AND o."myReminder"->>'doneDate' IS NULL)
+            OR (s.category <> ALL(ARRAY['рассмотрено', 'проект']::text[]) AND (o."myReminder"->>'dueDate')::date < current_date AND o."myReminder"->>'doneDate' IS NULL)
             OR c.author_id = $1 AND c.approve_status = 'rejected'
            )`,
           userId,
@@ -104,7 +104,7 @@ export class ControlCasesRepository {
 
   updateCase(dto: UpdateCaseDto, updatedById: number): Promise<number> {
     const q = this.pgp.as.format(cases.updateCase, { ...dto, updatedById });
-    Logger.warn(q);
+    // Logger.warn(q);
     return this.db.one(q).then((result) => result.id);
   }
   approveCase(dto: ApproveControlEntityDto, userId: number): Promise<number> {

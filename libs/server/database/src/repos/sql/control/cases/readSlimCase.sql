@@ -12,7 +12,7 @@ SELECT
 	created_at as "createdAt",
 	updated_at as "updatedAt",
 	external_cases as "externalCases",
-	direction_ids as "directionIds",
+	direction_ids::integer[] as "directionIds",
 	title,
 	notes,
 	extra

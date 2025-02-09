@@ -7,5 +7,5 @@ WHERE EXISTS
 (
 	SELECT *
 	FROM jsonb_array_elements(u.control_settings->'directions') as d(direction)
-	WHERE d.direction::integer = ANY(ARRAY[${directions:list}])
+	WHERE d.direction::integer = ANY(ARRAY[${directions:list}]::integer[])
 );

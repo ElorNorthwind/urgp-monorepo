@@ -106,7 +106,7 @@ const ExternalCaseFieldArray = ({
         onClick={() => {
           viewportRef?.current &&
             viewportRef.current.scrollTo(10, viewportRef.current.scrollHeight);
-          append({ system: 'NONE', num: '', date: new Date() });
+          append({ system: 'NONE', num: '', date: new Date().toISOString() });
         }}
       >
         <FilePlus className="mr-2 size-5" />
