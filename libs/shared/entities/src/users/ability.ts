@@ -115,6 +115,10 @@ export function defineControlAbilityFor(user: User) {
     'payload.approveStatus': { $eq: 'approved' }, // нельзя согласовывать то что уже согласовано
   });
 
+  cannot('approve', 'all', {
+    'payload.approveStatus': { $eq: 'project' }, // нельзя согласовывать что еще в проекте
+  });
+
   can('set-approver', 'all', {
     approveToId: null, // без согласующего можно создавать все
   });

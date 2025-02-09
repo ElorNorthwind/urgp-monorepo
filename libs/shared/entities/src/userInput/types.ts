@@ -52,13 +52,13 @@ export const userInfoSchema = z.object({
 export type UserInfo = z.infer<typeof userInfoSchema>;
 
 export const entitySlimSchema = z.object({
-  id: z.number().int().positive(), // Positive integer
+  id: z.number().int().nonnegative(), // Positive integer
   // class: entityClassSchema,
-  typeId: z.number().int().positive(),
-  authorId: z.number().int().positive(),
-  updatedById: z.number().int().positive().nullable(),
-  approveFromId: z.number().int().positive().nullable(),
-  approveToId: z.number().int().positive().nullable(),
+  typeId: z.number().int().nonnegative(),
+  authorId: z.number().int().nonnegative(),
+  updatedById: z.number().int().nonnegative().nullable(),
+  approveFromId: z.number().int().nonnegative().nullable(),
+  approveToId: z.number().int().nonnegative().nullable(),
   approveStatus: z.enum(approveStatusValues).default('project'),
   approveDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
   approveNotes: z.string().nullable().default(null),

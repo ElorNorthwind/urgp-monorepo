@@ -17,7 +17,13 @@
 -- SELECT c.data as cases, p.data as problems, o.data as operations
 -- FROM cases c, problems p, operations o;
 
-SELECT id as value, fio as label
+SELECT 0::integer as value, 'Оставить в проекте' as label
+
+UNION
+
+SELECT 
+	id as value, 
+	CASE WHEN id = ${userId} THEN 'Утвердить лично' ELSE fio END as label
 FROM renovation.users
 WHERE id IN (
 	SELECT jsonb_array_elements(control_data->'approveTo')::integer as value

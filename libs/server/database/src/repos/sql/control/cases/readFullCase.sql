@@ -24,6 +24,7 @@ GROUP BY o."caseId"),
 			jsonb_agg(d) as val
 		FROM control.cases_ c
 		LEFT JOIN (SELECT id, name, category, fullname as "fullName", default_executor_id as "executorId" FROM control.direction_types) d ON d.id = ANY(c.direction_ids)
+		WHERE d.id IS NOT NULL
 		GROUP BY c.id)
 
 SELECT
@@ -77,6 +78,7 @@ LEFT JOIN (SELECT id, name, category, fullname as "fullName" FROM control.case_s
 	CASE 
 		WHEN c.approve_status = 'pending' THEN 1 -- "на утверждении"
 		WHEN c.approve_status = 'rejected' THEN 10 -- "отказано в согласовании"
+		WHEN c.approve_status = 'project' THEN 12 -- "проект"
 		-- Эти вот штуки лучше бы прописать через специальное поле в control.operation_types ?
 		WHEN (o."lastStage"->'type'->>'id')::integer = 7 AND o."lastStage"->>'approveStatus' = 'approved' THEN 5 -- "отклонено"
 		WHEN (o."lastStage"->'type'->>'id')::integer = 8 AND o."lastStage"->>'approveStatus' = 'approved' THEN 6 -- "решено"

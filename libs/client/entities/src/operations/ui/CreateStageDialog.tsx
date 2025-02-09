@@ -59,11 +59,12 @@ const CreateStageDialog = ({
       class: 'stage',
       // controlFromId: null,
       // controlToId: null,
-      approveToId: operationTypes?.find((operation) => {
-        return operation.id === values.typeId;
-      })?.autoApprove
-        ? null
-        : values.approveToId,
+      approveToId:
+        operationTypes?.find((operation) => {
+          return operation.id === values.typeId;
+        })?.autoApprove || values.approveToId === 0
+          ? null
+          : values.approveToId,
     }),
     displayedElement: <EditedStageDisplayElement />,
     dialogWidth: '600px',

@@ -16,7 +16,7 @@ import { operationFullSchema } from '../operations/types';
 const caseSlimFields = {
   class: z.enum(caseClassesValues),
   externalCases: z.array(externalCaseSchema).default([]), // Array of externalCaseSchema objects
-  directionIds: z.array(z.number().int().positive()).default([]), // Array of positive integers
+  directionIds: z.array(z.number().int().nonnegative()).default([]), // Array of nonnegative integers
   title: z.string().min(1, { message: 'Заголовок не может быть пустым' }),
   notes: z.string().min(1, { message: 'Описание не может быть пустым' }),
 };
@@ -27,7 +27,7 @@ const caseFullFields = {
   directions: z.array(classificatorSchema).default([]),
   title: z.string().min(1, { message: 'Заголовок не может быть пустым' }),
   notes: z.string().min(1, { message: 'Описание не может быть пустым' }),
-  operationIds: z.array(z.coerce.number().int().positive()).default([]),
+  operationIds: z.array(z.coerce.number().int().nonnegative()).default([]),
   status: classificatorSchema,
   viewStatus: z.enum(viewStatusValues),
   lastEdit: z.string().datetime().nullable(), // ISO 8601 date string

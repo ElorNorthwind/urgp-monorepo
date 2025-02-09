@@ -37,20 +37,20 @@ export const updateOperationSchema = operationSlimSchema
 export type UpdateOperationDto = z.infer<typeof updateOperationSchema>;
 
 export const operationFormSchema = updateOperationSchema
-  // .omit({ controlFromId: true })
+  // .omit({ approveToId: true })
   .required()
   .extend({
     controlFromId: z.coerce
       .number()
       .int()
-      .positive()
+      .nonnegative()
       .nullable()
       .optional()
       .default(null),
     controlToId: z.coerce
       .number()
       .int()
-      .positive()
+      .nonnegative()
       .nullable()
       .optional()
       .default(null),
@@ -65,11 +65,11 @@ export const dispatchFormSchema = operationFormSchema
     // controlFromId: z.coerce
     //   .number()
     //   .int()
-    //   .positive({ message: 'Нужен контролер' }),
+    //   .nonnegative({ message: 'Нужен контролер' }),
     controlToId: z.coerce
       .number()
       .int()
-      .positive({ message: 'Нужен исполнитель' }),
+      .nonnegative({ message: 'Нужен исполнитель' }),
   });
 export type DispatchFormDto = z.infer<typeof dispatchFormSchema>;
 

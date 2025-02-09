@@ -118,7 +118,7 @@ const controlSlice = createSlice({
           ...ec,
           date: new Date(ec.date).toISOString(),
         })),
-        directionIds: payload?.directions?.map((d) => d?.id),
+        directionIds: payload?.directions?.map((d) => d?.id) || [],
         title: payload?.title || '', // fio
         notes: payload?.notes || '', // descrition
         extra: payload?.extra || '', // adress

@@ -61,7 +61,7 @@ export class ControlOperationsController {
       throw new UnauthorizedException('Нет прав на создание');
     }
 
-    const approveData = this.classificators.getCorrectApproveData({
+    const approveData = await this.classificators.getCorrectApproveData({
       user: req.user,
       dto,
       isOperation: true,
@@ -127,7 +127,7 @@ export class ControlOperationsController {
       (dto?.approveToId && dto?.approveToId !== curentOp.approveToId);
     // || (dto?.approveFromId && dto?.approveFromId !== curentOp.approveFromId);
 
-    const approveData = this.classificators.getCorrectApproveData({
+    const approveData = await this.classificators.getCorrectApproveData({
       user: req.user,
       dto,
       isOperation: true,
@@ -171,7 +171,7 @@ export class ControlOperationsController {
     @Body(new ZodValidationPipe(approveControlEntitySchema))
     dto: ApproveControlEntityDto,
   ) {
-    const approveData = this.classificators.getCorrectApproveData({
+    const approveData = await this.classificators.getCorrectApproveData({
       user: req.user,
       dto,
       isOperation: true,

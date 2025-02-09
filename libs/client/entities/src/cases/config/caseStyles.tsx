@@ -8,6 +8,8 @@ import {
   CircleChevronRight,
   CircleDashed,
   CircleDivide,
+  CircleDot,
+  CircleEllipsis,
   CircleFadingPlus,
   CircleHelp,
   CirclePlay,
@@ -37,6 +39,7 @@ export type StyleData = {
 };
 
 export const caseStatusStyles = {
+  12: { icon: CircleEllipsis, iconStyle: 'text-gray-500' },
   1: { icon: CircleHelp, iconStyle: 'text-slate-500' },
   2: { icon: CircleChevronRight, iconStyle: 'text-blue-500' },
   3: { icon: CirclePlay, iconStyle: 'text-sky-500' },

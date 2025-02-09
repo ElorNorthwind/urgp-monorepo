@@ -51,7 +51,7 @@ export class ControlCasesController {
     const i = defineControlAbilityFor(req.user);
     if (i.cannot('create', dto))
       throw new UnauthorizedException('Нет прав на создание');
-    const approveData = this.classificators.getCorrectApproveData({
+    const approveData = await this.classificators.getCorrectApproveData({
       user: req.user,
       dto,
       isOperation: false,
@@ -122,7 +122,7 @@ export class ControlCasesController {
       (dto?.approveToId && dto?.approveToId !== curCase.approveToId);
     // || (dto?.approveFromId && dto?.approveFromId !== curCase.approveFromId);
 
-    const approveData = this.classificators.getCorrectApproveData({
+    const approveData = await this.classificators.getCorrectApproveData({
       user: req.user,
       dto,
       isOperation: false,
@@ -158,7 +158,7 @@ export class ControlCasesController {
     @Body(new ZodValidationPipe(approveControlEntitySchema))
     dto: ApproveControlEntityDto,
   ) {
-    const approveData = this.classificators.getCorrectApproveData({
+    const approveData = await this.classificators.getCorrectApproveData({
       user: req.user,
       dto,
       isOperation: false,
