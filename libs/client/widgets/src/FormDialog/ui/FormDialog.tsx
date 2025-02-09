@@ -41,6 +41,7 @@ import { TypedUseMutation } from '@reduxjs/toolkit/dist/query/react';
 import { is } from 'date-fns/locale';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { DialogFormState } from '@urgp/shared/entities';
+import { error } from 'console';
 
 // const entitySliceFormHelpers = {
 //   stage: {
@@ -279,6 +280,11 @@ const FormDialog = <TDto extends FieldValues>(
         <Header className="bg-muted-foreground/5 -m-6 mb-0 px-6 py-4 text-left">
           <Title>{title}</Title>
           <Description>{subTitle}</Description>
+          {/* {Object.entries(form?.formState?.errors || {}).map((error) => (
+            <div key={error[0]}>
+              <p className="text-red-600">{error[1]?.message}</p>
+            </div>
+          ))} */}
         </Header>
         {displayedElement}
         <Form {...form}>

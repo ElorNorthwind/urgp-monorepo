@@ -54,16 +54,16 @@ export const updateCachedCase = async (
 };
 
 export const deleteCachedCase = async (
-  newCase: CaseFull | undefined,
+  caseId: number | undefined,
   dispatch: ThunkDispatch<any, any, UnknownAction>,
   getState?: () => RootState<any, any, 'api'>,
 ): Promise<void> => {
-  if (newCase) {
+  if (caseId) {
     const caseQueryArgs = getCaseQueryArgs(getState);
     caseQueryArgs.forEach((arg) => {
       dispatch(
         casesApi.util.updateQueryData('getCases', arg, (draft) => {
-          return draft.filter((stage) => stage.id !== newCase.id);
+          return draft.filter((stage) => stage.id !== caseId);
         }),
       );
     });

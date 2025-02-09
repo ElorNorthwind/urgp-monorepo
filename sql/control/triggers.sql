@@ -44,7 +44,8 @@ BEGIN
 			NEW.title,
 			NEW.notes,
 			NEW.extra,
-			NEW.archive_date
+			NEW.archive_date,
+			null
 		);
 				
 		RETURN NEW;

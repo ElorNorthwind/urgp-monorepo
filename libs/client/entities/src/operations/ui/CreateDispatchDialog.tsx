@@ -5,6 +5,7 @@ import {
   setDispatchFormState,
   setDispatchFormValuesEmpty,
   setDispatchFormValuesFromDto,
+  store,
   useUserAbility,
 } from '@urgp/client/shared';
 
@@ -20,9 +21,10 @@ import { DispatchFormFieldArray } from './DispatchFormElements/DispatchFormField
 import { EditedDispatchDisplayElement } from './DispatchFormElements/EditedDispatchDisplayElement';
 import {
   ControlOptions,
+  DispatchFormDto,
+  dispatchFormSchema,
   OperationClasses,
   OperationFormDto,
-  operationFormSchema,
 } from '@urgp/shared/entities';
 
 type CreateDispatchDialogProps = {
@@ -54,14 +56,14 @@ const CreateDispatchDialog = ({
   const dialogProps = {
     isEdit,
     entityType: 'operation',
-    dto: operationFormSchema,
+    dto: dispatchFormSchema,
     valuesSelector: selectDispatchFormValues,
     stateSelector: selectDispatchFormState,
     stateDispatch: setDispatchFormState,
     valuesEmptyDispatch: setDispatchFormValuesEmpty,
     valuesDtoDispatch: setDispatchFormValuesFromDto,
-    updateHook: useCreateOperation,
-    createHook: useUpdateOperation,
+    updateHook: useUpdateOperation,
+    createHook: useCreateOperation,
     deleteHook: useDeleteOperation,
     allowDelete: canDelete,
     FieldsArray: DispatchFormFieldArray,
@@ -72,6 +74,8 @@ const CreateDispatchDialog = ({
     customizeCreateValues: (values: OperationFormDto) => ({
       ...values,
       class: 'dispatch',
+      approveStatus: 'approved',
+      approveDate: new Date().toISOString(),
       controlFromId:
         values.controller === ControlOptions.author
           ? user?.id
@@ -86,7 +90,8 @@ const CreateDispatchDialog = ({
           : user?.id,
       dateDescription:
         values.extra ||
-        (values?.dueDate === useSelector(selectDispatchFormValues)?.dueDate
+        (values?.dueDate ===
+        store.getState().control.dispatchForm.values?.dueDate
           ? 'Корректировка без уточнения срока'
           : ''),
     }),
@@ -97,7 +102,7 @@ const CreateDispatchDialog = ({
     editTitle: 'Изменить поручение',
     createDescription: 'Внесите данные для создания поручения',
     editDescription: 'Внесите изменения в запись об поручении',
-  } as unknown as FormDialogProps<OperationFormDto>;
+  } as unknown as FormDialogProps<DispatchFormDto>;
 
   return <FormDialog {...dialogProps} />;
 };

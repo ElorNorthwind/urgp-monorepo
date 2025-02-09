@@ -35,13 +35,13 @@ const operationToForm = (payload: OperationFull) => {
     notes: payload?.notes || '', // descrition
     extra: payload?.extra || '', // date_description
 
-    approveToId: payload?.approveTo?.id,
-    approveStatus: payload?.approveStatus,
+    approveToId: payload?.approveTo?.id || null,
+    approveStatus: payload?.approveStatus || 'project',
     approveDate: new Date(payload?.approveDate).toISOString(),
-    approveNotes: payload?.approveNotes,
+    approveNotes: payload?.approveNotes || '',
 
-    constolFromId: payload?.controlFrom?.id,
-    controlToId: payload?.controlTo?.id,
+    constolFromId: payload?.controlFrom?.id || null,
+    controlToId: payload?.controlTo?.id || null,
 
     controller: ControlOptions.author,
   };
@@ -183,7 +183,7 @@ const controlSlice = createSlice({
         ...operationToForm(payload),
         extra: 'Без переноса срока',
         controller:
-          payload.controlFrom.id === state.user.id
+          payload?.controlFrom?.id === state?.user?.id
             ? ControlOptions.author
             : ControlOptions.executor,
       };
@@ -195,11 +195,11 @@ const controlSlice = createSlice({
       state.dispatchForm.values = {
         ...payload,
         controlFromId:
-          payload.controller === ControlOptions.author
-            ? state.user.id
-            : payload.controller === ControlOptions.executor
-              ? payload.controlToId
-              : payload.controlFromId,
+          payload?.controller === ControlOptions.author
+            ? state?.user?.id
+            : payload?.controller === ControlOptions.executor
+              ? payload?.controlToId
+              : payload?.controlFromId,
       };
     },
 

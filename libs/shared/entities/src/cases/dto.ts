@@ -28,7 +28,7 @@ export const updateCaseSchema = caseSlimSchema
   })
   .partial()
   .extend({
-    id: z.coerce.number().int().positive(),
+    id: z.coerce.number().int().nonnegative(),
     dueDate: z.string().datetime().optional(), // ISO 8601 date string
     //   dueDate: z.coerce
     //     .date({ message: 'Дата обязательна' })

@@ -75,7 +75,7 @@ const DispatchFormFieldArray = ({
       </div>
       <SelectFormField
         form={form}
-        fieldName={'controlFromId'}
+        fieldName={'controller'}
         options={controllerList}
         label="Контроль"
         placeholder="За кем останется контроль"

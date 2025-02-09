@@ -16,8 +16,10 @@ const ReminderFormFieldArray = ({
   form,
   isEdit,
 }: ReminderFormFieldArrayProps): JSX.Element | null => {
+  const date = form.watch('dueDate');
   return (
     <Fragment>
+      {date}
       <div className="flex w-full flex-row items-end gap-2">
         <DateFormField
           form={form}

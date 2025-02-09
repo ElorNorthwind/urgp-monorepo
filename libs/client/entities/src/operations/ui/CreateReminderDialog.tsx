@@ -73,6 +73,14 @@ const CreateReminderDialog = ({
     editDescription: 'Внесите изменения отслеживание по делу',
     deleteButtonLabel: 'Снять напоминание',
     saveButtonLabel: 'Отслеживать дело',
+    customizeCreateValues: (values: OperationFormDto) => ({
+      ...values,
+      controlFromId: user?.id,
+    }),
+    customizeUpdateValues: (values: OperationFormDto) => ({
+      ...values,
+      controlFromId: user?.id,
+    }),
   } as unknown as FormDialogProps<OperationFormDto>;
 
   return <FormDialog {...dialogProps} />;

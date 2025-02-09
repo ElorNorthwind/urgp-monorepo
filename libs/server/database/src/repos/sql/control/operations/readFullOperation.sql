@@ -18,6 +18,7 @@ SELECT
 	o."doneDate",
 	o.title,
 	o.notes,
-	o.extra
+	o.extra,
+	o."archiveDate"
 FROM control.full_operations o
 ${conditions:raw};

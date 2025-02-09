@@ -56,7 +56,7 @@ export class ControlOperationsService {
     userId?: number,
   ): Promise<OperationFull> {
     const operations = (await this.readOperations(
-      { operation: [id] },
+      { operation: [id], visibility: 'all' },
       userId,
     )) as OperationFull[];
     if (operations.length === 0)
@@ -69,7 +69,7 @@ export class ControlOperationsService {
     userId?: number,
   ): Promise<OperationSlim> {
     const operations = (await this.readOperations(
-      { operation: [id], mode: 'slim' },
+      { operation: [id], mode: 'slim', visibility: 'all' },
       userId,
     )) as OperationSlim[];
     if (operations.length === 0)
@@ -105,8 +105,15 @@ export class ControlOperationsService {
     );
   }
 
-  public async deleteOperation(id: number, userId: number): Promise<number> {
-    return this.dbServise.db.controlOperations.deleteOperation(id, userId);
+  public async deleteOperation(
+    id: number,
+    userId: number,
+  ): Promise<OperationSlim> {
+    const deletedId = await this.dbServise.db.controlOperations.deleteOperation(
+      id,
+      userId,
+    );
+    return this.readSlimOperationById(deletedId);
   }
 
   public async approveOperation(

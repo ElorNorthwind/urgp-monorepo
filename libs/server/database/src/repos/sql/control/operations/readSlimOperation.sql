@@ -19,9 +19,9 @@ WITH slim_operations AS (
 		o.done_date as "doneDate",
 		o.title,
 		o.notes,
-		o.extra
+		o.extra,
+		o.archive_date as "archiveDate"
 	FROM control.operations_ o
-	WHERE o.archive_date IS NULL
 )
 SELECT *
 from slim_operations o

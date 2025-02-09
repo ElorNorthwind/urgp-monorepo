@@ -24,9 +24,9 @@ VALUES (
     ${approveStatus},
     ${approveDate},
     ${approveNotes},
-    ${externalCases:json}::jsonb
+    ${externalCases:json}::jsonb,
     -- ${externalCases:raw},
-    ARRAY[${directionIds:list}],
+    ARRAY[${directionIds:list}]::integer[],
     ${title},
     ${notes},
     ${extra}

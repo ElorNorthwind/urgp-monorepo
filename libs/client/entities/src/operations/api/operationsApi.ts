@@ -6,11 +6,13 @@ import {
   EntityClasses,
   OperationClasses,
   OperationFull,
+  OperationSlim,
   UpdateOperationDto,
 } from '@urgp/shared/entities';
 import { markCachedCase, refetchCachedCase } from '../../cases/api/lib';
 import { casesApi } from '../../cases';
 import { formatISO } from 'date-fns';
+import { vi } from 'date-fns/locale';
 
 export const operationsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
@@ -84,7 +86,7 @@ export const operationsApi = rtkApi.injectEndpoints({
           return [];
         return [opClass];
       },
-      async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
+      async onQueryStarted(dto, { dispatch, queryFulfilled, getState }) {
         const { data: updatedOperation } = await queryFulfilled;
         refetchCachedCase(updatedOperation?.caseId, dispatch, getState);
       },
@@ -173,7 +175,7 @@ export const operationsApi = rtkApi.injectEndpoints({
       },
     }),
 
-    deleteOperation: build.mutation<OperationFull, DeleteControlEntityDto>({
+    deleteOperation: build.mutation<OperationSlim, DeleteControlEntityDto>({
       query: (dto) => ({
         url: '/control/operation',
         method: 'DELETE',

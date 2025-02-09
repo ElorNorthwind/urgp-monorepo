@@ -16,6 +16,7 @@ WITH user_info AS (SELECT id, fio FROM renovation.users), -- (control_data->>'pr
 				FILTER (WHERE o."class" = 'dispatch') as dispatches,
 			MAX(o."updatedAt") FILTER (WHERE o."class" = ANY(ARRAY['stage', 'dispatch'])) as "lastEdit"
 		FROM control.full_operations o
+		WHERE o."archiveDate" IS NULL
 GROUP BY o."caseId"),
 	directions AS (
 		SELECT  

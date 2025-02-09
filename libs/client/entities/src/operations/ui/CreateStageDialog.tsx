@@ -57,6 +57,8 @@ const CreateStageDialog = ({
     customizeUpdateValues: (values: OperationFormDto) => ({
       ...values,
       class: 'stage',
+      // controlFromId: null,
+      // controlToId: null,
       approveToId: operationTypes?.find((operation) => {
         return operation.id === values.typeId;
       })?.autoApprove

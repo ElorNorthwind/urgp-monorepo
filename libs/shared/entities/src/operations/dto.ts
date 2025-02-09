@@ -32,18 +32,46 @@ export const updateOperationSchema = operationSlimSchema
   })
   .partial()
   .extend({
-    id: z.coerce.number().int().positive(),
+    id: z.coerce.number().int().nonnegative(),
   });
 export type UpdateOperationDto = z.infer<typeof updateOperationSchema>;
 
 export const operationFormSchema = updateOperationSchema
-  .omit({ controlFromId: true })
+  // .omit({ controlFromId: true })
   .required()
   .extend({
-    controlFromId: z.coerce.number().int().positive().nullable().optional(),
+    controlFromId: z.coerce
+      .number()
+      .int()
+      .positive()
+      .nullable()
+      .optional()
+      .default(null),
+    controlToId: z.coerce
+      .number()
+      .int()
+      .positive()
+      .nullable()
+      .optional()
+      .default(null),
     controller: z.enum(controlOptionsValues).default(ControlOptions.executor),
   });
 export type OperationFormDto = z.infer<typeof operationFormSchema>;
+
+export const dispatchFormSchema = operationFormSchema
+  .omit({ extra: true, controlToId: true })
+  .extend({
+    extra: z.string().min(1, { message: 'Укажите причину переноса' }),
+    // controlFromId: z.coerce
+    //   .number()
+    //   .int()
+    //   .positive({ message: 'Нужен контролер' }),
+    controlToId: z.coerce
+      .number()
+      .int()
+      .positive({ message: 'Нужен исполнитель' }),
+  });
+export type DispatchFormDto = z.infer<typeof dispatchFormSchema>;
 
 export const markOperationSchema = z.object({
   mode: z.enum(['seen', 'done']).default('seen'),

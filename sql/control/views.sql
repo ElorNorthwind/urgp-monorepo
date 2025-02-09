@@ -37,7 +37,9 @@ SELECT
 	o.done_date as "doneDate",
 	o.title,
 	o.notes,
-	o.extra
+	o.extra,
+	o.archive_date as "archiveDate"
+	
 FROM control.operations_ o
 LEFT JOIN operation_types t ON t.id = o.type_id
 LEFT JOIN user_info u ON u.id = o.author_id
@@ -45,9 +47,9 @@ LEFT JOIN user_info u2 ON u2.id = o.updated_by_id
 LEFT JOIN user_info u3 ON u3.id = o.control_from_id
 LEFT JOIN user_info u4 ON u4.id = o.control_to_id
 LEFT JOIN user_info u5 ON u5.id = o.approve_from_id
-LEFT JOIN user_info u6 ON u6.id = o.approve_to_id
+LEFT JOIN user_info u6 ON u6.id = o.approve_to_id;
 
-WHERE o.archive_date IS NULL;
+-- WHERE o.archive_date IS NULL;
 
 ALTER TABLE control.full_operations
     OWNER TO renovation_user;

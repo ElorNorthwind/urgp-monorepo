@@ -71,12 +71,16 @@ export class ControlOperationsRepository {
         ),
       );
 
-    return this.db.any(baseQuery, {
+    if (visibility !== 'all') conditions.push(`o."archiveDate" IS NULL`);
+
+    const q = this.pgp.as.format(baseQuery, {
       conditions:
         'WHERE ' +
         conditions.join(' AND ') +
         ' ORDER BY o."doneDate" DESC NULLS FIRST, o."createdAt" DESC',
-    }) as Promise<OperationSlim[]>;
+    });
+    // Logger.warn(q);
+    return this.db.any(q) as Promise<OperationSlim[] | OperationFull[]>;
   }
 
   readOperationHistory(
@@ -123,9 +127,14 @@ export class ControlOperationsRepository {
     }) as Promise<number[]>;
   }
 
-  deleteOperation(id: number, userId: number): Promise<number> {
+  deleteOperation(id: number, updatedById: number): Promise<number> {
+    // const q = this.pgp.as.format(operations.deleteOperation, {
+    //   id,
+    //   updatedById,
+    // });
+    // Logger.warn(q);
     return this.db
-      .one(operations.deleteOperation, { id, userId })
+      .one(operations.deleteOperation, { id, updatedById })
       .then((result) => result.id);
   }
 

@@ -132,12 +132,8 @@ export class ControlCasesService {
     ) as Promise<CaseFull>;
   }
 
-  public async deleteCase(id: number, userId: number): Promise<CaseFull> {
-    const deletedCaseId = await this.dbServise.db.controlCases.deleteCase(
-      id,
-      userId,
-    );
-    return this.readFullCaseById(deletedCaseId, userId) as Promise<CaseFull>;
+  public async deleteCase(id: number, userId: number): Promise<number> {
+    return this.dbServise.db.controlCases.deleteCase(id, userId);
   }
 
   public async approveCase(

@@ -64,7 +64,7 @@ export const casesApi = rtkApi.injectEndpoints({
       },
     }),
 
-    deleteCase: build.mutation<CaseFull, DeleteControlEntityDto>({
+    deleteCase: build.mutation<number, DeleteControlEntityDto>({
       query: (dto) => ({
         url: '/control/case',
         method: 'DELETE',
