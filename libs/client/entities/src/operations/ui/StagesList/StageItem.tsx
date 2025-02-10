@@ -59,7 +59,7 @@ const StageItem = (props: StageItemProps): JSX.Element => {
           {stage?.doneDate && format(stage?.doneDate, 'dd.MM.yyyy')}
         </span>
       </div>
-      <div className="font-light">{stage.notes}</div>
+      <div className="font-light">{stage?.notes}</div>
 
       <div
         className={cn(

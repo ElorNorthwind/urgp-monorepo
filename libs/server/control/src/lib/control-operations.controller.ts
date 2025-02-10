@@ -176,7 +176,6 @@ export class ControlOperationsController {
       dto,
       isOperation: true,
     });
-
     return this.controlOperations.approveOperation(
       {
         ...dto,

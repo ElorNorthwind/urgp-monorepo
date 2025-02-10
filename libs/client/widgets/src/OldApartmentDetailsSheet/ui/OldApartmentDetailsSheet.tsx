@@ -57,10 +57,10 @@ const OldApartmentDetailsSheet = ({
     const recolored = apartmentTimeline?.map((item) => {
       color = item.source.includes('Судебная')
         ? 'red'
-        : item.notes?.includes('Московский фонд реновации')
+        : item?.notes?.includes('Московский фонд реновации')
           ? 'violet'
           : item.type === 'Ответ по смотровому' &&
-              item.notes?.toLowerCase().includes('отказ')
+              item?.notes?.toLowerCase().includes('отказ')
             ? 'yellow'
             : color;
       return {
@@ -199,7 +199,7 @@ const OldApartmentDetailsSheet = ({
                 <div
                   className={'text-muted-foreground px-4 text-sm leading-snug'}
                 >
-                  {operation.notes}
+                  {operation?.notes}
                 </div>
               </div>
             ))

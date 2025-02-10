@@ -78,11 +78,6 @@ const ApproveDialog = ({
     { skip: !isOperation || !entityId || entityId === 0 },
   );
   const i = useUserAbility();
-  const filteredOperationApprovers = controlCase
-    ? approvers?.filter((approver) => {
-        return approver.value !== user.id || i.can('resolve', controlCase);
-      })
-    : approvers;
 
   const defaultValues = useMemo(() => {
     return {
@@ -97,6 +92,17 @@ const ApproveDialog = ({
     defaultValues,
   });
   const watchApprover = form.watch('approveToId');
+
+  const filteredOperationApprovers = approvers?.filter((approver) => {
+    if (
+      controlCase &&
+      approver.value !== user?.id &&
+      i.cannot('resolve', controlCase)
+    )
+      return false;
+    if (defaultValues?.approveToId === approver?.value) return false;
+    return true;
+  });
 
   const title = isOperation ? 'Согласование операции' : 'Согласование заявки';
   const subTitle = isOperation
@@ -168,6 +174,8 @@ const ApproveDialog = ({
           entityId={entityId}
         />
         <Form {...form}>
+          {JSON.stringify(form.getValues('approveToId'))}
+          {JSON.stringify(defaultValues.approveToId)}
           <form className={cn('relative flex flex-col gap-2', className)}>
             <TextAreaFormField
               form={form}
@@ -178,8 +186,8 @@ const ApproveDialog = ({
             <div className="flex w-full flex-row gap-2">
               <SelectFormField
                 form={form}
-                fieldName={'nextApproverId'}
-                options={isOperation ? filteredOperationApprovers : approvers}
+                fieldName={'approveToId'}
+                options={filteredOperationApprovers}
                 isLoading={isApproversLoading}
                 label="Следующий согласующий"
                 placeholder="Выбор следующего согласующего"

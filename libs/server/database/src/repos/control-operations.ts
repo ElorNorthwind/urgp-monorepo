@@ -152,8 +152,14 @@ export class ControlOperationsRepository {
     dto: ApproveControlEntityDto,
     userId: number,
   ): Promise<number> {
+    Logger.warn(dto);
+    const q = this.pgp.as.format(operations.approveOperation, {
+      ...dto,
+      userId,
+    });
+    Logger.warn(q);
     return this.db
-      .one(operations.approveOperation, { dto, userId })
+      .one(operations.approveOperation, { ...dto, userId })
       .then((result) => result.id);
   }
 }

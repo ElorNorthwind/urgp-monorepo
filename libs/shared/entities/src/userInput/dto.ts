@@ -16,7 +16,7 @@ export type ApproveControlEntityDto = z.infer<
 >;
 
 export const approveControlEntityFormSchema = z.object({
-  approveToId: z.coerce.number().nullable(),
+  approveToId: z.coerce.number().int().nonnegative().nullable(),
   approveNotes: z.string().optional(),
   dueDate: z.string().datetime(),
 });

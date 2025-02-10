@@ -70,7 +70,7 @@ const StageHistoryItem = (props: StageHistoryItemProps): JSX.Element => {
           </>
         )}
       </div>
-      <div className="font-light">{item.notes}</div>
+      <div className="font-light">{item?.notes}</div>
 
       <div
         className={cn(

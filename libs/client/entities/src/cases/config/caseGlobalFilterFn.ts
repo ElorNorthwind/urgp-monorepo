@@ -38,10 +38,10 @@ export function caseGlobalFilterFn(
   if (
     query &&
     !(
-      row.original.notes?.toLowerCase().includes(query.toLowerCase()) ||
-      row.original.title?.toLowerCase().includes(query.toLowerCase()) ||
-      row.original.extra?.toLowerCase().includes(query.toLowerCase()) ||
-      row.original.externalCases
+      row.original?.notes?.toLowerCase().includes(query.toLowerCase()) ||
+      row.original?.title?.toLowerCase().includes(query.toLowerCase()) ||
+      row.original?.extra?.toLowerCase().includes(query.toLowerCase()) ||
+      row.original?.externalCases
         .reduce((prev, cur) => {
           return prev + ' ' + cur.num;
         }, '')
