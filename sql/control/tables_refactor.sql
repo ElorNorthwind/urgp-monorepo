@@ -26,6 +26,7 @@ CREATE TABLE control.cases_
 	extra text, -- Адрес
 
 	archive_date timestamp with time zone,
+	revision integer NOT NULL DEFAULT 1,
 	-- is_deleted boolean NOT NULL DEFAULT false,
 	PRIMARY KEY (id)
 );
@@ -62,6 +63,7 @@ CREATE TABLE control.cases_history
 	extra text, -- Адрес
 
 	archive_date timestamp with time zone,
+	revision integer NOT NULL DEFAULT 1,
 	delete_date	timestamp with time zone,
 	PRIMARY KEY (id)
 );
@@ -102,6 +104,7 @@ CREATE TABLE control.operations_
 	extra text, -- Описание изменения даты
 
 	archive_date timestamp with time zone,
+	revision integer NOT NULL DEFAULT 1,
 	PRIMARY KEY (id)
 );
 ALTER TABLE control.operations_
@@ -141,6 +144,7 @@ CREATE TABLE control.operations_history
 	extra text, -- Описание изменения даты
 
 	archive_date timestamp with time zone,
+	revision integer NOT NULL DEFAULT 1,
 	delete_date	timestamp with time zone,
 	-- is_deleted boolean NOT NULL DEFAULT false,
 	PRIMARY KEY (id)

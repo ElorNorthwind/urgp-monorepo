@@ -20,7 +20,8 @@ WITH slim_operations AS (
 		o.title,
 		o.notes,
 		o.extra,
-		o.archive_date as "archiveDate"
+		o.archive_date as "archiveDate",
+		o.revision
 	FROM control.operations_ o
 )
 SELECT *

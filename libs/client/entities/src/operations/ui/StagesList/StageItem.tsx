@@ -98,7 +98,7 @@ const StageItem = (props: StageItemProps): JSX.Element => {
           <span>
             {stage?.updatedAt && format(stage?.updatedAt || 0, 'dd.MM.yyyy')}
           </span>
-          <StagesHistory stageId={stage.id} />
+          {stage?.revision > 1 && <StagesHistory stageId={stage.id} />}
           <span className="mr-1 font-normal">{stage?.author?.fio}</span>
         </div>
       )}

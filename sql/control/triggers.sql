@@ -4,7 +4,7 @@ DROP TRIGGER IF EXISTS case_history_trigger ON control.cases_;
 CREATE OR REPLACE FUNCTION control.case_history_trigger_func()
 RETURNS trigger AS $body$
 BEGIN
-	if (TG_OP = 'UPDATE') then
+	if (TG_OP = 'CREATE') then
 		INSERT INTO control.cases_history (
 			case_id,
 			class,
@@ -24,6 +24,7 @@ BEGIN
 			notes,
 			extra,
 			archive_date,
+			revision,
 			delete_date
 		)
 		VALUES(
@@ -45,10 +46,60 @@ BEGIN
 			NEW.notes,
 			NEW.extra,
 			NEW.archive_date,
+			1,
 			null
 		);
 				
 		RETURN NEW;
+
+	elseif (TG_OP = 'UPDATE') then
+		INSERT INTO control.cases_history (
+			case_id,
+			class,
+			type_id,
+			author_id,
+			updated_by_id,
+			approve_from_id,
+			approve_to_id,
+			approve_status,
+			approve_date,
+			approve_notes,
+			created_at,
+			updated_at,
+			external_cases,
+			direction_ids,
+			title,
+			notes,
+			extra,
+			archive_date,
+			revision,
+			delete_date
+		)
+		VALUES(
+			NEW.id,
+			NEW.class,
+			NEW.type_id,
+			NEW.author_id,
+			NEW.updated_by_id,
+			NEW.approve_from_id,
+			NEW.approve_to_id,
+			NEW.approve_status,
+			NEW.approve_date,
+			NEW.approve_notes,
+			NEW.created_at,
+			NEW.updated_at,
+			NEW.external_cases::jsonb,
+			NEW.direction_ids::integer[],
+			NEW.title,
+			NEW.notes,
+			NEW.extra,
+			NEW.archive_date,
+			OLD.revision + 1,
+			null
+		);
+				
+		RETURN NEW;
+
 	elsif (TG_OP = 'DELETE') then
 		INSERT INTO control.cases_history (
 			case_id,
@@ -69,6 +120,7 @@ BEGIN
 			notes,
 			extra,
 			archive_date,
+			revision,
 			delete_date
 		)
 		VALUES(
@@ -90,6 +142,7 @@ BEGIN
 			OLD.notes,
 			OLD.extra,
 			OLD.archive_date,
+			OLD.revision + 1,
 			CURRENT_TIMESTAMP
 		);
 		RETURN OLD;
@@ -110,7 +163,7 @@ DROP TRIGGER IF EXISTS operation_history_trigger ON control.operations_;
 CREATE OR REPLACE FUNCTION control.operation_history_trigger_func()
 RETURNS trigger AS $body$
 BEGIN
-	if (TG_OP = 'UPDATE') then
+	if (TG_OP = 'CREATE') then
 		INSERT INTO control.operations_history (
 			operation_id,
 			case_id,
@@ -133,6 +186,7 @@ BEGIN
 			notes,
 			extra,
 			archive_date,
+			revision,
 			delete_date
 		)
 		VALUES(
@@ -157,6 +211,61 @@ BEGIN
 			NEW.notes,
 			NEW.extra,
 			NEW.archive_date,
+			1,
+			null
+		);
+				
+		RETURN NEW;
+
+	elseif (TG_OP = 'UPDATE') then
+		INSERT INTO control.operations_history (
+			operation_id,
+			case_id,
+			class,
+			type_id,
+			author_id,
+			updated_by_id,
+			approve_from_id,
+			approve_to_id,
+			approve_status,
+			approve_date,
+			approve_notes,
+			created_at,
+			updated_at,
+			due_date,
+			done_date,
+			control_from_id,
+			control_to_id,
+			title,
+			notes,
+			extra,
+			archive_date,
+			revision,
+			delete_date
+		)
+		VALUES(
+			NEW.id,
+			NEW.case_id,
+			NEW.class,
+			NEW.type_id,
+			NEW.author_id,
+			NEW.updated_by_id,
+			NEW.approve_from_id,
+			NEW.approve_to_id,
+			NEW.approve_status,
+			NEW.approve_date,
+			NEW.approve_notes,
+			NEW.created_at,
+			NEW.updated_at,
+			NEW.due_date,
+			NEW.done_date,
+			NEW.control_from_id,
+			NEW.control_to_id,
+			NEW.title,
+			NEW.notes,
+			NEW.extra,
+			NEW.archive_date,
+			OLD.revision + 1,
 			null
 		);
 				
@@ -184,6 +293,7 @@ BEGIN
 			notes,
 			extra,
 			archive_date,
+			revision,
 			delete_date
 		)
 		VALUES(
@@ -208,6 +318,7 @@ BEGIN
 			OLD.notes,
 			OLD.extra,
 			OLD.archive_date,
+			OLD.revision + 1,
 			CURRENT_TIMESTAMP
 		);
 		RETURN OLD;

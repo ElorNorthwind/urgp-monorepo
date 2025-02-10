@@ -38,7 +38,8 @@ SELECT
 	o.title,
 	o.notes,
 	o.extra,
-	o.archive_date as "archiveDate"
+	o.archive_date as "archiveDate",
+	o.revision
 	
 FROM control.operations_ o
 LEFT JOIN operation_types t ON t.id = o.type_id

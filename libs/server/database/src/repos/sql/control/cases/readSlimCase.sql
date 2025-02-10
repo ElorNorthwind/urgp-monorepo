@@ -15,7 +15,8 @@ SELECT
 	direction_ids::integer[] as "directionIds",
 	title,
 	notes,
-	extra
+	extra,
+	revision
 FROM control.cases_ c
 WHERE archive_date IS NULL
 ${conditions:raw};

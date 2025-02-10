@@ -18,6 +18,7 @@ export const createOperationSchema = operationSlimSchema.omit({
   approveFromId: true,
   updatedAt: true,
   createdAt: true,
+  revision: true,
 });
 export type CreateOperationDto = z.infer<typeof createOperationSchema>;
 
@@ -29,6 +30,7 @@ export const updateOperationSchema = operationSlimSchema
     approveFromId: true,
     updatedAt: true,
     createdAt: true,
+    revision: true,
   })
   .partial()
   .extend({

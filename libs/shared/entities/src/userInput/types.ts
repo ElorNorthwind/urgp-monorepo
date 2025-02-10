@@ -67,6 +67,7 @@ export const entitySlimSchema = z.object({
   title: z.string().nullable().default(null),
   notes: z.string().nullable().default(null),
   extra: z.string().nullable().default(null),
+  revision: z.coerce.number().int().nonnegative().default(1),
 });
 export type EntitySlim = z.infer<typeof entitySlimSchema>;
 

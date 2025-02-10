@@ -64,7 +64,8 @@ SELECT
 			, CASE WHEN o."lastStage"->'type'->>'category' = 'решение' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL THEN 'reminder-done' ELSE null END
 			, CASE WHEN (o."lastStage"->'type'->>'category' <> 'решение' AND (o."myReminder"->>'dueDate')::date < current_date) THEN 'reminder-overdue' ELSE null END
 		]
-	, null) as actions
+	, null) as actions,
+	c.revision
 FROM control.cases_ c
 
 LEFT JOIN control.case_types t ON t.id = c.type_id

@@ -11,6 +11,7 @@ export const createCaseSchema = caseSlimSchema
     approveFromId: true,
     updatedAt: true,
     createdAt: true,
+    revision: true,
   })
   .extend({
     dueDate: z.string().datetime().optional(), // ISO 8601 date string
@@ -25,6 +26,7 @@ export const updateCaseSchema = caseSlimSchema
     approveFromId: true,
     updatedAt: true,
     createdAt: true,
+    revision: true,
   })
   .partial()
   .extend({

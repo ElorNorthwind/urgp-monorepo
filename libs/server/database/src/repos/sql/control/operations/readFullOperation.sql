@@ -19,6 +19,7 @@ SELECT
 	o.title,
 	o.notes,
 	o.extra,
-	o."archiveDate"
+	o."archiveDate",
+	o.revision
 FROM control.full_operations o
 ${conditions:raw};

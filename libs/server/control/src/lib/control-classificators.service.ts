@@ -33,7 +33,7 @@ import { Cache } from 'cache-manager';
 import { ControlOperationsService } from './control-operations.service';
 import { ControlCasesService } from './control-cases.service';
 import { formatISO } from 'date-fns';
-
+import { caseClassesValues } from '@urgp/shared/entities';
 // type GetCorectApproveDataOperationProps = {
 //   user: User;
 //   dto: ApproveControlEntityDto | CreateOperationDto | UpdateOperationDto;
@@ -151,6 +151,7 @@ export class ControlClassificatorsService {
   }
 
   public async isAutoApproved(dto?: any | null): Promise<boolean> {
+    if (caseClassesValues.includes(dto?.class)) return false; // дела никогда не автоаппрувятся
     const typeId = dto && 'typeId' in dto ? dto.typeId : undefined;
     if (!typeId) return false;
     const operationTypes = await this.getOperationTypesFlat();
@@ -181,8 +182,8 @@ export class ControlClassificatorsService {
 
     if (
       !dto.approveToId ||
-      dto.approveToId === 0 ||
-      dto?.approveStatus === 'project'
+      dto.approveToId === 0
+      // || dto?.approveStatus === 'project'
     )
       return {
         // Проект не направляется на согласование
