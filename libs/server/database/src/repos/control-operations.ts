@@ -85,7 +85,6 @@ export class ControlOperationsRepository {
         conditions.join(' AND ') +
         ' ORDER BY o."doneDate" DESC NULLS FIRST, o."createdAt" DESC',
     });
-    // Logger.warn(q);
     return this.db.any(q) as Promise<OperationSlim[] | OperationFull[]>;
   }
 
@@ -142,7 +141,6 @@ export class ControlOperationsRepository {
     //   id,
     //   updatedById,
     // });
-    // Logger.warn(q);
     return this.db
       .one(operations.deleteOperation, { id, updatedById })
       .then((result) => result.id);
@@ -152,12 +150,10 @@ export class ControlOperationsRepository {
     dto: ApproveControlEntityDto,
     userId: number,
   ): Promise<number> {
-    Logger.warn(dto);
     const q = this.pgp.as.format(operations.approveOperation, {
       ...dto,
       userId,
     });
-    Logger.warn(q);
     return this.db
       .one(operations.approveOperation, { ...dto, userId })
       .then((result) => result.id);

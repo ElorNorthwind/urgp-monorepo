@@ -9,11 +9,11 @@ import {
   DialogTitle,
   Form,
   guestUser,
-  selectApproveFormEntityId,
   selectApproveFormState,
+  selectApproveFormValues,
   selectCurrentUser,
-  setApproveFormEntityId,
   setApproveFormState,
+  setApproveFormValuesEmpty,
   Sheet,
   SheetContent,
   SheetDescription,
@@ -64,43 +64,35 @@ const ApproveDialog = ({
     '--dialog-width': dialogWidth,
   } as React.CSSProperties;
 
-  const { data: approvers, isLoading: isApproversLoading } =
+  const { data: approveTo, isLoading: isApproversLoading } =
     useCurrentUserApproveTo();
 
   const user = useAuth();
   const formState = useSelector(selectApproveFormState);
   const isOperation = formState === 'operation';
-  const entityId = useSelector(selectApproveFormEntityId);
+  const values = useSelector(selectApproveFormValues);
 
   // Запрет на решение дел с контролем высокого уровня
   const { data: controlCase, isLoading: isStageLoading } = useCaseByOperationId(
-    entityId,
-    { skip: !isOperation || !entityId || entityId === 0 },
+    values?.id,
+    { skip: !isOperation || !values?.id || values.id === 0 },
   );
   const i = useUserAbility();
 
-  const defaultValues = useMemo(() => {
-    return {
-      approveToId: approvers?.[0].value || null,
-      approveNotes: '',
-      dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
-    };
-  }, [approvers]);
-
   const form = useForm<ApproveControlEntityFormDto>({
     resolver: zodResolver(approveControlEntityFormSchema),
-    defaultValues,
+    values,
   });
   const watchApprover = form.watch('approveToId');
 
-  const filteredOperationApprovers = approvers?.filter((approver) => {
+  const filteredApproveTo = approveTo?.filter((approver) => {
     if (
       controlCase &&
       approver.value !== user?.id &&
       i.cannot('resolve', controlCase)
     )
       return false;
-    if (defaultValues?.approveToId === approver?.value) return false;
+    if (values?.approveToId === approver?.value) return false;
     return true;
   });
 
@@ -116,7 +108,7 @@ const ApproveDialog = ({
   const isLoading = isApproveCaseLoading || isApproveOperationLoading;
 
   const closeAndReset = () => {
-    dispatch(setApproveFormEntityId(0));
+    dispatch(setApproveFormValuesEmpty());
     dispatch(setApproveFormState('close'));
   };
   const onOpenChange = (open: boolean) => {
@@ -127,7 +119,7 @@ const ApproveDialog = ({
     const approveEntity = isOperation ? approveOperation : approveCase;
     approveEntity({
       ...data,
-      id: entityId,
+      id: values?.id,
       approveStatus: approve ? 'approved' : 'rejected',
     })
       .unwrap()
@@ -143,7 +135,7 @@ const ApproveDialog = ({
   }
 
   useEffect(() => {
-    form.reset(defaultValues);
+    form.reset({ ...values, approveToId: filteredApproveTo?.[0]?.value || 0 });
   }, [formState]);
 
   const Wrapper = isMobile ? Sheet : Dialog;
@@ -171,11 +163,9 @@ const ApproveDialog = ({
         </Header>
         <ControlFormDisplayElement
           entityType={isOperation ? 'operation' : 'case'}
-          entityId={entityId}
+          entityId={values?.id}
         />
         <Form {...form}>
-          {JSON.stringify(form.getValues('approveToId'))}
-          {JSON.stringify(defaultValues.approveToId)}
           <form className={cn('relative flex flex-col gap-2', className)}>
             <TextAreaFormField
               form={form}
@@ -187,7 +177,7 @@ const ApproveDialog = ({
               <SelectFormField
                 form={form}
                 fieldName={'approveToId'}
-                options={filteredOperationApprovers}
+                options={filteredApproveTo}
                 isLoading={isApproversLoading}
                 label="Следующий согласующий"
                 placeholder="Выбор следующего согласующего"

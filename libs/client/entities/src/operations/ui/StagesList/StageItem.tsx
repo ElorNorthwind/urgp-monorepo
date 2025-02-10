@@ -65,12 +65,16 @@ const StageItem = (props: StageItemProps): JSX.Element => {
         className={cn(
           'mt-2 grid grid-cols-[auto_auto_1fr] gap-1 border-l-4 px-2 py-1',
           badgeStyle,
-          stage.approveStatus === ApproveStatus.approved && 'hidden',
+          stage?.approveStatus === ApproveStatus.approved && 'hidden',
         )}
       >
         <span className="font-medium">{label + ': '}</span>
         {stage?.approveTo?.fio && (
-          <span className="text-nowrap">{stage?.approveTo?.fio}</span>
+          <span className="text-nowrap">
+            {stage?.approveStatus === ApproveStatus.rejected
+              ? stage?.approveFrom?.fio
+              : stage?.approveTo?.fio}
+          </span>
         )}
 
         {stage?.approveDate && (

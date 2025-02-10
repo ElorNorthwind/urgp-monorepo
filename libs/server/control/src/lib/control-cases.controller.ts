@@ -103,6 +103,7 @@ export class ControlCasesController {
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(updateCaseSchema)) dto: UpdateCaseDto,
   ) {
+    Logger.debug(dto);
     const i = defineControlAbilityFor(req.user);
     const curCase = (await this.controlCases.readSlimCaseById(
       dto.id,
@@ -127,6 +128,8 @@ export class ControlCasesController {
       dto,
       isOperation: false,
     });
+
+    Logger.debug({ ...dto, ...(changesApproval ? approveData : {}) });
 
     return this.controlCases.updateCase(
       { ...dto, ...(changesApproval ? approveData : {}) },

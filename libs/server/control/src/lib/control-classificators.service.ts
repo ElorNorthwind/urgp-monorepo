@@ -181,8 +181,8 @@ export class ControlClassificatorsService {
       };
 
     if (
-      !dto.approveToId ||
-      dto.approveToId === 0
+      (!dto.approveToId || dto.approveToId === 0) &&
+      dto.approveStatus !== 'rejected'
       // || dto?.approveStatus === 'project'
     )
       return {

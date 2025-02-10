@@ -13,9 +13,10 @@ import {
   ControlOptions,
   DialogFormState,
   ApproveFormState,
+  ApproveFormDto,
+  emptyApproveData,
 } from '@urgp/shared/entities';
 import { RootState } from '../store';
-import { formatISO } from 'date-fns';
 import {
   clearUser,
   guestUser,
@@ -67,7 +68,7 @@ type ControlState = {
   };
   approveForm: {
     state: ApproveFormState;
-    entityId: number;
+    values: ApproveFormDto;
   };
   user: User | null;
 };
@@ -91,7 +92,7 @@ const initialState: ControlState = {
   },
   approveForm: {
     state: ApproveFormState.close,
-    entityId: 0,
+    values: emptyApproveData,
   },
   user: initialUserState.user,
 };
@@ -262,8 +263,27 @@ const controlSlice = createSlice({
     ) => {
       state.approveForm.state = payload;
     },
-    setApproveFormEntityId: (state, { payload }: PayloadAction<number>) => {
-      state.approveForm.entityId = payload;
+    setApproveFormValuesEmpty: (state) => {
+      state.approveForm.values = emptyReminder;
+    },
+    setApproveFormValuesFromEntity: (
+      state,
+      { payload }: PayloadAction<OperationFull | CaseFull>,
+    ) => {
+      state.approveForm.values = {
+        id: payload.id || 0,
+        approveToId: payload?.approveTo?.id || 0,
+        approveNotes: payload?.approveNotes || '',
+        dueDate:
+          ('dueDate' in payload && payload?.dueDate) ||
+          GET_DEFAULT_CONTROL_DUE_DATE(),
+      };
+    },
+    setApproveFormValuesFromDto: (
+      state,
+      { payload }: PayloadAction<ApproveFormDto>,
+    ) => {
+      state.approveForm.values = payload;
     },
   },
   extraReducers: (builder) => {
@@ -329,10 +349,14 @@ export const selectReminderFormState = (state: RootState) =>
   state.control.reminderForm.state;
 
 // ================================= APPROVE =================================
-export const { setApproveFormState, setApproveFormEntityId } =
-  controlSlice.actions;
-export const selectApproveFormEntityId = (state: RootState) =>
-  state.control.approveForm.entityId;
+export const {
+  setApproveFormState,
+  setApproveFormValuesEmpty,
+  setApproveFormValuesFromEntity,
+  setApproveFormValuesFromDto,
+} = controlSlice.actions;
+export const selectApproveFormValues = (state: RootState) =>
+  state.control.approveForm.values;
 export const selectApproveFormState = (state: RootState) =>
   state.control.approveForm.state;
 

@@ -1,4 +1,5 @@
 import { addBusinessDays, formatISO, startOfToday } from 'date-fns';
+import { z } from 'zod';
 
 export const GET_DEFAULT_CONTROL_DUE_DATE = () =>
   addBusinessDays(startOfToday(), 5).toISOString();
@@ -81,3 +82,18 @@ export const ApproveFormState = {
 } as const;
 export type ApproveFormState =
   (typeof ApproveFormState)[keyof typeof ApproveFormState];
+
+export const approveFormSchema = z.object({
+  id: z.coerce.number().int().nonnegative(),
+  approveToId: z.coerce.number().int().nonnegative().nullable(),
+  approveNotes: z.string(),
+  dueDate: z.string().datetime({ message: 'Формат даты' }),
+});
+export type ApproveFormDto = z.infer<typeof approveFormSchema>;
+
+export const emptyApproveData = {
+  id: 0,
+  approveToId: 0,
+  approveNotes: '',
+  dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
+};

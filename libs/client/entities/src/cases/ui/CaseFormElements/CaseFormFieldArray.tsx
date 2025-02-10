@@ -40,7 +40,6 @@ const CaseFormFieldArray = ({
         popoverMinWidth={popoverMinWidth}
         dirtyIndicator={isEdit}
       />
-      {JSON.stringify(form.getValues('authorId'))}
       <DirectionTypeSelector
         form={form}
         label="Направления"
@@ -75,7 +74,12 @@ const CaseFormFieldArray = ({
         placeholder="Описание проблемы"
         dirtyIndicator={isEdit}
       />
-      <div className="flex w-full flex-row gap-2">
+      <div
+        className={cn(
+          'flex w-full flex-row gap-2',
+          isEdit && cannotApprove && 'hidden',
+        )}
+      >
         <SelectFormField
           form={form}
           isLoading={isApproversLoading}
@@ -85,8 +89,9 @@ const CaseFormFieldArray = ({
           placeholder="Выбор согласующего"
           popoverMinWidth={popoverMinWidth}
           dirtyIndicator={isEdit}
+          disabled={cannotApprove && isEdit}
           valueType="number"
-          className={cn('flex-grow', cannotApprove && isEdit && 'hidden')}
+          className="flex-grow"
         />
         <DateFormField
           form={form}
@@ -96,10 +101,8 @@ const CaseFormFieldArray = ({
           disabled={isEdit || user?.id !== watchApproveTo}
           className={cn(
             'flex-shrink-0',
-            (user?.id !== watchApproveTo ||
-              user?.id !== watchApproveTo ||
-              (cannotApprove && isEdit)) &&
-              'hidden',
+            user?.id !== watchApproveTo ||
+              (user?.id !== watchApproveTo && 'hidden'),
           )}
         />
       </div>

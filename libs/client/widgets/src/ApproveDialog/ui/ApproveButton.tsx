@@ -8,8 +8,8 @@ import {
   cn,
   guestUser,
   selectCurrentUser,
-  setApproveFormEntityId,
   setApproveFormState,
+  setApproveFormValuesFromEntity,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -74,7 +74,7 @@ const ApproveButton = (props: ApproveButtonProps): JSX.Element | null => {
   const onClick = () => {
     if (!entity?.id) return;
     dispatch(setApproveFormState(entityType));
-    dispatch(setApproveFormEntityId(entity.id));
+    dispatch(setApproveFormValuesFromEntity(entity));
   };
   const user = useAuth();
 

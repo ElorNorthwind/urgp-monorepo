@@ -63,41 +63,61 @@ export function defineControlAbilityFor(user: User) {
 
   if (user?.controlData?.roles?.includes('admin')) {
     can('manage', 'all'); // админу по дефолту можно все
-  } else {
-    can(['read', 'create'], 'all'); // Все могут читать или создавать все
-    can(['update', 'delete'], 'all', {
-      'author.id': { $eq: user.id }, // FE // Все могу менять или удалять то, что они создали
+
+    cannot('approve', 'all', {
+      approveStatus: { $eq: 'approved' }, // решение по согласованным делам может принимать только согласовант
     });
-    can(['update', 'delete'], 'all', {
-      authorId: { $eq: user.id }, // BE // Все могу менять или удалять то, что они создали
+
+    can('approve', 'all', {
+      approveStatus: { $eq: 'project' },
+      'author.id': { $eq: user.id },
     });
-    can(['update', 'approve'], 'all', {
-      'approveTo.id': { $eq: user.id }, // FE // Все могут менять или согласовывать то, что у них на согле
+
+    can('approve', 'all', {
+      approveStatus: { $eq: 'project' },
+      authorId: { $eq: user.id },
     });
-    can(['update', 'approve'], 'all', {
-      approveToId: { $eq: user.id }, // BE // Все могут менять или согласовывать то, что у них на согле
+
+    return build({
+      detectSubjectType: (item) =>
+        (subjectVariants?.[item?.class as keyof typeof subjectVariants] ||
+          'unknown') as ExtractSubjectType<Subject>,
     });
-    cannot('update', 'all', {
-      approveStatus: { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
-    });
-    // cannot('create', 'Dispatch');
-    can('update', 'Dispatch', { controllerId: { $eq: user.id } }); // FORM Можно менять поручения, которые ты контролируешь
-    can('update', 'Dispatch', { controlFromId: { $eq: user.id } }); // BE Можно менять поручения, которые ты контролируешь
-    can('update', 'Dispatch', { controlFromId: { $eq: user.id } }); // FE Можно менять поручения, которые ты контролируешь
-    can('create', 'Reminder', { type: { $eq: 11 } }); // Можно создавать напоминалки
-    // cannot('create', 'Reminder', { type: { $eq: 12 } }); // Нельзя создавать направления боссу ПОДУМАЙ
-    can('update', 'Reminder', { observerId: { $eq: user.id } }); // FORM Можно менять свои напоминалки
-    can('update', 'Reminder', { controlToId: { $eq: user.id } }); // BE Можно менять свои напоминалки
-    can('update', 'Reminder', { controlFromId: { $eq: user.id } }); // FE Можно менять свои напоминалки
-    can('resolve', 'Case', {
-      controllerIds: {
-        $elemMatch: { $eq: user.id },
-      },
-    }); // Решение по делу уровня контроля выше заданного порога может принять только контролер
-    can('resolve', 'Case', {
-      controlLevel: { $lt: CONTROL_THRASHOLD },
-    }); // Решение по делу уровня контроля ниже заданного могут принимать все (с поправкой на иные права)
   }
+
+  can(['read', 'create'], 'all'); // Все могут читать или создавать все
+  can(['update', 'delete'], 'all', {
+    'author.id': { $eq: user.id }, // FE // Все могу менять или удалять то, что они создали
+  });
+  can(['update', 'delete'], 'all', {
+    authorId: { $eq: user.id }, // BE // Все могу менять или удалять то, что они создали
+  });
+  can(['update', 'approve'], 'all', {
+    'approveTo.id': { $eq: user.id }, // FE // Все могут менять или согласовывать то, что у них на согле
+  });
+  can(['update', 'approve'], 'all', {
+    approveToId: { $eq: user.id }, // BE // Все могут менять или согласовывать то, что у них на согле
+  });
+  cannot('update', 'all', {
+    approveStatus: { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
+  });
+  // cannot('create', 'Dispatch');
+  can('update', 'Dispatch', { controllerId: { $eq: user.id } }); // FORM Можно менять поручения, которые ты контролируешь
+  can('update', 'Dispatch', { controlFromId: { $eq: user.id } }); // BE Можно менять поручения, которые ты контролируешь
+  can('update', 'Dispatch', { controlFromId: { $eq: user.id } }); // FE Можно менять поручения, которые ты контролируешь
+  can('create', 'Reminder', { type: { $eq: 11 } }); // Можно создавать напоминалки
+  // cannot('create', 'Reminder', { type: { $eq: 12 } }); // Нельзя создавать направления боссу ПОДУМАЙ
+  can('update', 'Reminder', { observerId: { $eq: user.id } }); // FORM Можно менять свои напоминалки
+  can('update', 'Reminder', { controlToId: { $eq: user.id } }); // BE Можно менять свои напоминалки
+  can('update', 'Reminder', { controlFromId: { $eq: user.id } }); // FE Можно менять свои напоминалки
+  can('resolve', 'Case', {
+    controllerIds: {
+      $elemMatch: { $eq: user.id },
+    },
+  }); // Решение по делу уровня контроля выше заданного порога может принять только контролер
+  can('resolve', 'Case', {
+    controlLevel: { $lt: CONTROL_THRASHOLD },
+  }); // Решение по делу уровня контроля ниже заданного могут принимать все (с поправкой на иные права)
 
   if (
     user?.controlData?.roles?.includes('executor') ||
@@ -111,33 +131,35 @@ export function defineControlAbilityFor(user: User) {
     can('read-all', 'all'); // контроллер видит все
   }
 
-  cannot('approve', 'all', {
-    approveStatus: { $eq: 'approved' }, // решение по согласованным делам может принимать только согласовант
-  });
-
-  cannot('approve', 'all', {
-    approveStatus: { $eq: 'project' }, // нельзя согласовывать что еще в проекте и не за твоим авторством
-  });
-
   can('approve', 'all', {
     'approveTo.id': { $eq: user.id },
-  });
-
-  can('approve', 'all', {
-    'author.id': { $eq: user.id },
   });
 
   can('approve', 'all', {
     approveToId: { $eq: user.id },
   });
 
+  cannot('approve', 'all', {
+    approveStatus: { $eq: 'approved' }, // решение по согласованным делам может принимать только согласовант
+  });
+
+  // cannot('approve', 'all', {
+  //   approveStatus: { $eq: 'project' }, // нельзя согласовывать что еще в проекте и не за твоим авторством
+  // });
+
   can('approve', 'all', {
+    approveStatus: { $eq: 'project' },
+    'author.id': { $eq: user.id },
+  });
+
+  can('approve', 'all', {
+    approveStatus: { $eq: 'project' },
     authorId: { $eq: user.id },
   });
 
-  can('set-approver', 'all', {
-    approveToId: null, // без согласующего можно создавать все
-  });
+  // can('set-approver', 'all', {
+  //   approveToId: null, // без согласующего можно создавать все
+  // });
 
   // can('set-approver', 'all', {
   //   approveToId: 0, // без согласующего можно создавать все
