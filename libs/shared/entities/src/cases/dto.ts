@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import { z } from 'zod';
 import { viewStatusValues } from '../userInput/config';
 import { caseSlimSchema } from './types';
+import { virtualAuthorSchema } from '../userInput/types';
 
 export const createCaseSchema = caseSlimSchema
   .omit({
@@ -40,7 +41,9 @@ export const updateCaseSchema = caseSlimSchema
   });
 export type UpdateCaseDto = z.infer<typeof updateCaseSchema>;
 
-export const caseFormSchema = updateCaseSchema.required();
+export const caseFormSchema = updateCaseSchema.required().extend({
+  authorId: z.coerce.number().int().nonnegative().nullable().optional(),
+});
 export type CaseFormDto = z.infer<typeof caseFormSchema>;
 
 // Параметры поиска на странице

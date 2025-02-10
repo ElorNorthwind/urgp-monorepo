@@ -1,4 +1,4 @@
-import { cn, selectCurrentUser } from '@urgp/client/shared';
+import { cn, selectCurrentUser, useUserAbility } from '@urgp/client/shared';
 import {
   DateFormField,
   FieldsArrayProps,
@@ -22,8 +22,11 @@ const CaseFormFieldArray = ({
   popoverMinWidth,
 }: FieldsArrayProps<CaseFormDto>): JSX.Element | null => {
   const user = useSelector(selectCurrentUser);
+  const i = useUserAbility();
+  const cannotApprove = i.cannot('approve', form.getValues());
 
   const watchApproveTo = form.watch('approveToId');
+  // const isApproved = form.getValues('approveStatus') === 'approved';
   const { data: approvers, isLoading: isApproversLoading } =
     useCurrentUserApproveTo();
 
@@ -37,7 +40,7 @@ const CaseFormFieldArray = ({
         popoverMinWidth={popoverMinWidth}
         dirtyIndicator={isEdit}
       />
-
+      {JSON.stringify(form.getValues('authorId'))}
       <DirectionTypeSelector
         form={form}
         label="Направления"
@@ -83,7 +86,7 @@ const CaseFormFieldArray = ({
           popoverMinWidth={popoverMinWidth}
           dirtyIndicator={isEdit}
           valueType="number"
-          className="flex-grow"
+          className={cn('flex-grow', cannotApprove && isEdit && 'hidden')}
         />
         <DateFormField
           form={form}
@@ -93,7 +96,9 @@ const CaseFormFieldArray = ({
           disabled={isEdit || user?.id !== watchApproveTo}
           className={cn(
             'flex-shrink-0',
-            (user?.id !== watchApproveTo || user?.id !== watchApproveTo) &&
+            (user?.id !== watchApproveTo ||
+              user?.id !== watchApproveTo ||
+              (cannotApprove && isEdit)) &&
               'hidden',
           )}
         />

@@ -3,7 +3,7 @@ import { UseFormReturn } from 'react-hook-form';
 
 import { DateFormField, TextAreaFormField } from '@urgp/client/widgets';
 import { endOfYesterday, isBefore } from 'date-fns';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import { EditedReminderDisplayElement } from './EditedReminderDisplayElement';
 import { OperationFormDto } from '@urgp/shared/entities';
 
@@ -16,10 +16,8 @@ const ReminderFormFieldArray = ({
   form,
   isEdit,
 }: ReminderFormFieldArrayProps): JSX.Element | null => {
-  const date = form.watch('dueDate');
   return (
     <Fragment>
-      {date}
       <div className="flex w-full flex-row items-end gap-2">
         <DateFormField
           form={form}

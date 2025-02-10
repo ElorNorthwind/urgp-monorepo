@@ -137,6 +137,13 @@ export type NestedClassificatorInfoString = z.infer<
   typeof nestedClassificatorInfoString
 >;
 
+export const virtualAuthorSchema = z
+  .object({
+    id: z.coerce.number().int().nonnegative(),
+  })
+  .nullable()
+  .optional();
+
 // export const approveStatusData = approveStatusDataSlim
 //   .omit({
 //     approveById: true,

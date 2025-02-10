@@ -21,7 +21,8 @@ import {
 import {
   OperationClasses,
   OperationFormDto,
-  operationFormSchema,
+  ReminderFormDto,
+  reminderFormSchema,
 } from '@urgp/shared/entities';
 
 type CreateReminderDialogProps = {
@@ -50,7 +51,7 @@ const CreateReminderDialog = ({
   const dialogProps = {
     isEdit,
     entityType: 'operation',
-    dto: operationFormSchema,
+    dto: reminderFormSchema,
     valuesSelector: selectReminderFormValues,
     stateSelector: selectReminderFormState,
     stateDispatch: setReminderFormState,
@@ -73,6 +74,10 @@ const CreateReminderDialog = ({
     editDescription: 'Внесите изменения отслеживание по делу',
     deleteButtonLabel: 'Снять напоминание',
     saveButtonLabel: 'Отслеживать дело',
+    customizeDefaultValues: (values: OperationFormDto) => ({
+      ...values,
+      controlFromId: user?.id,
+    }),
     customizeCreateValues: (values: OperationFormDto) => ({
       ...values,
       controlFromId: user?.id,
@@ -81,7 +86,9 @@ const CreateReminderDialog = ({
       ...values,
       controlFromId: user?.id,
     }),
-  } as unknown as FormDialogProps<OperationFormDto>;
+    customizeDeleteValues: (values: OperationFormDto) => values?.id,
+    alwaysSaveEdit: true,
+  } as unknown as FormDialogProps<ReminderFormDto>;
 
   return <FormDialog {...dialogProps} />;
 };

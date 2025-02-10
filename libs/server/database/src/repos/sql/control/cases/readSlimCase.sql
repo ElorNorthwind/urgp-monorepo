@@ -16,7 +16,7 @@ SELECT
 	title,
 	notes,
 	extra,
-	revision
+revision
 FROM control.cases_ c
 WHERE archive_date IS NULL
 ${conditions:raw};

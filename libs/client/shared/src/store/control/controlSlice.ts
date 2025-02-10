@@ -34,6 +34,7 @@ const operationToForm = (payload: OperationFull) => {
     title: payload?.title || '', // num
     notes: payload?.notes || '', // descrition
     extra: payload?.extra || '', // date_description
+    authorId: payload?.author?.id || null,
 
     approveToId: payload?.approveTo?.id || null,
     approveStatus: payload?.approveStatus || 'project',
@@ -104,7 +105,7 @@ const controlSlice = createSlice({
       state.caseForm.state = payload;
     },
     setCaseFormValuesEmpty: (state) => {
-      state.caseForm.values = emptyCase;
+      state.caseForm.values = { ...emptyCase, authorId: state.user?.id };
     },
     setCaseFormValuesFromCase: (
       state,
@@ -112,6 +113,7 @@ const controlSlice = createSlice({
     ) => {
       state.caseForm.values = {
         id: payload?.id,
+        authorId: payload?.author?.id,
         class: payload?.class,
         typeId: payload?.type?.id,
         externalCases: payload?.externalCases.map((ec) => ({
@@ -134,7 +136,7 @@ const controlSlice = createSlice({
       state,
       { payload }: PayloadAction<CaseFormDto & { saved?: boolean }>,
     ) => {
-      state.caseForm.values = payload;
+      state.caseForm.values = { ...payload, authorId: state.user?.id };
     },
 
     // ================================= STAGE =================================
@@ -145,7 +147,7 @@ const controlSlice = createSlice({
       state.stageForm.values.caseId = payload;
     },
     setStageFormValuesEmpty: (state) => {
-      state.stageForm.values = emptyStage;
+      state.stageForm.values = { ...emptyStage, authorId: state.user?.id };
     },
     setStageFormValuesFromStage: (
       state,
@@ -173,7 +175,10 @@ const controlSlice = createSlice({
       state.dispatchForm.values.caseId = payload;
     },
     setDispatchFormValuesEmpty: (state) => {
-      state.dispatchForm.values = emptyDispatch;
+      state.dispatchForm.values = {
+        ...emptyDispatch,
+        authorId: state.user?.id,
+      };
     },
     setDispatchFormValuesFromDispatch: (
       state,
@@ -194,6 +199,7 @@ const controlSlice = createSlice({
     ) => {
       state.dispatchForm.values = {
         ...payload,
+        authorId: state?.user?.id,
         controlFromId:
           payload?.controller === ControlOptions.author
             ? state?.user?.id
@@ -220,7 +226,10 @@ const controlSlice = createSlice({
       state.reminderForm.values.typeId = payload;
     },
     setReminderFormValuesEmpty: (state) => {
-      state.reminderForm.values = emptyReminder;
+      state.reminderForm.values = {
+        ...emptyReminder,
+        authorId: state.user?.id,
+      };
     },
     setReminderFormValuesFromReminder: (
       state,
@@ -237,6 +246,7 @@ const controlSlice = createSlice({
     ) => {
       state.reminderForm.values = {
         ...payload,
+        authorId: state?.user?.id,
       };
       //  {
       //   ...payload,

@@ -72,23 +72,23 @@ export function defineControlAbilityFor(user: User) {
       authorId: { $eq: user.id }, // BE // Все могу менять или удалять то, что они создали
     });
     can(['update', 'approve'], 'all', {
-      'payload.approveTo.id': { $eq: user.id }, // FE // Все могут менять или согласовывать то, что у них на согле
+      'approveTo.id': { $eq: user.id }, // FE // Все могут менять или согласовывать то, что у них на согле
     });
     can(['update', 'approve'], 'all', {
-      'payload.approveToId': { $eq: user.id }, // BE // Все могут менять или согласовывать то, что у них на согле
+      approveToId: { $eq: user.id }, // BE // Все могут менять или согласовывать то, что у них на согле
     });
     cannot('update', 'all', {
-      'payload.approveStatus': { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
+      approveStatus: { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
     });
     // cannot('create', 'Dispatch');
     can('update', 'Dispatch', { controllerId: { $eq: user.id } }); // FORM Можно менять поручения, которые ты контролируешь
-    can('update', 'Dispatch', { 'payload.controllerId': { $eq: user.id } }); // BE Можно менять поручения, которые ты контролируешь
-    can('update', 'Dispatch', { 'payload.controller.id': { $eq: user.id } }); // FE Можно менять поручения, которые ты контролируешь
+    can('update', 'Dispatch', { controlFromId: { $eq: user.id } }); // BE Можно менять поручения, которые ты контролируешь
+    can('update', 'Dispatch', { controlFromId: { $eq: user.id } }); // FE Можно менять поручения, которые ты контролируешь
     can('create', 'Reminder', { type: { $eq: 11 } }); // Можно создавать напоминалки
     // cannot('create', 'Reminder', { type: { $eq: 12 } }); // Нельзя создавать направления боссу ПОДУМАЙ
     can('update', 'Reminder', { observerId: { $eq: user.id } }); // FORM Можно менять свои напоминалки
-    can('update', 'Reminder', { 'payload.observee.id': { $eq: user.id } }); // BE Можно менять свои напоминалки
-    can('update', 'Reminder', { 'payload.observerId': { $eq: user.id } }); // FE Можно менять свои напоминалки
+    can('update', 'Reminder', { controlToId: { $eq: user.id } }); // BE Можно менять свои напоминалки
+    can('update', 'Reminder', { controlFromId: { $eq: user.id } }); // FE Можно менять свои напоминалки
     can('resolve', 'Case', {
       controllerIds: {
         $elemMatch: { $eq: user.id },
@@ -112,11 +112,27 @@ export function defineControlAbilityFor(user: User) {
   }
 
   cannot('approve', 'all', {
-    'payload.approveStatus': { $eq: 'approved' }, // нельзя согласовывать то что уже согласовано
+    approveStatus: { $eq: 'approved' }, // решение по согласованным делам может принимать только согласовант
   });
 
   cannot('approve', 'all', {
-    'payload.approveStatus': { $eq: 'project' }, // нельзя согласовывать что еще в проекте
+    approveStatus: { $eq: 'project' }, // нельзя согласовывать что еще в проекте и не за твоим авторством
+  });
+
+  can('approve', 'all', {
+    'approveTo.id': { $eq: user.id },
+  });
+
+  can('approve', 'all', {
+    'author.id': { $eq: user.id },
+  });
+
+  can('approve', 'all', {
+    approveToId: { $eq: user.id },
+  });
+
+  can('approve', 'all', {
+    authorId: { $eq: user.id },
   });
 
   can('set-approver', 'all', {

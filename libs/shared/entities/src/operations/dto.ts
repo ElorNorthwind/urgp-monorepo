@@ -2,14 +2,13 @@ import { z } from 'zod';
 import {
   ControlOptions,
   controlOptionsValues,
-  GET_DEFAULT_CONTROL_DUE_DATE,
+  OperationClasses,
 } from '../userInput/config';
-import { startOfToday } from 'date-fns';
-import { operationSlimSchema } from './types';
 import {
   numberOrArraySchema,
   operationClassOrArraySchema,
 } from '../userInput/dto';
+import { operationSlimSchema } from './types';
 
 export const createOperationSchema = operationSlimSchema.omit({
   id: true,
@@ -42,6 +41,7 @@ export const operationFormSchema = updateOperationSchema
   // .omit({ approveToId: true })
   .required()
   .extend({
+    authorId: z.coerce.number().int().nonnegative().nullable().optional(),
     controlFromId: z.coerce
       .number()
       .int()
@@ -82,3 +82,13 @@ export const markOperationSchema = z.object({
   operation: numberOrArraySchema,
 });
 export type MarkOperationDto = z.infer<typeof markOperationSchema>;
+
+export const reminderFormSchema = operationFormSchema
+  .extend({
+    ...markOperationSchema.shape,
+  })
+  .omit({ class: true })
+  .extend({
+    class: z.literal(OperationClasses.reminder).or(operationClassOrArraySchema),
+  });
+export type ReminderFormDto = z.infer<typeof reminderFormSchema>;

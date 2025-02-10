@@ -110,6 +110,7 @@ export type FormDialogProps<TDto extends FieldValues> = {
   cancelButtonLabel?: string;
   deleteButtonLabel?: string;
   saveButtonLabel?: string;
+  alwaysSaveEdit?: boolean;
 };
 
 const FormDialog = <TDto extends FieldValues>(
@@ -145,6 +146,7 @@ const FormDialog = <TDto extends FieldValues>(
     cancelButtonLabel = 'Отмена',
     deleteButtonLabel = 'Удалить',
     saveButtonLabel = 'Сохранить',
+    alwaysSaveEdit = false,
   } = props;
 
   const dispatch = useDispatch();
@@ -328,7 +330,11 @@ const FormDialog = <TDto extends FieldValues>(
               <Button
                 type="submit"
                 className="flex-1"
-                disabled={isCreateLoading || isUpdateLoading}
+                disabled={
+                  isCreateLoading ||
+                  isUpdateLoading ||
+                  (!form.formState.isDirty && isEdit && !alwaysSaveEdit)
+                }
                 onClick={form.handleSubmit(onSubmit as any)}
               >
                 {saveButtonLabel}

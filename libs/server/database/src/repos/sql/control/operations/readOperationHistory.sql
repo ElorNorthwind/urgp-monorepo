@@ -1,36 +1,6 @@
 WITH 
 	operation_types AS (SELECT id, name, category, fullname, priority FROM control.operation_types), 
 	user_info AS (SELECT id, fio, (control_data->>'priority')::integer as priority FROM renovation.users)
-
-SELECT 
-	null as "revisionId",
-	o.id as "id",
-	o."caseId",
-	o.class,
-	o.type,
-	o.author,
-	o."updatedBy",
-	o."controlFrom",
-	o."controlTo",
-	o."approveFrom",
-	o."approveTo",
-	o."approveStatus",
-	o."approveDate",
-	o."approveNotes",
-	o."createdAt",
-	o."updatedAt",
-	o."dueDate",
-	o."doneDate",
-	o.title,
-	o.notes,
-	o.extra,
-    null as "archiveDate",
-	null as "deleteDate"
-FROM control.full_operations o
-WHERE id = ${id}
-
-UNION ALL
-
 SELECT
 	o.id as "revisionId",
 	o.operation_id as "id",
