@@ -6,11 +6,11 @@ SET
     -- author_id = ${authorId}, 
     updated_by_id = ${updatedById}, 
 
-    approve_from_id = ${updatedById}, -- approve_from_id = ${approveFromId}, 
-    approve_to_id = ${approveToId}, 
-    approve_status = ${approveStatus}, 
-    approve_date = ${approveDate}, 
-    approve_notes = ${approveNotes}, 
+    -- approve_from_id = ${updatedById}, -- approve_from_id = ${approveFromId}, 
+    -- approve_to_id = ${approveToId}, 
+    -- approve_status = ${approveStatus}, 
+    -- approve_date = ${approveDate}, 
+    -- approve_notes = ${approveNotes}, 
 
     -- created_at = ${createdAt}, 
     updated_at = NOW(), 

@@ -97,8 +97,6 @@ export class ControlCasesRepository {
       ),
       userId,
     });
-
-    // Logger.log(q);
     return this.db.any(q) as Promise<CaseSlim[] | CaseFull[]>;
   }
 
@@ -108,8 +106,9 @@ export class ControlCasesRepository {
   }
   approveCase(dto: ApproveControlEntityDto, userId: number): Promise<number> {
     // userId заменяет updated_by_id и approve_from_id
+    Logger.debug(dto);
     return this.db
-      .one(cases.approveCase, { dto, userId })
+      .one(cases.approveCase, { ...dto, userId })
       .then((result) => result.id);
   }
 

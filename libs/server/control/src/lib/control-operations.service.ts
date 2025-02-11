@@ -120,7 +120,6 @@ export class ControlOperationsService {
     dto: ApproveControlEntityDto,
     userId: number,
   ): Promise<number> {
-    Logger.log(dto);
     return this.dbServise.db.controlOperations.approveOperation(dto, userId);
   }
 

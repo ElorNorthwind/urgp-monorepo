@@ -74,12 +74,7 @@ const CaseFormFieldArray = ({
         placeholder="Описание проблемы"
         dirtyIndicator={isEdit}
       />
-      <div
-        className={cn(
-          'flex w-full flex-row gap-2',
-          isEdit && cannotApprove && 'hidden',
-        )}
-      >
+      <div className={cn('flex w-full flex-row gap-2', isEdit && 'hidden')}>
         <SelectFormField
           form={form}
           isLoading={isApproversLoading}
@@ -89,7 +84,7 @@ const CaseFormFieldArray = ({
           placeholder="Выбор согласующего"
           popoverMinWidth={popoverMinWidth}
           dirtyIndicator={isEdit}
-          disabled={cannotApprove && isEdit}
+          disabled={isEdit}
           valueType="number"
           className="flex-grow"
         />

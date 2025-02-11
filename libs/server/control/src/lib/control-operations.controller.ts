@@ -120,23 +120,7 @@ export class ControlOperationsController {
       throw new UnauthorizedException('Нет прав на изменение');
     }
 
-    const changesApproval =
-      (dto?.approveDate && dto?.approveDate !== curentOp.approveDate) ||
-      (dto?.approveStatus && dto?.approveStatus !== curentOp.approveStatus) ||
-      (dto?.approveNotes && dto?.approveNotes !== curentOp.approveNotes) ||
-      (dto?.approveToId && dto?.approveToId !== curentOp.approveToId);
-    // || (dto?.approveFromId && dto?.approveFromId !== curentOp.approveFromId);
-
-    const approveData = await this.classificators.getCorrectApproveData({
-      user: req.user,
-      dto,
-      isOperation: true,
-    });
-
-    return this.controlOperations.updateOperation(
-      { ...dto, ...(changesApproval ? approveData : {}) },
-      req.user.id,
-    );
+    return this.controlOperations.updateOperation(dto, req.user.id);
   }
 
   @Patch('mark-operation')

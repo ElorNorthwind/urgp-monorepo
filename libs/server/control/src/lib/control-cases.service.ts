@@ -6,6 +6,7 @@ import {
   CaseFull,
   CaseSlim,
   CreateCaseDto,
+  GET_DEFAULT_CONTROL_DUE_DATE,
   ReadEntityDto,
   UpdateCaseDto,
 } from '@urgp/shared/entities';
@@ -118,11 +119,12 @@ export class ControlCasesService {
       updatedById,
     );
 
-    if (dto.approveStatus === 'approved') {
+    const updatedCase = await this.readSlimCaseById(updatedCaseId);
+    if (updatedCase.approveStatus === 'approved') {
       this.operations.createDispatchesAndReminderForCase(
         updatedCaseId,
         updatedById,
-        dto?.dueDate,
+        GET_DEFAULT_CONTROL_DUE_DATE(),
       );
     }
 

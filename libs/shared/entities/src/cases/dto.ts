@@ -25,6 +25,10 @@ export const updateCaseSchema = caseSlimSchema
     authorId: true,
     updatedById: true,
     approveFromId: true,
+    approveToId: true,
+    approveStatus: true,
+    approveDate: true,
+    approveNotes: true,
     updatedAt: true,
     createdAt: true,
     revision: true,
@@ -41,9 +45,19 @@ export const updateCaseSchema = caseSlimSchema
   });
 export type UpdateCaseDto = z.infer<typeof updateCaseSchema>;
 
-export const caseFormSchema = updateCaseSchema.required().extend({
-  authorId: z.coerce.number().int().nonnegative().nullable().optional(),
-});
+export const caseFormSchema = updateCaseSchema
+  .required()
+  .extend({
+    authorId: z.coerce.number().int().nonnegative().nullable().optional(),
+  })
+  .extend(
+    caseSlimSchema.pick({
+      approveToId: true,
+      approveDate: true,
+      approveNotes: true,
+      approveStatus: true,
+    }).shape,
+  );
 export type CaseFormDto = z.infer<typeof caseFormSchema>;
 
 // Параметры поиска на странице

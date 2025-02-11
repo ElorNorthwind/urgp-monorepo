@@ -1,39 +1,30 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
-  BadGatewayException,
   BadRequestException,
   Inject,
   Injectable,
-  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import {
-  UserControlData,
-  NestedClassificatorInfo,
-  Classificator,
-  UserApproveTo,
-  SelectOption,
-  NestedClassificatorInfoString,
-  UserControlSettings,
-  CasesPageFilter,
-  OperationClass,
   ApproveControlEntityDto,
-  User,
-  CreateCaseDto,
-  UpdateCaseDto,
-  CreateOperationDto,
-  UpdateOperationDto,
+  caseClassesValues,
   CaseFull,
+  CasesPageFilter,
+  Classificator,
+  CreateCaseDto,
+  CreateOperationDto,
   defineControlAbilityFor,
-  OperationSlim,
-  CaseSlim,
+  NestedClassificatorInfo,
+  NestedClassificatorInfoString,
+  OperationClass,
+  SelectOption,
+  User,
+  UserApproveTo,
+  UserControlData,
+  UserControlSettings,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
-import { ControlOperationsService } from './control-operations.service';
-import { ControlCasesService } from './control-cases.service';
-import { formatISO } from 'date-fns';
-import { caseClassesValues } from '@urgp/shared/entities';
 // type GetCorectApproveDataOperationProps = {
 //   user: User;
 //   dto: ApproveControlEntityDto | CreateOperationDto | UpdateOperationDto;
@@ -52,12 +43,7 @@ import { caseClassesValues } from '@urgp/shared/entities';
 
 type GetCorectApproveDataProps = {
   user: User;
-  dto:
-    | ApproveControlEntityDto
-    | CreateCaseDto
-    | UpdateCaseDto
-    | CreateOperationDto
-    | UpdateOperationDto;
+  dto: ApproveControlEntityDto | CreateCaseDto | CreateOperationDto;
   isOperation?: boolean;
 };
 
@@ -165,6 +151,16 @@ export class ControlClassificatorsService {
     isOperation,
   }: GetCorectApproveDataProps): Promise<ApproveData> {
     const i = defineControlAbilityFor(user);
+    const currentEntity =
+      'id' in dto
+        ? isOperation
+          ? await this.dbServise.db.controlOperations
+              .readOperations({ mode: 'slim', operation: [dto.id] }, user.id)
+              .then((operations) => operations[0])
+          : await this.dbServise.db.controlCases
+              .readCases({ mode: 'slim', case: [dto.id] }, user.id)
+              .then((cases) => cases[0])
+        : dto;
 
     // Подгружаем сущность для определения прав на изменение
     // const entity = await this.getEntity(dto, isOperation);
@@ -213,7 +209,7 @@ export class ControlClassificatorsService {
         approveNotes: null,
       };
 
-    if (i.cannot('approve', dto)) {
+    if (i.cannot('approve', currentEntity)) {
       throw new UnauthorizedException(
         'Действие не разрешено. Нет прав на рассмотрение!',
       );
@@ -253,16 +249,15 @@ export class ControlClassificatorsService {
       };
     }
 
-    throw new BadRequestException(
-      'Непредвиденный сценарий согласования! Проверьте запрос',
-    );
-    // return {
-    //   // Этот случай не будет отрабатывать
-    //   approveStatus: 'pending',
-    //   approveFromId: user.id,
-    //   approveToId: dto?.approveToId || null,
-    //   approveDate: null,
-    //   approveNotes: null,
-    // };
+    // throw new BadRequestException(
+    //   'Непредвиденный сценарий согласования! Проверьте запрос',
+    // );
+    return {
+      approveStatus: 'pending',
+      approveFromId: user.id,
+      approveToId: dto?.approveToId || null,
+      approveDate: null,
+      approveNotes: null,
+    };
   }
 }

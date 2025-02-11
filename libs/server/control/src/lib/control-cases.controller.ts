@@ -104,7 +104,6 @@ export class ControlCasesController {
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(updateCaseSchema)) dto: UpdateCaseDto,
   ) {
-    // Logger.debug(dto);
     const i = defineControlAbilityFor(req.user);
     const curCase = (await this.controlCases.readSlimCaseById(
       dto.id,
@@ -117,30 +116,7 @@ export class ControlCasesController {
       throw new UnauthorizedException('Недостаточно прав для изменения');
     }
 
-    const changesApproval =
-      (dto?.approveDate && !curCase?.approveDate) ||
-      (dto?.approveDate &&
-        curCase?.approveDate &&
-        differenceInDays(dto?.approveDate, curCase.approveDate) !== 0) ||
-      (dto?.approveStatus && dto?.approveStatus !== curCase.approveStatus) ||
-      (dto?.approveNotes && dto?.approveNotes !== curCase.approveNotes) ||
-      (dto?.approveToId && dto?.approveToId !== curCase.approveToId);
-    // || (dto?.approveFromId && dto?.approveFromId !== curCase.approveFromId);
-
-    const approveData = changesApproval
-      ? await this.classificators.getCorrectApproveData({
-          user: req.user,
-          dto,
-          isOperation: false,
-        })
-      : {};
-
-    Logger.debug({ ...dto, ...approveData });
-
-    return this.controlCases.updateCase(
-      { ...dto, ...approveData },
-      req.user.id,
-    );
+    return this.controlCases.updateCase(dto, req.user.id);
   }
 
   @Delete()
