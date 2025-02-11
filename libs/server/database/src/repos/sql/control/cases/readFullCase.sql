@@ -47,11 +47,11 @@ SELECT
 	to_jsonb(s) as status,
 	CASE
 		WHEN o."myReminder" IS NULL OR o."myReminder"->>'doneDate' IS NOT NULL THEN 'unwatched'
-		WHEN GREATEST(o."lastEdit", c.updated_at) <= (o."myReminder"->>'updatedAt')::timestamp with time zone THEN 'unchanged'
-		WHEN (o."myReminder"->>'updatedAt')::timestamp with time zone = (o."myReminder"->>'createdAt')::timestamp with time zone  IS NULL THEN 'new'
+		WHEN COALESCE(GREATEST(o."lastEdit", c.updated_at), c.created_at) <= (o."myReminder"->>'updatedAt')::timestamp with time zone THEN 'unchanged'
+		WHEN o."myReminder"->>'updatedAt' IS NULL AND o."myReminder"->>'createdAt' IS NOT NULL THEN 'new'
 		ELSE 'changed'
 	END AS "viewStatus",
-	GREATEST(o."lastEdit", c.updated_at) as "lastEdit",
+	COALESCE(GREATEST(o."lastEdit", c.updated_at), c.created_at) as "lastEdit",
 	o."myReminder" as "myReminder",
 	o."lastStage" as "lastStage",
 	COALESCE(o."dispatches", '[]'::jsonb) as "dispatches",

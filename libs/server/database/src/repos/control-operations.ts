@@ -114,6 +114,7 @@ export class ControlOperationsRepository {
 
     const conditions: string[] = [
       this.pgp.as.format('class = ANY(ARRAY[$1:list]::varchar[])', [dto.class]),
+      this.pgp.as.format('control_from_id = $1', updatedById),
     ];
 
     if (dto.case)

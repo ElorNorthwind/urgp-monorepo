@@ -16,7 +16,7 @@ CREATE TABLE control.cases_
 	approve_notes character varying(255),
 
 	created_at timestamp with time zone DEFAULT (now())::timestamp(0) with time zone,
-	updated_at timestamp with time zone DEFAULT (now())::timestamp(0) with time zone,
+	updated_at timestamp with time zone,
 
 	external_cases jsonb NOT NULL DEFAULT '[]'::jsonb,
 	direction_ids integer[] NOT NULL DEFAULT array[]::integer[],
@@ -53,7 +53,7 @@ CREATE TABLE control.cases_history
 	approve_notes character varying(255),
 
 	created_at timestamp with time zone DEFAULT (now())::timestamp(0) with time zone,
-	updated_at timestamp with time zone DEFAULT (now())::timestamp(0) with time zone,
+	updated_at timestamp with time zone,
 
 	external_cases jsonb NOT NULL DEFAULT '[]'::jsonb,
 	direction_ids integer[] NOT NULL DEFAULT array[]::integer[],
@@ -91,7 +91,7 @@ CREATE TABLE control.operations_
 	approve_notes character varying(255),
 
 	created_at timestamp with time zone DEFAULT (now())::timestamp(0) with time zone,
-	updated_at timestamp with time zone DEFAULT (now())::timestamp(0) with time zone,
+	updated_at timestamp with time zone,
 
 	due_date timestamp with time zone,
 	done_date timestamp with time zone,
@@ -131,7 +131,7 @@ CREATE TABLE control.operations_history
 	approve_notes character varying(255),
 
 	created_at timestamp with time zone DEFAULT (now())::timestamp(0) with time zone,
-	updated_at timestamp with time zone DEFAULT (now())::timestamp(0) with time zone,
+	updated_at timestamp with time zone,
 
 	due_date timestamp with time zone,
 	done_date timestamp with time zone,
