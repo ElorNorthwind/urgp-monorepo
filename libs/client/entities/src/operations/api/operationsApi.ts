@@ -11,8 +11,6 @@ import {
 } from '@urgp/shared/entities';
 import { markCachedCase, refetchCachedCase } from '../../cases/api/lib';
 import { casesApi } from '../../cases';
-import { formatISO } from 'date-fns';
-import { vi } from 'date-fns/locale';
 
 export const operationsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
@@ -108,27 +106,28 @@ export const operationsApi = rtkApi.injectEndpoints({
       }),
 
       async onQueryStarted(dto, { dispatch, getState }) {
-        dispatch(
-          operationsApi.util.updateQueryData(
-            'getOperationsByCaseId',
-            { class: EntityClasses.reminder, case: dto.case },
-            (draft) => {
-              return draft.map((op) => {
-                if (dto.case.includes(op.caseId))
-                  return {
-                    ...op,
-                    updatedAt: new Date().toISOString(),
-                    doneDate:
-                      dto.mode === 'done'
-                        ? new Date().toISOString()
-                        : op.doneDate,
-                  };
-                return op;
-              });
-            },
-          ),
-        );
-
+        dto.case.forEach((caseId) => {
+          dispatch(
+            operationsApi.util.updateQueryData(
+              'getOperationsByCaseId',
+              { class: EntityClasses.reminder, case: caseId },
+              (draft) => {
+                return draft.map((op) => {
+                  if (dto.case.includes(op.caseId))
+                    return {
+                      ...op,
+                      updatedAt: new Date().toISOString(),
+                      doneDate:
+                        dto.mode === 'done'
+                          ? new Date().toISOString()
+                          : op.doneDate,
+                    };
+                  return op;
+                });
+              },
+            ),
+          );
+        });
         markCachedCase(dto, dispatch, getState);
       },
     }),
@@ -145,9 +144,10 @@ export const operationsApi = rtkApi.injectEndpoints({
       }),
 
       async onQueryStarted(opId, { dispatch, getState }) {
-        const newCase = (
-          await dispatch(casesApi.endpoints.getCaseByOperationId.initiate(opId))
-        )?.data;
+        const result = await dispatch(
+          casesApi.endpoints.getCaseByOperationId.initiate(opId),
+        );
+        const newCase = result.data;
         newCase &&
           dispatch(
             operationsApi.util.updateQueryData(
@@ -189,7 +189,7 @@ export const operationsApi = rtkApi.injectEndpoints({
             'getOperationsByCaseId',
             {
               class: deletedOperation.class,
-              case: deletedOperation.id,
+              case: deletedOperation.caseId,
             },
             (draft) => {
               return draft.filter((stage) => stage.id !== id);
@@ -215,7 +215,7 @@ export const operationsApi = rtkApi.injectEndpoints({
             'getOperationsByCaseId',
             {
               class: approvedOperation.class,
-              case: approvedOperation.id,
+              case: approvedOperation.caseId,
             },
             (draft) => {
               const index = draft.findIndex(
