@@ -10,7 +10,7 @@ WITH user_info AS (SELECT id, fio FROM renovation.users), -- (control_data->>'pr
 			(jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]) 
 				FILTER (WHERE o."class" = 'stage' AND o."approveStatus" = 'pending' AND o."approveToOrder" = 1 AND o."approveToId" = ${userId}))->0  as "myPendingStage",
 			(jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[])
-				FILTER (WHERE o."class" = 'stage' AND o."approveStatus" = 'approved' AND o."caseOrder" = 1))->0  as "lastStage",
+				FILTER (WHERE o."class" = 'stage' AND o."approveStatus" = ANY(ARRAY['approved', 'pending']) AND o."caseOrder" = 1))->0  as "lastStage",
 			jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]
 				ORDER BY (o."controlFrom"->>'priority')::integer DESC, o."dueDate" ASC )
 				FILTER (WHERE o."class" = 'dispatch') as dispatches,

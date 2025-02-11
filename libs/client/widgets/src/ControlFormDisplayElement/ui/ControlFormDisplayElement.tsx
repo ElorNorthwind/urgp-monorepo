@@ -1,5 +1,4 @@
 import { cn, Skeleton } from '@urgp/client/shared';
-import { ControlStage } from '@urgp/shared/entities';
 
 import {
   CaseDirectionsList,
@@ -51,21 +50,21 @@ const ControlFormDisplayElement = ({
             className,
           )}
         >
-          <div className="font-bold">{controlCase?.payload?.fio}</div>
+          <div className="font-bold">{controlCase?.title}</div>
           <div className="border-foreground/20 text-muted-foreground  flex-shrink truncate border-l pl-2">
-            {controlCase?.payload?.adress}
+            {controlCase?.extra}
           </div>
         </div>
 
         <div className="max-h-50 overflow-hidden rounded-b border-t p-4">
-          {controlCase?.payload?.description}
+          {controlCase?.notes}
         </div>
         {controlCase && (
           <div className="flex flex-row items-center gap-2 border-t p-4">
             <span className="text-xl font-semibold">Темы:</span>
 
             <CaseDirectionsList
-              directions={controlCase?.payload?.directions}
+              directions={controlCase?.directions}
               variant="list"
             />
           </div>
@@ -78,7 +77,7 @@ const ControlFormDisplayElement = ({
     // TODO: maybe refactor me?
     return (
       <StageItem
-        stage={operation as ControlStage}
+        stage={operation}
         className="my-2 rounded-t shadow-sm"
         hover={false}
       />

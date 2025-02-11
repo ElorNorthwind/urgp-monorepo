@@ -1,9 +1,16 @@
-import { cn, Skeleton, Tooltip, TooltipTrigger } from '@urgp/client/shared';
+import {
+  cn,
+  Skeleton,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@urgp/client/shared';
 import { Fragment } from 'react/jsx-runtime';
 import { EditDispatchButton } from '../../operations';
 import { isBefore } from 'date-fns';
 import { useMemo } from 'react';
 import { OperationFull } from '@urgp/shared/entities';
+import { Repeat } from 'lucide-react';
 
 type ControlDispatchesListProps = {
   dispatches?: OperationFull[];
@@ -65,26 +72,33 @@ const ControlDispatchesList = (
               >
                 {d?.controlFrom?.fio}
               </div>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div
-                    className={cn(
-                      paddingStyle,
-                      'bg-background group flex flex-row items-center gap-1',
-                      sameController ? 'col-span-2' : 'col-span-1 border-r',
-                      index < dispatches.length - 1 && !d.notes && 'border-b',
-                    )}
-                  >
-                    <EditDispatchButton controlDispatch={d} />
-                  </div>
-                </TooltipTrigger>
-                {/* {d.payload.dueDateChanged && (
-                  <TooltipContent side="top">
-                    <span className="font-bold">Причина переноса: </span>
-                    <span>{d.payload.dateDescription}</span>
-                  </TooltipContent>
-                )} */}
-              </Tooltip>
+
+              <div
+                className={cn(
+                  paddingStyle,
+                  'bg-background group flex flex-row items-center gap-1',
+                  sameController ? 'col-span-2' : 'col-span-1 border-r',
+                  index < dispatches.length - 1 && !d.notes && 'border-b',
+                )}
+              >
+                <EditDispatchButton controlDispatch={d} />
+                {d?.extra &&
+                  ![
+                    'Без переноса срока',
+                    'Первично установленный срок',
+                  ].includes(d?.extra) && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Repeat className="text-muted-foreground size-4" />
+                      </TooltipTrigger>
+
+                      <TooltipContent side="top">
+                        <span className="font-bold">Причина переноса: </span>
+                        <span>{d?.extra}</span>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+              </div>
               {!sameController && (
                 <div
                   className={cn(

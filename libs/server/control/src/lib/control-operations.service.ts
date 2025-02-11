@@ -117,10 +117,15 @@ export class ControlOperationsService {
   }
 
   public async approveOperation(
-    dto: ApproveControlEntityDto,
+    dto: ApproveControlEntityDto, // patched with correct approve data in controller
     userId: number,
-  ): Promise<number> {
-    return this.dbServise.db.controlOperations.approveOperation(dto, userId);
+  ): Promise<OperationFull> {
+    const approvedOperationId =
+      await this.dbServise.db.controlOperations.approveOperation(dto, userId);
+    return this.readFullOperationById(
+      approvedOperationId,
+      userId,
+    ) as Promise<OperationFull>;
   }
 
   public async createDispatchesAndReminderForCase(

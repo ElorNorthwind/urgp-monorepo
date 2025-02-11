@@ -77,7 +77,35 @@ export const refetchCachedCase = async (
 ): Promise<void> => {
   if (caseId) {
     const newCase = (
-      await dispatch(casesApi.endpoints.getCaseById.initiate(caseId))
+      await dispatch(
+        casesApi.endpoints.getCaseById.initiate(caseId, { forceRefetch: true }),
+      )
+    )?.data;
+    const caseQueryArgs = getCaseQueryArgs(getState);
+    caseQueryArgs.forEach((arg) => {
+      dispatch(
+        casesApi.util.updateQueryData('getCases', arg, (draft) => {
+          if (!newCase) return draft;
+          const index = draft.findIndex((stage) => stage.id === newCase?.id);
+          return [...draft.slice(0, index), newCase, ...draft.slice(index + 1)];
+        }),
+      );
+    });
+  }
+};
+
+export const refetchCachedCaseByOperationId = async (
+  operationId: number | undefined | null,
+  dispatch: ThunkDispatch<any, any, UnknownAction>,
+  getState?: () => RootState<any, any, 'api'>,
+): Promise<void> => {
+  if (operationId) {
+    const newCase = (
+      await dispatch(
+        casesApi.endpoints.getCaseByOperationId.initiate(operationId, {
+          forceRefetch: true,
+        }),
+      )
     )?.data;
     const caseQueryArgs = getCaseQueryArgs(getState);
     caseQueryArgs.forEach((arg) => {

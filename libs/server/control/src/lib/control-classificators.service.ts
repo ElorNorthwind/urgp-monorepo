@@ -18,6 +18,7 @@ import {
   NestedClassificatorInfo,
   NestedClassificatorInfoString,
   OperationClass,
+  OperationFull,
   SelectOption,
   User,
   UserApproveTo,
@@ -152,7 +153,7 @@ export class ControlClassificatorsService {
   }: GetCorectApproveDataProps): Promise<ApproveData> {
     const i = defineControlAbilityFor(user);
     const currentEntity =
-      'id' in dto
+      'id' in dto && dto?.id !== 0
         ? isOperation
           ? await this.dbServise.db.controlOperations
               .readOperations({ mode: 'slim', operation: [dto.id] }, user.id)

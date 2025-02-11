@@ -264,7 +264,7 @@ const controlSlice = createSlice({
       state.approveForm.state = payload;
     },
     setApproveFormValuesEmpty: (state) => {
-      state.approveForm.values = emptyReminder;
+      state.approveForm.values = emptyApproveData;
     },
     setApproveFormValuesFromEntity: (
       state,

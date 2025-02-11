@@ -21,7 +21,26 @@ export const casesApi = rtkApi.injectEndpoints({
           visibility: visibility ?? 'visible',
         },
       }),
-      providesTags: ['control-incident'],
+      providesTags: (result, error, arg) =>
+        result
+          ? [
+              {
+                type: 'control-incident' as const,
+                id: 'LIST',
+              },
+              'control-incident',
+            ]
+          : ['control-incident'],
+      // providesTags: (result, error, arg) =>
+      //   result
+      //     ? [
+      //         ...result.map(({ id }) => ({
+      //           type: 'control-incident' as const,
+      //           id,
+      //         })),
+      //         'control-incident',
+      //       ]
+      //     : ['control-incident'],
     }),
 
     getCaseById: build.query<CaseFull, number>({
@@ -29,7 +48,16 @@ export const casesApi = rtkApi.injectEndpoints({
         url: `/control/case/${id.toString()}/full`,
         method: 'GET',
       }),
-      providesTags: ['control-incident'],
+      providesTags: (result, error, arg) =>
+        result
+          ? [
+              {
+                type: 'control-incident' as const,
+                id: result.id,
+              },
+              'control-incident',
+            ]
+          : ['control-incident'],
     }),
 
     getCaseByOperationId: build.query<CaseFull, number>({
@@ -37,7 +65,16 @@ export const casesApi = rtkApi.injectEndpoints({
         url: `/control/case/${id.toString()}/by-operation`,
         method: 'GET',
       }),
-      providesTags: ['control-incident'],
+      providesTags: (result, error, arg) =>
+        result
+          ? [
+              {
+                type: 'control-incident' as const,
+                id: result.id,
+              },
+              'control-incident',
+            ]
+          : ['control-incident'],
     }),
 
     createCase: build.mutation<CaseFull, CreateCaseDto>({
@@ -58,6 +95,9 @@ export const casesApi = rtkApi.injectEndpoints({
         method: 'PATCH',
         body: dto,
       }),
+      // invalidatesTags: (result, error, arg) => [
+      //   { type: 'control-incident', id: arg.id },
+      // ],
       async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
         const { data: newCase } = await queryFulfilled;
         updateCachedCase(newCase, dispatch, getState);
@@ -70,6 +110,9 @@ export const casesApi = rtkApi.injectEndpoints({
         method: 'DELETE',
         body: dto,
       }),
+      // invalidatesTags: (result, error, arg) => [
+      //   { type: 'control-incident', id: arg.id },
+      // ],
       async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
         const { data: newCase } = await queryFulfilled;
         deleteCachedCase(newCase, dispatch, getState);
@@ -82,6 +125,9 @@ export const casesApi = rtkApi.injectEndpoints({
         method: 'PATCH',
         body: dto,
       }),
+      // invalidatesTags: (result, error, arg) => [
+      //   { type: 'control-incident', id: arg.id },
+      // ],
       async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
         const { data: newCase } = await queryFulfilled;
         updateCachedCase(newCase, dispatch, getState);

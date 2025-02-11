@@ -139,7 +139,7 @@ export class ControlCasesService {
   }
 
   public async approveCase(
-    dto: ApproveControlEntityDto,
+    dto: ApproveControlEntityDto, // patched with correct approve data in controller
     userId: number,
   ): Promise<CaseFull> {
     const approvedCaseId = (await this.dbServise.db.controlCases.approveCase(

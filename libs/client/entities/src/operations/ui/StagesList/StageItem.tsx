@@ -12,7 +12,7 @@ import { ApproveButton } from '@urgp/client/widgets';
 import { ApproveStatus, OperationFull } from '@urgp/shared/entities';
 
 type StageItemProps = {
-  stage: OperationFull | null;
+  stage?: OperationFull | null;
   hover?: boolean;
   className?: string;
 };
@@ -20,7 +20,7 @@ type StageItemProps = {
 const StageItem = (props: StageItemProps): JSX.Element => {
   const { className, stage, hover = true } = props;
 
-  if (stage === null) {
+  if (!stage || stage === null) {
     return <Skeleton className="h-8 w-full" />;
   }
 
