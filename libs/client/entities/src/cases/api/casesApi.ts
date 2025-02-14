@@ -8,6 +8,7 @@ import {
   UpdateCaseDto,
 } from '@urgp/shared/entities';
 import { deleteCachedCase, insertCachedCase, updateCachedCase } from './lib';
+import { daysToWeeks } from 'date-fns';
 
 export const casesApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
@@ -87,6 +88,8 @@ export const casesApi = rtkApi.injectEndpoints({
         const { data: newCase } = await queryFulfilled;
         insertCachedCase(newCase, dispatch, getState);
       },
+      invalidatesTags: (result, error, arg) =>
+        result?.approveStatus === 'approved' ? ['dispatch'] : [],
     }),
 
     updateCase: build.mutation<CaseFull, UpdateCaseDto>({
@@ -95,13 +98,12 @@ export const casesApi = rtkApi.injectEndpoints({
         method: 'PATCH',
         body: dto,
       }),
-      // invalidatesTags: (result, error, arg) => [
-      //   { type: 'control-incident', id: arg.id },
-      // ],
       async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
         const { data: newCase } = await queryFulfilled;
         updateCachedCase(newCase, dispatch, getState);
       },
+      invalidatesTags: (result, error, arg) =>
+        result?.approveStatus === 'approved' ? ['dispatch'] : [],
     }),
 
     deleteCase: build.mutation<number, DeleteControlEntityDto>({
@@ -132,6 +134,8 @@ export const casesApi = rtkApi.injectEndpoints({
         const { data: newCase } = await queryFulfilled;
         updateCachedCase(newCase, dispatch, getState);
       },
+      invalidatesTags: (result, error, arg) =>
+        result?.approveStatus === 'approved' ? ['dispatch'] : [],
     }),
   }),
   overrideExisting: false,

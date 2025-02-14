@@ -106,7 +106,6 @@ export class ControlCasesRepository {
   }
   approveCase(dto: ApproveControlEntityDto, userId: number): Promise<number> {
     // userId заменяет updated_by_id и approve_from_id
-    Logger.debug(dto);
     return this.db
       .one(cases.approveCase, { ...dto, userId })
       .then((result) => result.id);

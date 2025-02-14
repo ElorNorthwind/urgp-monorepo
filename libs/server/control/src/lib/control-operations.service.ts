@@ -143,8 +143,8 @@ export class ControlOperationsService {
 
     // Список людей, которым должны уйти напоминалки
     let reminderList = new Map<number, string>([]);
+    let dispatchesList = new Map<number, string>([]);
 
-    // Создаем по поручению и напоминалке на каждого из исполнителей
     const directions = await this.classificators.getCaseDirectionTypes();
 
     // Ищем исполнителей
@@ -160,6 +160,7 @@ export class ControlOperationsService {
 
     controlToList.forEach(async (controlTo) => {
       reminderList.set(controlTo, 'Напоминание исполнителю');
+      dispatchesList.set(controlTo, 'Для рассмотрения по тематике управления');
     });
 
     const directionSubscribers =
@@ -175,20 +176,47 @@ export class ControlOperationsService {
         );
     });
 
-    const existingReminders = (await this.readOperations({
+    const existingRemindersAndDispatches = (await this.readOperations({
       case: [slimCases[0].id],
       mode: 'slim',
-      class: [EntityClasses.reminder],
+      class: [EntityClasses.reminder, EntityClasses.dispatch],
     })) as OperationSlim[];
 
     reminderList.forEach((value, key) => {
-      !existingReminders.map((r) => r.controlFromId).includes(key) &&
+      !existingRemindersAndDispatches
+        .map((r) => r.controlFromId)
+        .includes(key) &&
         this.createOperation(
           // TODO : вынести в конфиг лишние поля пустой операции
           {
             caseId: caseId,
             class: 'reminder',
             typeId: 11,
+            // approveFromId: userId,
+            approveToId: userId,
+            approveStatus: 'approved',
+            approveDate: new Date().toISOString(),
+            approveNotes: null,
+            dueDate: dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
+            doneDate: null,
+            controlFromId: key,
+            controlToId: key,
+            title: null,
+            notes: value,
+            extra: null,
+          },
+          userId,
+        );
+    });
+    dispatchesList.forEach((value, key) => {
+      !existingRemindersAndDispatches
+        .map((r) => r.controlFromId)
+        .includes(key) &&
+        this.createOperation(
+          {
+            caseId: caseId,
+            class: 'dispatch',
+            typeId: 10,
             // approveFromId: userId,
             approveToId: userId,
             approveStatus: 'approved',

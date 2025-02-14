@@ -23,7 +23,6 @@ const CaseFormFieldArray = ({
 }: FieldsArrayProps<CaseFormDto>): JSX.Element | null => {
   const user = useSelector(selectCurrentUser);
   const i = useUserAbility();
-  const cannotApprove = i.cannot('approve', form.getValues());
 
   const watchApproveTo = form.watch('approveToId');
   // const isApproved = form.getValues('approveStatus') === 'approved';
@@ -96,8 +95,7 @@ const CaseFormFieldArray = ({
           disabled={isEdit || user?.id !== watchApproveTo}
           className={cn(
             'flex-shrink-0',
-            user?.id !== watchApproveTo ||
-              (user?.id !== watchApproveTo && 'hidden'),
+            user?.id !== watchApproveTo && 'hidden',
           )}
         />
       </div>

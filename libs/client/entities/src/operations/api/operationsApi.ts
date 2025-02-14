@@ -35,15 +35,14 @@ export const operationsApi = rtkApi.injectEndpoints({
           class: dto.class,
         },
       }),
-      providesTags: (_, __, dto) => {
+      providesTags: (result, error, arg) => {
         if (
-          !dto?.class ||
-          !['stage', 'dispatch', 'reminder'].includes(dto.class)
+          !arg?.class ||
+          !['stage', 'dispatch', 'reminder'].includes(arg.class)
         )
-          return [];
-        return [dto.class];
+          return ['stage', 'dispatch', 'reminder'];
+        return [arg.class];
       },
-      // providesTags: ['stage', 'dispatch', 'reminder'],
     }),
 
     getOperationHistroy: build.query<
