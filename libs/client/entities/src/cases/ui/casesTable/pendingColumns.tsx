@@ -12,6 +12,7 @@ import { isBefore } from 'date-fns';
 import { Eye } from 'lucide-react';
 import { ViewStatusCell } from './cells/ViewStatusCell';
 import { CaseFull } from '@urgp/shared/entities';
+import { RelevantStageCell } from './cells/RelevantStageCell';
 
 const columnHelper = createColumnHelper<CaseFull>();
 
@@ -153,32 +154,35 @@ export const pendingCasesColumns = [
     },
   }),
 
-  columnHelper.accessor((row) => row?.myPendingStage?.doneDate || '', {
-    id: 'pendingStage',
-    header: 'Этап',
-    size: 200,
-    enableSorting: true,
-    cell: (props) => {
-      return <PendingOperationCell {...props} />;
-    },
+  columnHelper.accessor(
+    (row) => row?.myPendingStage?.doneDate || row?.lastStage?.doneDate || '',
+    {
+      id: 'stage',
+      header: 'Этап',
+      size: 200,
+      enableSorting: true,
+      cell: (props) => {
+        return <RelevantStageCell {...props} />;
+      },
 
-    sortingFn: (rowA, rowB) => {
-      const dif1 = (rowA.original?.actions?.[0] || '').localeCompare(
-        rowB.original?.actions?.[0] || '',
-      );
-      // const dif2 =
-      //   (rowA.original.payload?.type?.priority || 0) -
-      //   (rowB.original.payload?.type?.priority || 0);
-      return dif1 > 0
-        ? 1
-        : dif1 < 0
-          ? -1
-          : isBefore(
-                rowA.original?.myPendingStage?.doneDate || 0,
-                rowB.original?.myPendingStage?.doneDate || 0,
-              )
-            ? 1
-            : -1;
+      // sortingFn: (rowA, rowB) => {
+      //   const dif1 = (rowA.original?.actions?.[0] || '').localeCompare(
+      //     rowB.original?.actions?.[0] || '',
+      //   );
+      //   // const dif2 =
+      //   //   (rowA.original.payload?.type?.priority || 0) -
+      //   //   (rowB.original.payload?.type?.priority || 0);
+      //   return dif1 > 0
+      //     ? 1
+      //     : dif1 < 0
+      //       ? -1
+      //       : isBefore(
+      //             rowA.original?.myPendingStage?.doneDate || 0,
+      //             rowB.original?.myPendingStage?.doneDate || 0,
+      //           )
+      //         ? 1
+      //         : -1;
+      // },
     },
-  }),
+  ),
 ];

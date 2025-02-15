@@ -79,8 +79,8 @@ const StageHistoryItem = (props: StageHistoryItemProps): JSX.Element => {
         )}
       >
         <span className="font-medium">{label}</span>
-        {item?.approveFrom?.fio && (
-          <span className="text-nowrap">{': ' + item?.approveFrom?.fio}</span>
+        {item?.approveTo?.fio && (
+          <span className="text-nowrap">{': ' + item?.approveTo?.fio}</span>
         )}
         {item?.approveDate && (
           <span className="ml-auto text-nowrap">

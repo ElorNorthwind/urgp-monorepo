@@ -1,5 +1,11 @@
 import { ApproveStatus } from '@urgp/shared/entities';
-import { CircleCheck, CircleSlash, CircleX, LucideProps } from 'lucide-react';
+import {
+  Circle,
+  CircleCheck,
+  CircleSlash,
+  CircleX,
+  LucideProps,
+} from 'lucide-react';
 
 type StyleData = {
   icon?: React.ForwardRefExoticComponent<
@@ -13,6 +19,7 @@ type StyleData = {
 };
 
 export const operationTypeStyles = {
+  1: { icon: Circle, iconStyle: 'text-muted-foreground/40' },
   7: { icon: CircleSlash, iconStyle: 'text-amber-500' },
   8: { icon: CircleCheck, iconStyle: 'text-emerald-500' },
   9: { icon: CircleX, iconStyle: 'text-rose-500' },

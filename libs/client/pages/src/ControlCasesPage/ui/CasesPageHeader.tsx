@@ -92,7 +92,7 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
             status: 'Статус',
             directions: 'Направления',
             type: 'Тип проблемы',
-            pendingStage: 'Этап',
+            stage: 'Этап',
           }}
           columnVisibility={columnVisibility}
           setColumnVisibility={setColumnVisibility}

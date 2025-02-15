@@ -31,8 +31,8 @@ const caseFullFields = {
   status: classificatorSchema,
   viewStatus: z.enum(viewStatusValues),
   lastEdit: z.string().datetime().nullable(), // ISO 8601 date string
-  myReminder: z.any().nullable(),
-  lastStage: z.any().nullable(),
+  myReminder: operationFullSchema.nullable(),
+  lastStage: operationFullSchema.nullable(),
   dispatches: z.array(operationFullSchema).default([]),
   myPendingStage: operationFullSchema.nullable(),
   actions: z.array(z.enum(caseActionsValues)).default([]),

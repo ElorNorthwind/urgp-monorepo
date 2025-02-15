@@ -1,6 +1,11 @@
 import { ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import { casesApi } from '..';
-import { CaseFull, ReadEntityDto, ViewStatus } from '@urgp/shared/entities';
+import {
+  CaseActions,
+  CaseFull,
+  ReadEntityDto,
+  ViewStatus,
+} from '@urgp/shared/entities';
 import { RootState } from '@reduxjs/toolkit/query';
 
 const getCaseQueryArgs = (
@@ -138,6 +143,16 @@ export const markCachedCase = (
                 cCase.viewStatus === 'unwatched' || dto.mode === 'done'
                   ? 'unwatched'
                   : ViewStatus.unchanged,
+              actions:
+                dto.mode === 'done'
+                  ? cCase.actions.filter(
+                      (ac) =>
+                        ![
+                          CaseActions.reminderDone,
+                          CaseActions.reminderOverdue,
+                        ].includes(ac as any),
+                    )
+                  : cCase.actions,
             } as CaseFull;
           return cCase as CaseFull;
         }),
