@@ -5,7 +5,6 @@ import { CaseStatusCell } from './cells/CaseStatusCell';
 import { CaseTypeCell } from './cells/CaseTypeCell';
 import { DirectionCell } from './cells/DirectionCell';
 import { ExternalCasesCell } from './cells/ExternalCasesCell';
-import { PendingOperationCell } from './cells/PendingOperationCell';
 import { SmartApproveCell } from './cells/SmartApproveCell';
 import { CheckboxCell } from './cells/CheckboxCell';
 import { isBefore } from 'date-fns';
