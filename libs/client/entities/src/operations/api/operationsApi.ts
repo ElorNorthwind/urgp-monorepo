@@ -1,4 +1,4 @@
-import { rtkApi } from '@urgp/client/shared';
+import { rtkApi, store } from '@urgp/client/shared';
 import {
   ApproveControlEntityDto,
   CreateOperationDto,
@@ -112,7 +112,10 @@ export const operationsApi = rtkApi.injectEndpoints({
               { class: EntityClasses.reminder, case: caseId },
               (draft) => {
                 return draft.map((op) => {
-                  if (dto.case.includes(op.caseId))
+                  if (
+                    dto.case.includes(op.caseId) &&
+                    op?.controlFrom?.id === store.getState()?.auth?.user?.id
+                  )
                     return {
                       ...op,
                       updatedAt: new Date().toISOString(),

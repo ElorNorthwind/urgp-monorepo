@@ -14,6 +14,7 @@ WITH user_info AS (SELECT id, fio FROM renovation.users), -- (control_data->>'pr
 			jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]
 				ORDER BY (o."controlFrom"->>'priority')::integer DESC, o."dueDate" ASC )
 				FILTER (WHERE o."class" = 'dispatch') as dispatches,
+			COUNT(*) FILTER (WHERE (o."type"->>'id')::integer = 12) as "escalations",
 			MAX(o."updatedAt") FILTER (WHERE o."class" = ANY(ARRAY['stage', 'dispatch'])) as "lastEdit"
 		FROM control.full_operations o
 		WHERE o."archiveDate" IS NULL
@@ -63,9 +64,12 @@ SELECT
 			, CASE WHEN o."myPendingStage" IS NOT NULL THEN 'operation-approve' ELSE null END
 			, CASE WHEN o."lastStage"->'type'->>'category' = 'решение' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL THEN 'reminder-done' ELSE null END
 			, CASE WHEN (o."lastStage"->'type'->>'category' <> 'решение' AND (o."myReminder"->>'dueDate')::date < current_date) THEN 'reminder-overdue' ELSE null END
+			, CASE WHEN (o."myReminder"->'type'->>'id')::integer = 12 THEN 'escalation' ELSE null END
 		]
 	, null) as actions,
-	c.revision
+	c.revision,
+	COALESCE(o.escalations, 0) as escalations,
+	o."controlLevel"
 FROM control.cases_ c
 
 LEFT JOIN control.case_types t ON t.id = c.type_id
@@ -81,9 +85,11 @@ LEFT JOIN (SELECT id, name, category, fullname as "fullName" FROM control.case_s
 		WHEN c.approve_status = 'rejected' THEN 10 -- "отказано в согласовании"
 		WHEN c.approve_status = 'project' THEN 12 -- "проект"
 		-- Эти вот штуки лучше бы прописать через специальное поле в control.operation_types ?
-		WHEN (o."lastStage"->'type'->>'id')::integer = 7 AND o."lastStage"->>'approveStatus' = 'approved' THEN 5 -- "отклонено"
-		WHEN (o."lastStage"->'type'->>'id')::integer = 8 AND o."lastStage"->>'approveStatus' = 'approved' THEN 6 -- "решено"
-		WHEN (o."lastStage"->'type'->>'id')::integer = 9 AND o."lastStage"->>'approveStatus' = 'approved' THEN 7 -- "не решено"
+		WHEN o.escalations > 0 THEN 8 -- "запрошено заключение"
+		WHEN (o."lastStage"->'type'->>'id')::integer = 7 AND o."lastStage"->>'approveStatus' = 'approved' AND COALESCE(o."controlLevel", 0) <= COALESCE((o."lastStage"->'approveFrom'->>'priority')::integer, 0) THEN 5 -- "отклонено"
+		WHEN (o."lastStage"->'type'->>'id')::integer = 8 AND o."lastStage"->>'approveStatus' = 'approved' AND COALESCE(o."controlLevel", 0) <= COALESCE((o."lastStage"->'approveFrom'->>'priority')::integer, 0) THEN 6 -- "решено"
+		WHEN (o."lastStage"->'type'->>'id')::integer = 9 AND o."lastStage"->>'approveStatus' = 'approved' AND COALESCE(o."controlLevel", 0) <= COALESCE((o."lastStage"->'approveFrom'->>'priority')::integer, 0) THEN 7 -- "не решено"
+		WHEN COALESCE(o."controlLevel", 0) >= ${controlThreshold} THEN 9 -- "на контроле руководства"
 		WHEN (o.dispatches->0->>'dueDate')::date < current_date THEN 11 -- "просрочка"
 		WHEN o."lastStage"->>'approveStatus' = 'pending' THEN 4 -- "проект решения"
 		WHEN o."lastStage" IS NOT NULL THEN 3 -- "в работе"

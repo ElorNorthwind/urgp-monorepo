@@ -92,3 +92,11 @@ export const reminderFormSchema = operationFormSchema
     class: z.literal(OperationClasses.reminder).or(operationClassOrArraySchema),
   });
 export type ReminderFormDto = z.infer<typeof reminderFormSchema>;
+
+export const escalateFormSchma = z.object({
+  caseId: z.coerce.number().int().nonnegative(),
+  controlFromId: z.coerce.number().int().nonnegative(),
+  notes: z.coerce.string(),
+  dueDate: z.string().datetime(),
+});
+export type EscalateFormDto = z.infer<typeof escalateFormSchma>;

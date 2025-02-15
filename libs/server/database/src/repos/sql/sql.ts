@@ -70,6 +70,7 @@ export const users = {
   setUserCaseFilter: sql('sql/users/setUserCaseFilter.sql'),
   getUserApproveTo: sql('sql/users/getUserApproveTo.sql'),
   getControlExecutors: sql('sql/users/getControlExecutors.sql'),
+  getEscalationTargets: sql('sql/users/getEscalationTargets.sql'),
 };
 
 export const cases = {

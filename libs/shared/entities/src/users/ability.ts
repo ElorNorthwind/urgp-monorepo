@@ -28,6 +28,7 @@ type Action =
   | 'approve'
   | 'set-approver'
   | 'resolve'
+  | 'escalate'
   | 'manage';
 type Subject =
   | 'Case'
@@ -52,7 +53,7 @@ export const subjectVariants = {
   reminder: 'Reminder',
 };
 
-export const CONTROL_THRASHOLD = 3;
+export const CONTROL_THRESHOLD = 3;
 
 export function defineControlAbilityFor(user: User) {
   const { can, cannot, build } = new AbilityBuilder(
@@ -116,7 +117,7 @@ export function defineControlAbilityFor(user: User) {
     },
   }); // Решение по делу уровня контроля выше заданного порога может принять только контролер
   can('resolve', 'Case', {
-    controlLevel: { $lt: CONTROL_THRASHOLD },
+    controlLevel: { $lt: CONTROL_THRESHOLD },
   }); // Решение по делу уровня контроля ниже заданного могут принимать все (с поправкой на иные права)
 
   if (
@@ -125,6 +126,10 @@ export function defineControlAbilityFor(user: User) {
   ) {
     can('create', 'Dispatch'); // начальники могут создавать поручения
     can('create', 'Reminder', { type: { $eq: 12 } }); // Начальники могут создавать направления боссу
+  }
+
+  if (user?.controlData?.roles?.includes('executor')) {
+    can('escalate', 'all'); // начальники могут поднимать вопрос на уровень босса
   }
 
   if (user?.controlData?.roles?.includes('controller')) {

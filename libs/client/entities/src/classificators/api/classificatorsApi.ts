@@ -84,6 +84,13 @@ export const classificatorsApi = rtkApi
         }),
         providesTags: ['classificator'],
       }),
+      getEscalationTargets: build.query<SelectOption<number>[], void>({
+        query: () => ({
+          url: '/control/classificators/escalation-targets',
+          method: 'GET',
+        }),
+        providesTags: ['classificator'],
+      }),
       getCaseTypes: build.query<NestedClassificatorInfo[], void>({
         query: () => ({
           url: '/control/classificators/case-types',
@@ -136,6 +143,7 @@ export const {
   useSetCurrentUserDirectionsMutation: useSetCurrentUserDirections,
   useSetCurrentUserCaseFilterMutation: useSetCurrentUserCaseFilter,
   useGetCurrentUserApproveToQuery: useCurrentUserApproveTo,
+  useGetEscalationTargetsQuery: useEscalationTargets,
   useGetControlExecutorsQuery: useControlExecutors,
   useGetCaseTypesQuery: useCaseTypes,
   useGetOperationTypesQuery: useOperationTypes,

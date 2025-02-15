@@ -36,6 +36,8 @@ const caseFullFields = {
   dispatches: z.array(operationFullSchema).default([]),
   myPendingStage: operationFullSchema.nullable(),
   actions: z.array(z.enum(caseActionsValues)).default([]),
+  escalations: z.coerce.number().int().nonnegative(),
+  controlLevel: z.coerce.number().int(),
 };
 
 export const caseSlimSchema = entitySlimSchema

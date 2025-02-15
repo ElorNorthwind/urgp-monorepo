@@ -15,6 +15,7 @@ import {
   ApproveFormState,
   ApproveFormDto,
   emptyApproveData,
+  EscalateFormState,
 } from '@urgp/shared/entities';
 import { RootState } from '../store';
 import {
@@ -70,6 +71,10 @@ type ControlState = {
     state: ApproveFormState;
     values: ApproveFormDto;
   };
+  escalateForm: {
+    state: EscalateFormState;
+    caseId: number;
+  };
   user: User | null;
 };
 
@@ -93,6 +98,10 @@ const initialState: ControlState = {
   approveForm: {
     state: ApproveFormState.close,
     values: emptyApproveData,
+  },
+  escalateForm: {
+    state: EscalateFormState.close,
+    caseId: 0,
   },
   user: initialUserState.user,
 };
@@ -285,6 +294,17 @@ const controlSlice = createSlice({
     ) => {
       state.approveForm.values = payload;
     },
+
+    // ================================= ESCALATE =================================
+    setEscalateFormState: (
+      state,
+      { payload }: PayloadAction<EscalateFormState>,
+    ) => {
+      state.escalateForm.state = payload;
+    },
+    setEscalateFormCaseId: (state, { payload }: PayloadAction<number>) => {
+      state.escalateForm.caseId = payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(setUser, (state, action) => {
@@ -359,5 +379,13 @@ export const selectApproveFormValues = (state: RootState) =>
   state.control.approveForm.values;
 export const selectApproveFormState = (state: RootState) =>
   state.control.approveForm.state;
+
+// ================================= ESCALATE =================================
+export const { setEscalateFormState, setEscalateFormCaseId } =
+  controlSlice.actions;
+export const selectEscalateFormState = (state: RootState) =>
+  state.control.escalateForm.state;
+export const selectEscalateFormCaseId = (state: RootState) =>
+  state.control.escalateForm.caseId;
 
 export default controlSlice.reducer;

@@ -1,5 +1,6 @@
 import {
   CasesPageFilter,
+  CONTROL_THRESHOLD,
   CreateUserDto,
   GetUserByIdDto,
   GetUserByLoginDto,
@@ -93,5 +94,11 @@ export class RenovationUsersRepository {
 
   async getControlExecutors(): Promise<SelectOption<number>[]> {
     return this.db.any(users.getControlExecutors);
+  }
+
+  async getEscalationTargets(): Promise<SelectOption<number>[]> {
+    return this.db.any(users.getEscalationTargets, {
+      controlThreshold: CONTROL_THRESHOLD,
+    });
   }
 }

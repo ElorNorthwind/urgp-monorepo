@@ -10,7 +10,7 @@ import { EditDispatchButton } from '../../operations';
 import { isBefore } from 'date-fns';
 import { useMemo } from 'react';
 import { OperationFull } from '@urgp/shared/entities';
-import { Repeat } from 'lucide-react';
+import { CirclePower, Repeat } from 'lucide-react';
 
 type ControlDispatchesListProps = {
   dispatches?: OperationFull[];
@@ -70,7 +70,7 @@ const ControlDispatchesList = (
                   index < dispatches.length - 1 && !d.notes && 'border-b',
                 )}
               >
-                {d?.controlFrom?.fio}
+                {d?.controlTo?.fio}
               </div>
 
               <div
@@ -103,11 +103,12 @@ const ControlDispatchesList = (
                 <div
                   className={cn(
                     paddingStyle,
-                    'bg-muted-foreground/5',
+                    'bg-muted-foreground/5 flex flex-row items-center gap-1',
                     index < dispatches.length - 1 && !d.notes && 'border-b',
                   )}
                 >
-                  {'от: ' + d?.controlFrom?.fio}
+                  <span>{'от: ' + d?.controlFrom?.fio}</span>
+                  <CirclePower className="text-muted-foreground size-4" />
                 </div>
               )}
               {d?.notes && (

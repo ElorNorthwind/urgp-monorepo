@@ -97,6 +97,10 @@ export class ControlClassificatorsService {
     return this.dbServise.db.renovationUsers.getControlExecutors();
   }
 
+  public async getEscalationTargets(): Promise<SelectOption<number>[]> {
+    return this.dbServise.db.renovationUsers.getEscalationTargets();
+  }
+
   public async getCaseTypes(): Promise<NestedClassificatorInfo[]> {
     return this.dbServise.db.controlClassificators.readCaseTypes();
   }

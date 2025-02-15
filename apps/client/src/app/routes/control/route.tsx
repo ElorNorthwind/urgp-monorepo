@@ -4,6 +4,7 @@ import {
   CreateDispatchDialog,
   CreateReminderDialog,
   CreateStageDialog,
+  EscalateDialog,
 } from '@urgp/client/entities';
 import { SidebarProvider, store, usePageMeta } from '@urgp/client/shared';
 import { ApproveDialog, ControlNavbar } from '@urgp/client/widgets';
@@ -35,6 +36,7 @@ export const Route = createFileRoute('/control')({
           <CreateDispatchDialog />
           <CreateReminderDialog />
           <ApproveDialog />
+          <EscalateDialog />
         </SidebarProvider>
       </div>
     );

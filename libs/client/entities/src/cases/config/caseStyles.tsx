@@ -1,5 +1,5 @@
 import { cn } from '@urgp/client/shared';
-import { ViewStatus } from '@urgp/shared/entities';
+import { CaseActions, ViewStatus } from '@urgp/shared/entities';
 import {
   Circle,
   CircleAlert,
@@ -13,6 +13,7 @@ import {
   CircleFadingPlus,
   CircleHelp,
   CirclePlay,
+  CirclePower,
   CircleSlash,
   CircleStop,
   CircleX,
@@ -21,6 +22,7 @@ import {
   ClipboardMinus,
   ClipboardPen,
   ClipboardPenLine,
+  ClipboardType,
   ClipboardX,
   LucideProps,
   MessageSquareHeart,
@@ -47,6 +49,8 @@ export const caseStatusStyles = {
   5: { icon: CircleSlash, iconStyle: 'text-amber-500' },
   6: { icon: CircleCheck, iconStyle: 'text-emerald-500' },
   7: { icon: CircleX, iconStyle: 'text-pink-500' },
+  8: { icon: CircleArrowUp, iconStyle: 'text-stone-500' },
+  9: { icon: CirclePower, iconStyle: 'text-indigo-500' },
   10: { icon: CircleStop, iconStyle: 'text-red-500' },
   11: { icon: CircleAlert, iconStyle: 'text-orange-500' },
 } as Record<number, StyleData>;
@@ -83,13 +87,13 @@ export const viewStatusStyles = {
 
 export const pendingActionStyles = {
   unknown: { icon: Clipboard },
-  'case-approve': { icon: ClipboardPen },
-  'both-approve': { icon: ClipboardPen },
-  'operation-approve': { icon: ClipboardPenLine },
-  'case-rejected': { icon: ClipboardMinus },
-  'reminder-done': { icon: ClipboardCheck },
-  'reminder-overdue': { icon: ClipboardX },
-} as Record<string, StyleData>;
+  [CaseActions.caseApprove]: { icon: ClipboardPen },
+  [CaseActions.operationApprove]: { icon: ClipboardPenLine },
+  [CaseActions.caseRejected]: { icon: ClipboardMinus },
+  [CaseActions.reminderDone]: { icon: ClipboardCheck },
+  [CaseActions.reminderOverdue]: { icon: ClipboardX },
+  [CaseActions.escalation]: { icon: ClipboardType },
+} as Record<CaseActions, StyleData>;
 
 export const directionCategoryStyles = {
   УРЖП: {

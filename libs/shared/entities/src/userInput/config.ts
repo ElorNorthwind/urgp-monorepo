@@ -46,6 +46,7 @@ export const CaseActions = {
   caseRejected: 'case-rejected',
   reminderDone: 'reminder-done',
   reminderOverdue: 'reminder-overdue',
+  escalation: 'escalation',
 } as const;
 export type CaseActions = (typeof CaseActions)[keyof typeof CaseActions];
 export const caseActionsValues = getValues(CaseActions);
@@ -82,6 +83,13 @@ export const ApproveFormState = {
 } as const;
 export type ApproveFormState =
   (typeof ApproveFormState)[keyof typeof ApproveFormState];
+
+export const EscalateFormState = {
+  open: 'open',
+  close: 'close',
+} as const;
+export type EscalateFormState =
+  (typeof EscalateFormState)[keyof typeof EscalateFormState];
 
 export const approveFormSchema = z.object({
   id: z.coerce.number().int().nonnegative(),

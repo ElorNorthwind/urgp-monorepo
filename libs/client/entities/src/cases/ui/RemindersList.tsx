@@ -1,6 +1,7 @@
 import { cn, Skeleton } from '@urgp/client/shared';
 import { OperationFull } from '@urgp/shared/entities';
 import { format } from 'date-fns';
+import { HelpingHand } from 'lucide-react';
 
 import { Fragment } from 'react/jsx-runtime';
 
@@ -47,12 +48,13 @@ const RemindersList = (props: RemindersListProps): JSX.Element => {
               <div
                 className={cn(
                   paddingStyle,
-                  'border-r',
+                  'flex flex-row items-center gap-1 border-r',
                   index === reminders.length - 1 ? 'border-b-0' : 'border-b',
                   'bg-muted-foreground/5',
                 )}
               >
-                {rem?.controlFrom?.fio}
+                <span>{rem?.controlFrom?.fio}</span>
+                {rem?.type?.id === 12 && <HelpingHand className="size-4" />}
               </div>
               <div
                 className={cn(

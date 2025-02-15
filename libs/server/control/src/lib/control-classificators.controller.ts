@@ -58,6 +58,11 @@ export class ControlClassificatorsController {
     return await this.classificators.getControlExecutors();
   }
 
+  @Get('escalation-targets')
+  async getEscalationTargets(): Promise<SelectOption<number>[]> {
+    return await this.classificators.getEscalationTargets();
+  }
+
   @Get('user-data/:id')
   async getUserData(
     @Req() req: RequestWithUserData,

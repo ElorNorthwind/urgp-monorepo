@@ -6,6 +6,7 @@ import {
   EntityApproveData,
   ApproveControlEntityDto,
   ReadEntityDto,
+  CONTROL_THRESHOLD,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { cases } from './sql/sql';
@@ -96,6 +97,7 @@ export class ControlCasesRepository {
         `${conditions.length > 0 ? 'AND ' : ''} ${conditions.join(' AND ')} ${sortSQL}`,
       ),
       userId,
+      controlThreshold: CONTROL_THRESHOLD,
     });
     return this.db.any(q) as Promise<CaseSlim[] | CaseFull[]>;
   }

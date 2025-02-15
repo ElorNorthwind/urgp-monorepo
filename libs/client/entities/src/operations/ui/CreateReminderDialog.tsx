@@ -77,14 +77,17 @@ const CreateReminderDialog = ({
     customizeDefaultValues: (values: OperationFormDto) => ({
       ...values,
       controlFromId: user?.id,
+      typeId: 11,
     }),
     customizeCreateValues: (values: OperationFormDto) => ({
       ...values,
       controlFromId: user?.id,
+      typeId: 11,
     }),
     customizeUpdateValues: (values: OperationFormDto) => ({
       ...values,
       controlFromId: user?.id,
+      typeId: 11,
     }),
     customizeDeleteValues: (values: OperationFormDto) => values?.id,
     alwaysSaveEdit: true,

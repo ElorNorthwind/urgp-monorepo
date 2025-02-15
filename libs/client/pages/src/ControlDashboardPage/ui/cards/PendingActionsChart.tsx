@@ -43,38 +43,46 @@ const PendingActionChart = forwardRef<
   const chartData = useMemo(() => {
     return [
       {
-        key: 'case-approve',
+        key: CaseActions.caseApprove,
         label: 'Проекты заявок ожидают моего утверждения',
-        icon: pendingActionStyles['case-approve']?.icon,
-        value:
-          countByPendingAction('case-approve', filteredCases) +
-          countByPendingAction('both-approve', filteredCases),
+        icon: pendingActionStyles[CaseActions.caseApprove]?.icon,
+        value: countByPendingAction(CaseActions.caseApprove, filteredCases),
       },
       {
-        key: 'operation-approve',
+        key: CaseActions.operationApprove,
         label: 'Решения по заявкам ожидают моего утверждения',
-        icon: pendingActionStyles['operation-approve']?.icon,
-        value: countByPendingAction('operation-approve', filteredCases),
+        icon: pendingActionStyles[CaseActions.operationApprove]?.icon,
+        value: countByPendingAction(
+          CaseActions.operationApprove,
+          filteredCases,
+        ),
       },
       {
-        key: 'case-rejected',
+        key: CaseActions.caseRejected,
         label: 'По моим заявкам отказали в согласовании',
-        icon: pendingActionStyles['case-rejected']?.icon,
-        value: countByPendingAction('case-rejected', filteredCases),
+        icon: pendingActionStyles[CaseActions.caseRejected]?.icon,
+        value: countByPendingAction(CaseActions.caseRejected, filteredCases),
         // style: 'bg-yellow-200',
       },
       {
-        key: 'reminder-done',
+        key: CaseActions.reminderDone,
         label: 'По заявкам, за которыми я слежу, приняты решения',
-        icon: pendingActionStyles['reminder-done']?.icon,
-        value: countByPendingAction('reminder-done', cases),
+        icon: pendingActionStyles[CaseActions.reminderDone]?.icon,
+        value: countByPendingAction(CaseActions.reminderDone, cases),
         // style: 'bg-green-200',
       },
       {
-        key: 'reminder-overdue',
+        key: CaseActions.reminderOverdue,
         label: 'Истек срок напоминания по заявкам за которыми я слежу',
-        icon: pendingActionStyles['reminder-overdue']?.icon,
-        value: countByPendingAction('reminder-overdue', cases),
+        icon: pendingActionStyles[CaseActions.reminderOverdue]?.icon,
+        value: countByPendingAction(CaseActions.reminderOverdue, cases),
+        // style: 'bg-rose-200',
+      },
+      {
+        key: CaseActions.escalation,
+        label: 'По заявке запрошено мое решение',
+        icon: pendingActionStyles[CaseActions.escalation]?.icon,
+        value: countByPendingAction(CaseActions.escalation, cases),
         // style: 'bg-rose-200',
       },
     ];
