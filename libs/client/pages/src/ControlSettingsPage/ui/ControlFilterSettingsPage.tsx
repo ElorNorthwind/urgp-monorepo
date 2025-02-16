@@ -22,6 +22,7 @@ import {
   RelevantFilter,
   StatusFilter,
   ViewStatusFilter,
+  PendingActionsFilter,
 } from '@urgp/client/widgets';
 import { CasesPageFilter } from '@urgp/shared/entities';
 import { useEffect } from 'react';
@@ -84,6 +85,7 @@ const ControlFilterSettingsPage = (): JSX.Element => {
               <DirectionsFilter variant="accordion" />
               <CaseTypesFilter variant="accordion" />
               <ViewStatusFilter variant="accordion" />
+              <PendingActionsFilter variant="accordion" />
             </Accordion>
             {isDirty && (
               <Button

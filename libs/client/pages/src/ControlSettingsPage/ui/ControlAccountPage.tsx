@@ -43,8 +43,19 @@ const ControlAccountPage = (): JSX.Element => {
           <InfoBox label="Роли:" value={user?.controlData?.roles?.join(', ')} />
           <InfoBox
             isLoading={isApproveToLoading || isApproveToFetching}
-            label="Доступные согасующие:"
+            label="Согласующие:"
             value={approveTo
+              ?.filter((a) => a.value !== 0)
+              ?.map((a) =>
+                a.label === 'Утвердить лично' ? 'Утверждает сам' : a.label,
+              )
+              .join(', ')}
+          />
+          <InfoBox
+            isLoading={isApproveToLoading || isApproveToFetching}
+            label="Подчиненные:"
+            value={approveTo
+              ?.filter((a) => a.value !== 0)
               ?.map((a) =>
                 a.label === 'Утвердить лично' ? 'Утверждает сам' : a.label,
               )

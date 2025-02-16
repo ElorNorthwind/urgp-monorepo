@@ -1,8 +1,11 @@
-import { CaseFull, CasesPageSearchDto } from '@urgp/shared/entities';
+import {
+  CaseActions,
+  CaseFull,
+  CasesPageSearchDto,
+} from '@urgp/shared/entities';
 import { Row } from '@tanstack/react-table';
 import { toDate } from 'date-fns';
 import { store } from '@urgp/client/shared';
-import { classificatorsApi } from '../../classificators';
 
 export function caseGlobalFilterFn(
   row: Row<CaseFull>,
@@ -117,7 +120,13 @@ export function caseGlobalFilterFn(
   }
 
   const rowActions = row?.original?.actions || [];
-  if (action && !rowActions?.some((a) => action.includes(a))) {
+  if (
+    action &&
+    !(
+      rowActions?.some((a) => action.includes(a)) ||
+      (rowActions.length === 0 && action.includes(CaseActions.unknown))
+    )
+  ) {
     allowed = false;
   }
 

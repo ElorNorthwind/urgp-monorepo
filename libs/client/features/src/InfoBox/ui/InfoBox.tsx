@@ -77,12 +77,7 @@ const InfoBox = forwardRef<
         )}
       >
         {label && (
-          <div
-            className={cn(
-              'bg-muted-foreground/5 font-bold',
-              value && 'border-r',
-            )}
-          >
+          <div className={cn('bg-muted-foreground/5 font-bold', 'border-r')}>
             <span>
               {typeof label === 'object' ? format(label, 'dd.MM.yyyy') : label}
             </span>

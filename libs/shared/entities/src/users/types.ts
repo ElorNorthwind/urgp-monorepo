@@ -43,6 +43,7 @@ export type UserControlData = {
   //   operations?: number[];
   // };
   approveTo: number[];
+  controlTo: number[];
   roles: string[];
   priority?: number;
 };

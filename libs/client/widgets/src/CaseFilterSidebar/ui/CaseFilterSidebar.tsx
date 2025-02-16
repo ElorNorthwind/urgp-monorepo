@@ -68,10 +68,8 @@ const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
                 pathname === '/control/pending' ? ['action'] : ['departments']
               }
             >
-              {pathname === '/control/pending' && (
-                <PendingActionsFilter variant="accordion" />
-              )}
               <DepartmentsFilter variant="accordion" />
+              <PendingActionsFilter variant="accordion" />
               <StatusFilter variant="accordion" />
               <DirectionsFilter variant="accordion" />
               <CaseTypesFilter variant="accordion" />

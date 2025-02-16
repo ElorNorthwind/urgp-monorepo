@@ -6,7 +6,7 @@ import {
 } from '@urgp/client/entities';
 import { ClassificatorFilter } from '@urgp/client/features';
 import { CaseRoutes, cn } from '@urgp/client/shared';
-import { CasesPageSearchDto } from '@urgp/shared/entities';
+import { CaseActions, CasesPageSearchDto } from '@urgp/shared/entities';
 
 type PendingActionsFilterProps = {
   variant?: 'popover' | 'checkbox' | 'accordion';
@@ -32,24 +32,32 @@ const PendingActionsFilter = (
       label: 'Типы действий',
       items: [
         {
-          value: 'case-approve',
+          value: CaseActions.caseApprove,
           label: 'Проект заявки',
         },
         {
-          value: 'operation-approve',
+          value: CaseActions.operationApprove,
           label: 'Проект решения',
         },
         {
-          value: 'reminder-done',
-          label: 'Исполнитель отчитался',
+          value: CaseActions.reminderDone,
+          label: 'Исполнитель закончил',
         },
         {
-          value: 'reminder-overdue',
+          value: CaseActions.reminderOverdue,
           label: 'Заявка просрочена',
         },
         {
-          value: 'case-rejected',
+          value: CaseActions.caseRejected,
           label: 'Мой проект отклонен',
+        },
+        {
+          value: CaseActions.escalation,
+          label: 'Запрошено мое решение',
+        },
+        {
+          value: CaseActions.unknown,
+          label: 'Действий не требуется',
         },
       ],
     },
