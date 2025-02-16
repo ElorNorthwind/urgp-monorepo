@@ -58,6 +58,13 @@ export class ControlClassificatorsController {
     return await this.classificators.getControlExecutors();
   }
 
+  @Get('control-to')
+  async getUserControlTo(
+    @Req() req: RequestWithUserData,
+  ): Promise<NestedClassificatorInfo[]> {
+    return await this.classificators.readUserControlTo(req.user.id);
+  }
+
   @Get('escalation-targets')
   async getEscalationTargets(): Promise<SelectOption<number>[]> {
     return await this.classificators.getEscalationTargets();

@@ -1,6 +1,7 @@
 import {
   DirectionTypeSelector,
   useCurrentUserApproveTo,
+  useUserControlTo,
 } from '@urgp/client/entities';
 import { InfoBox } from '@urgp/client/features';
 import {
@@ -25,6 +26,12 @@ const ControlAccountPage = (): JSX.Element => {
     isFetching: isApproveToFetching,
   } = useCurrentUserApproveTo();
 
+  const {
+    data: controlTo,
+    isLoading: isControlToLoading,
+    isFetching: isControlToFetching,
+  } = useUserControlTo();
+
   return (
     <Card>
       <CardHeader>
@@ -32,8 +39,6 @@ const ControlAccountPage = (): JSX.Element => {
         <CardDescription>Информация о Вашей учетной записи</CardDescription>
       </CardHeader>
       <CardContent className="space-y-8 pb-0">
-        {/* <h2 className="text-xl">Общие сведения</h2> */}
-        {/* <Separator /> */}
         <div className="flex flex-col gap-4">
           <div className="flex flex-row justify-between gap-4 text-nowrap">
             <InfoBox label="ID:" value={user?.id} />
@@ -52,17 +57,14 @@ const ControlAccountPage = (): JSX.Element => {
               .join(', ')}
           />
           <InfoBox
-            isLoading={isApproveToLoading || isApproveToFetching}
+            isLoading={isControlToLoading || isControlToFetching}
             label="Подчиненные:"
-            value={approveTo
-              ?.filter((a) => a.value !== 0)
-              ?.map((a) =>
-                a.label === 'Утвердить лично' ? 'Утверждает сам' : a.label,
-              )
+            value={controlTo
+              ?.find((item) => item.value === 'controlTo')
+              ?.items?.map((a) => a.label)
               .join(', ')}
           />
         </div>
-        {/* <Separator /> */}
         <CardFooter className="-mx-6 flex-col items-start gap-4 border-t pt-6">
           <h2 className="tracking-tigh text-2xl font-semibold leading-none">
             Отслеживать на заявки по направлениям:

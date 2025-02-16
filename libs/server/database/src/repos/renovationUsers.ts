@@ -4,6 +4,7 @@ import {
   CreateUserDto,
   GetUserByIdDto,
   GetUserByLoginDto,
+  NestedClassificatorInfo,
   SelectOption,
   UserApproveTo,
   UserControlData,
@@ -99,6 +100,12 @@ export class RenovationUsersRepository {
   async getEscalationTargets(): Promise<SelectOption<number>[]> {
     return this.db.any(users.getEscalationTargets, {
       controlThreshold: CONTROL_THRESHOLD,
+    });
+  }
+
+  async readUserControlTo(userId: number): Promise<NestedClassificatorInfo[]> {
+    return this.db.any(users.readUserControlTo, {
+      userId,
     });
   }
 }
