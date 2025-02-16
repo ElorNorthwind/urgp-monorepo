@@ -34,7 +34,7 @@ const EditCaseButton = ({
         dispatch(setCaseFormState('edit'));
       }}
     >
-      <Edit className="size-5 flex-shrink-0" />
+      <Edit className="size-4 flex-shrink-0" />
       <span>{label}</span>
     </Button>
   );

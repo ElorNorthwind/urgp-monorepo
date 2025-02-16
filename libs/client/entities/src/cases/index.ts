@@ -12,3 +12,4 @@ export * from './ui/CaseButtons/DeleteCaseButton';
 export * from './ui/CaseButtons/EditCaseButton';
 export * from './ui/CreateCaseDialog';
 export * from './ui/CaseDirectionsList';
+export * from './ui/CaseButtons/CaseSmartActionsMenu';

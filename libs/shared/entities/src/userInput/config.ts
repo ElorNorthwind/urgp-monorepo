@@ -1,5 +1,5 @@
 import { addBusinessDays, formatISO, startOfToday } from 'date-fns';
-import { z } from 'zod';
+import { unknown, z } from 'zod';
 
 export const GET_DEFAULT_CONTROL_DUE_DATE = () =>
   addBusinessDays(startOfToday(), 5).toISOString();
@@ -41,7 +41,6 @@ export const viewStatusValues = getValues(ViewStatus);
 export const CaseActions = {
   unknown: 'unknown',
   caseApprove: 'case-approve',
-  bothApprove: 'both-approve',
   operationApprove: 'operation-approve',
   caseRejected: 'case-rejected',
   reminderDone: 'reminder-done',

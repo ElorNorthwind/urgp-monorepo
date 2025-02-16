@@ -14,7 +14,7 @@ WITH user_info AS (SELECT id, fio FROM renovation.users), -- (control_data->>'pr
 			jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]
 				ORDER BY (o."controlFrom"->>'priority')::integer DESC, o."dueDate" ASC )
 				FILTER (WHERE o."class" = 'dispatch') as dispatches,
-			COUNT(*) FILTER (WHERE (o."type"->>'id')::integer = 12) as "escalations",
+			COUNT(*) FILTER (WHERE (o."type"->>'id')::integer = 12 AND o."doneDate" IS NULL) as "escalations",
 			MAX(o."updatedAt") FILTER (WHERE o."class" = ANY(ARRAY['stage', 'dispatch'])) as "lastEdit"
 		FROM control.full_operations o
 		WHERE o."archiveDate" IS NULL
@@ -64,7 +64,7 @@ SELECT
 			, CASE WHEN o."myPendingStage" IS NOT NULL THEN 'operation-approve' ELSE null END
 			, CASE WHEN o."lastStage"->'type'->>'category' = 'решение' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL THEN 'reminder-done' ELSE null END
 			, CASE WHEN (o."lastStage"->'type'->>'category' <> 'решение' AND (o."myReminder"->>'dueDate')::date < current_date) THEN 'reminder-overdue' ELSE null END
-			, CASE WHEN (o."myReminder"->'type'->>'id')::integer = 12 THEN 'escalation' ELSE null END
+			, CASE WHEN (o."myReminder"->'type'->>'id')::integer = 12 AND o."myReminder"->>'doneDate' IS NULL THEN 'escalation' ELSE null END
 		]
 	, null) as actions,
 	c.revision,

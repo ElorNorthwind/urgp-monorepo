@@ -4,6 +4,7 @@ import {
   setCaseFormState,
   setCaseFormValuesEmpty,
   setCaseFormValuesFromDto,
+  useUserAbility,
 } from '@urgp/client/shared';
 
 import { useCreateCase, useDeleteCase, useUpdateCase } from '../api/casesApi';
@@ -22,6 +23,9 @@ const CreateCaseDialog = ({
 }: CreateCaseDialogProps): JSX.Element | null => {
   const { data: approveTo } = useCurrentUserApproveTo();
   const isEdit = useSelector(selectCaseFormState) === 'edit';
+  const i = useUserAbility();
+  const values = useSelector(selectCaseFormValues);
+  const canDelete = i.can('delete', values);
 
   const dialogProps = {
     isEdit,
@@ -55,6 +59,7 @@ const CreateCaseDialog = ({
     editTitle: 'Изменить дело',
     createDescription: 'Внесите данные с информации о происшествии',
     editDescription: 'Внесите изменения в запись о происшествии',
+    allowDelete: canDelete && isEdit,
   } as unknown as FormDialogProps<CaseFormDto>;
 
   return <FormDialog {...dialogProps} />;

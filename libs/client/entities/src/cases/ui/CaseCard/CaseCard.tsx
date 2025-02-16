@@ -24,7 +24,6 @@ import {
 import { CaseCardFooter } from './CaseCardFooter';
 import { ControlDispatchesList } from '../ControlDispatchesList';
 import { format } from 'date-fns';
-import { CaseSmartActions } from '../CaseButtons/CaseSmartActions';
 
 type CaseCardProps = {
   controlCase: CaseFull;

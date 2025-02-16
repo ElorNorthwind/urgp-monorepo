@@ -1,7 +1,7 @@
 import { cn, Skeleton } from '@urgp/client/shared';
 import { OperationFull } from '@urgp/shared/entities';
 import { format } from 'date-fns';
-import { HelpingHand } from 'lucide-react';
+import { HandHeart } from 'lucide-react';
 
 import { Fragment } from 'react/jsx-runtime';
 
@@ -54,7 +54,7 @@ const RemindersList = (props: RemindersListProps): JSX.Element => {
                 )}
               >
                 <span>{rem?.controlFrom?.fio}</span>
-                {rem?.type?.id === 12 && <HelpingHand className="size-4" />}
+                {rem?.type?.id === 12 && <HandHeart className="size-4" />}
               </div>
               <div
                 className={cn(

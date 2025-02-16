@@ -40,7 +40,7 @@ export const pendingCasesColumns = [
   columnHelper.accessor((row) => row?.actions.join(', '), {
     id: 'smartApprove',
     header: 'Действия',
-    size: 90,
+    size: 120,
     enableHiding: true,
     enableSorting: true,
     cell: (props) => {

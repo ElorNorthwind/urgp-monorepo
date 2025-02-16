@@ -26,7 +26,7 @@ const ReminderFormFieldArray = ({
           placeholder="Напомнить в срок"
           className={cn('ml-autoflex-shrink-0')}
           dirtyIndicator={!!isEdit}
-          disabledDays={(date) => isBefore(date, endOfYesterday())}
+          // disabledDays={(date) => isBefore(date, endOfYesterday())}
         />
         <EditedReminderDisplayElement />
       </div>

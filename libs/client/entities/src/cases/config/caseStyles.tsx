@@ -86,13 +86,28 @@ export const viewStatusStyles = {
 } as Record<ViewStatus, StyleData>;
 
 export const pendingActionStyles = {
-  unknown: { icon: Clipboard },
-  [CaseActions.caseApprove]: { icon: ClipboardPen },
-  [CaseActions.operationApprove]: { icon: ClipboardPenLine },
-  [CaseActions.caseRejected]: { icon: ClipboardMinus },
-  [CaseActions.reminderDone]: { icon: ClipboardCheck },
-  [CaseActions.reminderOverdue]: { icon: ClipboardX },
-  [CaseActions.escalation]: { icon: ClipboardType },
+  unknown: { icon: Clipboard, label: 'Неизвестно' },
+  [CaseActions.caseApprove]: {
+    icon: ClipboardPen,
+    label: 'Рассмотреть проект',
+  },
+  [CaseActions.operationApprove]: {
+    icon: ClipboardPenLine,
+    label: 'Рассмотреть решение',
+  },
+  [CaseActions.caseRejected]: {
+    icon: ClipboardMinus,
+    label: 'Отработать отказ',
+  },
+  [CaseActions.reminderDone]: {
+    icon: ClipboardCheck,
+    label: 'Оценить решение',
+  },
+  [CaseActions.reminderOverdue]: {
+    icon: ClipboardX,
+    label: 'Срок напоминания',
+  },
+  [CaseActions.escalation]: { icon: ClipboardType, label: 'Дать заключение' },
 } as Record<CaseActions, StyleData>;
 
 export const directionCategoryStyles = {

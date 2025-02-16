@@ -4,6 +4,7 @@ import { CaseSmartApproveButton } from '../CaseButtons/CaseSmartApproveButton';
 import { DeleteCaseButton } from '../CaseButtons/DeleteCaseButton';
 import { EditCaseButton } from '../CaseButtons/EditCaseButton';
 import { EscalateButton } from '../../../operations';
+import { CaseSmartActionsMenu } from '../CaseButtons/CaseSmartActionsMenu';
 
 type CaseCardFooterProps = {
   className?: string;
@@ -19,9 +20,7 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element | null => {
     !controlCase ||
     (i.cannot('delete', controlCase) &&
       i.cannot('update', controlCase) &&
-      i.cannot('approve', controlCase) &&
-      myPendingStage &&
-      i.cannot('approve', myPendingStage))
+      controlCase?.actions?.length === 0)
   ) {
     return null;
   }
@@ -36,8 +35,12 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element | null => {
       {/* {controlCase?.id && <CaseSmartActions caseId={controlCase.id} />} */}
       <DeleteCaseButton controlCase={controlCase} />
       <EditCaseButton controlCase={controlCase} />
-      <CaseSmartApproveButton controlCase={controlCase} variant="default" />
-      <EscalateButton controlCase={controlCase} />
+      <CaseSmartActionsMenu
+        controlCase={controlCase}
+        className="flex-grow justify-center"
+      />
+      {/* <CaseSmartApproveButton controlCase={controlCase} variant="default" /> */}
+      {/* <EscalateButton controlCase={controlCase} /> */}
     </div>
   );
 };

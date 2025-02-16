@@ -66,14 +66,14 @@ const PendingActionChart = forwardRef<
       },
       {
         key: CaseActions.reminderDone,
-        label: 'По заявкам, за которыми я слежу, приняты решения',
+        label: 'Приняты решения по заявкам, за которыми я слежу',
         icon: pendingActionStyles[CaseActions.reminderDone]?.icon,
         value: countByPendingAction(CaseActions.reminderDone, cases),
         // style: 'bg-green-200',
       },
       {
         key: CaseActions.reminderOverdue,
-        label: 'Истек срок напоминания по заявкам за которыми я слежу',
+        label: 'Истек срок напоминания по заявкам, за которыми я слежу',
         icon: pendingActionStyles[CaseActions.reminderOverdue]?.icon,
         value: countByPendingAction(CaseActions.reminderOverdue, cases),
         // style: 'bg-rose-200',

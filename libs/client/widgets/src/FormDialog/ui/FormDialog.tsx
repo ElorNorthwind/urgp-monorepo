@@ -42,6 +42,7 @@ import { is } from 'date-fns/locale';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { DialogFormState } from '@urgp/shared/entities';
 import { error } from 'console';
+import { Save, SquareX, Trash, Trash2 } from 'lucide-react';
 
 // const entitySliceFormHelpers = {
 //   stage: {
@@ -306,17 +307,18 @@ const FormDialog = <TDto extends FieldValues>(
               )}
             >
               <Button
-                className="flex-1"
+                className="flex flex-1 flex-row gap-1"
                 type="button"
                 variant={'outline'}
                 disabled={isCreateLoading || isUpdateLoading}
                 onClick={closeAndReset}
               >
-                {cancelButtonLabel}
+                <SquareX className="size-4 flex-shrink-0" />
+                <span>{cancelButtonLabel}</span>
               </Button>
               {allowDelete && (
                 <Button
-                  className="flex-1"
+                  className="flex flex-1 flex-row gap-1"
                   type="button"
                   variant={'destructive'}
                   disabled={
@@ -324,12 +326,13 @@ const FormDialog = <TDto extends FieldValues>(
                   }
                   onClick={() => onDelete(form.getValues())}
                 >
-                  {deleteButtonLabel}
+                  <Trash2 className="size-4 flex-shrink-0" />
+                  <span>{deleteButtonLabel}</span>
                 </Button>
               )}
               <Button
                 type="submit"
-                className="flex-1"
+                className="flex flex-1 flex-row gap-1"
                 disabled={
                   isCreateLoading ||
                   isUpdateLoading ||
@@ -337,7 +340,8 @@ const FormDialog = <TDto extends FieldValues>(
                 }
                 onClick={form.handleSubmit(onSubmit as any)}
               >
-                {saveButtonLabel}
+                <Save className="size-4 flex-shrink-0" />
+                <span>{saveButtonLabel}</span>
               </Button>
             </Footer>
           </form>

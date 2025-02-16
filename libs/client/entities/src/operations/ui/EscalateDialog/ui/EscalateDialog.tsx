@@ -42,7 +42,7 @@ import {
   SelectFormField,
   TextAreaFormField,
 } from '@urgp/client/widgets';
-import { HandHelping } from 'lucide-react';
+import { HandHelping, SquareX } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -226,7 +226,8 @@ const EscalateDialog = ({
                 disabled={isLoading}
                 onClick={closeAndReset}
               >
-                Отмена
+                <SquareX className="size-4 flex-shrink-0" />
+                <span>Отмена</span>
               </Button>
               <Button
                 type="button"
@@ -235,7 +236,7 @@ const EscalateDialog = ({
                 disabled={isLoading || isRemindersLoading}
                 onClick={form.handleSubmit((data) => onSubmit(data))}
               >
-                <HandHelping className="size-5 flex-shrink-0" />
+                <HandHelping className="size-4 flex-shrink-0" />
                 <span>Направить</span>
               </Button>
             </Footer>

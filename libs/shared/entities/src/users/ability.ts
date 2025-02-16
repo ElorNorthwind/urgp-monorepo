@@ -106,11 +106,12 @@ export function defineControlAbilityFor(user: User) {
   can('update', 'Dispatch', { controllerId: { $eq: user.id } }); // FORM Можно менять поручения, которые ты контролируешь
   can('update', 'Dispatch', { controlFromId: { $eq: user.id } }); // BE Можно менять поручения, которые ты контролируешь
   can('update', 'Dispatch', { controlFromId: { $eq: user.id } }); // FE Можно менять поручения, которые ты контролируешь
-  can('create', 'Reminder', { type: { $eq: 11 } }); // Можно создавать напоминалки
   // cannot('create', 'Reminder', { type: { $eq: 12 } }); // Нельзя создавать направления боссу ПОДУМАЙ
-  can('update', 'Reminder', { observerId: { $eq: user.id } }); // FORM Можно менять свои напоминалки
+  can('create', 'Reminder', { type: { $eq: 11 } }); // Можно создавать напоминалки
   can('update', 'Reminder', { controlToId: { $eq: user.id } }); // BE Можно менять свои напоминалки
   can('update', 'Reminder', { controlFromId: { $eq: user.id } }); // FE Можно менять свои напоминалки
+  can('update', 'Reminder', { 'controlTo.id': { $eq: user.id } }); // BE Можно менять свои напоминалки
+  can('update', 'Reminder', { 'controlFrom.id': { $eq: user.id } }); // FE Можно менять свои напоминалки
   can('resolve', 'Case', {
     controllerIds: {
       $elemMatch: { $eq: user.id },

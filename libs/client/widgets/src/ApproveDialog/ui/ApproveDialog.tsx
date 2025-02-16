@@ -43,7 +43,7 @@ import {
   SelectFormField,
   TextAreaFormField,
 } from '@urgp/client/widgets';
-import { ThumbsDown, ThumbsUp } from 'lucide-react';
+import { SquareX, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -86,6 +86,7 @@ const ApproveDialog = ({
   const watchApprover = form.watch('approveToId');
 
   const filteredApproveTo = approveTo?.filter((approver) => {
+    if (approver.value === 0) return true;
     if (
       controlCase &&
       approver.value !== user?.id &&
@@ -95,6 +96,13 @@ const ApproveDialog = ({
     if (values?.approveToId === approver?.value) return false;
     return true;
   });
+
+  const approveText =
+    watchApprover === 0
+      ? 'Оставить в проекте'
+      : watchApprover === user.id
+        ? 'Одобрить'
+        : 'Направить согласующему';
 
   const title = isOperation ? 'Согласование операции' : 'Согласование заявки';
   const subTitle = isOperation
@@ -210,7 +218,8 @@ const ApproveDialog = ({
                 disabled={isLoading}
                 onClick={closeAndReset}
               >
-                Отмена
+                <SquareX className="size-4 flex-shrink-0" />
+                <span>Отмена</span>
               </Button>
 
               <Button
@@ -220,7 +229,7 @@ const ApproveDialog = ({
                 disabled={isLoading}
                 onClick={form.handleSubmit((data) => onSubmit(data, false))}
               >
-                <ThumbsDown className="size-5 flex-shrink-0" />
+                <ThumbsDown className="size-4 flex-shrink-0" />
                 <span>Отклонить</span>
               </Button>
               <Button
@@ -230,8 +239,8 @@ const ApproveDialog = ({
                 disabled={isLoading}
                 onClick={form.handleSubmit((data) => onSubmit(data, true))}
               >
-                <ThumbsUp className="size-5 flex-shrink-0" />
-                <span>Одобрить</span>
+                <ThumbsUp className="size-4 flex-shrink-0" />
+                <span>{approveText}</span>
               </Button>
             </Footer>
           </form>
