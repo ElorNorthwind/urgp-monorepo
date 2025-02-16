@@ -3,6 +3,7 @@ import { CellContext } from '@tanstack/react-table';
 import {
   cn,
   getApproveInfo,
+  Separator,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -11,7 +12,7 @@ import { format, isBefore, isEqual, startOfToday } from 'date-fns';
 import { Circle } from 'lucide-react';
 import { caseStatusStyles, viewStatusStyles } from '../../../config/caseStyles';
 import { CaseDispatchesList } from '../../CaseDispatchesList';
-import { CaseFull } from '@urgp/shared/entities';
+import { CaseFull, ViewStatus } from '@urgp/shared/entities';
 import { start } from 'repl';
 
 function CaseStatusCell(props: CellContext<CaseFull, string>): JSX.Element {
@@ -84,6 +85,21 @@ function CaseStatusCell(props: CellContext<CaseFull, string>): JSX.Element {
             label="Поручения:"
             compact
           />
+          <div className="text-sm">
+            {props.row.original?.viewStatus !== ViewStatus.unwatched &&
+              props.row.original?.myReminder?.dueDate && (
+                <div className="text-muted-foreground/80 mt-2">
+                  <Separator />
+                  <span className="">{'Мое напоминание: '}</span>
+                  <span className="font-semibold">
+                    {format(
+                      props.row.original?.myReminder?.dueDate,
+                      'dd.MM.yyyy',
+                    )}
+                  </span>
+                </div>
+              )}
+          </div>
         </TooltipContent>
       </TooltipPortal>
     </Tooltip>
