@@ -22,7 +22,7 @@ import { CasesPageHeader } from '../../ControlCasesPage/ui/CasesPageHeader';
 const defaultHiddenColumns = ['viewStatus', 'externalCases', 'type'];
 
 const PendingCasesPage = (): JSX.Element => {
-  const { data: cases, isLoading, isFetching } = useCases(undefined);
+  const { data: cases, isLoading, isFetching } = useCases();
   const [selected, setSelected] = useState<Row<CaseFull>[]>([]);
   const [filtered, setFiltered] = useState<Row<CaseFull>[]>([]);
 

@@ -30,7 +30,7 @@ const PendingActionChart = forwardRef<
     isLoading: isCasesLoading,
     isFetching: isCasesFetching,
     isError,
-  } = useCases(undefined);
+  } = useCases();
   const isLoading = isCasesLoading || isCasesFetching;
   const filteredCases = useMemo(
     () =>
@@ -80,7 +80,7 @@ const PendingActionChart = forwardRef<
       },
       {
         key: CaseActions.escalation,
-        label: 'По заявке запрошено мое решение',
+        label: 'По заявкам запрошено мое решение',
         icon: pendingActionStyles[CaseActions.escalation]?.icon,
         value: countByPendingAction(CaseActions.escalation, cases),
         // style: 'bg-rose-200',

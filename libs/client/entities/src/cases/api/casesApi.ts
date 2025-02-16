@@ -12,7 +12,7 @@ import { daysToWeeks } from 'date-fns';
 
 export const casesApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    getCases: build.query<CaseFull[], ReadEntityDto['visibility'] | undefined>({
+    getCases: build.query<CaseFull[], ReadEntityDto['visibility'] | void>({
       query: (visibility) => ({
         url: '/control/case',
         method: 'GET',

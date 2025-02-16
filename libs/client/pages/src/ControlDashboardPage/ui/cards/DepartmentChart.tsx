@@ -10,13 +10,12 @@ import {
   cn,
 } from '@urgp/client/shared';
 import { CaseFull } from '@urgp/shared/entities';
-import { ServerCrash } from 'lucide-react';
 import { useMemo } from 'react';
 
-const countByDepartment = (department: string, cases?: Case[]) => {
+const countByDepartment = (department: string, cases?: CaseFull[]) => {
   return (
     cases?.filter((c) =>
-      c?.payload?.directions.some((dir) => dir?.category === department),
+      c?.directions.some((dir) => dir?.category === department),
     )?.length || 0
   );
 };
@@ -33,12 +32,6 @@ const DepartmentChart = ({ className }: DepartmentChartProps): JSX.Element => {
     isError,
   } = useCases();
   const isLoading = isCasesLoading || isCasesFetching;
-
-  // УРЖП: { badgeStyle: 'bg-cyan-50 border-cyan-200 hover:bg-cyan-100' },
-  // УВЖУ: { badgeStyle: 'bg-emerald-50 border-emerald-200 hover:bg-emerald-100' },
-  // УПГУ: { badgeStyle: 'bg-amber-50 border-amber-200 hover:bg-amber-100' },
-  // УП: { badgeStyle: 'bg-slate-50 border-slate-200 hover:bg-slate-100' },
-  // УОЖП: { badgeStyle: 'bg-violet-50 border-violet-200 hover:bg-violet-100' },
 
   const chartData = useMemo(() => {
     return [
@@ -81,6 +74,7 @@ const DepartmentChart = ({ className }: DepartmentChartProps): JSX.Element => {
     <Card
       className={cn(
         'relative flex flex-col items-stretch justify-stretch overflow-hidden',
+        // 'to-muted-foreground/10 bg-gradient-to-bl from-cyan-600/40',
         className,
       )}
     >
@@ -104,21 +98,6 @@ const DepartmentChart = ({ className }: DepartmentChartProps): JSX.Element => {
             })
           }
         />
-        {/* <div
-          className={cn(
-            'select-none text-8xl font-semibold text-slate-200',
-            // '-mr-2 -mt-[100%] flex-shrink-0 ',
-            'absolute right-2 top-0 z-0',
-          )}
-        >
-          {isError ? (
-            <ServerCrash className="m-3 size-16" />
-          ) : isLoading ? (
-            ''
-          ) : (
-            chartData.reduce((acc, cur) => acc + cur.value, 0)
-          )}
-        </div> */}
       </CardContent>
     </Card>
   );

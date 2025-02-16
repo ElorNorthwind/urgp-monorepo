@@ -22,7 +22,7 @@ import { CasesPageHeader } from './CasesPageHeader';
 const defaultHiddenColumns = ['viewStatus'];
 
 const ControlCasesPage = (): JSX.Element => {
-  const { data: cases, isLoading, isFetching } = useCases(undefined);
+  const { data: cases, isLoading, isFetching } = useCases();
   const [selected, setSelected] = useState<Row<CaseFull>[]>([]); // Этот селектед не тот селектед!
   const [filtered, setFiltered] = useState<Row<CaseFull>[]>([]);
 

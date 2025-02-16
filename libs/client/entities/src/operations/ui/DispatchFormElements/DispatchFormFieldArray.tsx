@@ -1,7 +1,7 @@
 import { cn, selectDispatchFormValues } from '@urgp/client/shared';
 import { UseFormReturn } from 'react-hook-form';
 
-import { useControlExecutors } from '@urgp/client/entities';
+import { ControlToSelector, useControlExecutors } from '@urgp/client/entities';
 import {
   DateFormField,
   SelectFormField,
@@ -51,7 +51,7 @@ const DispatchFormFieldArray = ({
   return (
     <Fragment>
       <div className="flex w-full flex-row gap-2">
-        <SelectFormField
+        {/* <SelectFormField
           form={form}
           isLoading={isExecutorsLoading}
           fieldName={'controlToId'}
@@ -60,6 +60,13 @@ const DispatchFormFieldArray = ({
           placeholder="Выбор адресата поручения"
           popoverMinWidth={popoverMinWidth}
           valueType="number"
+          className="flex-grow"
+          dirtyIndicator={!!isEdit}
+        /> */}
+        <ControlToSelector
+          form={form}
+          fieldName={'controlToId'}
+          // popoverMinWidth={popoverMinWidth}
           className="flex-grow"
           dirtyIndicator={!!isEdit}
         />

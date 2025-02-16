@@ -4,7 +4,7 @@ SELECT
 	COALESCE(JSONB_AGG(jsonb_build_object(
 		'value', id,        
 		'label', fio,
-        'fullname', fio || ' (' || COALESCE(control_settings->>'department', '') || ')',
+        'fullname', 'начальник ' || COALESCE(control_settings->>'department', ''),
 		'tags', jsonb_build_array('начальник', LOWER(COALESCE(control_settings->>'department', ''))),
 		'category', 'executors'
 	)), '[]'::jsonb) as items
@@ -19,7 +19,7 @@ SELECT
 	COALESCE(JSONB_AGG(jsonb_build_object(
 		'value', u1.id,        
 		'label', u2.fio,
-        'fullname', u2.fio || ' (' || COALESCE(u2.control_settings->>'department', '') || ')',
+        'fullname', 'сотрудник ' || COALESCE(u2.control_settings->>'department', ''),
 		'tags', jsonb_build_array('подчиненный', LOWER(COALESCE(u2.control_settings->>'department', ''))),
 		'category', 'controlTo'
 	)), '[]'::jsonb) as items
