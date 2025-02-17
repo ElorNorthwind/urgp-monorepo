@@ -1,36 +1,44 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
   ApproveControlEntityDto,
+  ApproveStatus,
+  CaseClasses,
   CaseFull,
   CreateCaseDto,
   DeleteControlEntityDto,
+  OperationClasses,
   ReadEntityDto,
   UpdateCaseDto,
 } from '@urgp/shared/entities';
 import { deleteCachedCase, insertCachedCase, updateCachedCase } from './lib';
 
+export type CaseEndpointProps = {
+  visibility?: ReadEntityDto['visibility'];
+  class?: CaseClasses;
+};
+
 export const casesApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    getCases: build.query<CaseFull[], ReadEntityDto['visibility'] | void>({
-      query: (visibility) => ({
+    getCases: build.query<CaseFull[], CaseEndpointProps | void>({
+      query: (dto) => ({
         url: '/control/case',
         method: 'GET',
         params: {
           mode: 'full',
-          class: 'control-incident',
-          visibility: visibility ?? 'visible',
+          class: dto?.class ?? CaseClasses.incident,
+          visibility: dto?.visibility ?? 'visible',
         },
       }),
       providesTags: (result, error, arg) =>
         result
           ? [
               {
-                type: 'control-incident' as const,
+                type: arg?.class ?? CaseClasses.incident,
                 id: 'LIST',
               },
-              'control-incident',
+              CaseClasses.incident,
             ]
-          : ['control-incident'],
+          : [CaseClasses.incident],
     }),
 
     getCaseById: build.query<CaseFull, number>({
@@ -47,7 +55,7 @@ export const casesApi = rtkApi.injectEndpoints({
               },
               result.class,
             ]
-          : ['control-incident'],
+          : [CaseClasses.incident],
     }),
 
     getCaseByOperationId: build.query<CaseFull, number>({
@@ -64,7 +72,7 @@ export const casesApi = rtkApi.injectEndpoints({
               },
               result.class,
             ]
-          : ['control-incident'],
+          : [CaseClasses.incident],
     }),
     createCase: build.mutation<CaseFull, CreateCaseDto>({
       query: (dto) => ({
@@ -91,7 +99,9 @@ export const casesApi = rtkApi.injectEndpoints({
         updateCachedCase(newCase, dispatch, getState);
       },
       invalidatesTags: (result, error, arg) =>
-        result?.approveStatus === 'approved' ? ['dispatch'] : [],
+        result?.approveStatus === ApproveStatus.approved
+          ? [OperationClasses.dispatch]
+          : [],
     }),
 
     deleteCase: build.mutation<number, DeleteControlEntityDto>({
@@ -101,7 +111,7 @@ export const casesApi = rtkApi.injectEndpoints({
         body: dto,
       }),
       // invalidatesTags: (result, error, arg) => [
-      //   { type: 'control-incident', id: arg.id },
+      //   { type: CaseClasses.incident, id: arg.id },
       // ],
       async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
         const { data: newCase } = await queryFulfilled;
@@ -116,14 +126,16 @@ export const casesApi = rtkApi.injectEndpoints({
         body: dto,
       }),
       // invalidatesTags: (result, error, arg) => [
-      //   { type: 'control-incident', id: arg.id },
+      //   { type: CaseClasses.incident, id: arg.id },
       // ],
       async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
         const { data: newCase } = await queryFulfilled;
         updateCachedCase(newCase, dispatch, getState);
       },
       invalidatesTags: (result, error, arg) =>
-        result?.approveStatus === 'approved' ? ['dispatch'] : [],
+        result?.approveStatus === ApproveStatus.approved
+          ? [OperationClasses.dispatch]
+          : [],
     }),
   }),
   overrideExisting: false,

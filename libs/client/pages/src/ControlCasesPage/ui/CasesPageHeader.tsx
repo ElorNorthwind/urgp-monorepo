@@ -1,5 +1,5 @@
 import { getRouteApi, useLocation } from '@tanstack/react-router';
-import { CreateCaseButton } from '@urgp/client/entities';
+import { CreateCaseButton, useCases } from '@urgp/client/entities';
 import { ColumnVisibilitySelector } from '@urgp/client/features';
 import {
   Breadcrumb,
@@ -16,6 +16,7 @@ import {
 } from '@urgp/client/shared';
 import { QueryFilter, ResetFilter, UserFilter } from '@urgp/client/widgets';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
+import { useEffect } from 'react';
 type CasePageHeaderProps = {
   total?: number;
   filtered?: number;
@@ -28,6 +29,20 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
   const { total, filtered, className } = props;
   const isMobile = useIsMobile();
   const pathname = useLocation().pathname as CaseRoutes;
+
+  const { data: getCasez } = useCases({ class: 'control-incident' });
+  const { data: getProblems } = useCases({
+    class: 'control-problem',
+    visibility: 'pending',
+  });
+  const { data: getProblems2 } = useCases({
+    class: 'control-problem',
+    visibility: 'all',
+  });
+  useEffect(() => {
+    const ca = getCasez;
+    const pr = getProblems;
+  }, []);
 
   // const setVisibility = pathname === '/control/cases' ? dispatch(setIncidentTableColumns(columnVisibility)) : null;
 

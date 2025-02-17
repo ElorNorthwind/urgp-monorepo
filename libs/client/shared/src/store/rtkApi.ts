@@ -1,6 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { clearUser, setUser } from './auth/authSlice';
-import { User } from '@urgp/shared/entities';
+import {
+  CaseClasses,
+  caseClassesValues,
+  OperationClasses,
+  operationClassesValues,
+  User,
+} from '@urgp/shared/entities';
 // import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 // import axios from 'axios';
 // import type { AxiosRequestConfig, AxiosError } from 'axios';
@@ -79,11 +85,8 @@ export const rtkApi = createApi({
   tagTypes: [
     'user-data',
     'user-settings',
-    'control-incident',
-    'control-problem',
-    'stage',
-    'dispatch',
-    'reminder',
     'classificator',
+    ...caseClassesValues,
+    ...operationClassesValues,
   ],
 });

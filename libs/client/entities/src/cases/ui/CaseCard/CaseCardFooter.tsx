@@ -1,10 +1,11 @@
 import { cn, useUserAbility } from '@urgp/client/shared';
-import { CaseFull } from '@urgp/shared/entities';
+import { ApproveStatus, CaseFull } from '@urgp/shared/entities';
 import { CaseSmartApproveButton } from '../CaseButtons/CaseSmartApproveButton';
 import { DeleteCaseButton } from '../CaseButtons/DeleteCaseButton';
 import { EditCaseButton } from '../CaseButtons/EditCaseButton';
 import { EscalateButton } from '../../../operations';
 import { CaseSmartActionsMenu } from '../CaseButtons/CaseSmartActionsMenu';
+import { ApproveButton } from '@urgp/client/widgets';
 
 type CaseCardFooterProps = {
   className?: string;
@@ -35,6 +36,9 @@ const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element | null => {
       {/* {controlCase?.id && <CaseSmartActions caseId={controlCase.id} />} */}
       <DeleteCaseButton controlCase={controlCase} />
       <EditCaseButton controlCase={controlCase} />
+      {controlCase?.approveStatus === ApproveStatus.project && (
+        <ApproveButton entity={controlCase} approveLabel="Направить проект" />
+      )}
       <CaseSmartActionsMenu
         controlCase={controlCase}
         className="flex-grow justify-center"

@@ -1,5 +1,5 @@
 import { ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
-import { casesApi } from '..';
+import { CaseEndpointProps, casesApi } from '..';
 import {
   CaseActions,
   CaseFull,
@@ -10,15 +10,14 @@ import { RootState } from '@reduxjs/toolkit/query';
 
 const getCaseQueryArgs = (
   getState?: () => RootState<any, any, 'api'>,
-): Array<ReadEntityDto['visibility'] | undefined> => {
-  if (!getState) return [undefined, 'visible', 'pending', 'all'];
+): Array<CaseEndpointProps | undefined> => {
+  if (!getState) return [undefined];
   const queries = getState()[casesApi.reducerPath]?.queries;
+
   if (queries) {
     return Object.values(queries)
       .filter((query) => query?.endpointName === 'getCases')
-      .map((q) => q?.originalArgs) as Array<
-      ReadEntityDto['visibility'] | undefined
-    >;
+      .map((q) => q?.originalArgs) as Array<CaseEndpointProps>;
   }
   return [undefined];
 };
