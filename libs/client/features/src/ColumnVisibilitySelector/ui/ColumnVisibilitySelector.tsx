@@ -1,7 +1,10 @@
 import { CheckIcon, Settings2 } from 'lucide-react';
-import { Dispatch, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Button,
+  CaseRoutes,
+  clearIncidentTableColumns,
+  clearPendingTableColumns,
   cn,
   Command,
   CommandEmpty,
@@ -11,41 +14,78 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-  Skeleton,
+  selectIncidentTableColumns,
+  selectPendingTableColumns,
+  Separator,
+  setIncidentTableColumns,
+  setPendingTableColumns,
 } from '@urgp/client/shared';
-import { VisibilityState } from '@tanstack/react-table';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from '@tanstack/react-router';
+import {
+  defaultIncidentColumns,
+  defaultPendingColumns,
+} from '@urgp/client/entities';
+import { is } from 'date-fns/locale';
 
 interface ColumnVisibilitySelectorProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  columnNames?: Record<string, string>;
-  columnVisibility?: VisibilityState;
-  setColumnVisibility: Dispatch<VisibilityState>;
-  isLoading?: boolean;
   className?: string;
 }
 
 function ColumnVisibilitySelector(
   props: ColumnVisibilitySelectorProps,
 ): JSX.Element {
-  const {
-    columnNames,
-    columnVisibility,
-    setColumnVisibility,
-    isLoading,
-    className,
-  } = props;
+  const { className } = props;
   const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const pathname = useLocation().pathname as CaseRoutes;
+  const incidentColumnVisibility = useSelector(selectIncidentTableColumns);
+  const pendingColumnVisibility = useSelector(selectPendingTableColumns);
+  const dispatch = useDispatch();
 
-  if (isLoading) {
-    return <Skeleton className={cn('h-10 w-full', className)} />;
-  }
+  const defaultVisibility =
+    pathname === '/control/cases'
+      ? defaultIncidentColumns
+      : defaultPendingColumns;
+
+  const columnVisibility =
+    pathname === '/control/cases'
+      ? incidentColumnVisibility
+      : pendingColumnVisibility;
+
+  const setDispatch =
+    pathname === '/control/cases'
+      ? setIncidentTableColumns
+      : setPendingTableColumns;
+
+  const clearDisparch =
+    pathname === '/control/cases'
+      ? clearIncidentTableColumns
+      : clearPendingTableColumns;
+
+  const columnNames = {
+    smartApprove: 'Действия',
+    externalCases: 'Обращение',
+    desctiption: 'Описание',
+    viewStatus: 'Статус отслеживания',
+    status: 'Статус',
+    directions: 'Направления',
+    type: 'Тип проблемы',
+    stage: 'Этап',
+  };
+
+  const isDefault = useMemo(() => {
+    return (
+      JSON.stringify(defaultVisibility) === JSON.stringify(columnVisibility)
+    );
+  }, [columnVisibility]);
 
   return (
     <Popover modal={true} open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          disabled={isLoading}
+          // disabled={isLoading}
           variant="outline"
           className={cn('size-8 shrink-0 p-1', className)}
         >
@@ -64,23 +104,28 @@ function ColumnVisibilitySelector(
           )}
           <CommandList>
             <CommandEmpty>Не найдено</CommandEmpty>
-            {Object.keys(columnVisibility || {}).map((column) => {
+            {Object.keys(columnVisibility || {}).map((column: string) => {
               const isSelected = columnVisibility?.[column];
+
               return (
                 <CommandItem
                   key={column}
                   className="group/command-item relative"
                   onSelect={() => {
                     if (isSelected) {
-                      setColumnVisibility({
-                        ...columnVisibility,
-                        [column]: false,
-                      });
+                      dispatch(
+                        setDispatch({
+                          ...columnVisibility,
+                          [column]: false,
+                        }),
+                      );
                     } else {
-                      setColumnVisibility({
-                        ...columnVisibility,
-                        [column]: true,
-                      });
+                      dispatch(
+                        setDispatch({
+                          ...columnVisibility,
+                          [column]: true,
+                        }),
+                      );
                     }
                   }}
                 >
@@ -94,10 +139,23 @@ function ColumnVisibilitySelector(
                   >
                     <CheckIcon className={cn('h-4 w-4')} />
                   </div>
-                  <span>{columnNames?.[column] || column}</span>
+                  <span>
+                    {columnNames?.[column as keyof typeof columnNames] ||
+                      column}
+                  </span>
                 </CommandItem>
               );
             })}
+            <Separator className={cn(isDefault && 'hidden')} />
+            <Button
+              role="button"
+              variant="ghost"
+              className={cn('w-full', isDefault && 'hidden')}
+              disabled={isDefault}
+              onClick={() => dispatch(clearDisparch())}
+            >
+              Вернуть настройки по-умолчанию
+            </Button>
           </CommandList>
         </Command>
       </PopoverContent>

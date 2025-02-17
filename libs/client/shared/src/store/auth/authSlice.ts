@@ -15,6 +15,7 @@ export const guestUser = {
   controlData: {
     roles: [],
     approveTo: [],
+    controlTo: [],
     priority: 0,
     // approvers: { cases: [], problems: [], operations: [] },
   },

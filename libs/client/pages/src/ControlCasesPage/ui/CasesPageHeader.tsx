@@ -1,5 +1,6 @@
 import { getRouteApi, useLocation } from '@tanstack/react-router';
-import { VisibilityState } from '@tanstack/react-table';
+import { CreateCaseButton } from '@urgp/client/entities';
+import { ColumnVisibilitySelector } from '@urgp/client/features';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,22 +16,20 @@ import {
 } from '@urgp/client/shared';
 import { QueryFilter, ResetFilter, UserFilter } from '@urgp/client/widgets';
 import { CasesPageSearchDto } from '@urgp/shared/entities';
-import { Dispatch } from 'react';
-import { ColumnVisibilitySelector } from '@urgp/client/features';
-import { CreateCaseButton } from '@urgp/client/entities';
 type CasePageHeaderProps = {
   total?: number;
   filtered?: number;
   className?: string;
-  columnVisibility?: VisibilityState;
-  setColumnVisibility?: Dispatch<VisibilityState>;
+  // columnVisibility?: VisibilityState;
+  // setColumnVisibility?: Dispatch<VisibilityState>;
 };
 
 const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
-  const { total, filtered, className, columnVisibility, setColumnVisibility } =
-    props;
+  const { total, filtered, className } = props;
   const isMobile = useIsMobile();
   const pathname = useLocation().pathname as CaseRoutes;
+
+  // const setVisibility = pathname === '/control/cases' ? dispatch(setIncidentTableColumns(columnVisibility)) : null;
 
   const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
   const paramLength = Object.keys(search).filter(
@@ -82,22 +81,7 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
       {pathname === '/control/cases' && (
         <CreateCaseButton className={isMobile ? 'ml-auto' : ''} />
       )}
-      {setColumnVisibility && columnVisibility && (
-        <ColumnVisibilitySelector
-          columnNames={{
-            smartApprove: 'Решение',
-            externalCases: 'Обращение',
-            desctiption: 'Описание',
-            viewStatus: 'Статус отслеживания',
-            status: 'Статус',
-            directions: 'Направления',
-            type: 'Тип проблемы',
-            stage: 'Этап',
-          }}
-          columnVisibility={columnVisibility}
-          setColumnVisibility={setColumnVisibility}
-        />
-      )}
+      <ColumnVisibilitySelector />
     </header>
   );
 };

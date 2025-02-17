@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { VisibilityState } from '@tanstack/react-table';
 import {
   emptyCase,
   GET_DEFAULT_CONTROL_DUE_DATE,
@@ -18,12 +19,20 @@ import {
   EscalateFormState,
 } from '@urgp/shared/entities';
 import { RootState } from '../store';
+
 import {
   clearUser,
   guestUser,
   initialUserState,
   setUser,
 } from '../auth/authSlice';
+import {
+  defaultIncidentColumns,
+  defaultPendingColumns,
+  incidentsTableColumns,
+} from '@urgp/client/entities';
+import { lsKeys } from '../../config/localStorageKeys';
+import { set } from 'date-fns';
 
 const operationToForm = (payload: OperationFull) => {
   return {
@@ -50,6 +59,13 @@ const operationToForm = (payload: OperationFull) => {
   };
 };
 
+// const initialUser =
+//   JSON.parse(localStorage.getItem(lsKeys.USER_KEY)) || guestUser;
+
+// export const initialUserState: UserState = {
+//   user: initialUser,
+// };
+
 type ControlState = {
   caseForm: {
     state: DialogFormState;
@@ -75,8 +91,20 @@ type ControlState = {
     state: EscalateFormState;
     caseId: number;
   };
+  tableColumns: {
+    incident: VisibilityState;
+    pending: VisibilityState;
+  };
   user: User | null;
 };
+
+const initialIncidentTableColumns =
+  JSON.parse(localStorage.getItem(lsKeys.INCIDENT_TABLE_KEY)) ||
+  defaultIncidentColumns;
+
+const initialPendingTableColumns =
+  JSON.parse(localStorage.getItem(lsKeys.PENDING_TABLE_KEY)) ||
+  defaultPendingColumns;
 
 const initialState: ControlState = {
   caseForm: {
@@ -102,6 +130,10 @@ const initialState: ControlState = {
   escalateForm: {
     state: EscalateFormState.close,
     caseId: 0,
+  },
+  tableColumns: {
+    incident: initialIncidentTableColumns,
+    pending: initialPendingTableColumns,
   },
   user: initialUserState.user,
 };
@@ -305,6 +337,29 @@ const controlSlice = createSlice({
     setEscalateFormCaseId: (state, { payload }: PayloadAction<number>) => {
       state.escalateForm.caseId = payload;
     },
+    // =============================== TABLE STATE ================================
+    setIncidentTableColumns: (
+      state,
+      { payload }: PayloadAction<VisibilityState>,
+    ) => {
+      localStorage.setItem(lsKeys.INCIDENT_TABLE_KEY, JSON.stringify(payload));
+      state.tableColumns.incident = payload;
+    },
+    setPendingTableColumns: (
+      state,
+      { payload }: PayloadAction<VisibilityState>,
+    ) => {
+      localStorage.setItem(lsKeys.PENDING_TABLE_KEY, JSON.stringify(payload));
+      state.tableColumns.pending = payload;
+    },
+    clearIncidentTableColumns: (state) => {
+      localStorage.removeItem(lsKeys.INCIDENT_TABLE_KEY);
+      state.tableColumns.incident = defaultIncidentColumns;
+    },
+    clearPendingTableColumns: (state) => {
+      localStorage.removeItem(lsKeys.PENDING_TABLE_KEY);
+      state.tableColumns.pending = defaultPendingColumns;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(setUser, (state, action) => {
@@ -387,5 +442,17 @@ export const selectEscalateFormState = (state: RootState) =>
   state.control.escalateForm.state;
 export const selectEscalateFormCaseId = (state: RootState) =>
   state.control.escalateForm.caseId;
+
+// ================================ TABLE STATE ================================
+export const {
+  setIncidentTableColumns,
+  setPendingTableColumns,
+  clearIncidentTableColumns,
+  clearPendingTableColumns,
+} = controlSlice.actions;
+export const selectIncidentTableColumns = (state: RootState) =>
+  state.control.tableColumns.incident;
+export const selectPendingTableColumns = (state: RootState) =>
+  state.control.tableColumns.pending;
 
 export default controlSlice.reducer;

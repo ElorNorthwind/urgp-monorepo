@@ -9,10 +9,12 @@ import { CaseDesctiptionCell } from './cells/CaseDescriptionCell';
 import { CheckboxCell } from './cells/CheckboxCell';
 import { ViewStatusCell } from './cells/ViewStatusCell';
 import { Eye } from 'lucide-react';
+import { SmartApproveCell } from './cells/SmartApproveCell';
+import { RelevantStageCell } from './cells/RelevantStageCell';
 
 const columnHelper = createColumnHelper<CaseFull>();
 
-export const controlCasesColumns = [
+export const incidentsTableColumns = [
   columnHelper.display({
     id: 'select',
     size: 40,
@@ -50,6 +52,18 @@ export const controlCasesColumns = [
     // },
   }),
 
+  columnHelper.accessor((row) => row?.actions.join(', '), {
+    id: 'smartApprove',
+    header: 'Действия',
+    size: 120,
+    enableHiding: true,
+    enableSorting: true,
+    sortDescFirst: true,
+    cell: (props) => {
+      return <SmartApproveCell {...props} />;
+    },
+  }),
+
   columnHelper.accessor(
     (row): string => row?.externalCases?.map((d) => d.num)?.join(', ') || '',
     {
@@ -57,6 +71,7 @@ export const controlCasesColumns = [
       header: 'Обращение',
       size: 100,
       enableSorting: true,
+      sortDescFirst: true,
       cell: (props) => {
         return <ExternalCasesCell {...(props as any)} />;
       },
@@ -72,7 +87,7 @@ export const controlCasesColumns = [
   columnHelper.accessor('viewStatus', {
     id: 'viewStatus',
     header: () => {
-      return <Eye />;
+      return <Eye className="size-4" />;
     },
     size: 40,
     enableSorting: true,
@@ -156,4 +171,16 @@ export const controlCasesColumns = [
       return dif1 > 0 ? 1 : dif1 < 0 ? -1 : dif2 > 0 ? 1 : dif2 < 0 ? -1 : 0;
     },
   }),
+  columnHelper.accessor(
+    (row) => row?.myPendingStage?.doneDate || row?.lastStage?.doneDate || '',
+    {
+      id: 'stage',
+      header: 'Этап',
+      size: 200,
+      enableSorting: true,
+      cell: (props) => {
+        return <RelevantStageCell {...props} />;
+      },
+    },
+  ),
 ];

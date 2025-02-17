@@ -4,12 +4,13 @@ import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
   CaseCard,
   caseGlobalFilterFn,
-  controlCasesColumns,
+  incidentsTableColumns,
   useCases,
 } from '@urgp/client/entities';
 import {
   cn,
   NAVBAR_WIDTH,
+  selectIncidentTableColumns,
   SidebarInset,
   TooltipProvider,
   VirtualDataTable,
@@ -18,11 +19,11 @@ import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
 import { CaseFull, CasesPageSearchDto } from '@urgp/shared/entities';
 import { useState } from 'react';
 import { CasesPageHeader } from './CasesPageHeader';
-
-const defaultHiddenColumns = ['viewStatus'];
+import { useSelector } from 'react-redux';
 
 const ControlCasesPage = (): JSX.Element => {
   const { data: cases, isLoading, isFetching } = useCases();
+  const columnVisibility = useSelector(selectIncidentTableColumns);
   const [selected, setSelected] = useState<Row<CaseFull>[]>([]); // Этот селектед не тот селектед!
   const [filtered, setFiltered] = useState<Row<CaseFull>[]>([]);
 
@@ -60,28 +61,12 @@ const ControlCasesPage = (): JSX.Element => {
     }
   };
 
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    ...controlCasesColumns
-      .filter((col) => col.enableHiding !== false)
-      .reduce((acc, cur) => {
-        return cur.id ? { ...acc, [cur.id]: true } : acc;
-      }, {}),
-    ...defaultHiddenColumns.reduce((acc, cur) => {
-      return { ...acc, [cur]: false };
-    }, {}),
-  } as VisibilityState);
-
   return (
     <TooltipProvider delayDuration={50}>
       <CaseFilterSidebar side="left" className={`left-[${NAVBAR_WIDTH}]`} />
       <SidebarInset className="overflow-hidden">
         <main className="h-screen flex-col flex-wrap">
-          <CasesPageHeader
-            total={cases?.length}
-            filtered={filtered.length}
-            columnVisibility={columnVisibility}
-            setColumnVisibility={setColumnVisibility}
-          />
+          <CasesPageHeader total={cases?.length} filtered={filtered.length} />
           <VirtualDataTable
             autofocus
             columnVisibility={columnVisibility}
@@ -93,7 +78,7 @@ const ControlCasesPage = (): JSX.Element => {
             className={cn(
               'h-[calc(100vh-3rem)] flex-1 duration-200 ease-linear',
             )}
-            columns={controlCasesColumns}
+            columns={incidentsTableColumns}
             data={cases || []}
             isFetching={isLoading || isFetching}
             totalCount={cases?.length ?? 0}
