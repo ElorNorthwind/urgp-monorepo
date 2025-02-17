@@ -8,7 +8,6 @@ import {
   UpdateCaseDto,
 } from '@urgp/shared/entities';
 import { deleteCachedCase, insertCachedCase, updateCachedCase } from './lib';
-import { daysToWeeks } from 'date-fns';
 
 export const casesApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
@@ -32,16 +31,6 @@ export const casesApi = rtkApi.injectEndpoints({
               'control-incident',
             ]
           : ['control-incident'],
-      // providesTags: (result, error, arg) =>
-      //   result
-      //     ? [
-      //         ...result.map(({ id }) => ({
-      //           type: 'control-incident' as const,
-      //           id,
-      //         })),
-      //         'control-incident',
-      //       ]
-      //     : ['control-incident'],
     }),
 
     getCaseById: build.query<CaseFull, number>({
@@ -53,10 +42,10 @@ export const casesApi = rtkApi.injectEndpoints({
         result
           ? [
               {
-                type: 'control-incident' as const,
+                type: result.class,
                 id: result.id,
               },
-              'control-incident',
+              result.class,
             ]
           : ['control-incident'],
     }),
@@ -70,14 +59,13 @@ export const casesApi = rtkApi.injectEndpoints({
         result
           ? [
               {
-                type: 'control-incident' as const,
+                type: result.class,
                 id: result.id,
               },
-              'control-incident',
+              result.class,
             ]
           : ['control-incident'],
     }),
-
     createCase: build.mutation<CaseFull, CreateCaseDto>({
       query: (dto) => ({
         url: '/control/case',

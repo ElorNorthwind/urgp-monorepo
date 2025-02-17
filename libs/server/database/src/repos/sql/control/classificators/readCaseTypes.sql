@@ -9,7 +9,7 @@ SELECT
 		'category', category
 	)) as items
 FROM control.case_types
-WHERE category = 'control-incident';
+WHERE class = 'control-incident';
 
 -- SELECT 
 -- 	id as value, 

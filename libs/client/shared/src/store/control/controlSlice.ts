@@ -17,6 +17,8 @@ import {
   OperationFormDto,
   OperationFull,
   User,
+  emptyProblem,
+  CaseClasses,
 } from '@urgp/shared/entities';
 import { RootState } from '../store';
 
@@ -69,6 +71,10 @@ type ControlState = {
     state: DialogFormState;
     values: CaseFormDto & { saved?: boolean };
   };
+  problemForm: {
+    state: DialogFormState;
+    values: CaseFormDto & { saved?: boolean };
+  };
   stageForm: {
     state: DialogFormState;
     values: OperationFormDto & { saved?: boolean };
@@ -108,6 +114,10 @@ const initialState: ControlState = {
   caseForm: {
     state: DialogFormState.close,
     values: emptyIncident,
+  },
+  problemForm: {
+    state: DialogFormState.close,
+    values: emptyProblem,
   },
   stageForm: {
     state: DialogFormState.close,
@@ -178,7 +188,47 @@ const controlSlice = createSlice({
     ) => {
       state.caseForm.values = { ...payload, authorId: state.user?.id };
     },
+    // =============================== PROBLEM ===============================
+    setProblemFormState: (
+      state,
+      { payload }: PayloadAction<DialogFormState>,
+    ) => {
+      state.problemForm.state = payload;
+    },
+    setProblemFormValuesEmpty: (state) => {
+      state.problemForm.values = { ...emptyProblem, authorId: state.user?.id };
+    },
+    setProblemFormValuesFromProblem: (
+      state,
+      { payload }: PayloadAction<CaseFull>,
+    ) => {
+      state.problemForm.values = {
+        id: payload?.id,
+        authorId: payload?.author?.id,
+        class: payload?.class || CaseClasses.problem,
+        typeId: payload?.type?.id || 5,
+        externalCases: payload?.externalCases.map((ec) => ({
+          ...ec,
+          date: new Date(ec.date).toISOString(),
+        })),
+        directionIds: payload?.directions?.map((d) => d?.id) || [],
+        title: payload?.title || '', // short_title
+        notes: payload?.notes || '', // descrition
+        extra: payload?.extra || '', // extra_title
+        approveToId: payload?.approveTo?.id,
+        approveStatus: payload?.approveStatus,
+        approveDate: new Date(payload?.approveDate).toISOString(),
+        approveNotes: payload?.approveNotes,
+        dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
+      };
+    },
 
+    setProblemFormValuesFromDto: (
+      state,
+      { payload }: PayloadAction<CaseFormDto & { saved?: boolean }>,
+    ) => {
+      state.problemForm.values = { ...payload, authorId: state.user?.id };
+    },
     // ================================= STAGE =================================
     setStageFormState: (state, { payload }: PayloadAction<DialogFormState>) => {
       state.stageForm.state = payload;

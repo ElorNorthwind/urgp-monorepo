@@ -32,6 +32,7 @@ export const authApi = rtkApi.injectEndpoints({
         'user-data',
         'user-settings',
         'control-incident',
+        'control-problem',
         'stage',
         'dispatch',
         'reminder',

@@ -120,6 +120,9 @@ CREATE TABLE control.case_types
     name character varying(255) NOT NULL,
     category character varying(255),
     fullName character varying(255),
+	priority integer,
+	auto_approve boolean DEFAULT true,
+	class character varying(255) DEFAULT 'control-incident',
 	PRIMARY KEY (id)
 );
 ALTER TABLE control.case_types

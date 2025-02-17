@@ -80,6 +80,7 @@ export const rtkApi = createApi({
     'user-data',
     'user-settings',
     'control-incident',
+    'control-problem',
     'stage',
     'dispatch',
     'reminder',

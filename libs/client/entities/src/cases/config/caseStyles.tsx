@@ -28,6 +28,7 @@ import {
   MessageSquareHeart,
   MessageSquareMore,
   MessageSquarePlus,
+  MessageSquareText,
   MessageSquareX,
 } from 'lucide-react';
 
@@ -60,6 +61,7 @@ export const caseTypeStyles = {
   2: { icon: MessageSquareHeart, iconStyle: 'text-teal-500' },
   3: { icon: MessageSquarePlus, iconStyle: 'text-violet-500' },
   4: { icon: MessageSquareMore, iconStyle: 'text-slate-500' },
+  5: { icon: MessageSquareText, iconStyle: 'text-indigo-500' },
 } as Record<number, StyleData>;
 
 export const viewStatusStyles = {
