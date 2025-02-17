@@ -8,7 +8,8 @@ SELECT
 		'tags', jsonb_build_array(LOWER(fullname), LOWER(category)),
 		'category', category
 	)) as items
-FROM control.case_types;
+FROM control.case_types
+WHERE category = 'control-incident';
 
 -- SELECT 
 -- 	id as value, 

@@ -1,38 +1,36 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { VisibilityState } from '@tanstack/react-table';
 import {
-  emptyCase,
-  GET_DEFAULT_CONTROL_DUE_DATE,
-  emptyStage,
-  emptyDispatch,
-  emptyReminder,
-  User,
-  CaseFull,
+  ApproveFormDto,
+  ApproveFormState,
   CaseFormDto,
-  OperationFormDto,
-  OperationFull,
+  CaseFull,
   ControlOptions,
   DialogFormState,
-  ApproveFormState,
-  ApproveFormDto,
   emptyApproveData,
+  emptyIncident,
+  emptyDispatch,
+  emptyReminder,
+  emptyStage,
   EscalateFormState,
+  GET_DEFAULT_CONTROL_DUE_DATE,
+  OperationFormDto,
+  OperationFull,
+  User,
 } from '@urgp/shared/entities';
 import { RootState } from '../store';
 
+import {
+  defaultIncidentColumns,
+  defaultPendingColumns,
+} from '@urgp/client/entities';
+import { lsKeys } from '../../config/localStorageKeys';
 import {
   clearUser,
   guestUser,
   initialUserState,
   setUser,
 } from '../auth/authSlice';
-import {
-  defaultIncidentColumns,
-  defaultPendingColumns,
-  incidentsTableColumns,
-} from '@urgp/client/entities';
-import { lsKeys } from '../../config/localStorageKeys';
-import { set } from 'date-fns';
 
 const operationToForm = (payload: OperationFull) => {
   return {
@@ -109,7 +107,7 @@ const initialPendingTableColumns =
 const initialState: ControlState = {
   caseForm: {
     state: DialogFormState.close,
-    values: emptyCase,
+    values: emptyIncident,
   },
   stageForm: {
     state: DialogFormState.close,
@@ -147,7 +145,7 @@ const controlSlice = createSlice({
       state.caseForm.state = payload;
     },
     setCaseFormValuesEmpty: (state) => {
-      state.caseForm.values = { ...emptyCase, authorId: state.user?.id };
+      state.caseForm.values = { ...emptyIncident, authorId: state.user?.id };
     },
     setCaseFormValuesFromCase: (
       state,

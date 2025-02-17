@@ -126,10 +126,11 @@ ALTER TABLE control.case_types
     OWNER to renovation_user;
 
 INSERT INTO control.case_types (id, name, category, fullName) VALUES 
-(1, 'нарушение', 'control', 'Нарушен регламент'),
-(2, 'помочь клиенту', 'control', 'Можно помочь гражданину'),
-(3, 'помочь себе', 'control', 'Возможна выгода для города'),
-(4, 'предложение', 'control', 'Рационализаторское предложение');
+(1, 'нарушение', 'control-incident', 'Нарушен регламент'),
+(2, 'помочь клиенту', 'control-incident', 'Можно помочь гражданину'),
+(3, 'помочь себе', 'control-incident', 'Возможна выгода для города'),
+(4, 'предложение', 'control-incident', 'Рационализаторское предложение'),
+(5, 'проблема', 'control-problem', 'Системная проблема');
 
 
 -- Типы операций
