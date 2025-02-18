@@ -15,21 +15,19 @@ import {
   useIsMobile,
 } from '@urgp/client/shared';
 import { QueryFilter, ResetFilter, UserFilter } from '@urgp/client/widgets';
-import { CasesPageSearchDto } from '@urgp/shared/entities';
-import { useEffect } from 'react';
-type CasePageHeaderProps = {
+import { CaseClasses, ProblemsPageSearchDto } from '@urgp/shared/entities';
+type ProblemsPageHeaderProps = {
   total?: number;
   filtered?: number;
   className?: string;
-  // columnVisibility?: VisibilityState;
-  // setColumnVisibility?: Dispatch<VisibilityState>;
 };
 
-const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
+const ProblemsPageHeader = (props: ProblemsPageHeaderProps): JSX.Element => {
   const { total, filtered, className } = props;
   const isMobile = useIsMobile();
   const pathname = useLocation().pathname as CaseRoutes;
-  const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
+
+  const search = getRouteApi(pathname).useSearch() as ProblemsPageSearchDto;
   const paramLength = Object.keys(search).filter(
     (key) => !['selectedCase', 'sortKey', 'sortDir'].includes(key),
   ).length;
@@ -47,7 +45,7 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
           {paramLength}
         </div>
       )}
-      <UserFilter variant="mini" />
+      {/* <UserFilter variant="mini" /> */}
       <ResetFilter variant="mini" className="" />
       <Separator orientation="vertical" className="mr-2 h-4 shrink-0" />
       <Breadcrumb className="shrink-0">
@@ -57,9 +55,7 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
           </BreadcrumbItem>
           <BreadcrumbSeparator className="hidden md:block" />
           <BreadcrumbItem>
-            <BreadcrumbPage>
-              {pathname === '/control/cases' ? 'Дела' : 'Ожидают решения'}
-            </BreadcrumbPage>
+            <BreadcrumbPage>Системные проблемы</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -76,12 +72,13 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
       {!isMobile && (
         <QueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
       )}
-      {pathname === '/control/cases' && (
-        <CreateCaseButton className={isMobile ? 'ml-auto' : ''} />
-      )}
+      <CreateCaseButton
+        className={isMobile ? 'ml-auto' : ''}
+        caseClass={CaseClasses.problem}
+      />
       <ColumnVisibilitySelector />
     </header>
   );
 };
 
-export { CasesPageHeader };
+export { ProblemsPageHeader };

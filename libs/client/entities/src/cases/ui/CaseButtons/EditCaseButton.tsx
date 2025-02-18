@@ -3,9 +3,11 @@ import {
   cn,
   setCaseFormState,
   setCaseFormValuesFromCase,
+  setProblemFormState,
+  setProblemFormValuesFromProblem,
   useUserAbility,
 } from '@urgp/client/shared';
-import { CaseFull } from '@urgp/shared/entities';
+import { CaseClasses, CaseFull, DialogFormState } from '@urgp/shared/entities';
 import { Edit } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 
@@ -30,8 +32,13 @@ const EditCaseButton = ({
       variant={'outline'}
       className={cn('flex flex-grow flex-row gap-2', className)}
       onClick={() => {
-        dispatch(setCaseFormValuesFromCase(controlCase));
-        dispatch(setCaseFormState('edit'));
+        if (controlCase.class === CaseClasses.problem) {
+          dispatch(setProblemFormValuesFromProblem(controlCase));
+          dispatch(setProblemFormState(DialogFormState.edit));
+        } else if (controlCase.class === CaseClasses.incident) {
+          dispatch(setCaseFormValuesFromCase(controlCase));
+          dispatch(setCaseFormState(DialogFormState.edit));
+        }
       }}
     >
       <Edit className="size-4 flex-shrink-0" />

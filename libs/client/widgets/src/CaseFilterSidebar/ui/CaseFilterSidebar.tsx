@@ -58,7 +58,9 @@ const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
         <ScrollArea className={cn('h-full')}>
           <div className="m-3 flex h-full flex-col gap-2">
             <QueryFilter className="h-8 flex-shrink-0" />
-            <NumberFilter className="h-8 flex-shrink-0" />
+            {pathname !== '/control/problems' && (
+              <NumberFilter className="h-8 flex-shrink-0" />
+            )}
             <AuthorFilter className="h-8 flex-shrink-0" />
             <DueDateFilter className="flex-shrink-0" />
             <RelevantFilter className="h-8 flex-shrink-0" />
@@ -72,7 +74,9 @@ const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
               <PendingActionsFilter variant="accordion" />
               <StatusFilter variant="accordion" />
               <DirectionsFilter variant="accordion" />
-              <CaseTypesFilter variant="accordion" />
+              {pathname !== '/control/problems' && (
+                <CaseTypesFilter variant="accordion" />
+              )}
               <ViewStatusFilter variant="accordion" />
             </Accordion>
           </div>

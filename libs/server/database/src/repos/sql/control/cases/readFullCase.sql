@@ -31,6 +31,7 @@ GROUP BY o."caseId"),
 SELECT
 	c.id,
 	c.class,
+	c.created_at as "createdAt",
 	to_jsonb(t) as type,
 	to_jsonb(u) as author,
 	to_jsonb(u2) as "updatedBy",

@@ -21,6 +21,8 @@ import {
   setDispatchFormState,
   setEscalateFormCaseId,
   setEscalateFormState,
+  setProblemFormState,
+  setProblemFormValuesFromProblem,
   setReminderFormCaseId,
   setReminderFormState,
   setReminderFormValuesFromReminder,
@@ -30,6 +32,7 @@ import {
 import {
   ApproveFormState,
   CaseActions,
+  CaseClasses,
   CaseFull,
   DialogFormState,
   emptyStage,
@@ -135,8 +138,13 @@ const CaseSmartActionsMenu = ({
               disabled: i.cannot('update', controlCase),
               onClick: () => {
                 if (!controlCase) return;
-                dispatch(setCaseFormValuesFromCase(controlCase));
-                dispatch(setCaseFormState(DialogFormState.edit));
+                if (controlCase.class === CaseClasses.problem) {
+                  dispatch(setProblemFormValuesFromProblem(controlCase));
+                  dispatch(setProblemFormState(DialogFormState.edit));
+                } else if (controlCase.class === CaseClasses.incident) {
+                  dispatch(setCaseFormValuesFromCase(controlCase));
+                  dispatch(setCaseFormState(DialogFormState.edit));
+                }
               },
             },
             {

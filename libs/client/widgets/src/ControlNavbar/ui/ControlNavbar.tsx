@@ -1,14 +1,13 @@
 import { TooltipPortal, TooltipProvider } from '@radix-ui/react-tooltip';
-import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
+import { useRouterState } from '@tanstack/react-router';
 import {
   Button,
+  buttonVariants,
   cn,
   NAVBAR_WIDTH,
-  selectCurrentUser,
   Separator,
   Sheet,
   SheetContent,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -17,16 +16,13 @@ import {
   TooltipTrigger,
   useIsMobile,
 } from '@urgp/client/shared';
-import { Drama, KeyRound, Menu, User } from 'lucide-react';
-import { items } from '../config/items';
-import { buttonVariants } from '@urgp/client/shared';
+import { Drama, Menu } from 'lucide-react';
 import { ControlUserMenu } from '../../ControlUserMenu';
-import { useSelector } from 'react-redux';
+import { items } from '../config/items';
 
 const ControlNavbar = (): JSX.Element => {
   const router = useRouterState();
-  const navigate = useNavigate();
-  const user = useSelector(selectCurrentUser);
+
   const isMobile = useIsMobile();
 
   if (isMobile) {

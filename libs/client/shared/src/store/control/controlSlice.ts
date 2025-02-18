@@ -25,6 +25,7 @@ import { RootState } from '../store';
 import {
   defaultIncidentColumns,
   defaultPendingColumns,
+  defaultProblemColumns,
 } from '@urgp/client/entities';
 import { lsKeys } from '../../config/localStorageKeys';
 import {
@@ -98,6 +99,7 @@ type ControlState = {
   tableColumns: {
     incident: VisibilityState;
     pending: VisibilityState;
+    problem: VisibilityState;
   };
   user: User | null;
 };
@@ -109,6 +111,10 @@ const initialIncidentTableColumns =
 const initialPendingTableColumns =
   JSON.parse(localStorage.getItem(lsKeys.PENDING_TABLE_KEY)) ||
   defaultPendingColumns;
+
+const initialProblemTableColumns =
+  JSON.parse(localStorage.getItem(lsKeys.PROBLEM_TABLE_KEY)) ||
+  defaultProblemColumns;
 
 const initialState: ControlState = {
   caseForm: {
@@ -142,6 +148,7 @@ const initialState: ControlState = {
   tableColumns: {
     incident: initialIncidentTableColumns,
     pending: initialPendingTableColumns,
+    problem: initialProblemTableColumns,
   },
   user: initialUserState.user,
 };
@@ -400,6 +407,13 @@ const controlSlice = createSlice({
       localStorage.setItem(lsKeys.PENDING_TABLE_KEY, JSON.stringify(payload));
       state.tableColumns.pending = payload;
     },
+    setProblemTableColumns: (
+      state,
+      { payload }: PayloadAction<VisibilityState>,
+    ) => {
+      localStorage.setItem(lsKeys.PROBLEM_TABLE_KEY, JSON.stringify(payload));
+      state.tableColumns.problem = payload;
+    },
     clearIncidentTableColumns: (state) => {
       localStorage.removeItem(lsKeys.INCIDENT_TABLE_KEY);
       state.tableColumns.incident = defaultIncidentColumns;
@@ -407,6 +421,10 @@ const controlSlice = createSlice({
     clearPendingTableColumns: (state) => {
       localStorage.removeItem(lsKeys.PENDING_TABLE_KEY);
       state.tableColumns.pending = defaultPendingColumns;
+    },
+    clearProblemTableColumns: (state) => {
+      localStorage.removeItem(lsKeys.PROBLEM_TABLE_KEY);
+      state.tableColumns.problem = defaultProblemColumns;
     },
   },
   extraReducers: (builder) => {
@@ -431,6 +449,18 @@ export const selectCaseFormValues = (state: RootState) =>
 export const selectCaseFormState = (state: RootState) =>
   state.control.caseForm.state;
 
+// ================================= PROBLEM =================================
+export const {
+  setProblemFormState,
+  setProblemFormValuesEmpty,
+  setProblemFormValuesFromProblem,
+  setProblemFormValuesFromDto,
+} = controlSlice.actions;
+
+export const selectProblemFormValues = (state: RootState) =>
+  state.control.problemForm.values;
+export const selectProblemFormState = (state: RootState) =>
+  state.control.problemForm.state;
 // ================================= STAGE =================================
 export const {
   setStageFormState,
@@ -495,12 +525,16 @@ export const selectEscalateFormCaseId = (state: RootState) =>
 export const {
   setIncidentTableColumns,
   setPendingTableColumns,
+  setProblemTableColumns,
   clearIncidentTableColumns,
   clearPendingTableColumns,
+  clearProblemTableColumns,
 } = controlSlice.actions;
 export const selectIncidentTableColumns = (state: RootState) =>
   state.control.tableColumns.incident;
 export const selectPendingTableColumns = (state: RootState) =>
   state.control.tableColumns.pending;
+export const selectProblemTableColumns = (state: RootState) =>
+  state.control.tableColumns.problem;
 
 export default controlSlice.reducer;

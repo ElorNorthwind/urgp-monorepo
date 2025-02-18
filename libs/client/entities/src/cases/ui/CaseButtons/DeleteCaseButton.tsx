@@ -8,15 +8,17 @@ import {
   DialogTrigger,
   setCaseFormState,
   setCaseFormValuesEmpty,
+  setProblemFormState,
+  setProblemFormValuesEmpty,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   useUserAbility,
 } from '@urgp/client/shared';
-import { Trash2 } from 'lucide-react';
+import { SquareX, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { CaseFull } from '@urgp/shared/entities';
+import { CaseClasses, CaseFull, DialogFormState } from '@urgp/shared/entities';
 import { toast } from 'sonner';
 import { useDeleteCase } from '../../api/casesApi';
 import { CaseCardHeader } from '../CaseCard/CaseCardHeader';
@@ -57,11 +59,19 @@ const DeleteCaseButton = ({
             </Button>
           </DialogTrigger>
         </TooltipTrigger>
-        <TooltipContent>Удалить заявку</TooltipContent>
+        <TooltipContent>
+          {controlCase.class === CaseClasses?.problem
+            ? 'Удалить системную проблему'
+            : 'Удалить заявку'}
+        </TooltipContent>
       </Tooltip>
       <DialogContent>
         <DialogHeader>
-          <p>Вы точно хотите удалить заявку?</p>
+          {controlCase.class === CaseClasses?.problem ? (
+            <p>Вы точно хотите удалить системную проблему?</p>
+          ) : (
+            <p>Вы точно хотите удалить заявку?</p>
+          )}
         </DialogHeader>
         <DialogDescription>
           <CaseCardHeader controlCase={controlCase} />
@@ -73,7 +83,8 @@ const DeleteCaseButton = ({
             onClick={() => setDeleteOpen(false)}
             className="flex-grow"
           >
-            Отмена
+            <SquareX className="size-4 flex-shrink-0" />
+            <span>Отмена</span>
           </Button>
           <Button
             variant="destructive"
@@ -83,8 +94,13 @@ const DeleteCaseButton = ({
                 .unwrap()
                 .then(() => {
                   setDeleteOpen(false);
-                  dispatch(setCaseFormValuesEmpty());
-                  dispatch(setCaseFormState('close'));
+                  if (controlCase.class === CaseClasses.problem) {
+                    dispatch(setProblemFormValuesEmpty());
+                    dispatch(setProblemFormState(DialogFormState.close));
+                  } else if (controlCase.class === CaseClasses.incident) {
+                    dispatch(setCaseFormValuesEmpty());
+                    dispatch(setCaseFormState(DialogFormState.close));
+                  }
                   toast.success('Заявка удалена');
                 })
                 .catch((rejected: any) =>
@@ -94,7 +110,8 @@ const DeleteCaseButton = ({
                 )
             }
           >
-            Удалить
+            <Trash2 className="size-4 flex-shrink-0" />
+            <span>Удалить</span>
           </Button>
         </p>
       </DialogContent>

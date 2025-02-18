@@ -5,6 +5,7 @@ import {
   CaseRoutes,
   clearIncidentTableColumns,
   clearPendingTableColumns,
+  clearProblemTableColumns,
   cn,
   Command,
   CommandEmpty,
@@ -16,17 +17,33 @@ import {
   PopoverTrigger,
   selectIncidentTableColumns,
   selectPendingTableColumns,
+  selectProblemTableColumns,
   Separator,
   setIncidentTableColumns,
   setPendingTableColumns,
+  setProblemTableColumns,
 } from '@urgp/client/shared';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from '@tanstack/react-router';
+import { VisibilityState } from '@tanstack/react-table';
 import {
   defaultIncidentColumns,
   defaultPendingColumns,
+  defaultProblemColumns,
 } from '@urgp/client/entities';
-import { is } from 'date-fns/locale';
+import {
+  ActionCreatorWithoutPayload,
+  ActionCreatorWithPayload,
+} from '@reduxjs/toolkit';
+
+type PathnameOptions = {
+  [key: string]: {
+    defaultVisibility: VisibilityState;
+    columnVisibility: VisibilityState;
+    setDispatch: ActionCreatorWithPayload<VisibilityState>;
+    clearDisparch: ActionCreatorWithoutPayload;
+  };
+};
 
 interface ColumnVisibilitySelectorProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -35,34 +52,41 @@ interface ColumnVisibilitySelectorProps
 
 function ColumnVisibilitySelector(
   props: ColumnVisibilitySelectorProps,
-): JSX.Element {
+): JSX.Element | null {
   const { className } = props;
   const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-  const pathname = useLocation().pathname as CaseRoutes;
   const incidentColumnVisibility = useSelector(selectIncidentTableColumns);
   const pendingColumnVisibility = useSelector(selectPendingTableColumns);
+  const problemColumnVisibility = useSelector(selectProblemTableColumns);
   const dispatch = useDispatch();
 
-  const defaultVisibility =
-    pathname === '/control/cases'
-      ? defaultIncidentColumns
-      : defaultPendingColumns;
+  const pathnameOptions: PathnameOptions = {
+    '/control/cases': {
+      defaultVisibility: defaultIncidentColumns,
+      columnVisibility: incidentColumnVisibility,
+      setDispatch: setIncidentTableColumns,
+      clearDisparch: clearIncidentTableColumns,
+    },
+    '/control/pending': {
+      defaultVisibility: defaultPendingColumns,
+      columnVisibility: pendingColumnVisibility,
+      setDispatch: setPendingTableColumns,
+      clearDisparch: clearPendingTableColumns,
+    },
+    '/control/problems': {
+      defaultVisibility: defaultProblemColumns,
+      columnVisibility: problemColumnVisibility,
+      setDispatch: setProblemTableColumns,
+      clearDisparch: clearProblemTableColumns,
+    },
+  };
 
-  const columnVisibility =
-    pathname === '/control/cases'
-      ? incidentColumnVisibility
-      : pendingColumnVisibility;
+  const pathname = useLocation().pathname as CaseRoutes;
+  if (!(pathname in pathnameOptions)) return null;
 
-  const setDispatch =
-    pathname === '/control/cases'
-      ? setIncidentTableColumns
-      : setPendingTableColumns;
-
-  const clearDisparch =
-    pathname === '/control/cases'
-      ? clearIncidentTableColumns
-      : clearPendingTableColumns;
+  const { defaultVisibility, columnVisibility, setDispatch, clearDisparch } =
+    pathnameOptions?.[pathname];
 
   const columnNames = {
     smartApprove: 'Действия',

@@ -106,3 +106,16 @@ export const casesPageSearch = casesPageFilter
   })
   .partial();
 export type CasesPageSearchDto = z.infer<typeof casesPageSearch>;
+
+export const problemsPageSearch = casesPageFilter
+  .omit({
+    num: true,
+    type: true,
+  })
+  .extend({
+    selectedCase: z.coerce.number(),
+    sortKey: z.string(),
+    sortDir: z.enum(['asc', 'desc']),
+  })
+  .partial();
+export type ProblemsPageSearchDto = z.infer<typeof problemsPageSearch>;

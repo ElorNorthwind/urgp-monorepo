@@ -1,7 +1,7 @@
 import { Separator } from '@radix-ui/react-separator';
 import { useNavigate } from '@tanstack/react-router';
 import { Button, cn } from '@urgp/client/shared';
-import { CaseFull } from '@urgp/shared/entities';
+import { CaseClasses, CaseFull } from '@urgp/shared/entities';
 import { ChevronDown, X } from 'lucide-react';
 
 type CaseCardHeaderProps = {
@@ -26,7 +26,7 @@ const CaseCardHeader = (props: CaseCardHeaderProps): JSX.Element => {
       )}
     >
       {controlCase && <h1 className="font-bold">{controlCase?.title}</h1>}
-      {controlCase && (
+      {controlCase && controlCase.class !== CaseClasses.problem && (
         <p className="border-foreground/20 text-muted-foreground h-full flex-shrink truncate border-l pl-2">
           {controlCase?.extra}
         </p>

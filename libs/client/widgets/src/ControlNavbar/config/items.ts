@@ -1,4 +1,9 @@
-import { BriefcaseBusiness, LayoutDashboard, Scale } from 'lucide-react';
+import {
+  BriefcaseBusiness,
+  CircuitBoard,
+  LayoutDashboard,
+  Scale,
+} from 'lucide-react';
 
 // Menu items.
 export const items = [
@@ -12,11 +17,11 @@ export const items = [
     url: '/control/cases',
     icon: BriefcaseBusiness,
   },
-  // {
-  //   title: 'Системные проблемы',
-  //   url: '/control/problems',
-  //   icon: CircuitBoard,
-  // },
+  {
+    title: 'Системные проблемы',
+    url: '/control/problems',
+    icon: CircuitBoard,
+  },
   {
     title: 'Ожидают моего решения',
     url: '/control/pending',

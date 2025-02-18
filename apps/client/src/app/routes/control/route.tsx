@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 import {
   CreateCaseDialog,
   CreateDispatchDialog,
+  CreateProblemDialog,
   CreateReminderDialog,
   CreateStageDialog,
   EscalateDialog,
@@ -35,6 +36,7 @@ export const Route = createFileRoute('/control')({
           <CreateStageDialog />
           <CreateDispatchDialog />
           <CreateReminderDialog />
+          <CreateProblemDialog />
           <ApproveDialog />
           <EscalateDialog />
         </SidebarProvider>

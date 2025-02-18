@@ -2,7 +2,7 @@ import { CellContext } from '@tanstack/react-table';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@urgp/client/shared';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { format } from 'date-fns';
-import { CaseFull } from '@urgp/shared/entities';
+import { CaseClasses, CaseFull } from '@urgp/shared/entities';
 
 function CaseDesctiptionCell(
   props: CellContext<CaseFull, string>,
@@ -15,9 +15,11 @@ function CaseDesctiptionCell(
         <div className="flex flex-1 flex-col items-start justify-start truncate">
           <div className="truncate">
             <span className="font-bold">{controlCase?.title}</span>
-            <span className="text-muted-foreground ml-2 w-full truncate border-l pl-2">
-              {controlCase?.extra}
-            </span>
+            {controlCase.class === CaseClasses.incident && (
+              <span className="text-muted-foreground ml-2 w-full truncate border-l pl-2">
+                {controlCase?.extra}
+              </span>
+            )}
           </div>
           <div className="w-full truncate text-xs">{controlCase?.notes}</div>
         </div>
@@ -46,18 +48,29 @@ function CaseDesctiptionCell(
                   format(controlCase.createdAt, 'dd.MM.yyyy HH:mm')}
               </span>
             </div>
-            <div className="flex items-start justify-between">
-              <span>Заявитель:</span>
-              <span className="text-muted-foreground ml-2 font-normal">
-                {controlCase?.title}
-              </span>
-            </div>
-            <div className="flex items-start justify-between">
-              <span>Адрес:</span>
-              <span className="text-muted-foreground ml-2 font-normal">
-                {controlCase?.extra}
-              </span>
-            </div>
+            {controlCase.class === CaseClasses.incident ? (
+              <>
+                <div className="flex items-start justify-between">
+                  <span>Заявитель:</span>
+                  <span className="text-muted-foreground ml-2 font-normal">
+                    {controlCase?.title}
+                  </span>
+                </div>
+                <div className="flex items-start justify-between">
+                  <span>Адрес:</span>
+                  <span className="text-muted-foreground ml-2 font-normal">
+                    {controlCase?.extra}
+                  </span>
+                </div>
+              </>
+            ) : (
+              <div className="flex items-start justify-between">
+                <span>Тема:</span>
+                <span className="text-muted-foreground ml-2 font-normal">
+                  {controlCase?.title}
+                </span>
+              </div>
+            )}
           </div>
         </TooltipContent>
       </TooltipPortal>
