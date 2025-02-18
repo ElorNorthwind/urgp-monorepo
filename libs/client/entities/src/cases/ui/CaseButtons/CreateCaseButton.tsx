@@ -35,9 +35,11 @@ const CreateCaseButton = ({
 
   return (
     <Button
+      role="button"
       variant={'outline'}
       className={cn('h-8 p-1', className)}
-      onClick={() => {
+      onClick={(e) => {
+        e.preventDefault();
         caseClass === CaseClasses.problem
           ? dispatch(setProblemFormState(DialogFormState.create))
           : dispatch(setCaseFormState(DialogFormState.create));

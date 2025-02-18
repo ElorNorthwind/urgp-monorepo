@@ -14,7 +14,8 @@ import {
 } from '../../../classificators';
 import { ExternalCaseFieldArray } from './ExternalCaseFieldArray';
 import { Fragment } from 'react/jsx-runtime';
-import { CaseFormDto } from '@urgp/shared/entities';
+import { CaseClasses, CaseFormDto } from '@urgp/shared/entities';
+import { CreateCaseButton } from '../CaseButtons/CreateCaseButton';
 
 const CaseFormFieldArray = ({
   form,
@@ -47,6 +48,7 @@ const CaseFormFieldArray = ({
         dirtyIndicator={isEdit}
         popoverMinWidth={popoverMinWidth}
       />
+      {/* <CreateCaseButton caseClass={CaseClasses.problem} /> */}
       <ExternalCaseFieldArray form={form} fieldArrayName="externalCases" />
       <div className="flex w-full flex-row gap-2">
         <InputFormField
