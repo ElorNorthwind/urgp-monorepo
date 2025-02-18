@@ -82,6 +82,7 @@ export const cases = {
   deleteCase: sql('sql/control/cases/deleteCase.sql'),
   approveCase: sql('sql/control/cases/approveCase.sql'),
   upsertCaseConnections: sql('sql/control/cases/upsertCaseConnections.sql'),
+  upsertCaseConnectionsTo: sql('sql/control/cases/upsertCaseConnectionsTo.sql'),
 };
 
 export const operations = {

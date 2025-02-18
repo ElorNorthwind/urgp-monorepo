@@ -18,6 +18,7 @@ import { AccessTokenGuard } from '@urgp/server/auth';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
   ApproveControlEntityDto,
+  CaseClasses,
   CaseFull,
   CaseSlim,
   CreateCaseDto,
@@ -25,6 +26,7 @@ import {
   ReadEntityDto,
   RequestWithUserData,
   SetConnectionsDto,
+  SetConnectionsToDto,
   UpdateCaseDto,
   approveControlEntitySchema,
   createCaseSchema,
@@ -32,6 +34,7 @@ import {
   deleteControlEntirySchema,
   readEntitySchema,
   setConnectionsSchema,
+  setConnectionsToSchema,
   updateCaseSchema,
 } from '@urgp/shared/entities';
 import { ControlCasesService } from './control-cases.service';
@@ -68,10 +71,17 @@ export class ControlCasesController {
       req.user.id,
     );
 
-    this.controlCases.setCaseConnections(
-      { fromId: createdCase.id, toIds: dto.connectionsToIds },
-      req.user.id,
-    );
+    if (createdCase.class === CaseClasses.incident) {
+      this.controlCases.setCaseConnections(
+        { fromId: createdCase.id, toIds: dto.connectionsToIds },
+        req.user.id,
+      );
+    } else if (createdCase.class === CaseClasses.problem) {
+      this.controlCases.setCaseConnectionsTo(
+        { toId: createdCase.id, fromIds: dto.connectionsFromIds },
+        req.user.id,
+      );
+    }
 
     return createdCase;
   }
@@ -126,14 +136,19 @@ export class ControlCasesController {
       throw new UnauthorizedException('Недостаточно прав для изменения');
     }
 
-    const updatedCase = await this.controlCases.updateCase(dto, req.user.id);
+    if (dto.class === CaseClasses.incident) {
+      this.controlCases.setCaseConnections(
+        { fromId: dto.id, toIds: dto.connectionsToIds },
+        req.user.id,
+      );
+    } else if (dto.class === CaseClasses.problem) {
+      this.controlCases.setCaseConnectionsTo(
+        { toId: dto.id, fromIds: dto.connectionsFromIds },
+        req.user.id,
+      );
+    }
 
-    this.controlCases.setCaseConnections(
-      { fromId: updatedCase.id, toIds: dto.connectionsToIds },
-      req.user.id,
-    );
-
-    return updatedCase;
+    return this.controlCases.updateCase(dto, req.user.id);
   }
 
   @Delete()
@@ -186,5 +201,19 @@ export class ControlCasesController {
       throw new UnauthorizedException('Недостаточно прав для изменения');
 
     return this.controlCases.setCaseConnections(dto, req.user.id);
+  }
+
+  @Patch('connections-to')
+  async setCaseConnectionsTo(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(setConnectionsToSchema))
+    dto: SetConnectionsToDto,
+  ) {
+    const i = defineControlAbilityFor(req.user);
+    const caseTo = await this.controlCases.readSlimCaseById(dto.toId);
+    if (i.cannot('update', caseTo))
+      throw new UnauthorizedException('Недостаточно прав для изменения');
+
+    return this.controlCases.setCaseConnectionsTo(dto, req.user.id);
   }
 }

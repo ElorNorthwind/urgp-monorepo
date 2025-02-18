@@ -78,6 +78,12 @@ export const setConnectionsSchema = z.object({
 });
 export type SetConnectionsDto = z.infer<typeof setConnectionsSchema>;
 
+export const setConnectionsToSchema = z.object({
+  fromIds: z.array(z.coerce.number().int().nonnegative()),
+  toId: z.coerce.number().int().nonnegative(),
+});
+export type SetConnectionsToDto = z.infer<typeof setConnectionsToSchema>;
+
 // Параметры поиска на странице
 const queryNumberArray = z
   .string()

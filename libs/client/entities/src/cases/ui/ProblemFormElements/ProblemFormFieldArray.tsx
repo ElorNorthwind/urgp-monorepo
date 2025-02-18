@@ -9,6 +9,7 @@ import {
 import { useSelector } from 'react-redux';
 import {
   DirectionTypeSelector,
+  IncidentSelector,
   useCurrentUserApproveTo,
 } from '../../../classificators';
 import { Fragment } from 'react/jsx-runtime';
@@ -47,6 +48,12 @@ const ProblemFormFieldArray = ({
         label="Направления"
         placeholder="Направления работы"
         fieldName="directionIds"
+        dirtyIndicator={isEdit}
+        popoverMinWidth={popoverMinWidth}
+      />
+      <IncidentSelector
+        form={form}
+        fieldName="connectionsFromIds"
         dirtyIndicator={isEdit}
         popoverMinWidth={popoverMinWidth}
       />

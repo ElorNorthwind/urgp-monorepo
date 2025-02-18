@@ -9,6 +9,7 @@ import {
   GET_DEFAULT_CONTROL_DUE_DATE,
   ReadEntityDto,
   SetConnectionsDto,
+  SetConnectionsToDto,
   UpdateCaseDto,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
@@ -164,5 +165,12 @@ export class ControlCasesService {
     userId: number,
   ): Promise<number[]> {
     return this.dbServise.db.controlCases.upsertCaseConnections(dto, userId);
+  }
+
+  public async setCaseConnectionsTo(
+    dto: SetConnectionsToDto,
+    userId: number,
+  ): Promise<number[]> {
+    return this.dbServise.db.controlCases.upsertCaseConnectionsTo(dto, userId);
   }
 }

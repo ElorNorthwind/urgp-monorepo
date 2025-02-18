@@ -3,13 +3,14 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
+  Button,
   cn,
   getApproveInfo,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { CaseFull, OperationClasses } from '@urgp/shared/entities';
+import { CaseClasses, CaseFull, OperationClasses } from '@urgp/shared/entities';
 import { CaseCardHeader } from './CaseCardHeader';
 import { caseStatusStyles, caseTypeStyles } from '../../config/caseStyles';
 import { ExternalCasesList } from '../ExternalCasesList';
@@ -24,6 +25,7 @@ import {
 import { CaseCardFooter } from './CaseCardFooter';
 import { ControlDispatchesList } from '../ControlDispatchesList';
 import { format } from 'date-fns';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 
 type CaseCardProps = {
   controlCase: CaseFull;
@@ -37,6 +39,9 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
   const { icon: TypeIcon, iconStyle: typeIconStyle } =
     caseTypeStyles[controlCase?.type?.id || 1] ||
     Object.entries(caseTypeStyles)[0];
+
+  const pathname = useLocation().pathname;
+  const navigate = useNavigate({ from: pathname });
   // {
   //   icon: null,
   //   iconStyle: '',
@@ -173,6 +178,58 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
             </AccordionContent>
           )}
         </AccordionItem>
+        {controlCase?.class === CaseClasses.problem &&
+          controlCase?.connectionsFrom && (
+            <AccordionItem value="incidents" className="relative">
+              <AccordionTrigger>Связанные происшествия</AccordionTrigger>
+              <AccordionContent className="bg-background rounded-t-lg border border-b-0 p-2">
+                {controlCase?.connectionsFrom.map((connection) => (
+                  <Button
+                    className="py-0"
+                    variant="link"
+                    key={connection.id}
+                    size="sm"
+                    onClick={() => {
+                      navigate({
+                        to: '/control/cases',
+                        search: {
+                          selectedCase: connection.id,
+                        },
+                      });
+                    }}
+                  >
+                    {connection.title}
+                  </Button>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+          )}
+        {controlCase?.class === CaseClasses.incident &&
+          controlCase?.connectionsTo && (
+            <AccordionItem value="incidents" className="relative">
+              <AccordionTrigger>Системные проблемы</AccordionTrigger>
+              <AccordionContent className="bg-background rounded-t-lg border border-b-0 p-2">
+                {controlCase?.connectionsTo.map((connection) => (
+                  <Button
+                    className="py-0"
+                    variant="link"
+                    key={connection.id}
+                    size="sm"
+                    onClick={() => {
+                      navigate({
+                        to: '/control/problems',
+                        search: {
+                          selectedCase: connection.id,
+                        },
+                      });
+                    }}
+                  >
+                    {connection.title}
+                  </Button>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+          )}
         <AccordionItem value="dispatches" className="relative">
           <AccordionTrigger>Поручения</AccordionTrigger>
           {controlCase?.id && (
