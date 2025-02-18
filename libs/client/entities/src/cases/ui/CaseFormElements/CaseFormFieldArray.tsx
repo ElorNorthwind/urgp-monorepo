@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import {
   CaseTypeSelector,
   DirectionTypeSelector,
+  ProblemSelector,
   useCurrentUserApproveTo,
 } from '../../../classificators';
 import { ExternalCaseFieldArray } from './ExternalCaseFieldArray';
@@ -48,7 +49,12 @@ const CaseFormFieldArray = ({
         dirtyIndicator={isEdit}
         popoverMinWidth={popoverMinWidth}
       />
-      {/* <CreateCaseButton caseClass={CaseClasses.problem} /> */}
+      <ProblemSelector
+        form={form}
+        fieldName="connectionsToIds"
+        dirtyIndicator={isEdit}
+        popoverMinWidth={popoverMinWidth}
+      />
       <ExternalCaseFieldArray form={form} fieldArrayName="externalCases" />
       <div className="flex w-full flex-row gap-2">
         <InputFormField
@@ -75,6 +81,7 @@ const CaseFormFieldArray = ({
         placeholder="Описание проблемы"
         dirtyIndicator={isEdit}
       />
+
       <div className={cn('flex w-full flex-row gap-2', isEdit && 'hidden')}>
         <SelectFormField
           form={form}

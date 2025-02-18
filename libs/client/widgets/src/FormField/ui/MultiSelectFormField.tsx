@@ -10,6 +10,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  Separator,
 } from '@urgp/client/shared';
 import {
   ClassificatorInfo,
@@ -38,6 +39,7 @@ type MultiSelectFormFieldProps<T> = {
   addBadgeStyle?: (item: ClassificatorInfo | undefined) => string | null;
   dirtyIndicator?: boolean;
   side?: 'top' | 'right' | 'bottom' | 'left';
+  extraButton?: () => JSX.Element | null;
 };
 
 const MultiSelectFormField = <T extends string | number>(
@@ -57,6 +59,7 @@ const MultiSelectFormField = <T extends string | number>(
     addItemBadge,
     addBadgeStyle,
     dirtyIndicator = false,
+    extraButton,
   } = props;
 
   const flatOptions = useMemo(
@@ -257,6 +260,12 @@ const MultiSelectFormField = <T extends string | number>(
                           </CommandGroup>
                         );
                       })}
+                      {extraButton && (
+                        <>
+                          <Separator />
+                          {extraButton()}
+                        </>
+                      )}
                     </CommandList>
                   </PopoverContent>
                 </Command>

@@ -1,5 +1,6 @@
 import {
   Button,
+  buttonVariants,
   cn,
   selectCaseFormValues,
   selectProblemFormValues,
@@ -8,6 +9,7 @@ import {
   useUserAbility,
 } from '@urgp/client/shared';
 import { CaseClasses, DialogFormState } from '@urgp/shared/entities';
+import { VariantProps } from 'class-variance-authority';
 import { SquarePlus } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -15,12 +17,14 @@ type CreateCaseButtonProps = {
   caseClass?: CaseClasses;
   className?: string;
   label?: string;
-};
+} & VariantProps<typeof buttonVariants>;
 
 const CreateCaseButton = ({
   caseClass = CaseClasses.incident,
   className,
   label,
+  variant = 'outline',
+  size,
 }: CreateCaseButtonProps): JSX.Element | null => {
   const emptyIncidentValues = useSelector(selectCaseFormValues);
   const emptyProblemtValues = useSelector(selectProblemFormValues);
@@ -36,7 +40,8 @@ const CreateCaseButton = ({
   return (
     <Button
       role="button"
-      variant={'outline'}
+      variant={variant}
+      size={size}
       className={cn('h-8 p-1', className)}
       onClick={(e) => {
         e.preventDefault();

@@ -59,13 +59,21 @@ export class ControlCasesController {
       dto,
       isOperation: false,
     });
-    return this.controlCases.createCase(
+
+    const createdCase = await this.controlCases.createCase(
       {
         ...dto,
         ...approveData,
       },
       req.user.id,
     );
+
+    this.controlCases.setCaseConnections(
+      { fromId: createdCase.id, toIds: dto.connectionsToIds },
+      req.user.id,
+    );
+
+    return createdCase;
   }
 
   @Get(':id/slim')
@@ -118,7 +126,14 @@ export class ControlCasesController {
       throw new UnauthorizedException('Недостаточно прав для изменения');
     }
 
-    return this.controlCases.updateCase(dto, req.user.id);
+    const updatedCase = await this.controlCases.updateCase(dto, req.user.id);
+
+    this.controlCases.setCaseConnections(
+      { fromId: updatedCase.id, toIds: dto.connectionsToIds },
+      req.user.id,
+    );
+
+    return updatedCase;
   }
 
   @Delete()

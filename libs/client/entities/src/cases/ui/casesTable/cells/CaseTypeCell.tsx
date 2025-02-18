@@ -23,7 +23,15 @@ function CaseTypeCell(props: CellContext<CaseFull, string>): JSX.Element {
           <div className="flex flex-1 flex-col items-start justify-start truncate">
             <div className="truncate">{payload?.type?.name || ''}</div>
             <div className="text-muted-foreground line-clamp-1 flex items-start justify-center gap-1 text-xs">
-              Системная прорблема ...
+              {payload?.connectionsTo && payload?.connectionsTo?.length > 0 ? (
+                payload?.connectionsTo.map((c) => (
+                  <span key={c.id} className="rounded-full border px-2">
+                    {c.title}
+                  </span>
+                ))
+              ) : (
+                <span>нет системных проблем</span>
+              )}
             </div>
           </div>
           {/* {search?.selectedCase === props.row.original?.id && (
@@ -37,7 +45,17 @@ function CaseTypeCell(props: CellContext<CaseFull, string>): JSX.Element {
       <TooltipPortal>
         <TooltipContent side="bottom">
           <TooltipArrow />
-          <div className="flex flex-col gap-1">Список проблем...</div>
+          <div className="flex flex-col gap-1">
+            {payload?.connectionsTo && payload?.connectionsTo?.length > 0 ? (
+              payload?.connectionsTo.map((c) => (
+                <span key={c.id} className="rounded-full border px-2">
+                  {c.title}
+                </span>
+              ))
+            ) : (
+              <span>нет системных проблем</span>
+            )}
+          </div>
         </TooltipContent>
       </TooltipPortal>
     </Tooltip>
