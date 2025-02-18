@@ -13,6 +13,11 @@ import {
 } from '../userInput/config';
 import { operationFullSchema } from '../operations/types';
 
+const connectionInfoSchema = z.object({
+  id: z.coerce.number().int().nonnegative(),
+  title: z.string(),
+});
+
 const caseSlimFields = {
   class: z.enum(caseClassesValues),
   externalCases: z.array(externalCaseSchema).default([]), // Array of externalCaseSchema objects
@@ -38,6 +43,8 @@ const caseFullFields = {
   actions: z.array(z.enum(caseActionsValues)).default([]),
   escalations: z.coerce.number().int().nonnegative(),
   controlLevel: z.coerce.number().int(),
+  connectionsFrom: z.array(connectionInfoSchema).default([]),
+  connectionsTo: z.array(connectionInfoSchema).default([]),
 };
 
 export const caseSlimSchema = entitySlimSchema

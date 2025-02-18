@@ -24,12 +24,14 @@ import {
   DeleteControlEntityDto,
   ReadEntityDto,
   RequestWithUserData,
+  SetConnectionsDto,
   UpdateCaseDto,
   approveControlEntitySchema,
   createCaseSchema,
   defineControlAbilityFor,
   deleteControlEntirySchema,
   readEntitySchema,
+  setConnectionsSchema,
   updateCaseSchema,
 } from '@urgp/shared/entities';
 import { ControlCasesService } from './control-cases.service';
@@ -155,5 +157,19 @@ export class ControlCasesController {
       },
       req.user.id,
     );
+  }
+
+  @Patch('connections')
+  async setCaseConnections(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(setConnectionsSchema))
+    dto: SetConnectionsDto,
+  ) {
+    const i = defineControlAbilityFor(req.user);
+    const caseFrom = await this.controlCases.readSlimCaseById(dto.fromId);
+    if (i.cannot('update', caseFrom))
+      throw new UnauthorizedException('Недостаточно прав для изменения');
+
+    return this.controlCases.setCaseConnections(dto, req.user.id);
   }
 }

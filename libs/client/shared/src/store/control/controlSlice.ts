@@ -186,6 +186,8 @@ const controlSlice = createSlice({
         approveDate: new Date(payload?.approveDate).toISOString(),
         approveNotes: payload?.approveNotes,
         dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
+        connectionsToIds: payload?.connectionsTo?.map((p) => p?.id) || [],
+        connectionsFromIds: payload?.connectionsFrom?.map((p) => p?.id) || [],
       };
     },
 
@@ -227,6 +229,8 @@ const controlSlice = createSlice({
         approveDate: new Date(payload?.approveDate).toISOString(),
         approveNotes: payload?.approveNotes,
         dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
+        connectionsToIds: payload?.connectionsTo?.map((p) => p?.id) || [],
+        connectionsFromIds: payload?.connectionsFrom?.map((p) => p?.id) || [],
       };
     },
 

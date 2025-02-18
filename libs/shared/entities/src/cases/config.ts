@@ -26,6 +26,8 @@ export const emptyIncident = {
   notes: '',
   extra: '',
   dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
+  connectionsToIds: [],
+  connectionsFromIds: [],
 } as CaseFormDto;
 
 export const emptyProblem = {
@@ -42,4 +44,6 @@ export const emptyProblem = {
   notes: '',
   extra: '',
   dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
+  connectionsToIds: [],
+  connectionsFromIds: [],
 } as CaseFormDto;

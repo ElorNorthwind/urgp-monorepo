@@ -16,6 +16,12 @@ export const createCaseSchema = caseSlimSchema
   })
   .extend({
     dueDate: z.string().datetime().optional(), // ISO 8601 date string
+    connectionsToIds: z
+      .array(z.coerce.number().int().nonnegative())
+      .default([]),
+    connectionsFromIds: z
+      .array(z.coerce.number().int().nonnegative())
+      .default([]),
   });
 export type CreateCaseDto = z.infer<typeof createCaseSchema>;
 
@@ -37,6 +43,12 @@ export const updateCaseSchema = caseSlimSchema
   .extend({
     id: z.coerce.number().int().nonnegative(),
     dueDate: z.string().datetime().optional(), // ISO 8601 date string
+    connectionsToIds: z
+      .array(z.coerce.number().int().nonnegative())
+      .default([]),
+    connectionsFromIds: z
+      .array(z.coerce.number().int().nonnegative())
+      .default([]),
     //   dueDate: z.coerce
     //     .date({ message: 'Дата обязательна' })
     //     .or(z.number())
@@ -59,6 +71,12 @@ export const caseFormSchema = updateCaseSchema
     }).shape,
   );
 export type CaseFormDto = z.infer<typeof caseFormSchema>;
+
+export const setConnectionsSchema = z.object({
+  fromId: z.coerce.number().int().nonnegative(),
+  toIds: z.array(z.coerce.number().int().nonnegative()),
+});
+export type SetConnectionsDto = z.infer<typeof setConnectionsSchema>;
 
 // Параметры поиска на странице
 const queryNumberArray = z

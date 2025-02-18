@@ -26,7 +26,23 @@ GROUP BY o."caseId"),
 		FROM control.cases_ c
 		LEFT JOIN (SELECT id, name, category, fullname as "fullName", default_executor_id as "executorId" FROM control.direction_types) d ON d.id = ANY(c.direction_ids)
 		WHERE d.id IS NOT NULL
-		GROUP BY c.id)
+		GROUP BY c.id),
+	connections_to AS (
+		SELECT 
+			cc.from_id as id,
+			JSONB_AGG(cf) as connections
+		FROM control.case_connections cc
+		LEFT JOIN (SELECT id, title FROM control.cases_) cf ON cc.to_id = cf.id
+		WHERE cc.archive_date IS NULL
+		GROUP BY cc.from_id),
+	connections_from AS (
+		SELECT 
+			cc.to_id as id,
+			JSONB_AGG(cf) as connections
+		FROM control.case_connections cc
+		LEFT JOIN (SELECT id, title FROM control.cases_) cf ON cc.from_id = cf.id
+		WHERE cc.archive_date IS NULL
+		GROUP BY cc.to_id)
 
 SELECT
 	c.id,
@@ -70,6 +86,8 @@ SELECT
 	, null) as actions,
 	c.revision,
 	COALESCE(o.escalations, 0) as escalations,
+	cf.connections as "connectionsFrom",
+	ct.connections as "connectionsTo",
 	o."controlLevel"
 FROM control.cases_ c
 
@@ -80,6 +98,8 @@ LEFT JOIN user_info u3 ON u3.id = c.approve_from_id
 LEFT JOIN user_info u4 ON u4.id = c.approve_to_id
 LEFT JOIN operation_info o ON o."caseId" = c.id
 LEFT JOIN directions d ON d.id = c.id
+LEFT JOIN connections_from cf ON cf.id = c.id
+LEFT JOIN connections_to ct ON ct.id = c.id
 LEFT JOIN (SELECT id, name, category, fullname as "fullName" FROM control.case_status_types) s ON s.id = 
 	CASE 
 		WHEN c.approve_status = 'pending' THEN 1 -- "на утверждении"

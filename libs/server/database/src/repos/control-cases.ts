@@ -7,6 +7,7 @@ import {
   ApproveControlEntityDto,
   ReadEntityDto,
   CONTROL_THRESHOLD,
+  SetConnectionsDto,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { cases } from './sql/sql';
@@ -117,5 +118,11 @@ export class ControlCasesRepository {
     return this.db
       .one(cases.deleteCase, { id, updatedById })
       .then((result) => result.id);
+  }
+  upsertCaseConnections(
+    dto: SetConnectionsDto,
+    userId: number,
+  ): Promise<number[]> {
+    return this.db.any(cases.upsertCaseConnections, { ...dto, userId });
   }
 }
