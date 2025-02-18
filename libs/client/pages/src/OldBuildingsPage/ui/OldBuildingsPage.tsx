@@ -10,7 +10,8 @@ import {
 } from '@tanstack/react-router';
 import { cn, VirtualDataTable } from '@urgp/client/shared';
 import { OldBuildingsCard, OldBuildingsFilter } from '@urgp/client/widgets';
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import { Row } from '@tanstack/react-table';
 import {
   GetOldBuldingsDto,
   OldBuilding,
@@ -24,7 +25,7 @@ const OldBuildingsPage = (): JSX.Element => {
 
   const navigate = useNavigate({ from: '/renovation/oldbuildings' });
   const { currentData: buildings, isLoading, isFetching } = useOldBuldings();
-  const filterRef = useRef<HTMLDivElement>(null);
+  const [filtered, setFiltered] = useState<Row<OldBuilding>[]>([]);
 
   const setFilters = useCallback(
     (value: OldBuildingsPageSearch) => {
@@ -53,6 +54,7 @@ const OldBuildingsPage = (): JSX.Element => {
         filters={filters}
         setFilters={setFilters}
         totalCount={buildings?.length}
+        filteredCount={filtered?.length}
         isFetching={isFetching}
       />
 
@@ -60,6 +62,7 @@ const OldBuildingsPage = (): JSX.Element => {
         <VirtualDataTable<OldBuilding, string | number | undefined>
           initialOffset={scrollEntry?.scrollY}
           data-scroll-restoration-id={scrollRestorationId}
+          setFilteredRows={setFiltered}
           onRowClick={(row) => {
             // переделать в полностью контролируемый селект?
             row.toggleSelected();

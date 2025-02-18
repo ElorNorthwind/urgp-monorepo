@@ -25,10 +25,14 @@ type OldBuildingsFilterProps = {
   setFilters: (value: Partial<GetOldBuldingsDto>) => void;
   isFetching?: boolean;
   totalCount?: number;
+  filteredCount?: number;
 };
 
 const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
-  ({ filters, setFilters, isFetching, totalCount }, ref): JSX.Element => {
+  (
+    { filters, setFilters, isFetching, totalCount, filteredCount },
+    ref,
+  ): JSX.Element => {
     const filteredAreas = useMemo(() => {
       return areas.filter((area) =>
         filters.okrugs?.some((okrug) => okrug === area.value),
@@ -223,7 +227,9 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
           </Button>
         )}
         <div className="text-muted-foreground ml-auto">
-          {totalCount || (isFetching ? '' : 0)}
+          {(filteredCount || '') +
+            ' из ' +
+            (totalCount || (isFetching ? '' : 0))}
         </div>
       </div>
     );

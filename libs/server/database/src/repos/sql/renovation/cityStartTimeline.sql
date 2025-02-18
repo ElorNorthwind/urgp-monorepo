@@ -29,7 +29,7 @@ SELECT
   COUNT(*) FILTER(WHERE actual_first_resettlement_start IS NOT NULL)::integer as started,
   COUNT(*) FILTER(WHERE actual_first_resettlement_start IS NULL AND plan_first_resettlement_start IS NOT NULL)::integer as planned
 FROM intervals i 
-LEFT JOIN building_dates d ON i.year = DATE_PART('year', plan_first_resettlement_start)::integer 
-                          AND i.month = DATE_PART('month', plan_first_resettlement_start)::integer
+LEFT JOIN building_dates d ON i.year = DATE_PART('year', COALESCE(actual_first_resettlement_start, plan_first_resettlement_start))::integer 
+                          AND i.month = DATE_PART('month', COALESCE(actual_first_resettlement_start, plan_first_resettlement_start))::integer
 GROUP BY i.year, i.month, i.label
 ORDER BY i.year, i.month;

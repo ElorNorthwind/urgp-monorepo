@@ -46,8 +46,11 @@ export function oldBuildingsGlobalFilterFn(
   if (
     startFrom &&
     !(
-      toDate(row?.original?.terms?.plan?.firstResetlementStart ?? 0) >=
-      toDate(startFrom)
+      toDate(
+        row?.original?.terms?.actual?.firstResetlementStart ??
+          row?.original?.terms?.plan?.firstResetlementStart ??
+          0,
+      ) >= toDate(startFrom)
     )
   )
     allowed = false;
@@ -55,8 +58,11 @@ export function oldBuildingsGlobalFilterFn(
   if (
     startTo &&
     !(
-      toDate(row?.original?.terms?.plan?.firstResetlementStart ?? 0) <=
-      toDate(startTo)
+      toDate(
+        row?.original?.terms?.actual?.firstResetlementStart ??
+          row?.original?.terms?.plan?.firstResetlementStart ??
+          0,
+      ) <= toDate(startTo)
     )
   )
     allowed = false;
