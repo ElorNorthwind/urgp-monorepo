@@ -14,14 +14,16 @@ import { isThisWeek } from 'date-fns';
 import { CircleCheck, CirclePlay, CircleSlash, CircleX } from 'lucide-react';
 import { useMemo } from 'react';
 
-const countByStatus = (status: number[], cases?: Case[]) => {
+const countByStatus = (status: number[], cases?: CaseFull[]) => {
   return {
     total: cases?.filter((c) => status.includes(c?.status?.id))?.length || 0,
     thisWeek:
       cases?.filter(
         (c) =>
           status.includes(c?.status?.id) &&
-          isThisWeek(c.createdAt, { weekStartsOn: 1 }),
+          ([2, 3, 4, 11].includes(c?.status?.id)
+            ? isThisWeek(c?.createdAt, { weekStartsOn: 1 })
+            : isThisWeek(c?.lastEdit ?? c?.createdAt, { weekStartsOn: 1 })),
       )?.length || 0,
   };
 };

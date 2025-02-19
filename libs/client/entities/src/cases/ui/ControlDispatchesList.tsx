@@ -9,7 +9,7 @@ import { Fragment } from 'react/jsx-runtime';
 import { EditDispatchButton } from '../../operations';
 import { isBefore } from 'date-fns';
 import { useMemo } from 'react';
-import { OperationFull } from '@urgp/shared/entities';
+import { CONTROL_THRESHOLD, OperationFull } from '@urgp/shared/entities';
 import { CirclePower, Repeat } from 'lucide-react';
 
 type ControlDispatchesListProps = {
@@ -108,7 +108,12 @@ const ControlDispatchesList = (
                   )}
                 >
                   <span>{'от: ' + d?.controlFrom?.fio}</span>
-                  <CirclePower className="text-muted-foreground size-4" />
+                  {d?.controlFrom?.priority &&
+                  d?.controlFrom?.priority >= CONTROL_THRESHOLD ? (
+                    <CirclePower className="text-muted-foreground size-4" />
+                  ) : (
+                    <></>
+                  )}
                 </div>
               )}
               {d?.notes && (
