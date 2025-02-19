@@ -3,6 +3,7 @@ import { useCaseDirectionTypes } from '../api/classificatorsApi';
 import { MultiSelectFormField } from '@urgp/client/widgets';
 import { cn } from '@urgp/client/shared';
 import { directionCategoryStyles } from '../../cases/config/caseStyles';
+import { ClassificatorInfo } from '@urgp/shared/entities';
 
 type DirectionTypeSelectorProps = {
   className?: string;
@@ -14,6 +15,7 @@ type DirectionTypeSelectorProps = {
   label?: string | null;
   placeholder?: string;
   dirtyIndicator?: boolean;
+  lockOption?: (option?: ClassificatorInfo) => boolean;
 };
 
 const DirectionTypeSelector = (
@@ -29,6 +31,7 @@ const DirectionTypeSelector = (
     label = 'Направления работы',
     placeholder = 'Выберите направления',
     dirtyIndicator = false,
+    lockOption,
   } = props;
   const { data, isLoading, isFetching } = useCaseDirectionTypes();
 
@@ -45,7 +48,7 @@ const DirectionTypeSelector = (
       className={className}
       popoverMinWidth={popoverMinWidth}
       dirtyIndicator={dirtyIndicator}
-      // lockOption={(item) => item?.category === 'УРЖП'}
+      lockOption={lockOption}
       addBadgeStyle={(item) => {
         return cn(
           directionCategoryStyles?.[item?.category || '']?.badgeStyle || '',

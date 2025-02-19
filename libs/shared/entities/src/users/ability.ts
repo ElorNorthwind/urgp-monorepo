@@ -49,6 +49,7 @@ type Subject =
 export const subjectVariants = {
   stage: 'Stage',
   'control-incident': 'Case',
+  'control-problem': 'Case',
   dispanch: 'Dispatch',
   reminder: 'Reminder',
 };
@@ -79,11 +80,11 @@ export function defineControlAbilityFor(user: User) {
       authorId: { $eq: user.id },
     });
 
-    return build({
-      detectSubjectType: (item) =>
-        (subjectVariants?.[item?.class as keyof typeof subjectVariants] ||
-          'unknown') as ExtractSubjectType<Subject>,
-    });
+    // return build({
+    //   detectSubjectType: (item) =>
+    //     (subjectVariants?.[item?.class as keyof typeof subjectVariants] ||
+    //       'unknown') as ExtractSubjectType<Subject>,
+    // });
   }
 
   can(['read', 'create'], 'all'); // Все могут читать или создавать все
@@ -99,9 +100,17 @@ export function defineControlAbilityFor(user: User) {
   can(['update', 'approve'], 'all', {
     approveToId: { $eq: user.id }, // BE // Все могут менять или согласовывать то, что у них на согле
   });
+
   cannot('update', 'all', {
     approveStatus: { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
   });
+
+  can('update', 'Case', {
+    dispatches: { $elemMatch: { 'controlTo.id': { $eq: user.id } } },
+    // dispatches: { $elemMatch: { class: { $eq: 'dispatch' } } },
+    // { 'cities.address': { $elemMatch: { postalCode: { $regex: /^AB/ } } } } // (4)
+  });
+
   // cannot('create', 'Dispatch');
   can('update', 'Dispatch', { controllerId: { $eq: user.id } }); // FORM Можно менять поручения, которые ты контролируешь
   can('update', 'Dispatch', { controlFromId: { $eq: user.id } }); // BE Можно менять поручения, которые ты контролируешь

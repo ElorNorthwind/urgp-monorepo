@@ -35,3 +35,4 @@ export * from './ControlUserMenu';
 export * from './ChangeDirectionsForm';
 export * from './ControlFormDisplayElement';
 export * from './ApproveDialog';
+export * from './DirectionsChangeMenu';

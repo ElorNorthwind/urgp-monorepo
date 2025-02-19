@@ -9,6 +9,8 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  useAuth,
+  useUserAbility,
 } from '@urgp/client/shared';
 import { CaseClasses, CaseFull, OperationClasses } from '@urgp/shared/entities';
 import { CaseCardHeader } from './CaseCardHeader';
@@ -26,6 +28,7 @@ import { CaseCardFooter } from './CaseCardFooter';
 import { ControlDispatchesList } from '../ControlDispatchesList';
 import { format } from 'date-fns';
 import { useLocation, useNavigate } from '@tanstack/react-router';
+import { DirectionsChangeMenu } from '@urgp/client/widgets';
 
 type CaseCardProps = {
   controlCase: CaseFull;
@@ -61,12 +64,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
     { class: OperationClasses.stage, case: controlCase?.id },
     { skip: !controlCase?.id || controlCase?.id === 0 },
   );
-
-  // const {
-  //   data: dispatches,
-  //   isLoading: isDispatchesLoading,
-  //   isFetching: isDispatchesFetching,
-  // } = useDispatches(controlCase?.id, { skip: !controlCase?.id });
+  const i = useUserAbility();
   const dispatches = controlCase?.dispatches || [];
 
   const caseApproveInfo = getApproveInfo(controlCase);
@@ -146,13 +144,24 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
               </div>
             )}
             <div className="bg-muted-foreground/5 flex items-center truncate border-r px-2 py-1 text-right font-bold">
-              <span className="">Темы:</span>
+              {/* <span className="">Темы:</span> */}
+              {i.can('update', controlCase) ? (
+                <DirectionsChangeMenu
+                  controlCase={controlCase}
+                  variant={'link'}
+                  className="text-md text-sidebar-foreground h-8 p-0 text-right font-bold hover:no-underline"
+                  label="Темы:"
+                />
+              ) : (
+                <span className="">Темы:</span>
+              )}
             </div>
             <CaseDirectionsList
               directions={controlCase?.directions}
               className="col-span-3 items-center p-2"
             />
           </div>
+
           <ExternalCasesList externalCases={controlCase?.externalCases} />
         </div>
       )}

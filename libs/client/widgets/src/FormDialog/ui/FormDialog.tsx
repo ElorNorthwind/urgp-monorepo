@@ -1,3 +1,11 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  ActionCreatorWithoutPayload,
+  ActionCreatorWithPayload,
+} from '@reduxjs/toolkit';
+import { TypedUseMutation } from '@reduxjs/toolkit/dist/query/react';
+import { MutationDefinition } from '@reduxjs/toolkit/query';
+import { ConfirmationAlertDialog } from '@urgp/client/features';
 import {
   Button,
   cn,
@@ -9,8 +17,6 @@ import {
   DialogTitle,
   Form,
   RootState,
-  Separator,
-  setStageFormState,
   Sheet,
   SheetContent,
   SheetDescription,
@@ -20,29 +26,18 @@ import {
   Skeleton,
   useIsMobile,
 } from '@urgp/client/shared';
-import { useDispatch, useSelector } from 'react-redux';
-import { Fragment, ReactElement, useEffect, useState } from 'react';
+import { DialogFormState } from '@urgp/shared/entities';
+import { Save, SquareX, Trash2 } from 'lucide-react';
+import { ReactElement, useEffect, useState } from 'react';
 import {
   DefaultValues,
   FieldValues,
   useForm,
   UseFormReturn,
 } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ConfirmationAlertDialog } from '@urgp/client/features';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
 import { ZodObject } from 'zod';
-import {
-  ActionCreatorWithoutPayload,
-  ActionCreatorWithPayload,
-} from '@reduxjs/toolkit';
-import { MutationDefinition } from '@reduxjs/toolkit/query';
-import { TypedUseMutation } from '@reduxjs/toolkit/dist/query/react';
-import { is } from 'date-fns/locale';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
-import { DialogFormState } from '@urgp/shared/entities';
-import { error } from 'console';
-import { Save, SquareX, Trash, Trash2 } from 'lucide-react';
 
 // const entitySliceFormHelpers = {
 //   stage: {

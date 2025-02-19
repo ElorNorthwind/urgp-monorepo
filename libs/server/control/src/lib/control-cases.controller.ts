@@ -40,6 +40,7 @@ import {
 import { ControlCasesService } from './control-cases.service';
 import { ControlClassificatorsService } from './control-classificators.service';
 import { differenceInDays } from 'date-fns';
+import { userInfo } from 'os';
 
 @Controller('control/case')
 @UseGuards(AccessTokenGuard)
@@ -125,9 +126,10 @@ export class ControlCasesController {
     @Body(new ZodValidationPipe(updateCaseSchema)) dto: UpdateCaseDto,
   ) {
     const i = defineControlAbilityFor(req.user);
-    const curCase = (await this.controlCases.readSlimCaseById(
+    const curCase = (await this.controlCases.readFullCaseById(
       dto.id,
-    )) as CaseSlim;
+      req.user.id,
+    )) as CaseFull;
     if (
       i.cannot('update', {
         ...curCase,
