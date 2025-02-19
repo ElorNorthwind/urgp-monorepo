@@ -105,6 +105,13 @@ export class ControlOperationsService {
     );
   }
 
+  public async markAsWatched(caseIds: number[], userId: number): Promise<null> {
+    return await this.dbServise.db.controlOperations.markAsWatched(
+      caseIds,
+      userId,
+    );
+  }
+
   public async deleteOperation(
     id: number,
     userId: number,

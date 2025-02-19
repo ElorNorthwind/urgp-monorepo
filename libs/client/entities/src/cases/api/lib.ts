@@ -125,7 +125,7 @@ export const refetchCachedCaseByOperationId = async (
 };
 
 export const markCachedCase = (
-  dto: { mode: 'seen' | 'done'; case: number[] },
+  dto: { mode: 'seen' | 'done' | 'watched'; case: number[] },
   dispatch: ThunkDispatch<any, any, UnknownAction>,
   getState?: () => RootState<any, any, 'api'>,
 ) => {
@@ -139,9 +139,12 @@ export const markCachedCase = (
             return {
               ...cCase,
               viewStatus:
-                cCase.viewStatus === 'unwatched' || dto.mode === 'done'
-                  ? 'unwatched'
-                  : ViewStatus.unchanged,
+                dto.mode === 'watched'
+                  ? ViewStatus.unchanged
+                  : cCase.viewStatus === ViewStatus.unwatched ||
+                      dto.mode === 'done'
+                    ? ViewStatus.unwatched
+                    : ViewStatus.unchanged,
               actions:
                 dto.mode === 'done'
                   ? cCase.actions.filter(

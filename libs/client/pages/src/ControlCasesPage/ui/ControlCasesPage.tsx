@@ -15,8 +15,16 @@ import {
   TooltipProvider,
   VirtualDataTable,
 } from '@urgp/client/shared';
-import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
-import { CaseFull, CasesPageSearchDto } from '@urgp/shared/entities';
+import {
+  CaseFilterSidebar,
+  ControlSidePanel,
+  SelectedCasesActionBar,
+} from '@urgp/client/widgets';
+import {
+  CaseFull,
+  CasesPageSearchDto,
+  ViewStatus,
+} from '@urgp/shared/entities';
 import { useState } from 'react';
 import { CasesPageHeader } from './CasesPageHeader';
 import { useSelector } from 'react-redux';
@@ -124,6 +132,7 @@ const ControlCasesPage = (): JSX.Element => {
                   });
             }}
           />
+          <SelectedCasesActionBar selected={selected} />
         </main>
       </SidebarInset>
       <ControlSidePanel isOpen={search.selectedCase !== undefined}>

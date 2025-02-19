@@ -83,6 +83,11 @@ export const markOperationSchema = z.object({
 });
 export type MarkOperationDto = z.infer<typeof markOperationSchema>;
 
+export const markAsWatchedSchema = z.object({
+  caseIds: numberOrArraySchema,
+});
+export type MarkAsWatchedDto = z.infer<typeof markAsWatchedSchema>;
+
 export const reminderFormSchema = operationFormSchema
   .extend({
     ...markOperationSchema.shape,

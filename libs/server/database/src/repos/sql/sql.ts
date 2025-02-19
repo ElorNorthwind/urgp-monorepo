@@ -94,6 +94,7 @@ export const operations = {
   deleteOperation: sql('sql/control/operations/deleteOperation.sql'),
   markAsDone: sql('sql/control/operations/markAsDone.sql'),
   markAsSeen: sql('sql/control/operations/markAsSeen.sql'),
+  markAsWatched: sql('sql/control/operations/markAsWatched.sql'),
   approveOperation: sql('sql/control/operations/approveOperation.sql'),
 };
 

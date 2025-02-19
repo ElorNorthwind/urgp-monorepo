@@ -36,6 +36,8 @@ import {
   MarkOperationDto,
   readEntitySchema,
   ReadEntityDto,
+  markAsWatchedSchema,
+  MarkAsWatchedDto,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlOperationsService } from './control-operations.service';
@@ -129,6 +131,18 @@ export class ControlOperationsController {
     @Body(new ZodValidationPipe(markOperationSchema)) dto: MarkOperationDto,
   ) {
     return this.controlOperations.markOperation(dto, req.user.id);
+  }
+
+  @Patch('mark-as-watched')
+  async markAsWatched(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(markAsWatchedSchema))
+    { caseIds }: MarkAsWatchedDto,
+  ) {
+    if (!caseIds || caseIds?.length === 0)
+      throw new BadRequestException('Нужен корректный список дел');
+
+    return this.controlOperations.markAsWatched(caseIds, req.user.id);
   }
 
   @Delete()

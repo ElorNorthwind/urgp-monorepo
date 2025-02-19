@@ -6,6 +6,7 @@ import {
   UpdateOperationDto,
   MarkOperationDto,
   ReadEntityDto,
+  GET_DEFAULT_CONTROL_DUE_DATE,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { operations } from './sql/sql';
@@ -135,6 +136,15 @@ export class ControlOperationsRepository {
       conditions: conditions.join(' AND '),
       updatedById,
     }) as Promise<number[]>;
+  }
+
+  markAsWatched(caseIds: number[], userId: number): Promise<null> {
+    const q = this.pgp.as.format(operations.markAsWatched, {
+      caseIds,
+      dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
+      userId,
+    });
+    return this.db.none(q);
   }
 
   deleteOperation(id: number, updatedById: number): Promise<number> {

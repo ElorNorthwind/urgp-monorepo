@@ -4,6 +4,7 @@ import {
   CreateOperationDto,
   DeleteControlEntityDto,
   EntityClasses,
+  GET_DEFAULT_CONTROL_DUE_DATE,
   OperationClasses,
   OperationFull,
   OperationSlim,
@@ -177,6 +178,40 @@ export const operationsApi = rtkApi.injectEndpoints({
       },
     }),
 
+    markReminderAsWatched: build.mutation<null, number[]>({
+      query: (caseIds) => ({
+        url: '/control/operation/mark-as-watched',
+        method: 'PATCH',
+        body: {
+          caseIds,
+        },
+      }),
+
+      async onQueryStarted(caseIds, { dispatch, getState }) {
+        caseIds.forEach((caseId) => {
+          dispatch(
+            operationsApi.util.updateQueryData(
+              'getOperationsByCaseId',
+              { class: EntityClasses.reminder, case: caseId },
+              (draft) => {
+                return draft.map((op) => {
+                  if (op.controlFrom?.id === store.getState()?.auth?.user?.id)
+                    return {
+                      ...op,
+                      updatedAt: new Date().toISOString(),
+                      dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
+                      doneDate: null,
+                    };
+                  return op;
+                });
+              },
+            ),
+          );
+        });
+        markCachedCase({ mode: 'watched', case: caseIds }, dispatch, getState);
+      },
+    }),
+
     deleteOperation: build.mutation<OperationSlim, DeleteControlEntityDto>({
       query: (dto) => ({
         url: '/control/operation',
@@ -246,6 +281,7 @@ export const {
   useGetOperationHistroyQuery: useOperationHistory,
   useUpdateOperationMutation: useUpdateOperation,
   useMarkRemindersMutation: useMarkReminders,
+  useMarkReminderAsWatchedMutation: useMarkReminderAsWatched,
   useMarkReminderAsDoneMutation: useMarkReminderAsDone,
   useDeleteOperationMutation: useDeleteOperation,
   useApproveOperationMutation: useApproveOperation,
