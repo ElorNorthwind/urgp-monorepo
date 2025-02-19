@@ -40,6 +40,7 @@ type MultiSelectFormFieldProps<T> = {
   dirtyIndicator?: boolean;
   side?: 'top' | 'right' | 'bottom' | 'left';
   extraButton?: () => JSX.Element | null;
+  lockOption?: (option?: ClassificatorInfo) => boolean;
 };
 
 const MultiSelectFormField = <T extends string | number>(
@@ -60,6 +61,7 @@ const MultiSelectFormField = <T extends string | number>(
     addBadgeStyle,
     dirtyIndicator = false,
     extraButton,
+    lockOption,
   } = props;
 
   const flatOptions = useMemo(
@@ -80,9 +82,11 @@ const MultiSelectFormField = <T extends string | number>(
           .map((nestedOption) => {
             return {
               ...nestedOption,
-              items: nestedOption.items.filter(({ value }) => {
-                return !field.value?.some((v: number) => v === value);
-              }),
+              items: nestedOption.items
+                .filter(({ value }) => {
+                  return !field.value?.some((v: number) => v === value);
+                })
+                .filter((o) => (lockOption ? !lockOption(o) : true)),
             };
           })
           .filter((o) => o.items.length > 0);
@@ -105,7 +109,31 @@ const MultiSelectFormField = <T extends string | number>(
                   onKeyDown={(e) => {
                     if (e.key === 'Delete' || e.key === 'Backspace') {
                       if (inputValue === '') {
-                        field.onChange([...(field.value.slice(0, -1) || [])]);
+                        if (
+                          !lockOption ||
+                          !lockOption(
+                            flatOptions.find(
+                              (o) =>
+                                o.value === field.value[field.value.length - 1],
+                            ),
+                          )
+                        ) {
+                          field.onChange([...(field.value.slice(0, -1) || [])]);
+                        } else if (!!lockOption) {
+                          const removedIndex = field.value.findLastIndex(
+                            (v: number) =>
+                              !lockOption(
+                                flatOptions.find((o) => v === o.value),
+                              ),
+                          );
+                          return (
+                            removedIndex >= 0 &&
+                            field.onChange([
+                              ...field.value.slice(0, removedIndex),
+                              ...field.value.slice(removedIndex + 1),
+                            ])
+                          );
+                        }
                       }
                     }
                     // This is not a default behaviour of the <input /> field
@@ -134,6 +162,12 @@ const MultiSelectFormField = <T extends string | number>(
                     >
                       <div className="flex flex-wrap gap-1">
                         {field.value?.map((option: number) => {
+                          const locked =
+                            (lockOption &&
+                              lockOption(
+                                flatOptions.find((o) => o.value === option),
+                              )) ??
+                            false;
                           return (
                             <Badge
                               key={option}
@@ -143,6 +177,8 @@ const MultiSelectFormField = <T extends string | number>(
                                   addBadgeStyle(
                                     flatOptions.find((o) => o.value === option),
                                   ),
+                                locked &&
+                                  'bg-muted-foreground/10 cursor-not-allowed',
                               )}
                             >
                               {
@@ -150,8 +186,12 @@ const MultiSelectFormField = <T extends string | number>(
                                   ?.label
                               }
                               <button
+                                disabled={locked}
                                 tabIndex={-1}
-                                className="ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2"
+                                className={cn(
+                                  'ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2',
+                                  locked && 'hidden',
+                                )}
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter') {
                                     field.onChange(
@@ -228,6 +268,7 @@ const MultiSelectFormField = <T extends string | number>(
                             className="h-full overflow-auto"
                           >
                             {category.items.map((option) => {
+                              // if (lockOption && lockOption(option)) return null;
                               return (
                                 <CommandItem
                                   key={option.value}
@@ -242,7 +283,7 @@ const MultiSelectFormField = <T extends string | number>(
                                       option.value,
                                     ]);
                                   }}
-                                  className={'cursor-pointer'}
+                                  className={cn('cursor-pointer')}
                                   keywords={option.tags}
                                 >
                                   <p className="flex w-full flex-col gap-0 truncate">

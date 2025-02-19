@@ -45,6 +45,7 @@ const DirectionTypeSelector = (
       className={className}
       popoverMinWidth={popoverMinWidth}
       dirtyIndicator={dirtyIndicator}
+      // lockOption={(item) => item?.category === 'УРЖП'}
       addBadgeStyle={(item) => {
         return cn(
           directionCategoryStyles?.[item?.category || '']?.badgeStyle || '',
