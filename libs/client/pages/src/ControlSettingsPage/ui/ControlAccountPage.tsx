@@ -1,11 +1,10 @@
 import {
-  DirectionTypeSelector,
   useCurrentUserApproveTo,
+  useCurrentUserSettings,
   useUserControlTo,
 } from '@urgp/client/entities';
 import { InfoBox } from '@urgp/client/features';
 import {
-  Button,
   Card,
   CardContent,
   CardDescription,
@@ -13,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
   selectCurrentUser,
-  Separator,
 } from '@urgp/client/shared';
 import { ChangeDirectionsForm } from '@urgp/client/widgets';
 import { useSelector } from 'react-redux';
@@ -32,6 +30,12 @@ const ControlAccountPage = (): JSX.Element => {
     isFetching: isControlToFetching,
   } = useUserControlTo();
 
+  const {
+    data: userSettings,
+    isLoading: isSettingsLoading,
+    isFetching: isSettingsFetching,
+  } = useCurrentUserSettings();
+
   return (
     <Card>
       <CardHeader>
@@ -45,7 +49,17 @@ const ControlAccountPage = (): JSX.Element => {
             <InfoBox label="Логин:" value={user?.login} />
             <InfoBox label="ФИО:" value={user?.fio} />
           </div>
-          <InfoBox label="Роли:" value={user?.controlData?.roles?.join(', ')} />
+          <div className="flex flex-row justify-between gap-4 text-nowrap">
+            <InfoBox
+              label="Управление:"
+              isLoading={isSettingsLoading || isSettingsFetching}
+              value={userSettings?.department}
+            />
+            <InfoBox
+              label="Роли:"
+              value={user?.controlData?.roles?.join(', ')}
+            />
+          </div>
           <InfoBox
             isLoading={isApproveToLoading || isApproveToFetching}
             label="Согласующие:"
