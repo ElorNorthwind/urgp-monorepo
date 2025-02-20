@@ -20,7 +20,8 @@ SET
     control_to_id = ${controlToId}, 
     title = ${title}, 
     notes = ${notes}, 
-    extra = ${extra}
+    extra = ${extra},
+    revision = revision + 1
     -- archive_date = ${archiveDate} 
 WHERE id = ${id} 
 RETURNING id;

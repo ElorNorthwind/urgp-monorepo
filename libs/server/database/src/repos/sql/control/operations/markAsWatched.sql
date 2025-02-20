@@ -6,7 +6,8 @@ WITH marked_cases AS (
         updated_by_id = ${userId},
         updated_at = NOW(),
         due_date = ${dueDate},
-        done_date = null
+        done_date = null,
+        revision = revision + 1
     FROM marked_cases m
     WHERE case_id = m.id
     AND m.id IS NOT NULL

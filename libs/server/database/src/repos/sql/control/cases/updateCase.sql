@@ -14,6 +14,7 @@ SET
     title = ${title},
     notes = ${notes},
     extra = ${extra},
-    updated_at = NOW()
+    updated_at = NOW(),
+    revision = revision + 1
 WHERE id = ${id}
 RETURNING id;

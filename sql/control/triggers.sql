@@ -46,7 +46,7 @@ BEGIN
 			NEW.notes,
 			NEW.extra,
 			NEW.archive_date,
-			1,
+			NEW.revision,
 			null
 		);
 				
@@ -94,7 +94,7 @@ BEGIN
 			NEW.notes,
 			NEW.extra,
 			NEW.archive_date,
-			OLD.revision + 1,
+			NEW.revision,
 			null
 		);
 				
@@ -142,7 +142,7 @@ BEGIN
 			OLD.notes,
 			OLD.extra,
 			OLD.archive_date,
-			OLD.revision + 1,
+			OLD.revision,
 			CURRENT_TIMESTAMP
 		);
 		RETURN OLD;
@@ -211,7 +211,7 @@ BEGIN
 			NEW.notes,
 			NEW.extra,
 			NEW.archive_date,
-			1,
+			NEW.revision,
 			null
 		);
 				
@@ -265,7 +265,7 @@ BEGIN
 			NEW.notes,
 			NEW.extra,
 			NEW.archive_date,
-			OLD.revision + 1,
+			NEW.revision,
 			null
 		);
 				
@@ -318,7 +318,7 @@ BEGIN
 			OLD.notes,
 			OLD.extra,
 			OLD.archive_date,
-			OLD.revision + 1,
+			OLD.revision,
 			CURRENT_TIMESTAMP
 		);
 		RETURN OLD;

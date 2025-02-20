@@ -6,6 +6,7 @@ SET
     approve_status = ${approveStatus},
     approve_date = ${approveDate},
     approve_notes = ${approveNotes},
-    updated_at = NOW()
+    updated_at = NOW(),
+    revision = revision + 1
 WHERE id = ${id}
 RETURNING id
