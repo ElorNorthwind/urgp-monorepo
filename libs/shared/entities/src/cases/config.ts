@@ -29,6 +29,7 @@ export const emptyIncident = {
   dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
   connectionsToIds: [],
   connectionsFromIds: [],
+  manualControlToIds: [],
 } as CaseFormDto;
 
 export const emptyProblem = {
@@ -47,6 +48,7 @@ export const emptyProblem = {
   dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
   connectionsToIds: [],
   connectionsFromIds: [],
+  manualControlToIds: [],
 } as CaseFormDto;
 
 export const getFormDataFromCaseFull = (payload: CaseFull) => {
@@ -72,5 +74,6 @@ export const getFormDataFromCaseFull = (payload: CaseFull) => {
     dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
     connectionsToIds: payload?.connectionsTo?.map((p) => p?.id) || [],
     connectionsFromIds: payload?.connectionsFrom?.map((p) => p?.id) || [],
+    manualControlToIds: [],
   };
 };

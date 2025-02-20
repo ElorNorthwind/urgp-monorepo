@@ -6,3 +6,4 @@ export * from './ui/ProblemSelector';
 export * from './ui/IncidentSelector';
 export * from './ui/ControlToSelector';
 export * from './api/classificatorsApi';
+export * from './ui/ManualControlToSelector';

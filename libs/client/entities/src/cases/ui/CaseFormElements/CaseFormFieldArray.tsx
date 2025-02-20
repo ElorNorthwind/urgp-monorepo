@@ -1,4 +1,13 @@
-import { cn, selectCurrentUser, useUserAbility } from '@urgp/client/shared';
+import {
+  Button,
+  cn,
+  selectCurrentUser,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  useAuth,
+  useUserAbility,
+} from '@urgp/client/shared';
 import {
   DateFormField,
   FieldsArrayProps,
@@ -9,7 +18,9 @@ import {
 import { useSelector } from 'react-redux';
 import {
   CaseTypeSelector,
+  ControlToSelector,
   DirectionTypeSelector,
+  ManualControlToSelector,
   ProblemSelector,
   useCurrentUserApproveTo,
 } from '../../../classificators';
@@ -17,14 +28,16 @@ import { ExternalCaseFieldArray } from './ExternalCaseFieldArray';
 import { Fragment } from 'react/jsx-runtime';
 import { CaseClasses, CaseFormDto } from '@urgp/shared/entities';
 import { CreateCaseButton } from '../CaseButtons/CreateCaseButton';
+import { useState } from 'react';
+import { SquareAsterisk, SquareUserRound } from 'lucide-react';
 
 const CaseFormFieldArray = ({
   form,
   isEdit,
   popoverMinWidth,
 }: FieldsArrayProps<CaseFormDto>): JSX.Element | null => {
-  const user = useSelector(selectCurrentUser);
-  const i = useUserAbility();
+  const user = useAuth();
+  const [manualControlTo, setManualControlTo] = useState(false);
 
   const watchApproveTo = form.watch('approveToId');
   // const isApproved = form.getValues('approveStatus') === 'approved';
@@ -41,14 +54,56 @@ const CaseFormFieldArray = ({
         popoverMinWidth={popoverMinWidth}
         dirtyIndicator={isEdit}
       />
-      <DirectionTypeSelector
-        form={form}
-        label="Направления"
-        placeholder="Направления работы"
-        fieldName="directionIds"
-        dirtyIndicator={isEdit}
-        popoverMinWidth={popoverMinWidth}
-      />
+      <div className="flex w-full flex-row items-end gap-2">
+        <DirectionTypeSelector
+          form={form}
+          className={cn('flex-grow', manualControlTo ? 'hidden' : '')}
+          label="Направления"
+          placeholder="Направления работы"
+          fieldName="directionIds"
+          dirtyIndicator={isEdit}
+          popoverMinWidth={popoverMinWidth}
+        />
+        <ManualControlToSelector
+          form={form}
+          className={cn('flex-grow', manualControlTo ? '' : 'hidden')}
+          label="Исполнитель"
+          placeholder="Ответственный исполнитель"
+          fieldName="manualControlToIds"
+          dirtyIndicator={isEdit}
+          popoverMinWidth={popoverMinWidth}
+        />
+        {user?.controlData?.roles &&
+          user?.controlData?.roles.some((role) =>
+            ['admin', 'boss', 'executor'].includes(role),
+          ) && (
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  role="button"
+                  variant="outline"
+                  size="icon"
+                  className="size-10 p-1"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // if (manualControlTo && !isEdit)
+                    //   form.setValue('directionIds', []);
+                    // if (!manualControlTo)
+                    //   form.setValue('manualControlToIds', []);
+                    setManualControlTo((prev) => !prev);
+                  }}
+                >
+                  {manualControlTo ? <SquareAsterisk /> : <SquareUserRound />}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {manualControlTo
+                  ? 'Выбрать направления'
+                  : 'Выбрать исполнителя'}
+              </TooltipContent>
+            </Tooltip>
+          )}
+      </div>
       <ProblemSelector
         form={form}
         fieldName="connectionsToIds"

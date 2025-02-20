@@ -151,7 +151,7 @@ const MultiSelectFormField = <T extends string | number>(
                   <PopoverTrigger asChild>
                     <div
                       className={cn(
-                        'bg-background',
+                        'bg-background min-h-10',
                         'border-input ring-offset-background focus-within:ring-ring group rounded-md border px-3 py-2 text-sm focus-within:ring-2 focus-within:ring-offset-2',
                         formFieldStatusClassName({
                           dirtyIndicator,

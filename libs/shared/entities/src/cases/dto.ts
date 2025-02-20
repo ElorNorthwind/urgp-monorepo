@@ -2,7 +2,6 @@ import { format } from 'date-fns';
 import { z } from 'zod';
 import { viewStatusValues } from '../userInput/config';
 import { caseSlimSchema } from './types';
-import { virtualAuthorSchema } from '../userInput/types';
 
 export const createCaseSchema = caseSlimSchema
   .omit({
@@ -22,6 +21,10 @@ export const createCaseSchema = caseSlimSchema
     connectionsFromIds: z
       .array(z.coerce.number().int().nonnegative())
       .default([]),
+    manualControlToIds: z
+      .array(z.coerce.number().int().nonnegative())
+      .default([])
+      .optional(),
   });
 export type CreateCaseDto = z.infer<typeof createCaseSchema>;
 
@@ -49,6 +52,11 @@ export const updateCaseSchema = caseSlimSchema
     connectionsFromIds: z
       .array(z.coerce.number().int().nonnegative())
       .default([]),
+    manualControlToIds: z
+      .array(z.coerce.number().int().nonnegative())
+      .default([])
+      .optional(),
+
     //   dueDate: z.coerce
     //     .date({ message: 'Дата обязательна' })
     //     .or(z.number())
@@ -58,9 +66,14 @@ export const updateCaseSchema = caseSlimSchema
 export type UpdateCaseDto = z.infer<typeof updateCaseSchema>;
 
 export const caseFormSchema = updateCaseSchema
+  .omit({ manualControlToIds: true })
   .required()
   .extend({
     authorId: z.coerce.number().int().nonnegative().nullable().optional(),
+    manualControlToIds: z
+      .array(z.coerce.number().int().nonnegative())
+      .default([])
+      .optional(),
   })
   .extend(
     caseSlimSchema.pick({
@@ -70,6 +83,7 @@ export const caseFormSchema = updateCaseSchema
       approveStatus: true,
     }).shape,
   );
+
 export type CaseFormDto = z.infer<typeof caseFormSchema>;
 
 export const setConnectionsSchema = z.object({

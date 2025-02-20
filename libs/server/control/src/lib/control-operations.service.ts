@@ -139,6 +139,7 @@ export class ControlOperationsService {
     caseId: number,
     userId: number,
     dueDate?: string,
+    manualControlToIds?: number[],
   ) {
     // Забираем дело (поскольку теперь при создании мы возвращаем только id)
     const slimCases = (await this.dbServise.db.controlCases.readCases({
@@ -165,10 +166,15 @@ export class ControlOperationsService {
         : prev;
     }, [] as number[]);
 
-    controlToList.forEach(async (controlTo) => {
+    controlToList.forEach((controlTo) => {
       reminderList.set(controlTo, 'Напоминание исполнителю');
       dispatchesList.set(controlTo, 'Для рассмотрения по тематике управления');
     });
+
+    manualControlToIds &&
+      manualControlToIds.forEach((controlTo) => {
+        dispatchesList.set(controlTo, 'Добавление контроля по ручному списку');
+      });
 
     const directionSubscribers =
       await this.classificators.getDirectionSubscribers(

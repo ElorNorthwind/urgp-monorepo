@@ -44,6 +44,7 @@ export class ControlCasesService {
         createdCaseId,
         authorId,
         dto?.dueDate,
+        dto?.manualControlToIds,
       );
     }
 
@@ -127,6 +128,7 @@ export class ControlCasesService {
         updatedCaseId,
         updatedById,
         GET_DEFAULT_CONTROL_DUE_DATE(),
+        dto.manualControlToIds,
       );
     }
 
