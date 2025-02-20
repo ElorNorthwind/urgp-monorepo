@@ -43,6 +43,7 @@ const caseFullFields = {
   actions: z.array(z.enum(caseActionsValues)).default([]),
   escalations: z.coerce.number().int().nonnegative(),
   controlLevel: z.coerce.number().int(),
+  controllerIds: z.array(z.coerce.number().int()),
   connectionsFrom: z.array(connectionInfoSchema).default([]),
   connectionsTo: z.array(connectionInfoSchema).default([]),
 };
