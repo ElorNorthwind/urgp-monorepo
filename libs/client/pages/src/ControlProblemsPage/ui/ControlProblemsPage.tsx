@@ -1,23 +1,25 @@
-import { Row, VisibilityState } from '@tanstack/react-table';
+import { Row } from '@tanstack/react-table';
 
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
   CaseCard,
   caseGlobalFilterFn,
-  incidentsTableColumns,
   problemsTableColumns,
   useCases,
 } from '@urgp/client/entities';
 import {
   cn,
   NAVBAR_WIDTH,
-  selectIncidentTableColumns,
   selectProblemTableColumns,
   SidebarInset,
   TooltipProvider,
   VirtualDataTable,
 } from '@urgp/client/shared';
-import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
+import {
+  CaseFilterSidebar,
+  ControlSidePanel,
+  SelectedCasesActionBar,
+} from '@urgp/client/widgets';
 import {
   CaseClasses,
   CaseFull,
@@ -138,6 +140,7 @@ const ControlProblemsPage = (): JSX.Element => {
                   });
             }}
           />
+          <SelectedCasesActionBar selected={selected} />
         </main>
       </SidebarInset>
       <ControlSidePanel isOpen={search.selectedCase !== undefined}>

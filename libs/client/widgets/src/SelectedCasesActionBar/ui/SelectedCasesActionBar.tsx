@@ -39,7 +39,7 @@ const SelectedCasesActionBar = ({
   return (
     <div
       className={cn(
-        'bg-background absolute bottom-0 border-r border-t p-2',
+        'bg-background absolute bottom-0 border-r border-t p-1',
         'flex flex-row gap-2',
         className,
       )}

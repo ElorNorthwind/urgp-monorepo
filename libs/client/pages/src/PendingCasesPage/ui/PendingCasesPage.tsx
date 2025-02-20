@@ -15,7 +15,11 @@ import {
   TooltipProvider,
   VirtualDataTable,
 } from '@urgp/client/shared';
-import { CaseFilterSidebar, ControlSidePanel } from '@urgp/client/widgets';
+import {
+  CaseFilterSidebar,
+  ControlSidePanel,
+  SelectedCasesActionBar,
+} from '@urgp/client/widgets';
 import { CaseFull, CasesPageSearchDto } from '@urgp/shared/entities';
 import { useMemo, useState } from 'react';
 import { CasesPageHeader } from '../../ControlCasesPage/ui/CasesPageHeader';
@@ -136,6 +140,7 @@ const PendingCasesPage = (): JSX.Element => {
                   });
             }}
           />
+          <SelectedCasesActionBar selected={selected} />
         </main>
       </SidebarInset>
       <ControlSidePanel isOpen={search.selectedCase !== undefined}>
