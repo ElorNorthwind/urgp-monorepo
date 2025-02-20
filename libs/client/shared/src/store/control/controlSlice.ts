@@ -19,6 +19,8 @@ import {
   User,
   emptyProblem,
   CaseClasses,
+  getFormDataFromCaseFull,
+  getFormDataFromOperationFull,
 } from '@urgp/shared/entities';
 import { RootState } from '../store';
 
@@ -34,38 +36,6 @@ import {
   initialUserState,
   setUser,
 } from '../auth/authSlice';
-
-const operationToForm = (payload: OperationFull) => {
-  return {
-    id: payload?.id,
-    caseId: payload?.caseId,
-    class: payload?.class,
-    typeId: payload?.type?.id,
-    doneDate: new Date(payload?.doneDate).toISOString(),
-    dueDate: new Date(payload?.dueDate).toISOString(),
-    title: payload?.title || '', // num
-    notes: payload?.notes || '', // descrition
-    extra: payload?.extra || '', // date_description
-    authorId: payload?.author?.id || null,
-
-    approveToId: payload?.approveTo?.id || null,
-    approveStatus: payload?.approveStatus || 'project',
-    approveDate: new Date(payload?.approveDate).toISOString(),
-    approveNotes: payload?.approveNotes || '',
-
-    constolFromId: payload?.controlFrom?.id || null,
-    controlToId: payload?.controlTo?.id || null,
-
-    controller: ControlOptions.author,
-  };
-};
-
-// const initialUser =
-//   JSON.parse(localStorage.getItem(lsKeys.USER_KEY)) || guestUser;
-
-// export const initialUserState: UserState = {
-//   user: initialUser,
-// };
 
 type ControlState = {
   caseForm: {
@@ -168,27 +138,7 @@ const controlSlice = createSlice({
       state,
       { payload }: PayloadAction<CaseFull>,
     ) => {
-      state.caseForm.values = {
-        id: payload?.id,
-        authorId: payload?.author?.id,
-        class: payload?.class,
-        typeId: payload?.type?.id,
-        externalCases: payload?.externalCases.map((ec) => ({
-          ...ec,
-          date: new Date(ec.date).toISOString(),
-        })),
-        directionIds: payload?.directions?.map((d) => d?.id) || [],
-        title: payload?.title || '', // fio
-        notes: payload?.notes || '', // descrition
-        extra: payload?.extra || '', // adress
-        approveToId: payload?.approveTo?.id,
-        approveStatus: payload?.approveStatus,
-        approveDate: new Date(payload?.approveDate).toISOString(),
-        approveNotes: payload?.approveNotes,
-        dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
-        connectionsToIds: payload?.connectionsTo?.map((p) => p?.id) || [],
-        connectionsFromIds: payload?.connectionsFrom?.map((p) => p?.id) || [],
-      };
+      state.caseForm.values = getFormDataFromCaseFull(payload);
     },
 
     setCaseFormValuesFromDto: (
@@ -211,27 +161,7 @@ const controlSlice = createSlice({
       state,
       { payload }: PayloadAction<CaseFull>,
     ) => {
-      state.problemForm.values = {
-        id: payload?.id,
-        authorId: payload?.author?.id,
-        class: payload?.class || CaseClasses.problem,
-        typeId: payload?.type?.id || 5,
-        externalCases: payload?.externalCases.map((ec) => ({
-          ...ec,
-          date: new Date(ec.date).toISOString(),
-        })),
-        directionIds: payload?.directions?.map((d) => d?.id) || [],
-        title: payload?.title || '', // short_title
-        notes: payload?.notes || '', // descrition
-        extra: payload?.extra || '', // extra_title
-        approveToId: payload?.approveTo?.id,
-        approveStatus: payload?.approveStatus,
-        approveDate: new Date(payload?.approveDate).toISOString(),
-        approveNotes: payload?.approveNotes,
-        dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
-        connectionsToIds: payload?.connectionsTo?.map((p) => p?.id) || [],
-        connectionsFromIds: payload?.connectionsFrom?.map((p) => p?.id) || [],
-      };
+      state.problemForm.values = getFormDataFromCaseFull(payload);
     },
 
     setProblemFormValuesFromDto: (
@@ -254,7 +184,7 @@ const controlSlice = createSlice({
       state,
       { payload }: PayloadAction<OperationFull>,
     ) => {
-      state.stageForm.values = operationToForm(payload);
+      state.stageForm.values = getFormDataFromOperationFull(payload);
     },
     setStageFormValuesFromDto: (
       state,
@@ -286,7 +216,7 @@ const controlSlice = createSlice({
       { payload }: PayloadAction<OperationFull>,
     ) => {
       state.dispatchForm.values = {
-        ...operationToForm(payload),
+        ...getFormDataFromOperationFull(payload),
         extra: 'Без переноса срока',
         controller:
           payload?.controlFrom?.id === state?.user?.id
@@ -337,7 +267,7 @@ const controlSlice = createSlice({
       { payload }: PayloadAction<OperationFull>,
     ) => {
       state.reminderForm.values = {
-        ...operationToForm(payload),
+        ...getFormDataFromOperationFull(payload),
         doneDate: null,
       };
     },

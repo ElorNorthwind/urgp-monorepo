@@ -43,6 +43,7 @@ import {
   CaseFormDto,
   updateCaseSchema,
   caseFormSchema,
+  getFormDataFromCaseFull,
 } from '@urgp/shared/entities';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -91,16 +92,7 @@ const DirectionsChangeMenu = ({
   const [open, setOpen] = useState(false);
 
   const defaultValues = useMemo(() => {
-    return {
-      id: controlCase?.id,
-      typeId: controlCase?.type?.id || 0,
-      class: controlCase?.class || CaseClasses.incident,
-      title: controlCase?.title || '',
-      notes: controlCase?.notes || '',
-      dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
-      approveToId: controlCase?.approveTo?.id || null,
-      directionIds: controlCase?.directions?.map((d) => d?.id) || [],
-    };
+    return getFormDataFromCaseFull(controlCase);
   }, [controlCase]);
 
   const form = useForm<CaseFormDto>({

@@ -50,7 +50,7 @@ export const subjectVariants = {
   stage: 'Stage',
   'control-incident': 'Case',
   'control-problem': 'Case',
-  dispanch: 'Dispatch',
+  dispatch: 'Dispatch',
   reminder: 'Reminder',
 };
 
@@ -102,7 +102,7 @@ export function defineControlAbilityFor(user: User) {
   });
 
   cannot('update', 'all', {
-    approveStatus: { $ne: 'pending' }, // нельзя согласовывать или менять то что не на согласовании йо
+    approveStatus: { $ne: 'pending' }, // согласовывать то что не на согласовании йо
   });
 
   can('update', 'Case', {
@@ -111,10 +111,16 @@ export function defineControlAbilityFor(user: User) {
     // { 'cities.address': { $elemMatch: { postalCode: { $regex: /^AB/ } } } } // (4)
   });
 
+  can('update', 'Case', {
+    'author.id': { $eq: user.id },
+    // dispatches: { $elemMatch: { class: { $eq: 'dispatch' } } },
+    // { 'cities.address': { $elemMatch: { postalCode: { $regex: /^AB/ } } } } // (4)
+  });
+
   // cannot('create', 'Dispatch');
   can('update', 'Dispatch', { controllerId: { $eq: user.id } }); // FORM Можно менять поручения, которые ты контролируешь
   can('update', 'Dispatch', { controlFromId: { $eq: user.id } }); // BE Можно менять поручения, которые ты контролируешь
-  can('update', 'Dispatch', { controlFromId: { $eq: user.id } }); // FE Можно менять поручения, которые ты контролируешь
+  can('update', 'Dispatch', { 'controlFrom.id': { $eq: user.id } }); // FE Можно менять поручения, которые ты контролируешь
   // cannot('create', 'Reminder', { type: { $eq: 12 } }); // Нельзя создавать направления боссу ПОДУМАЙ
   can('create', 'Reminder', { type: { $eq: 11 } }); // Можно создавать напоминалки
   can('update', 'Reminder', { controlToId: { $eq: user.id } }); // BE Можно менять свои напоминалки
