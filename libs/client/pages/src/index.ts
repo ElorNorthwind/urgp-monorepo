@@ -14,3 +14,4 @@ export * from './ControlSettingsPage';
 export * from './PendingCasesPage';
 export * from './ControlDashboardPage';
 export * from './ControlProblemsPage';
+export * from './SingleCasePage';

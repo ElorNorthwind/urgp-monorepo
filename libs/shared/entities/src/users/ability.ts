@@ -101,8 +101,8 @@ export function defineControlAbilityFor(user: User) {
     approveToId: { $eq: user.id }, // BE // Все могут менять или согласовывать то, что у них на согле
   });
 
-  cannot('update', 'all', {
-    approveStatus: { $ne: 'pending' }, // согласовывать то что не на согласовании йо
+  cannot(['update', 'delete'], 'all', {
+    approveStatus: { $nin: ['project', 'pending'] }, // согласовывать то что не на согласовании йо
   });
 
   can('update', 'Case', {

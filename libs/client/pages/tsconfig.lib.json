@@ -11,7 +11,13 @@
       "@nx/react/typings/image.d.ts"
     ]
   },
-  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/SingleCasePage"
+  ],
   "exclude": [
     "vite.config.ts",
     "vitest.config.ts",
