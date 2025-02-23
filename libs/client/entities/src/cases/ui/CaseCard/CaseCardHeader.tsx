@@ -1,8 +1,9 @@
 import { Separator } from '@radix-ui/react-separator';
-import { useNavigate } from '@tanstack/react-router';
+import { useLocation, useMatch, useNavigate } from '@tanstack/react-router';
 import { Button, cn } from '@urgp/client/shared';
 import { CaseClasses, CaseFull } from '@urgp/shared/entities';
 import { ChevronDown, X } from 'lucide-react';
+import { from } from 'rxjs';
 
 type CaseCardHeaderProps = {
   className?: string;
@@ -16,7 +17,9 @@ type CaseCardHeaderProps = {
 
 const CaseCardHeader = (props: CaseCardHeaderProps): JSX.Element => {
   const { className, controlCase, onClose, onNextCase, onPrevCase } = props;
-  // const navigate = useNavigate({ from: '/control/cases' });
+  const pathname = useLocation().pathname;
+  const navigate = useNavigate({ from: pathname });
+  // const match = useMatch({ from: '/control/case/$caseId' });
 
   return (
     <div
@@ -25,7 +28,19 @@ const CaseCardHeader = (props: CaseCardHeaderProps): JSX.Element => {
         className,
       )}
     >
-      {controlCase && <h1 className="font-bold">{controlCase?.title}</h1>}
+      {controlCase && (
+        <h1
+          className="cursor-pointer font-bold"
+          onClick={() =>
+            navigate({
+              to: `/control/case/$caseId`,
+              params: { caseId: controlCase?.id },
+            })
+          }
+        >
+          {controlCase?.title}
+        </h1>
+      )}
       {controlCase && controlCase.class !== CaseClasses.problem && (
         <p className="border-foreground/20 text-muted-foreground h-full flex-shrink truncate border-l pl-2">
           {controlCase?.extra}

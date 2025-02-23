@@ -117,3 +117,7 @@ export const classificators = {
     'sql/control/classificators/readDirectionSubscribers.sql',
   ),
 };
+
+export const adress = {
+  upsertAdresses: sql('sql/adress/upsertAdresses.sql'),
+};

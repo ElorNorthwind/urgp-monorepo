@@ -29,6 +29,7 @@ import { ControlDispatchesList } from '../ControlDispatchesList';
 import { format } from 'date-fns';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import { DirectionsChangeMenu } from '@urgp/client/widgets';
+import { CaseInfoTab, ConnectedCasesTab } from '@urgp/client/features';
 
 type CaseCardProps = {
   controlCase: CaseFull;
@@ -67,8 +68,6 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
   const i = useUserAbility();
   const dispatches = controlCase?.dispatches || [];
 
-  const caseApproveInfo = getApproveInfo(controlCase);
-
   return (
     <>
       <CaseCardHeader
@@ -77,94 +76,10 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
         onPrevCase={onPrevCase}
         onNextCase={onNextCase}
       />
-      {controlCase && (
-        <div className="flex flex-col gap-2 p-4">
-          <div className="bg-background grid grid-cols-[auto_1fr_auto_1fr] rounded-lg border">
-            <div className="bg-muted-foreground/5 border-b border-r px-2 py-1 text-right font-bold">
-              Тип:
-            </div>
-            <div className="flex items-start justify-start gap-2 border-b p-1 ">
-              {TypeIcon && (
-                <TypeIcon
-                  className={cn('my-auto -mr-1 size-5 shrink-0', typeIconStyle)}
-                />
-              )}
-              <p className="my-auto w-full truncate text-sm">
-                {controlCase?.type?.name}
-              </p>
-            </div>
-            <div className="bg-muted-foreground/5 border-x border-b px-2 py-1 text-right font-bold">
-              Статус:
-            </div>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex items-start justify-start gap-2 truncate border-b p-1 ">
-                  {StatusIcon && (
-                    <StatusIcon
-                      className={cn(
-                        'my-auto -mr-1 size-5 shrink-0 ',
-                        statusIconStyle,
-                      )}
-                    />
-                  )}
-                  <p className="my-auto w-full truncate text-sm">
-                    {controlCase?.status?.name}
-                  </p>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                {caseApproveInfo?.currentFio &&
-                  caseApproveInfo?.approveText && (
-                    <>
-                      <p>{caseApproveInfo.approveText + ': '}</p>
-                      <p className="font-bold">{caseApproveInfo?.currentFio}</p>
-                      {caseApproveInfo?.previousFio && (
-                        <>
-                          <p>Перенаправил:</p>
-                          <p className="font-bold">
-                            {caseApproveInfo.previousFio}
-                          </p>
-                        </>
-                      )}
-                    </>
-                  )}
-                {controlCase?.lastEdit && (
-                  <>
-                    <p>Последнее действие:</p>
-                    <p className="font-bold">
-                      {format(controlCase.lastEdit, 'dd.MM.yyyy HH:mm')}
-                    </p>
-                  </>
-                )}
-              </TooltipContent>
-            </Tooltip>
-            {caseApproveInfo?.rejectNotes && (
-              <div className="col-span-4 border-b bg-rose-50 px-2 py-1 text-sm">
-                <span>{caseApproveInfo.rejectNotes}</span>
-              </div>
-            )}
-            <div className="bg-muted-foreground/5 flex items-center truncate border-r px-2 py-1 text-right font-bold">
-              {/* <span className="">Темы:</span> */}
-              {i.can('update', controlCase) ? (
-                <DirectionsChangeMenu
-                  controlCase={controlCase}
-                  variant={'link'}
-                  className="text-md text-sidebar-foreground h-8 p-0 text-right font-bold hover:no-underline"
-                  label="Темы:"
-                />
-              ) : (
-                <span className="">Темы:</span>
-              )}
-            </div>
-            <CaseDirectionsList
-              directions={controlCase?.directions}
-              className="col-span-3 items-center p-2"
-            />
-          </div>
-
-          <ExternalCasesList externalCases={controlCase?.externalCases} />
-        </div>
-      )}
+      <div className="flex flex-col gap-2 p-4">
+        <CaseInfoTab controlCase={controlCase} />
+        <ExternalCasesList externalCases={controlCase?.externalCases} />
+      </div>
       <Accordion
         type="multiple"
         className="w-full px-4"
@@ -187,58 +102,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
             </AccordionContent>
           )}
         </AccordionItem>
-        {controlCase?.class === CaseClasses.problem &&
-          controlCase?.connectionsFrom && (
-            <AccordionItem value="incidents" className="relative">
-              <AccordionTrigger>Связанные происшествия</AccordionTrigger>
-              <AccordionContent className="bg-background rounded-t-lg border border-b-0 p-2">
-                {controlCase?.connectionsFrom.map((connection) => (
-                  <Button
-                    className="py-0"
-                    variant="link"
-                    key={connection.id}
-                    size="sm"
-                    onClick={() => {
-                      navigate({
-                        to: '/control/cases',
-                        search: {
-                          selectedCase: connection.id,
-                        },
-                      });
-                    }}
-                  >
-                    {connection.title}
-                  </Button>
-                ))}
-              </AccordionContent>
-            </AccordionItem>
-          )}
-        {controlCase?.class === CaseClasses.incident &&
-          controlCase?.connectionsTo && (
-            <AccordionItem value="incidents" className="relative">
-              <AccordionTrigger>Системные проблемы</AccordionTrigger>
-              <AccordionContent className="bg-background rounded-t-lg border border-b-0 p-2">
-                {controlCase?.connectionsTo.map((connection) => (
-                  <Button
-                    className="py-0"
-                    variant="link"
-                    key={connection.id}
-                    size="sm"
-                    onClick={() => {
-                      navigate({
-                        to: '/control/problems',
-                        search: {
-                          selectedCase: connection.id,
-                        },
-                      });
-                    }}
-                  >
-                    {connection.title}
-                  </Button>
-                ))}
-              </AccordionContent>
-            </AccordionItem>
-          )}
+        <ConnectedCasesTab controlCase={controlCase} accordion />
         <AccordionItem value="dispatches" className="relative">
           <AccordionTrigger>Поручения</AccordionTrigger>
           {controlCase?.id && (

@@ -11,3 +11,5 @@ export * from './InfoBox';
 export * from './InputSkeleton';
 export * from './MultiSelect';
 export * from './SimpleBarChart';
+export * from './CaseInfoTab';
+export * from './ConnectedCasesTab';

@@ -1,0 +1,13 @@
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { DataMosService } from './data-mos.service';
+import { AccessTokenGuard } from '@urgp/server/auth';
+
+@Controller('data-mos')
+@UseGuards(AccessTokenGuard)
+export class DataMosController {
+  constructor(private readonly dataMos: DataMosService) {}
+  @Get('update-adress')
+  updateAdresses(): Promise<any> {
+    return this.dataMos.updateAdresses();
+  }
+}

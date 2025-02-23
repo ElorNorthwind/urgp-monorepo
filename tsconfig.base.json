@@ -34,7 +34,8 @@
       "@urgp/server/renovation": ["libs/server/renovation/src/index.ts"],
       "@urgp/server/control": ["libs/server/control/src/index.ts"],
       "@urgp/server/rsm": ["libs/server/rsm/src/index.ts"],
-      "@urgp/server/auth": ["libs/server/auth/src/index.ts"]
+      "@urgp/server/auth": ["libs/server/auth/src/index.ts"],
+      "@urgp/server/data-mos": ["libs/server/data-mos/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

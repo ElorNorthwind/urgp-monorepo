@@ -42,6 +42,10 @@ module.exports = {
             '../../dist/apps/server/sql/control/classificators',
           ),
         },
+        {
+          from: '../../libs/server/database/src/repos/sql/adress',
+          to: join(__dirname, '../../dist/apps/server/sql/adress'),
+        },
       ],
     }),
   ],
