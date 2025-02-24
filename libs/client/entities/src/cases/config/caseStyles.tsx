@@ -115,18 +115,18 @@ export const pendingActionStyles = {
 export const directionCategoryStyles = {
   УРЖП: {
     icon: Circle,
-    iconStyle: 'bg-cyan-500 rounded-full text-cyan-500',
+    iconStyle: 'bg-blue-500 rounded-full text-blue-500',
     badgeStyle: cn(
-      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-cyan-500',
-      "before:content-[''] before:rounded-full before:size-3 before:bg-cyan-500 before:mr-1",
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-blue-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-blue-500 before:mr-1",
     ),
   },
   УВЖУ: {
     icon: Circle,
-    iconStyle: 'bg-emerald-500 rounded-full text-emerald-500',
+    iconStyle: 'bg-teal-500 rounded-full text-teal-500',
     badgeStyle: cn(
-      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-emerald-500',
-      "before:content-[''] before:rounded-full before:size-3 before:bg-emerald-500 before:mr-1",
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-teal-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-teal-500 before:mr-1",
     ),
   },
   УПГУ: {
@@ -151,6 +151,14 @@ export const directionCategoryStyles = {
     badgeStyle: cn(
       'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-violet-500',
       "before:content-[''] before:rounded-full before:size-3 before:bg-violet-500 before:mr-1",
+    ),
+  },
+  УИ: {
+    icon: Circle,
+    iconStyle: 'bg-lime-500 rounded-full text-lime-500',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-lime-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-lime-500 before:mr-1",
     ),
   },
 } as Record<string, StyleData>;
