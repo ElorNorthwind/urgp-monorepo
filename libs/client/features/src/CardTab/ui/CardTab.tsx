@@ -33,7 +33,7 @@ const CardTab = (props: CardTabProps): JSX.Element | null => {
       variant: 'link',
       className: cn(
         'h-8 flex-grow-0 px-2',
-        accordionItemName && 'ml-auto mr-2',
+        accordionItemName && 'absolute right-6 top-3',
       ),
     });
 
@@ -45,12 +45,11 @@ const CardTab = (props: CardTabProps): JSX.Element | null => {
       >
         <AccordionTrigger
           className={cn(
-            'group/trigger relative flex flex-row items-center justify-between hover:no-underline',
+            'relative flex flex-row items-center justify-between',
             titleClassName,
           )}
         >
-          <div className="group-hover/trigger:underline">{label}</div>
-          {styledButton && styledButton}
+          {label}
         </AccordionTrigger>
         <AccordionContent
           className={cn(
@@ -60,6 +59,7 @@ const CardTab = (props: CardTabProps): JSX.Element | null => {
         >
           {children}
         </AccordionContent>
+        {styledButton && styledButton}
       </AccordionItem>
     );
 
