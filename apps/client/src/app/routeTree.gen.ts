@@ -27,6 +27,7 @@ import { Route as RenovationBuildingRelocationMapImport } from './routes/renovat
 import { Route as ControlProblemsImport } from './routes/control/problems'
 import { Route as ControlPendingImport } from './routes/control/pending'
 import { Route as ControlCasesImport } from './routes/control/cases'
+import { Route as ControlCaseImport } from './routes/control/case'
 import { Route as RenovationSettingsRouteImport } from './routes/renovation/settings/route'
 import { Route as ControlSettingsRouteImport } from './routes/control/settings/route'
 import { Route as RenovationSettingsIndexImport } from './routes/renovation/settings/index'
@@ -34,7 +35,6 @@ import { Route as ControlSettingsIndexImport } from './routes/control/settings/i
 import { Route as RenovationSettingsChangePasswordImport } from './routes/renovation/settings/change-password'
 import { Route as ControlSettingsFilterImport } from './routes/control/settings/filter'
 import { Route as ControlSettingsChangePasswordImport } from './routes/control/settings/change-password'
-import { Route as ControlCaseCaseIdImport } from './routes/control/case.$caseId'
 
 // Create Virtual Routes
 
@@ -154,6 +154,12 @@ const ControlCasesRoute = ControlCasesImport.update({
   getParentRoute: () => ControlRouteRoute,
 } as any)
 
+const ControlCaseRoute = ControlCaseImport.update({
+  id: '/case',
+  path: '/case',
+  getParentRoute: () => ControlRouteRoute,
+} as any)
+
 const RenovationSettingsRouteRoute = RenovationSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -197,12 +203,6 @@ const ControlSettingsChangePasswordRoute =
     path: '/change-password',
     getParentRoute: () => ControlSettingsRouteRoute,
   } as any)
-
-const ControlCaseCaseIdRoute = ControlCaseCaseIdImport.update({
-  id: '/case/$caseId',
-  path: '/case/$caseId',
-  getParentRoute: () => ControlRouteRoute,
-} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -278,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RenovationSettingsRouteImport
       parentRoute: typeof RenovationRouteImport
     }
+    '/control/case': {
+      id: '/control/case'
+      path: '/case'
+      fullPath: '/control/case'
+      preLoaderRoute: typeof ControlCaseImport
+      parentRoute: typeof ControlRouteImport
+    }
     '/control/cases': {
       id: '/control/cases'
       path: '/cases'
@@ -348,13 +355,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RenovationIndexImport
       parentRoute: typeof RenovationRouteImport
     }
-    '/control/case/$caseId': {
-      id: '/control/case/$caseId'
-      path: '/case/$caseId'
-      fullPath: '/control/case/$caseId'
-      preLoaderRoute: typeof ControlCaseCaseIdImport
-      parentRoute: typeof ControlRouteImport
-    }
     '/control/settings/change-password': {
       id: '/control/settings/change-password'
       path: '/change-password'
@@ -412,20 +412,20 @@ const ControlSettingsRouteRouteWithChildren =
 
 interface ControlRouteRouteChildren {
   ControlSettingsRouteRoute: typeof ControlSettingsRouteRouteWithChildren
+  ControlCaseRoute: typeof ControlCaseRoute
   ControlCasesRoute: typeof ControlCasesRoute
   ControlPendingRoute: typeof ControlPendingRoute
   ControlProblemsRoute: typeof ControlProblemsRoute
   ControlIndexRoute: typeof ControlIndexRoute
-  ControlCaseCaseIdRoute: typeof ControlCaseCaseIdRoute
 }
 
 const ControlRouteRouteChildren: ControlRouteRouteChildren = {
   ControlSettingsRouteRoute: ControlSettingsRouteRouteWithChildren,
+  ControlCaseRoute: ControlCaseRoute,
   ControlCasesRoute: ControlCasesRoute,
   ControlPendingRoute: ControlPendingRoute,
   ControlProblemsRoute: ControlProblemsRoute,
   ControlIndexRoute: ControlIndexRoute,
-  ControlCaseCaseIdRoute: ControlCaseCaseIdRoute,
 }
 
 const ControlRouteRouteWithChildren = ControlRouteRoute._addFileChildren(
@@ -484,6 +484,7 @@ export interface FileRoutesByFullPath {
   '/map': typeof MapLazyRoute
   '/control/settings': typeof ControlSettingsRouteRouteWithChildren
   '/renovation/settings': typeof RenovationSettingsRouteRouteWithChildren
+  '/control/case': typeof ControlCaseRoute
   '/control/cases': typeof ControlCasesRoute
   '/control/pending': typeof ControlPendingRoute
   '/control/problems': typeof ControlProblemsRoute
@@ -494,7 +495,6 @@ export interface FileRoutesByFullPath {
   '/renovation/stages': typeof RenovationStagesRoute
   '/control/': typeof ControlIndexRoute
   '/renovation/': typeof RenovationIndexRoute
-  '/control/case/$caseId': typeof ControlCaseCaseIdRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
@@ -509,6 +509,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutLazyRoute
   '/bticalc': typeof BticalcLazyRoute
   '/map': typeof MapLazyRoute
+  '/control/case': typeof ControlCaseRoute
   '/control/cases': typeof ControlCasesRoute
   '/control/pending': typeof ControlPendingRoute
   '/control/problems': typeof ControlProblemsRoute
@@ -519,7 +520,6 @@ export interface FileRoutesByTo {
   '/renovation/stages': typeof RenovationStagesRoute
   '/control': typeof ControlIndexRoute
   '/renovation': typeof RenovationIndexRoute
-  '/control/case/$caseId': typeof ControlCaseCaseIdRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
@@ -539,6 +539,7 @@ export interface FileRoutesById {
   '/map': typeof MapLazyRoute
   '/control/settings': typeof ControlSettingsRouteRouteWithChildren
   '/renovation/settings': typeof RenovationSettingsRouteRouteWithChildren
+  '/control/case': typeof ControlCaseRoute
   '/control/cases': typeof ControlCasesRoute
   '/control/pending': typeof ControlPendingRoute
   '/control/problems': typeof ControlProblemsRoute
@@ -549,7 +550,6 @@ export interface FileRoutesById {
   '/renovation/stages': typeof RenovationStagesRoute
   '/control/': typeof ControlIndexRoute
   '/renovation/': typeof RenovationIndexRoute
-  '/control/case/$caseId': typeof ControlCaseCaseIdRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
@@ -570,6 +570,7 @@ export interface FileRouteTypes {
     | '/map'
     | '/control/settings'
     | '/renovation/settings'
+    | '/control/case'
     | '/control/cases'
     | '/control/pending'
     | '/control/problems'
@@ -580,7 +581,6 @@ export interface FileRouteTypes {
     | '/renovation/stages'
     | '/control/'
     | '/renovation/'
-    | '/control/case/$caseId'
     | '/control/settings/change-password'
     | '/control/settings/filter'
     | '/renovation/settings/change-password'
@@ -594,6 +594,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/bticalc'
     | '/map'
+    | '/control/case'
     | '/control/cases'
     | '/control/pending'
     | '/control/problems'
@@ -604,7 +605,6 @@ export interface FileRouteTypes {
     | '/renovation/stages'
     | '/control'
     | '/renovation'
-    | '/control/case/$caseId'
     | '/control/settings/change-password'
     | '/control/settings/filter'
     | '/renovation/settings/change-password'
@@ -622,6 +622,7 @@ export interface FileRouteTypes {
     | '/map'
     | '/control/settings'
     | '/renovation/settings'
+    | '/control/case'
     | '/control/cases'
     | '/control/pending'
     | '/control/problems'
@@ -632,7 +633,6 @@ export interface FileRouteTypes {
     | '/renovation/stages'
     | '/control/'
     | '/renovation/'
-    | '/control/case/$caseId'
     | '/control/settings/change-password'
     | '/control/settings/filter'
     | '/renovation/settings/change-password'
@@ -690,11 +690,11 @@ export const routeTree = rootRoute
       "filePath": "control/route.tsx",
       "children": [
         "/control/settings",
+        "/control/case",
         "/control/cases",
         "/control/pending",
         "/control/problems",
-        "/control/",
-        "/control/case/$caseId"
+        "/control/"
       ]
     },
     "/renovation": {
@@ -741,6 +741,10 @@ export const routeTree = rootRoute
         "/renovation/settings/"
       ]
     },
+    "/control/case": {
+      "filePath": "control/case.tsx",
+      "parent": "/control"
+    },
     "/control/cases": {
       "filePath": "control/cases.tsx",
       "parent": "/control"
@@ -780,10 +784,6 @@ export const routeTree = rootRoute
     "/renovation/": {
       "filePath": "renovation/index.tsx",
       "parent": "/renovation"
-    },
-    "/control/case/$caseId": {
-      "filePath": "control/case.$caseId.tsx",
-      "parent": "/control"
     },
     "/control/settings/change-password": {
       "filePath": "control/settings/change-password.tsx",

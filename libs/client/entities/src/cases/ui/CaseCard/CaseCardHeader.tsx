@@ -3,7 +3,6 @@ import { useLocation, useMatch, useNavigate } from '@tanstack/react-router';
 import { Button, cn } from '@urgp/client/shared';
 import { CaseClasses, CaseFull } from '@urgp/shared/entities';
 import { ChevronDown, X } from 'lucide-react';
-import { from } from 'rxjs';
 
 type CaseCardHeaderProps = {
   className?: string;
@@ -19,7 +18,6 @@ const CaseCardHeader = (props: CaseCardHeaderProps): JSX.Element => {
   const { className, controlCase, onClose, onNextCase, onPrevCase } = props;
   const pathname = useLocation().pathname;
   const navigate = useNavigate({ from: pathname });
-  // const match = useMatch({ from: '/control/case/$caseId' });
 
   return (
     <div
@@ -33,8 +31,9 @@ const CaseCardHeader = (props: CaseCardHeaderProps): JSX.Element => {
           className="cursor-pointer font-bold"
           onClick={() =>
             navigate({
-              to: `/control/case/$caseId`,
-              params: { caseId: controlCase?.id },
+              to: `/control/case`,
+              search: { id: controlCase?.id },
+              // params: { caseId: controlCase?.id },
             })
           }
         >

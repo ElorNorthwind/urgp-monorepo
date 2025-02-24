@@ -3,8 +3,14 @@ import {
   useLocation,
   useNavigate,
   useRouter,
+  useSearch,
 } from '@tanstack/react-router';
-import { StagesHeader, StagesList, useOperations } from '@urgp/client/entities';
+import {
+  StagesHeader,
+  StagesList,
+  useCaseById,
+  useOperations,
+} from '@urgp/client/entities';
 import { cn, ScrollArea, Skeleton } from '@urgp/client/shared';
 import {
   CaseInfoTab,
@@ -17,23 +23,27 @@ import { CaseFull, OperationClasses } from '@urgp/shared/entities';
 import { SingleCasePageHeader } from './SingleCasePageHeader';
 
 const SingleCasePage = (): JSX.Element => {
-  const routeApi = getRouteApi('/control/case/$caseId');
-  const controlCase: CaseFull = routeApi.useLoaderData().data;
+  const pathname = useLocation().pathname;
+  const caseId = getRouteApi(pathname)?.useSearch()?.id || 0;
+  const {
+    data: controlCase,
+    isLoading,
+    isFetching,
+  } = useCaseById(caseId, {
+    skip: !caseId || caseId === 0,
+  });
 
   const {
     data: stages,
-    isLoading,
-    isFetching,
+    isLoading: isStageLoading,
+    isFetching: isStageFetching,
   } = useOperations(
-    { class: OperationClasses.stage, case: controlCase?.id },
+    { class: OperationClasses.stage, case: controlCase?.id || 0 },
     { skip: !controlCase?.id || controlCase?.id === 0 },
   );
 
-  const pathname = useLocation().pathname;
-  const navigate = useNavigate({ from: pathname });
-  const router = useRouter();
-
-  if (!controlCase) return <Skeleton className="h-10 w-full" />;
+  if (!controlCase || isLoading || isFetching)
+    return <Skeleton className="h-10 w-full" />;
 
   return (
     <ScrollArea
@@ -57,7 +67,10 @@ const SingleCasePage = (): JSX.Element => {
                 caseId={controlCase?.id}
                 className="text-lg font-semibold"
               />
-              <StagesList stages={stages} isLoading={isLoading || isFetching} />
+              <StagesList
+                stages={stages}
+                isLoading={isStageLoading || isStageFetching}
+              />
             </div>
           </div>
         </div>

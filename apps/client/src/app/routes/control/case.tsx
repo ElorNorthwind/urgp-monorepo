@@ -6,13 +6,10 @@ import { casesPageSearch } from '@urgp/shared/entities';
 import { Suspense } from 'react';
 import { z } from 'zod';
 
-export const Route = createFileRoute('/control/case/$caseId')({
-  loader: ({ params }) => {
-    return store.dispatch(
-      casesApi.endpoints.getCaseById.initiate(
-        z.coerce.number().int().parse(params.caseId),
-      ),
-    );
+export const Route = createFileRoute('/control/case')({
+  validateSearch: (search) => {
+    return z.object({ id: z.coerce.number().int() }).parse(search);
   },
+  // },
   component: () => <SingleCasePage />,
 });
