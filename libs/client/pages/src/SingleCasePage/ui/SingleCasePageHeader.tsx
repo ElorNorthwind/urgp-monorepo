@@ -39,7 +39,7 @@ const SingleCasePageHeader = ({
             </p>
           </div>
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <Button
                 role="button"
                 variant="ghost"

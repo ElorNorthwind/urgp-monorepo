@@ -24,9 +24,9 @@ const ExternalCasesList = (
 
   if (!externalCases || externalCases?.length === 0) return null;
   return (
-    <>
+    <div className="flex flex-col gap-2">
       {label && (
-        <div className={cn('text-xl font-semibold', labelClassName)}>
+        <div className={cn('text-lg font-semibold', labelClassName)}>
           {label}
         </div>
       )}
@@ -66,7 +66,7 @@ const ExternalCasesList = (
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 };
 

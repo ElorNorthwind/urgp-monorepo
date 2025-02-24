@@ -16,4 +16,3 @@ export * from './ui/CaseDirectionsList';
 export * from './ui/CaseButtons/CaseSmartActionsMenu';
 export * from './ui/CreateProblemDialog';
 export * from './ui/ExternalCasesList';
-export * from './ui/ControlDispatchesList';

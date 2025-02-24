@@ -9,7 +9,7 @@ import { CalendarPlus } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 
 type CreateDispatchButtonProps = {
-  caseId: number;
+  caseId?: number;
   className?: string;
 };
 
@@ -20,7 +20,7 @@ const CreateDispatchButton = ({
   const dispatch = useDispatch();
   const i = useUserAbility();
 
-  if (i.cannot('create', 'Dispatch')) return null;
+  if (!caseId || i.cannot('create', 'Dispatch')) return null;
 
   return (
     <Button

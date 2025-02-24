@@ -81,19 +81,19 @@ const ManageReminderButton = ({
           variant="outline"
           role="button"
           disabled={disabled}
-          className={cn('flex flex-grow flex-row gap-2', className)}
+          className={cn('flex flex-grow flex-row gap-1', className)}
           onClick={() => {
             userReminder ? onEdit() : onCreate();
           }}
         >
           {!userReminder || userReminder?.doneDate ? (
             <>
-              <Eye className="mr-1 size-4 flex-shrink-0 opacity-50" />
+              <Eye className="mr-1 size-5 flex-shrink-0 opacity-50" />
               <span>Отслеживать</span>
             </>
           ) : (
             <>
-              <ScanEye className="mr-1 size-4 flex-shrink-0" />
+              <ScanEye className="mr-1 size-5 flex-shrink-0" />
               <span>Отслеживание</span>
             </>
           )}
