@@ -54,7 +54,8 @@ const ManualControlToSelector = (
       lockOption={lockOption}
       addBadgeStyle={(item) => {
         return cn(
-          directionCategoryStyles?.[item?.category || '']?.badgeStyle || '',
+          directionCategoryStyles?.[item?.fullname.slice(10) || '']
+            ?.badgeStyle || '',
           'px-2',
         );
       }}
@@ -63,7 +64,8 @@ const ManualControlToSelector = (
           <div
             className={cn(
               'size-4 flex-shrink-0',
-              directionCategoryStyles?.[item?.category || '']?.iconStyle || '',
+              directionCategoryStyles?.[item?.fullname.slice(10) || '']
+                ?.iconStyle || '',
             )}
           />
         );

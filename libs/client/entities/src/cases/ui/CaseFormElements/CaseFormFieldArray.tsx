@@ -1,12 +1,10 @@
 import {
   Button,
   cn,
-  selectCurrentUser,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   useAuth,
-  useUserAbility,
 } from '@urgp/client/shared';
 import {
   DateFormField,
@@ -15,21 +13,18 @@ import {
   SelectFormField,
   TextAreaFormField,
 } from '@urgp/client/widgets';
-import { useSelector } from 'react-redux';
+import { CaseFormDto } from '@urgp/shared/entities';
+import { SquareAsterisk, SquareUserRound } from 'lucide-react';
+import { useState } from 'react';
+import { Fragment } from 'react/jsx-runtime';
 import {
   CaseTypeSelector,
-  ControlToSelector,
   DirectionTypeSelector,
   ManualControlToSelector,
   ProblemSelector,
   useCurrentUserApproveTo,
 } from '../../../classificators';
 import { ExternalCaseFieldArray } from './ExternalCaseFieldArray';
-import { Fragment } from 'react/jsx-runtime';
-import { CaseClasses, CaseFormDto } from '@urgp/shared/entities';
-import { CreateCaseButton } from '../CaseButtons/CreateCaseButton';
-import { useState } from 'react';
-import { SquareAsterisk, SquareUserRound } from 'lucide-react';
 
 const CaseFormFieldArray = ({
   form,
@@ -38,6 +33,12 @@ const CaseFormFieldArray = ({
 }: FieldsArrayProps<CaseFormDto>): JSX.Element | null => {
   const user = useAuth();
   const [manualControlTo, setManualControlTo] = useState(false);
+
+  const canSkipDirections =
+    user?.controlData?.roles &&
+    user?.controlData?.roles.some((role) =>
+      ['admin', 'boss', 'executor'].includes(role),
+    );
 
   const watchApproveTo = form.watch('approveToId');
   // const isApproved = form.getValues('approveStatus') === 'approved';
@@ -62,7 +63,7 @@ const CaseFormFieldArray = ({
           placeholder="Направления работы"
           fieldName="directionIds"
           dirtyIndicator={isEdit}
-          popoverMinWidth={popoverMinWidth}
+          popoverMinWidth={canSkipDirections ? '31.5rem' : popoverMinWidth}
         />
         <ManualControlToSelector
           form={form}
@@ -71,38 +72,33 @@ const CaseFormFieldArray = ({
           placeholder="Ответственный исполнитель"
           fieldName="manualControlToIds"
           dirtyIndicator={isEdit}
-          popoverMinWidth={popoverMinWidth}
+          popoverMinWidth={canSkipDirections ? '31.5rem' : popoverMinWidth}
         />
-        {user?.controlData?.roles &&
-          user?.controlData?.roles.some((role) =>
-            ['admin', 'boss', 'executor'].includes(role),
-          ) && (
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  role="button"
-                  variant="outline"
-                  size="icon"
-                  className="size-10 p-1"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    // if (manualControlTo && !isEdit)
-                    //   form.setValue('directionIds', []);
-                    // if (!manualControlTo)
-                    //   form.setValue('manualControlToIds', []);
-                    setManualControlTo((prev) => !prev);
-                  }}
-                >
-                  {manualControlTo ? <SquareAsterisk /> : <SquareUserRound />}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                {manualControlTo
-                  ? 'Выбрать направления'
-                  : 'Выбрать исполнителя'}
-              </TooltipContent>
-            </Tooltip>
-          )}
+        {canSkipDirections && (
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                role="button"
+                variant="outline"
+                size="icon"
+                className="size-10 p-1"
+                onClick={(e) => {
+                  e.preventDefault();
+                  // if (manualControlTo && !isEdit)
+                  //   form.setValue('directionIds', []);
+                  // if (!manualControlTo)
+                  //   form.setValue('manualControlToIds', []);
+                  setManualControlTo((prev) => !prev);
+                }}
+              >
+                {manualControlTo ? <SquareAsterisk /> : <SquareUserRound />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              {manualControlTo ? 'Выбрать направления' : 'Выбрать исполнителя'}
+            </TooltipContent>
+          </Tooltip>
+        )}
       </div>
       <ProblemSelector
         form={form}
