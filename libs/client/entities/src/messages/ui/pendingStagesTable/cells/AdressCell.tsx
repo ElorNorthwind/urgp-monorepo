@@ -1,7 +1,7 @@
 import { useNavigate } from '@tanstack/react-router';
 import { CellContext } from '@tanstack/react-table';
 import { Button } from '@urgp/client/shared';
-import { PendingStage, UnansweredMessage } from '@urgp/shared/entities';
+import { PendingStage } from '@urgp/shared/entities';
 import { ExternalLink } from 'lucide-react';
 
 function AdressCell(props: CellContext<PendingStage, string>): JSX.Element {
@@ -18,13 +18,13 @@ function AdressCell(props: CellContext<PendingStage, string>): JSX.Element {
             search: { adress: stage.adress },
           })
         }
-        className="py-1 px-2"
+        className="px-2 py-1"
       >
         <ExternalLink className="h-6 w-6" />
       </Button>
       <div className="flex flex-1 flex-col items-start justify-start truncate">
         <div className="line-clamp-2">{stage.adress}</div>
-        <div className="line-clamp-1 text-muted-foreground">
+        <div className="text-muted-foreground line-clamp-1">
           {stage.okrug + ', ' + stage.district}
         </div>
       </div>

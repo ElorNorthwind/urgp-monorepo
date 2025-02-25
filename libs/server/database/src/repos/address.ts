@@ -1,12 +1,5 @@
-import {
-  NestedClassificatorInfo,
-  NestedClassificatorInfoString,
-  Classificator,
-  OperationClass,
-} from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
-import { adress, classificators } from './sql/sql';
-import { Logger } from '@nestjs/common';
+import { address } from './sql/sql';
 
 // const pgp = require('pg-promise')();
 // const { ColumnSet } = pgp.helpers;
@@ -34,7 +27,7 @@ const adressRegistryColumns = [
   { name: 'status' },
   { name: 'kad_n' },
   { name: 'kad_zu' },
-  { name: 'outline', mod: '^' }, // Handle geometry as raw SQL
+  // { name: 'outline', mod: '^' }, // Handle geometry as raw SQL
   { name: 'p0' },
   { name: 'p1' },
   { name: 'p2' },
@@ -58,22 +51,22 @@ const adressRegistryColumns = [
 ];
 
 // @Injectable()
-export class AdressRepository {
+export class AddressRepository {
   constructor(
     private db: IDatabase<unknown>,
     private pgp: IMain,
   ) {}
 
-  upsertAdresses(adresses: any[]): Promise<null> {
+  upsertAdresses(addresses: any[]): Promise<null> {
     const addressRegistryColumnSet = new this.pgp.helpers.ColumnSet(
       adressRegistryColumns,
       {
-        table: 'adress_registry',
+        table: 'address_registry',
       },
     );
 
-    const insert = this.pgp.helpers.insert(adresses, addressRegistryColumnSet);
-    const q = this.pgp.as.format(adress.upsertAdresses, {
+    const insert = this.pgp.helpers.insert(addresses, addressRegistryColumnSet);
+    const q = this.pgp.as.format(address.upsertAddresses, {
       insert,
     });
     // Logger.warn(q);

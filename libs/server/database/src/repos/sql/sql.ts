@@ -118,6 +118,6 @@ export const classificators = {
   ),
 };
 
-export const adress = {
-  upsertAdresses: sql('sql/adress/upsertAdresses.sql'),
+export const address = {
+  upsertAddresses: sql('sql/address/upsertAddresses.sql'),
 };

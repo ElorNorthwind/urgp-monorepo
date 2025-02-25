@@ -12,6 +12,7 @@ import { firstValueFrom } from 'rxjs';
 import { DataMosAdress } from '../config/types';
 import { convertDataMosAdress } from './helper/convertDataMosAdress';
 import { AccessTokenGuard } from '@urgp/server/auth';
+import { splitAddress } from './helper/splitAddress';
 
 @Injectable()
 export class DataMosService {
@@ -55,12 +56,16 @@ export class DataMosService {
 
       do {
         const { data: additionalData }: { data: DataMosAdress[] } =
-          await firstValueFrom(this.axios.request(getRowConfig(current, 3)));
+          await firstValueFrom(this.axios.request(getRowConfig(current, 1000)));
 
-        this.dbServise.db.adress.upsertAdresses(
+        this.dbServise.db.address.upsertAdresses(
           convertDataMosAdress(additionalData) || [],
         );
         current = current + additionalData?.length || 0;
+
+        additionalData.map((d) => {
+          Logger.warn(splitAddress(d?.Cells?.SIMPLE_ADDRESS || ''));
+        });
 
         Logger.log(`Загружено ${current} из ${total}`);
       } while (current < total);

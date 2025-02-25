@@ -7,7 +7,7 @@ import { RenovationUsersRepository } from './renovationUsers';
 import { ControlCasesRepository } from './control-cases';
 import { ControlOperationsRepository } from './control-operations';
 import { ControlClassificatorsRepository } from './control-classificators';
-import { AdressRepository } from './adress';
+import { AddressRepository } from './address';
 
 // Database Interface Extensions:
 interface DbExtensions {
@@ -20,7 +20,7 @@ interface DbExtensions {
   controlCases: ControlCasesRepository;
   controlOperations: ControlOperationsRepository;
   controlClassificators: ControlClassificatorsRepository;
-  adress: AdressRepository;
+  address: AddressRepository;
 }
 
 export {

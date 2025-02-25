@@ -43,8 +43,8 @@ module.exports = {
           ),
         },
         {
-          from: '../../libs/server/database/src/repos/sql/adress',
-          to: join(__dirname, '../../dist/apps/server/sql/adress'),
+          from: '../../libs/server/database/src/repos/sql/address',
+          to: join(__dirname, '../../dist/apps/server/sql/address'),
         },
       ],
     }),

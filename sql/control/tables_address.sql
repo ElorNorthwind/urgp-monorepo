@@ -44,7 +44,8 @@ CREATE TABLE public.adress_registry (
     l5_type VARCHAR(255),
     l5_value VARCHAR(255),
     street_calc TEXT,
-    street_id REFERENCES public.street_registry(id) ON DELETE SET NULL
+    street_id REFERENCES public.street_registry(id) ON DELETE SET NULL,
+    updated_at TIMESTAMP WITH TIME ZONE
 );
 
 ALTER TABLE public.adress_registry

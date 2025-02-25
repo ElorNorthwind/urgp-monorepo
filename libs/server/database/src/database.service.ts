@@ -13,7 +13,7 @@ import {
 import { CasesRepository } from './repos';
 import { ControlOperationsRepository } from './repos/control-operations';
 import { ControlClassificatorsRepository } from './repos/control-classificators';
-import { AdressRepository } from './repos/adress';
+import { AddressRepository } from './repos/address';
 
 type ExtendedProtocol = pgPromise.IDatabase<DbExtensions> & DbExtensions;
 
@@ -48,7 +48,7 @@ export class DatabaseService {
           obj,
           pgPromise(),
         );
-        obj.adress = new AdressRepository(obj, pgPromise());
+        obj.address = new AddressRepository(obj, pgPromise());
       },
     };
 

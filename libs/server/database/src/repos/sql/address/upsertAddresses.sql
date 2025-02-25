@@ -22,7 +22,7 @@ DO UPDATE SET
     status = excluded.status,
     kad_n = excluded.kad_n,
     kad_zu = excluded.kad_zu,
-    outline = excluded.outline,
+    -- outline = excluded.outline,
     p0 = excluded.p0,
     p1 = excluded.p1,
     p2 = excluded.p2,

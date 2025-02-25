@@ -6,7 +6,7 @@ import { AccessTokenGuard } from '@urgp/server/auth';
 @UseGuards(AccessTokenGuard)
 export class DataMosController {
   constructor(private readonly dataMos: DataMosService) {}
-  @Get('update-adress')
+  @Get('update-address')
   updateAdresses(): Promise<any> {
     return this.dataMos.updateAdresses();
   }
