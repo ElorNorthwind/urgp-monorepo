@@ -131,26 +131,26 @@ export const directionCategoryStyles = {
   },
   УПГУ: {
     icon: Circle,
-    iconStyle: 'bg-amber-500 rounded-full text-amber-500',
+    iconStyle: 'bg-orange-500 rounded-full text-orange-500',
     badgeStyle: cn(
-      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-amber-500',
-      "before:content-[''] before:rounded-full before:size-3 before:bg-amber-500 before:mr-1",
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-orange-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-orange-500 before:mr-1",
     ),
   },
   УП: {
     icon: Circle,
-    iconStyle: 'bg-slate-500 rounded-full text-slate-500',
+    iconStyle: 'bg-rose-500 rounded-full text-rose-500',
     badgeStyle: cn(
-      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-slate-500',
-      "before:content-[''] before:rounded-full before:size-3 before:bg-slate-500 before:mr-1",
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-rose-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-rose-500 before:mr-1",
     ),
   },
   УОЖП: {
     icon: Circle,
-    iconStyle: 'bg-violet-500 rounded-full text-violet-500',
+    iconStyle: 'bg-purple-500 rounded-full text-purple-500',
     badgeStyle: cn(
-      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-violet-500',
-      "before:content-[''] before:rounded-full before:size-3 before:bg-violet-500 before:mr-1",
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-purple-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-purple-500 before:mr-1",
     ),
   },
   УИ: {

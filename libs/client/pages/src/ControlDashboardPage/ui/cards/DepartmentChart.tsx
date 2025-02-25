@@ -45,7 +45,7 @@ const DepartmentChart = ({ className }: DepartmentChartProps): JSX.Element => {
         key: 'УПГУ',
         label: 'УПГУ (Курзина Ю.А.)',
         value: countByDepartment('УПГУ', cases),
-        style: 'bg-amber-200',
+        style: 'bg-orange-200',
       },
       {
         key: 'УВЖУ',
@@ -57,13 +57,13 @@ const DepartmentChart = ({ className }: DepartmentChartProps): JSX.Element => {
         key: 'УП',
         label: 'УП (Замураев А.Ю.)',
         value: countByDepartment('УП', cases),
-        style: 'bg-slate-200',
+        style: 'bg-rose-200',
       },
       {
         key: 'УОЖП',
         label: 'УОЖП (Пахмутов С.А.)',
         value: countByDepartment('УОЖП', cases),
-        style: 'bg-violet-200',
+        style: 'bg-purple-200',
       },
       {
         key: 'УИ',
