@@ -70,21 +70,11 @@ export function defineControlAbilityFor(user: User) {
       approveStatus: { $eq: 'approved' }, // решение по согласованным делам может принимать только согласовант
     });
 
-    can('approve', 'all', {
-      approveStatus: { $eq: 'project' },
-      'author.id': { $eq: user.id },
+    return build({
+      detectSubjectType: (item) =>
+        (subjectVariants?.[item?.class as keyof typeof subjectVariants] ||
+          'unknown') as ExtractSubjectType<Subject>,
     });
-
-    can('approve', 'all', {
-      approveStatus: { $eq: 'project' },
-      authorId: { $eq: user.id },
-    });
-
-    // return build({
-    //   detectSubjectType: (item) =>
-    //     (subjectVariants?.[item?.class as keyof typeof subjectVariants] ||
-    //       'unknown') as ExtractSubjectType<Subject>,
-    // });
   }
 
   can(['read', 'create'], 'all'); // Все могут читать или создавать все
