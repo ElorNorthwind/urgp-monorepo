@@ -72,4 +72,13 @@ export class AddressRepository {
     // Logger.warn(q);
     return this.db.none(q);
   }
+
+  countUpdated(): Promise<number> {
+    return this.db
+      .one(address.countUpdated)
+      .then((result) => result?.total ?? 0);
+  }
+  clearUpdated(): Promise<null> {
+    return this.db.none(address.clearUpdated);
+  }
 }

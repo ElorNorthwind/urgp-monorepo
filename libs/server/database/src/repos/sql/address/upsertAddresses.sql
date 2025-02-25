@@ -42,4 +42,5 @@ DO UPDATE SET
     l4_type = excluded.l4_type,
     l4_value = excluded.l4_value,
     l5_type = excluded.l5_type,
-    l5_value = excluded.l5_value;
+    l5_value = excluded.l5_value,
+    updated_at = (now())::timestamp(0) with time zone;

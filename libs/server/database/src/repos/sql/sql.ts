@@ -120,4 +120,6 @@ export const classificators = {
 
 export const address = {
   upsertAddresses: sql('sql/address/upsertAddresses.sql'),
+  countUpdated: sql('sql/address/countUpdated.sql'),
+  clearUpdated: sql('sql/address/clearUpdated.sql'),
 };

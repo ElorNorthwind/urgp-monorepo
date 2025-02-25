@@ -22,6 +22,13 @@ export class DataMosService {
     private configService: ConfigService,
   ) {}
 
+  private async countUpdated(): Promise<number> {
+    return this.dbServise.db.address.countUpdated();
+  }
+  private async clearUpdated(): Promise<null> {
+    return this.dbServise.db.address.clearUpdated();
+  }
+
   public async updateAdresses(): Promise<any> {
     const apiKey = this.configService.get<string>('OPEN_MOS_KEY');
     if (!apiKey)
@@ -52,7 +59,11 @@ export class DataMosService {
       const { data: total } = await firstValueFrom(
         this.axios.request(countConfig),
       );
-      let current = 0;
+      let current = (await this.countUpdated()) || 0;
+
+      if (current === total) {
+        await this.clearUpdated();
+      }
 
       do {
         const { data: additionalData }: { data: DataMosAdress[] } =
@@ -63,9 +74,9 @@ export class DataMosService {
         );
         current = current + additionalData?.length || 0;
 
-        additionalData.map((d) => {
-          Logger.warn(splitAddress(d?.Cells?.SIMPLE_ADDRESS || ''));
-        });
+        // additionalData.map((d) => {
+        //   Logger.warn(splitAddress(d?.Cells?.SIMPLE_ADDRESS || ''));
+        // });
 
         Logger.log(`Загружено ${current} из ${total}`);
       } while (current < total);
