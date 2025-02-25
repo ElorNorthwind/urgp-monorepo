@@ -48,7 +48,7 @@ const ConnectedCasesTab = (
       label={correctLabel}
       className={className}
       titleClassName={titleClassName}
-      contentClassName={cn(contentClassName)}
+      contentClassName={cn('flex flex-wrap gap-2', contentClassName)}
       accordionItemName={accordionItemName}
     >
       {connections.map((connection) => (
