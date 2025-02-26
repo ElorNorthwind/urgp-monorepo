@@ -10,4 +10,5 @@ SELECT
 		'defaultExecutorId', default_executor_id
 	)) as items
 FROM control.direction_types
-GROUP BY category;
+GROUP BY category
+ORDER BY category;

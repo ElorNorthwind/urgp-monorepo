@@ -41,13 +41,21 @@ const IncidentSelector = (props: IncidentSelectorProps): JSX.Element => {
         label: 'Единичные инциденты',
         items: data
           ? [
-              ...data.map((d) => ({
-                value: d.id,
-                label: d.title + ' (' + d.extra + ')',
-                category: d.class,
-                fullname: d.notes,
-                tags: d.directions.map((dir) => dir.name),
-              })),
+              ...data
+                // .filter((d) =>
+                //   ['в работе', 'эскалация'].includes(d?.status?.category || ''),
+                // )
+                .map((d) => ({
+                  value: d.id,
+                  label: d.title + ' (' + d.extra + ')',
+                  category: ['в работе', 'эскалация'].includes(
+                    d?.status?.category || '',
+                  )
+                    ? 'active'
+                    : 'inactive',
+                  fullname: d.notes,
+                  tags: d.directions.map((dir) => dir.name),
+                })),
             ]
           : [],
       },
@@ -59,6 +67,9 @@ const IncidentSelector = (props: IncidentSelectorProps): JSX.Element => {
       fieldName={fieldName}
       form={form}
       label={label}
+      hideOption={(option) => {
+        return option?.category === 'inactive';
+      }}
       placeholder={placeholder}
       disabled={disabled}
       triggerClassName={triggerClassName}

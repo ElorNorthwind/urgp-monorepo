@@ -41,6 +41,7 @@ type MultiSelectFormFieldProps<T> = {
   side?: 'top' | 'right' | 'bottom' | 'left';
   extraButton?: () => JSX.Element | null;
   lockOption?: (option?: ClassificatorInfo) => boolean;
+  hideOption?: (option?: ClassificatorInfo) => boolean;
 };
 
 const MultiSelectFormField = <T extends string | number>(
@@ -62,6 +63,7 @@ const MultiSelectFormField = <T extends string | number>(
     dirtyIndicator = false,
     extraButton,
     lockOption,
+    hideOption,
   } = props;
 
   const flatOptions = useMemo(
@@ -86,7 +88,8 @@ const MultiSelectFormField = <T extends string | number>(
                 .filter(({ value }) => {
                   return !field.value?.some((v: number) => v === value);
                 })
-                .filter((o) => (lockOption ? !lockOption(o) : true)),
+                .filter((o) => (lockOption ? !lockOption(o) : true))
+                .filter((o) => (hideOption ? !hideOption(o) : true)),
             };
           })
           .filter((o) => o.items.length > 0);
@@ -168,6 +171,7 @@ const MultiSelectFormField = <T extends string | number>(
                                 flatOptions.find((o) => o.value === option),
                               )) ??
                             false;
+
                           return (
                             <Badge
                               key={option}
@@ -231,8 +235,12 @@ const MultiSelectFormField = <T extends string | number>(
                             onValueChange={setInputValue}
                             // onBlur={() => setOpen(false)}
                             // onFocus={() => setOpen(true)}
-                            placeholder={placeholder || 'Выберите значение'}
-                            className="placeholder:text-muted-foreground ml-2 flex-1 bg-transparent outline-none"
+                            placeholder={
+                              field?.value?.length > 0
+                                ? ''
+                                : placeholder || 'Выберите значение'
+                            }
+                            className="placeholder:text-muted-foreground ml-2 flex-1 truncate bg-transparent outline-none"
                           />
                         </FormControl>
                       </div>

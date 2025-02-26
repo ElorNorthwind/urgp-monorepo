@@ -15,7 +15,11 @@ import { operationFullSchema } from '../operations/types';
 
 const connectionInfoSchema = z.object({
   id: z.coerce.number().int().nonnegative(),
+  class: z.enum(caseClassesValues),
   title: z.string(),
+  extra: z.string(),
+  notes: z.string(),
+  departments: z.array(z.string()),
 });
 
 const caseSlimFields = {

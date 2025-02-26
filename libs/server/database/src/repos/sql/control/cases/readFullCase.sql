@@ -32,16 +32,26 @@ GROUP BY o."caseId"),
 			cc.from_id as id,
 			JSONB_AGG(cf) as connections
 		FROM control.case_connections cc
-		LEFT JOIN (SELECT id, title FROM control.cases_) cf ON cc.to_id = cf.id
-		WHERE cc.archive_date IS NULL
+		LEFT JOIN (
+			SELECT c.id, c.class, c.title, c.extra, c.notes, ARRAY_REMOVE(ARRAY_AGG(DISTINCT d.category), null) as departments FROM control.cases_ c
+			LEFT JOIN control.direction_types d ON d.id = ANY(direction_ids)
+			WHERE c.archive_date IS NULL
+			GROUP BY c.id, c.title, c.extra, c.notes
+		) cf ON cc.to_id = cf.id
+		WHERE cc.archive_date IS NULL AND cf.id IS NOT NULL
 		GROUP BY cc.from_id),
 	connections_from AS (
 		SELECT 
 			cc.to_id as id,
 			JSONB_AGG(cf) as connections
 		FROM control.case_connections cc
-		LEFT JOIN (SELECT id, title FROM control.cases_) cf ON cc.from_id = cf.id
-		WHERE cc.archive_date IS NULL
+		LEFT JOIN (
+			SELECT c.id, c.class, c.title, c.extra, c.notes, ARRAY_REMOVE(ARRAY_AGG(DISTINCT d.category), null) as departments FROM control.cases_ c
+			LEFT JOIN control.direction_types d ON d.id = ANY(direction_ids)
+			WHERE c.archive_date IS NULL 
+			GROUP BY c.id, c.title, c.extra, c.notes
+		) cf ON cc.from_id = cf.id
+		WHERE cc.archive_date IS NULL AND cf.id IS NOT NULL
 		GROUP BY cc.to_id)
 
 SELECT
@@ -77,8 +87,8 @@ SELECT
 	o."myPendingStage" as "myPendingStage",
 	ARRAY_REMOVE(
 		ARRAY[
-			  CASE WHEN c.approve_status = 'pending' THEN 'case-approve' ELSE null END
-			, CASE WHEN c.approve_status = 'rejected' THEN 'case-rejected' ELSE null END
+			  CASE WHEN c.approve_status = 'pending' AND c.approve_to_id = ${userId} THEN 'case-approve' ELSE null END
+			, CASE WHEN c.approve_status = 'rejected' AND c.author_id = ${userId} THEN 'case-rejected' ELSE null END
 			, CASE WHEN o."myPendingStage" IS NOT NULL THEN 'operation-approve' ELSE null END
 			, CASE WHEN o."lastStage"->'type'->>'category' = 'решение' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL THEN 'reminder-done' ELSE null END
 			, CASE WHEN (o."lastStage"->'type'->>'category' <> 'решение' AND (o."myReminder"->>'dueDate')::date < current_date) THEN 'reminder-overdue' ELSE null END

@@ -7,7 +7,10 @@ import {
   TooltipTrigger,
 } from '@urgp/client/shared';
 import { MessageSquare } from 'lucide-react';
-import { caseTypeStyles } from '../../../config/caseStyles';
+import {
+  caseTypeStyles,
+  directionCategoryStyles,
+} from '../../../config/caseStyles';
 import { CaseFull } from '@urgp/shared/entities';
 
 function CaseTypeCell(props: CellContext<CaseFull, string>): JSX.Element {
@@ -22,15 +25,38 @@ function CaseTypeCell(props: CellContext<CaseFull, string>): JSX.Element {
           {TypeIcon && <TypeIcon className={cn('size-8', iconStyle)} />}
           <div className="flex flex-1 flex-col items-start justify-start truncate">
             <div className="truncate">{payload?.type?.name || ''}</div>
-            <div className="text-muted-foreground line-clamp-1 flex items-start justify-center gap-1 text-xs">
+            <div className="text-muted-foreground line-clamp-1 flex flex-wrap items-start justify-start gap-1 text-xs">
               {payload?.connectionsTo && payload?.connectionsTo?.length > 0 ? (
-                payload?.connectionsTo.map((c) => (
-                  <span key={c.id} className="rounded-full border px-2">
-                    {c.title}
-                  </span>
-                ))
+                payload?.connectionsTo?.length < 3 ? (
+                  payload?.connectionsTo.map((c) => (
+                    <div
+                      key={c.id}
+                      className="flex flex-row items-center gap-1 rounded-full border px-2"
+                    >
+                      {c?.departments &&
+                        c?.departments?.length > 0 &&
+                        c?.departments.map((d) => (
+                          <div
+                            key={d}
+                            className={cn(
+                              'size-2 rounded-full',
+                              directionCategoryStyles?.[d].iconStyle ||
+                                'bg-slate-500',
+                            )}
+                          />
+                        ))}
+                      <span>{c?.title}</span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="rounded-full border px-2">
+                    {payload?.connectionsTo?.length} системных пробл.
+                  </div>
+                )
               ) : (
-                <span>нет системных проблем</span>
+                <div className="text-muted-foreground/50">
+                  нет системных проблем
+                </div>
               )}
             </div>
           </div>
@@ -43,17 +69,34 @@ function CaseTypeCell(props: CellContext<CaseFull, string>): JSX.Element {
         </div>
       </TooltipTrigger>
       <TooltipPortal>
-        <TooltipContent side="bottom">
+        <TooltipContent side="bottom" className="p-2">
           <TooltipArrow />
           <div className="flex flex-col gap-1">
             {payload?.connectionsTo && payload?.connectionsTo?.length > 0 ? (
               payload?.connectionsTo.map((c) => (
-                <span key={c.id} className="rounded-full border px-2">
-                  {c.title}
-                </span>
+                <div
+                  key={c?.id || '-'}
+                  className="flex flex-row items-center gap-1 rounded-full border px-2"
+                >
+                  {c?.departments &&
+                    c?.departments?.length > 0 &&
+                    c?.departments.map((d) => (
+                      <div
+                        key={d}
+                        className={cn(
+                          'size-2 rounded-full',
+                          directionCategoryStyles?.[d].iconStyle ||
+                            'bg-slate-500',
+                        )}
+                      />
+                    ))}
+                  <span>{c?.title}</span>
+                </div>
               ))
             ) : (
-              <span>нет системных проблем</span>
+              <span className="text-muted-foreground/50">
+                нет системных проблем
+              </span>
             )}
           </div>
         </TooltipContent>
