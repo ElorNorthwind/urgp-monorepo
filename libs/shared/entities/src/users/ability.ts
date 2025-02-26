@@ -62,6 +62,7 @@ export function defineControlAbilityFor(user: User) {
   );
 
   const approveTo = user.controlData.approveTo || [];
+  const controlTo = user.controlData.controlTo || [];
 
   if (user?.controlData?.roles?.includes('admin')) {
     can('manage', 'all'); // админу по дефолту можно все
@@ -84,6 +85,14 @@ export function defineControlAbilityFor(user: User) {
   can(['update', 'delete'], 'all', {
     authorId: { $eq: user.id }, // BE // Все могу менять или удалять то, что они создали
   });
+
+  can('update', 'all', {
+    'author.id': { $in: controlTo }, // FE // Можно править за подчиненными
+  });
+  can('update', 'all', {
+    authorId: { $in: controlTo }, // BE // Можно править за подчиненными
+  });
+
   can(['update', 'approve'], 'all', {
     'approveTo.id': { $eq: user.id }, // FE // Все могут менять или согласовывать то, что у них на согле
   });
@@ -91,7 +100,7 @@ export function defineControlAbilityFor(user: User) {
     approveToId: { $eq: user.id }, // BE // Все могут менять или согласовывать то, что у них на согле
   });
 
-  cannot(['update', 'delete'], 'all', {
+  cannot('delete', 'all', {
     approveStatus: { $nin: ['project', 'pending'] }, // согласовывать то что не на согласовании йо
   });
 
