@@ -68,7 +68,7 @@ export type DataMosAdress = {
 };
 
 export type AdressRegistryRow = {
-  global_id: number;
+  global_id: bigint;
   on_territory_of_moscow: boolean;
   unom: number;
   address: string;
@@ -90,7 +90,7 @@ export type AdressRegistryRow = {
   status: string;
   kad_n: string[];
   kad_zu: string[];
-  outline: any;
+  // outline: any;
   p0: string | null;
   p1: string | null;
   p2: string | null;
@@ -111,4 +111,15 @@ export type AdressRegistryRow = {
   l4_value: string | null;
   l5_type: string | null;
   l5_value: string | null;
+  street_calc: string | null;
 };
+
+export type AdressRegistryRowSlim = Pick<
+  AdressRegistryRow,
+  'global_id' | 'p4' | 'p6' | 'p7' | 'p90' | 'p91' | 'simple_address'
+>;
+
+export type AdressRegistryRowCalcStreetData = Pick<
+  AdressRegistryRow,
+  'global_id' | 'street_calc'
+>;

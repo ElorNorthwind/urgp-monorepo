@@ -10,4 +10,8 @@ export class DataMosController {
   updateAdresses(): Promise<any> {
     return this.dataMos.updateAdresses();
   }
+  @Get('calculate-streets')
+  calculateStreets(): Promise<any> {
+    return this.dataMos.calculateStreets(5000);
+  }
 }

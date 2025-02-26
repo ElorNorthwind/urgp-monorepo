@@ -9,10 +9,11 @@ import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '@urgp/server/database';
 import { AxiosRequestConfig } from 'axios';
 import { firstValueFrom } from 'rxjs';
-import { DataMosAdress } from '../config/types';
+import { AdressRegistryRowSlim, DataMosAdress } from '../config/types';
 import { convertDataMosAdress } from './helper/convertDataMosAdress';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { splitAddress } from './helper/splitAddress';
+import { calculateStreetFromDB } from './helper/calculateStreetFromDB';
 
 @Injectable()
 export class DataMosService {
@@ -85,5 +86,25 @@ export class DataMosService {
       Logger.error(error);
       return { count: 0, error };
     }
+  }
+  public async calculateStreets(limit: number = 1000): Promise<any> {
+    let offset = 0;
+    const total = await this.dbServise.db.address.countTotal();
+
+    do {
+      const batch = await this.dbServise.db.address.readPaginatedAddresses({
+        limit,
+        offset,
+      });
+
+      const calculatedStreets = batch.map((d) => ({
+        global_id: BigInt(d.global_id),
+        street_calc: calculateStreetFromDB(d),
+      }));
+      this.dbServise.db.address.updateCalcStreets(calculatedStreets);
+      offset = offset + limit;
+      Logger.log(`Обработано ${offset} из ${total}`);
+    } while (offset < total);
+    return { count: total, error: undefined };
   }
 }

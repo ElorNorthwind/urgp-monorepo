@@ -68,7 +68,7 @@ export const incidentsTableColumns = [
     (row): string => row?.externalCases?.map((d) => d.num)?.join(', ') || '',
     {
       id: 'externalCases',
-      header: 'Обращение',
+      header: 'Обращения',
       size: 100,
       enableSorting: true,
       sortDescFirst: true,

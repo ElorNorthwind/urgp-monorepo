@@ -43,4 +43,5 @@ DO UPDATE SET
     l4_value = excluded.l4_value,
     l5_type = excluded.l5_type,
     l5_value = excluded.l5_value,
+    street_calc = excluded.street_calc,
     updated_at = (now())::timestamp(0) with time zone;

@@ -1,10 +1,11 @@
 import { AdressRegistryRow, DataMosAdress } from '../../config/types';
+import { calculateStreetFromDataMos } from './calculateStreetFromDataMos';
 
 export const convertDataMosAdress = (
   objects: DataMosAdress[],
 ): AdressRegistryRow[] => {
   return objects.map((obj) => ({
-    global_id: obj.global_id,
+    global_id: BigInt(obj.global_id),
     on_territory_of_moscow: obj.Cells.OnTerritoryOfMoscow === 'да',
     unom: obj.Cells.UNOM,
     address: obj.Cells.ADDRESS,
@@ -26,7 +27,7 @@ export const convertDataMosAdress = (
     status: obj.Cells.STATUS,
     kad_n: obj.Cells.KAD_N.map((n) => n.KAD_N),
     kad_zu: obj.Cells.KAD_ZU.map((z) => z.KAD_ZU),
-    outline: `ST_GeomFromGeoJSON('${JSON.stringify(obj.Cells.geoData)}')`,
+    // outline: `ST_GeomFromGeoJSON('${JSON.stringify(obj.Cells.geoData)}')`,
     p0: obj.Cells.P0,
     p1: obj.Cells.P1,
     p2: obj.Cells.P2,
@@ -47,5 +48,6 @@ export const convertDataMosAdress = (
     l4_value: obj.Cells.L4_VALUE,
     l5_type: obj.Cells.L5_TYPE,
     l5_value: obj.Cells.L5_VALUE,
+    street_calc: calculateStreetFromDataMos(obj),
   }));
 };

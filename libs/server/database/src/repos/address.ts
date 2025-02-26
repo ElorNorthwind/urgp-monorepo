@@ -1,5 +1,10 @@
 import { IDatabase, IMain } from 'pg-promise';
 import { address } from './sql/sql';
+import {
+  AdressRegistryRowCalcStreetData,
+  AdressRegistryRowSlim,
+} from 'libs/server/data-mos/src/config/types';
+import { Logger } from '@nestjs/common';
 
 // const pgp = require('pg-promise')();
 // const { ColumnSet } = pgp.helpers;
@@ -48,6 +53,7 @@ const adressRegistryColumns = [
   { name: 'l4_value' },
   { name: 'l5_type' },
   { name: 'l5_value' },
+  { name: 'street_calc' },
 ];
 
 // @Injectable()
@@ -78,7 +84,34 @@ export class AddressRepository {
       .one(address.countUpdated)
       .then((result) => result?.total ?? 0);
   }
+
+  countTotal(): Promise<number> {
+    return this.db.one(address.countTotal).then((result) => result?.total ?? 0);
+  }
   clearUpdated(): Promise<null> {
     return this.db.none(address.clearUpdated);
+  }
+  readPaginatedAddresses({
+    limit = 1000,
+    offset = 0,
+  }: {
+    limit?: number;
+    offset?: number;
+  }): Promise<AdressRegistryRowSlim[]> {
+    return this.db.any(address.readPaginatedAddresses, { limit, offset });
+  }
+
+  updateCalcStreets(data: AdressRegistryRowCalcStreetData[]): Promise<null> {
+    const addressRegistryColumnSet = new this.pgp.helpers.ColumnSet(
+      [{ name: 'global_id', cnd: true }, { name: 'street_calc' }],
+      {
+        table: 'address_registry',
+      },
+    );
+    const update = this.pgp.helpers.update(data, addressRegistryColumnSet);
+
+    // Logger.warn(update);
+
+    return this.db.none(update + ' WHERE v.global_id = t.global_id');
   }
 }

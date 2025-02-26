@@ -1,4 +1,4 @@
-import { cn, useUserAbility } from '@urgp/client/shared';
+import { cn } from '@urgp/client/shared';
 import { CaseFull } from '@urgp/shared/entities';
 
 import { externalSystemStyles } from '@urgp/client/entities';
@@ -18,7 +18,7 @@ const ExternalCasesTab = (props: ExternalCasesTabProps): JSX.Element | null => {
   const {
     controlCase,
     className,
-    label = 'Связанные номера',
+    label = 'Обращения',
     titleClassName,
     contentClassName,
     accordionItemName,

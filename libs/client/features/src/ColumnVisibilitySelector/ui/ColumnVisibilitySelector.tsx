@@ -90,7 +90,7 @@ function ColumnVisibilitySelector(
 
   const columnNames = {
     smartApprove: 'Действия',
-    externalCases: 'Обращение',
+    externalCases: 'Обращения',
     desctiption: 'Описание',
     viewStatus: 'Статус отслеживания',
     status: 'Статус',
