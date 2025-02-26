@@ -25,6 +25,7 @@ import {
   useCurrentUserApproveTo,
 } from '../../../classificators';
 import { ExternalCaseFieldArray } from './ExternalCaseFieldArray';
+import { endOfYesterday, isBefore } from 'date-fns';
 
 const CaseFormFieldArray = ({
   form,
@@ -152,6 +153,7 @@ const CaseFormFieldArray = ({
           fieldName={'dueDate'}
           label="Срок решения"
           placeholder="Контрольный срок"
+          disabledDays={(date) => isBefore(date, endOfYesterday())}
           disabled={isEdit || user?.id !== watchApproveTo}
           className={cn(
             'flex-shrink-0',

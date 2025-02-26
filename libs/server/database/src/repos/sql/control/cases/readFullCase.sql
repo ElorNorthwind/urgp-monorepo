@@ -90,9 +90,9 @@ SELECT
 			  CASE WHEN c.approve_status = 'pending' AND c.approve_to_id = ${userId} THEN 'case-approve' ELSE null END
 			, CASE WHEN c.approve_status = 'rejected' AND c.author_id = ${userId} THEN 'case-rejected' ELSE null END
 			, CASE WHEN o."myPendingStage" IS NOT NULL THEN 'operation-approve' ELSE null END
-			, CASE WHEN o."lastStage"->'type'->>'category' = 'решение' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL THEN 'reminder-done' ELSE null END
-			, CASE WHEN (o."lastStage"->'type'->>'category' <> 'решение' AND (o."myReminder"->>'dueDate')::date < current_date) THEN 'reminder-overdue' ELSE null END
-			, CASE WHEN (o."myReminder"->'type'->>'id')::integer = 12 AND o."myReminder"->>'doneDate' IS NULL THEN 'escalation' ELSE null END
+			, CASE WHEN o."lastStage"->'type'->>'category' = 'решение' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL AND COALESCE(o.escalations, 0) = 0 THEN 'reminder-done' ELSE null END
+			, CASE WHEN (o."lastStage"->'type'->>'category' <> 'решение' AND (o."myReminder"->>'dueDate')::date < current_date) AND COALESCE(o.escalations, 0) = 0 THEN 'reminder-overdue' ELSE null END
+			, CASE WHEN (o."myReminder"->'type'->>'id')::integer = 12 AND o."myReminder"->>'doneDate' IS NULL AND COALESCE(o."controlLevel", 0) < ${controlThreshold} THEN 'escalation' ELSE null END
 		]
 	, null) as actions,
 	c.revision,
@@ -117,7 +117,7 @@ LEFT JOIN (SELECT id, name, category, fullname as "fullName" FROM control.case_s
 		WHEN c.approve_status = 'rejected' THEN 10 -- "отказано в согласовании"
 		WHEN c.approve_status = 'project' THEN 12 -- "проект"
 		-- Эти вот штуки лучше бы прописать через специальное поле в control.operation_types ?
-		WHEN o.escalations > 0 THEN 8 -- "запрошено заключение"
+		WHEN o.escalations > 0 AND COALESCE(o."controlLevel", 0) < ${controlThreshold} THEN 8 -- "запрошено заключение"
 		WHEN (o."lastStage"->'type'->>'id')::integer = 7 AND o."lastStage"->>'approveStatus' = 'approved' AND COALESCE(o."controlLevel", 0) <= COALESCE((o."lastStage"->'approveFrom'->>'priority')::integer, 0) THEN 5 -- "отклонено"
 		WHEN (o."lastStage"->'type'->>'id')::integer = 8 AND o."lastStage"->>'approveStatus' = 'approved' AND COALESCE(o."controlLevel", 0) <= COALESCE((o."lastStage"->'approveFrom'->>'priority')::integer, 0) THEN 6 -- "решено"
 		WHEN (o."lastStage"->'type'->>'id')::integer = 9 AND o."lastStage"->>'approveStatus' = 'approved' AND COALESCE(o."controlLevel", 0) <= COALESCE((o."lastStage"->'approveFrom'->>'priority')::integer, 0) THEN 7 -- "не решено"

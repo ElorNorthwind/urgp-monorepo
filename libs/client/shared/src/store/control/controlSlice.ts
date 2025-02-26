@@ -21,6 +21,7 @@ import {
   CaseClasses,
   getFormDataFromCaseFull,
   getFormDataFromOperationFull,
+  CONTROL_THRESHOLD,
 } from '@urgp/shared/entities';
 import { RootState } from '../store';
 
@@ -209,6 +210,10 @@ const controlSlice = createSlice({
       state.dispatchForm.values = {
         ...emptyDispatch,
         authorId: state.user?.id,
+        controller:
+          state.user?.controlData?.priority || 0 >= CONTROL_THRESHOLD
+            ? ControlOptions.author
+            : ControlOptions.executor,
       };
     },
     setDispatchFormValuesFromDispatch: (
@@ -231,6 +236,7 @@ const controlSlice = createSlice({
       state.dispatchForm.values = {
         ...payload,
         authorId: state?.user?.id,
+
         controlFromId:
           payload?.controller === ControlOptions.author
             ? state?.user?.id

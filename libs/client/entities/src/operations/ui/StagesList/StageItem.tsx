@@ -1,24 +1,25 @@
 import { cn, Skeleton } from '@urgp/client/shared';
+import { ApproveButton } from '@urgp/client/widgets';
+import { ApproveStatus, OperationFull } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import { Circle } from 'lucide-react';
 import {
   approveStatusStyles,
   operationTypeStyles,
 } from '../../config/operationStyles';
-import { StagesHistory } from '../StageHistory';
 import { DeleteStageButton } from '../StageButtons/DeleteStageButton';
 import { EditStageButton } from '../StageButtons/EditStageButton';
-import { ApproveButton } from '@urgp/client/widgets';
-import { ApproveStatus, OperationFull } from '@urgp/shared/entities';
+import { StagesHistory } from '../StageHistory';
 
 type StageItemProps = {
   stage?: OperationFull | null;
   hover?: boolean;
+  isInvalidated?: boolean;
   className?: string;
 };
 
 const StageItem = (props: StageItemProps): JSX.Element => {
-  const { className, stage, hover = true } = props;
+  const { className, stage, hover = true, isInvalidated = false } = props;
 
   if (!stage || stage === null) {
     return <Skeleton className="h-8 w-full" />;
@@ -46,6 +47,7 @@ const StageItem = (props: StageItemProps): JSX.Element => {
       className={cn(
         'group relative flex w-full flex-col border-b p-4 last:border-b-0',
         bgStyle,
+        isInvalidated && 'opacity-60',
         className,
       )}
     >

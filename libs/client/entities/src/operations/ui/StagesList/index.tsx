@@ -2,15 +2,17 @@ import { cn, ScrollArea } from '@urgp/client/shared';
 import { Coffee } from 'lucide-react';
 import { StageItem } from './StageItem';
 import { OperationFull } from '@urgp/shared/entities';
+import { control } from 'leaflet';
 
 type StagesListProps = {
   stages?: OperationFull[];
   className?: string;
   isLoading?: boolean;
+  controlLevel?: number;
 };
 
 const StagesList = (props: StagesListProps): JSX.Element => {
-  const { className, stages, isLoading } = props;
+  const { className, stages, isLoading, controlLevel = 0 } = props;
 
   if (!stages || stages?.length === 0) {
     return (
@@ -30,7 +32,16 @@ const StagesList = (props: StagesListProps): JSX.Element => {
       {isLoading ? (
         <StageItem stage={null} />
       ) : (
-        stages?.map((stage) => <StageItem stage={stage} key={stage.id} />)
+        stages?.map((stage) => (
+          <StageItem
+            stage={stage}
+            key={stage.id}
+            isInvalidated={
+              stage?.type?.category === 'решение' &&
+              (stage?.approveTo?.priority || 0) < controlLevel
+            }
+          />
+        ))
       )}
     </ScrollArea>
   );

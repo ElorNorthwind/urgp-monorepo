@@ -67,6 +67,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
         stages={stages}
         isLoading={isLoading || isFetching}
         className="m-4"
+        controlLevel={controlCase?.controlLevel || 0}
       />
       <CaseCardFooter controlCase={controlCase} />
     </>

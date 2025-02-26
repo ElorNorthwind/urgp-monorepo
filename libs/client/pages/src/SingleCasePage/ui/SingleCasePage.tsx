@@ -70,6 +70,7 @@ const SingleCasePage = (): JSX.Element => {
               <StagesList
                 stages={stages}
                 isLoading={isStageLoading || isStageFetching}
+                controlLevel={controlCase?.controlLevel || 0}
               />
             </div>
           </div>

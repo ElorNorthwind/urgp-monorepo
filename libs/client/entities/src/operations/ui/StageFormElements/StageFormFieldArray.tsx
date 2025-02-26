@@ -45,6 +45,22 @@ const StageFormFieldArray = ({
       })
     : approveToList;
 
+  // const filteredApproveTo = approveToList?.filter((approver) => {
+  //   if (approver.value === 0) return true;
+  //   if (
+  //     controlCase &&
+  //     approver.value !== user?.id &&
+  //     i.cannot('resolve', controlCase)
+  //   )
+  //     return false;
+  //   if (
+  //     form.getValues('approveToId') === approver?.value &&
+  //     approver.value !== user?.id
+  //   )
+  //     return false;
+  //   return true;
+  // });
+
   const watchType = form.watch('typeId');
 
   return (

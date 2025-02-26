@@ -92,6 +92,7 @@ export type FormDialogProps<TDto extends FieldValues> = {
   customizeCreateValues?: (values: TDto) => TDto;
   customizeUpdateValues?: (values: TDto) => TDto;
   customizeDeleteValues?: (values: TDto) => any;
+  extraSubmitAction?: (values: TDto) => void;
 
   dialogWidth?: string;
   className?: string;
@@ -130,6 +131,7 @@ const FormDialog = <TDto extends FieldValues>(
     customizeCreateValues,
     customizeUpdateValues,
     customizeDeleteValues,
+    extraSubmitAction,
     dialogWidth = '600px',
     className,
     skeletonClassName = 'h-[35rem] w-full',
@@ -228,6 +230,7 @@ const FormDialog = <TDto extends FieldValues>(
 
   async function onSubmit(data: TDto) {
     isEdit ? onEdit(data) : onCreate(data);
+    extraSubmitAction && extraSubmitAction(data);
   }
 
   const onOpenChange = (open: boolean) => {

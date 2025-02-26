@@ -1,4 +1,4 @@
-import { cn, selectDispatchFormValues } from '@urgp/client/shared';
+import { cn, selectDispatchFormValues, useAuth } from '@urgp/client/shared';
 import { UseFormReturn } from 'react-hook-form';
 
 import { ControlToSelector, useControlExecutors } from '@urgp/client/entities';
@@ -10,7 +10,12 @@ import {
 import { endOfYesterday, isBefore } from 'date-fns';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ControlOptions, OperationFormDto } from '@urgp/shared/entities';
+import {
+  CONTROL_THRESHOLD,
+  ControlOptions,
+  OperationFormDto,
+} from '@urgp/shared/entities';
+import { Control } from 'leaflet';
 
 type DispatchFormFieldArrayProps = {
   form: UseFormReturn<OperationFormDto, any, undefined>;
@@ -47,6 +52,12 @@ const DispatchFormFieldArray = ({
     setDateChanged(needDescription);
     form.setValue('extra', needDescription ? '' : 'Без переноса срока');
   }, [watchDueDate, isEdit]);
+
+  const user = useAuth();
+  useEffect(() => {
+    if ((user?.controlData?.priority || 0) >= CONTROL_THRESHOLD)
+      form.setValue('controller', ControlOptions.author);
+  }, [user]);
 
   return (
     <Fragment>

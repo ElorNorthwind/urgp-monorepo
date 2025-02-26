@@ -8,7 +8,7 @@ WITH
 SELECT
   	-- Технические данные для свода
 	ROW_NUMBER() OVER (PARTITION BY o.case_id, o.class, o.archive_date IS NULL
-					ORDER BY t.priority DESC, o.done_date DESC)  as "caseOrder",
+					ORDER BY t.priority DESC, u6.priority DESC, o.done_date DESC)  as "caseOrder",
 	ROW_NUMBER() OVER (PARTITION BY o.case_id, o.class, o.approve_status, o.approve_to_id, o.archive_date IS NULL 
 					ORDER BY o.created_at DESC) as "approveToOrder",
 	ROW_NUMBER() OVER (PARTITION BY o.case_id, o.class, o.approve_status, o.control_from_id, o.archive_date IS NULL

@@ -177,6 +177,7 @@ const MultiSelectFormField = <T extends string | number>(
                               key={option}
                               variant="secondary"
                               className={cn(
+                                'h-[1.3rem]',
                                 addBadgeStyle &&
                                   addBadgeStyle(
                                     flatOptions.find((o) => o.value === option),

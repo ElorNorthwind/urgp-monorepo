@@ -48,6 +48,7 @@ import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
+import { endOfYesterday, isBefore } from 'date-fns';
 
 type ApproveDialogProps = {
   className?: string;
@@ -93,7 +94,8 @@ const ApproveDialog = ({
       i.cannot('resolve', controlCase)
     )
       return false;
-    if (values?.approveToId === approver?.value) return false;
+    if (values?.approveToId === approver?.value && approver.value !== user?.id)
+      return false;
     return true;
   });
 
@@ -196,6 +198,7 @@ const ApproveDialog = ({
               <DateFormField
                 form={form}
                 fieldName={'dueDate'}
+                disabledDays={(date) => isBefore(date, endOfYesterday())}
                 label="Срок решения"
                 placeholder="Контрольный срок"
                 className={cn(

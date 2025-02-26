@@ -81,14 +81,14 @@ const DeleteCaseButton = ({
             disabled={i.cannot('update', controlCase)}
             variant="default"
             onClick={() => setDeleteOpen(false)}
-            className="flex-grow"
+            className="flex flex-grow flex-row items-center gap-1"
           >
             <SquareX className="size-4 flex-shrink-0" />
             <span>Отмена</span>
           </Button>
           <Button
             variant="destructive"
-            className="flex-grow"
+            className="flex flex-grow flex-row items-center gap-1"
             onClick={() =>
               deleteCase({ id: controlCase.id })
                 .unwrap()

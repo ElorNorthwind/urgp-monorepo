@@ -11,21 +11,22 @@ import {
 
 import { FormDialog, FormDialogProps } from '@urgp/client/widgets';
 import {
-  useCreateOperation,
-  useDeleteOperation,
-  useOperations,
-  useUpdateOperation,
-} from '../api/operationsApi';
-import { useSelector } from 'react-redux';
-import { DispatchFormFieldArray } from './DispatchFormElements/DispatchFormFieldArray';
-import { EditedDispatchDisplayElement } from './DispatchFormElements/EditedDispatchDisplayElement';
-import {
   ControlOptions,
   DispatchFormDto,
   dispatchFormSchema,
   OperationClasses,
   OperationFormDto,
 } from '@urgp/shared/entities';
+import { useSelector } from 'react-redux';
+import {
+  useCreateOperation,
+  useDeleteOperation,
+  useMarkReminderAsWatched,
+  useOperations,
+  useUpdateOperation,
+} from '../api/operationsApi';
+import { DispatchFormFieldArray } from './DispatchFormElements/DispatchFormFieldArray';
+import { EditedDispatchDisplayElement } from './DispatchFormElements/EditedDispatchDisplayElement';
 
 type CreateDispatchDialogProps = {
   className?: string;
@@ -38,6 +39,7 @@ const CreateDispatchDialog = ({
   const user = useSelector(selectCurrentUser);
 
   const formValues = useSelector(selectDispatchFormValues);
+
   const { data: dispatches, isLoading: isDispatshesLoading } = useOperations(
     { class: OperationClasses.dispatch, case: formValues?.caseId || 0 },
     {
@@ -45,6 +47,8 @@ const CreateDispatchDialog = ({
     },
   );
   const editedDispatch = dispatches?.find((d) => d.id === formValues?.id);
+
+  const [markAsWatched] = useMarkReminderAsWatched();
 
   const i = useUserAbility();
   const canDelete =
@@ -102,6 +106,9 @@ const CreateDispatchDialog = ({
     editTitle: 'Изменить поручение',
     createDescription: 'Внесите данные для создания поручения',
     editDescription: 'Внесите изменения в запись об поручении',
+    extraSubmitAction: (values: OperationFormDto) => {
+      markAsWatched([values.caseId]);
+    },
   } as unknown as FormDialogProps<DispatchFormDto>;
 
   return <FormDialog {...dialogProps} />;
