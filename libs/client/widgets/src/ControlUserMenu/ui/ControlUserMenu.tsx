@@ -56,6 +56,7 @@ const ControlUserMenu = ({ className }: ControlUserMenuProps): JSX.Element => {
           </Link>
         ) : (
           <>
+            <span className="mb-2 text-lg font-bold">{user.fio}</span>
             <Link
               to="/control/settings"
               className={cn(
