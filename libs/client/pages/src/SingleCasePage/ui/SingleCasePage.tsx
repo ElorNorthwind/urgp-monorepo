@@ -75,7 +75,10 @@ const SingleCasePage = (): JSX.Element => {
               />
             </div>
           </div>
-          <CaseCardFooter controlCase={controlCase} className="mt-6" />
+          <CaseCardFooter
+            controlCase={controlCase}
+            className="mt-6 rounded-lg p-6"
+          />
         </div>
       </div>
     </ScrollArea>
