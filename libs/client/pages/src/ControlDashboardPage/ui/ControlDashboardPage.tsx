@@ -23,7 +23,7 @@ const ControlDashboardPage = (): JSX.Element => {
           <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
             <PendingActionChart className="col-span-2" />
             <DepartmentChart className="col-span-2 md:col-span-1" />
-            <div className="col-span-2 flex flex-col justify-start gap-3 md:col-span-1">
+            <div className="col-span-2 flex flex-col justify-start gap-6 md:col-span-1">
               <ViewStatusChart className="grid-col-1" />
               <CreateCaseButton
                 label="Добавить новую заявку"

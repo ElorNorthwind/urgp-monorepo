@@ -100,7 +100,9 @@ const MultiSelectFormField = <T extends string | number>(
             {isLoading || !options ? (
               <InputSkeleton />
             ) : (
-              <Popover open={open}>
+              <Popover
+                open={open && (selectables?.length > 0 || !!extraButton)}
+              >
                 <Command
                   filter={(value, search, keywords) => {
                     const extendValue = (
@@ -252,15 +254,8 @@ const MultiSelectFormField = <T extends string | number>(
                     className={cn('p-0')} // popoverClassName
                     side="bottom"
                     style={{
-                      // width: 'calc(600px - 3rem)',
                       minWidth: popoverMinWidth,
-                      // minWidth: '600px',
                     }}
-
-                    // className={cn(
-                    //   'bg-popover text-popover-foreground animate-in top-0 z-10 max-h-80 w-full overflow-auto rounded-md border shadow-md outline-none',
-                    //   open && selectables.length > 0 ? 'absolute' : 'hidden',
-                    // )}
                   >
                     <CommandList
                       className="max-h-80 overflow-auto"
@@ -313,7 +308,7 @@ const MultiSelectFormField = <T extends string | number>(
                       {extraButton && (
                         <>
                           <Separator />
-                          {extraButton()}
+                          <div className="w-full p-1">{extraButton()}</div>
                         </>
                       )}
                     </CommandList>
