@@ -21,12 +21,13 @@ export const classificatorsApi = rtkApi
         }),
         providesTags: ['user-data'],
       }),
+
       getCurrentUserApproveTo: build.query<UserApproveTo, void>({
         query: () => ({
           url: '/control/classificators/user-approve-to',
           method: 'GET',
-          providesTags: ['user-data'],
         }),
+        providesTags: ['user-data'],
       }),
 
       getCurrentUserSettings: build.query<UserControlSettings, void>({

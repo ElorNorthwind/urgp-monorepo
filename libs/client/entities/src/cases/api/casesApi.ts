@@ -74,6 +74,7 @@ export const casesApi = rtkApi.injectEndpoints({
             ]
           : [CaseClasses.incident],
     }),
+
     createCase: build.mutation<CaseFull, CreateCaseDto>({
       query: (dto) => ({
         url: '/control/case',
@@ -85,7 +86,9 @@ export const casesApi = rtkApi.injectEndpoints({
         insertCachedCase(newCase, dispatch, getState);
       },
       invalidatesTags: (result, error, arg) =>
-        result?.approveStatus === 'approved' ? ['dispatch'] : [],
+        result?.approveStatus === ApproveStatus.approved
+          ? [OperationClasses.dispatch]
+          : [],
     }),
 
     updateCase: build.mutation<CaseFull, UpdateCaseDto>({
