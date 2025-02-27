@@ -135,7 +135,9 @@ const ControlCasesPage = (): JSX.Element => {
           <SelectedCasesActionBar selected={selected} />
         </main>
       </SidebarInset>
-      <ControlSidePanel isOpen={search.selectedCase !== undefined}>
+      <ControlSidePanel
+        isOpen={search.selectedCase !== undefined && currentIndex >= 0}
+      >
         <CaseCard
           onPrevCase={prevCaseId ? onPrevCase : undefined}
           onNextCase={nextCaseId ? onNextCase : undefined}
