@@ -32,7 +32,7 @@ export class ControlCasesService {
       await this.dbServise.db.controlCases.createCase(dto, authorId);
 
     // Напоминание автору
-    this.operations.createReminderForAuthorAndApproveTo(
+    await this.operations.createReminderForAuthorAndApproveTo(
       createdCaseId,
       authorId,
       dto?.dueDate,
@@ -40,7 +40,7 @@ export class ControlCasesService {
 
     // Напоминания и поручения исполнителям и подписавшимся
     if (dto.approveStatus === 'approved') {
-      this.operations.createDispatchesAndReminderForCase(
+      await this.operations.createDispatchesAndReminderForCase(
         createdCaseId,
         authorId,
         dto?.dueDate,
@@ -124,7 +124,7 @@ export class ControlCasesService {
 
     const updatedCase = await this.readSlimCaseById(updatedCaseId);
     if (updatedCase.approveStatus === 'approved') {
-      this.operations.createDispatchesAndReminderForCase(
+      await this.operations.createDispatchesAndReminderForCase(
         updatedCaseId,
         updatedById,
         GET_DEFAULT_CONTROL_DUE_DATE(),
@@ -152,13 +152,13 @@ export class ControlCasesService {
     )) as number;
 
     if (dto.approveStatus === 'approved') {
-      this.operations.createDispatchesAndReminderForCase(
+      await this.operations.createDispatchesAndReminderForCase(
         approvedCaseId,
         userId,
         dto.dueDate,
       );
     } else {
-      this.operations.createReminderForAuthorAndApproveTo(
+      await this.operations.createReminderForAuthorAndApproveTo(
         approvedCaseId,
         userId,
         dto?.dueDate,
