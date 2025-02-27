@@ -14,12 +14,19 @@ import { StagesHistory } from '../StageHistory';
 type StageItemProps = {
   stage?: OperationFull | null;
   hover?: boolean;
-  isInvalidated?: boolean;
   className?: string;
+  isInvalidated?: boolean;
+  showApproveInfo?: boolean;
 };
 
 const StageItem = (props: StageItemProps): JSX.Element => {
-  const { className, stage, hover = true, isInvalidated = false } = props;
+  const {
+    className,
+    stage,
+    hover = true,
+    isInvalidated = false,
+    showApproveInfo = false,
+  } = props;
 
   if (!stage || stage === null) {
     return <Skeleton className="h-8 w-full" />;
@@ -65,35 +72,41 @@ const StageItem = (props: StageItemProps): JSX.Element => {
 
       <div
         className={cn(
-          'mt-2 grid grid-cols-[auto_auto_1fr] gap-1 border-l-4 px-2 py-1',
+          'mt-2 flex flex-col gap-1 border-l-4 px-2 py-1',
           badgeStyle,
-          stage?.approveStatus === ApproveStatus.approved && 'hidden',
+          showApproveInfo === false && 'hidden',
+          // stage?.approveStatus === ApproveStatus.approved && 'hidden',
         )}
       >
-        <span className="font-medium">{label + ': '}</span>
         {stage?.approveTo?.fio && (
-          <span className="text-nowrap">
-            {stage?.approveStatus === ApproveStatus.rejected
-              ? stage?.approveFrom?.fio
-              : stage?.approveTo?.fio}
-          </span>
+          <div className="flex flex-row gap-2">
+            <span className="font-medium">{label + ': '}</span>
+            <span className={cn('text-nowrap')}>
+              {stage?.approveStatus === ApproveStatus.rejected
+                ? stage?.approveFrom?.fio
+                : stage?.approveTo?.fio}
+            </span>
+            {stage?.approveDate && (
+              <span className="ml-auto text-nowrap">
+                {format(stage?.approveDate, 'dd.MM.yyyy HH:mm')}
+              </span>
+            )}
+          </div>
         )}
 
-        {stage?.approveDate && (
-          <span className="ml-auto text-nowrap">
-            {format(stage?.approveDate, 'dd.MM.yyyy HH:mm')}
-          </span>
-        )}
         {stage?.approveFrom?.fio &&
-          stage?.approveFrom?.id !== stage?.approveFrom?.id && (
-            <>
-              <span className="col-span-1 font-medium">Перенаправил:</span>
-              <span>{stage?.approveFrom?.fio}</span>
-            </>
+          stage?.approveFrom?.id !== stage?.approveTo?.id &&
+          stage?.approveStatus !== ApproveStatus.approved && (
+            <div className="flex flex-row gap-2">
+              <span className="font-medium">Направил:</span>
+              <span className="col-span-2">{stage?.approveFrom?.fio}</span>
+            </div>
           )}
-        {stage?.approveNotes && (
-          <span className="col-span-3 italic">{stage?.approveNotes}</span>
-        )}
+        <div className="flex flex-row gap-2">
+          {stage?.approveNotes && (
+            <span className="col-span-3 italic">{stage?.approveNotes}</span>
+          )}
+        </div>
       </div>
 
       {hover && (

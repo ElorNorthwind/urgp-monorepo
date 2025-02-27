@@ -111,6 +111,12 @@ const CaseInfoTab = (props: CaseInfoTabProps): JSX.Element | null => {
               </p>
             </>
           )}
+          {controlCase?.approveNotes && (
+            <>
+              <p>Примечания согласующего:</p>
+              <p className="font-bold">{controlCase?.approveNotes}</p>
+            </>
+          )}
         </TooltipContent>
       </Tooltip>
       {caseApproveInfo?.rejectNotes && (

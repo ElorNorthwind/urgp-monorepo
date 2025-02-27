@@ -9,10 +9,11 @@ type StagesListProps = {
   className?: string;
   isLoading?: boolean;
   controlLevel?: number;
+  lastStageId?: number;
 };
 
 const StagesList = (props: StagesListProps): JSX.Element => {
-  const { className, stages, isLoading, controlLevel = 0 } = props;
+  const { className, stages, isLoading, controlLevel = 0, lastStageId } = props;
 
   if (!stages || stages?.length === 0) {
     return (
@@ -36,6 +37,10 @@ const StagesList = (props: StagesListProps): JSX.Element => {
           <StageItem
             stage={stage}
             key={stage.id}
+            showApproveInfo={
+              stage.type?.category === 'решение' &&
+              (!lastStageId || lastStageId === stage?.id)
+            }
             isInvalidated={
               stage?.type?.category === 'решение' &&
               (stage?.approveTo?.priority || 0) < controlLevel
