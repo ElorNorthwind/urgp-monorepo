@@ -6,6 +6,7 @@ import {
   useSearch,
 } from '@tanstack/react-router';
 import {
+  CaseCardFooter,
   StagesHeader,
   StagesList,
   useCaseById,
@@ -74,6 +75,7 @@ const SingleCasePage = (): JSX.Element => {
               />
             </div>
           </div>
+          <CaseCardFooter controlCase={controlCase} className="mt-6" />
         </div>
       </div>
     </ScrollArea>

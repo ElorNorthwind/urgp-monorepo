@@ -1,11 +1,9 @@
 import { cn, useUserAbility } from '@urgp/client/shared';
+import { ApproveButton } from '@urgp/client/widgets';
 import { ApproveStatus, CaseFull } from '@urgp/shared/entities';
-import { CaseSmartApproveButton } from '../CaseButtons/CaseSmartApproveButton';
+import { CaseSmartActionsMenu } from '../CaseButtons/CaseSmartActionsMenu';
 import { DeleteCaseButton } from '../CaseButtons/DeleteCaseButton';
 import { EditCaseButton } from '../CaseButtons/EditCaseButton';
-import { EscalateButton } from '../../../operations';
-import { CaseSmartActionsMenu } from '../CaseButtons/CaseSmartActionsMenu';
-import { ApproveButton } from '@urgp/client/widgets';
 
 type CaseCardFooterProps = {
   className?: string;
@@ -14,7 +12,6 @@ type CaseCardFooterProps = {
 
 const CaseCardFooter = (props: CaseCardFooterProps): JSX.Element | null => {
   const { className, controlCase } = props;
-  const myPendingStage = controlCase?.myPendingStage;
   const i = useUserAbility();
 
   if (

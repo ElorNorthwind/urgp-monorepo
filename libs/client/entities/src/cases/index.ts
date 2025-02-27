@@ -3,6 +3,7 @@ export * from './ui/casesTable/incidentsTableColumns';
 export * from './ui/casesTable/problemsTableColumns';
 export * from './ui/casesTable/defaultColumnVisibility';
 export * from './ui/CaseCard/CaseCard';
+export * from './ui/CaseCard/CaseCardFooter';
 export * from './config/caseGlobalFilterFn';
 export * from './ui/CaseDispatchesList';
 export * from './ui/RemindersList';
