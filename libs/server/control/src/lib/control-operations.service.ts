@@ -151,6 +151,7 @@ export class ControlOperationsService {
 
     // Список людей, которым должны уйти напоминалки
     let reminderList = new Map<number, string>([]);
+    // Список людей, которым должны уйти поручения
     let dispatchesList = new Map<number, string>([]);
 
     const directions = await this.classificators.getCaseDirectionTypes();
@@ -248,7 +249,7 @@ export class ControlOperationsService {
     });
   }
 
-  public async createReminderForAuthor(
+  public async createReminderForAuthorAndApproveTo(
     caseId: number,
     userId: number,
     dueDate?: string,
@@ -267,6 +268,13 @@ export class ControlOperationsService {
       class: [EntityClasses.reminder],
     })) as OperationSlim[];
 
+    const approveToId =
+      slimCases[0]?.approveToId === userId ||
+      slimCases[0]?.approveToId === 0 ||
+      !slimCases[0]?.approveToId
+        ? null
+        : slimCases[0]?.approveToId;
+
     !existingReminders.map((r) => r.id).includes(userId) &&
       this.createOperation(
         {
@@ -284,6 +292,29 @@ export class ControlOperationsService {
           controlToId: userId,
           title: null,
           notes: 'Напоминание автору заявки',
+          extra: null,
+        },
+        userId,
+      );
+
+    !!approveToId &&
+      !existingReminders.map((r) => r.id).includes(approveToId) &&
+      this.createOperation(
+        {
+          caseId: caseId,
+          class: 'reminder',
+          typeId: 11,
+          // approveFromId: userId,
+          approveToId: userId,
+          approveStatus: 'approved',
+          approveDate: new Date().toISOString(),
+          approveNotes: null,
+          dueDate: dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
+          doneDate: null,
+          controlFromId: approveToId,
+          controlToId: approveToId,
+          title: null,
+          notes: 'Напоминание согласующему заявки',
           extra: null,
         },
         userId,

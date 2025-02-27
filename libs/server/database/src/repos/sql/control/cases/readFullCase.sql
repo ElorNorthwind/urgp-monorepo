@@ -15,7 +15,7 @@ WITH user_info AS (SELECT id, fio FROM renovation.users), -- (control_data->>'pr
 				ORDER BY (o."controlFrom"->>'priority')::integer DESC, o."dueDate" ASC )
 				FILTER (WHERE o."class" = 'dispatch') as dispatches,
 			COUNT(*) FILTER (WHERE (o."type"->>'id')::integer = 12 AND o."doneDate" IS NULL) as "escalations",
-			MAX(o."updatedAt") FILTER (WHERE o."class" = ANY(ARRAY['stage', 'dispatch'])) as "lastEdit"
+			MAX(COALESCE(o."createdAt", o."updatedAt")) FILTER (WHERE o."class" = ANY(ARRAY['stage', 'dispatch'])) as "lastEdit"
 		FROM control.full_operations o
 		WHERE o."archiveDate" IS NULL
 GROUP BY o."caseId"),

@@ -2,6 +2,7 @@ import { ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import { CaseEndpointProps, casesApi } from '..';
 import {
   CaseActions,
+  CaseClasses,
   CaseFull,
   ReadEntityDto,
   ViewStatus,
@@ -30,7 +31,7 @@ export const insertCachedCase = async (
   if (newCase) {
     const caseQueryArgs = getCaseQueryArgs(getState);
     caseQueryArgs.forEach((arg) => {
-      if (arg?.class !== newCase.class) return;
+      if (arg?.class ?? CaseClasses.incident !== newCase.class) return;
       dispatch(
         casesApi.util.updateQueryData('getCases', arg, (draft) => {
           draft?.unshift(newCase);
@@ -48,7 +49,7 @@ export const updateCachedCase = async (
   if (newCase) {
     const caseQueryArgs = getCaseQueryArgs(getState);
     caseQueryArgs.forEach((arg) => {
-      if (arg?.class !== newCase.class) return;
+      if (arg?.class ?? CaseClasses.incident !== newCase.class) return;
       dispatch(
         casesApi.util.updateQueryData('getCases', arg, (draft) => {
           const index = draft.findIndex((stage) => stage.id === newCase.id);
@@ -89,7 +90,11 @@ export const refetchCachedCase = async (
     )?.data;
     const caseQueryArgs = getCaseQueryArgs(getState);
     caseQueryArgs.forEach((arg) => {
-      if (!newCase?.class || arg?.class !== newCase.class) return;
+      if (
+        !newCase?.class ||
+        (arg?.class ?? CaseClasses.incident) !== newCase.class
+      )
+        return;
       dispatch(
         casesApi.util.updateQueryData('getCases', arg, (draft) => {
           if (!newCase) return draft;

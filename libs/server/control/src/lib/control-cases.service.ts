@@ -1,5 +1,5 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import {
   ApproveControlEntityDto,
@@ -32,7 +32,7 @@ export class ControlCasesService {
       await this.dbServise.db.controlCases.createCase(dto, authorId);
 
     // Напоминание автору
-    this.operations.createReminderForAuthor(
+    this.operations.createReminderForAuthorAndApproveTo(
       createdCaseId,
       authorId,
       dto?.dueDate,
@@ -156,6 +156,12 @@ export class ControlCasesService {
         approvedCaseId,
         userId,
         dto.dueDate,
+      );
+    } else {
+      this.operations.createReminderForAuthorAndApproveTo(
+        approvedCaseId,
+        userId,
+        dto?.dueDate,
       );
     }
 
