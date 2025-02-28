@@ -85,6 +85,13 @@ const PendingActionChart = forwardRef<
         value: countByPendingAction(CaseActions.escalation, cases),
         // style: 'bg-rose-200',
       },
+      {
+        key: CaseActions.controlToMe,
+        label: 'Поступило ко мне на исполнение',
+        icon: pendingActionStyles[CaseActions.controlToMe]?.icon,
+        value: countByPendingAction(CaseActions.controlToMe, cases),
+        // style: 'bg-rose-200',
+      },
     ];
   }, [cases, isLoading]);
 

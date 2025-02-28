@@ -19,6 +19,7 @@ import {
   CircleX,
   Clipboard,
   ClipboardCheck,
+  ClipboardList,
   ClipboardMinus,
   ClipboardPen,
   ClipboardPenLine,
@@ -110,6 +111,10 @@ export const pendingActionStyles = {
     label: 'Срок напоминания',
   },
   [CaseActions.escalation]: { icon: ClipboardType, label: 'Дать заключение' },
+  [CaseActions.controlToMe]: {
+    icon: ClipboardList,
+    label: 'Отработать поручение',
+  },
 } as Record<CaseActions, StyleData>;
 
 export const directionCategoryStyles = {

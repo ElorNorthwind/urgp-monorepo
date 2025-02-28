@@ -5,16 +5,18 @@ WITH user_info AS (SELECT id, fio FROM renovation.users), -- (control_data->>'pr
 			array_agg(o.id) as "operationIds",
 			MAX(o."controlLevel") FILTER (WHERE (o."class" = 'dispatch')) as "controlLevel",
 			array_agg(DISTINCT o."controlFromId") FILTER (WHERE o."class" = 'dispatch' AND o."controlLevel" = o."maxControlLevel") as "controllerIds",
-			(jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]) 
+			(jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, controlToId, approveToId}'::text[]) 
 				FILTER (WHERE o."class" = 'reminder' AND o."controlFromOrder" = 1 AND o."controlFromId" =  ${userId}))->0  as "myReminder",
-			(jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]) 
+			(jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, controlToId, approveToId}'::text[]) 
 				FILTER (WHERE o."class" = 'stage' AND o."approveStatus" = 'pending' AND o."approveToOrder" = 1 AND o."approveToId" = ${userId}))->0  as "myPendingStage",
-			(jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[])
+			(jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, controlToId, approveToId}'::text[])
 				FILTER (WHERE o."class" = 'stage' AND o."approveStatus" = ANY(ARRAY['approved', 'pending']) AND o."caseOrder" = 1))->0  as "lastStage",
-			jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, approveToId}'::text[]
+			jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, controlToId, approveToId}'::text[]
 				ORDER BY (o."controlFrom"->>'priority')::integer DESC, o."dueDate" ASC )
 				FILTER (WHERE o."class" = 'dispatch') as dispatches,
-			COUNT(*) FILTER (WHERE (o."type"->>'id')::integer = 12 AND o."doneDate" IS NULL) as "escalations",
+			COALESCE(COUNT(*) FILTER (WHERE (o."type"->>'id')::integer = 12 AND o."doneDate" IS NULL) > 0, false) as "hasEscalations",
+			COALESCE(COUNT(*) FILTER (WHERE o."class" = 'dispatch' AND o."controlFromId" = ${userId} AND o."controlToId" <> ${userId}) > 0, false) as "hasControlFromMe",
+			COALESCE(COUNT(*) FILTER (WHERE o."class" = 'dispatch' AND o."controlToId" = ${userId}) > 0, false) as "hasControlToMe",
 			MAX(COALESCE(o."createdAt", o."updatedAt")) FILTER (WHERE o."class" = ANY(ARRAY['stage', 'dispatch'])) as "lastEdit"
 		FROM control.full_operations o
 		WHERE o."archiveDate" IS NULL
@@ -90,13 +92,16 @@ SELECT
 			  CASE WHEN c.approve_status = 'pending' AND c.approve_to_id = ${userId} THEN 'case-approve' ELSE null END
 			, CASE WHEN c.approve_status = 'rejected' AND c.author_id = ${userId} THEN 'case-rejected' ELSE null END
 			, CASE WHEN o."myPendingStage" IS NOT NULL THEN 'operation-approve' ELSE null END
-			, CASE WHEN o."lastStage"->'type'->>'category' = 'решение' AND o."lastStage"->>'approveStatus' = 'approved' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL AND COALESCE(o.escalations, 0) = 0 THEN 'reminder-done' ELSE null END
-			, CASE WHEN (o."lastStage"->'type'->>'category' <> 'решение' AND (o."myReminder"->>'dueDate')::date < current_date) AND COALESCE(o.escalations, 0) = 0 THEN 'reminder-overdue' ELSE null END
+			, CASE WHEN o."lastStage"->'type'->>'category' = 'решение' AND o."lastStage"->>'approveStatus' = 'approved' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL AND o."hasEscalations" IS DISTINCT FROM true THEN 'reminder-done' ELSE null END
+			, CASE WHEN (o."lastStage"->'type'->>'category' <> 'решение' AND (o."myReminder"->>'dueDate')::date < current_date) AND o."hasEscalations" IS DISTINCT FROM true THEN 'reminder-overdue' ELSE null END
 			, CASE WHEN (o."myReminder"->'type'->>'id')::integer = 12 AND o."myReminder"->>'doneDate' IS NULL AND COALESCE(o."controlLevel", 0) < ${controlThreshold} THEN 'escalation' ELSE null END
+			, CASE WHEN (o."hasControlToMe" AND NOT (o."hasControlFromMe" OR o."lastStage"->'type'->>'category' IS NOT DISTINCT FROM 'решение')) THEN 'control-to-me' ELSE null END
 		]
 	, null) as actions,
 	c.revision,
-	COALESCE(o.escalations, 0) as escalations,
+	o."hasEscalations",
+	o."hasControlFromMe",
+	o."hasControlToMe",
 	cf.connections as "connectionsFrom",
 	ct.connections as "connectionsTo",
 	o."controlLevel"
@@ -117,7 +122,7 @@ LEFT JOIN (SELECT id, name, category, fullname as "fullName" FROM control.case_s
 		WHEN c.approve_status = 'rejected' THEN 10 -- "отказано в согласовании"
 		WHEN c.approve_status = 'project' THEN 12 -- "проект"
 		-- Эти вот штуки лучше бы прописать через специальное поле в control.operation_types ?
-		WHEN o.escalations > 0 AND COALESCE(o."controlLevel", 0) < ${controlThreshold} THEN 8 -- "запрошено заключение"
+		WHEN o."hasEscalations" AND COALESCE(o."controlLevel", 0) < ${controlThreshold} THEN 8 -- "запрошено заключение"
 		WHEN (o."lastStage"->'type'->>'id')::integer = 7 AND o."lastStage"->>'approveStatus' = 'approved' AND COALESCE(o."controlLevel", 0) <= COALESCE((o."lastStage"->'approveFrom'->>'priority')::integer, 0) THEN 5 -- "отклонено"
 		WHEN (o."lastStage"->'type'->>'id')::integer = 8 AND o."lastStage"->>'approveStatus' = 'approved' AND COALESCE(o."controlLevel", 0) <= COALESCE((o."lastStage"->'approveFrom'->>'priority')::integer, 0) THEN 6 -- "решено"
 		WHEN (o."lastStage"->'type'->>'id')::integer = 9 AND o."lastStage"->>'approveStatus' = 'approved' AND COALESCE(o."controlLevel", 0) <= COALESCE((o."lastStage"->'approveFrom'->>'priority')::integer, 0) THEN 7 -- "не решено"

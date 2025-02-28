@@ -26,6 +26,8 @@ import {
   setReminderFormCaseId,
   setReminderFormState,
   setReminderFormValuesFromReminder,
+  setStageFormCaseId,
+  setStageFormState,
   useAuth,
   useUserAbility,
 } from '@urgp/client/shared';
@@ -41,10 +43,12 @@ import {
 import { VariantProps } from 'class-variance-authority';
 import {
   AlarmClockCheck,
+  Cog,
   Edit,
   HandHeart,
   LucideAlarmClock,
   Scale,
+  SquarePlus,
   ZoomIn,
 } from 'lucide-react';
 import { useMemo } from 'react';
@@ -98,8 +102,9 @@ const CaseSmartActionsMenu = ({
 
   const { icon: ActionIcon, label } =
     controlCase?.actions?.length === 1
-      ? pendingActionStyles[controlCase.actions[0]]
-      : pendingActionStyles.unknown;
+      ? pendingActionStyles?.[controlCase?.actions?.[0]] ||
+        pendingActionStyles['unknown']
+      : pendingActionStyles['unknown'];
 
   const dispatch = useDispatch();
 
@@ -156,6 +161,36 @@ const CaseSmartActionsMenu = ({
                 if (!controlCase) return;
                 dispatch(setApproveFormState(ApproveFormState.case));
                 dispatch(setApproveFormValuesFromEntity(controlCase));
+              },
+            },
+          ],
+        },
+        [CaseActions.controlToMe]: {
+          onClick: null,
+          sub: [
+            {
+              key: 'control-from-me',
+              icon: ZoomIn,
+              label: 'Поручить сотруднику',
+              disabled:
+                i.cannot('create', 'Dispatch') ||
+                !user?.controlData?.controlTo ||
+                user?.controlData?.controlTo?.length === 0,
+              onClick: () => {
+                if (!controlCase) return;
+                dispatch(setDispatchFormCaseId(controlCase?.id));
+                dispatch(setDispatchFormState(DialogFormState.create));
+              },
+            },
+            {
+              key: 'create-stage',
+              icon: SquarePlus,
+              label: 'Создать этап',
+              disabled: i.cannot('create', 'Stage'),
+              onClick: () => {
+                if (!controlCase) return;
+                dispatch(setStageFormCaseId(controlCase?.id));
+                dispatch(setStageFormState(DialogFormState.create));
               },
             },
           ],

@@ -50,7 +50,7 @@ const EscalateButton = (props: EscalateButtonProps): JSX.Element | null => {
     ) &&
       controlCase?.status?.id !== 11) ||
       !controlCase?.myReminder ||
-      controlCase?.escalations === 0 ||
+      controlCase?.hasEscalations ||
       controlCase?.controlLevel >= CONTROL_THRESHOLD)
   )
     return null;

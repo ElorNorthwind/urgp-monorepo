@@ -6,6 +6,7 @@ import {
   setStageFormState,
   useUserAbility,
 } from '@urgp/client/shared';
+import { DialogFormState } from '@urgp/shared/entities';
 import { SquarePlus } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -30,7 +31,7 @@ const CreateStageButton = ({
       className={cn('h-8 p-1', className)} // pr-2
       onClick={() => {
         dispatch(setStageFormCaseId(caseId));
-        dispatch(setStageFormState('create'));
+        dispatch(setStageFormState(DialogFormState.create));
       }}
     >
       <SquarePlus className="mr-1 size-4 flex-shrink-0" />

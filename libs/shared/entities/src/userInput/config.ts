@@ -46,6 +46,7 @@ export const CaseActions = {
   reminderDone: 'reminder-done',
   reminderOverdue: 'reminder-overdue',
   escalation: 'escalation',
+  controlToMe: 'control-to-me',
 } as const;
 export type CaseActions = (typeof CaseActions)[keyof typeof CaseActions];
 export const caseActionsValues = getValues(CaseActions);

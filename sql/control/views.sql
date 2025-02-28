@@ -16,6 +16,7 @@ SELECT
 	MAX(u3.priority) OVER (PARTITION BY o.case_id, o.class) as "maxControlLevel",
 	u3.priority as "controlLevel",
 	o.control_from_id as "controlFromId",
+	o.control_to_id as "controlToId",
 	o.approve_to_id as "approveToId",
 	-- Полезная нагрузка
 	o.id,
