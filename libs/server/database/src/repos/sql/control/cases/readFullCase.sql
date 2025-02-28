@@ -90,7 +90,7 @@ SELECT
 			  CASE WHEN c.approve_status = 'pending' AND c.approve_to_id = ${userId} THEN 'case-approve' ELSE null END
 			, CASE WHEN c.approve_status = 'rejected' AND c.author_id = ${userId} THEN 'case-rejected' ELSE null END
 			, CASE WHEN o."myPendingStage" IS NOT NULL THEN 'operation-approve' ELSE null END
-			, CASE WHEN o."lastStage"->'type'->>'category' = 'решение' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL AND COALESCE(o.escalations, 0) = 0 THEN 'reminder-done' ELSE null END
+			, CASE WHEN o."lastStage"->'type'->>'category' = 'решение' AND o."lastStage"->>'approveStatus' = 'approved' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL AND COALESCE(o.escalations, 0) = 0 THEN 'reminder-done' ELSE null END
 			, CASE WHEN (o."lastStage"->'type'->>'category' <> 'решение' AND (o."myReminder"->>'dueDate')::date < current_date) AND COALESCE(o.escalations, 0) = 0 THEN 'reminder-overdue' ELSE null END
 			, CASE WHEN (o."myReminder"->'type'->>'id')::integer = 12 AND o."myReminder"->>'doneDate' IS NULL AND COALESCE(o."controlLevel", 0) < ${controlThreshold} THEN 'escalation' ELSE null END
 		]
