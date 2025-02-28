@@ -9,11 +9,11 @@ import {
   CardTitle,
   cn,
 } from '@urgp/client/shared';
-import { CaseFull } from '@urgp/shared/entities';
-import { ServerCrash } from 'lucide-react';
+import { CaseFull, ViewStatus } from '@urgp/shared/entities';
+import { ExternalLink, ServerCrash } from 'lucide-react';
 import { useMemo } from 'react';
 
-const countByViewStatus = (status: string, cases?: Case[]) => {
+const countByViewStatus = (status: string, cases?: CaseFull[]) => {
   return cases?.filter((c) => c?.viewStatus === status)?.length || 0;
 };
 
@@ -62,8 +62,28 @@ const ViewStatusChart = ({ className }: ViewStatusChartProps): JSX.Element => {
         className,
       )}
     >
-      <CardHeader className="z-10">
-        <CardTitle>Я отслеживаю</CardTitle>
+      <CardHeader
+        className={cn(
+          'group/header z-10 cursor-pointer',
+          'hover:from-muted hover:via-background/25 hover:to-background/0 hover:bg-gradient-to-br',
+        )}
+        onClick={() =>
+          navigate({
+            to: './cases',
+            search: {
+              viewStatus: [
+                ViewStatus.changed,
+                ViewStatus.new,
+                ViewStatus.unchanged,
+              ],
+            },
+          })
+        }
+      >
+        <CardTitle className="flex flex-row gap-2">
+          <span>Я отслеживаю</span>
+          <ExternalLink className="hidden size-6 flex-shrink-0 group-hover/header:block" />
+        </CardTitle>
         <CardDescription>Дела, на которые я подписан</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-row items-end gap-4">

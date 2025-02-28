@@ -10,7 +10,7 @@ import {
   cn,
 } from '@urgp/client/shared';
 import { CaseActions, CaseFull } from '@urgp/shared/entities';
-import { ServerCrash } from 'lucide-react';
+import { ExternalLink, ServerCrash } from 'lucide-react';
 import { forwardRef, useMemo } from 'react';
 
 const countByPendingAction = (status: CaseActions, cases?: CaseFull[]) => {
@@ -98,8 +98,17 @@ const PendingActionChart = forwardRef<
       )}
       ref={ref}
     >
-      <CardHeader className="z-10">
-        <CardTitle>Ожидает моего решения</CardTitle>
+      <CardHeader
+        className={cn(
+          'group/header z-10 cursor-pointer',
+          'hover:from-muted hover:via-background/25 hover:to-background/0 hover:bg-gradient-to-br',
+        )}
+        onClick={() => navigate({ to: './pending' })}
+      >
+        <CardTitle className="flex flex-row gap-2">
+          <span>Ожидает моего решения</span>
+          <ExternalLink className="hidden size-6 flex-shrink-0 group-hover/header:block" />
+        </CardTitle>
         <CardDescription>
           Вопросы, которые мне требуется рассмотреть
         </CardDescription>
