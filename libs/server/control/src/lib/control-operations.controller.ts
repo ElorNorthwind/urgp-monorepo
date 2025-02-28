@@ -4,9 +4,7 @@ import {
   Controller,
   Delete,
   Get,
-  Logger,
   Param,
-  ParseArrayPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -16,33 +14,31 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
+import { AccessTokenGuard } from '@urgp/server/auth';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
-  RequestWithUserData,
-  approveControlEntitySchema,
   ApproveControlEntityDto,
-  deleteControlEntirySchema,
+  CreateOperationDto,
   DeleteControlEntityDto,
-  defineControlAbilityFor,
-  CaseFull,
+  MarkAsWatchedDto,
+  MarkOperationDto,
+  OperationClasses,
   OperationFull,
   OperationSlim,
-  createOperationSchema,
-  CreateOperationDto,
-  ApproveStatus,
-  updateOperationSchema,
-  UpdateOperationDto,
-  markOperationSchema,
-  MarkOperationDto,
-  readEntitySchema,
   ReadEntityDto,
+  RequestWithUserData,
+  UpdateOperationDto,
+  approveControlEntitySchema,
+  createOperationSchema,
+  defineControlAbilityFor,
+  deleteControlEntirySchema,
   markAsWatchedSchema,
-  MarkAsWatchedDto,
+  markOperationSchema,
+  readEntitySchema,
+  updateOperationSchema,
 } from '@urgp/shared/entities';
-import { AccessTokenGuard } from '@urgp/server/auth';
-import { ControlOperationsService } from './control-operations.service';
 import { ControlClassificatorsService } from './control-classificators.service';
-import { ControlCasesService } from './control-cases.service';
+import { ControlOperationsService } from './control-operations.service';
 
 @Controller('control/operation')
 @UseGuards(AccessTokenGuard)
@@ -69,13 +65,19 @@ export class ControlOperationsController {
       isOperation: true,
     });
 
-    return this.controlOperations.createOperation(
+    const operation = await this.controlOperations.createOperation(
       {
         ...dto,
         ...approveData,
       },
       req.user.id,
     );
+
+    if (operation.class === OperationClasses.dispatch) {
+      this.controlOperations.createRemindeByControlTo(operation, req.user.id);
+    }
+
+    return operation;
   }
 
   @UsePipes(new ZodValidationPipe(readEntitySchema))
@@ -122,7 +124,16 @@ export class ControlOperationsController {
       throw new UnauthorizedException('Нет прав на изменение');
     }
 
-    return this.controlOperations.updateOperation(dto, req.user.id);
+    const operation = await this.controlOperations.updateOperation(
+      dto,
+      req.user.id,
+    );
+
+    if (operation.class === OperationClasses.dispatch) {
+      this.controlOperations.createRemindeByControlTo(operation, req.user.id);
+    }
+
+    return operation;
   }
 
   @Patch('mark-operation')

@@ -313,4 +313,43 @@ export class ControlOperationsService {
         userId,
       );
   }
+
+  public async createRemindeByControlTo(
+    operation: OperationFull,
+    userId: number,
+  ) {
+    const caseId = operation?.caseId;
+    const controlTo = operation?.controlTo?.id;
+
+    if (!caseId || !controlTo) return;
+
+    const existingReminders = (await this.readOperations({
+      case: [caseId],
+      mode: 'slim',
+      class: [EntityClasses.reminder],
+    })) as OperationSlim[];
+
+    if (existingReminders.map((r) => r.id).includes(userId)) return;
+
+    this.createOperation(
+      {
+        caseId: caseId,
+        class: 'reminder',
+        typeId: 11,
+        // approveFromId: userId,
+        approveToId: userId,
+        approveStatus: 'approved',
+        approveDate: new Date().toISOString(),
+        approveNotes: null,
+        dueDate: operation?.dueDate || GET_DEFAULT_CONTROL_DUE_DATE(),
+        doneDate: null,
+        controlFromId: controlTo,
+        controlToId: controlTo,
+        title: null,
+        notes: 'Напоминание адресату поручения',
+        extra: null,
+      },
+      userId,
+    );
+  }
 }
