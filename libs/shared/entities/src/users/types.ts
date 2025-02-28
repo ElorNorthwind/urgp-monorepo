@@ -61,6 +61,21 @@ export type SelectOption<T> = {
 
 export type UserApproveTo = Array<SelectOption<number>>;
 
+export type ApprovePathNode = {
+  id: number;
+  fio: string;
+  executor: boolean;
+  priority: number;
+  department: string;
+};
+
+export type UserApproveToChainData = {
+  key: string;
+  id: number;
+  department: string;
+  path: ApprovePathNode[];
+};
+
 // export type RequestWithAccessToken = Request & {
 //   user: UserAccessTokenInfo;
 // };

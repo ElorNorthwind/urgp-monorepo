@@ -72,6 +72,7 @@ export const users = {
   getControlExecutors: sql('sql/users/getControlExecutors.sql'),
   readUserControlTo: sql('sql/users/readUserControlTo.sql'),
   getEscalationTargets: sql('sql/users/getEscalationTargets.sql'),
+  getUserApproveToChains: sql('sql/users/getUserApproveToChains.sql'),
 };
 
 export const cases = {

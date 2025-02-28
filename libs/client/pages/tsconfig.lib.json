@@ -16,7 +16,8 @@
     "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/SingleCasePage"
+    "src/SingleCasePage",
+    "src/ControlSettingsPage/ui/ControlApproveChainPagetsx"
   ],
   "exclude": [
     "vite.config.ts",

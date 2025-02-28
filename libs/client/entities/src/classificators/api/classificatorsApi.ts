@@ -8,6 +8,7 @@ import {
   UserControlData,
   UserControlSettings,
   UserApproveTo,
+  UserApproveToChainData,
 } from '@urgp/shared/entities';
 
 export const classificatorsApi = rtkApi
@@ -25,6 +26,14 @@ export const classificatorsApi = rtkApi
       getCurrentUserApproveTo: build.query<UserApproveTo, void>({
         query: () => ({
           url: '/control/classificators/user-approve-to',
+          method: 'GET',
+        }),
+        providesTags: ['user-data'],
+      }),
+
+      getCurrentUserApproveChains: build.query<UserApproveToChainData[], void>({
+        query: () => ({
+          url: '/control/classificators/user-approve-chains',
           method: 'GET',
         }),
         providesTags: ['user-data'],
@@ -153,6 +162,7 @@ export const {
   useSetCurrentUserDirectionsMutation: useSetCurrentUserDirections,
   useSetCurrentUserCaseFilterMutation: useSetCurrentUserCaseFilter,
   useGetCurrentUserApproveToQuery: useCurrentUserApproveTo,
+  useGetCurrentUserApproveChainsQuery: useCurrentUserApproveChains,
   useGetEscalationTargetsQuery: useEscalationTargets,
   useGetControlExecutorsQuery: useControlExecutors,
   useGetUserControlToQuery: useUserControlTo,

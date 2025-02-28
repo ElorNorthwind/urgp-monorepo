@@ -25,6 +25,8 @@ import {
   CasesPageFilter,
   OperationClass,
   operationClassSchema,
+  ApprovePathNode,
+  UserApproveToChainData,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
@@ -51,6 +53,14 @@ export class ControlClassificatorsController {
   ): Promise<UserApproveTo> {
     const userId = req.user.id;
     return await this.classificators.getUserApproveTo(userId);
+  }
+
+  @Get('user-approve-chains')
+  async getCurrentUserApproveChains(
+    @Req() req: RequestWithUserData,
+  ): Promise<UserApproveToChainData[]> {
+    const userId = req.user.id;
+    return await this.classificators.getUserApproveChains(userId);
   }
 
   @Get('executors')

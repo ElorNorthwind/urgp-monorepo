@@ -13,7 +13,7 @@ import {
   CardTitle,
   selectCurrentUser,
 } from '@urgp/client/shared';
-import { ChangeDirectionsForm } from '@urgp/client/widgets';
+import { ApproveChainsTab, ChangeDirectionsForm } from '@urgp/client/widgets';
 import { useSelector } from 'react-redux';
 
 const ControlAccountPage = (): JSX.Element => {

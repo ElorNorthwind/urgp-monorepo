@@ -35,6 +35,7 @@ import { Route as ControlSettingsIndexImport } from './routes/control/settings/i
 import { Route as RenovationSettingsChangePasswordImport } from './routes/renovation/settings/change-password'
 import { Route as ControlSettingsFilterImport } from './routes/control/settings/filter'
 import { Route as ControlSettingsChangePasswordImport } from './routes/control/settings/change-password'
+import { Route as ControlSettingsApproveChainImport } from './routes/control/settings/approve-chain'
 
 // Create Virtual Routes
 
@@ -204,6 +205,13 @@ const ControlSettingsChangePasswordRoute =
     getParentRoute: () => ControlSettingsRouteRoute,
   } as any)
 
+const ControlSettingsApproveChainRoute =
+  ControlSettingsApproveChainImport.update({
+    id: '/approve-chain',
+    path: '/approve-chain',
+    getParentRoute: () => ControlSettingsRouteRoute,
+  } as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -355,6 +363,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RenovationIndexImport
       parentRoute: typeof RenovationRouteImport
     }
+    '/control/settings/approve-chain': {
+      id: '/control/settings/approve-chain'
+      path: '/approve-chain'
+      fullPath: '/control/settings/approve-chain'
+      preLoaderRoute: typeof ControlSettingsApproveChainImport
+      parentRoute: typeof ControlSettingsRouteImport
+    }
     '/control/settings/change-password': {
       id: '/control/settings/change-password'
       path: '/change-password'
@@ -396,12 +411,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface ControlSettingsRouteRouteChildren {
+  ControlSettingsApproveChainRoute: typeof ControlSettingsApproveChainRoute
   ControlSettingsChangePasswordRoute: typeof ControlSettingsChangePasswordRoute
   ControlSettingsFilterRoute: typeof ControlSettingsFilterRoute
   ControlSettingsIndexRoute: typeof ControlSettingsIndexRoute
 }
 
 const ControlSettingsRouteRouteChildren: ControlSettingsRouteRouteChildren = {
+  ControlSettingsApproveChainRoute: ControlSettingsApproveChainRoute,
   ControlSettingsChangePasswordRoute: ControlSettingsChangePasswordRoute,
   ControlSettingsFilterRoute: ControlSettingsFilterRoute,
   ControlSettingsIndexRoute: ControlSettingsIndexRoute,
@@ -495,6 +512,7 @@ export interface FileRoutesByFullPath {
   '/renovation/stages': typeof RenovationStagesRoute
   '/control/': typeof ControlIndexRoute
   '/renovation/': typeof RenovationIndexRoute
+  '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
@@ -520,6 +538,7 @@ export interface FileRoutesByTo {
   '/renovation/stages': typeof RenovationStagesRoute
   '/control': typeof ControlIndexRoute
   '/renovation': typeof RenovationIndexRoute
+  '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
@@ -550,6 +569,7 @@ export interface FileRoutesById {
   '/renovation/stages': typeof RenovationStagesRoute
   '/control/': typeof ControlIndexRoute
   '/renovation/': typeof RenovationIndexRoute
+  '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
@@ -581,6 +601,7 @@ export interface FileRouteTypes {
     | '/renovation/stages'
     | '/control/'
     | '/renovation/'
+    | '/control/settings/approve-chain'
     | '/control/settings/change-password'
     | '/control/settings/filter'
     | '/renovation/settings/change-password'
@@ -605,6 +626,7 @@ export interface FileRouteTypes {
     | '/renovation/stages'
     | '/control'
     | '/renovation'
+    | '/control/settings/approve-chain'
     | '/control/settings/change-password'
     | '/control/settings/filter'
     | '/renovation/settings/change-password'
@@ -633,6 +655,7 @@ export interface FileRouteTypes {
     | '/renovation/stages'
     | '/control/'
     | '/renovation/'
+    | '/control/settings/approve-chain'
     | '/control/settings/change-password'
     | '/control/settings/filter'
     | '/renovation/settings/change-password'
@@ -728,6 +751,7 @@ export const routeTree = rootRoute
       "filePath": "control/settings/route.tsx",
       "parent": "/control",
       "children": [
+        "/control/settings/approve-chain",
         "/control/settings/change-password",
         "/control/settings/filter",
         "/control/settings/"
@@ -784,6 +808,10 @@ export const routeTree = rootRoute
     "/renovation/": {
       "filePath": "renovation/index.tsx",
       "parent": "/renovation"
+    },
+    "/control/settings/approve-chain": {
+      "filePath": "control/settings/approve-chain.tsx",
+      "parent": "/control/settings"
     },
     "/control/settings/change-password": {
       "filePath": "control/settings/change-password.tsx",

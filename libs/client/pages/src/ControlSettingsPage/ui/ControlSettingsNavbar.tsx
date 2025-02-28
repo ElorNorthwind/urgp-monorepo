@@ -4,6 +4,7 @@ import { Button, cn } from '@urgp/client/shared';
 const navbarItems = [
   { name: 'Учетная запись', path: '/control/settings' },
   { name: 'Быстрый фильтр', path: '/control/settings/filter' },
+  { name: 'Сценарии согласования', path: '/control/settings/approve-chain' },
   { name: 'Сменить пароль', path: '/control/settings/change-password' },
 ];
 

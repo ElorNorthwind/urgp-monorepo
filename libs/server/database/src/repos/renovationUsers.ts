@@ -7,6 +7,7 @@ import {
   NestedClassificatorInfo,
   SelectOption,
   UserApproveTo,
+  UserApproveToChainData,
   UserControlData,
   UserControlSettings,
   UserWithCredentials,
@@ -91,6 +92,12 @@ export class RenovationUsersRepository {
 
   async getUserApproveTo(userId: number): Promise<UserApproveTo> {
     return this.db.any(users.getUserApproveTo, { userId });
+  }
+
+  async getUserApproveToChains(
+    userId: number,
+  ): Promise<UserApproveToChainData[]> {
+    return this.db.any(users.getUserApproveToChains, { userId });
   }
 
   async getControlExecutors(): Promise<SelectOption<number>[]> {

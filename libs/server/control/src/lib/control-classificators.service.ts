@@ -22,6 +22,7 @@ import {
   SelectOption,
   User,
   UserApproveTo,
+  UserApproveToChainData,
   UserControlData,
   UserControlSettings,
 } from '@urgp/shared/entities';
@@ -91,6 +92,12 @@ export class ControlClassificatorsService {
 
   public async getUserApproveTo(userId: number): Promise<UserApproveTo> {
     return this.dbServise.db.renovationUsers.getUserApproveTo(userId);
+  }
+
+  public async getUserApproveChains(
+    userId: number,
+  ): Promise<UserApproveToChainData[]> {
+    return this.dbServise.db.renovationUsers.getUserApproveToChains(userId);
   }
 
   public async getControlExecutors(): Promise<SelectOption<number>[]> {
@@ -184,7 +191,7 @@ export class ControlClassificatorsService {
         approveFromId: user.id,
         approveToId: user.id,
         approveDate: new Date().toISOString(),
-        approveNotes: 'Операция не требует согласования',
+        approveNotes: dto?.approveNotes ?? 'Операция не требует согласования',
       };
 
     if (
@@ -198,7 +205,7 @@ export class ControlClassificatorsService {
         approveFromId: user.id,
         approveToId: null,
         approveDate: null,
-        approveNotes: null,
+        approveNotes: dto?.approveNotes ?? null,
       };
 
     if (i.cannot('set-approver', dto)) {
@@ -217,7 +224,7 @@ export class ControlClassificatorsService {
         approveFromId: user.id,
         approveToId: dto.approveToId ?? null,
         approveDate: null,
-        approveNotes: null,
+        approveNotes: dto?.approveNotes ?? null,
       };
 
     if (i.cannot('approve', currentEntity)) {
@@ -247,7 +254,7 @@ export class ControlClassificatorsService {
         approveFromId: user.id,
         approveToId: dto?.approveToId || null, // Не забыть прокинуть сюда id направившего согл!
         approveDate: new Date().toISOString(),
-        approveNotes: dto?.approveNotes || null,
+        approveNotes: dto?.approveNotes ?? null,
       };
     } else if (dto.approveToId === user.id) {
       return {
@@ -256,7 +263,7 @@ export class ControlClassificatorsService {
         approveFromId: user.id,
         approveToId: user.id,
         approveDate: new Date().toISOString(),
-        approveNotes: 'Одоберно автором при создании',
+        approveNotes: dto?.approveNotes ?? 'Одоберно автором при создании',
       };
     }
 
@@ -268,7 +275,7 @@ export class ControlClassificatorsService {
       approveFromId: user.id,
       approveToId: dto?.approveToId || null,
       approveDate: null,
-      approveNotes: null,
+      approveNotes: dto?.approveNotes ?? null,
     };
   }
 }
