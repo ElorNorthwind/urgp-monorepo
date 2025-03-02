@@ -11,5 +11,6 @@ import { FIAS_HTTP_OPTIONS } from '../config/constants';
   imports: [DatabaseModule, HttpModule.register(FIAS_HTTP_OPTIONS)],
   providers: [FiasService],
   controllers: [FiasController],
+  exports: [FiasService],
 })
 export class FiasModule {}

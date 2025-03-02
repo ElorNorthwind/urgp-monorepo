@@ -137,3 +137,9 @@ export const sessions = {
   getSessionById: sql('sql/address/sessions/getSessionById.sql'),
   getSessionsByUserId: sql('sql/address/sessions/getSessionsByUserId.sql'),
 };
+
+export const results = {
+  readSessionUnfinishedBatch: sql(
+    'sql/address/results/readSessionUnfinishedBatch.sql',
+  ),
+};

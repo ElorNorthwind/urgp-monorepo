@@ -18,6 +18,10 @@ export class FiasService {
     private readonly dbServise: DatabaseService,
     private configService: ConfigService,
   ) {}
+  static get emptyAddress(): FiasAddress {
+    return addressNotFound;
+  }
+
   public async getAddressHint(address: string): Promise<FiasHint> {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');

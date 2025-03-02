@@ -45,7 +45,19 @@ export class AddressController {
       throw new BadRequestException('Требуется список адресов');
 
     const sessionId = await this.sessions.createSession(rest, req.user.id);
-    return this.address.addSessionAddresses(addresses, sessionId);
+    const unfinishedAddresses = await this.address.addSessionAddresses(
+      addresses,
+      sessionId,
+    );
+    this.address.hydrateSessionAdresses(sessionId);
+
+    return unfinishedAddresses;
+  }
+
+  @Post('session/restart')
+  async restartSessionById(@Body('id', ParseIntPipe) id: number) {
+    this.address.hydrateSessionAdresses(id);
+    return this.sessions.getSessionById(id);
   }
 
   @Patch('session')

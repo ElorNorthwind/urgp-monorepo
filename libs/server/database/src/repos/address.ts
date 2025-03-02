@@ -3,12 +3,14 @@ import {
   AdressRegistryRowCalcStreetData,
   AdressRegistryRowSlim,
 } from 'libs/server/data-mos/src/config/types';
-import { Logger } from '@nestjs/common';
-import { dataMos, sessions } from './sql/sql';
+import { BadRequestException, Logger } from '@nestjs/common';
+import { dataMos, results, sessions } from './sql/sql';
 import {
   AddressSession,
   AddressSessionFull,
   CreateAddressSessionDto,
+  FiasRequestResult,
+  UnfinishedAddress,
   UpdateAddressSessionDto,
 } from '@urgp/shared/entities';
 import { camelToSnakeCase } from '../lib/to-snake-case';
@@ -192,7 +194,10 @@ export class AddressRepository {
   getSessionsByUserId(userId: number): Promise<AddressSessionFull[]> {
     return this.db.any(sessions.getSessionsByUserId, { userId });
   }
-  insertSessionAdresses(addresses: string[], sessionId: number): Promise<null> {
+  insertSessionAddresses(
+    addresses: string[],
+    sessionId: number,
+  ): Promise<null> {
     const resultTableColumnSet = new this.pgp.helpers.ColumnSet(
       [
         { name: 'session_id', prop: 'sessionId' },
@@ -213,5 +218,57 @@ export class AddressRepository {
     );
 
     return this.db.none(insert);
+  }
+  readSessionUnfinishedAddresses(
+    sessionId: number,
+    limit = 1000,
+  ): Promise<UnfinishedAddress[]> {
+    return this.db.any(results.readSessionUnfinishedBatch, {
+      sessionId,
+      limit,
+    });
+  }
+  updateAddressResult(results: FiasRequestResult[]): Promise<null> {
+    if (results.length === 0) return Promise.resolve(null);
+    try {
+      const resultTableColumnSet = new this.pgp.helpers.ColumnSet(
+        [
+          { name: 'id', prop: 'id', cnd: true },
+          { name: 'response', prop: 'response', cast: 'jsonb' },
+          { name: 'is_error', prop: 'isError' },
+          { name: 'is_done', prop: 'isDone' },
+          {
+            name: 'updated_at',
+            prop: 'updatedAt',
+            cast: 'timestamp with time zone',
+          },
+        ],
+        {
+          table: {
+            table: 'results',
+            schema: 'address',
+          },
+        },
+      );
+
+      const data = results.map((r) => ({
+        id: r.id,
+        response: JSON.stringify(r?.value || {}),
+        isError: r?.error ? true : false,
+        isDone: true,
+        updatedAt: new Date().toISOString(),
+      }));
+
+      const update =
+        this.pgp.helpers.update(data, resultTableColumnSet) +
+        ' WHERE v.id = t.id';
+
+      // Logger.warn(update);
+
+      return this.db.none(update);
+    } catch (e) {
+      Logger.warn(e);
+      return Promise.reject(e);
+    }
   }
 }
