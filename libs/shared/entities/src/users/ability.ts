@@ -6,7 +6,6 @@ import {
 } from '@casl/ability';
 import { User } from './types';
 import { OperationFull, OperationSlim } from '../operations/types';
-import { CaseFull, CaseSlim } from '../cases/types';
 // import { CaseCreateDto, CaseUpdateDto } from '../cases/dto';
 // import {
 //   ControlStageCreateDto,
@@ -18,6 +17,7 @@ import { CaseFull, CaseSlim } from '../cases/types';
 // } from '../operations/dto';
 import { CreateCaseDto, UpdateCaseDto } from '../cases/dto';
 import { CreateOperationDto, UpdateOperationDto } from '../operations/dto';
+import { CaseFull, CaseSlim } from '../cases/types';
 
 type Action =
   | 'create'

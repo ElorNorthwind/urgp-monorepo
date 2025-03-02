@@ -6,6 +6,6 @@ SELECT
 	p90, 
 	p91, 
 	simple_address
-FROM public.address_registry
+FROM address.address_registry
 ORDER BY global_id
 LIMIT ${limit} OFFSET ${offset};

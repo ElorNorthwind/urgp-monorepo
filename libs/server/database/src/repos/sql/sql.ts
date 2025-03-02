@@ -119,10 +119,12 @@ export const classificators = {
   ),
 };
 
-export const address = {
-  readPaginatedAddresses: sql('sql/address/readPaginatedAddresses.sql'),
-  upsertAddresses: sql('sql/address/upsertAddresses.sql'),
-  countUpdated: sql('sql/address/countUpdated.sql'),
-  countTotal: sql('sql/address/countTotal.sql'),
-  clearUpdated: sql('sql/address/clearUpdated.sql'),
+export const dataMos = {
+  readPaginatedAddresses: sql(
+    'sql/address/data-mos/readPaginatedAddresses.sql',
+  ),
+  upsertAddresses: sql('sql/address/data-mos/upsertAddresses.sql'),
+  countUpdated: sql('sql/address/data-mos/countUpdated.sql'),
+  countTotal: sql('sql/address/data-mos/countTotal.sql'),
+  clearUpdated: sql('sql/address/data-mos/clearUpdated.sql'),
 };

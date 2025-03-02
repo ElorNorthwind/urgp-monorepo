@@ -1,0 +1,15 @@
+import { Module } from '@nestjs/common';
+import { DatabaseModule } from '@urgp/server/database';
+
+import { FiasController } from './fias.controller';
+
+import { FiasService } from './fias.service';
+import { HttpModule, HttpService } from '@nestjs/axios';
+import { FIAS_HTTP_OPTIONS } from '../config/constants';
+
+@Module({
+  imports: [DatabaseModule, HttpModule.register(FIAS_HTTP_OPTIONS)],
+  providers: [FiasService],
+  controllers: [FiasController],
+})
+export class FiasModule {}

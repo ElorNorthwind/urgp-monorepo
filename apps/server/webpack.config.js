@@ -43,8 +43,16 @@ module.exports = {
           ),
         },
         {
-          from: '../../libs/server/database/src/repos/sql/address',
-          to: join(__dirname, '../../dist/apps/server/sql/address'),
+          from: '../../libs/server/database/src/repos/sql/address/data-mos',
+          to: join(__dirname, '../../dist/apps/server/sql/address/data-mos'),
+        },
+        {
+          from: '../../libs/server/database/src/repos/sql/address/sessions',
+          to: join(__dirname, '../../dist/apps/server/sql/address/sessions'),
+        },
+        {
+          from: '../../libs/server/database/src/repos/sql/address/results',
+          to: join(__dirname, '../../dist/apps/server/sql/address/results'),
         },
       ],
     }),

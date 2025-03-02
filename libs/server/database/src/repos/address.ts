@@ -1,10 +1,11 @@
 import { IDatabase, IMain } from 'pg-promise';
-import { address } from './sql/sql';
 import {
   AdressRegistryRowCalcStreetData,
   AdressRegistryRowSlim,
 } from 'libs/server/data-mos/src/config/types';
 import { Logger } from '@nestjs/common';
+import { dataMos } from './sql/sql';
+import { CreateAddressSessionDto } from '@urgp/shared/entities';
 
 // const pgp = require('pg-promise')();
 // const { ColumnSet } = pgp.helpers;
@@ -67,12 +68,15 @@ export class AddressRepository {
     const addressRegistryColumnSet = new this.pgp.helpers.ColumnSet(
       adressRegistryColumns,
       {
-        table: 'address_registry',
+        table: {
+          table: 'address_registry',
+          schema: 'address',
+        },
       },
     );
 
     const insert = this.pgp.helpers.insert(addresses, addressRegistryColumnSet);
-    const q = this.pgp.as.format(address.upsertAddresses, {
+    const q = this.pgp.as.format(dataMos.upsertAddresses, {
       insert,
     });
     // Logger.warn(q);
@@ -81,15 +85,15 @@ export class AddressRepository {
 
   countUpdated(): Promise<number> {
     return this.db
-      .one(address.countUpdated)
+      .one(dataMos.countUpdated)
       .then((result) => result?.total ?? 0);
   }
 
   countTotal(): Promise<number> {
-    return this.db.one(address.countTotal).then((result) => result?.total ?? 0);
+    return this.db.one(dataMos.countTotal).then((result) => result?.total ?? 0);
   }
   clearUpdated(): Promise<null> {
-    return this.db.none(address.clearUpdated);
+    return this.db.none(dataMos.clearUpdated);
   }
   readPaginatedAddresses({
     limit = 1000,
@@ -98,14 +102,17 @@ export class AddressRepository {
     limit?: number;
     offset?: number;
   }): Promise<AdressRegistryRowSlim[]> {
-    return this.db.any(address.readPaginatedAddresses, { limit, offset });
+    return this.db.any(dataMos.readPaginatedAddresses, { limit, offset });
   }
 
   updateCalcStreets(data: AdressRegistryRowCalcStreetData[]): Promise<null> {
     const addressRegistryColumnSet = new this.pgp.helpers.ColumnSet(
       [{ name: 'global_id', cnd: true }, { name: 'street_calc' }],
       {
-        table: 'address_registry',
+        table: {
+          table: 'address_registry',
+          schema: 'address',
+        },
       },
     );
     const update = this.pgp.helpers.update(data, addressRegistryColumnSet);
@@ -113,5 +120,29 @@ export class AddressRepository {
     // Logger.warn(update);
 
     return this.db.none(update + ' WHERE v.global_id = t.global_id');
+  }
+
+  insertSession(dto: CreateAddressSessionDto, userId: number): void {
+    const sessionColumnSet = new this.pgp.helpers.ColumnSet(
+      [
+        { name: 'type', prop: 'type' },
+        { name: 'title', prop: 'title' },
+        { name: 'notes', prop: 'notes' },
+        { name: 'user_id', prop: 'userId' },
+      ],
+      {
+        table: {
+          table: 'sessions',
+          schema: 'address',
+        },
+      },
+    );
+    const insert = this.pgp.helpers.update(
+      { ...dto, userId },
+      sessionColumnSet,
+    );
+    Logger.warn(insert);
+
+    // return this.db.one(update + ' WHERE v.global_id = t.global_id');
   }
 }

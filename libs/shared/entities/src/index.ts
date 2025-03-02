@@ -26,3 +26,6 @@ export * from './operations/dto';
 export * from './operations/config';
 
 export * from './users/ability';
+
+export * from './addressSessions/types';
+export * from './addressSessions/dto';

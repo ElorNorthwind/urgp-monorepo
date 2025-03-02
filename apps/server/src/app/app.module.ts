@@ -15,6 +15,8 @@ import { AuthModule } from '@urgp/server/auth';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ControlModule } from '@urgp/server/control';
 import { DataMosModule } from '@urgp/server/data-mos';
+import { AddressModule } from '@urgp/server/address';
+import { FiasModule } from '@urgp/server/fias';
 
 @Module({
   // dot env files
@@ -44,7 +46,10 @@ import { DataMosModule } from '@urgp/server/data-mos';
     RenovationModule,
     AuthModule,
     ControlModule,
+
     DataMosModule,
+    FiasModule,
+    AddressModule,
   ],
 })
 export class AppModule {}
