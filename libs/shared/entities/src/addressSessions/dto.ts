@@ -10,7 +10,10 @@ export const createAddressSessionSchema = addressSessionSchema
     isError: true,
     isDone: true,
   })
-  .partial();
+  .partial()
+  .extend({
+    addresses: z.array(z.string()).optional(),
+  });
 export type CreateAddressSessionDto = z.infer<
   typeof createAddressSessionSchema
 >;

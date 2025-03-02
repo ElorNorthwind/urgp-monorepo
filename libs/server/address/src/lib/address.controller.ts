@@ -1,8 +1,10 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   ParseIntPipe,
   Patch,
@@ -37,7 +39,13 @@ export class AddressController {
     @Body(new ZodValidationPipe(createAddressSessionSchema))
     dto: CreateAddressSessionDto,
   ) {
-    return this.sessions.createSession(dto, req.user.id);
+    const { addresses, ...rest } = dto;
+
+    if (!addresses || addresses.length === 0)
+      throw new BadRequestException('Требуется список адресов');
+
+    const sessionId = await this.sessions.createSession(rest, req.user.id);
+    return this.address.addSessionAddresses(addresses, sessionId);
   }
 
   @Patch('session')

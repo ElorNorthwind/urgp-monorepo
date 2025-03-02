@@ -90,6 +90,7 @@ CREATE TABLE address.results (
     is_done BOOLEAN NOT NULL DEFAULT false,
     session_npp INTEGER,
     original_address TEXT,
+    response JSONB,
     PRIMARY KEY (id)
 );
 

@@ -142,8 +142,8 @@ export class AddressRepository {
     const insert =
       this.pgp.helpers.insert({ ...dto, userId }, sessionColumnSet) +
       ' returning id;';
-    // Logger.warn(insert);
-    return this.db.one(insert);
+
+    return this.db.one(insert).then((result: any) => result.id);
   }
 
   updateSession(dto: UpdateAddressSessionDto): Promise<AddressSession> {
@@ -191,5 +191,27 @@ export class AddressRepository {
 
   getSessionsByUserId(userId: number): Promise<AddressSessionFull[]> {
     return this.db.any(sessions.getSessionsByUserId, { userId });
+  }
+  insertSessionAdresses(addresses: string[], sessionId: number): Promise<null> {
+    const resultTableColumnSet = new this.pgp.helpers.ColumnSet(
+      [
+        { name: 'session_id', prop: 'sessionId' },
+        { name: 'original_address', prop: 'address' },
+        { name: 'session_npp', prop: 'npp' },
+      ],
+      {
+        table: {
+          table: 'results',
+          schema: 'address',
+        },
+      },
+    );
+
+    const insert = this.pgp.helpers.insert(
+      addresses.map((a, i) => ({ sessionId, address: a, npp: i + 1 })),
+      resultTableColumnSet,
+    );
+
+    return this.db.none(insert);
   }
 }

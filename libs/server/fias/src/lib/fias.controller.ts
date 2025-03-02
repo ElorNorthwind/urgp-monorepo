@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { FiasService } from './fias.service';
 import { AccessTokenGuard } from '@urgp/server/auth';
-import { FiasAddress, FiasHint } from '../config/types';
+import { FiasAddress, FiasHint } from '@urgp/shared/entities';
 
 @Controller('fias')
 @UseGuards(AccessTokenGuard)

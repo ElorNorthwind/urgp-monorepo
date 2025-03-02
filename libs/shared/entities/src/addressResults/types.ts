@@ -52,3 +52,13 @@ export type FiasAddress = {
   hierarchy: FiasHierarchyItem[];
   federal_district: FiasFederalDistrict;
 };
+
+// id INTEGER GENERATED ALWAYS AS IDENTITY,
+// session_id INTEGER REFERENCES address.sessions(id) ON DELETE CASCADE,
+// created_at TIMESTAMP WITH TIME ZONE DEFAULT (now())::timestamp(0) with time zone,
+// updated_at TIMESTAMP WITH TIME ZONE DEFAULT (now())::timestamp(0) with time zone,
+// is_error BOOLEAN NOT NULL DEFAULT false,
+// is_done BOOLEAN NOT NULL DEFAULT false,
+// session_npp INTEGER,
+// original_address TEXT,
+// response JSONB,

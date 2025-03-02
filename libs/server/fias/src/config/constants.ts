@@ -1,4 +1,4 @@
-import { FiasAddress, FiasHint } from './types';
+import { FiasAddress, FiasHint } from '@urgp/shared/entities';
 
 export const FIAS_HTTP_OPTIONS = {
   baseURL: 'https://fias-public-service.nalog.ru/api/spas/v2.0',
