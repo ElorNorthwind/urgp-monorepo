@@ -1,11 +1,16 @@
-import { IDatabase, IMain } from 'pg-promise';
+import { Column, ColumnSet, IDatabase, IMain } from 'pg-promise';
 import {
   AdressRegistryRowCalcStreetData,
   AdressRegistryRowSlim,
 } from 'libs/server/data-mos/src/config/types';
 import { Logger } from '@nestjs/common';
 import { dataMos } from './sql/sql';
-import { CreateAddressSessionDto } from '@urgp/shared/entities';
+import {
+  AddressSession,
+  CreateAddressSessionDto,
+  UpdateAddressSessionDto,
+} from '@urgp/shared/entities';
+import { camelToSnakeCase } from '../lib/to-snake-case';
 
 // const pgp = require('pg-promise')();
 // const { ColumnSet } = pgp.helpers;
@@ -122,27 +127,50 @@ export class AddressRepository {
     return this.db.none(update + ' WHERE v.global_id = t.global_id');
   }
 
-  insertSession(dto: CreateAddressSessionDto, userId: number): void {
-    const sessionColumnSet = new this.pgp.helpers.ColumnSet(
-      [
-        { name: 'type', prop: 'type' },
-        { name: 'title', prop: 'title' },
-        { name: 'notes', prop: 'notes' },
-        { name: 'user_id', prop: 'userId' },
-      ],
-      {
-        table: {
-          table: 'sessions',
-          schema: 'address',
-        },
+  insertSession(dto: CreateAddressSessionDto, userId: number): Promise<number> {
+    const columns = [{ name: 'user_id', prop: 'userId' }];
+    Object.keys(dto).forEach((key) => {
+      columns.push({ name: camelToSnakeCase(key), prop: key });
+    });
+    const sessionColumnSet = new this.pgp.helpers.ColumnSet(columns, {
+      table: {
+        table: 'sessions',
+        schema: 'address',
       },
-    );
-    const insert = this.pgp.helpers.update(
-      { ...dto, userId },
-      sessionColumnSet,
-    );
-    Logger.warn(insert);
+    });
+    const insert =
+      this.pgp.helpers.insert({ ...dto, userId }, sessionColumnSet) +
+      ' returning id;';
+    // Logger.warn(insert);
+    return this.db.one(insert);
+  }
 
-    // return this.db.one(update + ' WHERE v.global_id = t.global_id');
+  updateSession(dto: UpdateAddressSessionDto): Promise<AddressSession> {
+    const columns = [{ name: 'id', prop: 'id', cnd: true }] as {
+      name: string;
+      prop?: string;
+      cnd?: boolean;
+    }[];
+
+    Object.keys(dto)
+      .filter((key) => key !== 'id')
+      .forEach((key) => {
+        columns.push({ name: camelToSnakeCase(key), prop: key });
+      });
+
+    const sessionColumnSet = new this.pgp.helpers.ColumnSet(columns, {
+      table: {
+        table: 'sessions',
+        schema: 'address',
+      },
+    });
+
+    const update =
+      this.pgp.helpers.update(dto, sessionColumnSet) +
+      ' WHERE v.id = t.id RETURNING t.*';
+
+    Logger.log(update);
+
+    return this.db.one(update);
   }
 }

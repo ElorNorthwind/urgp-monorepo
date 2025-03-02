@@ -17,7 +17,6 @@ export type CreateAddressSessionDto = z.infer<
 
 export const updateAddressSessionSchema = addressSessionSchema
   .omit({
-    id: true,
     userId: true,
     createdAt: true,
     updatedAt: true,
