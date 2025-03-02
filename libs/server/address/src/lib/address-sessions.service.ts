@@ -26,4 +26,20 @@ export class AddressSessionsService {
   ): Promise<AddressSession> {
     return this.dbServise.db.address.updateSession(dto);
   }
+
+  public async getSessionById(id: number): Promise<AddressSession | null> {
+    return this.dbServise.db.address.getSessionById(id);
+  }
+
+  public async getSessionsByUserId(userId: number): Promise<AddressSession[]> {
+    return this.dbServise.db.address.getSessionsByUserId(userId);
+  }
+
+  public async deleteSession(id: number): Promise<null> {
+    return this.dbServise.db.address.deleteSession(id);
+  }
+
+  public async deleteSessionsOlderThan(date: string): Promise<null> {
+    return this.dbServise.db.address.deleteSessionsOlderThan(date);
+  }
 }

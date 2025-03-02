@@ -1,10 +1,16 @@
 import { z } from 'zod';
 
+const sessionProgressSchema = z.object({
+  total: z.coerce.number().int().nonnegative().default(0),
+  done: z.coerce.number().int().nonnegative().default(0),
+  error: z.coerce.number().int().nonnegative().default(0),
+});
+
 export const addressSessionSchema = z.object({
-  id: z.coerce.number(),
+  id: z.coerce.number().int().nonnegative(),
   userId: z.coerce.number(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
   isError: z.boolean(),
   isDone: z.boolean(),
   type: z.string().default('fias-search'),
@@ -12,3 +18,8 @@ export const addressSessionSchema = z.object({
   notes: z.string().nullable(),
 });
 export type AddressSession = z.infer<typeof addressSessionSchema>;
+
+export const addressSessionFullSchema = addressSessionSchema.extend(
+  sessionProgressSchema.shape,
+);
+export type AddressSessionFull = z.infer<typeof addressSessionFullSchema>;

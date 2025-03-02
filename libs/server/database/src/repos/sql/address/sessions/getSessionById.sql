@@ -1,0 +1,24 @@
+SELECT 
+	s.id,
+	s.user_id as userId,
+	s.created_at as createdAt,
+	s.updated_at as updatedAt,
+    s.is_error as isError,
+    s.is_done as isDone,
+    s.type,
+    s.title,
+    s.notes,
+	COALESCE(r.total, 0) as total, 
+	COALESCE(r.done, 0) as done,
+	COALESCE(r.error, 0) as error
+FROM address.sessions s
+LEFT JOIN (
+	SELECT 
+		session_id,
+		COUNT(*) as total, 
+		COUNT(*) FILTER (WHERE is_done IS NOT DISTINCT FROM true) as done,
+		COUNT(*) FILTER (WHERE is_error IS NOT DISTINCT FROM true) as error
+	FROM address.results
+	GROUP BY session_id
+) r ON s.id = r.session_id
+WHERE s.id = ${id};

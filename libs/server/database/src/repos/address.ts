@@ -4,9 +4,10 @@ import {
   AdressRegistryRowSlim,
 } from 'libs/server/data-mos/src/config/types';
 import { Logger } from '@nestjs/common';
-import { dataMos } from './sql/sql';
+import { dataMos, sessions } from './sql/sql';
 import {
   AddressSession,
+  AddressSessionFull,
   CreateAddressSessionDto,
   UpdateAddressSessionDto,
 } from '@urgp/shared/entities';
@@ -146,7 +147,10 @@ export class AddressRepository {
   }
 
   updateSession(dto: UpdateAddressSessionDto): Promise<AddressSession> {
-    const columns = [{ name: 'id', prop: 'id', cnd: true }] as {
+    const columns = [
+      { name: 'id', prop: 'id', cnd: true },
+      { name: 'updated_at', prop: 'updatedAt' },
+    ] as {
       name: string;
       prop?: string;
       cnd?: boolean;
@@ -166,11 +170,26 @@ export class AddressRepository {
     });
 
     const update =
-      this.pgp.helpers.update(dto, sessionColumnSet) +
-      ' WHERE v.id = t.id RETURNING t.*';
-
-    Logger.log(update);
-
+      this.pgp.helpers.update(
+        { ...dto, updatedAt: new Date().toISOString() },
+        sessionColumnSet,
+      ) + ` WHERE id = ${dto.id} RETURNING *`;
     return this.db.one(update);
+  }
+
+  deleteSession(id: number): Promise<null> {
+    return this.db.none(sessions.deleteSession, { id });
+  }
+
+  deleteSessionsOlderThan(date: string): Promise<null> {
+    return this.db.none(sessions.deleteSessionsOlderThan, { date });
+  }
+
+  getSessionById(id: number): Promise<AddressSessionFull | null> {
+    return this.db.oneOrNone(sessions.getSessionById, { id });
+  }
+
+  getSessionsByUserId(userId: number): Promise<AddressSessionFull[]> {
+    return this.db.any(sessions.getSessionsByUserId, { userId });
   }
 }

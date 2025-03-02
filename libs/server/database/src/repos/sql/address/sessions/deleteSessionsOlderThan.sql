@@ -1,3 +1,3 @@
 DELETE
 FROM address.sessions
-WHERE id = ${id};
+WHERE updated_at <= ${date};

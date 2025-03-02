@@ -17,11 +17,15 @@ export type CreateAddressSessionDto = z.infer<
 
 export const updateAddressSessionSchema = addressSessionSchema
   .omit({
+    id: true,
     userId: true,
     createdAt: true,
     updatedAt: true,
   })
-  .partial();
+  .partial()
+  .extend({
+    id: z.coerce.number().int().nonnegative(),
+  });
 
 export type UpdateAddressSessionDto = z.infer<
   typeof updateAddressSessionSchema

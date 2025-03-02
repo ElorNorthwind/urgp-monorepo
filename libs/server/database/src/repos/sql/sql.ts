@@ -128,3 +128,12 @@ export const dataMos = {
   countTotal: sql('sql/address/data-mos/countTotal.sql'),
   clearUpdated: sql('sql/address/data-mos/clearUpdated.sql'),
 };
+
+export const sessions = {
+  deleteSession: sql('sql/address/sessions/deleteSession.sql'),
+  deleteSessionsOlderThan: sql(
+    'sql/address/sessions/deleteSessionsOlderThan.sql',
+  ),
+  getSessionById: sql('sql/address/sessions/getSessionById.sql'),
+  getSessionsByUserId: sql('sql/address/sessions/getSessionsByUserId.sql'),
+};
