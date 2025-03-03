@@ -219,14 +219,17 @@ export class AddressRepository {
 
     return this.db.none(insert);
   }
-  readSessionUnfinishedAddresses(
+  getSessionUnfinishedAddresses(
     sessionId: number,
     limit = 1000,
   ): Promise<UnfinishedAddress[]> {
-    return this.db.any(results.readSessionUnfinishedBatch, {
+    return this.db.any(results.getSessionUnfinishedBatch, {
       sessionId,
       limit,
     });
+  }
+  getFiasDailyUsage(): Promise<number> {
+    return this.db.one(results.getFiasDailyUsage).then((result) => result.used);
   }
   updateAddressResult(results: FiasRequestResult[]): Promise<null> {
     if (results.length === 0) return Promise.resolve(null);
@@ -237,6 +240,7 @@ export class AddressRepository {
           { name: 'response', prop: 'response', cast: 'jsonb' },
           { name: 'is_error', prop: 'isError' },
           { name: 'is_done', prop: 'isDone' },
+          { name: 'response_source', prop: 'source' },
           {
             name: 'updated_at',
             prop: 'updatedAt',
@@ -257,6 +261,7 @@ export class AddressRepository {
         isError: r?.error ? true : false,
         isDone: true,
         updatedAt: new Date().toISOString(),
+        source: r.source,
       }));
 
       const update =

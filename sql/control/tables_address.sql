@@ -73,6 +73,7 @@ CREATE TABLE address.sessions (
     type VARCHAR(255) DEFAULT 'fias-search',
     title VARCHAR(255),
     notes TEXT,
+    status VARCHAR(255) DEFAULT 'new',
     PRIMARY KEY (id)
 );
 
@@ -90,6 +91,7 @@ CREATE TABLE address.results (
     is_done BOOLEAN NOT NULL DEFAULT false,
     session_npp INTEGER,
     original_address TEXT,
+    response_source VARCHAR(255),
     response JSONB,
     PRIMARY KEY (id)
 );

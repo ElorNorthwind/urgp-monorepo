@@ -139,7 +139,8 @@ export const sessions = {
 };
 
 export const results = {
-  readSessionUnfinishedBatch: sql(
-    'sql/address/results/readSessionUnfinishedBatch.sql',
+  getSessionUnfinishedBatch: sql(
+    'sql/address/results/getSessionUnfinishedBatch.sql',
   ),
+  getFiasDailyUsage: sql('sql/address/results/getFiasDailyUsage.sql'),
 };

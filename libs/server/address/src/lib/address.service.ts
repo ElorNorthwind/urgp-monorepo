@@ -1,19 +1,19 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '@urgp/server/database';
-import { AddressSessionFull } from '@urgp/shared/entities';
-import { add } from 'date-fns';
+import {
+  AddressSessionFull,
+  FIAS_CONCURRENCY,
+  FIAS_DB_STEP,
+  FIAS_TIMEOUT,
+} from '@urgp/shared/entities';
 import { FiasService } from 'libs/server/fias/src/lib/fias.service';
 import {
   catchError,
-  firstValueFrom,
   from,
   lastValueFrom,
   map,
   mergeMap,
-  NotFoundError,
-  Observable,
   of,
   timer,
   toArray,
@@ -27,6 +27,10 @@ export class AddressService {
     private fias: FiasService,
   ) {}
 
+  public async getFiasDailyUsage(): Promise<number> {
+    return this.dbServise.db.address.getFiasDailyUsage();
+  }
+
   public async addSessionAddresses(
     addresses: string[],
     sessionId: number,
@@ -38,18 +42,23 @@ export class AddressService {
     return this.dbServise.db.address.getSessionById(sessionId);
   }
 
-  public async hydrateSessionAdresses(sessionId: number, limit = 50) {
+  public async hydrateSessionAdresses(sessionId: number, limit = FIAS_DB_STEP) {
     try {
       let addresses = [];
       do {
+        this.dbServise.db.address.updateSession({
+          id: sessionId,
+          status: 'running',
+        });
+
         addresses =
-          await this.dbServise.db.address.readSessionUnfinishedAddresses(
+          await this.dbServise.db.address.getSessionUnfinishedAddresses(
             sessionId,
             limit,
           );
         const hydratedData = from(addresses).pipe(
           mergeMap((arg, index) =>
-            timer(100 * index).pipe(
+            timer(FIAS_TIMEOUT * index).pipe(
               mergeMap(
                 () =>
                   from(this.fias.getAddress(arg.address)).pipe(
@@ -61,6 +70,7 @@ export class AddressService {
                         status: 'success' as const,
                         value,
                         error: null,
+                        source: 'fias-search',
                       };
                     }),
                     catchError((error) =>
@@ -72,10 +82,11 @@ export class AddressService {
                           full_name: error.message,
                         },
                         error: error.message,
+                        source: 'fias-search',
                       }),
                     ),
                   ),
-                4, // Run up to 4 requests in parallel
+                FIAS_CONCURRENCY,
               ),
             ),
           ),
@@ -90,12 +101,14 @@ export class AddressService {
         id: sessionId,
         isDone: true,
         isError: false,
+        status: 'done',
       });
     } catch {
       this.dbServise.db.address.updateSession({
         id: sessionId,
         isDone: true,
         isError: true,
+        status: 'paused',
       });
       (e: any) => Logger.error(e);
     }

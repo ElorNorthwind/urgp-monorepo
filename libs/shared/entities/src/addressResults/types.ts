@@ -64,4 +64,5 @@ export type FiasRequestResult = {
   status: 'success' | 'error';
   value: FiasAddress | null;
   error: any | null;
+  source: string;
 };

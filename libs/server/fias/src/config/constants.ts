@@ -7,8 +7,6 @@ export const FIAS_HTTP_OPTIONS = {
   },
 };
 
-export const FIAS_RETRY_COUNT = 3;
-
 export const hintNotFound: FiasHint = {
   object_id: -1,
   path: '',

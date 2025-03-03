@@ -4,12 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '@urgp/server/database';
 import { AxiosRequestConfig } from 'axios';
 import { firstValueFrom, retry } from 'rxjs';
-import {
-  addressNotFound,
-  FIAS_RETRY_COUNT,
-  hintNotFound,
-} from '../config/constants';
-import { FiasAddress, FiasHint } from '@urgp/shared/entities';
+import { addressNotFound, hintNotFound } from '../config/constants';
+import { FIAS_RETRY_COUNT, FiasAddress, FiasHint } from '@urgp/shared/entities';
 
 @Injectable()
 export class FiasService {

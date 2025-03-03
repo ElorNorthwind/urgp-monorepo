@@ -78,6 +78,11 @@ export class AddressController {
     return this.sessions.getSessionsByUserId(req.user.id);
   }
 
+  @Get('fias-usage')
+  async getFiasDailyUsage() {
+    return this.address.getFiasDailyUsage();
+  }
+
   @Delete('session')
   async deleteSession(@Body('id', ParseIntPipe) id: number) {
     return this.sessions.deleteSession(id);

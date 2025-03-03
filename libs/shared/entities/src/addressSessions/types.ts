@@ -16,6 +16,7 @@ export const addressSessionSchema = z.object({
   type: z.string().default('fias-search'),
   title: z.string().nullable(),
   notes: z.string().nullable(),
+  status: z.string().nullable(),
 });
 export type AddressSession = z.infer<typeof addressSessionSchema>;
 
