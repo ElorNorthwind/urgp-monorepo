@@ -88,5 +88,6 @@ export const rtkApi = createApi({
     'classificator',
     ...caseClassesValues,
     ...operationClassesValues,
+    'address-session',
   ],
 });

@@ -7,8 +7,19 @@ import {
   CreateStageDialog,
   EscalateDialog,
 } from '@urgp/client/entities';
-import { SidebarProvider, store, usePageMeta } from '@urgp/client/shared';
-import { ApproveDialog, ControlNavbar } from '@urgp/client/widgets';
+import {
+  cn,
+  ScrollArea,
+  Separator,
+  SidebarProvider,
+  store,
+  usePageMeta,
+} from '@urgp/client/shared';
+import {
+  AddressNavbar,
+  ApproveDialog,
+  ControlNavbar,
+} from '@urgp/client/widgets';
 
 export const Route = createFileRoute('/address')({
   beforeLoad: async ({ location }) => {
@@ -29,7 +40,17 @@ export const Route = createFileRoute('/address')({
     usePageMeta('Парсинг адресов', '/favicon.ico');
     return (
       <div className="font-roboto">
-        <Outlet />
+        <SidebarProvider cookieName="address-sidebar" defaultOpen={false}>
+          <AddressNavbar />
+
+          <ScrollArea
+            className={cn(
+              'bg-muted-foreground/5 flex h-screen min-h-screen flex-1 flex-col overflow-auto',
+            )}
+          >
+            <Outlet />
+          </ScrollArea>
+        </SidebarProvider>
       </div>
     );
   },

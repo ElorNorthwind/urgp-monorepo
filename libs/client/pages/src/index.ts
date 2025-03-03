@@ -15,3 +15,4 @@ export * from './PendingCasesPage';
 export * from './ControlDashboardPage';
 export * from './ControlProblemsPage';
 export * from './SingleCasePage';
+export * from './AddressUploadPage';

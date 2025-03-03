@@ -15,6 +15,7 @@ import {
   NotFoundError,
   Observable,
   of,
+  timer,
   toArray,
 } from 'rxjs';
 
@@ -37,7 +38,7 @@ export class AddressService {
     return this.dbServise.db.address.getSessionById(sessionId);
   }
 
-  public async hydrateSessionAdresses(sessionId: number, limit = 1000) {
+  public async hydrateSessionAdresses(sessionId: number, limit = 50) {
     try {
       let addresses = [];
       do {
@@ -47,32 +48,36 @@ export class AddressService {
             limit,
           );
         const hydratedData = from(addresses).pipe(
-          mergeMap(
-            (arg) =>
-              from(this.fias.getAddress(arg.address)).pipe(
-                map((value) => {
-                  if (value?.object_id < 0)
-                    throw new NotFoundException('Адрес не найден');
-                  return {
-                    id: arg.id,
-                    status: 'success' as const,
-                    value,
-                    error: null,
-                  };
-                }),
-                catchError((error) =>
-                  of({
-                    id: arg.id,
-                    status: 'error' as const,
-                    value: {
-                      ...FiasService.emptyAddress,
-                      full_name: error.message,
-                    },
-                    error: error.message,
-                  }),
-                ),
+          mergeMap((arg, index) =>
+            timer(100 * index).pipe(
+              mergeMap(
+                () =>
+                  from(this.fias.getAddress(arg.address)).pipe(
+                    map((value) => {
+                      if (value?.object_id < 0)
+                        throw new NotFoundException('Адрес не найден');
+                      return {
+                        id: arg.id,
+                        status: 'success' as const,
+                        value,
+                        error: null,
+                      };
+                    }),
+                    catchError((error) =>
+                      of({
+                        id: arg.id,
+                        status: 'error' as const,
+                        value: {
+                          ...FiasService.emptyAddress,
+                          full_name: error.message,
+                        },
+                        error: error.message,
+                      }),
+                    ),
+                  ),
+                4, // Run up to 4 requests in parallel
               ),
-            20, // Run up to 20 requests in parallel
+            ),
           ),
           toArray(),
         );
