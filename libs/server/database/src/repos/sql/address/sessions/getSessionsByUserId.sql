@@ -1,3 +1,30 @@
+WITH queue AS (
+	SELECT 
+		s.id,
+		(SUM(r.total - r.done) 
+		OVER (PARTITION BY r.done < r.total 
+		ORDER BY s.created_at ASC) - (r.total - r.done))::integer AS queue
+	FROM address.sessions s
+	LEFT JOIN (
+		SELECT 
+			session_id,
+			COUNT(*)::integer as total, 
+			COALESCE(COUNT(*) FILTER (WHERE is_done IS NOT DISTINCT FROM true), 0)::integer as done
+		FROM address.results
+		GROUP BY session_id
+	) r ON s.id = r.session_id
+	WHERE r.done < r.total
+), results AS (
+	SELECT 
+		session_id,
+		COUNT(*)::integer as total, 
+		COALESCE(COUNT(*) FILTER (WHERE is_done IS NOT DISTINCT FROM true), 0)::integer as done,
+		COALESCE(COUNT(*) FILTER (WHERE is_done IS NOT DISTINCT FROM true AND is_error IS DISTINCT FROM true), 0)::integer as success,
+		COALESCE(COUNT(*) FILTER (WHERE is_error IS NOT DISTINCT FROM true), 0)::integer as error
+	FROM address.results
+	GROUP BY session_id
+)
+
 SELECT 
 	s.id,
 	s.user_id as "userId",
@@ -9,22 +36,15 @@ SELECT
 	s.type,
 	s.title,
 	s.notes,
-	s.status,
-	COALESCE(r.total, 0)::integer as total, 
-	COALESCE(r.done, 0)::integer as done,
-	COALESCE(r.success, 0)::integer as success,
-	COALESCE(r.error, 0)::integer as error
+	CASE WHEN r.done = r.total THEN 'done' ELSE 'pending' END as status,
+	r.total, 
+	r.done,
+	r.success,
+	r.error,
+	q.queue
 FROM address.sessions s
-LEFT JOIN (
-	SELECT 
-		session_id,
-		COUNT(*) as total, 
-		COUNT(*) FILTER (WHERE is_done IS NOT DISTINCT FROM true) as done,
-		COUNT(*) FILTER (WHERE is_done IS NOT DISTINCT FROM true AND is_error IS DISTINCT FROM true) as success,
-		COUNT(*) FILTER (WHERE is_error IS NOT DISTINCT FROM true) as error
-	FROM address.results
-	GROUP BY session_id
-) r ON s.id = r.session_id
+LEFT JOIN results r ON s.id = r.session_id
+LEFT JOIN queue q ON s.id = q.id
 WHERE s.user_id = ${userId}
 ORDER BY s.created_at DESC
 LIMIT 100;

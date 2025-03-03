@@ -13,6 +13,7 @@ export const addressApi = rtkApi.injectEndpoints({
       }),
       providesTags: ['address-session'],
     }),
+
     getSessionById: build.query<AddressSessionFull, number>({
       query: (id) => ({
         url: `/address/session/${id.toString()}`,
@@ -27,6 +28,22 @@ export const addressApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
       providesTags: ['address-session'],
+    }),
+
+    getSessionsQueue: build.query<AddressSessionFull[], void>({
+      query: () => ({
+        url: `/address/session-queue`,
+        method: 'GET',
+      }),
+      providesTags: ['address-session'],
+    }),
+
+    refreshSessionsQueue: build.mutation<undefined, void>({
+      query: () => ({
+        url: `/address/session/refresh-queue`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['address-session'],
     }),
 
     createSession: build.mutation<AddressSessionFull, CreateAddressSessionDto>({
@@ -56,4 +73,6 @@ export const {
   useGetSessionByIdQuery: useGetSessionById,
   useGetUserSessionsQuery: useGetUserSessions,
   useGetFiasDailyUsageQuery: useGetFiasUsage,
+  useGetSessionsQueueQuery: useGetSessionsQueue,
+  useRefreshSessionsQueueMutation: useRefreshSessionsQueue,
 } = addressApi;

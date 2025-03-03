@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 import {
+  addressApi,
   CreateCaseDialog,
   CreateDispatchDialog,
   CreateProblemDialog,
@@ -23,6 +24,8 @@ import {
 
 export const Route = createFileRoute('/address')({
   beforeLoad: async ({ location }) => {
+    // restart queue
+    store.dispatch(addressApi.endpoints.refreshSessionsQueue.initiate());
     const user = store.getState().auth.user;
     if (!user || user.id === 0) {
       throw redirect({

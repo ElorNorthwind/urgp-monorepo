@@ -68,12 +68,12 @@ CREATE TABLE address.sessions (
     user_id INTEGER REFERENCES renovation.users(id) ON DELETE SET NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT (now())::timestamp(0) with time zone,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT (now())::timestamp(0) with time zone,
-    is_error BOOLEAN NOT NULL DEFAULT false,
-    is_done BOOLEAN NOT NULL DEFAULT false,
     type VARCHAR(255) DEFAULT 'fias-search',
     title VARCHAR(255),
     notes TEXT,
-    status VARCHAR(255) DEFAULT 'pending',
+    -- is_error BOOLEAN NOT NULL DEFAULT false,
+    -- is_done BOOLEAN NOT NULL DEFAULT false,
+    -- status VARCHAR(255) DEFAULT 'pending',
     PRIMARY KEY (id)
 );
 

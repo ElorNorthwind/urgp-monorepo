@@ -46,11 +46,6 @@ export class AddressService {
     try {
       let addresses = [];
       do {
-        this.dbServise.db.address.updateSession({
-          id: sessionId,
-          status: 'running',
-        });
-
         addresses =
           await this.dbServise.db.address.getSessionUnfinishedAddresses(
             sessionId,
@@ -96,20 +91,7 @@ export class AddressService {
           await lastValueFrom(hydratedData),
         );
       } while (addresses?.length > 0);
-
-      this.dbServise.db.address.updateSession({
-        id: sessionId,
-        isDone: true,
-        isError: false,
-        status: 'done',
-      });
     } catch {
-      this.dbServise.db.address.updateSession({
-        id: sessionId,
-        isDone: true,
-        isError: true,
-        status: 'paused',
-      });
       (e: any) => Logger.error(e);
     }
   }

@@ -49,15 +49,12 @@ export class AddressController {
       addresses,
       sessionId,
     );
-    this.address.hydrateSessionAdresses(sessionId);
-
     return unfinishedAddresses;
   }
 
-  @Post('session/restart')
+  @Post('session/reset-errors')
   async restartSessionById(@Body('id', ParseIntPipe) id: number) {
-    this.address.hydrateSessionAdresses(id);
-    return this.sessions.getSessionById(id);
+    return this.sessions.resetSessionErrors(id);
   }
 
   @Patch('session')
@@ -66,6 +63,11 @@ export class AddressController {
     dto: UpdateAddressSessionDto,
   ) {
     return this.sessions.updateSession(dto);
+  }
+
+  @Get('session-queue')
+  getSessionsQueue() {
+    return this.sessions.getActiveSession();
   }
 
   @Get('session/:id')
@@ -78,6 +80,11 @@ export class AddressController {
     return this.sessions.getSessionsByUserId(req.user.id);
   }
 
+  @Post('session/refresh-queue')
+  refreshSessionsQueue() {
+    return this.sessions.refreshSessionQueue();
+  }
+
   @Get('fias-usage')
   async getFiasDailyUsage() {
     return this.address.getFiasDailyUsage();
@@ -87,6 +94,7 @@ export class AddressController {
   async deleteSession(@Body('id', ParseIntPipe) id: number) {
     return this.sessions.deleteSession(id);
   }
+
   @Delete('session/older-than')
   async deleteSessionsOlderThan(
     @Body(new ZodValidationPipe(z.object({ date: z.string().datetime() })))

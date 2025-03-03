@@ -136,6 +136,7 @@ export const sessions = {
   ),
   getSessionById: sql('sql/address/sessions/getSessionById.sql'),
   getSessionsByUserId: sql('sql/address/sessions/getSessionsByUserId.sql'),
+  getSessionsQueue: sql('sql/address/sessions/getSessionsQueue.sql'),
 };
 
 export const results = {
@@ -143,4 +144,5 @@ export const results = {
     'sql/address/results/getSessionUnfinishedBatch.sql',
   ),
   getFiasDailyUsage: sql('sql/address/results/getFiasDailyUsage.sql'),
+  resetSessionErrorsById: sql('sql/address/results/resetSessionErrorsById.sql'),
 };

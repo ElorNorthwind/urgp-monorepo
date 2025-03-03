@@ -91,7 +91,13 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
           className="flex-grow"
         />
       </div>
-      {session.status === 'running' && (
+      {session.status === 'pending' && session?.queue && session?.queue > 0 ? (
+        <div className="bg-muted-foreground/5 flex flex-row items-center gap-2 rounded p-2">
+          <Loader className="size-5 flex-shrink-0 animate-spin" />
+          <span>{`Адресов в очереди: ${session.queue}`}</span>
+        </div>
+      ) : null}
+      {session.status !== 'done' && (
         <BarRow
           value={session?.done || 0}
           max={session?.total || 0}

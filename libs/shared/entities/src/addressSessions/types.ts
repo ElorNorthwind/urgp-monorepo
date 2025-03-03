@@ -12,12 +12,13 @@ export const addressSessionSchema = z.object({
   userId: z.coerce.number(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-  isError: z.boolean(),
-  isDone: z.boolean(),
+  // isError: z.boolean(),
+  // isDone: z.boolean(),
   type: z.string().default('fias-search'),
   title: z.string().nullable(),
   notes: z.string().nullable(),
   status: z.string().nullable(),
+  queue: z.coerce.number().int().nonnegative().nullable().optional(),
 });
 export type AddressSession = z.infer<typeof addressSessionSchema>;
 

@@ -183,6 +183,10 @@ export class AddressRepository {
     return this.db.none(sessions.deleteSession, { id });
   }
 
+  resetSessionErrors(id: number): Promise<null> {
+    return this.db.none(results.resetSessionErrorsById, { id });
+  }
+
   deleteSessionsOlderThan(date: string): Promise<null> {
     return this.db.none(sessions.deleteSessionsOlderThan, { date });
   }
@@ -194,6 +198,11 @@ export class AddressRepository {
   getSessionsByUserId(userId: number): Promise<AddressSessionFull[]> {
     return this.db.any(sessions.getSessionsByUserId, { userId });
   }
+
+  getSessionQueue(): Promise<AddressSessionFull[]> {
+    return this.db.any(sessions.getSessionsQueue);
+  }
+
   insertSessionAddresses(
     addresses: string[],
     sessionId: number,
@@ -231,6 +240,7 @@ export class AddressRepository {
   getFiasDailyUsage(): Promise<number> {
     return this.db.one(results.getFiasDailyUsage).then((result) => result.used);
   }
+
   updateAddressResult(results: FiasRequestResult[]): Promise<null> {
     if (results.length === 0) return Promise.resolve(null);
     try {

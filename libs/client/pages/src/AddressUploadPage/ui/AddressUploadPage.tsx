@@ -3,6 +3,7 @@ import {
   SessionCard,
   useGetFiasUsage,
   useGetSessionById,
+  useGetSessionsQueue,
   useGetUserSessions,
 } from '@urgp/client/entities';
 import { BarRow, ExcelFileInput } from '@urgp/client/features';
@@ -53,6 +54,12 @@ const AddressUploadPage = (): JSX.Element => {
     isFetching: isUsageFetching,
   } = useGetFiasUsage();
 
+  const {
+    data: queue,
+    isLoading: isQueueLoading,
+    isFetching: isQueueFetching,
+  } = useGetSessionsQueue();
+
   return (
     <div className="block space-y-6 p-10 pb-16">
       <div className="mx-auto max-w-7xl">
@@ -65,13 +72,18 @@ const AddressUploadPage = (): JSX.Element => {
               value={usage ?? 0}
               max={100}
               isLoading={isUsageLoading || isUsageFetching}
-              label={`Потрачен лимит (рассчетно) - ${usage}%`}
+              label={
+                <div className="flex w-full flex-row justify-between text-xs">
+                  <span>{`Расход лимита (рассчетно)`}</span>
+                  <span>{`${usage || 0}%`}</span>
+                </div>
+              }
               labelFit="full"
               className={cn(
                 'bg-muted-foreground/10 mb-6 h-5',
                 isMobile ? 'w-full' : 'max-w-[19rem]',
               )}
-              barClassName={'bg-teal-500'}
+              barClassName={'bg-slate-400'}
             />
           </div>
           {sessionId && (
@@ -135,6 +147,15 @@ const AddressUploadPage = (): JSX.Element => {
           {sessionId && session && (
             <SessionCard session={session} className="w-full" />
           )}
+          {/* {queue &&
+            queue.length > 0 &&
+            queue.map((session) => (
+              <SessionCard
+                key={session.id}
+                session={session}
+                className="w-full"
+              />
+            ))} */}
         </div>
       </div>
     </div>
