@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { ExcelFileInput } from '@urgp/client/features';
-import { AddressUploadPage, ControlDashboardPage } from '@urgp/client/pages';
-import { casesPageSearch } from '@urgp/shared/entities';
+import { AddressUploadPage } from '@urgp/client/pages';
+import { addressUploadPageSearchSchema } from '@urgp/shared/entities';
 
 export const Route = createFileRoute('/address/')({
   // beforeLoad: () => {
@@ -9,7 +8,7 @@ export const Route = createFileRoute('/address/')({
   // },
   // component: () => <ExcelFileInput />,
   component: () => <AddressUploadPage />,
-  // validateSearch: (search) => {
-  //   return casesPageSearch.parse(search);
-  // },
+  validateSearch: (search) => {
+    return addressUploadPageSearchSchema.parse(search);
+  },
 });

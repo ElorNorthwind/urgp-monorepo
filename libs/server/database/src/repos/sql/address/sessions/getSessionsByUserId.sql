@@ -9,6 +9,7 @@ SELECT
 	s.type,
 	s.title,
 	s.notes,
+	s.status,
 	COALESCE(r.total, 0)::integer as total, 
 	COALESCE(r.done, 0)::integer as done,
 	COALESCE(r.error, 0)::integer as error
@@ -23,4 +24,5 @@ LEFT JOIN (
 	GROUP BY session_id
 ) r ON s.id = r.session_id
 WHERE s.user_id = ${userId}
-ORDER BY s.created_at DESC;
+ORDER BY s.created_at DESC
+LIMIT 100;

@@ -33,3 +33,11 @@ export const updateAddressSessionSchema = addressSessionSchema
 export type UpdateAddressSessionDto = z.infer<
   typeof updateAddressSessionSchema
 >;
+
+export const addressUploadPageSearchSchema = z.object({
+  sessionId: z.coerce.number().int().nonnegative().optional(),
+});
+
+export type AddressUploadPageSearchDto = z.infer<
+  typeof addressUploadPageSearchSchema
+>;

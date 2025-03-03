@@ -9,6 +9,7 @@ SELECT
 	s.type,
 	s.title,
 	s.notes,
+	s.status,
 	COALESCE(r.total, 0)::integer as total, 
 	COALESCE(r.done, 0)::integer as done,
 	COALESCE(r.error, 0)::integer as error

@@ -1,14 +1,4 @@
-import { TooltipTrigger } from '@radix-ui/react-tooltip';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  cn,
-  Skeleton,
-  Tooltip,
-  TooltipContent,
-} from '@urgp/client/shared';
+import { cn, Skeleton } from '@urgp/client/shared';
 import { forwardRef, useMemo } from 'react';
 
 type BarRowProps = {

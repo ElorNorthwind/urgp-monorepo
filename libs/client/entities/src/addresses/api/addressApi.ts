@@ -6,6 +6,13 @@ import {
 
 export const addressApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
+    getFiasDailyUsage: build.query<number, void>({
+      query: (id) => ({
+        url: `/address/fias-usage`,
+        method: 'GET',
+      }),
+      providesTags: ['address-session'],
+    }),
     getSessionById: build.query<AddressSessionFull, number>({
       query: (id) => ({
         url: `/address/session/${id.toString()}`,
@@ -48,4 +55,5 @@ export const {
   useDeleteSessionMutation: useDeleteSession,
   useGetSessionByIdQuery: useGetSessionById,
   useGetUserSessionsQuery: useGetUserSessions,
+  useGetFiasDailyUsageQuery: useGetFiasUsage,
 } = addressApi;

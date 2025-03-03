@@ -1,54 +1,111 @@
-import { useGetUserSessions } from '@urgp/client/entities';
-import { ExcelFileInput } from '@urgp/client/features';
+import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import {
+  useGetFiasUsage,
+  useGetSessionById,
+  useGetUserSessions,
+} from '@urgp/client/entities';
+import { BarRow, ExcelFileInput } from '@urgp/client/features';
+import {
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
+  cn,
   Separator,
   Skeleton,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  useIsMobile,
 } from '@urgp/client/shared';
 import { CreateAddressSessionForm } from '@urgp/client/widgets';
-import { Loader } from 'lucide-react';
+import { AddressUploadPageSearchDto } from '@urgp/shared/entities';
+import { Loader, SquareArrowLeft } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 const AddressUploadPage = (): JSX.Element => {
-  const [data, setData] = useState([]) as any;
+  const [addressCount, setAddressCount] = useState(0);
   const [isParsing, setIsParsing] = useState(false);
+  const isMobile = useIsMobile();
 
-  const filteredData = useMemo(
-    () =>
-      data
-        .filter(
-          (item: any) =>
-            'Адрес' in item && item?.['Адрес'] && item?.['Адрес'] !== '',
-        )
-        .map((item: any) => item['Адрес']),
-    [data],
-  );
+  const pathname = useLocation().pathname;
+  const navigate = useNavigate({ from: pathname });
+  const { sessionId } = getRouteApi(
+    pathname,
+  ).useSearch() as AddressUploadPageSearchDto;
+
+  const {
+    data: session,
+    isLoading: isSessionLoading,
+    isFetching: isSessionFetching,
+  } = useGetSessionById(sessionId ?? 0, {
+    pollingInterval: 5000,
+    skip: !sessionId || sessionId === 0,
+  });
+
+  const {
+    data: usage,
+    isLoading: isUsageLoading,
+    isFetching: isUsageFetching,
+  } = useGetFiasUsage();
 
   return (
     <div className="block space-y-6 p-10 pb-16">
       <div className="mx-auto max-w-7xl">
-        <div className="space-y-0.5">
-          <h2 className="text-2xl font-bold tracking-tight">
-            Сформировать запрос
-          </h2>
-          <p className="text-muted-foreground">Выбор адресов для обработки</p>
+        <div className="flex w-full flex-row justify-between">
+          <div className="space-y-0.5">
+            <h2 className="text-2xl font-bold tracking-tight">
+              Сформировать запрос
+            </h2>
+            <BarRow
+              value={usage ?? 0}
+              max={100}
+              isLoading={isUsageLoading || isUsageFetching}
+              label={`Потрачен лимит (рассчетно) - ${usage}%`}
+              labelFit="full"
+              className={cn(
+                'bg-muted-foreground/10 mb-6 h-5',
+                isMobile ? 'w-full' : 'max-w-[19rem]',
+              )}
+              barClassName={'bg-teal-500'}
+            />
+          </div>
+          {sessionId && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  role="button"
+                  variant="ghost"
+                  size="icon"
+                  className="size-12 p-2"
+                  onClick={() =>
+                    navigate({ to: pathname, search: { sessionId: undefined } })
+                  }
+                >
+                  <SquareArrowLeft className="text-sidebar-foreground size-10 opacity-30" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="left" sideOffset={4}>
+                Назад
+              </TooltipContent>
+            </Tooltip>
+          )}
         </div>
         <Separator className="my-6" />
+
         <div className="flex flex-col gap-4">
-          <Card className="flex-1">
-            <CardHeader>
+          <Card>
+            <CardHeader className="bg-muted-foreground/5 mb-4 pb-4">
               <CardTitle className="flex flex-row items-center justify-between">
                 <div>Файл в формате Excel</div>
                 {isParsing ? (
                   <Skeleton className="h-7 w-60" />
                 ) : (
-                  filteredData?.length > 0 && (
-                    <div className="text-muted-foreground/50 text-xl font-semibold">{`Обнаружено ${filteredData?.length} адресов`}</div>
+                  addressCount > 0 && (
+                    <div className="text-muted-foreground/50 text-lg font-semibold">{`Обнаружено ${addressCount.toLocaleString('ru-RU')} адресов`}</div>
                   )
                 )}
               </CardTitle>
@@ -56,23 +113,30 @@ const AddressUploadPage = (): JSX.Element => {
                 Должен содержать столбец "Адрес"
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <ExcelFileInput
-                data={data}
-                setData={setData}
+            <CardContent>
+              <CreateAddressSessionForm
+                isParsing={isParsing}
                 setIsParsing={setIsParsing}
+                setAddressCount={setAddressCount}
+                setSessionId={(id: number) => {
+                  navigate({
+                    to: pathname,
+                    search: { sessionId: id },
+                  });
+                }}
               />
             </CardContent>
           </Card>
-          {filteredData?.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Запрос готов к отправке</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CreateAddressSessionForm addresses={filteredData} />
-              </CardContent>
-            </Card>
+          {sessionId && (
+            <BarRow
+              value={session?.done || 0}
+              max={session?.total || 0}
+              isLoading={isSessionLoading || isSessionFetching}
+              label={`Запрос c id: ${sessionId} - (${session?.done || 0} из ${session?.total || 0}) - (${session?.status})`}
+              labelFit="full"
+              className={cn('bg-muted-foreground/10 mb-6 h-10 w-full')}
+              barClassName={cn('bg-slate-400 animate-pulse')}
+            />
           )}
         </div>
       </div>
