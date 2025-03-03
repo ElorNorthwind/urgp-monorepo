@@ -12,6 +12,7 @@ SELECT
 	s.status,
 	COALESCE(r.total, 0)::integer as total, 
 	COALESCE(r.done, 0)::integer as done,
+	COALESCE(r.success, 0)::integer as success,
 	COALESCE(r.error, 0)::integer as error
 FROM address.sessions s
 LEFT JOIN (
@@ -19,6 +20,7 @@ LEFT JOIN (
 		session_id,
 		COUNT(*) as total, 
 		COUNT(*) FILTER (WHERE is_done IS NOT DISTINCT FROM true) as done,
+		COUNT(*) FILTER (WHERE is_done IS NOT DISTINCT FROM true AND is_error IS DISTINCT FROM true) as success,
 		COUNT(*) FILTER (WHERE is_error IS NOT DISTINCT FROM true) as error
 	FROM address.results
 	GROUP BY session_id

@@ -40,7 +40,7 @@ const InfoBox = forwardRef<
     if (noWrapper)
       return (
         <Fragment>
-          {label && (
+          {(label !== undefined || label !== null) && (
             <div
               className={cn(
                 'flex items-center px-2 py-2',
@@ -56,7 +56,7 @@ const InfoBox = forwardRef<
               </span>
             </div>
           )}
-          {value && (
+          {(value !== undefined || value !== null) && (
             <div className="flex items-center px-2 py-2">
               <span>
                 {typeof value === 'object'
@@ -76,14 +76,14 @@ const InfoBox = forwardRef<
           className,
         )}
       >
-        {label && (
+        {(label !== undefined || label !== null) && (
           <div className={cn('bg-muted-foreground/5 font-bold', 'border-r')}>
             <span>
               {typeof label === 'object' ? format(label, 'dd.MM.yyyy') : label}
             </span>
           </div>
         )}
-        {value && (
+        {(value !== undefined || value !== null) && (
           <div className="">
             <span>
               {typeof value === 'object' ? format(value, 'dd.MM.yyyy') : value}

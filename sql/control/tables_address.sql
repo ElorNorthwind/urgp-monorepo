@@ -73,7 +73,7 @@ CREATE TABLE address.sessions (
     type VARCHAR(255) DEFAULT 'fias-search',
     title VARCHAR(255),
     notes TEXT,
-    status VARCHAR(255) DEFAULT 'new',
+    status VARCHAR(255) DEFAULT 'pending',
     PRIMARY KEY (id)
 );
 

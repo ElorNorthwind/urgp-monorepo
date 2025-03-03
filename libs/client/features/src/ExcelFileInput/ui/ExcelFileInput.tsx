@@ -1,13 +1,18 @@
-import { cn, Input } from '@urgp/client/shared';
+import { Button, cn, Input } from '@urgp/client/shared';
+import { Upload } from 'lucide-react';
 import React, { forwardRef, useMemo, useState } from 'react';
 import * as XLSX from 'xlsx';
 
 type ExcelFileInputProps = {
   label?: string;
+  extraElement?: JSX.Element | string;
   setData: (data: any[]) => void;
   setIsParsing?: (isParsing: boolean) => void;
   parseData?: (data: any[]) => any[];
   className?: string;
+  inputId?: string;
+  setFileName?: (name: string) => void;
+  fileName?: string | null;
 };
 
 const ExcelFileInput = forwardRef<
@@ -18,9 +23,15 @@ const ExcelFileInput = forwardRef<
     setData,
     setIsParsing,
     parseData,
-    label = 'Выберете файл',
+    label = 'Выбрать файл',
+    extraElement = '.xls или .xlsx',
     className,
+    inputId = 'excel-file-input',
+    setFileName,
+    fileName = null,
   } = props;
+
+  // const [fi, setFile] = useState<File | null>(null);
 
   const handleFileUpload = (e: any) => {
     const file = e.target.files[0];
@@ -34,6 +45,7 @@ const ExcelFileInput = forwardRef<
       const worksheet = workbook.Sheets[worksheetName];
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
       setData(parseData ? parseData(jsonData) : jsonData);
+      setFileName && setFileName(file.name);
       setIsParsing && setIsParsing(false);
     };
     setIsParsing && setIsParsing(true);
@@ -42,25 +54,48 @@ const ExcelFileInput = forwardRef<
 
   return (
     <div>
-      <p
+      <label
+        // htmlFor={inputId}
         className={cn(
           'flex justify-between truncate text-left',
           'mb-2 text-sm font-medium leading-none',
         )}
       >
         <span>{label || ''}</span>
-      </p>
-      <input
-        ref={ref}
-        type={'file'}
-        placeholder="Выберите файл"
-        accept=".xlsx, .xls"
-        onChange={handleFileUpload}
+      </label>
+      <div
         className={cn(
-          'border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+          'group relative',
+          'ring-offset-background first-focus-visible:ring-ring first-focus-visible:outline-none first-focus-visible:ring-2 first-focus-visible:ring-offset-2 first-disabled:cursor-not-allowed first-disabled:opacity-50',
+          'border-input bg-muted-foreground/5 flex items-center justify-center rounded-md border border-dashed px-3 py-2',
           className,
         )}
-      />
+      >
+        <input
+          id={inputId}
+          ref={ref}
+          type={'file'}
+          accept=".xlsx, .xls"
+          onChange={handleFileUpload}
+          className={cn(
+            'cursor-pointer" absolute inset-0 h-full w-full opacity-0',
+          )}
+        />
+
+        <div className="pointer-events-none flex flex-col items-center justify-center gap-2 p-4">
+          <div className="bg-muted-foreground/10 flex flex-row items-center gap-2 rounded-full p-3 transition-transform group-hover:scale-105">
+            <Upload className="size-8 flex-shrink-0" />
+            {/* <span>Обзор</span> */}
+          </div>
+
+          <div className="text-center">
+            <p className="font-medium">
+              {fileName ?? 'Кликните или перетащите файл'}
+            </p>
+            <p className="text-muted-foreground mt-1 text-xs">{extraElement}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 });

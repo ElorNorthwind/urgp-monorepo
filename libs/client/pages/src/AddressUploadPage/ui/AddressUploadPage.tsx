@@ -1,5 +1,6 @@
 import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import {
+  SessionCard,
   useGetFiasUsage,
   useGetSessionById,
   useGetUserSessions,
@@ -29,6 +30,7 @@ import { useMemo, useState } from 'react';
 const AddressUploadPage = (): JSX.Element => {
   const [addressCount, setAddressCount] = useState(0);
   const [isParsing, setIsParsing] = useState(false);
+
   const isMobile = useIsMobile();
 
   const pathname = useLocation().pathname;
@@ -37,14 +39,13 @@ const AddressUploadPage = (): JSX.Element => {
     pathname,
   ).useSearch() as AddressUploadPageSearchDto;
 
-  const {
-    data: session,
-    isLoading: isSessionLoading,
-    isFetching: isSessionFetching,
-  } = useGetSessionById(sessionId ?? 0, {
-    pollingInterval: 5000,
-    skip: !sessionId || sessionId === 0,
-  });
+  const { data: session, isLoading: isSessionLoading } = useGetSessionById(
+    sessionId ?? 0,
+    {
+      pollingInterval: 5000,
+      skip: !sessionId || sessionId === 0,
+    },
+  );
 
   const {
     data: usage,
@@ -97,46 +98,42 @@ const AddressUploadPage = (): JSX.Element => {
         <Separator className="my-6" />
 
         <div className="flex flex-col gap-4">
-          <Card>
-            <CardHeader className="bg-muted-foreground/5 mb-4 pb-4">
-              <CardTitle className="flex flex-row items-center justify-between">
-                <div>Файл в формате Excel</div>
-                {isParsing ? (
-                  <Skeleton className="h-7 w-60" />
-                ) : (
-                  addressCount > 0 && (
-                    <div className="text-muted-foreground/50 text-lg font-semibold">{`Обнаружено ${addressCount.toLocaleString('ru-RU')} адресов`}</div>
-                  )
-                )}
-              </CardTitle>
-              <CardDescription>
-                Должен содержать столбец "Адрес"
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <CreateAddressSessionForm
-                isParsing={isParsing}
-                setIsParsing={setIsParsing}
-                setAddressCount={setAddressCount}
-                setSessionId={(id: number) => {
-                  navigate({
-                    to: pathname,
-                    search: { sessionId: id },
-                  });
-                }}
-              />
-            </CardContent>
-          </Card>
-          {sessionId && (
-            <BarRow
-              value={session?.done || 0}
-              max={session?.total || 0}
-              isLoading={isSessionLoading || isSessionFetching}
-              label={`Запрос c id: ${sessionId} - (${session?.done || 0} из ${session?.total || 0}) - (${session?.status})`}
-              labelFit="full"
-              className={cn('bg-muted-foreground/10 mb-6 h-10 w-full')}
-              barClassName={cn('bg-slate-400 animate-pulse')}
-            />
+          {!sessionId && (
+            <Card>
+              <CardHeader className="bg-muted-foreground/5 mb-4 pb-4">
+                <CardTitle className="flex flex-row items-center justify-between">
+                  <div>Файл в формате Excel</div>
+                  {isMobile === false &&
+                    (isParsing ? (
+                      <Skeleton className="h-7 w-60" />
+                    ) : (
+                      addressCount > 0 && (
+                        <div className="text-muted-foreground/50 text-2xl font-semibold">{`${addressCount.toLocaleString('ru-RU')} адресов`}</div>
+                      )
+                    ))}
+                </CardTitle>
+                <CardDescription>
+                  Должен содержать столбец "Адрес"
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CreateAddressSessionForm
+                  isParsing={isParsing}
+                  setIsParsing={setIsParsing}
+                  addressCount={addressCount}
+                  setAddressCount={setAddressCount}
+                  setSessionId={(id: number) => {
+                    navigate({
+                      to: pathname,
+                      search: { sessionId: id },
+                    });
+                  }}
+                />
+              </CardContent>
+            </Card>
+          )}
+          {sessionId && session && (
+            <SessionCard session={session} className="w-full" />
           )}
         </div>
       </div>

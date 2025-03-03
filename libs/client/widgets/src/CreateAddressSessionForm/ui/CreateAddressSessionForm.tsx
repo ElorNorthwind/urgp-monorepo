@@ -1,4 +1,11 @@
-import { Button, cn, Form, Separator } from '@urgp/client/shared';
+import {
+  Button,
+  cn,
+  Form,
+  Separator,
+  Skeleton,
+  useIsMobile,
+} from '@urgp/client/shared';
 import {
   CreateAddressSessionDto,
   createAddressSessionSchema,
@@ -7,7 +14,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateSession } from '@urgp/client/entities';
 import { InputFormField } from '@urgp/client/widgets';
-import { Send, SquareX, ThumbsUp } from 'lucide-react';
+import { Loader, Send, SquareX, ThumbsUp } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -16,6 +23,7 @@ import { ExcelFileInput } from '@urgp/client/features';
 type CreateAddressSessionFormProps = {
   className?: string;
   setSessionId?: (id: number) => void;
+  addressCount?: number;
   setAddressCount?: (count: number) => void;
   isParsing?: boolean;
   setIsParsing?: (isParsing: boolean) => void;
@@ -25,13 +33,16 @@ type CreateAddressSessionFormProps = {
 const CreateAddressSessionForm = ({
   className,
   setSessionId,
+  addressCount,
   setAddressCount,
   isParsing,
   setIsParsing,
   extraOnSubmit,
 }: CreateAddressSessionFormProps): JSX.Element | null => {
   const [addresses, setAddresses] = useState([] as string[]);
+  const [fileName, setFileName] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
 
   const values = {
     type: 'fias-search',
@@ -54,6 +65,14 @@ const CreateAddressSessionForm = ({
     form.setValue('addresses', addresses || []);
   }, [addresses]);
 
+  useEffect(() => {
+    const shortFileName = fileName?.replace(/(\.[a-z]+)$/, '') || '';
+    const title = form.getValues('title');
+    if (title === '') {
+      form.setValue('title', shortFileName);
+    }
+  }, [fileName]);
+
   const parseAddresses = useCallback((data: any[]) => {
     const filteredData = data
       .filter(
@@ -68,6 +87,7 @@ const CreateAddressSessionForm = ({
   async function onReset() {
     if (fileInputRef?.current) fileInputRef.current.value = '';
     if (setAddressCount) setAddressCount(0);
+    setFileName && setFileName(null);
     form.reset(values);
   }
 
@@ -95,15 +115,33 @@ const CreateAddressSessionForm = ({
           setData={setAddresses}
           parseData={parseAddresses}
           setIsParsing={setIsParsing}
-          // className="h-24"
+          fileName={fileName}
+          setFileName={setFileName}
+          extraElement={
+            isParsing ? (
+              <div className="flex flex-row items-center justify-center gap-1">
+                <Loader className="size-4 animate-spin" />
+                <span>Обработка файла...</span>
+              </div>
+            ) : addressCount && addressCount > 0 ? (
+              `Содержит ${addressCount.toLocaleString('ru-RU')} адресов`
+            ) : (
+              'Файл Excel со столбцом "Адрес"'
+            )
+          }
         />
-        <div className="flex w-full flex-row gap-4">
+        <div
+          className={cn(
+            'flex w-full gap-4',
+            isMobile ? 'flex-col' : 'flex-row',
+          )}
+        >
           <InputFormField
             form={form}
             fieldName={'title'}
             label="Имя запроса"
             placeholder="Назовите запрос"
-            className="flex-grow-0"
+            className="min-w-[20%] flex-grow-0"
           />
           <InputFormField
             form={form}
@@ -114,12 +152,15 @@ const CreateAddressSessionForm = ({
           />
         </div>
 
-        <div className="mt-6 flex w-full flex-row gap-4">
+        <div className="mt-6 flex w-full flex-row justify-end gap-4">
           <Button
-            className="flex flex-grow flex-row gap-2"
+            className={cn(
+              'flex flex-row gap-2',
+              isMobile ? 'flex-grow' : 'min-w-[30%]',
+            )}
             type="button"
             variant={'outline'}
-            disabled={isLoading}
+            disabled={isLoading || isParsing}
             onClick={onReset}
           >
             <SquareX className="size-4 flex-shrink-0" />
@@ -128,7 +169,10 @@ const CreateAddressSessionForm = ({
 
           <Button
             type="button"
-            className="flex flex-grow flex-row gap-2"
+            className={cn(
+              'flex flex-row gap-2',
+              isMobile ? 'flex-grow' : 'min-w-[30%]',
+            )}
             variant="default"
             disabled={isLoading || addresses?.length === 0 || isParsing}
             onClick={form.handleSubmit((data) => onSubmit(data))}
