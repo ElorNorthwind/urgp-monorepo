@@ -152,35 +152,37 @@ const CreateAddressSessionForm = ({
           />
         </div>
 
-        <div className="mt-6 flex w-full flex-row justify-end gap-4">
-          <Button
-            className={cn(
-              'flex flex-row gap-2',
-              isMobile ? 'flex-grow' : 'min-w-[30%]',
-            )}
-            type="button"
-            variant={'outline'}
-            disabled={isLoading || isParsing}
-            onClick={onReset}
-          >
-            <SquareX className="size-4 flex-shrink-0" />
-            <span>Отмена</span>
-          </Button>
+        {addressCount && addressCount > 0 ? (
+          <div className="mt-6 flex w-full flex-row justify-end gap-4">
+            <Button
+              className={cn(
+                'flex flex-row gap-2',
+                isMobile ? 'flex-grow' : 'min-w-[30%]',
+              )}
+              type="button"
+              variant={'outline'}
+              disabled={isLoading || isParsing}
+              onClick={onReset}
+            >
+              {/* <SquareX className="size-4 flex-shrink-0" /> */}
+              <span>Отмена</span>
+            </Button>
 
-          <Button
-            type="button"
-            className={cn(
-              'flex flex-row gap-2',
-              isMobile ? 'flex-grow' : 'min-w-[30%]',
-            )}
-            variant="default"
-            disabled={isLoading || addresses?.length === 0 || isParsing}
-            onClick={form.handleSubmit((data) => onSubmit(data))}
-          >
-            <Send className="size-4 flex-shrink-0" />
-            <span>Отправить</span>
-          </Button>
-        </div>
+            <Button
+              type="button"
+              className={cn(
+                'flex flex-row gap-2',
+                isMobile ? 'flex-grow' : 'min-w-[30%]',
+              )}
+              variant="default"
+              disabled={isLoading || addresses?.length === 0 || isParsing}
+              onClick={form.handleSubmit((data) => onSubmit(data))}
+            >
+              {/* <Send className="size-4 flex-shrink-0" /> */}
+              <span>Отправить</span>
+            </Button>
+          </div>
+        ) : null}
       </form>
     </Form>
   );

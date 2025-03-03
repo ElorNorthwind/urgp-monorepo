@@ -101,14 +101,14 @@ const AddressUploadPage = (): JSX.Element => {
           {!sessionId && (
             <Card>
               <CardHeader className="bg-muted-foreground/5 mb-4 pb-4">
-                <CardTitle className="flex flex-row items-center justify-between">
+                <CardTitle className="relative flex flex-row items-center justify-between">
                   <div>Файл в формате Excel</div>
                   {isMobile === false &&
                     (isParsing ? (
-                      <Skeleton className="h-7 w-60" />
+                      <Skeleton className="absolute right-2 top-1 h-7 w-60" />
                     ) : (
                       addressCount > 0 && (
-                        <div className="text-muted-foreground/50 text-2xl font-semibold">{`${addressCount.toLocaleString('ru-RU')} адресов`}</div>
+                        <div className="text-muted-foreground/50 absolute right-2 top-1 text-2xl font-semibold">{`${addressCount.toLocaleString('ru-RU')} адресов`}</div>
                       )
                     ))}
                 </CardTitle>
