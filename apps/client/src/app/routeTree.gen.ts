@@ -17,8 +17,10 @@ import { Route as OldbuildingsImport } from './routes/oldbuildings'
 import { Route as LoginImport } from './routes/login'
 import { Route as RenovationRouteImport } from './routes/renovation/route'
 import { Route as ControlRouteImport } from './routes/control/route'
+import { Route as AddressRouteImport } from './routes/address/route'
 import { Route as RenovationIndexImport } from './routes/renovation/index'
 import { Route as ControlIndexImport } from './routes/control/index'
+import { Route as AddressIndexImport } from './routes/address/index'
 import { Route as RenovationStagesImport } from './routes/renovation/stages'
 import { Route as RenovationOldbuildingsImport } from './routes/renovation/oldbuildings'
 import { Route as RenovationOldapartmentsImport } from './routes/renovation/oldapartments'
@@ -88,6 +90,12 @@ const ControlRouteRoute = ControlRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AddressRouteRoute = AddressRouteImport.update({
+  id: '/address',
+  path: '/address',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexLazyRoute = IndexLazyImport.update({
   id: '/',
   path: '/',
@@ -104,6 +112,12 @@ const ControlIndexRoute = ControlIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ControlRouteRoute,
+} as any)
+
+const AddressIndexRoute = AddressIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AddressRouteRoute,
 } as any)
 
 const RenovationStagesRoute = RenovationStagesImport.update({
@@ -221,6 +235,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/address': {
+      id: '/address'
+      path: '/address'
+      fullPath: '/address'
+      preLoaderRoute: typeof AddressRouteImport
       parentRoute: typeof rootRoute
     }
     '/control': {
@@ -349,6 +370,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RenovationStagesImport
       parentRoute: typeof RenovationRouteImport
     }
+    '/address/': {
+      id: '/address/'
+      path: '/'
+      fullPath: '/address/'
+      preLoaderRoute: typeof AddressIndexImport
+      parentRoute: typeof AddressRouteImport
+    }
     '/control/': {
       id: '/control/'
       path: '/'
@@ -409,6 +437,18 @@ declare module '@tanstack/react-router' {
 }
 
 // Create and export the route tree
+
+interface AddressRouteRouteChildren {
+  AddressIndexRoute: typeof AddressIndexRoute
+}
+
+const AddressRouteRouteChildren: AddressRouteRouteChildren = {
+  AddressIndexRoute: AddressIndexRoute,
+}
+
+const AddressRouteRouteWithChildren = AddressRouteRoute._addFileChildren(
+  AddressRouteRouteChildren,
+)
 
 interface ControlSettingsRouteRouteChildren {
   ControlSettingsApproveChainRoute: typeof ControlSettingsApproveChainRoute
@@ -492,6 +532,7 @@ const RenovationRouteRouteWithChildren = RenovationRouteRoute._addFileChildren(
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/address': typeof AddressRouteRouteWithChildren
   '/control': typeof ControlRouteRouteWithChildren
   '/renovation': typeof RenovationRouteRouteWithChildren
   '/login': typeof LoginRoute
@@ -510,6 +551,7 @@ export interface FileRoutesByFullPath {
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
   '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
   '/renovation/stages': typeof RenovationStagesRoute
+  '/address/': typeof AddressIndexRoute
   '/control/': typeof ControlIndexRoute
   '/renovation/': typeof RenovationIndexRoute
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
@@ -536,6 +578,7 @@ export interface FileRoutesByTo {
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
   '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
   '/renovation/stages': typeof RenovationStagesRoute
+  '/address': typeof AddressIndexRoute
   '/control': typeof ControlIndexRoute
   '/renovation': typeof RenovationIndexRoute
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
@@ -549,6 +592,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/address': typeof AddressRouteRouteWithChildren
   '/control': typeof ControlRouteRouteWithChildren
   '/renovation': typeof RenovationRouteRouteWithChildren
   '/login': typeof LoginRoute
@@ -567,6 +611,7 @@ export interface FileRoutesById {
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
   '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
   '/renovation/stages': typeof RenovationStagesRoute
+  '/address/': typeof AddressIndexRoute
   '/control/': typeof ControlIndexRoute
   '/renovation/': typeof RenovationIndexRoute
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
@@ -581,6 +626,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/address'
     | '/control'
     | '/renovation'
     | '/login'
@@ -599,6 +645,7 @@ export interface FileRouteTypes {
     | '/renovation/oldapartments'
     | '/renovation/oldbuildings'
     | '/renovation/stages'
+    | '/address/'
     | '/control/'
     | '/renovation/'
     | '/control/settings/approve-chain'
@@ -624,6 +671,7 @@ export interface FileRouteTypes {
     | '/renovation/oldapartments'
     | '/renovation/oldbuildings'
     | '/renovation/stages'
+    | '/address'
     | '/control'
     | '/renovation'
     | '/control/settings/approve-chain'
@@ -635,6 +683,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/address'
     | '/control'
     | '/renovation'
     | '/login'
@@ -653,6 +702,7 @@ export interface FileRouteTypes {
     | '/renovation/oldapartments'
     | '/renovation/oldbuildings'
     | '/renovation/stages'
+    | '/address/'
     | '/control/'
     | '/renovation/'
     | '/control/settings/approve-chain'
@@ -666,6 +716,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  AddressRouteRoute: typeof AddressRouteRouteWithChildren
   ControlRouteRoute: typeof ControlRouteRouteWithChildren
   RenovationRouteRoute: typeof RenovationRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
@@ -677,6 +728,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  AddressRouteRoute: AddressRouteRouteWithChildren,
   ControlRouteRoute: ControlRouteRouteWithChildren,
   RenovationRouteRoute: RenovationRouteRouteWithChildren,
   LoginRoute: LoginRoute,
@@ -697,6 +749,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/address",
         "/control",
         "/renovation",
         "/login",
@@ -708,6 +761,12 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.lazy.tsx"
+    },
+    "/address": {
+      "filePath": "address/route.tsx",
+      "children": [
+        "/address/"
+      ]
     },
     "/control": {
       "filePath": "control/route.tsx",
@@ -800,6 +859,10 @@ export const routeTree = rootRoute
     "/renovation/stages": {
       "filePath": "renovation/stages.tsx",
       "parent": "/renovation"
+    },
+    "/address/": {
+      "filePath": "address/index.tsx",
+      "parent": "/address"
     },
     "/control/": {
       "filePath": "control/index.tsx",
