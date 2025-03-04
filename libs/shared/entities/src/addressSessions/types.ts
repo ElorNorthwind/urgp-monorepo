@@ -10,6 +10,7 @@ const sessionProgressSchema = z.object({
 export const addressSessionSchema = z.object({
   id: z.coerce.number().int().nonnegative(),
   userId: z.coerce.number(),
+  userFio: z.string(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   // isError: z.boolean(),

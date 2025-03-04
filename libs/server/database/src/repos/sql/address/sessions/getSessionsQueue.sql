@@ -2,6 +2,7 @@
 SELECT 
 	s.id,
 	s.user_id as "userId",
+		u.fio as "userFio",
 	s.created_at as "createdAt",
 	s.updated_at as "updatedAt",
 	s.updated_at - s.created_at as duration,
@@ -29,5 +30,6 @@ LEFT JOIN (
 	FROM address.results
 	GROUP BY session_id
 ) r ON s.id = r.session_id
+LEFT JOIN renovation.users u ON s.user_id = u.id
 WHERE r.done < r.total
 ORDER BY s.created_at ASC;

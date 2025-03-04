@@ -5,6 +5,7 @@ export const createAddressSessionSchema = addressSessionSchema
   .omit({
     id: true,
     userId: true,
+    userFio: true,
     createdAt: true,
     updatedAt: true,
     status: true,
@@ -21,6 +22,7 @@ export const updateAddressSessionSchema = addressSessionSchema
   .omit({
     id: true,
     userId: true,
+    userFio: true,
     createdAt: true,
     updatedAt: true,
     status: true,

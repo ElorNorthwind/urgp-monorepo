@@ -18,7 +18,7 @@ const SessionQueueItem = (props: SessionQueueItemProps): JSX.Element | null => {
       className={cn(
         'bg-background verflow-hidden flex flex-row flex-nowrap items-center rounded-md border px-2 ',
         '[&>*]:p-2 [&>:not(:last-child)]:border-r',
-        selected && 'bg-slate-50',
+        selected && 'border-slate-400 bg-slate-50',
         onClick && 'cursor-pointer',
         className,
       )}
@@ -26,6 +26,7 @@ const SessionQueueItem = (props: SessionQueueItemProps): JSX.Element | null => {
     >
       <span className="font-semibold">{session.id}</span>
       <span>{`${format(session?.createdAt, 'dd.MM.yyyy HH:mm:ss')}`}</span>
+      <span className="font-semibold">{`${session.userFio}`}</span>
       <span className="flex-grow truncate">{session?.title || ''}</span>
       <span className="w-20">{`${session?.status}`}</span>
       <span>{`[${session?.done}/${session?.total}]`}</span>

@@ -28,6 +28,7 @@ WITH queue AS (
 SELECT 
 	s.id,
 	s.user_id as "userId",
+	u.fio as "userFio",
 	s.created_at as "createdAt",
 	s.updated_at as "updatedAt",
 	s.updated_at - s.created_at as duration,
@@ -45,4 +46,5 @@ SELECT
 FROM address.sessions s
 LEFT JOIN results r ON s.id = r.session_id
 LEFT JOIN queue q ON s.id = q.id
+LEFT JOIN renovation.users u ON s.user_id = u.id
 WHERE s.id = ${id};

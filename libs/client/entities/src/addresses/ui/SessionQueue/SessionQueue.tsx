@@ -23,7 +23,7 @@ const SessionQueue = (props: SessionQueueProps): JSX.Element | null => {
     <div
       className={cn('items-ceter flex flex-col justify-start gap-2', className)}
     >
-      <span className="text-xl font-semibold">Очередь запросов:</span>
+      <span className="text-xl font-semibold">Очередь активных запросов:</span>
       {data.map((session) => {
         const isSelected = selectedSessionId === session.id;
         return (
