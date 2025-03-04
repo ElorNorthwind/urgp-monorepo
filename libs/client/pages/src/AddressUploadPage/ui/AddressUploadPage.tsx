@@ -61,7 +61,7 @@ const AddressUploadPage = (): JSX.Element => {
         <div className="flex w-full flex-row justify-between">
           <div className="space-y-0.5">
             <h2 className="text-2xl font-bold tracking-tight">
-              Сформировать запрос
+              {sessionId ? 'Статус текущего запроса' : 'Сформировать запрос'}
             </h2>
             <BarRow
               value={usage ?? 0}

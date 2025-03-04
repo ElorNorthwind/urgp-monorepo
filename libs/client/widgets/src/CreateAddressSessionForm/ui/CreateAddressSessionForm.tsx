@@ -14,7 +14,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateSession } from '@urgp/client/entities';
 import { InputFormField } from '@urgp/client/widgets';
-import { Loader, Send, SquareX, ThumbsUp } from 'lucide-react';
+import { Loader, LoaderCircle, Send, SquareX, ThumbsUp } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -120,7 +120,7 @@ const CreateAddressSessionForm = ({
           extraElement={
             isParsing ? (
               <div className="flex flex-row items-center justify-center gap-1">
-                <Loader className="size-4 animate-spin" />
+                <LoaderCircle className="size-4 animate-spin" />
                 <span>Обработка файла...</span>
               </div>
             ) : addressCount && addressCount > 0 ? (

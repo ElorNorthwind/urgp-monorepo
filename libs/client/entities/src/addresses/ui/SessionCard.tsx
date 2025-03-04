@@ -17,7 +17,7 @@ import {
   OperationClasses,
 } from '@urgp/shared/entities';
 import { format } from 'date-fns';
-import { Loader } from 'lucide-react';
+import { Loader, LoaderCircle } from 'lucide-react';
 
 type SessionCardProps = {
   session: AddressSessionFull;
@@ -97,7 +97,7 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
       </div>
       {session.status === 'pending' && session?.queue && session?.queue > 0 ? (
         <div className="bg-muted-foreground/5 flex flex-row items-center gap-2 rounded p-2">
-          <Loader className="size-5 flex-shrink-0 animate-spin" />
+          <LoaderCircle className="size-5 flex-shrink-0 animate-spin" />
           <span>{`Адресов в очереди: ${session.queue}`}</span>
         </div>
       ) : null}
@@ -107,7 +107,7 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
           max={session?.total || 0}
           label={
             <>
-              <Loader className="size-5 flex-shrink-0 animate-spin" />
+              <LoaderCircle className="size-5 flex-shrink-0 animate-spin" />
               <span>{`${session?.done || 0} из ${session?.total || 0} - (${session?.status})`}</span>
             </>
           }

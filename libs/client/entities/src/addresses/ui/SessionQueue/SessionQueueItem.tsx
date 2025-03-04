@@ -1,6 +1,7 @@
 import { cn } from '@urgp/client/shared';
 import { AddressSessionFull } from '@urgp/shared/entities';
 import { format } from 'date-fns';
+import { LoaderCircle } from 'lucide-react';
 
 type SessionQueueItemProps = {
   session: AddressSessionFull;
@@ -27,9 +28,16 @@ const SessionQueueItem = (props: SessionQueueItemProps): JSX.Element | null => {
       <span className="font-semibold">{session.id}</span>
       <span>{`${format(session?.createdAt, 'dd.MM.yyyy HH:mm:ss')}`}</span>
       <span className="font-semibold">{`${session.userFio}`}</span>
-      <span className="flex-grow truncate">{session?.title || ''}</span>
-      <span className="w-20">{`${session?.status}`}</span>
-      <span>{`[${session?.done}/${session?.total}]`}</span>
+      <span className="flex flex-grow flex-row items-center gap-2 overflow-hidden">
+        <span className="text-muted-foreground">{`[${session?.done}/${session?.total}]`}</span>
+        <span className="flex-grow truncate text-sm">
+          {session?.title || ''}
+        </span>
+        {session?.status === 'running' && (
+          <LoaderCircle className="ml-auto size-4 flex-shrink-0 animate-spin" />
+        )}
+      </span>
+      <span className="min-w-20 flex-shrink-0 text-center">{`${session?.status}`}</span>
     </div>
   );
 };
