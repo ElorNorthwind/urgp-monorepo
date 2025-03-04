@@ -1,21 +1,20 @@
-import { Column, ColumnSet, IDatabase, IMain } from 'pg-promise';
-import {
-  AdressRegistryRowCalcStreetData,
-  AdressRegistryRowSlim,
-} from 'libs/server/data-mos/src/config/types';
-import { BadRequestException, Logger } from '@nestjs/common';
-import { dataMos, results, sessions } from './sql/sql';
+import { Logger } from '@nestjs/common';
 import {
   AddressReslutUpdate,
   AddressResult,
   AddressSession,
   AddressSessionFull,
   CreateAddressSessionDto,
-  FiasRequestResult,
   UnfinishedAddress,
   UpdateAddressSessionDto,
 } from '@urgp/shared/entities';
+import {
+  AdressRegistryRowCalcStreetData,
+  AdressRegistryRowSlim,
+} from 'libs/server/data-mos/src/config/types';
+import { IDatabase, IMain } from 'pg-promise';
 import { camelToSnakeCase } from '../lib/to-snake-case';
+import { dataMos, results, sessions } from './sql/sql';
 
 // const pgp = require('pg-promise')();
 // const { ColumnSet } = pgp.helpers;
@@ -253,6 +252,7 @@ export class AddressRepository {
     const columns = [
       { name: 'id', prop: 'id', cnd: true },
       { name: 'response', prop: 'response', cast: 'jsonb' },
+      // { name: 'fias_id', prop: 'fiasId', cast: 'bigint' },
       {
         name: 'updated_at',
         prop: 'updatedAt',
@@ -264,8 +264,10 @@ export class AddressRepository {
       cnd?: boolean;
     }[];
 
+    const customColumnProps = columns.map((col) => col.prop);
+
     Object.keys(results[0])
-      .filter((key) => !['id', 'response', 'updatedAt', 'postal'].includes(key))
+      .filter((key) => !customColumnProps.includes(key))
       .forEach((key) => {
         columns.push({ name: camelToSnakeCase(key), prop: key });
       });
@@ -282,6 +284,10 @@ export class AddressRepository {
         this.pgp.helpers.update(results, resultTableColumnSet) +
         ' WHERE v.id = t.id';
 
+      // Logger.warn(
+      //   this.pgp.helpers.update(results.slice(0, 1), resultTableColumnSet) +
+      //     ' WHERE v.id = t.id',
+      // );
       return this.db.none(update);
     } catch (e) {
       Logger.warn(e);

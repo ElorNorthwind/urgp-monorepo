@@ -101,7 +101,7 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
           <span>{`Адресов в очереди: ${session.queue}`}</span>
         </div>
       ) : null}
-      {session.status === 'runnig' ? (
+      {session.status === 'running' ? (
         <BarRow
           value={session?.done || 0}
           max={session?.total || 0}

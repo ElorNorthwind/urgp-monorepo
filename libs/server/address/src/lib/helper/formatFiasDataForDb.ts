@@ -9,7 +9,7 @@ export const formatFiasDataForDb = (value: FiasAddress): FiasParsedToResult => {
   if (value?.object_id < 0) throw new NotFoundException('Адрес не найден');
 
   const street = value.hierarchy.find((item) =>
-    [6, 7, 8].includes(item.object_level_id),
+    [5, 6, 7, 8].includes(item.object_level_id),
   );
   const house = value.hierarchy.find((item) => item.object_level_id === 10);
   const apartment = value.hierarchy.find((item) => item.object_level_id === 11);

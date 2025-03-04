@@ -83,12 +83,24 @@ export class AddressSessionsService {
 
   public async getSessionById(id: number): Promise<AddressSession | null> {
     this.startSessionsQueue();
-    return this.dbServise.db.address.getSessionById(id);
+    const session = await this.dbServise.db.address.getSessionById(id);
+    if (!session) return null;
+    return {
+      ...session,
+      status:
+        this.sessionQueue.find((s) => s.id === id)?.status || session?.status,
+    };
   }
 
   public async getSessionsByUserId(userId: number): Promise<AddressSession[]> {
     this.startSessionsQueue();
-    return this.dbServise.db.address.getSessionsByUserId(userId);
+    const sessions =
+      await this.dbServise.db.address.getSessionsByUserId(userId);
+    return sessions.map((s) => ({
+      ...s,
+      status:
+        this.sessionQueue.find((ss) => ss.id === s.id)?.status || s.status,
+    }));
   }
 
   public async deleteSession(id: number): Promise<null> {

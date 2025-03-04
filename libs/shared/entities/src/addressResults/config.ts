@@ -1,8 +1,8 @@
 import { FiasAddress, FiasHint, FiasParsedToResult } from './types';
 
-export const FIAS_CONCURRENCY = 300;
-export const FIAS_DB_STEP = 300;
-export const FIAS_TIMEOUT = 50;
+export const FIAS_CONCURRENCY = 10;
+export const FIAS_DB_STEP = 50;
+export const FIAS_TIMEOUT = 10;
 export const FIAS_RETRY_COUNT = 1;
 
 export const hintNotFound: FiasHint = {
@@ -49,32 +49,32 @@ export const addressNotFoundParsedToResult: FiasParsedToResult = {
   fullAddress: 'Адрес не найден',
 
   //   unom: null,
-  postal: null,
-  cadNum: null,
+  postal: -1,
+  cadNum: '',
 
-  fiasId: null,
-  fiasGuid: null,
-  fiasPath: null,
-  fiasLevel: null,
-  fiasIsActive: null,
+  fiasId: -1,
+  fiasGuid: '',
+  fiasPath: '',
+  fiasLevel: -1,
+  fiasIsActive: false,
 
   // levels 6,7,8
-  streetName: null,
-  streetLevel: null,
-  streetType: null,
-  streetFiasId: null,
-  streetFiasGuid: null,
-  streetKladr: null,
+  streetName: '',
+  streetLevel: -1,
+  streetType: '',
+  streetFiasId: -1,
+  streetFiasGuid: '',
+  streetKladr: '',
 
   // level 10
-  houseNum: null,
-  houseType: null,
-  houseFiasId: null,
-  houseFiasGuid: null,
+  houseNum: '',
+  houseType: '',
+  houseFiasId: -1,
+  houseFiasGuid: '',
 
   // level 11
-  apartmentNum: null,
-  apartmentType: null,
-  apartmentFiasId: null,
-  apartmentFiasGuid: null,
+  apartmentNum: '',
+  apartmentType: '',
+  apartmentFiasId: -1,
+  apartmentFiasGuid: '',
 };

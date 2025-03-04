@@ -22,6 +22,7 @@ import {
   toArray,
 } from 'rxjs';
 import { formatFiasDataForDb } from './helper/formatFiasDataForDb';
+import { start } from 'repl';
 
 @Injectable()
 export class AddressService {
@@ -55,12 +56,13 @@ export class AddressService {
     limit = FIAS_DB_STEP,
     strategy: 'hint' | 'direct' = 'direct',
   ) {
-    const addressReq =
-      strategy === 'direct' ? this.fias.getDirectAddress : this.fias.getAddress;
+    // const addressReq =
+    //   strategy === 'direct' ? this.fias.getDirectAddress : this.fias.getAddress;
     Logger.log(`Getting FIAS data for session ${sessionId}`);
     try {
       let addresses = [];
       do {
+        const startTime = performance.now();
         addresses =
           await this.dbServise.db.address.getSessionUnfinishedAddresses(
             sessionId,
@@ -74,7 +76,9 @@ export class AddressService {
                   from(this.fias.getDirectAddress(arg.address)).pipe(
                     map((value: FiasAddress): AddressReslutUpdate => {
                       if (value?.object_id < 0)
-                        throw new NotFoundException('Адрес не найден');
+                        throw new NotFoundException(
+                          `Адрес "${arg.address}" не найден`,
+                        );
                       // Logger.warn(value);
                       return {
                         id: arg.id,
@@ -82,13 +86,14 @@ export class AddressService {
                         updatedAt: new Date().toISOString(),
                       };
                     }),
-                    catchError((error) =>
-                      of({
+                    catchError((error) => {
+                      Logger.warn(error);
+                      return of({
                         id: arg.id,
                         ...addressNotFoundParsedToResult,
                         updatedAt: new Date().toISOString(),
-                      }),
-                    ),
+                      });
+                    }),
                   ),
                 FIAS_CONCURRENCY,
               ),
@@ -96,11 +101,19 @@ export class AddressService {
           ),
           toArray(),
         );
+        let dbTime = 0;
         this.dbServise.db.address
           .updateAddressResult(await lastValueFrom(hydratedData))
           .then(() => {
+            dbTime = performance.now();
             this.dbServise.db.address.addUnomsToResultAddress(sessionId);
           });
+        const endTime = performance.now();
+        Logger.log(
+          `${Math.floor((endTime - startTime) / addresses.length)}ms per addresses,
+          total: ${endTime - startTime}ms, 
+          db:${endTime - dbTime}ms`,
+        );
       } while (addresses?.length > 0);
     } catch {
       (e: any) => Logger.error(e);

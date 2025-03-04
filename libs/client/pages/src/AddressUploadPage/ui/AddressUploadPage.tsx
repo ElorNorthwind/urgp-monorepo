@@ -58,7 +58,10 @@ const AddressUploadPage = (): JSX.Element => {
     data: queue,
     isLoading: isQueueLoading,
     isFetching: isQueueFetching,
-  } = useGetSessionsQueue();
+  } = useGetSessionsQueue(undefined, {
+    pollingInterval: 5000,
+    skip: !sessionId || sessionId === 0,
+  });
 
   return (
     <div className="block space-y-6 p-10 pb-16">
@@ -147,15 +150,15 @@ const AddressUploadPage = (): JSX.Element => {
           {sessionId && session && (
             <SessionCard session={session} className="w-full" />
           )}
-          {/* {queue &&
-            queue.length > 0 &&
-            queue.map((session) => (
-              <SessionCard
-                key={session.id}
-                session={session}
-                className="w-full"
-              />
-            ))} */}
+          {queue && queue.length > 0 && (
+            <div>
+              {queue.map((session) => (
+                <div
+                  key={session.id}
+                >{`${session.id}: ${session.title} - ${session.status}`}</div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

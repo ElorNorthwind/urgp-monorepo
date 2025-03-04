@@ -1,7 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DatabaseService } from '@urgp/server/database';
 import { AxiosRequestConfig } from 'axios';
 import { catchError, firstValueFrom, from, of, retry, tap } from 'rxjs';
 import {
@@ -16,20 +15,22 @@ import {
 export class FiasService {
   constructor(
     private readonly axios: HttpService,
-    private readonly dbServise: DatabaseService,
     private configService: ConfigService,
   ) {}
 
   public async getDirectAddress(address: string): Promise<FiasAddress> {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
+    const fullAddress = /[Мм]осква/.test(address)
+      ? address
+      : 'Москва, ' + address;
     // Параметры запроса на подсказку адреса
     const directAddressConfig: AxiosRequestConfig = {
       method: 'get',
       url: '/SearchAddressItems',
       headers: { 'master-token': apiKey },
       params: {
-        search_string: address,
+        search_string: fullAddress,
         address_type: 1,
       },
     };
@@ -45,7 +46,6 @@ export class FiasService {
         ),
       );
       const addresses = data?.addresses as FiasAddress[];
-
       if (!addresses || addresses.length === 0) return addressNotFound;
       return (
         addresses.find(
@@ -59,6 +59,7 @@ export class FiasService {
       return addressNotFound;
     }
   }
+
   public async getAddressHint(address: string): Promise<FiasHint> {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
@@ -101,6 +102,7 @@ export class FiasService {
   public async getAddress(address: string): Promise<FiasAddress> {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
+
     // Параметры запроса на подсказку адреса
     const getAddressConfig = (object_id: number): AxiosRequestConfig => ({
       method: 'get',
