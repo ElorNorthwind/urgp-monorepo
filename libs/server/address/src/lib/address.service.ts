@@ -50,7 +50,13 @@ export class AddressService {
     return this.dbServise.db.address.getAddressResultsBySessionId(sessionId);
   }
 
-  public async hydrateSessionAdresses(sessionId: number, limit = FIAS_DB_STEP) {
+  public async hydrateSessionAdresses(
+    sessionId: number,
+    limit = FIAS_DB_STEP,
+    strategy: 'hint' | 'direct' = 'direct',
+  ) {
+    const addressReq =
+      strategy === 'direct' ? this.fias.getDirectAddress : this.fias.getAddress;
     Logger.log(`Getting FIAS data for session ${sessionId}`);
     try {
       let addresses = [];
@@ -65,10 +71,11 @@ export class AddressService {
             timer(FIAS_TIMEOUT * index).pipe(
               mergeMap(
                 () =>
-                  from(this.fias.getAddress(arg.address)).pipe(
+                  from(this.fias.getDirectAddress(arg.address)).pipe(
                     map((value: FiasAddress): AddressReslutUpdate => {
                       if (value?.object_id < 0)
                         throw new NotFoundException('Адрес не найден');
+                      // Logger.warn(value);
                       return {
                         id: arg.id,
                         ...formatFiasDataForDb(value),
@@ -89,9 +96,11 @@ export class AddressService {
           ),
           toArray(),
         );
-        this.dbServise.db.address.updateAddressResult(
-          await lastValueFrom(hydratedData),
-        );
+        this.dbServise.db.address
+          .updateAddressResult(await lastValueFrom(hydratedData))
+          .then(() => {
+            this.dbServise.db.address.addUnomsToResultAddress(sessionId);
+          });
       } while (addresses?.length > 0);
     } catch {
       (e: any) => Logger.error(e);

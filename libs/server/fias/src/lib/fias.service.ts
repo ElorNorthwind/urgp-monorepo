@@ -3,7 +3,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '@urgp/server/database';
 import { AxiosRequestConfig } from 'axios';
-import { firstValueFrom, retry } from 'rxjs';
+import { catchError, firstValueFrom, from, of, retry, tap } from 'rxjs';
 import {
   addressNotFound,
   FIAS_RETRY_COUNT,
@@ -20,6 +20,45 @@ export class FiasService {
     private configService: ConfigService,
   ) {}
 
+  public async getDirectAddress(address: string): Promise<FiasAddress> {
+    const apiKey = this.configService.get<string>('FIAS_KEY');
+    if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
+    // Параметры запроса на подсказку адреса
+    const directAddressConfig: AxiosRequestConfig = {
+      method: 'get',
+      url: '/SearchAddressItems',
+      headers: { 'master-token': apiKey },
+      params: {
+        search_string: address,
+        address_type: 1,
+      },
+    };
+
+    try {
+      const { data } = await firstValueFrom(
+        this.axios.request(directAddressConfig).pipe(
+          // tap(() => Logger.log('fias request: ' + address)),
+          retry(FIAS_RETRY_COUNT),
+          catchError(() => {
+            return of({ data: [addressNotFound] });
+          }),
+        ),
+      );
+      const addresses = data?.addresses as FiasAddress[];
+
+      if (!addresses || addresses.length === 0) return addressNotFound;
+      return (
+        addresses.find(
+          (address) =>
+            address.path.split('.').length >= 3 && // Должно быть домом или ниже (не улица)
+            address.path.slice(0, 7) === '1405113', // Должно быть в Москве
+        ) ?? addressNotFound
+      );
+    } catch (error) {
+      Logger.error(error);
+      return addressNotFound;
+    }
+  }
   public async getAddressHint(address: string): Promise<FiasHint> {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
@@ -38,7 +77,12 @@ export class FiasService {
 
     try {
       const { data } = await firstValueFrom(
-        this.axios.request(hintConfig).pipe(retry(FIAS_RETRY_COUNT)),
+        this.axios.request(hintConfig).pipe(
+          retry(FIAS_RETRY_COUNT),
+          catchError(() => {
+            return of({ data: [hintNotFound] });
+          }),
+        ),
       );
       const hints = data?.hints as FiasHint[];
 
@@ -73,11 +117,14 @@ export class FiasService {
       if (!object_id || object_id === -1) return addressNotFound;
 
       const { data } = await firstValueFrom(
-        this.axios
-          .request(getAddressConfig(object_id))
-          .pipe(retry(FIAS_RETRY_COUNT)),
+        this.axios.request(getAddressConfig(object_id)).pipe(
+          retry(FIAS_RETRY_COUNT),
+          catchError(() => {
+            return of({ data: [addressNotFound] });
+          }),
+        ),
       );
-      return data?.addresses?.[0] ?? hintNotFound;
+      return data?.addresses?.[0] ?? addressNotFound;
     } catch (error) {
       Logger.error(error);
       return addressNotFound;

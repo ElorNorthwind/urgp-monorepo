@@ -265,7 +265,7 @@ export class AddressRepository {
     }[];
 
     Object.keys(results[0])
-      .filter((key) => !['id', 'response', 'updatedAt'].includes(key))
+      .filter((key) => !['id', 'response', 'updatedAt', 'postal'].includes(key))
       .forEach((key) => {
         columns.push({ name: camelToSnakeCase(key), prop: key });
       });
@@ -287,5 +287,8 @@ export class AddressRepository {
       Logger.warn(e);
       return Promise.reject(e);
     }
+  }
+  addUnomsToResultAddress(sessionId: number): Promise<null> {
+    return this.db.none(results.addUnomsToResultAddress, { sessionId });
   }
 }

@@ -26,4 +26,10 @@ export class FiasController {
       throw new BadRequestException('Нужно указать искомый адрес');
     return this.fias.getAddress(q);
   }
+  @Get('direct-address')
+  getDirectAddress(@Query('q') q: string): Promise<FiasAddress> {
+    if (!q || q.length === 0)
+      throw new BadRequestException('Нужно указать искомый адрес');
+    return this.fias.getDirectAddress(q);
+  }
 }

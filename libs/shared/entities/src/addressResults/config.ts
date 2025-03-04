@@ -1,9 +1,9 @@
 import { FiasAddress, FiasHint, FiasParsedToResult } from './types';
 
-export const FIAS_CONCURRENCY = 5;
-export const FIAS_DB_STEP = 50;
-export const FIAS_TIMEOUT = 150;
-export const FIAS_RETRY_COUNT = 3;
+export const FIAS_CONCURRENCY = 300;
+export const FIAS_DB_STEP = 300;
+export const FIAS_TIMEOUT = 50;
+export const FIAS_RETRY_COUNT = 1;
 
 export const hintNotFound: FiasHint = {
   object_id: -1,

@@ -1,11 +1,4 @@
-import {
-  BriefcaseBusiness,
-  CircuitBoard,
-  FileUp,
-  LayoutDashboard,
-  ListTodo,
-  Scale,
-} from 'lucide-react';
+import { FileUp, ListTodo } from 'lucide-react';
 
 // Menu items.
 export const items = [

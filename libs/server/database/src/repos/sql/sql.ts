@@ -148,4 +148,7 @@ export const results = {
   getAddressResultsBySessionId: sql(
     'sql/address/results/getAddressResultsBySessionId.sql',
   ),
+  addUnomsToResultAddress: sql(
+    'sql/address/results/addUnomsToResultAddress.sql',
+  ),
 };
