@@ -83,7 +83,7 @@ export class AddressService {
                   };
                 }),
                 catchError((error) => {
-                  Logger.warn(error);
+                  // Logger.warn(error);
                   return of({
                     id: arg.id,
                     ...addressNotFoundParsedToResult,
