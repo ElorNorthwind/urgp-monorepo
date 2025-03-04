@@ -7,6 +7,7 @@ import { BadRequestException, Logger } from '@nestjs/common';
 import { dataMos, results, sessions } from './sql/sql';
 import {
   AddressReslutUpdate,
+  AddressResult,
   AddressSession,
   AddressSessionFull,
   CreateAddressSessionDto,
@@ -202,6 +203,10 @@ export class AddressRepository {
 
   getSessionQueue(): Promise<AddressSessionFull[]> {
     return this.db.any(sessions.getSessionsQueue);
+  }
+
+  getAddressResultsBySessionId(sessionId: number): Promise<AddressResult[]> {
+    return this.db.any(results.getAddressResultsBySessionId, { sessionId });
   }
 
   insertSessionAddresses(

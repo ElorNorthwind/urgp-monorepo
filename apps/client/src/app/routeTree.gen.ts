@@ -30,6 +30,7 @@ import { Route as ControlProblemsImport } from './routes/control/problems'
 import { Route as ControlPendingImport } from './routes/control/pending'
 import { Route as ControlCasesImport } from './routes/control/cases'
 import { Route as ControlCaseImport } from './routes/control/case'
+import { Route as AddressSessionsImport } from './routes/address/sessions'
 import { Route as RenovationSettingsRouteImport } from './routes/renovation/settings/route'
 import { Route as ControlSettingsRouteImport } from './routes/control/settings/route'
 import { Route as RenovationSettingsIndexImport } from './routes/renovation/settings/index'
@@ -175,6 +176,12 @@ const ControlCaseRoute = ControlCaseImport.update({
   getParentRoute: () => ControlRouteRoute,
 } as any)
 
+const AddressSessionsRoute = AddressSessionsImport.update({
+  id: '/sessions',
+  path: '/sessions',
+  getParentRoute: () => AddressRouteRoute,
+} as any)
+
 const RenovationSettingsRouteRoute = RenovationSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -306,6 +313,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/renovation/settings'
       preLoaderRoute: typeof RenovationSettingsRouteImport
       parentRoute: typeof RenovationRouteImport
+    }
+    '/address/sessions': {
+      id: '/address/sessions'
+      path: '/sessions'
+      fullPath: '/address/sessions'
+      preLoaderRoute: typeof AddressSessionsImport
+      parentRoute: typeof AddressRouteImport
     }
     '/control/case': {
       id: '/control/case'
@@ -439,10 +453,12 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AddressRouteRouteChildren {
+  AddressSessionsRoute: typeof AddressSessionsRoute
   AddressIndexRoute: typeof AddressIndexRoute
 }
 
 const AddressRouteRouteChildren: AddressRouteRouteChildren = {
+  AddressSessionsRoute: AddressSessionsRoute,
   AddressIndexRoute: AddressIndexRoute,
 }
 
@@ -542,6 +558,7 @@ export interface FileRoutesByFullPath {
   '/map': typeof MapLazyRoute
   '/control/settings': typeof ControlSettingsRouteRouteWithChildren
   '/renovation/settings': typeof RenovationSettingsRouteRouteWithChildren
+  '/address/sessions': typeof AddressSessionsRoute
   '/control/case': typeof ControlCaseRoute
   '/control/cases': typeof ControlCasesRoute
   '/control/pending': typeof ControlPendingRoute
@@ -569,6 +586,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutLazyRoute
   '/bticalc': typeof BticalcLazyRoute
   '/map': typeof MapLazyRoute
+  '/address/sessions': typeof AddressSessionsRoute
   '/control/case': typeof ControlCaseRoute
   '/control/cases': typeof ControlCasesRoute
   '/control/pending': typeof ControlPendingRoute
@@ -602,6 +620,7 @@ export interface FileRoutesById {
   '/map': typeof MapLazyRoute
   '/control/settings': typeof ControlSettingsRouteRouteWithChildren
   '/renovation/settings': typeof RenovationSettingsRouteRouteWithChildren
+  '/address/sessions': typeof AddressSessionsRoute
   '/control/case': typeof ControlCaseRoute
   '/control/cases': typeof ControlCasesRoute
   '/control/pending': typeof ControlPendingRoute
@@ -636,6 +655,7 @@ export interface FileRouteTypes {
     | '/map'
     | '/control/settings'
     | '/renovation/settings'
+    | '/address/sessions'
     | '/control/case'
     | '/control/cases'
     | '/control/pending'
@@ -662,6 +682,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/bticalc'
     | '/map'
+    | '/address/sessions'
     | '/control/case'
     | '/control/cases'
     | '/control/pending'
@@ -693,6 +714,7 @@ export interface FileRouteTypes {
     | '/map'
     | '/control/settings'
     | '/renovation/settings'
+    | '/address/sessions'
     | '/control/case'
     | '/control/cases'
     | '/control/pending'
@@ -765,6 +787,7 @@ export const routeTree = rootRoute
     "/address": {
       "filePath": "address/route.tsx",
       "children": [
+        "/address/sessions",
         "/address/"
       ]
     },
@@ -823,6 +846,10 @@ export const routeTree = rootRoute
         "/renovation/settings/change-password",
         "/renovation/settings/"
       ]
+    },
+    "/address/sessions": {
+      "filePath": "address/sessions.tsx",
+      "parent": "/address"
     },
     "/control/case": {
       "filePath": "control/case.tsx",

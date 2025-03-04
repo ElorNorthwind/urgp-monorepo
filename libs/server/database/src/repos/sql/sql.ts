@@ -145,4 +145,7 @@ export const results = {
   ),
   getFiasDailyUsage: sql('sql/address/results/getFiasDailyUsage.sql'),
   resetSessionErrorsById: sql('sql/address/results/resetSessionErrorsById.sql'),
+  getAddressResultsBySessionId: sql(
+    'sql/address/results/getAddressResultsBySessionId.sql',
+  ),
 };

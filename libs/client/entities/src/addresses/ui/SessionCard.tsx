@@ -1,4 +1,8 @@
-import { BarRow, InfoBox } from '@urgp/client/features';
+import {
+  BarRow,
+  ExportAddressResultButton,
+  InfoBox,
+} from '@urgp/client/features';
 import { Accordion, cn } from '@urgp/client/shared';
 import {
   CaseInfoTab,
@@ -97,7 +101,7 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
           <span>{`Адресов в очереди: ${session.queue}`}</span>
         </div>
       ) : null}
-      {session.status !== 'done' ? (
+      {session.status === 'runnig' ? (
         <BarRow
           value={session?.done || 0}
           max={session?.total || 0}
@@ -111,6 +115,9 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
           className={cn('bg-muted-foreground/10 h-10 w-full')}
           barClassName={cn('bg-slate-400 animate-pulse')}
         />
+      ) : null}
+      {session.status === 'done' ? (
+        <ExportAddressResultButton sessionId={session?.id || 0} />
       ) : null}
     </div>
   );

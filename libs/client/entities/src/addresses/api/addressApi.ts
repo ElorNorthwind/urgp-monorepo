@@ -1,5 +1,6 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
+  AddressResult,
   AddressSessionFull,
   CreateAddressSessionDto,
 } from '@urgp/shared/entities';
@@ -20,6 +21,14 @@ export const addressApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
       providesTags: ['address-session'],
+    }),
+
+    getSessionResult: build.query<AddressResult[], number>({
+      query: (id) => ({
+        url: `/address/results/${id.toString()}`,
+        method: 'GET',
+      }),
+      providesTags: ['address-result'],
     }),
 
     getUserSessions: build.query<AddressSessionFull[], void>({
@@ -75,4 +84,6 @@ export const {
   useGetFiasDailyUsageQuery: useGetFiasUsage,
   useGetSessionsQueueQuery: useGetSessionsQueue,
   useRefreshSessionsQueueMutation: useRefreshSessionsQueue,
+  useGetSessionResultQuery: useSessionResults,
+  useLazyGetSessionResultQuery: useLazySessionResults,
 } = addressApi;

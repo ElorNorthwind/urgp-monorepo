@@ -75,6 +75,11 @@ export class AddressController {
     return this.sessions.getSessionById(id);
   }
 
+  @Get('results/:id')
+  async getSessionResults(@Param('id', ParseIntPipe) id: number) {
+    return this.address.getAddressResultsBySessionId(id);
+  }
+
   @Get('user-sessions')
   async getSessionsByUserId(@Req() req: RequestWithUserData) {
     return this.sessions.getSessionsByUserId(req.user.id);

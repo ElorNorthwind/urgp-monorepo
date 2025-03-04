@@ -46,6 +46,10 @@ export class AddressService {
     return this.dbServise.db.address.getSessionById(sessionId);
   }
 
+  public async getAddressResultsBySessionId(sessionId: number) {
+    return this.dbServise.db.address.getAddressResultsBySessionId(sessionId);
+  }
+
   public async hydrateSessionAdresses(sessionId: number, limit = FIAS_DB_STEP) {
     Logger.log(`Getting FIAS data for session ${sessionId}`);
     try {

@@ -1,0 +1,54 @@
+import { useLazySessionResults } from '@urgp/client/entities';
+import { Button, cn, exportToExcel, Input } from '@urgp/client/shared';
+import { FileSpreadsheet, Upload } from 'lucide-react';
+import React, { forwardRef, useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
+import * as XLSX from 'xlsx';
+
+type ExportAddressResultButtonProps = {
+  sessionId: number;
+  className?: string;
+};
+
+const ExportAddressResultButton = forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLInputElement> & ExportAddressResultButtonProps
+>((props: ExportAddressResultButtonProps, ref): JSX.Element => {
+  const { sessionId, className } = props;
+
+  const [triggerFetch, { isLoading, isFetching }] = useLazySessionResults();
+
+  const onClick = () => {
+    if (!sessionId || sessionId === 0) {
+      toast.error('Не удалось загрузить данные', {
+        description: 'Не указан ID сессии',
+      });
+      return;
+    }
+    triggerFetch(sessionId)
+      .unwrap()
+      .then((data) => {
+        exportToExcel(data);
+      })
+      .catch((rejected: any) =>
+        toast.error('Не удалось загрузить данные', {
+          description: rejected.data?.message || 'Неизвестная ошибка',
+        }),
+      );
+  };
+
+  return (
+    <Button
+      role="button"
+      variant="outline"
+      disabled={isLoading || isFetching}
+      onClick={onClick}
+      className={cn('ml-auto flex flex-row gap-1', className)}
+    >
+      <FileSpreadsheet className="size-5 flex-shrink-0" />
+      <span>Скачать результат</span>
+    </Button>
+  );
+});
+
+export { ExportAddressResultButton };

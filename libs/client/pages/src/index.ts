@@ -16,3 +16,4 @@ export * from './ControlDashboardPage';
 export * from './ControlProblemsPage';
 export * from './SingleCasePage';
 export * from './AddressUploadPage';
+export * from './AddressMySessionsPage';
