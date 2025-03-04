@@ -56,18 +56,12 @@ export class AddressService {
     return this.dbServise.db.address.getAddressResultsBySessionId(sessionId);
   }
 
-  public async hydrateSessionAdresses(
-    sessionId: number,
-    limit = FIAS_DB_STEP,
-    strategy: 'hint' | 'direct' = 'direct',
-  ) {
-    // const addressReq =
-    //   strategy === 'direct' ? this.fias.getDirectAddress : this.fias.getAddress;
-    Logger.log(`Getting FIAS data for session ${sessionId}`);
+  public async hydrateSessionAdresses(sessionId: number, limit = FIAS_DB_STEP) {
+    // Logger.log(`Getting FIAS data for session ${sessionId}`);
     try {
       let addresses = [];
       do {
-        const startTime = performance.now();
+        // const startTime = performance.now();
         addresses =
           await this.dbServise.db.address.getSessionUnfinishedAddresses(
             sessionId,
@@ -107,10 +101,10 @@ export class AddressService {
           .then(() => {
             this.dbServise.db.address.addUnomsToResultAddress(sessionId);
           });
-        const endTime = performance.now();
-        Logger.log(
-          `${Math.floor((endTime - startTime) / addresses.length)}ms/address [${Math.floor(endTime - startTime)} total]`,
-        );
+        // const endTime = performance.now();
+        // Logger.log(
+        //   `${Math.floor((endTime - startTime) / addresses.length)}ms/address [${Math.floor(endTime - startTime)} total]`,
+        // );
       } while (addresses?.length > 0);
     } catch {
       (e: any) => Logger.error(e);
