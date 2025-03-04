@@ -60,7 +60,6 @@ const AddressUploadPage = (): JSX.Element => {
     isFetching: isQueueFetching,
   } = useGetSessionsQueue(undefined, {
     pollingInterval: 5000,
-    skip: !sessionId || sessionId === 0,
   });
 
   return (
@@ -155,7 +154,7 @@ const AddressUploadPage = (): JSX.Element => {
               {queue.map((session) => (
                 <div
                   key={session.id}
-                >{`${session.id}: ${session.title} - ${session.status}`}</div>
+                >{`${session.id}: ${session.title} - ${session.status} [${session.done}/${session.total}]`}</div>
               ))}
             </div>
           )}

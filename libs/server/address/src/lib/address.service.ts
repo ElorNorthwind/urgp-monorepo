@@ -13,6 +13,7 @@ import {
 import { FiasService } from 'libs/server/fias/src/lib/fias.service';
 import {
   catchError,
+  firstValueFrom,
   from,
   lastValueFrom,
   map,
@@ -101,18 +102,14 @@ export class AddressService {
           ),
           toArray(),
         );
-        let dbTime = 0;
-        this.dbServise.db.address
+        await this.dbServise.db.address
           .updateAddressResult(await lastValueFrom(hydratedData))
           .then(() => {
-            dbTime = performance.now();
             this.dbServise.db.address.addUnomsToResultAddress(sessionId);
           });
         const endTime = performance.now();
         Logger.log(
-          `${Math.floor((endTime - startTime) / addresses.length)}ms per addresses,
-          total: ${endTime - startTime}ms, 
-          db:${endTime - dbTime}ms`,
+          `${Math.floor((endTime - startTime) / addresses.length)}ms/address [${Math.floor(endTime - startTime)} total]`,
         );
       } while (addresses?.length > 0);
     } catch {
