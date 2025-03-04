@@ -13,12 +13,16 @@ import {
 import { FiasService } from 'libs/server/fias/src/lib/fias.service';
 import {
   catchError,
+  finalize,
   firstValueFrom,
   from,
+  interval,
   lastValueFrom,
   map,
   mergeMap,
   of,
+  tap,
+  throttle,
   timer,
   toArray,
 } from 'rxjs';
@@ -70,36 +74,32 @@ export class AddressService {
             limit,
           );
         const hydratedData = from(addresses).pipe(
-          mergeMap((arg, index) =>
-            timer(FIAS_TIMEOUT * index).pipe(
-              mergeMap(
-                () =>
-                  from(this.fias.getDirectAddress(arg.address)).pipe(
-                    map((value: FiasAddress): AddressReslutUpdate => {
-                      if (value?.object_id < 0)
-                        throw new NotFoundException(
-                          `Адрес "${arg.address}" не найден`,
-                        );
-                      // Logger.warn(value);
-                      return {
-                        id: arg.id,
-                        ...formatFiasDataForDb(value),
-                        updatedAt: new Date().toISOString(),
-                      };
-                    }),
-                    catchError((error) => {
-                      Logger.warn(error);
-                      return of({
-                        id: arg.id,
-                        ...addressNotFoundParsedToResult,
-                        updatedAt: new Date().toISOString(),
-                      });
-                    }),
-                  ),
-                FIAS_CONCURRENCY,
+          mergeMap(
+            (arg) =>
+              from(this.fias.getDirectAddress(arg.address)).pipe(
+                map((value: FiasAddress): AddressReslutUpdate => {
+                  if (value?.object_id < 0)
+                    throw new NotFoundException(
+                      `Адрес "${arg.address}" не найден`,
+                    );
+                  return {
+                    id: arg.id,
+                    ...formatFiasDataForDb(value),
+                    updatedAt: new Date().toISOString(),
+                  };
+                }),
+                catchError((error) => {
+                  Logger.warn(error);
+                  return of({
+                    id: arg.id,
+                    ...addressNotFoundParsedToResult,
+                    updatedAt: new Date().toISOString(),
+                  });
+                }),
               ),
-            ),
+            FIAS_CONCURRENCY, // Set your desired concurrency level here
           ),
+          throttle(() => interval(FIAS_TIMEOUT)),
           toArray(),
         );
         await this.dbServise.db.address

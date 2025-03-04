@@ -1,6 +1,7 @@
 import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import {
   SessionCard,
+  SessionQueue,
   useGetFiasUsage,
   useGetSessionById,
   useGetSessionsQueue,
@@ -53,14 +54,6 @@ const AddressUploadPage = (): JSX.Element => {
     isLoading: isUsageLoading,
     isFetching: isUsageFetching,
   } = useGetFiasUsage();
-
-  const {
-    data: queue,
-    isLoading: isQueueLoading,
-    isFetching: isQueueFetching,
-  } = useGetSessionsQueue(undefined, {
-    pollingInterval: 5000,
-  });
 
   return (
     <div className="block space-y-6 p-10 pb-16">
@@ -149,15 +142,7 @@ const AddressUploadPage = (): JSX.Element => {
           {sessionId && session && (
             <SessionCard session={session} className="w-full" />
           )}
-          {queue && queue.length > 0 && (
-            <div>
-              {queue.map((session) => (
-                <div
-                  key={session.id}
-                >{`${session.id}: ${session.title} - ${session.status} [${session.done}/${session.total}]`}</div>
-              ))}
-            </div>
-          )}
+          <SessionQueue selectedSessionId={sessionId} className="w-full" />
         </div>
       </div>
     </div>

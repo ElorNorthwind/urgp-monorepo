@@ -27,12 +27,16 @@ export class AddressSessionsService {
     const runningSessions = this.sessionQueue.filter(
       (s) => s.status === 'running',
     );
+
+    const activeSessions = sessions
+      .filter((s) => runningSessions.some((rs) => rs.id === s.id))
+      .map((s) => ({ ...s, status: 'running' }));
     const inactiveSessions = sessions.filter(
       (s) => !runningSessions.some((rs) => rs.id === s.id),
     );
     if (runningSessions.length > 1)
       Logger.warn(`Running sessions: ${sessions}! (that's not ok)`);
-    this.sessionQueue = [...runningSessions, ...inactiveSessions];
+    this.sessionQueue = [...activeSessions, ...inactiveSessions];
     this.startSessionsQueue();
   }
 
