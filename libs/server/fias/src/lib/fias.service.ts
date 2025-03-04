@@ -4,8 +4,13 @@ import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '@urgp/server/database';
 import { AxiosRequestConfig } from 'axios';
 import { firstValueFrom, retry } from 'rxjs';
-import { addressNotFound, hintNotFound } from '../config/constants';
-import { FIAS_RETRY_COUNT, FiasAddress, FiasHint } from '@urgp/shared/entities';
+import {
+  addressNotFound,
+  FIAS_RETRY_COUNT,
+  FiasAddress,
+  FiasHint,
+  hintNotFound,
+} from '@urgp/shared/entities';
 
 @Injectable()
 export class FiasService {
@@ -14,9 +19,6 @@ export class FiasService {
     private readonly dbServise: DatabaseService,
     private configService: ConfigService,
   ) {}
-  static get emptyAddress(): FiasAddress {
-    return addressNotFound;
-  }
 
   public async getAddressHint(address: string): Promise<FiasHint> {
     const apiKey = this.configService.get<string>('FIAS_KEY');

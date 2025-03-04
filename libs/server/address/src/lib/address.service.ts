@@ -2,10 +2,13 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '@urgp/server/database';
 import {
+  addressNotFoundParsedToResult,
+  AddressReslutUpdate,
   AddressSessionFull,
   FIAS_CONCURRENCY,
   FIAS_DB_STEP,
   FIAS_TIMEOUT,
+  FiasAddress,
 } from '@urgp/shared/entities';
 import { FiasService } from 'libs/server/fias/src/lib/fias.service';
 import {
@@ -18,6 +21,7 @@ import {
   timer,
   toArray,
 } from 'rxjs';
+import { formatFiasDataForDb } from './helper/formatFiasDataForDb';
 
 @Injectable()
 export class AddressService {
@@ -43,6 +47,7 @@ export class AddressService {
   }
 
   public async hydrateSessionAdresses(sessionId: number, limit = FIAS_DB_STEP) {
+    Logger.log(`Getting FIAS data for session ${sessionId}`);
     try {
       let addresses = [];
       do {
@@ -57,27 +62,20 @@ export class AddressService {
               mergeMap(
                 () =>
                   from(this.fias.getAddress(arg.address)).pipe(
-                    map((value) => {
+                    map((value: FiasAddress): AddressReslutUpdate => {
                       if (value?.object_id < 0)
                         throw new NotFoundException('Адрес не найден');
                       return {
                         id: arg.id,
-                        status: 'success' as const,
-                        value,
-                        error: null,
-                        source: 'fias-search',
+                        ...formatFiasDataForDb(value),
+                        updatedAt: new Date().toISOString(),
                       };
                     }),
                     catchError((error) =>
                       of({
                         id: arg.id,
-                        status: 'error' as const,
-                        value: {
-                          ...FiasService.emptyAddress,
-                          full_name: error.message,
-                        },
-                        error: error.message,
-                        source: 'fias-search',
+                        ...addressNotFoundParsedToResult,
+                        updatedAt: new Date().toISOString(),
                       }),
                     ),
                   ),

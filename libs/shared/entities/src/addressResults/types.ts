@@ -17,6 +17,7 @@ type FiasAdressDetails = {
 };
 
 type FiasHierarchyItem = {
+  number?: string;
   object_type: string;
   region_code: number;
   name: string;
@@ -28,7 +29,7 @@ type FiasHierarchyItem = {
   object_guid: string;
   full_name: string;
   full_name_short: string;
-  kladr_code: string;
+  kladr_code?: string;
 };
 
 type FiasFederalDistrict = {
@@ -66,3 +67,61 @@ export type FiasRequestResult = {
   error: any | null;
   source: string;
 };
+
+export type AddressResult = {
+  id: number;
+  sessionId: number;
+  createdAt: string; // ISO 8601 date string
+  updatedAt: string; // ISO 8601 date string
+  isError: boolean;
+  isDone: boolean;
+  sessionNpp?: number | null;
+  originalAddress?: string | null;
+  responseSource?: string | null;
+  response?: FiasAddress | null;
+
+  unom?: number | null;
+  fullAddress?: string | null;
+  postal?: number | null;
+  cadNum?: string | null;
+
+  fiasId?: number | null;
+  fiasGuid?: string | null;
+  fiasPath?: string | null;
+  fiasLevel?: number | null;
+  fiasIsActive?: boolean | null;
+
+  // levels 6,7,8
+  streetName?: string | null;
+  streetLevel?: number | null;
+  streetType?: string | null;
+  streetFiasId?: number | null;
+  streetFiasGuid?: string | null;
+  streetKladr?: string | null;
+
+  // level 10
+  houseNum?: string | null;
+  houseType?: string | null;
+  houseFiasId?: number | null;
+  houseFiasGuid?: string | null;
+
+  // level 11
+  apartmentNum?: string | null;
+  apartmentType?: string | null;
+  apartmentFiasId?: number | null;
+  apartmentFiasGuid?: string | null;
+};
+
+export type FiasParsedToResult = Omit<
+  AddressResult,
+  | 'id'
+  | 'sessionId'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'originalAddress'
+  | 'sessionNpp'
+>;
+export type AddressReslutUpdate = Omit<
+  AddressResult,
+  'sessionId' | 'createdAt'
+>;

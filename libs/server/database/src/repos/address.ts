@@ -6,6 +6,7 @@ import {
 import { BadRequestException, Logger } from '@nestjs/common';
 import { dataMos, results, sessions } from './sql/sql';
 import {
+  AddressReslutUpdate,
   AddressSession,
   AddressSessionFull,
   CreateAddressSessionDto,
@@ -241,44 +242,40 @@ export class AddressRepository {
     return this.db.one(results.getFiasDailyUsage).then((result) => result.used);
   }
 
-  updateAddressResult(results: FiasRequestResult[]): Promise<null> {
+  updateAddressResult(results: AddressReslutUpdate[]): Promise<null> {
     if (results.length === 0) return Promise.resolve(null);
+    // Logger.warn(results[0]);
+    const columns = [
+      { name: 'id', prop: 'id', cnd: true },
+      { name: 'response', prop: 'response', cast: 'jsonb' },
+      {
+        name: 'updated_at',
+        prop: 'updatedAt',
+        cast: 'timestamp with time zone',
+      },
+    ] as {
+      name: string;
+      prop?: string;
+      cnd?: boolean;
+    }[];
+
+    Object.keys(results[0])
+      .filter((key) => !['id', 'response', 'updatedAt'].includes(key))
+      .forEach((key) => {
+        columns.push({ name: camelToSnakeCase(key), prop: key });
+      });
+
+    const resultTableColumnSet = new this.pgp.helpers.ColumnSet(columns, {
+      table: {
+        table: 'results',
+        schema: 'address',
+      },
+    });
+
     try {
-      const resultTableColumnSet = new this.pgp.helpers.ColumnSet(
-        [
-          { name: 'id', prop: 'id', cnd: true },
-          { name: 'response', prop: 'response', cast: 'jsonb' },
-          { name: 'is_error', prop: 'isError' },
-          { name: 'is_done', prop: 'isDone' },
-          { name: 'response_source', prop: 'source' },
-          {
-            name: 'updated_at',
-            prop: 'updatedAt',
-            cast: 'timestamp with time zone',
-          },
-        ],
-        {
-          table: {
-            table: 'results',
-            schema: 'address',
-          },
-        },
-      );
-
-      const data = results.map((r) => ({
-        id: r.id,
-        response: JSON.stringify(r?.value || {}),
-        isError: r?.error ? true : false,
-        isDone: true,
-        updatedAt: new Date().toISOString(),
-        source: r.source,
-      }));
-
       const update =
-        this.pgp.helpers.update(data, resultTableColumnSet) +
+        this.pgp.helpers.update(results, resultTableColumnSet) +
         ' WHERE v.id = t.id';
-
-      // Logger.warn(update);
 
       return this.db.none(update);
     } catch (e) {

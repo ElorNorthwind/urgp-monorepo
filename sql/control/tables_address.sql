@@ -62,6 +62,14 @@ ALTER TABLE address.street_registry
     OWNER to renovation_user;
 
 
+
+
+
+
+
+
+
+
 DROP TABLE IF EXISTS address.sessions CASCADE;
 CREATE TABLE address.sessions (
     id INTEGER GENERATED ALWAYS AS IDENTITY,
@@ -81,6 +89,7 @@ ALTER TABLE address.sessions
     OWNER to renovation_user;
 
 
+
 DROP TABLE IF EXISTS address.results CASCADE;
 CREATE TABLE address.results (
     id INTEGER GENERATED ALWAYS AS IDENTITY,
@@ -92,9 +101,63 @@ CREATE TABLE address.results (
     session_npp INTEGER,
     original_address TEXT,
     response_source VARCHAR(255),
+
+    unom INTEGER, -- needs extra hydration
+    full_address TEXT,
+    postal INTEGER,
+    cad_num TEXT, 
+
+    -- okato TEXT, -- BIGTINT
+    -- oktmo TEXT, -- BIGINT
+    -- oktmo_budget TEXT, -- BIGINT
+    -- ifns_fl TEXT, -- INTEGER
+    -- ifns_ul TEXT, -- INTEGER
+
+    fias_id BIGINT,
+    fias_guid TEXT,
+    fias_path TEXT,
+    fias_level INTEGER,
+    fias_is_active BOOLEAN,
+
+    -- levels 6,7,8
+    street_name TEXT,
+    street_level INTEGER,
+    street_type TEXT,
+    street_fias_id BIGINT,
+    street_fias_guid TEXT,
+    street_kladr TEXT,
+
+    -- level 10
+    house_num TEXT,
+    house_type TEXT,
+    house_fias_id BIGINT,
+    house_fias_guid TEXT,
+
+    -- level 11
+    apartment_num TEXT,
+    apartment_type TEXT,
+    apartment_fias_id BIGINT,
+    apartment_fias_guid TEXT,
+
     response JSONB,
+
     PRIMARY KEY (id)
 );
 
 ALTER TABLE address.results
+    OWNER to renovation_user;
+ 
+ 
+
+
+DROP TABLE IF EXISTS address.rates CASCADE;
+CREATE TABLE address.rates (
+    id INTEGER GENERATED ALWAYS AS IDENTITY,
+ source VARCHAR(255),
+ amount INTEGER,
+ created_at TIMESTAMP WITH TIME ZONE DEFAULT (now())::timestamp(0) with time zone,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE address.rates
     OWNER to renovation_user;

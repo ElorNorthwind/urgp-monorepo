@@ -97,7 +97,7 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
           <span>{`Адресов в очереди: ${session.queue}`}</span>
         </div>
       ) : null}
-      {session.status !== 'done' && (
+      {session.status !== 'done' ? (
         <BarRow
           value={session?.done || 0}
           max={session?.total || 0}
@@ -111,7 +111,7 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
           className={cn('bg-muted-foreground/10 h-10 w-full')}
           barClassName={cn('bg-slate-400 animate-pulse')}
         />
-      )}
+      ) : null}
     </div>
   );
 };
