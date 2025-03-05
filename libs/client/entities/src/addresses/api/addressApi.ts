@@ -23,7 +23,7 @@ export const addressApi = rtkApi.injectEndpoints({
       providesTags: ['address-session'],
     }),
 
-    getSessionResult: build.query<AddressResult[], number>({
+    getSessionResult: build.query<any[], number>({
       query: (id) => ({
         url: `/address/results/${id.toString()}`,
         method: 'GET',

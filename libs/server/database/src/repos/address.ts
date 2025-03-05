@@ -204,7 +204,7 @@ export class AddressRepository {
     return this.db.any(sessions.getSessionsQueue);
   }
 
-  getAddressResultsBySessionId(sessionId: number): Promise<AddressResult[]> {
+  getAddressResultsBySessionId(sessionId: number): Promise<any[]> {
     return this.db.any(results.getAddressResultsBySessionId, { sessionId });
   }
 
