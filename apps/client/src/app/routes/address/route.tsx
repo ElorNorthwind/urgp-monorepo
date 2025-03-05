@@ -1,26 +1,13 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
-import {
-  addressApi,
-  CreateCaseDialog,
-  CreateDispatchDialog,
-  CreateProblemDialog,
-  CreateReminderDialog,
-  CreateStageDialog,
-  EscalateDialog,
-} from '@urgp/client/entities';
+import { addressApi } from '@urgp/client/entities';
 import {
   cn,
   ScrollArea,
-  Separator,
   SidebarProvider,
   store,
   usePageMeta,
 } from '@urgp/client/shared';
-import {
-  AddressNavbar,
-  ApproveDialog,
-  ControlNavbar,
-} from '@urgp/client/widgets';
+import { AddressNavbar } from '@urgp/client/widgets';
 
 export const Route = createFileRoute('/address')({
   beforeLoad: async ({ location }) => {
@@ -40,7 +27,7 @@ export const Route = createFileRoute('/address')({
     }
   },
   component: () => {
-    usePageMeta('Парсинг адресов', '/favicon.ico');
+    usePageMeta('Поиск адресов', '/favicon.ico');
     return (
       <div className="font-roboto">
         <SidebarProvider cookieName="address-sidebar" defaultOpen={false}>

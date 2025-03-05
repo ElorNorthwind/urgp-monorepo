@@ -1,8 +1,8 @@
 SELECT
     session_npp AS "№ п/п",
-    CASE WHEN is_error IS DISTINCT FROM true THEN 'не найден' ELSE 'найден' END AS "Результат",
     original_address AS "Исходный адрес",
-	
+
+    CASE WHEN is_error IS DISTINCT FROM true THEN 'найден' ELSE 'не найден' END AS "Результат",
     unom as "УНОМ",
     full_address AS "Полный адрес",
     postal as "Почтовый индекс",

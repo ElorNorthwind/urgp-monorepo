@@ -1,6 +1,6 @@
 import { FiasAddress, FiasHint, FiasParsedToResult } from './types';
 
-export const FIAS_CONCURRENCY = 20;
+export const FIAS_CONCURRENCY = 50;
 export const FIAS_DB_STEP = 50;
 export const FIAS_TIMEOUT = 100;
 export const FIAS_RETRY_COUNT = 1;

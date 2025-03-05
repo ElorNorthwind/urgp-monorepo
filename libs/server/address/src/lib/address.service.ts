@@ -94,6 +94,8 @@ export class AddressService {
               ),
             FIAS_CONCURRENCY, // Set your desired concurrency level here
           ),
+          // bufferCount(50), // Process in batches of 50
+          // mergeMap(batch => forkJoin(batch.map(processAddress))
           // throttle(() => interval(FIAS_TIMEOUT)),
           toArray(),
         );

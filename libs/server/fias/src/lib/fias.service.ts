@@ -38,7 +38,7 @@ export class FiasService {
     try {
       const { data } = await firstValueFrom(
         this.axios.request(directAddressConfig).pipe(
-          // tap(() => Logger.log('fias request: ' + address)),
+          tap(() => Logger.log('fias request: ' + address)),
           retry(FIAS_RETRY_COUNT),
           catchError(() => {
             return of({ data: [addressNotFound] });
@@ -50,7 +50,7 @@ export class FiasService {
       return (
         addresses.find(
           (address) =>
-            address.path.split('.').length >= 3 && // Должно быть домом или ниже (не улица)
+            address.object_level_id >= 10 && // Только дома и ниже
             address.path.slice(0, 7) === '1405113', // Должно быть в Москве
         ) ?? addressNotFound
       );

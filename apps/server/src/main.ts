@@ -1,16 +1,18 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppModule } from './app/app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     abortOnError: false,
   });
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   app.use(cookieParser());
+  app.useBodyParser('json', { limit: '20mb' });
   app.enableCors({
     origin: process.env['ORIGIN'] || 'http://localhost:4200',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
