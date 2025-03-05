@@ -4,6 +4,7 @@ import { DatabaseService } from '@urgp/server/database';
 import {
   AddressSession,
   AddressSessionFull,
+  AddressSessionStatuses,
   CreateAddressSessionDto,
   UpdateAddressSessionDto,
 } from '@urgp/shared/entities';
@@ -26,12 +27,12 @@ export class AddressSessionsService {
   public async refreshSessionQueue(): Promise<void> {
     const sessions = await this.dbServise.db.address.getSessionQueue();
     const runningSessions = this.sessionQueue.filter(
-      (s) => s.status === 'running',
+      (s) => s.status === AddressSessionStatuses.running,
     );
 
     const activeSessions = sessions
       .filter((s) => runningSessions.some((rs) => rs.id === s.id))
-      .map((s) => ({ ...s, status: 'running' }));
+      .map((s) => ({ ...s, status: AddressSessionStatuses.running }));
     const inactiveSessions = sessions.filter(
       (s) => !runningSessions.some((rs) => rs.id === s.id),
     );
@@ -44,16 +45,16 @@ export class AddressSessionsService {
   public async startSessionsQueue(): Promise<void> {
     if (
       this.sessionQueue.length === 0 ||
-      this.sessionQueue[0].status === 'running'
+      this.sessionQueue[0].status === AddressSessionStatuses.running
     )
       return;
 
     try {
-      this.sessionQueue[0].status = 'running';
+      this.sessionQueue[0].status = AddressSessionStatuses.running;
       await this.address.hydrateSessionAdresses(this.sessionQueue[0].id);
-      this.sessionQueue[0].status = 'done';
+      this.sessionQueue[0].status = AddressSessionStatuses.done;
     } catch (error) {
-      this.sessionQueue[0].status = 'error';
+      this.sessionQueue[0].status = AddressSessionStatuses.error;
       Logger.error(error);
     } finally {
       this.refreshSessionQueue();

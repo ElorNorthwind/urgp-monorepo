@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from '@tanstack/react-router';
 import { cn, Skeleton } from '@urgp/client/shared';
 import { useGetSessionsQueue, useGetUserSessions } from '../../api/addressApi';
 import { SessionQueueItem } from './SessionQueueItem';
+import { AddressSessionStatuses } from '@urgp/shared/entities';
 
 type LatestDoneSessionsProps = {
   selectedSessionId?: number;
@@ -22,7 +23,7 @@ const LatestDoneSessions = (
 
   const filteredSessions =
     data
-      ?.filter((session) => session.status === 'done')
+      ?.filter((session) => session.status === AddressSessionStatuses.done)
       .slice(0, sessionLimit) || [];
 
   if (!filteredSessions || filteredSessions?.length === 0 || isLoading)

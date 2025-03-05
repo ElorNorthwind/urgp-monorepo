@@ -13,11 +13,13 @@ import {
 } from '@urgp/client/widgets';
 import {
   AddressSessionFull,
+  AddressSessionStatuses,
   CaseFull,
   OperationClasses,
 } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import { Loader, LoaderCircle } from 'lucide-react';
+import { sessionStatusStyles } from '../config/sessionStyles';
 
 type SessionCardProps = {
   session: AddressSessionFull;
@@ -26,23 +28,14 @@ type SessionCardProps = {
 
 const SessionCard = (props: SessionCardProps): JSX.Element | null => {
   const { session, className } = props;
-  // const session = {
-  //   id: 21,
-  //   userId: 1,
-  //   createdAt: '2025-03-03T16:08:50.000Z',
-  //   updatedAt: '2025-03-03T16:08:56.523Z',
-  //   duration: { seconds: 6, milliseconds: 523 },
-  //   isError: false,
-  //   isDone: true,
-  //   type: 'fias-search',
-  //   title: '',
-  //   notes: '',
-  //   status: 'done',
-  //   total: 20,
-  //   done: 0,
-  //   success: 0,
-  //   error: 0,
-  // };
+
+  const {
+    label: statusLabel,
+    icon: Icon,
+    iconStyle,
+  } = sessionStatusStyles[
+    (session?.status as keyof typeof sessionStatusStyles) || 'pending'
+  ] || Object.entries(sessionStatusStyles)[0];
 
   if (!session) return null;
 
@@ -67,7 +60,7 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
         />
         <InfoBox
           label="Статус:"
-          value={session?.status || '-'}
+          value={statusLabel || '-'}
           className="flex-grow-0"
         />
       </div>
@@ -95,13 +88,15 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
           className="flex-grow"
         />
       </div>
-      {session.status === 'pending' && session?.queue && session?.queue > 0 ? (
+      {session.status === AddressSessionStatuses.pending &&
+      session?.queue &&
+      session?.queue > 0 ? (
         <div className="bg-muted-foreground/5 flex flex-row items-center gap-2 rounded p-2">
           <LoaderCircle className="size-5 flex-shrink-0 animate-spin" />
           <span>{`Адресов в очереди: ${session.queue}`}</span>
         </div>
       ) : null}
-      {session.status === 'running' ? (
+      {session.status === AddressSessionStatuses.running ? (
         <BarRow
           value={session?.done || 0}
           max={session?.total || 0}
@@ -116,7 +111,7 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
           barClassName={cn('bg-slate-400 animate-pulse')}
         />
       ) : null}
-      {session.status === 'done' ? (
+      {session.status === AddressSessionStatuses.done ? (
         <ExportAddressResultButton sessionId={session?.id || 0} />
       ) : null}
     </div>

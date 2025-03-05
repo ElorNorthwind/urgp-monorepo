@@ -1,7 +1,11 @@
 import { cn } from '@urgp/client/shared';
-import { AddressSessionFull } from '@urgp/shared/entities';
+import {
+  AddressSessionFull,
+  AddressSessionStatuses,
+} from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import { LoaderCircle } from 'lucide-react';
+import { sessionStatusStyles } from '../../config/sessionStyles';
 
 type SessionQueueItemProps = {
   session: AddressSessionFull;
@@ -14,12 +18,20 @@ const SessionQueueItem = (props: SessionQueueItemProps): JSX.Element | null => {
   const { session, className, onClick, selected = false } = props;
   if (!session) return null;
 
+  const {
+    label: statusLabel,
+    icon: Icon,
+    iconStyle,
+  } = sessionStatusStyles[
+    (session?.status as keyof typeof sessionStatusStyles) || 'pending'
+  ] || Object.entries(sessionStatusStyles)[0];
+
   return (
     <div
       className={cn(
         'bg-background verflow-hidden flex flex-row flex-nowrap items-center overflow-hidden rounded-md border',
         '[&>*]:p-2 [&>:not(:last-child)]:border-r',
-        selected && 'border-foreground/30 bg-muted-foreground/10',
+        selected && 'border-foreground/50 bg-slate-50',
         onClick && 'cursor-pointer',
         className,
       )}
@@ -37,13 +49,12 @@ const SessionQueueItem = (props: SessionQueueItemProps): JSX.Element | null => {
           <LoaderCircle className="ml-auto size-4 flex-shrink-0 animate-spin" />
         )}
       </span>
-      <span
-        className={cn(
-          'min-w-20 flex-shrink-0 text-center',
-          session.status === 'done' && 'bg-emerald-50',
-          session.status === 'error' && 'bg-rose-50',
-        )}
-      >{`${session?.status}`}</span>
+      <span className="flex flex-row items-center gap-2 overflow-hidden">
+        {Icon && <Icon className={cn('size-5 flex-shrink-0', iconStyle)} />}
+        <span
+          className={cn('min-w-28 flex-shrink-0 text-center')}
+        >{`${statusLabel}`}</span>
+      </span>
     </div>
   );
 };
