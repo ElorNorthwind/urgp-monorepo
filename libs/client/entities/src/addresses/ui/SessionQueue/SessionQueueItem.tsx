@@ -17,9 +17,9 @@ const SessionQueueItem = (props: SessionQueueItemProps): JSX.Element | null => {
   return (
     <div
       className={cn(
-        'bg-background verflow-hidden flex flex-row flex-nowrap items-center rounded-md border px-2 ',
+        'bg-background verflow-hidden flex flex-row flex-nowrap items-center overflow-hidden rounded-md border',
         '[&>*]:p-2 [&>:not(:last-child)]:border-r',
-        selected && 'border-slate-400 bg-slate-50',
+        selected && 'border-foreground/30 bg-muted-foreground/10',
         onClick && 'cursor-pointer',
         className,
       )}
@@ -37,7 +37,13 @@ const SessionQueueItem = (props: SessionQueueItemProps): JSX.Element | null => {
           <LoaderCircle className="ml-auto size-4 flex-shrink-0 animate-spin" />
         )}
       </span>
-      <span className="min-w-20 flex-shrink-0 text-center">{`${session?.status}`}</span>
+      <span
+        className={cn(
+          'min-w-20 flex-shrink-0 text-center',
+          session.status === 'done' && 'bg-emerald-50',
+          session.status === 'error' && 'bg-rose-50',
+        )}
+      >{`${session?.status}`}</span>
     </div>
   );
 };

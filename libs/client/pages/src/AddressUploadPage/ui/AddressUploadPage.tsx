@@ -1,5 +1,6 @@
 import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import {
+  LatestDoneSessions,
   SessionCard,
   SessionQueue,
   useGetFiasUsage,
@@ -143,6 +144,11 @@ const AddressUploadPage = (): JSX.Element => {
             <SessionCard session={session} className="w-full" />
           )}
           <SessionQueue selectedSessionId={sessionId} className="w-full" />
+          <LatestDoneSessions
+            selectedSessionId={sessionId}
+            className="w-full"
+            sessionLimit={3}
+          />
         </div>
       </div>
     </div>

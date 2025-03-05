@@ -1,30 +1,41 @@
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import { cn, Skeleton } from '@urgp/client/shared';
-import { useGetSessionsQueue } from '../../api/addressApi';
+import { useGetSessionsQueue, useGetUserSessions } from '../../api/addressApi';
 import { SessionQueueItem } from './SessionQueueItem';
 
-type SessionQueueProps = {
+type LatestDoneSessionsProps = {
   selectedSessionId?: number;
   className?: string;
+  sessionLimit?: number;
 };
 
-const SessionQueue = (props: SessionQueueProps): JSX.Element | null => {
-  const { className, selectedSessionId } = props;
+const LatestDoneSessions = (
+  props: LatestDoneSessionsProps,
+): JSX.Element | null => {
+  const { className, selectedSessionId, sessionLimit = 5 } = props;
   const pathname = useLocation().pathname;
   const navigate = useNavigate({ from: pathname });
 
-  const { data, isLoading } = useGetSessionsQueue(undefined, {
+  const { data, isLoading } = useGetUserSessions(undefined, {
     pollingInterval: 5000,
   });
 
-  if (!data || data?.length === 0 || isLoading) return null;
+  const filteredSessions =
+    data
+      ?.filter((session) => session.status === 'done')
+      .slice(0, sessionLimit) || [];
+
+  if (!filteredSessions || filteredSessions?.length === 0 || isLoading)
+    return null;
 
   return (
     <div
       className={cn('items-ceter flex flex-col justify-start gap-2', className)}
     >
-      <span className="text-xl font-semibold">Очередь активных запросов:</span>
-      {data.map((session) => {
+      <span className="text-xl font-semibold">
+        Мои последние выполненные запросы:
+      </span>
+      {filteredSessions.map((session) => {
         const isSelected = selectedSessionId === session.id;
         return (
           <SessionQueueItem
@@ -44,4 +55,4 @@ const SessionQueue = (props: SessionQueueProps): JSX.Element | null => {
   );
 };
 
-export { SessionQueue };
+export { LatestDoneSessions };

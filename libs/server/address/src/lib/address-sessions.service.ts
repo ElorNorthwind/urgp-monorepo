@@ -18,7 +18,8 @@ export class AddressSessionsService {
     private readonly address: AddressService,
   ) {}
 
-  public getActiveSession(): AddressSessionFull[] {
+  public async getActiveSession(): Promise<AddressSessionFull[]> {
+    await this.refreshSessionQueue();
     return this.sessionQueue;
   }
 
