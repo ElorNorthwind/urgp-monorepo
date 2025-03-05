@@ -57,11 +57,12 @@ export class AddressService {
   }
 
   public async hydrateSessionAdresses(sessionId: number, limit = FIAS_DB_STEP) {
-    // Logger.log(`Getting FIAS data for session ${sessionId}`);
+    const isDev = this.configService.get<string>('NODE_ENV') === 'development';
+    isDev && Logger.log(`Getting FIAS data for session ${sessionId}`);
     try {
       let addresses = [];
       do {
-        // const startTime = performance.now();
+        const startTime = isDev ? performance.now() : 0;
         addresses =
           await this.dbServise.db.address.getSessionUnfinishedAddresses(
             sessionId,
@@ -83,7 +84,7 @@ export class AddressService {
                   };
                 }),
                 catchError((error) => {
-                  // Logger.warn(error);
+                  isDev && Logger.warn(error);
                   return of({
                     id: arg.id,
                     ...addressNotFoundParsedToResult,
@@ -93,18 +94,19 @@ export class AddressService {
               ),
             FIAS_CONCURRENCY, // Set your desired concurrency level here
           ),
-          throttle(() => interval(FIAS_TIMEOUT)),
+          // throttle(() => interval(FIAS_TIMEOUT)),
           toArray(),
         );
-        await this.dbServise.db.address
-          .updateAddressResult(await lastValueFrom(hydratedData))
-          .then(() => {
-            this.dbServise.db.address.addUnomsToResultAddress(sessionId);
-          });
-        // const endTime = performance.now();
-        // Logger.log(
-        //   `${Math.floor((endTime - startTime) / addresses.length)}ms/address [${Math.floor(endTime - startTime)} total]`,
-        // );
+        const data = await lastValueFrom(hydratedData);
+        isDev && Logger.warn('DB update ' + data?.length || 0);
+        await this.dbServise.db.address.updateAddressResult(data).then(() => {
+          this.dbServise.db.address.addUnomsToResultAddress(sessionId);
+        });
+        const endTime = isDev ? performance.now() : 0;
+        isDev &&
+          Logger.log(
+            `${Math.floor((endTime - startTime) / addresses.length)}ms/address [${Math.floor(endTime - startTime)} total]`,
+          );
       } while (addresses?.length > 0);
     } catch {
       (e: any) => Logger.error(e);
