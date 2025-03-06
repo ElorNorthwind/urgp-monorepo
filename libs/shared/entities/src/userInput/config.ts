@@ -43,6 +43,7 @@ export const CaseActions = {
   caseApprove: 'case-approve',
   operationApprove: 'operation-approve',
   caseRejected: 'case-rejected',
+  caseProject: 'case-project',
   reminderDone: 'reminder-done',
   reminderOverdue: 'reminder-overdue',
   escalation: 'escalation',

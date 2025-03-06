@@ -21,6 +21,7 @@ import {
   ClipboardCheck,
   ClipboardList,
   ClipboardMinus,
+  ClipboardPaste,
   ClipboardPen,
   ClipboardPenLine,
   ClipboardType,
@@ -101,6 +102,10 @@ export const pendingActionStyles = {
   [CaseActions.caseRejected]: {
     icon: ClipboardMinus,
     label: 'Отработать отказ',
+  },
+  [CaseActions.caseProject]: {
+    icon: ClipboardPaste,
+    label: 'Завершить проект',
   },
   [CaseActions.reminderDone]: {
     icon: ClipboardCheck,

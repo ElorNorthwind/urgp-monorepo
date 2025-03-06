@@ -165,6 +165,40 @@ const CaseSmartActionsMenu = ({
             },
           ],
         },
+
+        [CaseActions.caseProject]: {
+          onClick: null,
+          sub: [
+            {
+              key: 'project-edit',
+              icon: Edit,
+              label: 'Редактировать дело',
+              disabled: i.cannot('update', controlCase),
+              onClick: () => {
+                if (!controlCase) return;
+                if (controlCase.class === CaseClasses.problem) {
+                  dispatch(setProblemFormValuesFromProblem(controlCase));
+                  dispatch(setProblemFormState(DialogFormState.edit));
+                } else if (controlCase.class === CaseClasses.incident) {
+                  dispatch(setCaseFormValuesFromCase(controlCase));
+                  dispatch(setCaseFormState(DialogFormState.edit));
+                }
+              },
+            },
+            {
+              key: 'project-distapch',
+              icon: Scale,
+              label: 'Направить на согласование',
+              disabled: i.cannot('approve', controlCase),
+              onClick: () => {
+                if (!controlCase) return;
+                dispatch(setApproveFormState(ApproveFormState.case));
+                dispatch(setApproveFormValuesFromEntity(controlCase));
+              },
+            },
+          ],
+        },
+
         [CaseActions.controlToMe]: {
           onClick: null,
           sub: [

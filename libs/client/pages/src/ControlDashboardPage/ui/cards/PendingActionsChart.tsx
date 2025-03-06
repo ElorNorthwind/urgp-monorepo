@@ -43,6 +43,20 @@ const PendingActionChart = forwardRef<
   const chartData = useMemo(() => {
     return [
       {
+        key: CaseActions.escalation,
+        label: 'По заявкам запрошено мое решение',
+        icon: pendingActionStyles[CaseActions.escalation]?.icon,
+        value: countByPendingAction(CaseActions.escalation, cases),
+        // style: 'bg-rose-200',
+      },
+      {
+        key: CaseActions.controlToMe,
+        label: 'Поступило ко мне на исполнение',
+        icon: pendingActionStyles[CaseActions.controlToMe]?.icon,
+        value: countByPendingAction(CaseActions.controlToMe, cases),
+        // style: 'bg-rose-200',
+      },
+      {
         key: CaseActions.caseApprove,
         label: 'Проекты заявок ожидают моего утверждения',
         icon: pendingActionStyles[CaseActions.caseApprove]?.icon,
@@ -57,13 +71,7 @@ const PendingActionChart = forwardRef<
           filteredCases,
         ),
       },
-      {
-        key: CaseActions.caseRejected,
-        label: 'По моим заявкам отказали в согласовании',
-        icon: pendingActionStyles[CaseActions.caseRejected]?.icon,
-        value: countByPendingAction(CaseActions.caseRejected, filteredCases),
-        // style: 'bg-yellow-200',
-      },
+
       {
         key: CaseActions.reminderDone,
         label: 'Приняты решения по заявкам, за которыми я слежу',
@@ -76,21 +84,22 @@ const PendingActionChart = forwardRef<
         label: 'Истек срок напоминания по заявкам, за которыми я слежу',
         icon: pendingActionStyles[CaseActions.reminderOverdue]?.icon,
         value: countByPendingAction(CaseActions.reminderOverdue, cases),
-        // style: 'bg-rose-200',
+        // style: 'bg-red-300',
+      },
+
+      {
+        key: CaseActions.caseRejected,
+        label: 'По моим заявкам отказали в согласовании',
+        icon: pendingActionStyles[CaseActions.caseRejected]?.icon,
+        value: countByPendingAction(CaseActions.caseRejected, filteredCases),
+        // style: 'bg-yellow-200',
       },
       {
-        key: CaseActions.escalation,
-        label: 'По заявкам запрошено мое решение',
-        icon: pendingActionStyles[CaseActions.escalation]?.icon,
-        value: countByPendingAction(CaseActions.escalation, cases),
-        // style: 'bg-rose-200',
-      },
-      {
-        key: CaseActions.controlToMe,
-        label: 'Поступило ко мне на исполнение',
-        icon: pendingActionStyles[CaseActions.controlToMe]?.icon,
-        value: countByPendingAction(CaseActions.controlToMe, cases),
-        // style: 'bg-rose-200',
+        key: CaseActions.caseProject,
+        label: 'Я не направил проект дела на согласование',
+        icon: pendingActionStyles[CaseActions.caseProject]?.icon,
+        value: countByPendingAction(CaseActions.caseProject, filteredCases),
+        // style: 'bg-yellow-200',
       },
     ];
   }, [cases, isLoading]);
@@ -122,7 +131,8 @@ const PendingActionChart = forwardRef<
       </CardHeader>
       <CardContent className="flex flex-row items-end gap-4">
         <SimpleBarChart
-          values={chartData.sort((a, b) => b.value - a.value)}
+          // values={chartData.sort((a, b) => b.value - a.value)}
+          values={chartData}
           isLoading={isLoading}
           isError={isError}
           skeletonCount={3}

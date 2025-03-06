@@ -91,6 +91,7 @@ SELECT
 		ARRAY[
 			  CASE WHEN c.approve_status = 'pending' AND c.approve_to_id = ${userId} THEN 'case-approve' ELSE null END
 			, CASE WHEN c.approve_status = 'rejected' AND c.author_id = ${userId} THEN 'case-rejected' ELSE null END
+			, CASE WHEN c.approve_status = 'project' AND c.author_id = ${userId} THEN 'case-project' ELSE null END
 			, CASE WHEN o."myPendingStage" IS NOT NULL THEN 'operation-approve' ELSE null END
 			, CASE WHEN o."lastStage"->'type'->>'category' = 'решение' AND o."lastStage"->>'approveStatus' = 'approved' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL AND o."hasEscalations" IS DISTINCT FROM true THEN 'reminder-done' ELSE null END
 			, CASE WHEN (o."lastStage"->'type'->>'category' <> 'решение' AND (o."myReminder"->>'dueDate')::date < current_date) AND o."hasEscalations" IS DISTINCT FROM true THEN 'reminder-overdue' ELSE null END

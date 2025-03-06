@@ -79,7 +79,7 @@ const DepartmentChart = ({ className }: DepartmentChartProps): JSX.Element => {
   return (
     <Card
       className={cn(
-        'relative flex flex-col items-stretch justify-stretch overflow-hidden',
+        'relative flex flex-col items-stretch justify-start overflow-hidden',
         // 'to-muted-foreground/10 bg-gradient-to-bl from-cyan-600/40',
         className,
       )}
@@ -88,7 +88,7 @@ const DepartmentChart = ({ className }: DepartmentChartProps): JSX.Element => {
         <CardTitle>Тематики дел</CardTitle>
         <CardDescription>В разбивке по управлениям</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-row items-end gap-4">
+      <CardContent className=" mt-0 flex flex-row justify-start gap-4 ">
         <SimpleBarChart
           values={chartData.sort((a, b) => b.value - a.value)}
           isLoading={isLoading}
