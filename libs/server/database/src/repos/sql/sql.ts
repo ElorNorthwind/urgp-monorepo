@@ -151,4 +151,5 @@ export const results = {
   addUnomsToResultAddress: sql(
     'sql/address/results/addUnomsToResultAddress.sql',
   ),
+  addUnomsFromOks: sql('sql/address/results/addUnomsFromOks.sql'),
 };

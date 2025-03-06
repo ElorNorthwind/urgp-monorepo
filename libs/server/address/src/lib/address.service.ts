@@ -102,7 +102,9 @@ export class AddressService {
         const data = await lastValueFrom(hydratedData);
         isDev && Logger.warn('DB update ' + data?.length || 0);
         await this.dbServise.db.address.updateAddressResult(data).then(() => {
-          this.dbServise.db.address.addUnomsToResultAddress(sessionId);
+          this.dbServise.db.address.addUnomsFromOks(sessionId).then(() => {
+            this.dbServise.db.address.addUnomsToResultAddress(sessionId);
+          });
         });
         const endTime = isDev ? performance.now() : 0;
         isDev &&

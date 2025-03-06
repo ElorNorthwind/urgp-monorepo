@@ -297,4 +297,7 @@ export class AddressRepository {
   addUnomsToResultAddress(sessionId: number): Promise<null> {
     return this.db.none(results.addUnomsToResultAddress, { sessionId });
   }
+  addUnomsFromOks(sessionId: number): Promise<null> {
+    return this.db.none(results.addUnomsFromOks, { sessionId });
+  }
 }

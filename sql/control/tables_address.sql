@@ -48,6 +48,11 @@ CREATE TABLE address.adress_registry (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT (now())::timestamp(0) with time zone
 );
 
+CREATE INDEX idx_address_registry_fias_guid
+    ON address.address_registry USING btree
+    (n_fias COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
+
 ALTER TABLE address.adress_registry
     OWNER to renovation_user;
 
@@ -144,10 +149,35 @@ CREATE TABLE address.results (
     PRIMARY KEY (id)
 );
 
+CREATE INDEX idx_results_fias_guid
+    ON address.results USING btree
+    (house_fias_guid COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+CREATE INDEX idx_results_cad_num
+    ON address.results USING btree
+    (cad_num COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
+
 ALTER TABLE address.results
     OWNER to renovation_user;
  
  
+DROP TABLE IF EXISTS address.oks_unoms CASCADE;
+CREATE TABLE address.oks_unoms (
+    id INTEGER GENERATED ALWAYS AS IDENTITY,
+    unom INTEGER,
+    cad_num TEXT,
+    PRIMARY KEY (id)
+);
+
+CREATE INDEX idx_oks_cad_num
+    ON address.results USING btree
+    (cad_num COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+ALTER TABLE address.oks_unoms
+    OWNER to renovation_user;
 
 
 DROP TABLE IF EXISTS address.rates CASCADE;
