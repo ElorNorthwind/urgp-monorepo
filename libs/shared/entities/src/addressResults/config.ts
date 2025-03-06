@@ -1,4 +1,4 @@
-import { FiasAddress, FiasHint, FiasParsedToResult } from './types';
+import { FiasAddressWithDetails, FiasHint, FiasParsedToResult } from './types';
 
 export const FIAS_CONCURRENCY = 50;
 export const FIAS_DB_STEP = 50;
@@ -12,7 +12,7 @@ export const hintNotFound: FiasHint = {
   full_name_html: '',
 };
 
-export const addressNotFound: FiasAddress = {
+export const addressNotFound: FiasAddressWithDetails = {
   object_id: -1,
   object_level_id: -1,
   operation_type_id: -1,
@@ -39,6 +39,8 @@ export const addressNotFound: FiasAddress = {
     short_name: '',
     center_id: -1,
   },
+  house_cad_num: '',
+  confidence: 'none',
 };
 
 export const addressNotFoundParsedToResult: FiasParsedToResult = {
@@ -46,11 +48,14 @@ export const addressNotFoundParsedToResult: FiasParsedToResult = {
   isDone: true,
   responseSource: 'fias-search',
   response: addressNotFound,
+  confidence: 'none',
+
   fullAddress: 'Адрес не найден',
 
   //   unom: null,
   postal: -1,
   cadNum: '',
+  houseCadNum: '',
 
   fiasId: -1,
   fiasGuid: '',
@@ -67,8 +72,13 @@ export const addressNotFoundParsedToResult: FiasParsedToResult = {
   streetKladr: '',
 
   // level 10
+  houseName: '',
   houseNum: '',
   houseType: '',
+  houseAddNum1: '',
+  houseAddType1: '',
+  houseAddNum2: '',
+  houseAddType2: '',
   houseFiasId: -1,
   houseFiasGuid: '',
 

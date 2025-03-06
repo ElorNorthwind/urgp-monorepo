@@ -1,11 +1,15 @@
 import { NotFoundException } from '@nestjs/common';
 import {
   AddressResult,
+  clearMunicipalAddressPart,
   FiasAddress,
+  FiasAddressWithDetails,
   FiasParsedToResult,
 } from '@urgp/shared/entities';
 
-export const formatFiasDataForDb = (value: FiasAddress): FiasParsedToResult => {
+export const formatFiasDataForDb = (
+  value: FiasAddressWithDetails,
+): FiasParsedToResult => {
   if (value?.object_id < 0) throw new NotFoundException('Адрес не найден');
 
   const street = value.hierarchy.find((item) =>
@@ -17,13 +21,15 @@ export const formatFiasDataForDb = (value: FiasAddress): FiasParsedToResult => {
   return {
     isError: false,
     isDone: true,
-    responseSource: 'fias-search',
+    responseSource: value?.response_source || 'fias-search',
     response: value,
+    confidence: value.confidence,
 
     // unom: null,
-    fullAddress: value.full_name,
+    fullAddress: value.full_name, // clearMunicipalAddressPart(value.full_name), //oh-oh
     postal: parseInt(value.address_details.postal_code) || null,
     cadNum: value.address_details.cadastral_number,
+    houseCadNum: value.house_cad_num,
 
     fiasId: value?.object_id || null,
     fiasGuid: value?.object_guid || null,
@@ -40,8 +46,13 @@ export const formatFiasDataForDb = (value: FiasAddress): FiasParsedToResult => {
     streetKladr: street?.kladr_code || null,
 
     // level 10
+    houseName: house?.name || null,
     houseNum: house?.number || null,
     houseType: house?.type_name || null,
+    houseAddNum1: house?.add_number1 || null,
+    houseAddType1: house?.add_type1_name || null,
+    houseAddNum2: house?.add_number2 || null,
+    houseAddType2: house?.add_type2_name || null,
     houseFiasId: house?.object_id || null,
     houseFiasGuid: house?.object_guid || null,
 

@@ -106,11 +106,13 @@ CREATE TABLE address.results (
     session_npp INTEGER,
     original_address TEXT,
     response_source VARCHAR(255),
+    confidence VARCHAR(255) DEFAULT 'medium',
 
     unom INTEGER, -- needs extra hydration
     full_address TEXT,
     postal INTEGER,
     cad_num TEXT, 
+    house_cad_num TEXT,
 
     -- okato TEXT, -- BIGTINT
     -- oktmo TEXT, -- BIGINT
@@ -133,8 +135,13 @@ CREATE TABLE address.results (
     street_kladr TEXT,
 
     -- level 10
+    house_name TEXT,
     house_num TEXT,
     house_type TEXT,
+    house_add_num_1 TEXT,
+    house_add_type_1 TEXT,
+    house_add_num_2 TEXT,
+    house_add_type_2 TEXT,
     house_fias_id BIGINT,
     house_fias_guid TEXT,
 

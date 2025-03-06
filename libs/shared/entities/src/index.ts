@@ -31,6 +31,7 @@ export * from './addressSessions/config';
 export * from './addressSessions/types';
 export * from './addressSessions/dto';
 
+export * from './addressResults/lib/addressStringFunctions';
 export * from './addressResults/config';
 export * from './addressResults/types';
 export * from './addressResults/dto';

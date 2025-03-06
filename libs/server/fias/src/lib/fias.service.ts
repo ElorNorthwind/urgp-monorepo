@@ -7,8 +7,10 @@ import {
   addressNotFound,
   FIAS_RETRY_COUNT,
   FiasAddress,
+  FiasAddressWithDetails,
   FiasHint,
   hintNotFound,
+  splitAddress,
 } from '@urgp/shared/entities';
 
 @Injectable()
@@ -18,7 +20,9 @@ export class FiasService {
     private configService: ConfigService,
   ) {}
 
-  public async getDirectAddress(address: string): Promise<FiasAddress> {
+  public async getDirectAddress(
+    address: string,
+  ): Promise<FiasAddressWithDetails> {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
     const fullAddress = /[Мм]осква/.test(address)
@@ -31,14 +35,15 @@ export class FiasService {
       headers: { 'master-token': apiKey },
       params: {
         search_string: fullAddress,
-        address_type: 1,
+        address_type: 2,
       },
     };
 
     try {
       const { data } = await firstValueFrom(
         this.axios.request(directAddressConfig).pipe(
-          tap(() => Logger.log('fias request: ' + address)),
+          // tap(() => Logger.log('fias request: ' + address)),
+          // tap(() => Logger.log(splitAddress(address))),
           retry(FIAS_RETRY_COUNT),
           catchError(() => {
             return of({ data: [addressNotFound] });
@@ -47,13 +52,36 @@ export class FiasService {
       );
       const addresses = data?.addresses as FiasAddress[];
       if (!addresses || addresses.length === 0) return addressNotFound;
-      return (
-        addresses.find(
-          (address) =>
-            address.object_level_id >= 10 && // Только дома и ниже
-            address.path.slice(0, 7) === '1405113', // Должно быть в Москве
-        ) ?? addressNotFound
+
+      const fiasSuggestions = addresses.filter(
+        (address) =>
+          address.object_level_id >= 10 && // Только дома и ниже
+          address.path.slice(0, 7) === '1405113', // Должно быть в Москве
       );
+
+      if (fiasSuggestions.length === 0) return addressNotFound;
+
+      const houseId = fiasSuggestions[0]?.hierarchy?.find(
+        (item) => item.object_level_id === 10,
+      )?.object_id;
+
+      const house =
+        fiasSuggestions[0].object_level_id !== 10
+          ? addresses.find((address) => address.object_id === houseId)
+          : fiasSuggestions[0];
+
+      // const houseCadNum =
+      //   fiasSuggestions[0].object_level_id > 10
+      //     ? fiasSuggestions.find((address) => address.object_id === houseId)
+      //         ?.address_details?.cadastral_number || null
+      //     : fiasSuggestions[0].address_details.cadastral_number;
+      // if (fiasSuggestions[0].object_level_id > 10) return fiasSuggestions[0];
+
+      return {
+        ...fiasSuggestions[0],
+        house_cad_num: house?.address_details?.cadastral_number || null,
+        confidence: 'medium',
+      };
     } catch (error) {
       Logger.error(error);
       return addressNotFound;

@@ -9,6 +9,7 @@ import {
   FIAS_DB_STEP,
   FIAS_TIMEOUT,
   FiasAddress,
+  FiasAddressWithDetails,
 } from '@urgp/shared/entities';
 import { FiasService } from 'libs/server/fias/src/lib/fias.service';
 import {
@@ -72,7 +73,7 @@ export class AddressService {
           mergeMap(
             (arg) =>
               from(this.fias.getDirectAddress(arg.address)).pipe(
-                map((value: FiasAddress): AddressReslutUpdate => {
+                map((value: FiasAddressWithDetails): AddressReslutUpdate => {
                   if (value?.object_id < 0)
                     throw new NotFoundException(
                       `Адрес "${arg.address}" не найден`,
@@ -102,9 +103,7 @@ export class AddressService {
         const data = await lastValueFrom(hydratedData);
         isDev && Logger.warn('DB update ' + data?.length || 0);
         await this.dbServise.db.address.updateAddressResult(data).then(() => {
-          this.dbServise.db.address.addUnomsFromOks(sessionId).then(() => {
-            this.dbServise.db.address.addUnomsToResultAddress(sessionId);
-          });
+          this.dbServise.db.address.addUnomsToResultAddress(sessionId);
         });
         const endTime = isDev ? performance.now() : 0;
         isDev &&

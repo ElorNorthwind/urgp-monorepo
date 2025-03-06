@@ -6,7 +6,8 @@ SELECT
     unom as "УНОМ",
     full_address AS "Полный адрес",
     postal as "Почтовый индекс",
-    cad_num AS "Кадастровый номер",
+    cad_num AS "Кадастровый номер объекта",
+    house_cad_num AS "Кадастровый номер дома",
 
     fias_id AS "Объект - ID ФИАС",
     fias_guid AS "Объект - GUID ФИАС",
@@ -21,15 +22,18 @@ SELECT
     street_fias_guid AS "Улица - GUID ФИАС",
     street_kladr AS "Улица - код КЛАДР",
 
-    house_num AS "Дом - номер",
-    house_type AS "Дом - тип",
+    house_name AS "Дом - полное наименование",
+    -- house_type AS "Дом - тип",
     house_fias_id AS "Дом - ID ФИАС",
     house_fias_guid AS "Дом - GUID ФИАС",
 
     apartment_num AS "Квартира - номер",
     apartment_type AS "Квартира - тип", 
     apartment_fias_id AS "Квартира - ID ФИАС",
-    apartment_fias_guid AS "Квартира - GUID ФИАС"
+    apartment_fias_guid AS "Квартира - GUID ФИАС",
+
+    response_source AS "Источник данных",
+    confidence AS "Уверенность в результате"
 
 FROM address.results
 WHERE session_id = ${sessionId}
