@@ -17,9 +17,10 @@ const claerWhitespaceRegexp = /\s\s+/g;
 type SplitAdress = {
   original: string;
   street: string;
-  // numbers: string;
   house: string;
   apartment: string;
+  validationStr: string;
+  numbers?: string[];
 };
 type SplitApartment = {
   house: string;
@@ -28,7 +29,7 @@ type SplitApartment = {
 
 export function splitAppartment(addressPart: string): SplitApartment {
   const regEx =
-    /^(.*?(?:к.*?)?(?:к(?!в\.).*?)?)(?:,?\s)((?:кв\.кв|кв?(?:артир[аы])?|п(?:ом)?(?:ещ)?(?:ение)?)\.?(?:[,\s]|(?=\d))(?:[№N]\s)?[\dIVX][\d\-\\\/а-яА-Я,\. IVX]*)$/;
+    /^(.*?)(?:,?\s)((?:кв\.кв|кв(?:артир[аы])?|п(?:ом)?(?:ещ)?(?:ение)?)\.?(?:[,?\s]|(?=\d))(?:[№N]\s)?[\dIVX][\d\-\\\/а-яА-Я,\. IVX]*)$/;
   const result = regEx.exec(addressPart);
   return {
     house: result?.[1] || addressPart,
@@ -37,14 +38,22 @@ export function splitAppartment(addressPart: string): SplitApartment {
 }
 
 export function splitAddress(address: string): SplitAdress {
-  const regEx =
+  const splitAddress =
     /^(.*?\d+\-[йя].*?|.*?)(?:,?\s)((?:(?:д(?:ом)?|уч(?:ас)?(?:ток)|кор(?:п)?(?:ус)?|з(?:ем)?(?:ельный)?(?:\/у)?|вл?(?:ад)?(?:ен)?(?:ие)?|c(?:оор)?(?:ужение)?|стр(?:оен)?(?:ие)?|[№Nn]|$|)\.?(?:[,?\s]|(?=\d))).*?\d.*)?$/;
-  const result = regEx.exec(address.replace(claerWhitespaceRegexp, ' '));
-  const houseAndAppartment = splitAppartment(result?.[2] || '');
+
+  const findNums = /([\dIVX][\d\-\\\/а-яА-ЯIVX]*)/g;
+  const addressParts = splitAddress.exec(
+    address.replace(claerWhitespaceRegexp, ' '),
+  );
+
+  const houseAndAppartment = splitAppartment(addressParts?.[2] || '');
+  const numbers = (addressParts?.[2] || '').match(findNums) || [];
+
   return {
     original: address.replace(claerWhitespaceRegexp, ' '),
-    street: clearStreet(result?.[1] || ''),
-    // numbers: result?.[2] || '',
+    street: clearStreet(addressParts?.[1] || ''),
     ...houseAndAppartment,
+    validationStr: numbers.join('|').toLowerCase(),
+    // numbers,
   };
 }

@@ -68,14 +68,25 @@ export class FiasService {
 
       if (fiasSuggestions.length === 0) return { ...addressNotFound, requests };
 
-      const houseId = fiasSuggestions[0]?.hierarchy?.find(
+      const { validationStr } = splitAddress(address);
+
+      const validatedAddress = fiasSuggestions.find(
+        (address) =>
+          splitAddress(address.full_name)?.validationStr === validationStr,
+      );
+
+      const requestResult = validatedAddress
+        ? { ...validatedAddress, confidence: 'medium' }
+        : { ...fiasSuggestions[0], confidence: 'low' };
+
+      const houseId = requestResult?.hierarchy?.find(
         (item) => item.object_level_id === 10,
       )?.object_id;
 
       const house =
-        fiasSuggestions[0].object_level_id !== 10
+        requestResult.object_level_id !== 10
           ? addresses.find((address) => address.object_id === houseId)
-          : fiasSuggestions[0];
+          : requestResult;
 
       let houseCadNum = house?.address_details?.cadastral_number;
 
@@ -87,10 +98,16 @@ export class FiasService {
       }
 
       return {
-        ...fiasSuggestions[0],
+        ...requestResult,
         house_cad_num: houseCadNum || null,
-        confidence: 'medium',
         requests,
+        // // for testing
+        // extra: {
+        //   validationStr:
+        //     validationStr +
+        //       ' -> ' +
+        //       splitAddress(requestResult.full_name)?.validationStr || '',
+        // },
       };
     } catch (error) {
       Logger.error(error);

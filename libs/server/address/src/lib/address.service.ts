@@ -53,15 +53,15 @@ export class AddressService {
     const isDev = this.configService.get<string>('NODE_ENV') === 'development';
     isDev && Logger.log(`Getting FIAS data for session ${sessionId}`);
 
-    const addresses =
-      await this.dbServise.db.address.getSessionUnfinishedAddresses(
-        sessionId,
-        limit,
-      );
-    addresses.forEach((add) => {
-      Logger.log(splitAddress(add.address));
-    });
-    return;
+    // const addresses =
+    //   await this.dbServise.db.address.getSessionUnfinishedAddresses(
+    //     sessionId,
+    //     limit,
+    //   );
+    // addresses.forEach((add) => {
+    //   Logger.log(splitAddress(add.address));
+    // });
+    // return;
 
     try {
       let addresses = [];
@@ -78,7 +78,6 @@ export class AddressService {
             (arg) =>
               from(this.fias.getAddressByString(arg.address)).pipe(
                 map((value: FiasAddressWithDetails): AddressReslutUpdate => {
-                  Logger.log(splitAddress(arg.address));
                   if (value?.object_id < 0) {
                     throw new NotFoundException(
                       `Адрес "${arg.address}" не найден`,

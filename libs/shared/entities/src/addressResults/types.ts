@@ -93,6 +93,7 @@ export type FiasAddressWithDetails = {
   confidence: string;
   response_source?: string;
   requests?: number;
+  extra?: any;
 };
 
 export type UnfinishedAddress = {
