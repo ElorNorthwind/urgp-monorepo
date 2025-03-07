@@ -14,22 +14,22 @@ import { FiasAddress, FiasHint } from '@urgp/shared/entities';
 @UseGuards(AccessTokenGuard)
 export class FiasController {
   constructor(private readonly fias: FiasService) {}
-  @Get('hint')
-  getAddressHint(@Query('q') q: string): Promise<FiasHint> {
-    if (!q || q.length === 0)
-      throw new BadRequestException('Нужно указать искомый адрес');
-    return this.fias.getAddressHint(q);
-  }
+  // @Get('hint')
+  // getAddressHint(@Query('q') q: string): Promise<FiasHint> {
+  //   if (!q || q.length === 0)
+  //     throw new BadRequestException('Нужно указать искомый адрес');
+  //   return this.fias.getAddressHint(q);
+  // }
   @Get('address')
   getAddress(@Query('q') q: string): Promise<FiasAddress> {
     if (!q || q.length === 0)
       throw new BadRequestException('Нужно указать искомый адрес');
-    return this.fias.getAddress(q);
+    return this.fias.getAddressByString(q);
   }
-  @Get('direct-address')
-  getDirectAddress(@Query('q') q: string): Promise<FiasAddress> {
-    if (!q || q.length === 0)
-      throw new BadRequestException('Нужно указать искомый адрес');
-    return this.fias.getDirectAddress(q);
-  }
+  // @Get('direct-address')
+  // getDirectAddress(@Query('q') q: string): Promise<FiasAddress> {
+  //   if (!q || q.length === 0)
+  //     throw new BadRequestException('Нужно указать искомый адрес');
+  //   return this.fias.getAddressByString(q);
+  // }
 }

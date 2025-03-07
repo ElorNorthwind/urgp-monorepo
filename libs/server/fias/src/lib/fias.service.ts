@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AxiosRequestConfig } from 'axios';
-import { catchError, firstValueFrom, from, of, retry, tap } from 'rxjs';
+import { catchError, firstValueFrom, from, map, of, retry, tap } from 'rxjs';
 import {
   addressNotFound,
   FIAS_RETRY_COUNT,
@@ -20,7 +20,7 @@ export class FiasService {
     private configService: ConfigService,
   ) {}
 
-  public async getDirectAddress(
+  public async getAddressByString(
     address: string,
   ): Promise<FiasAddressWithDetails> {
     const apiKey = this.configService.get<string>('FIAS_KEY');
@@ -39,11 +39,17 @@ export class FiasService {
       },
     };
 
+    let requests = 0;
+
     try {
       const { data } = await firstValueFrom(
         this.axios.request(directAddressConfig).pipe(
           // tap(() => Logger.log('fias request: ' + address)),
-          // tap(() => Logger.log(splitAddress(address))),
+          // tap(() => Logger.log(split Address(address))),
+          // tap((resp) => Logger.log(resp.data)),
+          tap(() => {
+            requests += 1;
+          }),
           retry(FIAS_RETRY_COUNT),
           catchError(() => {
             return of({ data: [addressNotFound] });
@@ -51,7 +57,8 @@ export class FiasService {
         ),
       );
       const addresses = data?.addresses as FiasAddress[];
-      if (!addresses || addresses.length === 0) return addressNotFound;
+      if (!addresses || addresses.length === 0)
+        return { ...addressNotFound, requests };
 
       const fiasSuggestions = addresses.filter(
         (address) =>
@@ -59,7 +66,7 @@ export class FiasService {
           address.path.slice(0, 7) === '1405113', // Должно быть в Москве
       );
 
-      if (fiasSuggestions.length === 0) return addressNotFound;
+      if (fiasSuggestions.length === 0) return { ...addressNotFound, requests };
 
       const houseId = fiasSuggestions[0]?.hierarchy?.find(
         (item) => item.object_level_id === 10,
@@ -70,84 +77,45 @@ export class FiasService {
           ? addresses.find((address) => address.object_id === houseId)
           : fiasSuggestions[0];
 
-      // const houseCadNum =
-      //   fiasSuggestions[0].object_level_id > 10
-      //     ? fiasSuggestions.find((address) => address.object_id === houseId)
-      //         ?.address_details?.cadastral_number || null
-      //     : fiasSuggestions[0].address_details.cadastral_number;
-      // if (fiasSuggestions[0].object_level_id > 10) return fiasSuggestions[0];
+      let houseCadNum = house?.address_details?.cadastral_number;
+
+      // if (houseId && (!houseCadNum || houseCadNum === '')) {
+      if (houseId && !house) {
+        requests += 1;
+        houseCadNum = (await this.getAddressById(houseId))?.address_details
+          ?.cadastral_number;
+      }
 
       return {
         ...fiasSuggestions[0],
-        house_cad_num: house?.address_details?.cadastral_number || null,
+        house_cad_num: houseCadNum || null,
         confidence: 'medium',
+        requests,
       };
     } catch (error) {
       Logger.error(error);
-      return addressNotFound;
+      return { ...addressNotFound, requests };
     }
   }
 
-  public async getAddressHint(address: string): Promise<FiasHint> {
+  public async getAddressById(fiasId: number): Promise<FiasAddressWithDetails> {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
-    // Параметры запроса на подсказку адреса
-    const hintConfig: AxiosRequestConfig = {
-      method: 'post',
-      url: '/GetAddressHint',
+
+    // Параметры запроса на адрес по ID
+    const addressConfig: AxiosRequestConfig = {
+      method: 'get',
+      url: '/GetAddressItemById',
       headers: { 'master-token': apiKey },
-      data: {
-        searchString: address,
-        addressType: 1,
-        upToLevel: 11,
-        locationsBoost: 1405113,
+      params: {
+        address_type: 2,
+        object_id: fiasId,
       },
     };
 
     try {
       const { data } = await firstValueFrom(
-        this.axios.request(hintConfig).pipe(
-          retry(FIAS_RETRY_COUNT),
-          catchError(() => {
-            return of({ data: [hintNotFound] });
-          }),
-        ),
-      );
-      const hints = data?.hints as FiasHint[];
-
-      if (!hints || hints.length === 0) return hintNotFound;
-      return (
-        hints.find(
-          (h) =>
-            h.path.split('.').length >= 3 && h.path.slice(0, 7) === '1405113',
-        ) ?? hintNotFound
-      );
-    } catch (error) {
-      Logger.error(error);
-      return hintNotFound;
-    }
-  }
-  public async getAddress(address: string): Promise<FiasAddress> {
-    const apiKey = this.configService.get<string>('FIAS_KEY');
-    if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
-
-    // Параметры запроса на подсказку адреса
-    const getAddressConfig = (object_id: number): AxiosRequestConfig => ({
-      method: 'get',
-      url: '/GetAddressItemById',
-      headers: { 'master-token': apiKey },
-      params: {
-        address_type: 1,
-        object_id,
-      },
-    });
-
-    try {
-      const { object_id } = await this.getAddressHint(address);
-      if (!object_id || object_id === -1) return addressNotFound;
-
-      const { data } = await firstValueFrom(
-        this.axios.request(getAddressConfig(object_id)).pipe(
+        this.axios.request(addressConfig).pipe(
           retry(FIAS_RETRY_COUNT),
           catchError(() => {
             return of({ data: [addressNotFound] });
@@ -160,4 +128,77 @@ export class FiasService {
       return addressNotFound;
     }
   }
+
+  // public async getAddressHint(address: string): Promise<FiasHint> {
+  //   const apiKey = this.configService.get<string>('FIAS_KEY');
+  //   if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
+  //   // Параметры запроса на подсказку адреса
+  //   const hintConfig: AxiosRequestConfig = {
+  //     method: 'post',
+  //     url: '/GetAddressHint',
+  //     headers: { 'master-token': apiKey },
+  //     data: {
+  //       searchString: address,
+  //       addressType: 1,
+  //       upToLevel: 11,
+  //       locationsBoost: 1405113,
+  //     },
+  //   };
+
+  //   try {
+  //     const { data } = await firstValueFrom(
+  //       this.axios.request(hintConfig).pipe(
+  //         retry(FIAS_RETRY_COUNT),
+  //         catchError(() => {
+  //           return of({ data: [hintNotFound] });
+  //         }),
+  //       ),
+  //     );
+  //     const hints = data?.hints as FiasHint[];
+
+  //     if (!hints || hints.length === 0) return hintNotFound;
+  //     return (
+  //       hints.find(
+  //         (h) =>
+  //           h.path.split('.').length >= 3 && h.path.slice(0, 7) === '1405113',
+  //       ) ?? hintNotFound
+  //     );
+  //   } catch (error) {
+  //     Logger.error(error);
+  //     return hintNotFound;
+  //   }
+  // }
+  // public async getAddress(address: string): Promise<FiasAddress> {
+  //   const apiKey = this.configService.get<string>('FIAS_KEY');
+  //   if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
+
+  //   // Параметры запроса на подсказку адреса
+  //   const getAddressConfig = (object_id: number): AxiosRequestConfig => ({
+  //     method: 'get',
+  //     url: '/GetAddressItemById',
+  //     headers: { 'master-token': apiKey },
+  //     params: {
+  //       address_type: 1,
+  //       object_id,
+  //     },
+  //   });
+
+  //   try {
+  //     const { object_id } = await this.getAddressHint(address);
+  //     if (!object_id || object_id === -1) return addressNotFound;
+
+  //     const { data } = await firstValueFrom(
+  //       this.axios.request(getAddressConfig(object_id)).pipe(
+  //         retry(FIAS_RETRY_COUNT),
+  //         catchError(() => {
+  //           return of({ data: [addressNotFound] });
+  //         }),
+  //       ),
+  //     );
+  //     return data?.addresses?.[0] ?? addressNotFound;
+  //   } catch (error) {
+  //     Logger.error(error);
+  //     return addressNotFound;
+  //   }
+  // }
 }

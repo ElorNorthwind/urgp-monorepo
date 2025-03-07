@@ -7,28 +7,19 @@ import {
   AddressSessionFull,
   FIAS_CONCURRENCY,
   FIAS_DB_STEP,
-  FIAS_TIMEOUT,
-  FiasAddress,
   FiasAddressWithDetails,
 } from '@urgp/shared/entities';
 import { FiasService } from 'libs/server/fias/src/lib/fias.service';
 import {
   catchError,
-  finalize,
-  firstValueFrom,
   from,
-  interval,
   lastValueFrom,
   map,
   mergeMap,
   of,
-  tap,
-  throttle,
-  timer,
   toArray,
 } from 'rxjs';
 import { formatFiasDataForDb } from './helper/formatFiasDataForDb';
-import { start } from 'repl';
 
 @Injectable()
 export class AddressService {
@@ -72,12 +63,13 @@ export class AddressService {
         const hydratedData = from(addresses).pipe(
           mergeMap(
             (arg) =>
-              from(this.fias.getDirectAddress(arg.address)).pipe(
+              from(this.fias.getAddressByString(arg.address)).pipe(
                 map((value: FiasAddressWithDetails): AddressReslutUpdate => {
-                  if (value?.object_id < 0)
+                  if (value?.object_id < 0) {
                     throw new NotFoundException(
                       `Адрес "${arg.address}" не найден`,
                     );
+                  }
                   return {
                     id: arg.id,
                     ...formatFiasDataForDb(value),

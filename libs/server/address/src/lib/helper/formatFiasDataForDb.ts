@@ -1,8 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
 import {
-  AddressResult,
-  clearMunicipalAddressPart,
-  FiasAddress,
   FiasAddressWithDetails,
   FiasParsedToResult,
 } from '@urgp/shared/entities';
@@ -23,25 +20,26 @@ export const formatFiasDataForDb = (
     isDone: true,
     responseSource: value?.response_source || 'fias-search',
     response: value,
-    confidence: value.confidence,
+    confidence: value.confidence || 'low',
+    // requests: value.requests || 0,
 
     // unom: null,
-    fullAddress: value.full_name, // clearMunicipalAddressPart(value.full_name), //oh-oh
-    postal: parseInt(value.address_details.postal_code) || null,
+    fullAddress: value.full_name || '', // clearMunicipalAddressPart(value.full_name), //oh-oh
+    postal: parseInt(value.address_details.postal_code) || -1,
     cadNum: value.address_details.cadastral_number,
     houseCadNum: value.house_cad_num,
 
-    fiasId: value?.object_id || null,
+    fiasId: value?.object_id || -1,
     fiasGuid: value?.object_guid || null,
     fiasPath: value?.path || null,
-    fiasLevel: value?.object_level_id || null,
-    fiasIsActive: value?.is_active || null,
+    fiasLevel: value?.object_level_id || -1,
+    fiasIsActive: value?.is_active || false,
 
     // levels 6,7,8
     streetName: street?.name || null,
-    streetLevel: street?.object_level_id || null,
+    streetLevel: street?.object_level_id || -1,
     streetType: street?.type_name || null,
-    streetFiasId: street?.object_id || null,
+    streetFiasId: street?.object_id || -1,
     streetFiasGuid: street?.object_guid || null,
     streetKladr: street?.kladr_code || null,
 
@@ -53,13 +51,13 @@ export const formatFiasDataForDb = (
     houseAddType1: house?.add_type1_name || null,
     houseAddNum2: house?.add_number2 || null,
     houseAddType2: house?.add_type2_name || null,
-    houseFiasId: house?.object_id || null,
+    houseFiasId: house?.object_id || -1,
     houseFiasGuid: house?.object_guid || null,
 
     // level 11
     apartmentNum: apartment?.number || null,
     apartmentType: apartment?.type_name || null,
-    apartmentFiasId: apartment?.object_id || null,
+    apartmentFiasId: apartment?.object_id || -1,
     apartmentFiasGuid: apartment?.object_guid || null,
   };
 };

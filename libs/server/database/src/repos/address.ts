@@ -248,11 +248,9 @@ export class AddressRepository {
 
   updateAddressResult(results: AddressReslutUpdate[]): Promise<null> {
     if (results.length === 0) return Promise.resolve(null);
-    // Logger.warn(results[0]);
     const columns = [
       { name: 'id', prop: 'id', cnd: true },
       { name: 'response', prop: 'response', cast: 'jsonb' },
-      // { name: 'fias_id', prop: 'fiasId', cast: 'bigint' },
       {
         name: 'updated_at',
         prop: 'updatedAt',
@@ -279,20 +277,10 @@ export class AddressRepository {
       },
     });
 
-    try {
-      const update =
-        this.pgp.helpers.update(results, resultTableColumnSet) +
-        ' WHERE v.id = t.id';
-
-      // Logger.warn(
-      //   this.pgp.helpers.update(results.slice(0, 1), resultTableColumnSet) +
-      //     ' WHERE v.id = t.id',
-      // );
-      return this.db.none(update);
-    } catch (e) {
-      Logger.warn(e);
-      return Promise.reject(e);
-    }
+    const update =
+      this.pgp.helpers.update(results, resultTableColumnSet) +
+      ' WHERE v.id = t.id';
+    return this.db.none(update);
   }
   addUnomsToResultAddress(sessionId: number): Promise<null> {
     return this.db.none(results.addUnomsToResultAddress, { sessionId });
