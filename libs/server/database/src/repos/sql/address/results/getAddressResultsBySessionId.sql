@@ -7,6 +7,7 @@ SELECT
         WHEN confidence = 'high' THEN 'Высокая'
         WHEN confidence = 'medium' THEN 'Нормальная'
         WHEN confidence = 'low' THEN 'Низкая'
+        WHEN confidence = 'none' THEN 'Никакой'
         ELSE 'Не установлена'
     END AS "Уверенность в результате",
 
