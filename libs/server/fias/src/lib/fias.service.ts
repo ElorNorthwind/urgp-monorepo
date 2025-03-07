@@ -27,6 +27,7 @@ export class FiasService {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
 
+    // TODO: Доп проверки на плохо написанные квартиры выше уровнем?
     const hasFlat = part?.flat?.number && part?.flat?.number !== '';
 
     const requestData = {
@@ -35,12 +36,10 @@ export class FiasService {
         type_name: 'город',
       },
       object_level_id: hasFlat ? 11 : 10,
-      street: part.street,
+      street: part.street, // TODO: Дочищать адреса надо лучше! г Москва вот это вот все
       house: part.house,
       flat: hasFlat ? part.flat : undefined,
     };
-
-    Logger.debug(requestData);
 
     // Параметры запроса на адрес по ID
     const addressConfig: AxiosRequestConfig = {
@@ -64,10 +63,23 @@ export class FiasService {
           }),
         ),
       );
-      Logger.debug(data);
-      return (
-        data?.addresses?.[0]?.address_item ?? { ...addressNotFound, requests }
-      );
+      // Logger.debug(data);
+
+      const resultData =
+        (data?.address_item as FiasAddress | undefined) ?? addressNotFound;
+      const problems = data?.description ?? null;
+
+      return {
+        ...resultData,
+        requests,
+        response_source: 'fias-parts',
+        house_cad_num:
+          resultData?.object_level_id === 10
+            ? (resultData?.address_details?.cadastral_number ?? null)
+            : null,
+        confidence: resultData?.object_id > 0 ? 'hight' : 'none',
+        extra: { problems },
+      };
     } catch (error) {
       Logger.error(error);
       return { ...addressNotFound, requests };

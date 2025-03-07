@@ -76,19 +76,7 @@ export type FiasAddress = {
   federal_district: FiasFederalDistrict;
 };
 
-export type FiasAddressWithDetails = {
-  object_id: number;
-  object_level_id: number;
-  operation_type_id: number;
-  object_guid: string;
-  address_type: number;
-  full_name: string;
-  region_code: number;
-  is_active: boolean;
-  path: string;
-  address_details: FiasAdressDetails;
-  hierarchy: FiasHierarchyItem[];
-  federal_district: FiasFederalDistrict;
+export type FiasAddressWithDetails = FiasAddress & {
   house_cad_num: string | null;
   confidence: string;
   response_source?: string;
