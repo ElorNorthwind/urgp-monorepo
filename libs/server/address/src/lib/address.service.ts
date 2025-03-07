@@ -8,6 +8,7 @@ import {
   FIAS_CONCURRENCY,
   FIAS_DB_STEP,
   FiasAddressWithDetails,
+  splitAddress,
 } from '@urgp/shared/entities';
 import { FiasService } from 'libs/server/fias/src/lib/fias.service';
 import {
@@ -51,6 +52,17 @@ export class AddressService {
   public async hydrateSessionAdresses(sessionId: number, limit = FIAS_DB_STEP) {
     const isDev = this.configService.get<string>('NODE_ENV') === 'development';
     isDev && Logger.log(`Getting FIAS data for session ${sessionId}`);
+
+    const addresses =
+      await this.dbServise.db.address.getSessionUnfinishedAddresses(
+        sessionId,
+        limit,
+      );
+    addresses.forEach((add) => {
+      Logger.log(splitAddress(add.address));
+    });
+    return;
+
     try {
       let addresses = [];
       do {
@@ -60,11 +72,13 @@ export class AddressService {
             sessionId,
             limit,
           );
+
         const hydratedData = from(addresses).pipe(
           mergeMap(
             (arg) =>
               from(this.fias.getAddressByString(arg.address)).pipe(
                 map((value: FiasAddressWithDetails): AddressReslutUpdate => {
+                  Logger.log(splitAddress(arg.address));
                   if (value?.object_id < 0) {
                     throw new NotFoundException(
                       `Адрес "${arg.address}" не найден`,

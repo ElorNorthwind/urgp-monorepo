@@ -12,17 +12,39 @@ export function clearStreet(street: string): string {
   return result.replace(/([,\.;]|\s(?=\s))/g, '');
 }
 
+const claerWhitespaceRegexp = /\s\s+/g;
+
 type SplitAdress = {
+  original: string;
   street: string;
-  numbers: string;
+  // numbers: string;
+  house: string;
+  apartment: string;
+};
+type SplitApartment = {
+  house: string;
+  apartment: string;
 };
 
-export function splitAddress(adress: string): SplitAdress {
+export function splitAppartment(addressPart: string): SplitApartment {
   const regEx =
-    /^(.*?\d+\-[йя].*?|.*?)(?:,?\s)((?:(?:д(?:ом)?|уч(?:ас)?(?:ток)|кор(?:п)?(?:ус)?|з(?:ем)?(?:ельный)?(?:\/у)?|вл?(?:ад)?(?:ен)?(?:ие)?|c(?:оор)?(?:ужение)?|стр(?:оен)?(?:ие)?|[№Nn]|$|)\.?(?:[,\s]|(?=\d))).*?\d.*)?$/;
-  const result = regEx.exec(adress);
+    /^(.*?(?:к.*?)?(?:к(?!в\.).*?)?)(?:,?\s)((?:кв\.кв|кв?(?:артир[аы])?|п(?:ом)?(?:ещ)?(?:ение)?)\.?(?:[,\s]|(?=\d))(?:[№N]\s)?[\dIVX][\d\-\\\/а-яА-Я,\. IVX]*)$/;
+  const result = regEx.exec(addressPart);
   return {
+    house: result?.[1] || addressPart,
+    apartment: result?.[2] || '',
+  };
+}
+
+export function splitAddress(address: string): SplitAdress {
+  const regEx =
+    /^(.*?\d+\-[йя].*?|.*?)(?:,?\s)((?:(?:д(?:ом)?|уч(?:ас)?(?:ток)|кор(?:п)?(?:ус)?|з(?:ем)?(?:ельный)?(?:\/у)?|вл?(?:ад)?(?:ен)?(?:ие)?|c(?:оор)?(?:ужение)?|стр(?:оен)?(?:ие)?|[№Nn]|$|)\.?(?:[,?\s]|(?=\d))).*?\d.*)?$/;
+  const result = regEx.exec(address.replace(claerWhitespaceRegexp, ' '));
+  const houseAndAppartment = splitAppartment(result?.[2] || '');
+  return {
+    original: address.replace(claerWhitespaceRegexp, ' '),
     street: clearStreet(result?.[1] || ''),
-    numbers: result?.[2] || '',
+    // numbers: result?.[2] || '',
+    ...houseAndAppartment,
   };
 }
