@@ -3,6 +3,13 @@ SELECT
     original_address AS "Исходный адрес",
 
     CASE WHEN is_error IS DISTINCT FROM true THEN 'найден' ELSE 'не найден' END AS "Результат",
+    CASE 
+        WHEN confidence = 'high' THEN 'Высокая'
+        WHEN confidence = 'medium' THEN 'Нормальная'
+        WHEN confidence = 'low' THEN 'Низкая'
+        ELSE 'Не установлена'
+    END AS "Уверенность в результате",
+
     unom as "УНОМ",
     full_address AS "Полный адрес",
     postal as "Почтовый индекс",
@@ -32,8 +39,7 @@ SELECT
     apartment_fias_id AS "Квартира - ID ФИАС",
     apartment_fias_guid AS "Квартира - GUID ФИАС",
 
-    response_source AS "Источник данных",
-    confidence AS "Уверенность в результате"
+    response_source AS "Источник данных"
 
 FROM address.results
 WHERE session_id = ${sessionId}

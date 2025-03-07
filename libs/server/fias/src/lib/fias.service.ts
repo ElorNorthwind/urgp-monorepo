@@ -7,6 +7,7 @@ import {
   addressNotFound,
   FIAS_RETRY_COUNT,
   FiasAddress,
+  FiasAddressPart,
   FiasAddressWithDetails,
   FiasHint,
   hintNotFound,
@@ -19,6 +20,59 @@ export class FiasService {
     private readonly axios: HttpService,
     private configService: ConfigService,
   ) {}
+
+  public async getAddressByPart(
+    part: FiasAddressPart,
+  ): Promise<FiasAddressWithDetails> {
+    const apiKey = this.configService.get<string>('FIAS_KEY');
+    if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
+
+    const hasFlat = part?.flat?.number && part?.flat?.number !== '';
+
+    const requestData = {
+      region: {
+        name: 'Москва',
+        type_name: 'город',
+      },
+      object_level_id: hasFlat ? 11 : 10,
+      street: part.street,
+      house: part.house,
+      flat: hasFlat ? part.flat : undefined,
+    };
+
+    Logger.debug(requestData);
+
+    // Параметры запроса на адрес по ID
+    const addressConfig: AxiosRequestConfig = {
+      method: 'post',
+      url: '/SearchByParts',
+      headers: { 'master-token': apiKey },
+      data: requestData,
+    };
+
+    let requests = 0;
+
+    try {
+      const { data } = await firstValueFrom(
+        this.axios.request(addressConfig).pipe(
+          tap(() => {
+            requests += 1;
+          }),
+          retry(FIAS_RETRY_COUNT),
+          catchError(() => {
+            return of({ data: [addressNotFound] });
+          }),
+        ),
+      );
+      Logger.debug(data);
+      return (
+        data?.addresses?.[0]?.address_item ?? { ...addressNotFound, requests }
+      );
+    } catch (error) {
+      Logger.error(error);
+      return { ...addressNotFound, requests };
+    }
+  }
 
   public async getAddressByString(
     address: string,
@@ -68,7 +122,18 @@ export class FiasService {
 
       if (fiasSuggestions.length === 0) return { ...addressNotFound, requests };
 
-      const { validationStr } = splitAddress(address);
+      const {
+        validationStr,
+        street: streetStr,
+        house: houseStr,
+        apartment: apartmentStr,
+      } = splitAddress(address);
+
+      this.getAddressByPart({
+        street: { name: streetStr },
+        house: { number: houseStr },
+        flat: { number: apartmentStr },
+      });
 
       const validatedAddress = fiasSuggestions.find(
         (address) =>
@@ -101,13 +166,16 @@ export class FiasService {
         ...requestResult,
         house_cad_num: houseCadNum || null,
         requests,
-        // // for testing
-        // extra: {
-        //   validationStr:
-        //     validationStr +
-        //       ' -> ' +
-        //       splitAddress(requestResult.full_name)?.validationStr || '',
-        // },
+        // for testing
+        extra: {
+          validationStr:
+            validationStr +
+              ' -> ' +
+              splitAddress(requestResult.full_name)?.validationStr || '',
+          streetStr,
+          houseStr,
+          apartmentStr,
+        },
       };
     } catch (error) {
       Logger.error(error);

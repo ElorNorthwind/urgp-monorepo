@@ -175,6 +175,37 @@ export type AddressReslutUpdate = Omit<
   'sessionId' | 'createdAt'
 >;
 
+type AddressPartInfo = {
+  name?: string;
+  type_name?: string;
+  number?: string;
+};
+
+export type FiasAddressPart = {
+  region?: AddressPartInfo;
+  street?: AddressPartInfo;
+  house?: AddressPartInfo;
+  flat?: AddressPartInfo;
+  object_level_id?: 10 | 11;
+};
+
+// {
+//   "region": {
+//     "name": "Москва",
+//     "type_name": "город"
+// },
+//   "street": {
+//     "name": "Зеленоград"
+//   },
+//   "house": {
+//     "number": "корп 515"
+//   },
+//   "flat": {
+//     "number": "квартира 1"
+//   },
+//   "object_level_id": 11
+// }
+
 // {
 //     "path": "1405113.1409606.69766498",
 //     "full_name": "город Москва, аллея Берёзовая, дом 7",
