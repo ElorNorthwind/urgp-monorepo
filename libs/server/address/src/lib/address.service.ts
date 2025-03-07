@@ -76,7 +76,7 @@ export class AddressService {
         const hydratedData = from(addresses).pipe(
           mergeMap(
             (arg) =>
-              from(this.fias.getAddressByString(arg.address)).pipe(
+              from(this.fias.getAddress(arg.address)).pipe(
                 map((value: FiasAddressWithDetails): AddressReslutUpdate => {
                   if (value?.object_id < 0) {
                     throw new NotFoundException(

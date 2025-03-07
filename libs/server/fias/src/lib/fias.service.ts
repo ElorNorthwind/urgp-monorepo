@@ -21,6 +21,61 @@ export class FiasService {
     private configService: ConfigService,
   ) {}
 
+  public async getAddress(address: string): Promise<FiasAddressWithDetails> {
+    const apiKey = this.configService.get<string>('FIAS_KEY');
+    if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
+
+    let requests = 0;
+
+    const {
+      validationStr,
+      street: streetStr,
+      house: houseStr,
+      apartment: apartmentStr,
+    } = splitAddress(address);
+
+    try {
+      let fiasAddress = await this.getAddressByPart({
+        street: { name: streetStr },
+        house: { number: houseStr },
+        flat: { number: apartmentStr },
+      });
+      requests += fiasAddress?.requests || 0;
+
+      if (fiasAddress?.confidence === 'none' || fiasAddress?.object_id < 0) {
+        fiasAddress = await this.getAddressByString(address, validationStr);
+        requests += fiasAddress?.requests || 0;
+      }
+
+      if (!fiasAddress?.house_cad_num || fiasAddress?.house_cad_num === '') {
+        const houseId = fiasAddress?.hierarchy?.find(
+          (item) => item.object_level_id === 10,
+        )?.object_id;
+
+        if (houseId) {
+          requests += 1;
+          fiasAddress.house_cad_num =
+            (await this.getAddressById(houseId))?.address_details
+              ?.cadastral_number || null;
+        }
+      }
+      return {
+        ...fiasAddress,
+        requests,
+        // for testing
+        extra: {
+          ...fiasAddress?.extra,
+          streetStr,
+          houseStr,
+          apartmentStr,
+        },
+      };
+    } catch (error) {
+      Logger.error(error);
+      return { ...addressNotFound, requests };
+    }
+  }
+
   public async getAddressByPart(
     part: FiasAddressPart,
   ): Promise<FiasAddressWithDetails> {
@@ -77,7 +132,7 @@ export class FiasService {
           resultData?.object_level_id === 10
             ? (resultData?.address_details?.cadastral_number ?? null)
             : null,
-        confidence: resultData?.object_id > 0 ? 'hight' : 'none',
+        confidence: resultData?.object_id > 0 ? 'high' : 'none',
         extra: { problems },
       };
     } catch (error) {
@@ -88,12 +143,15 @@ export class FiasService {
 
   public async getAddressByString(
     address: string,
+    validationStr?: string,
   ): Promise<FiasAddressWithDetails> {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
+
     const fullAddress = /[Мм]осква/.test(address)
       ? address
       : 'Москва, ' + address;
+
     // Параметры запроса на подсказку адреса
     const directAddressConfig: AxiosRequestConfig = {
       method: 'get',
@@ -110,9 +168,6 @@ export class FiasService {
     try {
       const { data } = await firstValueFrom(
         this.axios.request(directAddressConfig).pipe(
-          // tap(() => Logger.log('fias request: ' + address)),
-          // tap(() => Logger.log(split Address(address))),
-          // tap((resp) => Logger.log(resp.data)),
           tap(() => {
             requests += 1;
           }),
@@ -122,9 +177,16 @@ export class FiasService {
           }),
         ),
       );
+
+      const notFoundResult = {
+        ...addressNotFound,
+        requests,
+        response_source: 'fias-search',
+        confidence: 'none',
+      };
+
       const addresses = data?.addresses as FiasAddress[];
-      if (!addresses || addresses.length === 0)
-        return { ...addressNotFound, requests };
+      if (!addresses || addresses.length === 0) return notFoundResult;
 
       const fiasSuggestions = addresses.filter(
         (address) =>
@@ -132,20 +194,7 @@ export class FiasService {
           address.path.slice(0, 7) === '1405113', // Должно быть в Москве
       );
 
-      if (fiasSuggestions.length === 0) return { ...addressNotFound, requests };
-
-      const {
-        validationStr,
-        street: streetStr,
-        house: houseStr,
-        apartment: apartmentStr,
-      } = splitAddress(address);
-
-      this.getAddressByPart({
-        street: { name: streetStr },
-        house: { number: houseStr },
-        flat: { number: apartmentStr },
-      });
+      if (fiasSuggestions.length === 0) return notFoundResult;
 
       const validatedAddress = fiasSuggestions.find(
         (address) =>
@@ -167,31 +216,26 @@ export class FiasService {
 
       let houseCadNum = house?.address_details?.cadastral_number;
 
-      // if (houseId && (!houseCadNum || houseCadNum === '')) {
-      if (houseId && !house) {
-        requests += 1;
-        houseCadNum = (await this.getAddressById(houseId))?.address_details
-          ?.cadastral_number;
-      }
-
       return {
         ...requestResult,
         house_cad_num: houseCadNum || null,
+        response_source: 'fias-search',
         requests,
-        // for testing
         extra: {
           validationStr:
             validationStr +
               ' -> ' +
               splitAddress(requestResult.full_name)?.validationStr || '',
-          streetStr,
-          houseStr,
-          apartmentStr,
         },
       };
     } catch (error) {
       Logger.error(error);
-      return { ...addressNotFound, requests };
+      return {
+        ...addressNotFound,
+        requests,
+        response_source: 'fias-search',
+        confidence: 'none',
+      };
     }
   }
 
