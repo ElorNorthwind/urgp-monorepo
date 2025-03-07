@@ -1,5 +1,6 @@
 import { useLazySessionResults } from '@urgp/client/entities';
 import { Button, cn, exportToExcel, Input } from '@urgp/client/shared';
+import { clearMunicipalAddressPart } from '@urgp/shared/entities';
 import { FileSpreadsheet, Upload } from 'lucide-react';
 import React, { forwardRef, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -28,7 +29,11 @@ const ExportAddressResultButton = forwardRef<
     triggerFetch(sessionId)
       .unwrap()
       .then((data) => {
-        exportToExcel(data);
+        const formatedData = data.map((address) => ({
+          ...address,
+          'Полный адрес': clearMunicipalAddressPart(address['Полный адрес']),
+        }));
+        exportToExcel(formatedData);
       })
       .catch((rejected: any) =>
         toast.error('Не удалось загрузить данные', {
