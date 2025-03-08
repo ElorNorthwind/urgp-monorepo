@@ -14,3 +14,4 @@ export * from './SimpleBarChart';
 export * from './CardTab';
 export * from './ExcelFileInput';
 export * from './ExportAddressResultButton';
+export * from './DailyRatesUsageBar';

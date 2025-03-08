@@ -3,12 +3,15 @@ import {
   LatestDoneSessions,
   SessionCard,
   SessionQueue,
-  useGetFiasUsage,
   useGetSessionById,
   useGetSessionsQueue,
   useGetUserSessions,
 } from '@urgp/client/entities';
-import { BarRow, ExcelFileInput } from '@urgp/client/features';
+import {
+  BarRow,
+  DailyRatesUsageBar,
+  ExcelFileInput,
+} from '@urgp/client/features';
 import {
   Button,
   Card,
@@ -27,6 +30,7 @@ import {
 } from '@urgp/client/shared';
 import { CreateAddressSessionForm } from '@urgp/client/widgets';
 import { AddressUploadPageSearchDto } from '@urgp/shared/entities';
+import { isMonday } from 'date-fns';
 import { Loader, SquareArrowLeft } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
@@ -50,37 +54,19 @@ const AddressUploadPage = (): JSX.Element => {
     },
   );
 
-  const {
-    data: usage,
-    isLoading: isUsageLoading,
-    isFetching: isUsageFetching,
-  } = useGetFiasUsage();
-
   return (
     <div className="block space-y-6 p-10 pb-16">
       <div className="mx-auto max-w-7xl">
-        <div className="flex w-full flex-row justify-between">
+        <div className="flex w-full flex-row justify-between gap-2">
           <div className="space-y-0.5">
             <h2 className="text-2xl font-bold tracking-tight">
-              {sessionId ? 'Статус текущего запроса' : 'Сформировать запрос'}
+              {sessionId ? 'Статус запроса' : 'Сформировать запрос'}
             </h2>
-            <BarRow
-              value={usage ?? 0}
-              max={100}
-              isLoading={isUsageLoading || isUsageFetching}
-              label={
-                <div className="flex w-full flex-row justify-between text-xs">
-                  <span>{`Расход лимита (рассчетно)`}</span>
-                  <span>{`${usage || 0}%`}</span>
-                </div>
-              }
-              labelFit="full"
-              className={cn(
-                'bg-muted-foreground/10 mb-6 h-5',
-                isMobile ? 'w-full' : 'max-w-[19rem]',
-              )}
-              barClassName={'bg-slate-400'}
-            />
+            <p className="text-muted-foreground">
+              {sessionId
+                ? 'Ранее сформированный запрос'
+                : 'Новый запрос на обработку адресов'}
+            </p>
           </div>
           {sessionId && (
             <Tooltip>
@@ -89,7 +75,7 @@ const AddressUploadPage = (): JSX.Element => {
                   role="button"
                   variant="ghost"
                   size="icon"
-                  className="size-12 p-2"
+                  className="ml-auto size-12 p-2"
                   onClick={() =>
                     navigate({ to: pathname, search: { sessionId: undefined } })
                   }
@@ -102,6 +88,9 @@ const AddressUploadPage = (): JSX.Element => {
               </TooltipContent>
             </Tooltip>
           )}
+          <DailyRatesUsageBar
+            className={cn('justify-center', isMobile ? 'hidden' : 'w-1/3')}
+          />
         </div>
         <Separator className="my-6" />
 

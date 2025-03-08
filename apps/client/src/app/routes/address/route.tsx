@@ -32,7 +32,6 @@ export const Route = createFileRoute('/address')({
       <div className="font-roboto">
         <SidebarProvider cookieName="address-sidebar" defaultOpen={false}>
           <AddressNavbar />
-
           <ScrollArea
             className={cn(
               'bg-muted-foreground/5 flex h-screen min-h-screen flex-1 flex-col overflow-auto',

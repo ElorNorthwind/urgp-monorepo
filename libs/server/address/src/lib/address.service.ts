@@ -9,6 +9,7 @@ import {
   FIAS_DB_STEP,
   FiasAddressWithDetails,
   addressToParts,
+  RatesDailyUsage,
 } from '@urgp/shared/entities';
 import { FiasService } from 'libs/server/fias/src/lib/fias.service';
 import {
@@ -32,8 +33,8 @@ export class AddressService {
     private fias: FiasService,
   ) {}
 
-  public async getFiasDailyUsage(): Promise<number> {
-    return this.dbServise.db.address.getFiasDailyUsage();
+  public async getFiasDailyUsage(): Promise<RatesDailyUsage> {
+    return this.dbServise.db.address.getRatesDailyUsage();
   }
 
   public async addSessionAddresses(
@@ -59,7 +60,8 @@ export class AddressService {
       let addresses = [];
       do {
         const startTime = isDev ? performance.now() : 0;
-        let requests = 0;
+        let fiasRequests = 0;
+        let dadataRequests = 0;
         addresses =
           await this.dbServise.db.address.getSessionUnfinishedAddresses(
             sessionId,
@@ -71,7 +73,8 @@ export class AddressService {
             (arg) =>
               from(this.fias.getAddress(arg.address)).pipe(
                 tap((value) => {
-                  requests += value?.requests || 0;
+                  dadataRequests += value?.dadataRequests || 0;
+                  fiasRequests += value?.fiasRequests || 0;
                 }),
                 map((value: FiasAddressWithDetails): AddressReslutUpdate => {
                   if (value?.object_id < 0) {
@@ -103,7 +106,21 @@ export class AddressService {
         );
         const data = await lastValueFrom(hydratedData);
 
-        this.dbServise.db.address.insertFiasUsage(sessionId, requests, 'fias');
+        if (fiasRequests > 0) {
+          this.dbServise.db.address.insertRatesUsage(
+            sessionId,
+            fiasRequests,
+            'fias',
+          );
+        }
+
+        if (dadataRequests > 0) {
+          this.dbServise.db.address.insertRatesUsage(
+            sessionId,
+            dadataRequests,
+            'dadata',
+          );
+        }
 
         await this.dbServise.db.address.updateAddressResult(data).then(() => {
           this.dbServise.db.address.addUnomsToResultAddress(sessionId);
@@ -111,7 +128,7 @@ export class AddressService {
         const endTime = isDev ? performance.now() : 0;
         isDev &&
           Logger.log(
-            `${Math.floor((endTime - startTime) / addresses.length)}ms/address | DB update ${data?.length || 0} [${requests} requests]`,
+            `${Math.floor((endTime - startTime) / addresses.length)}ms/address | DB update ${data?.length || 0} [${fiasRequests || 0} fias + ${dadataRequests || 0} dadata]`,
           );
       } while (addresses?.length > 0);
     } catch {

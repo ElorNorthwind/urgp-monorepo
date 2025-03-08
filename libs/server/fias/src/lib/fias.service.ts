@@ -13,11 +13,13 @@ import {
   hintNotFound,
   addressToParts,
 } from '@urgp/shared/entities';
+import { DaDataService } from 'libs/server/dadata/src/lib/dadata.service';
 
 @Injectable()
 export class FiasService {
   constructor(
     private readonly axios: HttpService,
+    private readonly dadata: DaDataService,
     private configService: ConfigService,
   ) {}
 
@@ -25,19 +27,20 @@ export class FiasService {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
 
-    let requests = 0;
+    let fiasRequests = 0;
+    let dadataRequests = 0;
 
     const { validationStr, parts, shortAddress } = addressToParts(address);
 
     try {
       // Поиск 1: по частям адреса
       let fiasAddress = await this.getAddressByPart(parts);
-      requests += fiasAddress?.requests || 0;
+      fiasRequests += fiasAddress?.fiasRequests || 0;
 
       // Поиск 2: по полному адресу
       if (fiasAddress?.confidence === 'none' || fiasAddress?.object_id < 0) {
         fiasAddress = await this.getAddressByString(address, validationStr);
-        requests += fiasAddress?.requests || 0;
+        fiasRequests += fiasAddress?.fiasRequests || 0;
       }
 
       // Поиск 3: по сокращенному адресу
@@ -49,9 +52,38 @@ export class FiasService {
           shortAddress,
           validationStr,
         );
-        requests += fiasAddress?.requests || 0;
+        fiasRequests += fiasAddress?.fiasRequests || 0;
         if (['medium', 'high'].includes(shortSearchResult.confidence)) {
           fiasAddress = shortSearchResult;
+        }
+      }
+
+      // Поиск 4: DaData :(
+      if (
+        ['low', 'none'].includes(fiasAddress?.confidence) ||
+        fiasAddress?.object_id < 0
+      ) {
+        const daDataSearchResult = await this.dadata.getFiasGuidByAddressString(
+          address,
+          validationStr,
+        );
+        dadataRequests += daDataSearchResult?.dadataRequests || 1;
+
+        if (
+          daDataSearchResult?.object_guid &&
+          ['medium', 'high'].includes(daDataSearchResult.confidence)
+        ) {
+          const fiasAddressByGuid = await this.getAddressByGuid(
+            daDataSearchResult?.object_guid,
+          );
+          fiasRequests += fiasAddress?.fiasRequests || 0;
+
+          fiasAddress = {
+            ...fiasAddressByGuid,
+            house_cad_num: daDataSearchResult?.house_cad_num || null,
+            response_source: 'dadata-hint',
+            confidence: 'medium',
+          };
         }
       }
 
@@ -61,7 +93,7 @@ export class FiasService {
         )?.object_id;
 
         if (houseId) {
-          requests += 1;
+          fiasRequests += 1;
           fiasAddress.house_cad_num =
             (await this.getAddressById(houseId))?.address_details
               ?.cadastral_number || null;
@@ -69,18 +101,19 @@ export class FiasService {
       }
       return {
         ...fiasAddress,
-        requests,
+        fiasRequests,
+        dadataRequests,
         // inserted into DB for testing and monitoring
         extra: {
           // validationStr,
           parts,
           shortAddress,
-          requests,
+          fiasRequests,
         },
       };
     } catch (error) {
       Logger.error(error);
-      return { ...addressNotFound, requests };
+      return { ...addressNotFound, fiasRequests };
     }
   }
 
@@ -112,13 +145,13 @@ export class FiasService {
       data: requestData,
     };
 
-    let requests = 0;
+    let fiasRequests = 0;
 
     try {
       const { data } = await firstValueFrom(
         this.axios.request(addressConfig).pipe(
           tap(() => {
-            requests += 1;
+            fiasRequests += 1;
           }),
           retry(FIAS_RETRY_COUNT),
           catchError(() => {
@@ -134,7 +167,7 @@ export class FiasService {
 
       return {
         ...resultData,
-        requests,
+        fiasRequests,
         response_source: 'fias-parts',
         house_cad_num:
           resultData?.object_level_id === 10
@@ -145,7 +178,7 @@ export class FiasService {
       };
     } catch (error) {
       Logger.error(error);
-      return { ...addressNotFound, requests };
+      return { ...addressNotFound, fiasRequests };
     }
   }
 
@@ -171,13 +204,13 @@ export class FiasService {
       },
     };
 
-    let requests = 0;
+    let fiasRequests = 0;
 
     try {
       const { data } = await firstValueFrom(
         this.axios.request(directAddressConfig).pipe(
           tap(() => {
-            requests += 1;
+            fiasRequests += 1;
           }),
           retry(FIAS_RETRY_COUNT),
           catchError(() => {
@@ -188,7 +221,7 @@ export class FiasService {
 
       const notFoundResult = {
         ...addressNotFound,
-        requests,
+        fiasRequests,
         response_source: 'fias-search',
         confidence: 'none',
       };
@@ -227,7 +260,7 @@ export class FiasService {
         ...requestResult,
         house_cad_num: houseCadNum || null,
         response_source: 'fias-search',
-        requests,
+        fiasRequests,
         extra: {
           validationStr:
             validationStr +
@@ -239,7 +272,7 @@ export class FiasService {
       Logger.error(error);
       return {
         ...addressNotFound,
-        requests,
+        fiasRequests,
         response_source: 'fias-search',
         confidence: 'none',
       };
@@ -258,6 +291,37 @@ export class FiasService {
       params: {
         address_type: 2,
         object_id: fiasId,
+      },
+    };
+
+    try {
+      const { data } = await firstValueFrom(
+        this.axios.request(addressConfig).pipe(
+          retry(FIAS_RETRY_COUNT),
+          catchError(() => {
+            return of({ data: [addressNotFound] });
+          }),
+        ),
+      );
+      return data?.addresses?.[0] ?? addressNotFound;
+    } catch (error) {
+      Logger.error(error);
+      return addressNotFound;
+    }
+  }
+
+  public async getAddressByGuid(guid: string): Promise<FiasAddressWithDetails> {
+    const apiKey = this.configService.get<string>('FIAS_KEY');
+    if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
+
+    // Параметры запроса на адрес по ID
+    const addressConfig: AxiosRequestConfig = {
+      method: 'get',
+      url: '/GetAddressItemByGuid',
+      headers: { 'master-token': apiKey },
+      params: {
+        address_type: 2,
+        object_guid: guid,
       },
     };
 

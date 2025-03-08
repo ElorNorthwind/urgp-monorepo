@@ -3,13 +3,14 @@ import {
   AddressResult,
   AddressSessionFull,
   CreateAddressSessionDto,
+  RatesDailyUsage,
 } from '@urgp/shared/entities';
 
 export const addressApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    getFiasDailyUsage: build.query<number, void>({
+    getDailyRatesUsage: build.query<RatesDailyUsage, void>({
       query: (id) => ({
-        url: `/address/fias-usage`,
+        url: `/address/rates-usage`,
         method: 'GET',
       }),
       providesTags: ['address-session'],
@@ -81,7 +82,8 @@ export const {
   useDeleteSessionMutation: useDeleteSession,
   useGetSessionByIdQuery: useGetSessionById,
   useGetUserSessionsQuery: useGetUserSessions,
-  useGetFiasDailyUsageQuery: useGetFiasUsage,
+  // useGetFiasDailyUsageQuery: useGetFiasUsage,
+  useGetDailyRatesUsageQuery: useGetRatesUsage,
   useGetSessionsQueueQuery: useGetSessionsQueue,
   useRefreshSessionsQueueMutation: useRefreshSessionsQueue,
   useGetSessionResultQuery: useSessionResults,

@@ -27,3 +27,8 @@ export const addressSessionFullSchema = addressSessionSchema.extend(
   sessionProgressSchema.shape,
 );
 export type AddressSessionFull = z.infer<typeof addressSessionFullSchema>;
+
+export type RatesDailyUsage = {
+  fias: number;
+  dadata: number;
+};

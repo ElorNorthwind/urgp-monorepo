@@ -3,6 +3,7 @@ import {
   AddressSession,
   AddressSessionFull,
   CreateAddressSessionDto,
+  RatesDailyUsage,
   UnfinishedAddress,
   UpdateAddressSessionDto,
 } from '@urgp/shared/entities';
@@ -241,10 +242,11 @@ export class AddressRepository {
       limit,
     });
   }
-  getFiasDailyUsage(): Promise<number> {
-    return this.db.one(rates.getDailyUsage).then((result) => result.fias);
+  getRatesDailyUsage(): Promise<RatesDailyUsage> {
+    return this.db.one(rates.getDailyUsage);
   }
-  insertFiasUsage(
+
+  insertRatesUsage(
     sessionId: number,
     amount: number,
     responseSource: string = 'fias',

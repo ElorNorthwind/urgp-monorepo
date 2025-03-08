@@ -17,6 +17,7 @@ import { ControlModule } from '@urgp/server/control';
 import { DataMosModule } from '@urgp/server/data-mos';
 import { AddressModule } from '@urgp/server/address';
 import { FiasModule } from '@urgp/server/fias';
+import { DaDataModule } from '@urgp/server/dadata';
 
 @Module({
   // dot env files
@@ -48,6 +49,7 @@ import { FiasModule } from '@urgp/server/fias';
     ControlModule,
 
     DataMosModule,
+    DaDataModule,
     FiasModule,
     AddressModule,
   ],

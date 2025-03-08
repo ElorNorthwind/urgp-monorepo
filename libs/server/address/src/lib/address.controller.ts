@@ -90,7 +90,7 @@ export class AddressController {
     return this.sessions.refreshSessionQueue();
   }
 
-  @Get('fias-usage')
+  @Get('rates-usage')
   async getFiasDailyUsage() {
     return this.address.getFiasDailyUsage();
   }
