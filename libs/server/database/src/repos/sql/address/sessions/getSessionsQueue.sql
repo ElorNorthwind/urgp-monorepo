@@ -14,7 +14,9 @@ SELECT
 	'pending' as status,
 	r.total, 
 	r.done,
-	r.success,
+	r.good,
+	r.questionable,
+	r.pending,
 	r.error,
 	(SUM(r.total - r.done) 
 	 OVER (PARTITION BY r.done < r.total 
@@ -25,8 +27,10 @@ LEFT JOIN (
 		session_id,
 		COUNT(*)::integer as total, 
 		COALESCE(COUNT(*) FILTER (WHERE is_done IS NOT DISTINCT FROM true), 0)::integer as done,
-		COALESCE(COUNT(*) FILTER (WHERE is_done IS NOT DISTINCT FROM true AND is_error IS DISTINCT FROM true), 0)::integer as success,
-		COALESCE(COUNT(*) FILTER (WHERE is_error IS NOT DISTINCT FROM true), 0)::integer as error
+		COALESCE(COUNT(*) FILTER (WHERE is_done IS NOT DISTINCT FROM true AND is_error IS DISTINCT FROM true AND confidence <> 'low'), 0)::integer as good,
+		COALESCE(COUNT(*) FILTER (WHERE is_done IS NOT DISTINCT FROM true AND is_error IS DISTINCT FROM true AND confidence = 'low'), 0)::integer as questionable,
+		COALESCE(COUNT(*) FILTER (WHERE is_done IS DISTINCT FROM true), 0)::integer as pending,
+		COALESCE(COUNT(*) FILTER (WHERE is_done IS NOT DISTINCT FROM true AND is_error IS NOT DISTINCT FROM true), 0)::integer as error
 	FROM address.results
 	GROUP BY session_id
 ) r ON s.id = r.session_id

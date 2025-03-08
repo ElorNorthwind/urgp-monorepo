@@ -3,7 +3,9 @@ import { z } from 'zod';
 const sessionProgressSchema = z.object({
   total: z.coerce.number().int().nonnegative().default(0),
   done: z.coerce.number().int().nonnegative().default(0),
-  success: z.coerce.number().int().nonnegative().default(0),
+  good: z.coerce.number().int().nonnegative().default(0),
+  questionable: z.coerce.number().int().nonnegative().default(0),
+  pending: z.coerce.number().int().nonnegative().default(0),
   error: z.coerce.number().int().nonnegative().default(0),
 });
 

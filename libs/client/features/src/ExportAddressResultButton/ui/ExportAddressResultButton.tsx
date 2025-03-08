@@ -1,6 +1,7 @@
 import { useLazySessionResults } from '@urgp/client/entities';
-import { Button, cn, exportToExcel } from '@urgp/client/shared';
+import { Button, buttonVariants, cn, exportToExcel } from '@urgp/client/shared';
 import { clearMunicipalAddressPart } from '@urgp/shared/entities';
+import { VariantProps } from 'class-variance-authority';
 import { FileSpreadsheet } from 'lucide-react';
 import React, { forwardRef } from 'react';
 import { toast } from 'sonner';
@@ -8,13 +9,13 @@ import { toast } from 'sonner';
 type ExportAddressResultButtonProps = {
   sessionId: number;
   className?: string;
-};
+} & VariantProps<typeof buttonVariants>;
 
 const ExportAddressResultButton = forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLInputElement> & ExportAddressResultButtonProps
 >((props: ExportAddressResultButtonProps, ref): JSX.Element => {
-  const { sessionId, className } = props;
+  const { sessionId, className, size, variant = 'outline' } = props;
 
   const [triggerFetch, { isLoading, isFetching }] = useLazySessionResults();
 
@@ -44,7 +45,8 @@ const ExportAddressResultButton = forwardRef<
   return (
     <Button
       role="button"
-      variant="outline"
+      size={size}
+      variant={variant}
       disabled={isLoading || isFetching}
       onClick={onClick}
       className={cn('ml-auto flex flex-row gap-1', className)}
