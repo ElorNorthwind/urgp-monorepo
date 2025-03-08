@@ -143,7 +143,6 @@ export const results = {
   getSessionUnfinishedBatch: sql(
     'sql/address/results/getSessionUnfinishedBatch.sql',
   ),
-  getFiasDailyUsage: sql('sql/address/results/getFiasDailyUsage.sql'),
   resetSessionErrorsById: sql('sql/address/results/resetSessionErrorsById.sql'),
   getAddressResultsBySessionId: sql(
     'sql/address/results/getAddressResultsBySessionId.sql',
@@ -151,4 +150,9 @@ export const results = {
   addUnomsToResultAddress: sql(
     'sql/address/results/addUnomsToResultAddress.sql',
   ),
+};
+
+export const rates = {
+  getDailyUsage: sql('sql/address/rates/getDailyUsage.sql'),
+  insertSpendRates: sql('sql/address/rates/insertSpendRates.sql'),
 };

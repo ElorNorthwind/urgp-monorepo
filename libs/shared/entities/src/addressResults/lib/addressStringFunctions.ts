@@ -1,3 +1,5 @@
+import { FiasAddressPart } from '../types';
+
 // Вычищаем часть адреса с городом Москвой и муниципальным делением
 export const clearMunicipalAddressPart = (address: string): string => {
   const municipalPart =
@@ -16,11 +18,9 @@ const claerWhitespaceRegexp = /\s\s+/g;
 
 type SplitAdress = {
   original: string;
-  street: string;
-  house: string;
-  apartment: string;
+  shortAddress: string;
+  parts: FiasAddressPart;
   validationStr: string;
-  numbers?: string[];
 };
 type SplitApartment = {
   house: string;
@@ -37,7 +37,7 @@ export function splitAppartment(addressPart: string): SplitApartment {
   };
 }
 
-export function splitAddress(address: string): SplitAdress {
+export function addressToParts(address: string): SplitAdress {
   const splitAddress =
     /^(.*?\d+\-[йя].*?|.*?)(?:,?\s)((?:(?:д(?:ом)?|уч(?:ас)?(?:ток)|кор(?:п)?(?:ус)?|з(?:ем)?(?:ельный)?(?:\/у)?|вл?(?:ад)?(?:ен)?(?:ие)?|c(?:оор)?(?:ужение)?|стр(?:оен)?(?:ие)?|[№Nn]|$|)\.?(?:[,?\s]|(?=\d))).*?\d.*)?$/;
 
@@ -46,14 +46,37 @@ export function splitAddress(address: string): SplitAdress {
     address.replace(claerWhitespaceRegexp, ' '),
   );
 
+  const shortStreetname = clearStreet(addressParts?.[1] || '') || '';
   const houseAndAppartment = splitAppartment(addressParts?.[2] || '');
   const numbers = (addressParts?.[2] || '').match(findNums) || [];
+  const shortAddress =
+    (/[Мм]осква/.test(shortStreetname)
+      ? shortStreetname
+      : 'Москва, ' + shortStreetname) +
+    ' ' +
+    numbers.join(' ');
+
+  // TODO: Доп проверки на плохо написанные квартиры?
+  const hasFlat =
+    houseAndAppartment?.apartment && houseAndAppartment?.apartment !== ''
+      ? true
+      : false;
+
+  const parts = {
+    region: {
+      name: 'Москва',
+      type_name: 'город',
+    },
+    object_level_id: hasFlat ? 11 : 10,
+    street: { name: shortStreetname }, // TODO: Дочищать адреса надо лучше! г Москва вот это вот все
+    house: { number: houseAndAppartment?.house || '' },
+    flat: hasFlat ? { number: houseAndAppartment?.apartment || '' } : undefined,
+  };
 
   return {
     original: address.replace(claerWhitespaceRegexp, ' '),
-    street: clearStreet(addressParts?.[1] || ''),
-    ...houseAndAppartment,
+    shortAddress,
+    parts,
     validationStr: numbers.join('|').toLowerCase(),
-    // numbers,
   };
 }

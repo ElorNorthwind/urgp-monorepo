@@ -1,7 +1,5 @@
-import { Logger } from '@nestjs/common';
 import {
   AddressReslutUpdate,
-  AddressResult,
   AddressSession,
   AddressSessionFull,
   CreateAddressSessionDto,
@@ -14,7 +12,8 @@ import {
 } from 'libs/server/data-mos/src/config/types';
 import { IDatabase, IMain } from 'pg-promise';
 import { camelToSnakeCase } from '../lib/to-snake-case';
-import { dataMos, results, sessions } from './sql/sql';
+import { dataMos, rates, results, sessions } from './sql/sql';
+import { Logger } from '@nestjs/common';
 
 // const pgp = require('pg-promise')();
 // const { ColumnSet } = pgp.helpers;
@@ -243,7 +242,20 @@ export class AddressRepository {
     });
   }
   getFiasDailyUsage(): Promise<number> {
-    return this.db.one(results.getFiasDailyUsage).then((result) => result.used);
+    return this.db.one(rates.getDailyUsage).then((result) => result.fias);
+  }
+  insertFiasUsage(
+    sessionId: number,
+    amount: number,
+    responseSource: string = 'fias',
+  ): Promise<null> {
+    const q = this.pgp.as.format(rates.insertSpendRates, {
+      sessionId,
+      responseSource,
+      amount,
+    });
+
+    return this.db.none(q);
   }
 
   updateAddressResult(results: AddressReslutUpdate[]): Promise<null> {

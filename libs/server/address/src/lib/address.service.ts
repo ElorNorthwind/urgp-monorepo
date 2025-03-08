@@ -8,7 +8,7 @@ import {
   FIAS_CONCURRENCY,
   FIAS_DB_STEP,
   FiasAddressWithDetails,
-  splitAddress,
+  addressToParts,
 } from '@urgp/shared/entities';
 import { FiasService } from 'libs/server/fias/src/lib/fias.service';
 import {
@@ -18,9 +18,11 @@ import {
   map,
   mergeMap,
   of,
+  tap,
   toArray,
 } from 'rxjs';
 import { formatFiasDataForDb } from './helper/formatFiasDataForDb';
+import { AddressSessionsService } from './address-sessions.service';
 
 @Injectable()
 export class AddressService {
@@ -53,20 +55,11 @@ export class AddressService {
     const isDev = this.configService.get<string>('NODE_ENV') === 'development';
     isDev && Logger.log(`Getting FIAS data for session ${sessionId}`);
 
-    // const addresses =
-    //   await this.dbServise.db.address.getSessionUnfinishedAddresses(
-    //     sessionId,
-    //     limit,
-    //   );
-    // addresses.forEach((add) => {
-    //   Logger.log(splitAddress(add.address));
-    // });
-    // return;
-
     try {
       let addresses = [];
       do {
         const startTime = isDev ? performance.now() : 0;
+        let requests = 0;
         addresses =
           await this.dbServise.db.address.getSessionUnfinishedAddresses(
             sessionId,
@@ -77,6 +70,9 @@ export class AddressService {
           mergeMap(
             (arg) =>
               from(this.fias.getAddress(arg.address)).pipe(
+                tap((value) => {
+                  requests += value?.requests || 0;
+                }),
                 map((value: FiasAddressWithDetails): AddressReslutUpdate => {
                   if (value?.object_id < 0) {
                     throw new NotFoundException(
@@ -106,14 +102,16 @@ export class AddressService {
           toArray(),
         );
         const data = await lastValueFrom(hydratedData);
-        isDev && Logger.warn('DB update ' + data?.length || 0);
+
+        this.dbServise.db.address.insertFiasUsage(sessionId, requests, 'fias');
+
         await this.dbServise.db.address.updateAddressResult(data).then(() => {
           this.dbServise.db.address.addUnomsToResultAddress(sessionId);
         });
         const endTime = isDev ? performance.now() : 0;
         isDev &&
           Logger.log(
-            `${Math.floor((endTime - startTime) / addresses.length)}ms/address [${Math.floor(endTime - startTime)} total]`,
+            `${Math.floor((endTime - startTime) / addresses.length)}ms/address | DB update ${data?.length || 0} [${requests} requests]`,
           );
       } while (addresses?.length > 0);
     } catch {

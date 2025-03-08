@@ -1,10 +1,9 @@
 import { useLazySessionResults } from '@urgp/client/entities';
-import { Button, cn, exportToExcel, Input } from '@urgp/client/shared';
+import { Button, cn, exportToExcel } from '@urgp/client/shared';
 import { clearMunicipalAddressPart } from '@urgp/shared/entities';
-import { FileSpreadsheet, Upload } from 'lucide-react';
-import React, { forwardRef, useEffect, useMemo, useState } from 'react';
+import { FileSpreadsheet } from 'lucide-react';
+import React, { forwardRef } from 'react';
 import { toast } from 'sonner';
-import * as XLSX from 'xlsx';
 
 type ExportAddressResultButtonProps = {
   sessionId: number;

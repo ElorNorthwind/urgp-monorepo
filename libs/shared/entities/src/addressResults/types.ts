@@ -174,7 +174,7 @@ export type FiasAddressPart = {
   street?: AddressPartInfo;
   house?: AddressPartInfo;
   flat?: AddressPartInfo;
-  object_level_id?: 10 | 11;
+  object_level_id?: number;
 };
 
 // {

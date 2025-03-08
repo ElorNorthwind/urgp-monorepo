@@ -190,9 +190,11 @@ ALTER TABLE address.oks_unoms
 DROP TABLE IF EXISTS address.rates CASCADE;
 CREATE TABLE address.rates (
     id INTEGER GENERATED ALWAYS AS IDENTITY,
- source VARCHAR(255),
- amount INTEGER,
- created_at TIMESTAMP WITH TIME ZONE DEFAULT (now())::timestamp(0) with time zone,
+    session_id INTEGER REFERENCES address.sessions(id) ON DELETE SET NULL,
+    user_id INTEGER REFERENCES renovation.users(id) ON DELETE SET NULL,
+    response_source VARCHAR(255),
+    amount INTEGER,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT (now())::timestamp(0) with time zone,
     PRIMARY KEY (id)
 );
 

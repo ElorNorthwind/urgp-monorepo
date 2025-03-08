@@ -11,7 +11,7 @@ import {
   FiasAddressWithDetails,
   FiasHint,
   hintNotFound,
-  splitAddress,
+  addressToParts,
 } from '@urgp/shared/entities';
 
 @Injectable()
@@ -27,24 +27,32 @@ export class FiasService {
 
     let requests = 0;
 
-    const {
-      validationStr,
-      street: streetStr,
-      house: houseStr,
-      apartment: apartmentStr,
-    } = splitAddress(address);
+    const { validationStr, parts, shortAddress } = addressToParts(address);
 
     try {
-      let fiasAddress = await this.getAddressByPart({
-        street: { name: streetStr },
-        house: { number: houseStr },
-        flat: { number: apartmentStr },
-      });
+      // Поиск 1: по частям адреса
+      let fiasAddress = await this.getAddressByPart(parts);
       requests += fiasAddress?.requests || 0;
 
+      // Поиск 2: по полному адресу
       if (fiasAddress?.confidence === 'none' || fiasAddress?.object_id < 0) {
         fiasAddress = await this.getAddressByString(address, validationStr);
         requests += fiasAddress?.requests || 0;
+      }
+
+      // Поиск 3: по сокращенному адресу
+      if (
+        ['low', 'none'].includes(fiasAddress?.confidence) ||
+        fiasAddress?.object_id < 0
+      ) {
+        const shortSearchResult = await this.getAddressByString(
+          shortAddress,
+          validationStr,
+        );
+        requests += fiasAddress?.requests || 0;
+        if (['medium', 'high'].includes(shortSearchResult.confidence)) {
+          fiasAddress = shortSearchResult;
+        }
       }
 
       if (!fiasAddress?.house_cad_num || fiasAddress?.house_cad_num === '') {
@@ -62,12 +70,12 @@ export class FiasService {
       return {
         ...fiasAddress,
         requests,
-        // for testing
+        // inserted into DB for testing and monitoring
         extra: {
-          ...fiasAddress?.extra,
-          streetStr,
-          houseStr,
-          apartmentStr,
+          // validationStr,
+          parts,
+          shortAddress,
+          requests,
         },
       };
     } catch (error) {
@@ -195,10 +203,9 @@ export class FiasService {
       );
 
       if (fiasSuggestions.length === 0) return notFoundResult;
-
       const validatedAddress = fiasSuggestions.find(
         (address) =>
-          splitAddress(address.full_name)?.validationStr === validationStr,
+          addressToParts(address.full_name)?.validationStr === validationStr,
       );
 
       const requestResult = validatedAddress
@@ -225,7 +232,7 @@ export class FiasService {
           validationStr:
             validationStr +
               ' -> ' +
-              splitAddress(requestResult.full_name)?.validationStr || '',
+              addressToParts(requestResult.full_name)?.validationStr || '',
         },
       };
     } catch (error) {

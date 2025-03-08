@@ -54,6 +54,10 @@ module.exports = {
           from: '../../libs/server/database/src/repos/sql/address/results',
           to: join(__dirname, '../../dist/apps/server/sql/address/results'),
         },
+        {
+          from: '../../libs/server/database/src/repos/sql/address/rates',
+          to: join(__dirname, '../../dist/apps/server/sql/address/rates'),
+        },
       ],
     }),
   ],
