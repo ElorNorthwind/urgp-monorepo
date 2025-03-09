@@ -1,7 +1,9 @@
 import {
   BarRow,
+  DeleteAddressSessionButton,
   ExportAddressResultButton,
   InfoBox,
+  ResetAddressErrorsButton,
 } from '@urgp/client/features';
 import { cn } from '@urgp/client/shared';
 import {
@@ -40,32 +42,21 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
     >
       <SessionStatusChart session={session} className="-m-6 size-[12rem]" />
       <div className="flex flex-grow flex-col gap-2">
-        <div className="flex flex-row gap-2">
-          <InfoBox label="ID:" value={session?.id} className="flex-grow-0" />
-          <InfoBox
-            label="Создано:"
-            value={format(session?.createdAt, 'dd.MM.yyyy HH:MM')}
-            className="flex-grow-0"
-          />
-          <InfoBox
-            label="Название:"
-            value={session?.title || '-'}
-            className="flex-grow"
-          />
-          <InfoBox
-            label="Статус:"
-            value={statusLabel || '-'}
-            className="flex-grow-0"
-          />
+        <div className="flex flex-shrink-0 flex-row items-center gap-2">
+          {/* {Icon && <Icon className={cn('size-10', iconStyle)} />} */}
+          <div className="flex flex-col items-start justify-center gap-0">
+            <div className="text-xl font-semibold">{session?.title}</div>
+            <div className="text-muted-foreground text-xs">
+              <span className="mr-1">{`[#${session?.id}]`}</span>
+              <span>
+                {'от ' + format(session?.createdAt, 'dd.MM.yyyy HH:MM')}
+              </span>
+            </div>
+          </div>
+          <div className="ml-auto text-2xl">{statusLabel}</div>
+          {Icon && <Icon className={cn('size-10', iconStyle)} />}
         </div>
-        {session?.notes && (
-          <InfoBox
-            label="Примечания:"
-            value={session?.notes || '-'}
-            className="w-full"
-          />
-        )}
-        <div className="flex gap-2">
+        <div className="flex w-full gap-2">
           <InfoBox
             label="Выполнено:"
             value={`${session?.done || 0} из ${session?.total || 0}`}
@@ -87,6 +78,14 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
             className="flex-grow"
           />
         </div>
+        {session?.notes && (
+          <InfoBox
+            label="Примечания:"
+            value={session?.notes || '-'}
+            className="w-full"
+          />
+        )}
+
         {session.status === AddressSessionStatuses.pending &&
         session?.queue &&
         session?.queue > 0 ? (
@@ -102,7 +101,7 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
             label={
               <>
                 <LoaderCircle className="size-5 flex-shrink-0 animate-spin" />
-                <span>{`${session?.done || 0} из ${session?.total || 0} - (${session?.status})`}</span>
+                <span>{`${session?.done || 0} из ${session?.total || 0}`}</span>
               </>
             }
             labelFit="full"
@@ -111,10 +110,11 @@ const SessionCard = (props: SessionCardProps): JSX.Element | null => {
           />
         ) : null}
         {session.status === AddressSessionStatuses.done ? (
-          <ExportAddressResultButton
-            sessionId={session?.id || 0}
-            // variant={'default'}
-          />
+          <div className="flex w-full flex-row justify-end gap-2">
+            <DeleteAddressSessionButton session={session} />
+            <ResetAddressErrorsButton session={session} />
+            <ExportAddressResultButton session={session} variant="default" />
+          </div>
         ) : null}
       </div>
     </div>

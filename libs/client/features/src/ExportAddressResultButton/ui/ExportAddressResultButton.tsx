@@ -1,32 +1,42 @@
 import { useLazySessionResults } from '@urgp/client/entities';
-import { Button, buttonVariants, cn, exportToExcel } from '@urgp/client/shared';
-import { clearMunicipalAddressPart } from '@urgp/shared/entities';
+import {
+  Button,
+  buttonVariants,
+  cn,
+  exportToExcel,
+  useUserAbility,
+} from '@urgp/client/shared';
+import {
+  AddressSessionFull,
+  clearMunicipalAddressPart,
+} from '@urgp/shared/entities';
 import { VariantProps } from 'class-variance-authority';
 import { FileSpreadsheet } from 'lucide-react';
 import React, { forwardRef } from 'react';
 import { toast } from 'sonner';
 
 type ExportAddressResultButtonProps = {
-  sessionId: number;
+  session: AddressSessionFull;
   className?: string;
 } & VariantProps<typeof buttonVariants>;
 
 const ExportAddressResultButton = forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLInputElement> & ExportAddressResultButtonProps
->((props: ExportAddressResultButtonProps, ref): JSX.Element => {
-  const { sessionId, className, size, variant = 'outline' } = props;
-
+>((props: ExportAddressResultButtonProps, ref): JSX.Element | null => {
+  const { session, className, size, variant = 'outline' } = props;
+  const i = useUserAbility();
+  if (!session || i.cannot('read', session)) return null;
   const [triggerFetch, { isLoading, isFetching }] = useLazySessionResults();
 
   const onClick = () => {
-    if (!sessionId || sessionId === 0) {
+    if (!session?.id || session?.id === 0) {
       toast.error('Не удалось загрузить данные', {
         description: 'Не указан ID сессии',
       });
       return;
     }
-    triggerFetch(sessionId)
+    triggerFetch(session?.id)
       .unwrap()
       .then((data) => {
         const formatedData = data.map((address) => ({
@@ -49,7 +59,7 @@ const ExportAddressResultButton = forwardRef<
       variant={variant}
       disabled={isLoading || isFetching}
       onClick={onClick}
-      className={cn('ml-auto flex flex-row gap-1', className)}
+      className={cn('flex flex-row gap-1', className)}
     >
       <FileSpreadsheet className="size-5 flex-shrink-0" />
       <span>Скачать результат</span>

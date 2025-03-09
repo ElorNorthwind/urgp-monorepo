@@ -15,3 +15,5 @@ export * from './CardTab';
 export * from './ExcelFileInput';
 export * from './ExportAddressResultButton';
 export * from './DailyRatesUsageBar';
+export * from './ResetAddressErrorsButton';
+export * from './DeleteAddressSessionButton';

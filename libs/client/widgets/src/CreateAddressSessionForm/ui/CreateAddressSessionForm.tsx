@@ -68,10 +68,17 @@ const CreateAddressSessionForm = ({
   useEffect(() => {
     const shortFileName = fileName?.replace(/(\.[a-z]+)$/, '') || '';
     const title = form.getValues('title');
-    if (title === '') {
+    const notes = form.getValues('notes');
+    if (title === '' && shortFileName.length > 0) {
       form.setValue('title', shortFileName);
     }
-  }, [fileName]);
+    if (notes === '' && addresses.length > 0) {
+      form.setValue(
+        'notes',
+        addresses.slice(0, 3).join('; ').slice(0, 100) + '...',
+      );
+    }
+  }, [fileName, addresses]);
 
   const parseAddresses = useCallback((data: any[]) => {
     const filteredData = data

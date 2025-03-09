@@ -34,4 +34,6 @@ export type AddressSessionFull = z.infer<typeof addressSessionFullSchema>;
 export type RatesDailyUsage = {
   fias: number;
   dadata: number;
+  fiasCount: number;
+  dadataCount: number;
 };

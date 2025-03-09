@@ -56,6 +56,7 @@ const BarRow = forwardRef<
           style={{ width: `${filled}%` }}
           className={cn(
             'bg-foreground h-full rounded',
+            'transition-all duration-[2500ms] ease-in',
             onClick && 'group-hover/bar:bg-opacity-80',
             'flex flex-row flex-nowrap items-center justify-start gap-2 overflow-hidden truncate',
             barClassName,

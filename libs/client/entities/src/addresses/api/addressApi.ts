@@ -73,6 +73,15 @@ export const addressApi = rtkApi.injectEndpoints({
       }),
       invalidatesTags: ['address-session'],
     }),
+
+    resetSessionErrors: build.mutation<null, number>({
+      query: (id: number) => ({
+        url: `/address/session/reset-errors`,
+        method: 'POST',
+        body: { id },
+      }),
+      invalidatesTags: ['address-session'],
+    }),
   }),
   overrideExisting: false,
 });
@@ -80,6 +89,7 @@ export const addressApi = rtkApi.injectEndpoints({
 export const {
   useCreateSessionMutation: useCreateSession,
   useDeleteSessionMutation: useDeleteSession,
+  useResetSessionErrorsMutation: useResetSessionErrors,
   useGetSessionByIdQuery: useGetSessionById,
   useGetUserSessionsQuery: useGetUserSessions,
   // useGetFiasDailyUsageQuery: useGetFiasUsage,
