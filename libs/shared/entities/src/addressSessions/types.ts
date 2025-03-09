@@ -22,6 +22,7 @@ export const addressSessionSchema = z.object({
   notes: z.string().nullable(),
   status: z.string().nullable(),
   queue: z.coerce.number().int().nonnegative().nullable().optional(),
+  class: z.literal('session'),
 });
 export type AddressSession = z.infer<typeof addressSessionSchema>;
 

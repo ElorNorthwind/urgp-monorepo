@@ -9,6 +9,7 @@ export const createAddressSessionSchema = addressSessionSchema
     createdAt: true,
     updatedAt: true,
     status: true,
+    class: true,
   })
   .partial()
   .extend({
@@ -26,6 +27,7 @@ export const updateAddressSessionSchema = addressSessionSchema
     createdAt: true,
     updatedAt: true,
     status: true,
+    class: true,
   })
   .partial()
   .extend({

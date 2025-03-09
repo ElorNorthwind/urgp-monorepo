@@ -4,5 +4,5 @@ UPDATE address.results
 		response_source = null,
 		confidence = null,
 		response = null
-WHERE is_error = true
+WHERE is_error = true OR confidence = 'low'
   AND session_id = ${id};

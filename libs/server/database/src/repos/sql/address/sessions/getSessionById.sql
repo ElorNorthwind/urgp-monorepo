@@ -28,6 +28,7 @@ WITH queue AS (
 )
 
 SELECT 
+	'session' as class,
 	s.id,
 	s.user_id as "userId",
 	u.fio as "userFio",

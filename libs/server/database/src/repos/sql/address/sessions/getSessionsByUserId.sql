@@ -1,5 +1,6 @@
 WITH queue AS (
 	SELECT 
+
 		s.id,
 		(SUM(r.total - r.done) 
 		OVER (PARTITION BY r.done < r.total 
@@ -29,6 +30,7 @@ WITH queue AS (
 
 SELECT 
 	s.id,
+	'session' as class,
 	s.user_id as "userId",
 	u.fio as "userFio",
 	s.created_at as "createdAt",

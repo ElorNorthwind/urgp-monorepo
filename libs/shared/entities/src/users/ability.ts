@@ -18,6 +18,7 @@ import { OperationFull, OperationSlim } from '../operations/types';
 import { CreateCaseDto, UpdateCaseDto } from '../cases/dto';
 import { CreateOperationDto, UpdateOperationDto } from '../operations/dto';
 import { CaseFull, CaseSlim } from '../cases/types';
+import { AddressSession, AddressSessionFull } from '../addressSessions/types';
 
 type Action =
   | 'create'
@@ -43,6 +44,9 @@ type Subject =
   | OperationSlim
   | CreateOperationDto
   | UpdateOperationDto
+  | 'Session'
+  | AddressSessionFull
+  | AddressSession
   | 'unknown'
   | 'all';
 
@@ -52,6 +56,7 @@ export const subjectVariants = {
   'control-problem': 'Case',
   dispatch: 'Dispatch',
   reminder: 'Reminder',
+  session: 'Session',
 };
 
 export const CONTROL_THRESHOLD = 3;
@@ -187,6 +192,10 @@ export function defineControlAbilityFor(user: User) {
 
   can('set-approver', 'all', {
     approveToId: { $in: approveTo }, // Можно выставлять только доступных тебе согласующих
+  });
+
+  can(['update', 'delete'], 'Session', {
+    approveToId: { $eq: user.id },
   });
 
   return build({

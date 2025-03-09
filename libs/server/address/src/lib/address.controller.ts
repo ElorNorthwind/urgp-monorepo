@@ -10,6 +10,7 @@ import {
   Patch,
   Post,
   Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AccessTokenGuard } from '@urgp/server/auth';
@@ -17,6 +18,7 @@ import { AddressService } from './address.service';
 import {
   CreateAddressSessionDto,
   createAddressSessionSchema,
+  defineControlAbilityFor,
   RequestWithUserData,
   UpdateAddressSessionDto,
   updateAddressSessionSchema,
@@ -53,7 +55,16 @@ export class AddressController {
   }
 
   @Post('session/reset-errors')
-  async restartSessionById(@Body('id', ParseIntPipe) id: number) {
+  async restartSessionById(
+    @Req() req: RequestWithUserData,
+    @Body('id', ParseIntPipe) id: number,
+  ) {
+    const session = await this.sessions.getSessionById(id);
+    if (!session) return null;
+    const i = defineControlAbilityFor(req.user);
+    if (i.cannot('update', session))
+      throw new UnauthorizedException('Нет прав на изменение сессии');
+
     return this.sessions.resetSessionErrors(id);
   }
 
@@ -96,7 +107,15 @@ export class AddressController {
   }
 
   @Delete('session')
-  async deleteSession(@Body('id', ParseIntPipe) id: number) {
+  async deleteSession(
+    @Req() req: RequestWithUserData,
+    @Body('id', ParseIntPipe) id: number,
+  ) {
+    const session = await this.sessions.getSessionById(id);
+    if (!session) return null;
+    const i = defineControlAbilityFor(req.user);
+    if (i.cannot('delete', session))
+      throw new UnauthorizedException('Нет прав на удаление сессии');
     return this.sessions.deleteSession(id);
   }
 

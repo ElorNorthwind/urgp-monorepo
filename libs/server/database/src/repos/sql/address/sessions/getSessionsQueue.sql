@@ -1,6 +1,7 @@
 
 SELECT 
 	s.id,
+	'session' as class,
 	s.user_id as "userId",
 		u.fio as "userFio",
 	s.created_at as "createdAt",

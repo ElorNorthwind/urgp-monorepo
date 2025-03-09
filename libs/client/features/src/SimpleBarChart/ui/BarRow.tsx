@@ -30,6 +30,7 @@ const BarRow = forwardRef<
     ref,
   ): JSX.Element => {
     const filled = useMemo(() => Math.round((value / max) * 100), [value, max]);
+    // const filledPart = useMemo(() => value / max, [value, max]);
     if (isLoading)
       return (
         <Skeleton
