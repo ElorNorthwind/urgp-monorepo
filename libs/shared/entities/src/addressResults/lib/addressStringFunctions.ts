@@ -1,20 +1,21 @@
 import { FiasAddressPart } from '../types';
-
-// Вычищаем часть адреса с городом Москвой и муниципальным делением
-export const clearMunicipalAddressPart = (address: string): string => {
-  const municipalPart =
-    /((?:Гг Москва)?(?:,\s)?.*?(?:(?:[мМ]уницип|[Гг]ор).*?(?:[оО]кр|[оО]браз)|(?:[Мм]униц|[Гг]ор).*?рай|(?:[Сс]ель|[Гг]ор).*?пос).*?(?:,\s))/;
-  return (address.replace(municipalPart, '') || '')?.trim();
-};
-
-export function clearStreet(street: string): string {
-  const sanitizeStreetTypes =
-    /(?<=\s|^)(ул(?:ица)?\.?|д(?:ер)?(?:евня)?\.?|пер(?:еулок)?\.?|п(?:р)?(?:оезд|\-д)?\.?(?! [№Nn])г(?:ор)?(?:од)?\.?|(?:дачный |рабочий )?п(?:ос)?(?:[её]л)?(?:ок)?\.?|с(?:ело?)?\.?|ш(?:оссе)?\.?|посел(?:ен)?(?:ие)?\.?|пл(?:ощадь)?\.?|бул(?:ьв)?(?:ар)?\.?|наб(?:ережная)?\.?|туп(?:ик)?\.?|пр?(?:осп)?(?:ект)?(?:-т)?\.?|аллея|хутор|линия|просек)(?=\s|$)/g;
-  const result = (street.replace(sanitizeStreetTypes, '') || '')?.trim();
-  return result.replace(/([,\.;]|\s(?=\s))/g, '');
-}
-
-const claerWhitespaceRegexp = /\s\s+/g;
+import {
+  deletePatterns,
+  findPatterns,
+  replacePatterns,
+} from './helperFunctions';
+import {
+  extraWhitespacePattern,
+  streetTypeReplacements,
+  moscowCityPattern,
+  municipalPartPattern,
+  streetNumberPaddingPattern,
+  streetTypePattern,
+  splitHouseAndFlatPattern,
+  houseTypeReplacements,
+  splitAddressPatternn,
+  numericPartPattern,
+} from './patterns';
 
 type SplitAdress = {
   original: string;
@@ -22,45 +23,89 @@ type SplitAdress = {
   parts: FiasAddressPart;
   validationStr: string;
 };
-type SplitApartment = {
-  house: string;
-  apartment: string;
+
+type HouseAndFlatPart = {
+  house: { number: string };
+  flat?: { number: string };
 };
 
-export function splitAppartment(addressPart: string): SplitApartment {
-  const regEx =
-    /^(.*?)(?:,?\s)((?:кв\.кв|кв(?:артир[аы])?|п(?:ом)?(?:ещ)?(?:ение)?)\.?(?:[,?\s]|(?=\d))(?:[№N]\s)?[\dIVX][\d\-\\\/а-яА-Я,\. IVX]*)$/;
-  const result = regEx.exec(addressPart);
+type StreetPart = {
+  name: string;
+  type_name?: string;
+};
+
+// Вычищаем часть адреса с городом Москвой и муниципальным делением
+export const clearMunicipalAddressPart = (address: string): string => {
+  const result = deletePatterns(address, [
+    moscowCityPattern,
+    municipalPartPattern,
+    streetNumberPaddingPattern,
+    extraWhitespacePattern,
+  ]).trim();
+  return result;
+};
+
+export function clearStreet(street: string): StreetPart {
+  const streetName = deletePatterns(street, [
+    moscowCityPattern,
+    municipalPartPattern,
+    streetTypePattern,
+    streetNumberPaddingPattern,
+    extraWhitespacePattern,
+  ]).trim();
+
+  const streetType = findPatterns(street, streetTypeReplacements);
+
   return {
-    house: result?.[1] || addressPart,
-    apartment: result?.[2] || '',
+    name: streetName,
+    type_name: streetType ? streetType : undefined,
+  };
+}
+
+export function clearHouseAndFlat(addressHalf: string): HouseAndFlatPart {
+  const result = splitHouseAndFlatPattern.exec(addressHalf);
+  // TODO: Доп проверки на плохо написанные квартиры?
+  const hasFlat = result?.[2] && result?.[2] !== '' ? true : false;
+
+  const houseNum = deletePatterns(
+    replacePatterns(
+      result?.[1] || addressHalf || '',
+      houseTypeReplacements,
+      ' ',
+      ' ',
+    ),
+    [extraWhitespacePattern],
+  ).trim();
+
+  return {
+    house: { number: houseNum },
+    flat: hasFlat
+      ? {
+          number: deletePatterns(result?.[2] || '', [
+            extraWhitespacePattern,
+          ]).trim(),
+        }
+      : undefined,
   };
 }
 
 export function addressToParts(address: string): SplitAdress {
-  const splitAddress =
-    /^(.*?\d+\-[йя].*?|.*?)(?:,?\s)((?:(?:д(?:ом)?|уч(?:ас)?(?:ток)|кор(?:п)?(?:ус)?|з(?:ем)?(?:ельный)?(?:\/у)?|вл?(?:ад)?(?:ен)?(?:ие)?|c(?:оор)?(?:ужение)?|стр(?:оен)?(?:ие)?|[№Nn]|$|)\.?(?:[,?\s]|(?=\d))).*?\d.*)?$/;
+  const clearedAddress = deletePatterns(address, [extraWhitespacePattern]);
+  const addressHalfs = splitAddressPatternn.exec(clearedAddress);
 
-  const findNums = /([\dIVX][\d\-\\\/а-яА-ЯIVX]*)/g;
-  const addressParts = splitAddress.exec(
-    address.replace(claerWhitespaceRegexp, ' '),
-  );
+  const streetPart = clearStreet(addressHalfs?.[1] || '');
 
-  const shortStreetname = clearStreet(addressParts?.[1] || '') || '';
-  const houseAndAppartment = splitAppartment(addressParts?.[2] || '');
-  const numbers = (addressParts?.[2] || '').match(findNums) || [];
+  const numbers = (addressHalfs?.[2] || '').match(numericPartPattern) || [];
+
   const shortAddress =
-    (/[Мм]осква/.test(shortStreetname)
-      ? shortStreetname
-      : 'Москва, ' + shortStreetname) +
+    (/[Мм]осква/.test(streetPart?.name)
+      ? streetPart?.name || ''
+      : 'Москва, ' + streetPart?.name) +
     ' ' +
     numbers.join(' ');
 
-  // TODO: Доп проверки на плохо написанные квартиры?
-  const hasFlat =
-    houseAndAppartment?.apartment && houseAndAppartment?.apartment !== ''
-      ? true
-      : false;
+  const houseAndFlatParts = clearHouseAndFlat(addressHalfs?.[2] || '');
+  const hasFlat = houseAndFlatParts?.flat ? true : false;
 
   const parts = {
     region: {
@@ -68,13 +113,12 @@ export function addressToParts(address: string): SplitAdress {
       type_name: 'город',
     },
     object_level_id: hasFlat ? 11 : 10,
-    street: { name: shortStreetname }, // TODO: Дочищать адреса надо лучше! г Москва вот это вот все
-    house: { number: houseAndAppartment?.house || '' },
-    flat: hasFlat ? { number: houseAndAppartment?.apartment || '' } : undefined,
+    street: streetPart,
+    ...houseAndFlatParts,
   };
 
   return {
-    original: address.replace(claerWhitespaceRegexp, ' '),
+    original: address.replace(extraWhitespacePattern, ' '),
     shortAddress,
     parts,
     validationStr: numbers.join('|').toLowerCase(),
