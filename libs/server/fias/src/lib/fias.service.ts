@@ -122,6 +122,7 @@ export class FiasService {
   ): Promise<FiasAddressWithDetails> {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
+    const isDev = this.configService.get<string>('NODE_ENV') === 'development';
 
     // TODO: Доп проверки на плохо написанные квартиры выше уровнем?
     const hasFlat = part?.flat?.number && part?.flat?.number !== '';
@@ -154,7 +155,8 @@ export class FiasService {
             fiasRequests += 1;
           }),
           retry(FIAS_RETRY_COUNT),
-          catchError(() => {
+          catchError((err) => {
+            isDev && Logger.warn(err);
             return of({ data: [addressNotFound] });
           }),
         ),
@@ -188,6 +190,7 @@ export class FiasService {
   ): Promise<FiasAddressWithDetails> {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
+    const isDev = this.configService.get<string>('NODE_ENV') === 'development';
 
     const fullAddress = /[Мм]осква/.test(address)
       ? address
@@ -213,7 +216,8 @@ export class FiasService {
             fiasRequests += 1;
           }),
           retry(FIAS_RETRY_COUNT),
-          catchError(() => {
+          catchError((err) => {
+            isDev && Logger.warn(err);
             return of({ data: [addressNotFound] });
           }),
         ),
@@ -313,6 +317,7 @@ export class FiasService {
   public async getAddressByGuid(guid: string): Promise<FiasAddressWithDetails> {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
+    const isDev = this.configService.get<string>('NODE_ENV') === 'development';
 
     // Параметры запроса на адрес по ID
     const addressConfig: AxiosRequestConfig = {
@@ -329,7 +334,8 @@ export class FiasService {
       const { data } = await firstValueFrom(
         this.axios.request(addressConfig).pipe(
           retry(FIAS_RETRY_COUNT),
-          catchError(() => {
+          catchError((err) => {
+            isDev && Logger.warn(err);
             return of({ data: [addressNotFound] });
           }),
         ),

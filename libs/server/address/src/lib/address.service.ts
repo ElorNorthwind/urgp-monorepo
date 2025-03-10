@@ -10,16 +10,19 @@ import {
   FiasAddressWithDetails,
   addressToParts,
   RatesDailyUsage,
+  FIAS_TIMEOUT,
 } from '@urgp/shared/entities';
 import { FiasService } from 'libs/server/fias/src/lib/fias.service';
 import {
   catchError,
   from,
+  interval,
   lastValueFrom,
   map,
   mergeMap,
   of,
   tap,
+  throttle,
   toArray,
 } from 'rxjs';
 import { formatFiasDataForDb } from './helper/formatFiasDataForDb';
