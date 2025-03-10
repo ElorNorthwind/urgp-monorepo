@@ -78,6 +78,7 @@ export class AddressService {
                 tap((value) => {
                   dadataRequests += value?.dadataRequests || 0;
                   fiasRequests += value?.fiasRequests || 0;
+                  isDev && Logger.log(value?.fiasRequests + ' fias requs');
                 }),
                 map((value: FiasAddressWithDetails): AddressReslutUpdate => {
                   if (value?.object_id < 0) {
@@ -104,7 +105,7 @@ export class AddressService {
           ),
           // bufferCount(50), // Process in batches of 50
           // mergeMap(batch => forkJoin(batch.map(processAddress))
-          // throttle(() => interval(FIAS_TIMEOUT)),
+          throttle(() => interval(FIAS_TIMEOUT)),
           toArray(),
         );
         const data = await lastValueFrom(hydratedData);

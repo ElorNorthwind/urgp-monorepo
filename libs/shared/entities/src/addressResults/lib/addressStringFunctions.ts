@@ -46,15 +46,18 @@ export const clearMunicipalAddressPart = (address: string): string => {
 };
 
 export function clearStreet(street: string): StreetPart {
-  const streetName = deletePatterns(street, [
+  const streetNameWithType = deletePatterns(street, [
     moscowCityPattern,
     municipalPartPattern,
-    streetTypePattern,
     streetNumberPaddingPattern,
     extraWhitespacePattern,
   ]).trim();
 
-  const streetType = findPatterns(street, streetTypeReplacements);
+  const streetType = findPatterns(streetNameWithType, streetTypeReplacements);
+
+  const streetName = deletePatterns(streetNameWithType, [
+    streetTypePattern,
+  ]).trim();
 
   return {
     name: streetName,
