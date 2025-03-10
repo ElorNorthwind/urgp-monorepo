@@ -195,7 +195,7 @@ export function defineControlAbilityFor(user: User) {
   });
 
   can(['update', 'delete'], 'Session', {
-    approveToId: { $eq: user.id },
+    userId: { $eq: user.id },
   });
 
   return build({

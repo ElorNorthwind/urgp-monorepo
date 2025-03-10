@@ -11,6 +11,7 @@ import {
   addressToParts,
   RatesDailyUsage,
   FIAS_TIMEOUT,
+  FIAS_REQUESTS_PER_SECOND,
 } from '@urgp/shared/entities';
 import { FiasService } from 'libs/server/fias/src/lib/fias.service';
 import {
@@ -21,9 +22,11 @@ import {
   map,
   mergeMap,
   of,
+  startWith,
   tap,
   throttle,
   toArray,
+  zip,
 } from 'rxjs';
 import { formatFiasDataForDb } from './helper/formatFiasDataForDb';
 import { AddressSessionsService } from './address-sessions.service';
@@ -71,14 +74,16 @@ export class AddressService {
             limit,
           );
 
-        const hydratedData = from(addresses).pipe(
+        const rateLimitMs = 1000 / FIAS_REQUESTS_PER_SECOND;
+        const tokens$ = interval(rateLimitMs).pipe(startWith(0));
+
+        const hydratedData = zip(from(addresses), tokens$).pipe(
           mergeMap(
-            (arg) =>
+            ([arg]) =>
               from(this.fias.getAddress(arg.address)).pipe(
                 tap((value) => {
                   dadataRequests += value?.dadataRequests || 0;
                   fiasRequests += value?.fiasRequests || 0;
-                  isDev && Logger.log(value?.fiasRequests + ' fias requs');
                 }),
                 map((value: FiasAddressWithDetails): AddressReslutUpdate => {
                   if (value?.object_id < 0) {
@@ -93,7 +98,7 @@ export class AddressService {
                   };
                 }),
                 catchError((error) => {
-                  isDev && Logger.warn(error);
+                  // isDev && Logger.warn(error);
                   return of({
                     id: arg.id,
                     ...addressNotFoundParsedToResult,
@@ -105,7 +110,7 @@ export class AddressService {
           ),
           // bufferCount(50), // Process in batches of 50
           // mergeMap(batch => forkJoin(batch.map(processAddress))
-          throttle(() => interval(FIAS_TIMEOUT)),
+          // throttle(() => interval(FIAS_TIMEOUT)),
           toArray(),
         );
         const data = await lastValueFrom(hydratedData);

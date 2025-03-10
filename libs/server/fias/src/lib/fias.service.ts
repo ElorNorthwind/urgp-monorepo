@@ -2,7 +2,18 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AxiosRequestConfig } from 'axios';
-import { catchError, firstValueFrom, from, map, of, retry, tap } from 'rxjs';
+import {
+  catchError,
+  concatMap,
+  firstValueFrom,
+  from,
+  map,
+  of,
+  retry,
+  tap,
+  throwError,
+  timer,
+} from 'rxjs';
 import {
   addressNotFound,
   FIAS_RETRY_COUNT,
@@ -14,6 +25,7 @@ import {
   addressToParts,
 } from '@urgp/shared/entities';
 import { DaDataService } from 'libs/server/dadata/src/lib/dadata.service';
+import { shouldRetry } from '../config/constants';
 
 @Injectable()
 export class FiasService {
@@ -154,7 +166,7 @@ export class FiasService {
           tap(() => {
             fiasRequests += 1;
           }),
-          retry(FIAS_RETRY_COUNT),
+          retry({ count: FIAS_RETRY_COUNT, delay: shouldRetry }),
           catchError((err) => {
             isDev && Logger.warn(err);
             return of({ data: [addressNotFound] });
@@ -215,7 +227,7 @@ export class FiasService {
           tap(() => {
             fiasRequests += 1;
           }),
-          retry(FIAS_RETRY_COUNT),
+          retry({ count: FIAS_RETRY_COUNT, delay: shouldRetry }),
           catchError((err) => {
             isDev && Logger.warn(err);
             return of({ data: [addressNotFound] });
@@ -301,7 +313,7 @@ export class FiasService {
     try {
       const { data } = await firstValueFrom(
         this.axios.request(addressConfig).pipe(
-          retry(FIAS_RETRY_COUNT),
+          retry({ count: FIAS_RETRY_COUNT, delay: shouldRetry }),
           catchError(() => {
             return of({ data: [addressNotFound] });
           }),
@@ -333,7 +345,7 @@ export class FiasService {
     try {
       const { data } = await firstValueFrom(
         this.axios.request(addressConfig).pipe(
-          retry(FIAS_RETRY_COUNT),
+          retry({ count: FIAS_RETRY_COUNT, delay: shouldRetry }),
           catchError((err) => {
             isDev && Logger.warn(err);
             return of({ data: [addressNotFound] });
