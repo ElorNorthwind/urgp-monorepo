@@ -1,12 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createLazyFileRoute } from '@tanstack/react-router';
 import { OldBuildingsPage } from '@urgp/client/pages';
 import { oldBuildingsPageSearch } from '@urgp/shared/entities';
 
-export const Route = createFileRoute('/renovation/oldbuildings')({
-  // component: OldBuildings,
-  validateSearch: (search) => {
-    return oldBuildingsPageSearch.parse(search);
-  },
+export const Route = createLazyFileRoute('/renovation/oldbuildings')({
+  component: OldBuildings,
+  // validateSearch: (search) => {
+  //   return oldBuildingsPageSearch.parse(search)
+  // },
 
   // loaderDeps: ({ search: dto }) => dto,
   // loader: (dto) => {
@@ -19,6 +19,6 @@ export const Route = createFileRoute('/renovation/oldbuildings')({
   // },
 });
 
-// function OldBuildings() {
-//   return <OldBuildingsPage />;
-// }
+function OldBuildings() {
+  return <OldBuildingsPage />;
+}

@@ -131,7 +131,9 @@ const RenovationOldbuildingsRoute = RenovationOldbuildingsImport.update({
   id: '/oldbuildings',
   path: '/oldbuildings',
   getParentRoute: () => RenovationRouteRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/renovation/oldbuildings.lazy').then((d) => d.Route),
+)
 
 const RenovationOldapartmentsRoute = RenovationOldapartmentsImport.update({
   id: '/oldapartments',
@@ -150,7 +152,11 @@ const RenovationBuildingRelocationMapRoute =
     id: '/building-relocation-map',
     path: '/building-relocation-map',
     getParentRoute: () => RenovationRouteRoute,
-  } as any)
+  } as any).lazy(() =>
+    import('./routes/renovation/building-relocation-map.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 const ControlProblemsRoute = ControlProblemsImport.update({
   id: '/problems',

@@ -35,4 +35,4 @@ const SettingsNavbar = ({ className }: { className?: string }): JSX.Element => {
     </nav>
   );
 };
-export { SettingsNavbar };
+export default SettingsNavbar;

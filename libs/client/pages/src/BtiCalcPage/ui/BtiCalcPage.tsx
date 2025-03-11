@@ -10,4 +10,4 @@ const BtiCalcPage = (): JSX.Element => {
   );
 };
 
-export { BtiCalcPage };
+export default BtiCalcPage;

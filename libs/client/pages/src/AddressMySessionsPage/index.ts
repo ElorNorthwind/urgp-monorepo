@@ -1,1 +1,4 @@
-export * from './ui/AddressMySessionsPage';
+import { lazy } from 'react';
+export const AddressMySessionsPage = lazy(
+  () => import('./ui/AddressMySessionsPage'),
+);

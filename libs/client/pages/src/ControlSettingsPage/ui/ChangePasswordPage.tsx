@@ -23,4 +23,4 @@ const ControlChangePasswordPage = (): JSX.Element => {
   );
 };
 
-export { ControlChangePasswordPage };
+export default ControlChangePasswordPage;

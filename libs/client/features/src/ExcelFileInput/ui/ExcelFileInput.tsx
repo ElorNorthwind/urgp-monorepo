@@ -100,4 +100,4 @@ const ExcelFileInput = forwardRef<
   );
 });
 
-export { ExcelFileInput };
+export default ExcelFileInput;

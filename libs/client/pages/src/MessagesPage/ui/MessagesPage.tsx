@@ -117,4 +117,4 @@ const MessagesPage = (): JSX.Element => {
   );
 };
 
-export { MessagesPage };
+export default MessagesPage;

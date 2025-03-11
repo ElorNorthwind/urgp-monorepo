@@ -156,4 +156,4 @@ const ControlCasesPage = (): JSX.Element => {
   );
 };
 
-export { ControlCasesPage };
+export default ControlCasesPage;

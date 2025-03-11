@@ -36,4 +36,4 @@ const AccountPage = (): JSX.Element => {
   );
 };
 
-export { AccountPage };
+export default AccountPage;

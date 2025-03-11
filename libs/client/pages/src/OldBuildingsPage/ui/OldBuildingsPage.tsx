@@ -157,4 +157,4 @@ const OldBuildingsPage = (): JSX.Element => {
   );
 };
 
-export { OldBuildingsPage };
+export default OldBuildingsPage;

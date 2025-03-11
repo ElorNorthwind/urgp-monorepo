@@ -178,4 +178,4 @@ const RenovationDashboardPage = (): JSX.Element => {
     </div>
   );
 };
-export { RenovationDashboardPage };
+export default RenovationDashboardPage;

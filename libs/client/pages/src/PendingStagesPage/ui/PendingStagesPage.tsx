@@ -73,4 +73,4 @@ const PendingStagesPage = (): JSX.Element => {
   );
 };
 
-export { PendingStagesPage };
+export default PendingStagesPage;

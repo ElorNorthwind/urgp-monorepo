@@ -140,7 +140,7 @@ const BuildingRelocationMapPage = (): JSX.Element => {
     <div className="isolate">
       <div
         className={cn(
-          'absolute top-4 right-4 shadow-sm transition-all ease-in-out',
+          'absolute right-4 top-4 shadow-sm transition-all ease-in-out',
           expanded ? 'h-[calc(100vh-2rem)]' : 'h-[4rem]',
         )}
       >
@@ -294,4 +294,4 @@ const BuildingRelocationMapPage = (): JSX.Element => {
   );
 };
 
-export { BuildingRelocationMapPage };
+export default BuildingRelocationMapPage;

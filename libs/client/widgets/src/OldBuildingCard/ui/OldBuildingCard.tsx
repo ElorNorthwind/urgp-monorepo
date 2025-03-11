@@ -38,7 +38,7 @@ type OldBuildingCardProps = {
   setExpanded?: (value: boolean) => void;
   onCenter?: () => void;
 };
-const OldBuildingsCard = ({
+const OldBuildingCard = ({
   building,
   className,
   onClose,
@@ -292,4 +292,4 @@ const OldBuildingsCard = ({
   );
 };
 
-export { OldBuildingsCard };
+export default OldBuildingCard;

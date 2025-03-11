@@ -162,4 +162,4 @@ const ControlProblemsPage = (): JSX.Element => {
   );
 };
 
-export { ControlProblemsPage };
+export default ControlProblemsPage;

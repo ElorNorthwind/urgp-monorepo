@@ -85,4 +85,4 @@ const SingleCasePage = (): JSX.Element => {
   );
 };
 
-export { SingleCasePage };
+export default SingleCasePage;

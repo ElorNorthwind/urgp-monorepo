@@ -1,1 +1,2 @@
-export { BtiCalcPage } from './ui/BtiCalcPage';
+import { lazy } from 'react';
+export const BtiCalcPage = lazy(() => import('./ui/BtiCalcPage'));

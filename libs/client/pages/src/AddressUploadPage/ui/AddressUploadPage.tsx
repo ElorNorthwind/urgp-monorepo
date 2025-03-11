@@ -144,4 +144,4 @@ const AddressUploadPage = (): JSX.Element => {
   );
 };
 
-export { AddressUploadPage };
+export default AddressUploadPage;

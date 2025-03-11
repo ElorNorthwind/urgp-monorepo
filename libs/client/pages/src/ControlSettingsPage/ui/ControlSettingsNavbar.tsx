@@ -41,4 +41,4 @@ const ControlSettingsNavbar = ({
     </nav>
   );
 };
-export { ControlSettingsNavbar };
+export default ControlSettingsNavbar;

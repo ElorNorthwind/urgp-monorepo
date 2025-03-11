@@ -116,4 +116,4 @@ const ControlFilterSettingsPage = (): JSX.Element => {
   );
 };
 
-export { ControlFilterSettingsPage };
+export default ControlFilterSettingsPage;

@@ -34,4 +34,4 @@ const AddressMySessionsPage = (): JSX.Element => {
   );
 };
 
-export { AddressMySessionsPage };
+export default AddressMySessionsPage;

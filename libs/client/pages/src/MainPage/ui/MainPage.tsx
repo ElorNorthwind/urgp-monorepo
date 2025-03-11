@@ -38,4 +38,4 @@ const MainPage = (): JSX.Element => {
   );
 };
 
-export { MainPage };
+export default MainPage;

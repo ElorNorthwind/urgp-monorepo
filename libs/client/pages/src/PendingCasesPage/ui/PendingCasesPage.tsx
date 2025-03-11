@@ -162,4 +162,4 @@ const PendingCasesPage = (): JSX.Element => {
   );
 };
 
-export { PendingCasesPage };
+export default PendingCasesPage;

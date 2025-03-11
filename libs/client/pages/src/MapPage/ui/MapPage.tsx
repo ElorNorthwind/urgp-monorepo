@@ -9,4 +9,4 @@ const MapPage = (): JSX.Element => {
   );
 };
 
-export { MapPage };
+export default MapPage;

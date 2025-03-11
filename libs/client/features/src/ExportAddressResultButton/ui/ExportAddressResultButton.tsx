@@ -67,4 +67,4 @@ const ExportAddressResultButton = forwardRef<
   );
 });
 
-export { ExportAddressResultButton };
+export default ExportAddressResultButton;

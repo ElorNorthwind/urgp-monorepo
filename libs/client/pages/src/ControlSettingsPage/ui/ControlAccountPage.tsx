@@ -90,4 +90,4 @@ const ControlAccountPage = (): JSX.Element => {
   );
 };
 
-export { ControlAccountPage };
+export default ControlAccountPage;

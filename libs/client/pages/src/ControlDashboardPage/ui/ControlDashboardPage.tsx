@@ -36,4 +36,4 @@ const ControlDashboardPage = (): JSX.Element => {
     </ScrollArea>
   );
 };
-export { ControlDashboardPage };
+export default ControlDashboardPage;

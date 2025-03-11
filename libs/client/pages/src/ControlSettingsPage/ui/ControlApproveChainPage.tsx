@@ -23,4 +23,4 @@ const ControlApproveChainPage = (): JSX.Element => {
   );
 };
 
-export { ControlApproveChainPage };
+export default ControlApproveChainPage;
