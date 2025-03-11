@@ -6,6 +6,7 @@ import {
   CardTitle,
   Separator,
 } from '@urgp/client/shared';
+import { CreateXMLForm } from '@urgp/client/widgets';
 
 const XMLGeneratorPage = (): JSX.Element => {
   return (
@@ -31,7 +32,9 @@ const XMLGeneratorPage = (): JSX.Element => {
               </CardTitle>
               <CardDescription>Внесите сведения о распоряжении</CardDescription>
             </CardHeader>
-            <CardContent>Тут будет форма</CardContent>
+            <CardContent>
+              <CreateXMLForm />
+            </CardContent>
           </Card>
         </div>
       </div>

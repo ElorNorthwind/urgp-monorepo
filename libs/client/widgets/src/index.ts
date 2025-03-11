@@ -41,3 +41,4 @@ export * from './ControlCardTabs';
 export * from './ApproveChainsTab';
 export * from './AddressNavbar';
 export * from './CreateAddressSessionForm';
+export * from './CreateXMLForm';
