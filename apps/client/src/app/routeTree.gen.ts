@@ -15,9 +15,11 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as OldbuildingsImport } from './routes/oldbuildings'
 import { Route as LoginImport } from './routes/login'
+import { Route as XmlRouteImport } from './routes/xml/route'
 import { Route as RenovationRouteImport } from './routes/renovation/route'
 import { Route as ControlRouteImport } from './routes/control/route'
 import { Route as AddressRouteImport } from './routes/address/route'
+import { Route as XmlIndexImport } from './routes/xml/index'
 import { Route as RenovationIndexImport } from './routes/renovation/index'
 import { Route as ControlIndexImport } from './routes/control/index'
 import { Route as AddressIndexImport } from './routes/address/index'
@@ -79,6 +81,12 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const XmlRouteRoute = XmlRouteImport.update({
+  id: '/xml',
+  path: '/xml',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const RenovationRouteRoute = RenovationRouteImport.update({
   id: '/renovation',
   path: '/renovation',
@@ -102,6 +110,12 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const XmlIndexRoute = XmlIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => XmlRouteRoute,
+} as any)
 
 const RenovationIndexRoute = RenovationIndexImport.update({
   id: '/',
@@ -271,6 +285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RenovationRouteImport
       parentRoute: typeof rootRoute
     }
+    '/xml': {
+      id: '/xml'
+      path: '/xml'
+      fullPath: '/xml'
+      preLoaderRoute: typeof XmlRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -410,6 +431,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/renovation/'
       preLoaderRoute: typeof RenovationIndexImport
       parentRoute: typeof RenovationRouteImport
+    }
+    '/xml/': {
+      id: '/xml/'
+      path: '/'
+      fullPath: '/xml/'
+      preLoaderRoute: typeof XmlIndexImport
+      parentRoute: typeof XmlRouteImport
     }
     '/control/settings/approve-chain': {
       id: '/control/settings/approve-chain'
@@ -552,11 +580,24 @@ const RenovationRouteRouteWithChildren = RenovationRouteRoute._addFileChildren(
   RenovationRouteRouteChildren,
 )
 
+interface XmlRouteRouteChildren {
+  XmlIndexRoute: typeof XmlIndexRoute
+}
+
+const XmlRouteRouteChildren: XmlRouteRouteChildren = {
+  XmlIndexRoute: XmlIndexRoute,
+}
+
+const XmlRouteRouteWithChildren = XmlRouteRoute._addFileChildren(
+  XmlRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/address': typeof AddressRouteRouteWithChildren
   '/control': typeof ControlRouteRouteWithChildren
   '/renovation': typeof RenovationRouteRouteWithChildren
+  '/xml': typeof XmlRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/oldbuildings': typeof OldbuildingsRoute
   '/about': typeof AboutLazyRoute
@@ -577,6 +618,7 @@ export interface FileRoutesByFullPath {
   '/address/': typeof AddressIndexRoute
   '/control/': typeof ControlIndexRoute
   '/renovation/': typeof RenovationIndexRoute
+  '/xml/': typeof XmlIndexRoute
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
@@ -605,6 +647,7 @@ export interface FileRoutesByTo {
   '/address': typeof AddressIndexRoute
   '/control': typeof ControlIndexRoute
   '/renovation': typeof RenovationIndexRoute
+  '/xml': typeof XmlIndexRoute
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
@@ -619,6 +662,7 @@ export interface FileRoutesById {
   '/address': typeof AddressRouteRouteWithChildren
   '/control': typeof ControlRouteRouteWithChildren
   '/renovation': typeof RenovationRouteRouteWithChildren
+  '/xml': typeof XmlRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/oldbuildings': typeof OldbuildingsRoute
   '/about': typeof AboutLazyRoute
@@ -639,6 +683,7 @@ export interface FileRoutesById {
   '/address/': typeof AddressIndexRoute
   '/control/': typeof ControlIndexRoute
   '/renovation/': typeof RenovationIndexRoute
+  '/xml/': typeof XmlIndexRoute
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
@@ -654,6 +699,7 @@ export interface FileRouteTypes {
     | '/address'
     | '/control'
     | '/renovation'
+    | '/xml'
     | '/login'
     | '/oldbuildings'
     | '/about'
@@ -674,6 +720,7 @@ export interface FileRouteTypes {
     | '/address/'
     | '/control/'
     | '/renovation/'
+    | '/xml/'
     | '/control/settings/approve-chain'
     | '/control/settings/change-password'
     | '/control/settings/filter'
@@ -701,6 +748,7 @@ export interface FileRouteTypes {
     | '/address'
     | '/control'
     | '/renovation'
+    | '/xml'
     | '/control/settings/approve-chain'
     | '/control/settings/change-password'
     | '/control/settings/filter'
@@ -713,6 +761,7 @@ export interface FileRouteTypes {
     | '/address'
     | '/control'
     | '/renovation'
+    | '/xml'
     | '/login'
     | '/oldbuildings'
     | '/about'
@@ -733,6 +782,7 @@ export interface FileRouteTypes {
     | '/address/'
     | '/control/'
     | '/renovation/'
+    | '/xml/'
     | '/control/settings/approve-chain'
     | '/control/settings/change-password'
     | '/control/settings/filter'
@@ -747,6 +797,7 @@ export interface RootRouteChildren {
   AddressRouteRoute: typeof AddressRouteRouteWithChildren
   ControlRouteRoute: typeof ControlRouteRouteWithChildren
   RenovationRouteRoute: typeof RenovationRouteRouteWithChildren
+  XmlRouteRoute: typeof XmlRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
   OldbuildingsRoute: typeof OldbuildingsRoute
   AboutLazyRoute: typeof AboutLazyRoute
@@ -759,6 +810,7 @@ const rootRouteChildren: RootRouteChildren = {
   AddressRouteRoute: AddressRouteRouteWithChildren,
   ControlRouteRoute: ControlRouteRouteWithChildren,
   RenovationRouteRoute: RenovationRouteRouteWithChildren,
+  XmlRouteRoute: XmlRouteRouteWithChildren,
   LoginRoute: LoginRoute,
   OldbuildingsRoute: OldbuildingsRoute,
   AboutLazyRoute: AboutLazyRoute,
@@ -780,6 +832,7 @@ export const routeTree = rootRoute
         "/address",
         "/control",
         "/renovation",
+        "/xml",
         "/login",
         "/oldbuildings",
         "/about",
@@ -818,6 +871,12 @@ export const routeTree = rootRoute
         "/renovation/oldbuildings",
         "/renovation/stages",
         "/renovation/"
+      ]
+    },
+    "/xml": {
+      "filePath": "xml/route.tsx",
+      "children": [
+        "/xml/"
       ]
     },
     "/login": {
@@ -904,6 +963,10 @@ export const routeTree = rootRoute
     "/renovation/": {
       "filePath": "renovation/index.tsx",
       "parent": "/renovation"
+    },
+    "/xml/": {
+      "filePath": "xml/index.tsx",
+      "parent": "/xml"
     },
     "/control/settings/approve-chain": {
       "filePath": "control/settings/approve-chain.tsx",

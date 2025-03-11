@@ -17,3 +17,4 @@ export * from './ControlProblemsPage';
 export * from './SingleCasePage';
 export * from './AddressUploadPage';
 export * from './AddressMySessionsPage';
+export * from './XMLGeneratorPage';
