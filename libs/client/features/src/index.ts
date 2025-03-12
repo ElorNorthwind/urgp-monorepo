@@ -17,3 +17,4 @@ export * from './ExportAddressResultButton';
 export * from './DailyRatesUsageBar';
 export * from './ResetAddressErrorsButton';
 export * from './DeleteAddressSessionButton';
+export * from './XMLFormFileInput';

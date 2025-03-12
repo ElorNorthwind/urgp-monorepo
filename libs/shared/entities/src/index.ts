@@ -35,3 +35,5 @@ export * from './addressResults/lib/addressStringFunctions';
 export * from './addressResults/config';
 export * from './addressResults/types';
 export * from './addressResults/dto';
+
+export * from './rdXml/types';

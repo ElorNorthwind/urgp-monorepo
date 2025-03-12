@@ -1,8 +1,8 @@
 import { format } from 'date-fns';
 import { rdTemplates } from '../config/templates';
-import { RdXMLFormValues } from '../model/types';
 import { escapeXml } from './excapeText';
 import { toast } from 'sonner';
+import { RdXMLFormValues } from '@urgp/shared/entities';
 
 // Component with download functionality
 export const generateXml = (data: RdXMLFormValues) => {

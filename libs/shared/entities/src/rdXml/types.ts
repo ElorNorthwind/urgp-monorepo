@@ -28,3 +28,8 @@ export const RdXMLFormSchema = z.object({
   rdType: z.enum(rdTypes, { message: 'Некорректный тип РД' }),
 });
 export type RdXMLFormValues = z.infer<typeof RdXMLFormSchema>;
+
+export type RdXMLFileParseResult = Pick<
+  RdXMLFormValues,
+  'rdNum' | 'rdDate' | 'fileName' | 'cadNum'
+> & { rdType: string };

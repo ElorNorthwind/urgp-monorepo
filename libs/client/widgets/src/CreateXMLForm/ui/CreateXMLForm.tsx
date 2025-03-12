@@ -9,6 +9,11 @@ import {
 import {
   CreateAddressSessionDto,
   createAddressSessionSchema,
+  RdType,
+  rdTypes,
+  RdXMLFileParseResult,
+  RdXMLFormSchema,
+  RdXMLFormValues,
 } from '@urgp/shared/entities';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -23,8 +28,7 @@ import { Loader, LoaderCircle, Send, SquareX, ThumbsUp } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { ExcelFileInput } from '@urgp/client/features';
-import { RdType, RdXMLFormSchema, RdXMLFormValues } from '../model/types';
+import { ExcelFileInput, XMLFormFileInput } from '@urgp/client/features';
 import { generateXml } from '../lib/generateXML';
 import { emptyFormValues, RdTypeOptions } from '../config/constants';
 
@@ -36,6 +40,35 @@ const CreateXMLForm = ({
   className,
 }: CreateXMLFormProps): JSX.Element | null => {
   const isMobile = useIsMobile();
+
+  const [fileData, setFileData] = useState({
+    fileName: '',
+    rdNum: '',
+    rdDate: '',
+    cadNum: '',
+    rdType: '',
+  } as RdXMLFileParseResult);
+  const [fileName, setFileName] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (fileData.fileName !== '' && form.getValues('fileName') === '') {
+      form.setValue('fileName', fileData.fileName);
+    }
+    if (fileData.rdNum !== '' && form.getValues('rdNum') === '') {
+      form.setValue('rdNum', fileData.rdNum);
+    }
+    if (fileData.rdDate !== '' && form.getValues('rdDate') === '') {
+      form.setValue('rdDate', fileData.rdDate);
+    }
+    if (fileData.cadNum !== '' && form.getValues('cadNum') === '') {
+      form.setValue('cadNum', fileData.cadNum);
+    }
+    if (fileData.rdType !== '' && rdTypes.includes(fileData.rdType as RdType)) {
+      form.setValue('rdType', fileData.rdType as RdType);
+    }
+  }, [fileData]);
 
   // const guid = useMemo(() => uuidv4(), []);
 
@@ -54,6 +87,15 @@ const CreateXMLForm = ({
   });
 
   async function onReset() {
+    if (fileInputRef?.current) fileInputRef.current.value = '';
+    setFileData({
+      fileName: '',
+      rdNum: '',
+      rdDate: '',
+      cadNum: '',
+      rdType: '',
+    });
+    setFileName(null);
     form.reset(emptyFormValues);
     form.setValue('guid', uuidv4());
   }
@@ -66,6 +108,12 @@ const CreateXMLForm = ({
   return (
     <Form {...form}>
       <form className={cn('relative flex flex-col gap-6', className)}>
+        <XMLFormFileInput
+          setData={setFileData}
+          fileName={fileName}
+          setFileName={setFileName}
+          ref={fileInputRef}
+        />
         <div
           className={cn(
             'flex w-full gap-6',
