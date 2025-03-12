@@ -59,8 +59,14 @@ const CreateXMLForm = ({
     if (fileData.rdNum !== '' && form.getValues('rdNum') === '') {
       form.setValue('rdNum', fileData.rdNum);
     }
-    if (fileData.rdDate !== '' && form.getValues('rdDate') === '') {
-      form.setValue('rdDate', fileData.rdDate);
+    if (fileData.rdDate !== '') {
+      const [day, month, year] = fileData.rdDate.split('.');
+      form.setValue(
+        'rdDate',
+        new Date(
+          `${year || '2000'}-${month || '01'}-${day || '01'}`,
+        ).toISOString(),
+      );
     }
     if (fileData.cadNum !== '' && form.getValues('cadNum') === '') {
       form.setValue('cadNum', fileData.cadNum);

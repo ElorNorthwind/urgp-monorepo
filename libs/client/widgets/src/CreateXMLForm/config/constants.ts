@@ -1,4 +1,4 @@
-import { RdType } from '../model/types';
+import { RdType } from '@urgp/shared/entities';
 import { v4 as uuidv4 } from 'uuid';
 
 export const emptyFormValues = {

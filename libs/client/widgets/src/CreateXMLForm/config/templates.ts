@@ -1,4 +1,4 @@
-import { RdType } from '../model/types';
+import { RdType } from '@urgp/shared/entities';
 
 const PremiseToResidential = `<?xml version="1.0" encoding="UTF-8"?>
 <KAISToGKN xmlns="urn://x-artefacts-rosreestr-ru/incoming/kais-to-gkn/5.0.4" xmlns:ns6="urn://x-artefacts-rosreestr-ru/commons/complex-types/person/5.0.2" xmlns:ns5="urn://x-artefacts-rosreestr-ru/commons/complex-types/governance/5.0.1" xmlns:ns7="urn://x-artefacts-rosreestr-ru/commons/complex-types/assignation-flat/1.0.1" xmlns:ns0="urn://x-artefacts-smev-gov-ru/supplementary/commons/1.0.1" xmlns:ns2="urn://x-artefacts-rosreestr-ru/commons/complex-types/sender/5.0.1" xmlns:ns1="urn://x-artefacts-rosreestr-ru/commons/complex-types/document-info/5.0.1" xmlns:ns4="urn://x-artefacts-rosreestr-ru/commons/complex-types/address-input/6.0.1" xmlns:ns3="urn://x-artefacts-rosreestr-ru/commons/complex-types/organization/4.0.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GUID="{{guid}}" NameSoftware="КАИС &quot;МЖР&quot;" VersionSoftware="05">
