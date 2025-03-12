@@ -11,14 +11,14 @@ import { CreateXMLForm } from '@urgp/client/widgets';
 const XMLGeneratorPage = (): JSX.Element => {
   return (
     <div className="block space-y-6 p-10 pb-16">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-4xl">
         <div className="flex w-full flex-row justify-between gap-2">
           <div className="space-y-0.5">
             <h2 className="text-2xl font-bold tracking-tight">
               Формирование XML файлов
             </h2>
             <p className="text-muted-foreground">
-              ...а данные мы передаем... жопой!
+              Для распоряжений о переводе помещений и зданий
             </p>
           </div>
         </div>

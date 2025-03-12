@@ -1,17 +1,27 @@
 import { format } from 'date-fns';
-import { testTemplate } from '../config/templates';
+import { rdTemplates } from '../config/templates';
 import { RdXMLFormValues } from '../model/types';
 import { escapeXml } from './excapeText';
+import { toast } from 'sonner';
 
 // Component with download functionality
 export const generateXml = (data: RdXMLFormValues) => {
+  const template = rdTemplates?.[data.rdType];
+  if (!template) {
+    toast.error('Не найден шаблон XML файла!');
+    return;
+  }
+
   // Replace placeholders with escaped values
-  const xmlContent = testTemplate
+  const xmlContent = template
+    .replace('{{guid}}', escapeXml(data?.guid || ''))
+    .replace('{{rdNum}}', escapeXml(data?.rdNum || ''))
     .replace(
-      '{{TITLE}}',
-      escapeXml(format(data.rdDate, 'dd.MM.yyyy') + ' (+3 )'),
+      '{{rdDate}}',
+      escapeXml(format(data?.rdDate || '', 'yyyy-MM-dd') + '+3:00'),
     )
-    .replace('{{CONTENT}}', escapeXml(data.fileName));
+    .replace('{{fileName}}', escapeXml(data?.fileName || ''))
+    .replace('{{cadNum}}', escapeXml(data?.cadNum || ''));
 
   // Create Blob and download
   const blob = new Blob([xmlContent], { type: 'application/xml' });

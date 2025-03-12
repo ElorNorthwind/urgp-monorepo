@@ -5,21 +5,26 @@ function getValues<T extends Record<string, any>>(obj: T) {
 }
 
 export const RdType = {
-  PremiseToResidential: 'О переводе в жилье',
-  PremiseToNonResidential: 'О переводе в нежилье',
-  BuildingToResidential: 'О переводе в жилье но здания',
-  BuildingToNonResidential: 'О переводе в нежилье но здания',
+  PremiseToResidential:
+    'Распоряжение Департамента о переводе нежилого помещения в жилое помещение в многоквартирном доме и включении его в жилищный фонд города Москвы',
+  PremiseToNonResidential:
+    'Распоряжение Департамента об исключении из жилищного фонда города Москвы жилого помещения и переводе его в нежилой фонд',
+  BuildingToResidential:
+    'Несуществующее распоряжение Департамента о переводе в жилье но здания (таких не бывает)',
+  BuildingToNonResidential:
+    'Распоряжение Департамента о переводе жилого дома в нежилой фонд',
 } as const;
 export type RdType = (typeof RdType)[keyof typeof RdType];
 export const rdTypes = getValues(RdType);
 
 export const RdXMLFormSchema = z.object({
   guid: z.string().uuid({ message: 'Некорректный GUID' }),
-  rdNum: z.string().min(1, { message: 'Некорректный номер РД' }),
+  rdNum: z.string().regex(/\d+/, { message: 'Некорректный номер РД' }),
   rdDate: z.string().datetime({ message: 'Некорректная дата РД' }),
-  fileName: z.string().min(1, { message: 'Некорректное имя файла' }),
-  cadNum: z.string().min(1, { message: 'Некорректный номер кадастра' }),
-  // rdType: z.enum(rdTypes, { message: 'Некорректный тип РД' }),
-  rdType: z.string(),
+  fileName: z.string().regex(/\.pdf$/, { message: 'Некорректное имя файла' }),
+  cadNum: z.string().regex(/\d{2}:\d{2}:\d{6,7}:\d*/, {
+    message: 'Некорректный номер кадастра',
+  }),
+  rdType: z.enum(rdTypes, { message: 'Некорректный тип РД' }),
 });
 export type RdXMLFormValues = z.infer<typeof RdXMLFormSchema>;

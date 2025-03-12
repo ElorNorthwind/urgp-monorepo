@@ -65,19 +65,10 @@ const CreateXMLForm = ({
 
   return (
     <Form {...form}>
-      <form className={cn('relative flex flex-col gap-4', className)}>
-        <SelectFormField
-          form={form}
-          options={RdTypeOptions}
-          valueType="string"
-          fieldName={'rdType'}
-          label="Вид распоряжения"
-          placeholder="Тип документа"
-          className="flex-shrink-0"
-        />
+      <form className={cn('relative flex flex-col gap-6', className)}>
         <div
           className={cn(
-            'flex w-full gap-4',
+            'flex w-full gap-6',
             isMobile ? 'flex-col' : 'flex-row',
           )}
         >
@@ -86,7 +77,7 @@ const CreateXMLForm = ({
             fieldName={'rdDate'}
             label="Дата РД"
             placeholder="Дата регистрации РД"
-            className="flex-shrink-0"
+            className="min-w-[19rem] flex-shrink-0 flex-grow-0"
           />
           <InputFormField
             form={form}
@@ -95,17 +86,33 @@ const CreateXMLForm = ({
             placeholder="12345"
             className="flex-grow"
           />
+        </div>
+        <div
+          className={cn(
+            'flex w-full gap-6',
+            isMobile ? 'flex-col' : 'flex-row',
+          )}
+        >
+          <SelectFormField
+            form={form}
+            options={RdTypeOptions}
+            valueType="string"
+            fieldName={'rdType'}
+            label="Вид распоряжения"
+            placeholder="Тип документа"
+            className="min-w-[19rem] flex-grow-0"
+          />
           <InputFormField
             form={form}
-            fieldName={'fileName'}
-            label="Имя файла"
-            placeholder="Точное название файла"
+            fieldName={'cadNum'}
+            label="Кадастровый номер объекта"
+            placeholder="77:00:0000000:0000"
             className="flex-grow"
           />
         </div>
         <div
           className={cn(
-            'flex w-full gap-4',
+            'flex w-full gap-6',
             isMobile ? 'flex-col' : 'flex-row',
           )}
         >
@@ -114,13 +121,14 @@ const CreateXMLForm = ({
             fieldName={'guid'}
             label="GUID"
             placeholder="Случайный номер XML"
-            className="min-w-[18rem] flex-grow-0"
+            className="min-w-[19rem] flex-grow-0"
           />
+
           <InputFormField
             form={form}
-            fieldName={'cadNum'}
-            label="Кадастровый номер объекта"
-            placeholder="77:11123131:11"
+            fieldName={'fileName'}
+            label="Имя файла"
+            placeholder="Точное название файла"
             className="flex-grow"
           />
         </div>
