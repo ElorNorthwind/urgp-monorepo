@@ -18,6 +18,7 @@ import { DataMosModule } from '@urgp/server/data-mos';
 import { AddressModule } from '@urgp/server/address';
 import { FiasModule } from '@urgp/server/fias';
 import { DaDataModule } from '@urgp/server/dadata';
+import { TelegramModule } from '@urgp/server/telegram';
 
 @Module({
   // dot env files
@@ -52,6 +53,7 @@ import { DaDataModule } from '@urgp/server/dadata';
     DaDataModule,
     FiasModule,
     AddressModule,
+    TelegramModule,
   ],
 })
 export class AppModule {}
