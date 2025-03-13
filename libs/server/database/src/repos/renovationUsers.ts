@@ -6,6 +6,7 @@ import {
   GetUserByLoginDto,
   NestedClassificatorInfo,
   SelectOption,
+  User,
   UserApproveTo,
   UserApproveToChainData,
   UserControlData,
@@ -55,6 +56,36 @@ export class RenovationUsersRepository {
     const reply = await this.db.oneOrNone(users.getUserControlSettings, { id });
     return reply?.data;
   }
+
+  async getUserToken(userId: number): Promise<string> {
+    const sql = `SELECT token FROM renovation.users WHERE id = $1;`;
+    return this.db.oneOrNone(sql, [userId]).then((reply) => reply?.token || '');
+  }
+
+  async getUserByToken(token: string): Promise<User | null> {
+    return this.db.oneOrNone(users.getByToken, { token });
+  }
+
+  async getUserChatId(userId: number): Promise<number> {
+    const sql = `SELECT telegram_chat_id as id as data FROM renovation.users WHERE id = $1;`;
+    return this.db.oneOrNone(sql, [userId]).then((reply) => reply?.id || '');
+  }
+
+  async getUserByChatId(chatId: number): Promise<User | null> {
+    return this.db.oneOrNone(users.getByTelegramChatId, { chatId });
+  }
+
+  async setUserChatId(userId: number, chatId: number): Promise<null> {
+    const sql = `UPDATE renovation.users SET telegram_chat_id = $1 WHERE id = $2;`;
+    return this.db.none(sql, [chatId, userId]);
+  }
+
+  // id: number;
+  // login: string;
+  // fio: string;
+  // roles: string[];
+  // tokenVersion: number;
+  // controlData: UserControlData;
 
   async setControlDirections(
     id: number,

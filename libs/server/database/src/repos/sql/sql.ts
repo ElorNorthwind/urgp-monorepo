@@ -61,6 +61,8 @@ export const renovation = {
 export const users = {
   getByLogin: sql('sql/users/getByLogin.sql'),
   getById: sql('sql/users/getUserById.sql'),
+  getByToken: sql('sql/users/getUserByToken.sql'),
+  getByTelegramChatId: sql('sql/users/getUserByTelegramChatId.sql'),
   create: sql('sql/users/create.sql'),
   incrementTokenVersion: sql('sql/users/incrementTokenVersion.sql'),
   changePassword: sql('sql/users/changePassword.sql'),
