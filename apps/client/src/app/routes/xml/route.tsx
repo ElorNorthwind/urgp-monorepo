@@ -1,17 +1,14 @@
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
-import { addressApi } from '@urgp/client/entities';
+import { createFileRoute, Outlet } from '@tanstack/react-router';
 import {
   cn,
   ScrollArea,
   SidebarProvider,
-  store,
   usePageMeta,
 } from '@urgp/client/shared';
-import { AddressNavbar } from '@urgp/client/widgets';
 
 export const Route = createFileRoute('/xml')({
   component: () => {
-    usePageMeta('Герератор XML к распоряжениям', '/favicon.ico');
+    usePageMeta('Генератор XML к распоряжениям', '/favicon.ico');
     return (
       <div className="font-roboto">
         <SidebarProvider cookieName="xml-sidebar" defaultOpen={false}>

@@ -1,14 +1,5 @@
+import { Button, cn, Form, useIsMobile } from '@urgp/client/shared';
 import {
-  Button,
-  cn,
-  Form,
-  Separator,
-  Skeleton,
-  useIsMobile,
-} from '@urgp/client/shared';
-import {
-  CreateAddressSessionDto,
-  createAddressSessionSchema,
   RdType,
   rdTypes,
   RdXMLFileParseResult,
@@ -18,19 +9,16 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCreateSession } from '@urgp/client/entities';
+import { XMLFormFileInput } from '@urgp/client/features';
 import {
   DateFormField,
   InputFormField,
   SelectFormField,
 } from '@urgp/client/widgets';
-import { Loader, LoaderCircle, Send, SquareX, ThumbsUp } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { ExcelFileInput, XMLFormFileInput } from '@urgp/client/features';
-import { generateXml } from '../lib/generateXML';
 import { emptyFormValues, RdTypeOptions } from '../config/constants';
+import { generateXml } from '../lib/generateXML';
 
 type CreateXMLFormProps = {
   className?: string;
