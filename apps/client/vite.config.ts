@@ -2,10 +2,10 @@
 import { defineConfig, PluginOption } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
-import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
+import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
+// import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
 import svgr from 'vite-plugin-svgr';
 import { join } from 'path';
-import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
   root: __dirname,
@@ -39,13 +39,13 @@ export default defineConfig({
     }),
     react(),
     svgr({ include: '**/*.svg?react' }),
-    visualizer({
-      template: 'treemap', // or sunburst
-      open: true,
-      gzipSize: true,
-      brotliSize: true,
-      filename: 'analyse.html', // will be saved in project's root
-    }) as PluginOption,
+    // visualizer({
+    //   template: 'treemap', // or sunburst
+    //   open: true,
+    //   gzipSize: true,
+    //   brotliSize: true,
+    //   filename: 'analyse.html', // will be saved in project's root
+    // }) as PluginOption,
   ],
 
   // Uncomment this if you are using workers.
