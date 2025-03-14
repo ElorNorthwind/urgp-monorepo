@@ -38,6 +38,7 @@ import { TelegramModule } from '@urgp/server/telegram';
         // },
       },
     }),
+
     EdoModule,
     DatabaseModule,
     GptModule,
@@ -53,7 +54,7 @@ import { TelegramModule } from '@urgp/server/telegram';
     DaDataModule,
     FiasModule,
     AddressModule,
-    TelegramModule,
+    // TelegramModule,
   ],
 })
 export class AppModule {}

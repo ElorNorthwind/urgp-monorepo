@@ -13,6 +13,7 @@ import {
   selectIncidentTableColumns,
   SidebarInset,
   TooltipProvider,
+  useUserAbility,
   VirtualDataTable,
 } from '@urgp/client/shared';
 import {
@@ -30,7 +31,15 @@ import { CasesPageHeader } from './CasesPageHeader';
 import { useSelector } from 'react-redux';
 
 const ControlCasesPage = (): JSX.Element => {
-  const { data: cases, isLoading, isFetching } = useCases();
+  const i = useUserAbility();
+
+  const readMode = i.can('read-all', 'Case') ? 'all' : undefined;
+
+  const {
+    data: cases,
+    isLoading,
+    isFetching,
+  } = useCases({ visibility: readMode });
   const columnVisibility = useSelector(selectIncidentTableColumns);
   const [selected, setSelected] = useState<Row<CaseFull>[]>([]); // Этот селектед не тот селектед!
   const [filtered, setFiltered] = useState<Row<CaseFull>[]>([]);
