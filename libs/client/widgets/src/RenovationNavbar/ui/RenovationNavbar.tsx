@@ -10,6 +10,7 @@ import {
 } from '@urgp/client/shared';
 import {
   Gauge,
+  Ghost,
   House,
   MailQuestion,
   Map,
@@ -157,6 +158,31 @@ const RenovationNavbar = (): JSX.Element => {
             </TooltipPortal>
           </Tooltip>
         )}
+      {user && user.id !== 0 && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              className={cn(
+                'text-muted-foreground flex p-0',
+                router.location.pathname === '/renovation/specialapartments' &&
+                  'bg-muted-foreground/10 text-primary',
+              )}
+              disabled={
+                router.location.pathname === '/renovation/specialapartments'
+              }
+              variant="ghost"
+              onClick={() => navigate({ to: '/renovation/specialapartments' })}
+            >
+              <Ghost className="" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipPortal>
+            <TooltipContent side="right" className="">
+              Квартиры специализированного фонда
+            </TooltipContent>
+          </TooltipPortal>
+        </Tooltip>
+      )}
     </nav>
   );
 };
