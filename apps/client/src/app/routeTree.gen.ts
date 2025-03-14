@@ -24,6 +24,7 @@ import { Route as RenovationIndexImport } from './routes/renovation/index'
 import { Route as ControlIndexImport } from './routes/control/index'
 import { Route as AddressIndexImport } from './routes/address/index'
 import { Route as RenovationStagesImport } from './routes/renovation/stages'
+import { Route as RenovationSpecialapartmentsImport } from './routes/renovation/specialapartments'
 import { Route as RenovationOldbuildingsImport } from './routes/renovation/oldbuildings'
 import { Route as RenovationOldapartmentsImport } from './routes/renovation/oldapartments'
 import { Route as RenovationMessagesImport } from './routes/renovation/messages'
@@ -140,6 +141,13 @@ const RenovationStagesRoute = RenovationStagesImport.update({
   path: '/stages',
   getParentRoute: () => RenovationRouteRoute,
 } as any)
+
+const RenovationSpecialapartmentsRoute =
+  RenovationSpecialapartmentsImport.update({
+    id: '/specialapartments',
+    path: '/specialapartments',
+    getParentRoute: () => RenovationRouteRoute,
+  } as any)
 
 const RenovationOldbuildingsRoute = RenovationOldbuildingsImport.update({
   id: '/oldbuildings',
@@ -404,6 +412,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RenovationOldbuildingsImport
       parentRoute: typeof RenovationRouteImport
     }
+    '/renovation/specialapartments': {
+      id: '/renovation/specialapartments'
+      path: '/specialapartments'
+      fullPath: '/renovation/specialapartments'
+      preLoaderRoute: typeof RenovationSpecialapartmentsImport
+      parentRoute: typeof RenovationRouteImport
+    }
     '/renovation/stages': {
       id: '/renovation/stages'
       path: '/stages'
@@ -562,6 +577,7 @@ interface RenovationRouteRouteChildren {
   RenovationMessagesRoute: typeof RenovationMessagesRoute
   RenovationOldapartmentsRoute: typeof RenovationOldapartmentsRoute
   RenovationOldbuildingsRoute: typeof RenovationOldbuildingsRoute
+  RenovationSpecialapartmentsRoute: typeof RenovationSpecialapartmentsRoute
   RenovationStagesRoute: typeof RenovationStagesRoute
   RenovationIndexRoute: typeof RenovationIndexRoute
 }
@@ -572,6 +588,7 @@ const RenovationRouteRouteChildren: RenovationRouteRouteChildren = {
   RenovationMessagesRoute: RenovationMessagesRoute,
   RenovationOldapartmentsRoute: RenovationOldapartmentsRoute,
   RenovationOldbuildingsRoute: RenovationOldbuildingsRoute,
+  RenovationSpecialapartmentsRoute: RenovationSpecialapartmentsRoute,
   RenovationStagesRoute: RenovationStagesRoute,
   RenovationIndexRoute: RenovationIndexRoute,
 }
@@ -614,6 +631,7 @@ export interface FileRoutesByFullPath {
   '/renovation/messages': typeof RenovationMessagesRoute
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
   '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
+  '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute
   '/renovation/stages': typeof RenovationStagesRoute
   '/address/': typeof AddressIndexRoute
   '/control/': typeof ControlIndexRoute
@@ -643,6 +661,7 @@ export interface FileRoutesByTo {
   '/renovation/messages': typeof RenovationMessagesRoute
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
   '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
+  '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute
   '/renovation/stages': typeof RenovationStagesRoute
   '/address': typeof AddressIndexRoute
   '/control': typeof ControlIndexRoute
@@ -679,6 +698,7 @@ export interface FileRoutesById {
   '/renovation/messages': typeof RenovationMessagesRoute
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
   '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
+  '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute
   '/renovation/stages': typeof RenovationStagesRoute
   '/address/': typeof AddressIndexRoute
   '/control/': typeof ControlIndexRoute
@@ -716,6 +736,7 @@ export interface FileRouteTypes {
     | '/renovation/messages'
     | '/renovation/oldapartments'
     | '/renovation/oldbuildings'
+    | '/renovation/specialapartments'
     | '/renovation/stages'
     | '/address/'
     | '/control/'
@@ -744,6 +765,7 @@ export interface FileRouteTypes {
     | '/renovation/messages'
     | '/renovation/oldapartments'
     | '/renovation/oldbuildings'
+    | '/renovation/specialapartments'
     | '/renovation/stages'
     | '/address'
     | '/control'
@@ -778,6 +800,7 @@ export interface FileRouteTypes {
     | '/renovation/messages'
     | '/renovation/oldapartments'
     | '/renovation/oldbuildings'
+    | '/renovation/specialapartments'
     | '/renovation/stages'
     | '/address/'
     | '/control/'
@@ -869,6 +892,7 @@ export const routeTree = rootRoute
         "/renovation/messages",
         "/renovation/oldapartments",
         "/renovation/oldbuildings",
+        "/renovation/specialapartments",
         "/renovation/stages",
         "/renovation/"
       ]
@@ -946,6 +970,10 @@ export const routeTree = rootRoute
     },
     "/renovation/oldbuildings": {
       "filePath": "renovation/oldbuildings.tsx",
+      "parent": "/renovation"
+    },
+    "/renovation/specialapartments": {
+      "filePath": "renovation/specialapartments.tsx",
       "parent": "/renovation"
     },
     "/renovation/stages": {

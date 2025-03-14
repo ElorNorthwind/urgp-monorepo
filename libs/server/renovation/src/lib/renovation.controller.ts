@@ -110,6 +110,12 @@ export class RenovationController {
     return this.renovation.getOldAppartments(getOldAppartmentsDto);
   }
 
+  @Get('special-apartments')
+  @UsePipes(new ZodValidationPipe(getOldApartments))
+  getSpecialAppartments(): Promise<OldAppartment[]> {
+    return this.renovation.getSpecialAppartments();
+  }
+
   @CacheTTL(1000 * 60 * 60)
   @UseInterceptors(CacheInterceptor)
   @Get('okrug-totals')

@@ -27,3 +27,18 @@ export const oldApartmetsSearch = getOldApartments
 
 export type GetOldAppartmentsDto = z.infer<typeof getOldApartments>;
 export type OldApartmentSearch = z.infer<typeof oldApartmetsSearch>;
+
+export const specialApartmentsSearchSchema = getOldBuldings
+  .pick({
+    okrugs: true,
+    districts: true,
+    deviation: true,
+  })
+  .extend({
+    fio: z.string().optional(),
+    apartment: z.coerce.number().nullable().optional(),
+  })
+  .partial();
+export type SpecialApartmentSearch = z.infer<
+  typeof specialApartmentsSearchSchema
+>;

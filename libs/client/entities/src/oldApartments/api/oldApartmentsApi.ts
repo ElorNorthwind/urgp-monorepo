@@ -28,6 +28,13 @@ const oldApartmentsApi = rtkApi.injectEndpoints({
         return currentArg?.offset !== previousArg?.offset;
       },
     }),
+
+    getSpecialApartments: build.query<OldAppartment[], void>({
+      query: () => ({
+        url: '/renovation/special-apartments',
+      }),
+    }),
+
     getOldApartmentTimeline: build.query<OldApartmentTimeline[], number>({
       query: (query) => ({
         url: '/renovation/old-apartment-timeline/' + query.toString(),
@@ -53,6 +60,7 @@ const oldApartmentsApi = rtkApi.injectEndpoints({
 
 export const {
   useGetOldApartmentsQuery: useOldApartments,
+  useGetSpecialApartmentsQuery: useSpecialApartments,
   useGetOldApartmentTimelineQuery: useOldApartmentTimeline,
   useGetOldApartmentDetailsQuery: useOldApartmentDetails,
   useGetProblematicApartmentsQuery: useProblematicApartments,

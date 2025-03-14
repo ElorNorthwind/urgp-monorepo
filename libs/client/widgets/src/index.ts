@@ -42,3 +42,4 @@ export * from './ApproveChainsTab';
 export * from './AddressNavbar';
 export * from './CreateAddressSessionForm';
 export * from './CreateXMLForm';
+export * from './SpecialApartmentFilter';

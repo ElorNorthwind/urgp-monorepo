@@ -164,6 +164,9 @@ export class RenovationRepository {
       conditions,
     });
   }
+  getSpecialAppartments(): Promise<OldAppartment[]> {
+    return this.db.any(renovation.specialApartments);
+  }
 
   getOkrugTotalHouses(): Promise<OkrugTotals[]> {
     return this.db.any(renovation.okrugTotalHouses);
