@@ -2,6 +2,8 @@
 
 # compiled output
 dist
+dist_
+.npmrc
 tmp
 /out-tsc
 
