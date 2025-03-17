@@ -6,13 +6,12 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '@urgp/server/database';
-import { Telegraf } from 'telegraf';
-import { message } from 'telegraf/filters';
+import { Bot, GrammyError, HttpError } from 'grammy';
 
 @Injectable()
 export class TelegramService implements OnModuleDestroy {
   private readonly logger = new Logger(TelegramService.name);
-  public bot: Telegraf;
+  public bot: Bot;
 
   constructor(
     private configService: ConfigService,
@@ -20,7 +19,7 @@ export class TelegramService implements OnModuleDestroy {
   ) {
     const token = this.configService.get<string>('TELEGRAM_BOT_TOKEN');
     if (!token) throw new Error('TELEGRAM_BOT_TOKEN missing');
-    this.bot = new Telegraf(token);
+    this.bot = new Bot(token);
   }
 
   // async onModuleInit() {
@@ -31,7 +30,7 @@ export class TelegramService implements OnModuleDestroy {
 
   async launchBot() {
     this.registerHandlers();
-    await this.bot.launch();
+    await this.bot.start();
     this.logger.log('Telegram bot started');
   }
 
@@ -41,11 +40,11 @@ export class TelegramService implements OnModuleDestroy {
 
   private registerHandlers() {
     // https://t.me/urgp_bot?start=cef2b525-35d0-4c93-a901-2dbe906b51fe
-    this.bot.start(async (ctx) => {
+    this.bot.command('start', async (ctx) => {
       if (
-        !ctx?.payload ||
+        !ctx?.match ||
         !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(
-          ctx.payload,
+          ctx.match,
         )
       ) {
         ctx.reply(
@@ -55,7 +54,7 @@ export class TelegramService implements OnModuleDestroy {
       }
 
       const user = await this.dbService.db.renovationUsers.getUserByToken(
-        ctx.payload,
+        ctx.match,
       );
       if (!user?.id || !ctx?.message?.chat?.id) {
         ctx.reply(`Не найден пользователя по токену.`);
@@ -86,9 +85,17 @@ export class TelegramService implements OnModuleDestroy {
     // });
 
     // Error handling
-    this.bot.catch((err, ctx) => {
-      this.logger.error(`Error for ${ctx.updateType}`, err);
-      ctx.reply('Произошла ошибка...');
+    this.bot.catch((err) => {
+      const ctx = err.ctx;
+      console.error(`Error while handling update ${ctx.update.update_id}:`);
+      const e = err.error;
+      if (e instanceof GrammyError) {
+        console.error('Error in request:', e.description);
+      } else if (e instanceof HttpError) {
+        console.error('Could not contact Telegram:', e);
+      } else {
+        console.error('Unknown error:', e);
+      }
     });
   }
 }
