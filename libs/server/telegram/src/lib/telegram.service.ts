@@ -10,7 +10,7 @@ import { Telegraf } from 'telegraf';
 import { message } from 'telegraf/filters';
 
 @Injectable()
-export class TelegramService implements OnModuleInit, OnModuleDestroy {
+export class TelegramService implements OnModuleDestroy {
   private readonly logger = new Logger(TelegramService.name);
   public bot: Telegraf;
 
@@ -23,7 +23,13 @@ export class TelegramService implements OnModuleInit, OnModuleDestroy {
     this.bot = new Telegraf(token);
   }
 
-  async onModuleInit() {
+  // async onModuleInit() {
+  //   this.registerHandlers();
+  //   await this.bot.launch();
+  //   this.logger.log('Telegram bot started');
+  // }
+
+  async launchBot() {
     this.registerHandlers();
     await this.bot.launch();
     this.logger.log('Telegram bot started');

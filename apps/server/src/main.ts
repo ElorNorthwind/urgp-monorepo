@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppModule } from './app/app.module';
+import { TelegramService } from 'libs/server/telegram/src/lib/telegram.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -25,6 +26,10 @@ async function bootstrap() {
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
   );
+
+  // Manually get TelegramService and launch bot
+  const telegramService = app.get(TelegramService);
+  await telegramService.launchBot();
 }
 
 bootstrap();
