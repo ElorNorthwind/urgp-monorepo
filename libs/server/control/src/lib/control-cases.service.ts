@@ -14,6 +14,7 @@ import {
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 import { ControlOperationsService } from './control-operations.service';
+import { defineAbility } from '@casl/ability';
 
 @Injectable()
 export class ControlCasesService {
@@ -71,10 +72,12 @@ export class ControlCasesService {
   public async readFullCaseById(
     caseId: number,
     userId: number,
+    allowHidden: boolean = false,
   ): Promise<CaseFull> {
     const cases = (await this.readCases(
       {
         mode: 'full',
+        visibility: allowHidden ? 'all' : 'visible',
         case: [caseId],
       },
       userId,

@@ -101,6 +101,7 @@ export class ControlCasesRepository {
       userId,
       controlThreshold: CONTROL_THRESHOLD,
     });
+
     return this.db.any(q) as Promise<CaseSlim[] | CaseFull[]>;
   }
 

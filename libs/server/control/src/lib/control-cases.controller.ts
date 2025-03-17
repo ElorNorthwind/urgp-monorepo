@@ -97,7 +97,9 @@ export class ControlCasesController {
     @Req() req: RequestWithUserData,
     @Param('id', ParseIntPipe) id: number,
   ): Promise<CaseFull> {
-    return this.controlCases.readFullCaseById(id, req.user.id);
+    const i = defineControlAbilityFor(req.user);
+    const allowHidden = i.can('read-all', 'Case') ? true : false;
+    return this.controlCases.readFullCaseById(id, req.user.id, allowHidden);
   }
 
   @Get(':id/by-operation')

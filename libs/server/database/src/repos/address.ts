@@ -14,7 +14,6 @@ import {
 import { IDatabase, IMain } from 'pg-promise';
 import { camelToSnakeCase } from '../lib/to-snake-case';
 import { dataMos, rates, results, sessions } from './sql/sql';
-import { Logger } from '@nestjs/common';
 
 // const pgp = require('pg-promise')();
 // const { ColumnSet } = pgp.helpers;

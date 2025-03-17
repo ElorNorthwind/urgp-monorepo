@@ -5,7 +5,7 @@ import { CasesPageSearchDto } from '@urgp/shared/entities';
 import { ChevronLeft } from 'lucide-react';
 
 function CheckboxCell(props: CellContext<any, unknown>): JSX.Element {
-  const pathname = useLocation().pathname as CaseRoutes;
+  const pathname = useLocation()?.pathname as CaseRoutes;
   const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
 
   return (
