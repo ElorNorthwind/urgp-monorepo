@@ -5,6 +5,14 @@ import '@tanstack/react-table';
 interface ImportMetaEnv {
   readonly VITE_API_URL: string;
   // more env variables...
+  XML_BOSS_FAMILY_NAME: string;
+  XML_BOSS_FIRST_NAME: string;
+  XML_BOSS_PATRONYMIC: string;
+  XML_BOSS_EMAIL: string;
+  XML_BOSS_PASSPORT_SERIES: string;
+  XML_BOSS_PASSPORT_NUMBER: string;
+  XML_BOSS_PASSPORT_DATE: string;
+  XML_BOSS_PASSPORT_ISSUE_ORGAN: string;
 }
 
 interface ImportMeta {

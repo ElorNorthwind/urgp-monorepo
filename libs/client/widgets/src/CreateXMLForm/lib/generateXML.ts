@@ -16,6 +16,11 @@ export const generateXml = (data: RdXMLFormValues) => {
   const xmlContent = template
     .replace('{{guid}}', escapeXml(data?.guid || ''))
     .replace('{{rdNum}}', escapeXml(data?.rdNum || ''))
+    .replace('{{rdNum}}', escapeXml(data?.rdNum || ''))
+    .replace(
+      '{{rdDate}}',
+      escapeXml(format(data?.rdDate || '', 'yyyy-MM-dd') + '+3:00'),
+    )
     .replace(
       '{{rdDate}}',
       escapeXml(format(data?.rdDate || '', 'yyyy-MM-dd') + '+3:00'),

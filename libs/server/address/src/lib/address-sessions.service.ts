@@ -27,7 +27,7 @@ export class AddressSessionsService {
   public async refreshSessionQueue(): Promise<void> {
     const sessions = await this.dbServise.db.address.getSessionQueue();
     const runningSessions = this.sessionQueue.filter(
-      (s) => s.status === AddressSessionStatuses.running,
+      (s) => s?.status && s.status === AddressSessionStatuses.running,
     );
 
     const activeSessions = sessions

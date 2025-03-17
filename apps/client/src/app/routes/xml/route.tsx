@@ -5,6 +5,7 @@ import {
   SidebarProvider,
   usePageMeta,
 } from '@urgp/client/shared';
+import { CornerDownLeft } from 'lucide-react';
 
 export const Route = createFileRoute('/xml')({
   component: () => {

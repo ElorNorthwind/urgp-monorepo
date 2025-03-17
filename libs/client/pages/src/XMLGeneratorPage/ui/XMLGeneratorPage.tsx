@@ -23,7 +23,6 @@ const XMLGeneratorPage = (): JSX.Element => {
           </div>
         </div>
         <Separator className="my-6" />
-
         <div className="flex flex-col gap-4">
           <Card>
             <CardHeader className="bg-muted-foreground/5 mb-4 pb-4">
