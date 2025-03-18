@@ -19,6 +19,7 @@ import { AddressModule } from '@urgp/server/address';
 import { FiasModule } from '@urgp/server/fias';
 import { DaDataModule } from '@urgp/server/dadata';
 import { TelegramModule } from '@urgp/server/telegram';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   // dot env files
@@ -38,6 +39,7 @@ import { TelegramModule } from '@urgp/server/telegram';
         // },
       },
     }),
+    ScheduleModule.forRoot(),
 
     EdoModule,
     DatabaseModule,

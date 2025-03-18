@@ -9,6 +9,7 @@ import { DatabaseService } from '@urgp/server/database';
 import { Bot, GrammyError, HttpError, RawApi } from 'grammy';
 import { Other } from 'grammy/out/core/api';
 import { formatStatusMessage } from './helpers/formatStatusMessage';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class TelegramService implements OnModuleDestroy {
@@ -22,6 +23,22 @@ export class TelegramService implements OnModuleDestroy {
     const token = this.configService.get<string>('TELEGRAM_BOT_TOKEN');
     if (!token) throw new Error('TELEGRAM_BOT_TOKEN missing');
     this.bot = new Bot(token);
+  }
+
+  async launchBot() {
+    this.registerHandlers();
+    await this.bot.start();
+    this.logger.log('Telegram bot started');
+
+    await this.bot.api.setMyCommands([
+      // { command: "start", description: "Start the bot" },
+      { command: 'help', description: 'Список команд' },
+      { command: 'status', description: 'Статус поручений' },
+    ]);
+  }
+
+  async onModuleDestroy() {
+    await this.bot.stop();
   }
 
   // async onModuleInit() {
@@ -53,6 +70,21 @@ export class TelegramService implements OnModuleDestroy {
     const status =
       await this.dbService.db.controlCases.readUserCaseStatuses(userId);
 
+    const totalCount =
+      status.case_approve +
+      status.case_rejected +
+      status.case_project +
+      status.operation_pprove +
+      status.reminder_done +
+      status.reminder_overdue +
+      status.escalation +
+      status.control_to_me +
+      status.updated;
+
+    if (totalCount === 0) {
+      return -1;
+    }
+
     return await this.bot.api
       .sendMessage(chatId, formatStatusMessage(status), {
         parse_mode: 'MarkdownV2',
@@ -60,21 +92,10 @@ export class TelegramService implements OnModuleDestroy {
       .then((m) => m.message_id);
   }
 
-  async launchBot() {
-    this.registerHandlers();
-    await this.bot.start();
-    this.logger.log('Telegram bot started');
-
-    await this.bot.api.setMyCommands([
-      // { command: "start", description: "Start the bot" },
-      { command: 'help', description: 'Список команд' },
-      { command: 'status', description: 'Статус поручений' },
-    ]);
-  }
-
-  async onModuleDestroy() {
-    await this.bot.stop();
-  }
+  // @Cron('*/10 * * * * *')
+  // private testNotify() {
+  //   this.sendUserStatus(1);
+  // }
 
   private registerHandlers() {
     // https://t.me/urgp_bot?start=cef2b525-35d0-4c93-a901-2dbe906b51fe
