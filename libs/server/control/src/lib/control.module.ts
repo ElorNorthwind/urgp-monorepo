@@ -8,9 +8,10 @@ import { ControlOperationsController } from './control-operations.controller';
 import { ControlOperationsService } from './control-operations.service';
 import { ControlClassificatorsService } from './control-classificators.service';
 import { ControlClassificatorsController } from './control-classificators.controller';
+import { TelegramModule } from '@urgp/server/telegram';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, TelegramModule],
   providers: [
     ControlCasesService,
     ControlOperationsService,

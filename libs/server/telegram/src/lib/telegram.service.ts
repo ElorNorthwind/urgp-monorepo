@@ -6,7 +6,8 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '@urgp/server/database';
-import { Bot, GrammyError, HttpError } from 'grammy';
+import { Bot, GrammyError, HttpError, RawApi } from 'grammy';
+import { Other } from 'grammy/out/core/api';
 
 @Injectable()
 export class TelegramService implements OnModuleDestroy {
@@ -27,6 +28,21 @@ export class TelegramService implements OnModuleDestroy {
   //   await this.bot.launch();
   //   this.logger.log('Telegram bot started');
   // }
+
+  public async messageUser(
+    userId: number,
+    text: string,
+    other?: Other<RawApi, 'sendMessage', 'chat_id' | 'text'>,
+  ) {
+    const chatId =
+      await this.dbService.db.renovationUsers.getUserChatId(userId);
+    if (!chatId) {
+      throw new Error('Пользователь не привязан к боту!');
+    }
+    return await this.bot.api
+      .sendMessage(chatId, text, other)
+      .then((m) => m.message_id);
+  }
 
   async launchBot() {
     this.registerHandlers();
@@ -72,29 +88,33 @@ export class TelegramService implements OnModuleDestroy {
     // this.bot.command('start', (ctx) => ctx.reply(JSON.stringify(ctx)));
     this.bot.command('help', (ctx) =>
       ctx.reply(
-        `Это бот оповещений для сервиса [Кон(троль)](http://10.9.96.230/control). У него нет команд и цели, только путь.`,
+        `Это бот оповещений для сервиса [Кон\\(троль\\)](http://10.9.96.230/control)\\.
+У него нет команд и цели, только путь\\.`,
         {
           parse_mode: 'MarkdownV2',
         },
       ),
     );
 
-    // // Text message handler
-    // this.bot.on(message('text'), (ctx) => {
-    //   ctx.reply(`Echo: ${ctx.message.text}`);
-    // });
-
     // Error handling
     this.bot.catch((err) => {
       const ctx = err.ctx;
-      console.error(`Error while handling update ${ctx.update.update_id}:`);
+      Logger.error(`Error while handling update ${ctx.update.update_id}:`);
       const e = err.error;
+      ctx.reply(
+        'Проишошла ошибка\\! \n```json\n' +
+          JSON.stringify(e, null, 2) +
+          '\n```',
+        {
+          parse_mode: 'MarkdownV2',
+        },
+      );
       if (e instanceof GrammyError) {
-        console.error('Error in request:', e.description);
+        Logger.error('Error in request:', e.description);
       } else if (e instanceof HttpError) {
-        console.error('Could not contact Telegram:', e);
+        Logger.error('Could not contact Telegram:', e);
       } else {
-        console.error('Unknown error:', e);
+        Logger.error('Unknown error:', e);
       }
     });
   }

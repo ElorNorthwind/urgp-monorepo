@@ -67,7 +67,7 @@ export class RenovationUsersRepository {
   }
 
   async getUserChatId(userId: number): Promise<number> {
-    const sql = `SELECT telegram_chat_id as id as data FROM renovation.users WHERE id = $1;`;
+    const sql = `SELECT telegram_chat_id as id FROM renovation.users WHERE id = $1;`;
     return this.db.oneOrNone(sql, [userId]).then((reply) => reply?.id || '');
   }
 
