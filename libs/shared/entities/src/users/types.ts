@@ -66,6 +66,11 @@ export type UserControlSettings = {
   notifications?: UserNotificationSettings;
 };
 
+export type UserTelegramStatus = {
+  connected: boolean;
+  token: string;
+};
+
 export type SelectOption<T> = {
   label: string;
   value: T;

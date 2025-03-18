@@ -38,7 +38,6 @@ const CheckboxFormField = (props: CheckboxFormFieldProps): JSX.Element => {
     className,
     triggerClassName,
     disabled = false,
-    isLoading,
     form,
     fieldName,
     label = 'Значение',
@@ -58,22 +57,6 @@ const CheckboxFormField = (props: CheckboxFormFieldProps): JSX.Element => {
             className,
           )}
         >
-          {/* <FormControl>
-            {isLoading ? (
-              <Skeleton className={cn('size-5', triggerClassName)} />
-            ) : (
-              <Checkbox
-                disabled={disabled || formState.isSubmitting}
-                className={cn(
-                  'size-5 flex-shrink-0',
-                  formFieldStatusClassName({ dirtyIndicator, fieldState }),
-                  triggerClassName,
-                )}
-                checked={field.value}
-                onCheckedChange={field.onChange}
-              />
-            )}
-          </FormControl> */}
           <FormControl>
             <Checkbox
               disabled={disabled || formState.isSubmitting}
@@ -99,33 +82,6 @@ const CheckboxFormField = (props: CheckboxFormFieldProps): JSX.Element => {
             </FormDescription>
           </div>
         </FormItem>
-
-        // <FormItem className={cn(formItemClassName, className)}>
-        //   {isLoading ? (
-        //     <InputSkeleton />
-        //   ) : (
-        //     <>
-
-        //       <FormControl>
-        //         <Checkbox
-        //           className={cn(
-        //             formFieldStatusClassName({ dirtyIndicator, fieldState }),
-        //             triggerClassName,
-        //           )}
-        //           {...field}
-        //           checked={field.value}
-
-        //           // value={field.value?.toString() || field.value}
-        //           // defaultValue={field.value?.toString() || field.value}
-        //           disabled={disabled || formState.isSubmitting}
-        //         />
-        //       </FormControl>
-        //       {label && (
-        //         <FormInputLabel fieldState={fieldState} label={label} />
-        //       )}
-        //     </>
-        //   )}
-        // </FormItem>
       )}
     />
   );

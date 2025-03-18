@@ -10,6 +10,7 @@ import {
   UserApproveTo,
   UserApproveToChainData,
   UserNotificationSettings,
+  UserTelegramStatus,
 } from '@urgp/shared/entities';
 
 export const classificatorsApi = rtkApi
@@ -176,6 +177,13 @@ export const classificatorsApi = rtkApi
         }),
         providesTags: ['classificator'],
       }),
+      getUserTelegramStatus: build.query<UserTelegramStatus, void>({
+        query: () => ({
+          url: '/control/classificators/telegram-status',
+          method: 'GET',
+        }),
+        providesTags: ['classificator'],
+      }),
     }),
     overrideExisting: false,
   });
@@ -197,4 +205,5 @@ export const {
   useGetCaseStatusTypesQuery: useCaseStatusTypes,
   useGetCaseDirectionTypesQuery: useCaseDirectionTypes,
   useGetDepartmentTypesQuery: useDepartmentTypes,
+  useGetUserTelegramStatusQuery: useUserTelegramStatus,
 } = classificatorsApi;

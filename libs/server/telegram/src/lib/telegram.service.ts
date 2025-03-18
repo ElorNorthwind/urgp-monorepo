@@ -151,6 +151,20 @@ export class TelegramService implements OnModuleDestroy {
 
       ctx.reply(formatStatusMessage(status), {
         parse_mode: 'MarkdownV2',
+        reply_markup: {
+          inline_keyboard: [
+            [
+              {
+                text: 'Перейти в дашборд',
+                url: 'http://10.9.96.230/control',
+              },
+              {
+                text: 'Обновить текущий статус',
+                callback_data: 'status',
+              },
+            ],
+          ],
+        },
       });
     });
 

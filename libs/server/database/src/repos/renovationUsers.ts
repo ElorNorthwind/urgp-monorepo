@@ -12,6 +12,7 @@ import {
   UserControlData,
   UserControlSettings,
   UserNotificationSettings,
+  UserTelegramStatus,
   UserWithCredentials,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
@@ -81,12 +82,12 @@ export class RenovationUsersRepository {
     return this.db.none(sql, [chatId, userId]);
   }
 
-  // id: number;
-  // login: string;
-  // fio: string;
-  // roles: string[];
-  // tokenVersion: number;
-  // controlData: UserControlData;
+  async getUserTelegramStatus(
+    userId: number,
+  ): Promise<UserTelegramStatus | null> {
+    const sql = `SELECT token, telegram_chat_id IS NOT NULL as connected FROM renovation.users WHERE id = $1`;
+    return this.db.oneOrNone(sql, [userId]);
+  }
 
   async setControlDirections(
     userId: number,

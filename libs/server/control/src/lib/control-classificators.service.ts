@@ -26,6 +26,7 @@ import {
   UserControlData,
   UserControlSettings,
   UserNotificationSettings,
+  UserTelegramStatus,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 // type GetCorectApproveDataOperationProps = {
@@ -72,6 +73,12 @@ export class ControlClassificatorsService {
     userId: number,
   ): Promise<UserControlSettings> {
     return this.dbServise.db.renovationUsers.getControlSettings(userId);
+  }
+
+  public async getTelegramStatus(
+    userId: number,
+  ): Promise<UserTelegramStatus | null> {
+    return this.dbServise.db.renovationUsers.getUserTelegramStatus(userId);
   }
 
   public async setControlDirections(

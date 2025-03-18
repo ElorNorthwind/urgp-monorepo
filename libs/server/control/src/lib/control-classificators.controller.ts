@@ -29,6 +29,7 @@ import {
   UserApproveToChainData,
   userNotificationSettingsSchema,
   UserNotificationSettings,
+  UserTelegramStatus,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
@@ -103,6 +104,14 @@ export class ControlClassificatorsController {
   ): Promise<UserControlSettings> {
     const userId = req.user.id;
     return await this.classificators.getControlSettings(userId);
+  }
+
+  @Get('telegram-status')
+  async getCurrentTelegamStatus(
+    @Req() req: RequestWithUserData,
+  ): Promise<UserTelegramStatus | null> {
+    const userId = req.user.id;
+    return await this.classificators.getTelegramStatus(userId);
   }
 
   @Get('user-settings/:id')
