@@ -3,9 +3,12 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 import { DatabaseService } from '@urgp/server/database';
+import { TelegramService } from '@urgp/server/telegram';
 import {
   ApproveControlEntityDto,
   caseClassesValues,
@@ -29,6 +32,7 @@ import {
   UserTelegramStatus,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
+import { from, map, tap, timeout } from 'rxjs';
 // type GetCorectApproveDataOperationProps = {
 //   user: User;
 //   dto: ApproveControlEntityDto | CreateOperationDto | UpdateOperationDto;
@@ -60,10 +64,29 @@ type ApproveData = Omit<ApproveControlEntityDto, 'id'> & {
 export class ControlClassificatorsService {
   constructor(
     private readonly dbServise: DatabaseService,
+    private readonly telegram: TelegramService,
     // private readonly operations: ControlOperationsService,
     // private readonly cases: ControlCasesService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
+
+  @Cron('0 15 8 * * 1-5')
+  private async dailyStatusNotification() {
+    const dailySubscriptions =
+      await this.dbServise.db.renovationUsers.readDailySubscriptions();
+    dailySubscriptions.forEach((id, index) => {
+      setTimeout(() => this.telegram.sendUserStatus(id), index * 50);
+    });
+  }
+
+  @Cron('0 0 8 * * 1')
+  private async weelyStatusNotification() {
+    const dailySubscriptions =
+      await this.dbServise.db.renovationUsers.readWeeklySubscriptions();
+    dailySubscriptions.forEach((id, index) => {
+      setTimeout(() => this.telegram.sendUserStatus(id), index * 50);
+    });
+  }
 
   public async getControlData(userId: number): Promise<UserControlData> {
     return this.dbServise.db.renovationUsers.getControlData(userId);

@@ -5,6 +5,7 @@ import {
   GetUserByIdDto,
   GetUserByLoginDto,
   NestedClassificatorInfo,
+  NotificationPeriod,
   SelectOption,
   User,
   UserApproveTo,
@@ -164,5 +165,25 @@ export class RenovationUsersRepository {
     return this.db.any(users.readUserControlTo, {
       userId,
     });
+  }
+
+  async readDailySubscriptions(): Promise<number[]> {
+    const sql = `SELECT id 
+    FROM renovation.users 
+    WHERE telegram_chat_id IS NOT NULL
+    AND control_settings->'notifications'->>'period' = $1;`;
+    return (await this.db.any(sql, [NotificationPeriod.daily])).map(
+      (user) => user.id,
+    );
+  }
+
+  async readWeeklySubscriptions(): Promise<number[]> {
+    const sql = `SELECT id 
+    FROM renovation.users 
+    WHERE telegram_chat_id IS NOT NULL
+    AND control_settings->'notifications'->>'period' = $1;`;
+    return (await this.db.any(sql, [NotificationPeriod.weekly])).map(
+      (user) => user.id,
+    );
   }
 }
