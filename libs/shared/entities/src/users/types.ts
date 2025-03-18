@@ -1,4 +1,6 @@
+import { z } from 'zod';
 import { CasesPageFilter } from '../cases/dto';
+import { NotificationPeriod, notificationPeriodsValues } from './config';
 
 export type User = {
   id: number;
@@ -46,12 +48,22 @@ export type UserControlData = {
   controlTo: number[];
   roles: string[];
   priority?: number;
+  department?: string; // TODO get me here!
 };
+
+export const userNotificationSettingsSchema = z.object({
+  period: z.enum(notificationPeriodsValues).optional(),
+  realtime: z.coerce.boolean().default(false).optional(),
+});
+export type UserNotificationSettings = z.infer<
+  typeof userNotificationSettingsSchema
+>;
 
 export type UserControlSettings = {
   directions: number[];
-  department: string;
+  department: string; // TODO delete me!
   casesFilter: CasesPageFilter;
+  notifications?: UserNotificationSettings;
 };
 
 export type SelectOption<T> = {

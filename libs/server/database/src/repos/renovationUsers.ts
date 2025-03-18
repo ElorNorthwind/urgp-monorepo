@@ -11,6 +11,7 @@ import {
   UserApproveToChainData,
   UserControlData,
   UserControlSettings,
+  UserNotificationSettings,
   UserWithCredentials,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
@@ -88,7 +89,7 @@ export class RenovationUsersRepository {
   // controlData: UserControlData;
 
   async setControlDirections(
-    id: number,
+    userId: number,
     directions: number[],
   ): Promise<UserControlSettings> {
     // const q = this.pgp.as.format(users.setUserControlDirections, {
@@ -98,14 +99,14 @@ export class RenovationUsersRepository {
     // console.log(q);
 
     const reply = await this.db.oneOrNone(users.setUserControlDirections, {
-      id,
+      userId,
       directions,
     });
     return reply?.data;
   }
 
   async setCaseFilter(
-    id: number,
+    userId: number,
     filter: CasesPageFilter,
   ): Promise<UserControlSettings> {
     // const q = this.pgp.as.format(users.setUserCaseFilter, {
@@ -115,8 +116,25 @@ export class RenovationUsersRepository {
     // console.log(q);
 
     const reply = await this.db.oneOrNone(users.setUserCaseFilter, {
-      id,
+      userId,
       filter,
+    });
+    return reply?.data;
+  }
+
+  async setNotificationData(
+    userId: number,
+    notifications: UserNotificationSettings,
+  ): Promise<UserControlSettings> {
+    // const q = this.pgp.as.format(users.setUserCaseFilter, {
+    //   id,
+    //   filter,
+    // });
+    // console.log(q);
+
+    const reply = await this.db.oneOrNone(users.setUserNotificationsData, {
+      userId,
+      notifications,
     });
     return reply?.data;
   }

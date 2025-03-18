@@ -17,3 +17,7 @@ export const ControlAccountPage = lazy(() => import('./ui/ControlAccountPage'));
 export const ControlChangePasswordPage = lazy(
   () => import('./ui/ChangePasswordPage'),
 );
+
+export const ControlNotificationsSettingsPage = lazy(
+  () => import('./ui/ControlNotificationsSettingsPage'),
+);

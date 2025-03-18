@@ -9,6 +9,7 @@ import {
   UserControlSettings,
   UserApproveTo,
   UserApproveToChainData,
+  UserNotificationSettings,
 } from '@urgp/shared/entities';
 
 export const classificatorsApi = rtkApi
@@ -45,6 +46,29 @@ export const classificatorsApi = rtkApi
           method: 'GET',
         }),
         providesTags: ['user-settings'],
+      }),
+
+      setCurrentUserNotificationsSettings: build.mutation<
+        UserControlSettings,
+        UserNotificationSettings
+      >({
+        query: (notifications) => ({
+          url: '/control/classificators/user-settings/notifications',
+          method: 'PATCH',
+          body: notifications,
+        }),
+        invalidatesTags: ['user-settings'],
+        // async onQueryStarted(ids, { dispatch }) {
+        //   dispatch(
+        //     classificatorsApi.util.updateQueryData(
+        //       'getCurrentUserSettings',
+        //       undefined,
+        //       (draft) => {
+        //         return { ...draft, directions: ids };
+        //       },
+        //     ),
+        //   );
+        // },
       }),
       setCurrentUserDirections: build.mutation<UserControlSettings, number[]>({
         query: (directions) => ({
@@ -161,6 +185,7 @@ export const {
   useGetCurrentUserSettingsQuery: useCurrentUserSettings,
   useSetCurrentUserDirectionsMutation: useSetCurrentUserDirections,
   useSetCurrentUserCaseFilterMutation: useSetCurrentUserCaseFilter,
+  useSetCurrentUserNotificationsSettingsMutation: useSetNotificationsSettings,
   useGetCurrentUserApproveToQuery: useCurrentUserApproveTo,
   useGetCurrentUserApproveChainsQuery: useCurrentUserApproveChains,
   useGetEscalationTargetsQuery: useEscalationTargets,

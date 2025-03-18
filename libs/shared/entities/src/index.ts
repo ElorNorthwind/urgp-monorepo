@@ -6,6 +6,7 @@ export * from './oldBuildings/types';
 
 export * from './renovationStatistics/types';
 
+export * from './users/config';
 export * from './users/types';
 export * from './users/dto';
 

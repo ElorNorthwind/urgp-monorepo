@@ -43,3 +43,4 @@ export * from './AddressNavbar';
 export * from './CreateAddressSessionForm';
 export * from './CreateXMLForm';
 export * from './SpecialApartmentFilter';
+export * from './ChangeNotificationsSettingsForm';

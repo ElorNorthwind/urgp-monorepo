@@ -25,6 +25,7 @@ import {
   UserApproveToChainData,
   UserControlData,
   UserControlSettings,
+  UserNotificationSettings,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 // type GetCorectApproveDataOperationProps = {
@@ -88,6 +89,16 @@ export class ControlClassificatorsService {
     filter: CasesPageFilter,
   ): Promise<UserControlSettings> {
     return this.dbServise.db.renovationUsers.setCaseFilter(userId, filter);
+  }
+
+  public async setNotificationsSettings(
+    userId: number,
+    notifications: UserNotificationSettings,
+  ): Promise<UserControlSettings> {
+    return this.dbServise.db.renovationUsers.setNotificationData(
+      userId,
+      notifications,
+    );
   }
 
   public async getUserApproveTo(userId: number): Promise<UserApproveTo> {

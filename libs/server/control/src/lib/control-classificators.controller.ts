@@ -27,6 +27,8 @@ import {
   operationClassSchema,
   ApprovePathNode,
   UserApproveToChainData,
+  userNotificationSettingsSchema,
+  UserNotificationSettings,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
@@ -135,6 +137,15 @@ export class ControlClassificatorsController {
     @Body(new ZodValidationPipe(casesPageFilter)) dto: CasesPageFilter,
   ): Promise<UserControlSettings> {
     return this.classificators.setCaseFilter(req.user.id, dto);
+  }
+
+  @Patch('user-settings/notifications')
+  async setCurrentUserNotificationSettings(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(userNotificationSettingsSchema))
+    dto: UserNotificationSettings,
+  ): Promise<UserControlSettings> {
+    return this.classificators.setNotificationsSettings(req.user.id, dto);
   }
 
   @Get('case-types')

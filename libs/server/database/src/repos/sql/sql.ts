@@ -70,6 +70,7 @@ export const users = {
   getUserControlData: sql('sql/users/getUserControlData.sql'),
   getUserControlSettings: sql('sql/users/getUserControlSettings.sql'),
   setUserControlDirections: sql('sql/users/setUserControlDirections.sql'),
+  setUserNotificationsData: sql('sql/users/setUserNotificationsData.sql'),
   setUserCaseFilter: sql('sql/users/setUserCaseFilter.sql'),
   getUserApproveTo: sql('sql/users/getUserApproveTo.sql'),
   getControlExecutors: sql('sql/users/getControlExecutors.sql'),

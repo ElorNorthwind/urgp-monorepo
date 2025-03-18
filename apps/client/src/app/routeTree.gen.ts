@@ -39,6 +39,7 @@ import { Route as ControlSettingsRouteImport } from './routes/control/settings/r
 import { Route as RenovationSettingsIndexImport } from './routes/renovation/settings/index'
 import { Route as ControlSettingsIndexImport } from './routes/control/settings/index'
 import { Route as RenovationSettingsChangePasswordImport } from './routes/renovation/settings/change-password'
+import { Route as ControlSettingsNotificationsImport } from './routes/control/settings/notifications'
 import { Route as ControlSettingsFilterImport } from './routes/control/settings/filter'
 import { Route as ControlSettingsChangePasswordImport } from './routes/control/settings/change-password'
 import { Route as ControlSettingsApproveChainImport } from './routes/control/settings/approve-chain'
@@ -239,6 +240,13 @@ const RenovationSettingsChangePasswordRoute =
     id: '/change-password',
     path: '/change-password',
     getParentRoute: () => RenovationSettingsRouteRoute,
+  } as any)
+
+const ControlSettingsNotificationsRoute =
+  ControlSettingsNotificationsImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => ControlSettingsRouteRoute,
   } as any)
 
 const ControlSettingsFilterRoute = ControlSettingsFilterImport.update({
@@ -475,6 +483,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ControlSettingsFilterImport
       parentRoute: typeof ControlSettingsRouteImport
     }
+    '/control/settings/notifications': {
+      id: '/control/settings/notifications'
+      path: '/notifications'
+      fullPath: '/control/settings/notifications'
+      preLoaderRoute: typeof ControlSettingsNotificationsImport
+      parentRoute: typeof ControlSettingsRouteImport
+    }
     '/renovation/settings/change-password': {
       id: '/renovation/settings/change-password'
       path: '/change-password'
@@ -519,6 +534,7 @@ interface ControlSettingsRouteRouteChildren {
   ControlSettingsApproveChainRoute: typeof ControlSettingsApproveChainRoute
   ControlSettingsChangePasswordRoute: typeof ControlSettingsChangePasswordRoute
   ControlSettingsFilterRoute: typeof ControlSettingsFilterRoute
+  ControlSettingsNotificationsRoute: typeof ControlSettingsNotificationsRoute
   ControlSettingsIndexRoute: typeof ControlSettingsIndexRoute
 }
 
@@ -526,6 +542,7 @@ const ControlSettingsRouteRouteChildren: ControlSettingsRouteRouteChildren = {
   ControlSettingsApproveChainRoute: ControlSettingsApproveChainRoute,
   ControlSettingsChangePasswordRoute: ControlSettingsChangePasswordRoute,
   ControlSettingsFilterRoute: ControlSettingsFilterRoute,
+  ControlSettingsNotificationsRoute: ControlSettingsNotificationsRoute,
   ControlSettingsIndexRoute: ControlSettingsIndexRoute,
 }
 
@@ -640,6 +657,7 @@ export interface FileRoutesByFullPath {
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
+  '/control/settings/notifications': typeof ControlSettingsNotificationsRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
   '/control/settings/': typeof ControlSettingsIndexRoute
   '/renovation/settings/': typeof RenovationSettingsIndexRoute
@@ -670,6 +688,7 @@ export interface FileRoutesByTo {
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
+  '/control/settings/notifications': typeof ControlSettingsNotificationsRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
   '/control/settings': typeof ControlSettingsIndexRoute
   '/renovation/settings': typeof RenovationSettingsIndexRoute
@@ -707,6 +726,7 @@ export interface FileRoutesById {
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
+  '/control/settings/notifications': typeof ControlSettingsNotificationsRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
   '/control/settings/': typeof ControlSettingsIndexRoute
   '/renovation/settings/': typeof RenovationSettingsIndexRoute
@@ -745,6 +765,7 @@ export interface FileRouteTypes {
     | '/control/settings/approve-chain'
     | '/control/settings/change-password'
     | '/control/settings/filter'
+    | '/control/settings/notifications'
     | '/renovation/settings/change-password'
     | '/control/settings/'
     | '/renovation/settings/'
@@ -774,6 +795,7 @@ export interface FileRouteTypes {
     | '/control/settings/approve-chain'
     | '/control/settings/change-password'
     | '/control/settings/filter'
+    | '/control/settings/notifications'
     | '/renovation/settings/change-password'
     | '/control/settings'
     | '/renovation/settings'
@@ -809,6 +831,7 @@ export interface FileRouteTypes {
     | '/control/settings/approve-chain'
     | '/control/settings/change-password'
     | '/control/settings/filter'
+    | '/control/settings/notifications'
     | '/renovation/settings/change-password'
     | '/control/settings/'
     | '/renovation/settings/'
@@ -925,6 +948,7 @@ export const routeTree = rootRoute
         "/control/settings/approve-chain",
         "/control/settings/change-password",
         "/control/settings/filter",
+        "/control/settings/notifications",
         "/control/settings/"
       ]
     },
@@ -1006,6 +1030,10 @@ export const routeTree = rootRoute
     },
     "/control/settings/filter": {
       "filePath": "control/settings/filter.tsx",
+      "parent": "/control/settings"
+    },
+    "/control/settings/notifications": {
+      "filePath": "control/settings/notifications.tsx",
       "parent": "/control/settings"
     },
     "/renovation/settings/change-password": {
