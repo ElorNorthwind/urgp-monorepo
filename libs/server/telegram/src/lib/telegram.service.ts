@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '@urgp/server/database';
 import { Bot, GrammyError, HttpError, RawApi } from 'grammy';
 import { Other } from 'grammy/out/core/api';
+import { formatStatusMessage } from './helpers/formatStatusMessage';
 
 @Injectable()
 export class TelegramService implements OnModuleDestroy {
@@ -43,11 +44,32 @@ export class TelegramService implements OnModuleDestroy {
       .sendMessage(chatId, text, other)
       .then((m) => m.message_id);
   }
+  public async sendUserStatus(userId: number) {
+    const chatId =
+      await this.dbService.db.renovationUsers.getUserChatId(userId);
+    if (!chatId) {
+      throw new Error('Пользователь не привязан к боту!');
+    }
+    const status =
+      await this.dbService.db.controlCases.readUserCaseStatuses(userId);
+
+    return await this.bot.api
+      .sendMessage(chatId, formatStatusMessage(status), {
+        parse_mode: 'MarkdownV2',
+      })
+      .then((m) => m.message_id);
+  }
 
   async launchBot() {
     this.registerHandlers();
     await this.bot.start();
     this.logger.log('Telegram bot started');
+
+    await this.bot.api.setMyCommands([
+      // { command: "start", description: "Start the bot" },
+      { command: 'help', description: 'Список команд' },
+      { command: 'status', description: 'Статус поручений' },
+    ]);
   }
 
   async onModuleDestroy() {
@@ -63,18 +85,16 @@ export class TelegramService implements OnModuleDestroy {
           ctx.match,
         )
       ) {
-        ctx.reply(
-          `Для привязки учетной записи нужен корректный токен... Пройдите по ссылке на сайте.`,
+        throw new Error(
+          'Для привязки учетной записи нужен корректный токен... Пройдите по ссылке на сайте!',
         );
-        throw new Error('Некорректный токен!');
       }
 
       const user = await this.dbService.db.renovationUsers.getUserByToken(
         ctx.match,
       );
       if (!user?.id || !ctx?.message?.chat?.id) {
-        ctx.reply(`Не найден пользователя по токену.`);
-        throw new Error('Пользователь не найден токен!');
+        throw new Error('Не найден токен пользователя!');
       }
       await this.dbService.db.renovationUsers.setUserChatId(
         user?.id,
@@ -85,30 +105,52 @@ export class TelegramService implements OnModuleDestroy {
     });
 
     // Command handlers
-    // this.bot.command('start', (ctx) => ctx.reply(JSON.stringify(ctx)));
     this.bot.command('help', (ctx) =>
       ctx.reply(
         `Это бот оповещений для сервиса [Кон\\(троль\\)](http://10.9.96.230/control)\\.
-У него нет команд и цели, только путь\\.`,
+Для проверки статуса поручений используйте команду /status\\.`,
         {
           parse_mode: 'MarkdownV2',
         },
       ),
     );
 
+    this.bot.command('status', async (ctx) => {
+      const user = await this.dbService.db.renovationUsers.getUserByChatId(
+        ctx.chatId,
+      );
+
+      if (!user || !user?.id) {
+        throw new Error('Не найден пользователь!');
+      }
+
+      const status = await this.dbService.db.controlCases.readUserCaseStatuses(
+        user?.id,
+      );
+
+      ctx.reply(formatStatusMessage(status), {
+        parse_mode: 'MarkdownV2',
+      });
+    });
+
     // Error handling
     this.bot.catch((err) => {
       const ctx = err.ctx;
       Logger.error(`Error while handling update ${ctx.update.update_id}:`);
       const e = err.error;
-      ctx.reply(
-        'Проишошла ошибка\\! \n```json\n' +
-          JSON.stringify(e, null, 2) +
-          '\n```',
-        {
-          parse_mode: 'MarkdownV2',
-        },
-      );
+      if (err.message) {
+        ctx.reply(err.message);
+      } else {
+        ctx.reply(
+          'Проишошла ошибка\\! \n```json\n' +
+            '\n' +
+            JSON.stringify(e, null, 2) +
+            '\n```',
+          {
+            parse_mode: 'MarkdownV2',
+          },
+        );
+      }
       if (e instanceof GrammyError) {
         Logger.error('Error in request:', e.description);
       } else if (e instanceof HttpError) {

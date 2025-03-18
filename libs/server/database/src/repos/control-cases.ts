@@ -9,6 +9,7 @@ import {
   CONTROL_THRESHOLD,
   SetConnectionsDto,
   SetConnectionsToDto,
+  UserCaseStatus,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { cases } from './sql/sql';
@@ -103,6 +104,14 @@ export class ControlCasesRepository {
     });
 
     return this.db.any(q) as Promise<CaseSlim[] | CaseFull[]>;
+  }
+
+  readUserCaseStatuses(userId?: number): Promise<UserCaseStatus> {
+    const q = this.pgp.as.format(cases.readUserCaseTotals, {
+      userId,
+      controlThreshold: CONTROL_THRESHOLD,
+    });
+    return this.db.one(q);
   }
 
   updateCase(dto: UpdateCaseDto, updatedById: number): Promise<number> {

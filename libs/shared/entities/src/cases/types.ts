@@ -66,3 +66,15 @@ export const caseSchema = entityFullSchema
 // export type CaseFull = z.infer<typeof caseSchema>;
 const caseFullFieldsSchema = z.object(caseFullFields);
 export type CaseFull = EntityFull & z.infer<typeof caseFullFieldsSchema>;
+
+export type UserCaseStatus = {
+  case_approve: number;
+  case_rejected: number;
+  case_project: number;
+  operation_pprove: number;
+  reminder_done: number;
+  reminder_overdue: number;
+  escalation: number;
+  control_to_me: number;
+  updated: number;
+};
