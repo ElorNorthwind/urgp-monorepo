@@ -4,6 +4,7 @@ function getValues<T extends Record<string, any>>(obj: T) {
 
 export const NotificationPeriod = {
   none: 'none',
+  thrice: 'thrice',
   daily: 'daily',
   weekly: 'weekly',
 } as const;

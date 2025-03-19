@@ -20,6 +20,7 @@ import {
   defineControlAbilityFor,
   NestedClassificatorInfo,
   NestedClassificatorInfoString,
+  NotificationPeriod,
   OperationClass,
   OperationFull,
   SelectOption,
@@ -70,20 +71,35 @@ export class ControlClassificatorsService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
+  @Cron('0 10 8,12,16 * * 1-5')
+  private async thriceADayStatusNotification() {
+    const dailySubscriptions =
+      await this.dbServise.db.renovationUsers.readSubscriptions(
+        NotificationPeriod.thrice,
+      );
+    dailySubscriptions.forEach((id, index) => {
+      setTimeout(() => this.telegram.sendUserStatus(id), index * 50);
+    });
+  }
+
   @Cron('0 15 8 * * 1-5')
   private async dailyStatusNotification() {
     const dailySubscriptions =
-      await this.dbServise.db.renovationUsers.readDailySubscriptions();
+      await this.dbServise.db.renovationUsers.readSubscriptions(
+        NotificationPeriod.daily,
+      );
     dailySubscriptions.forEach((id, index) => {
       setTimeout(() => this.telegram.sendUserStatus(id), index * 50);
     });
   }
 
   @Cron('0 0 8 * * 1')
-  private async weelyStatusNotification() {
-    const dailySubscriptions =
-      await this.dbServise.db.renovationUsers.readWeeklySubscriptions();
-    dailySubscriptions.forEach((id, index) => {
+  private async weellyStatusNotification() {
+    const weeklySubscriptions =
+      await this.dbServise.db.renovationUsers.readSubscriptions(
+        NotificationPeriod.weekly,
+      );
+    weeklySubscriptions.forEach((id, index) => {
       setTimeout(() => this.telegram.sendUserStatus(id), index * 50);
     });
   }

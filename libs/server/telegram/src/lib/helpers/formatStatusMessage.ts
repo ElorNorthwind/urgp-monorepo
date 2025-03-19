@@ -14,11 +14,11 @@ export const numericCases = (value: number) => {
 export const numericRequire = (value: number) => {
   const lastLetter = value.toString().slice(-1);
   if (lastLetter === '1') {
-    return `требует`;
+    return `ожидает`;
   } else if (['2', '3', '4'].includes(lastLetter)) {
-    return `требуют`;
+    return `ожидают`;
   } else {
-    return `требуют`;
+    return `ожидают`;
   }
 };
 

@@ -30,6 +30,10 @@ const notificationPeriodOptions = [
     value: NotificationPeriod.none,
     label: 'Не получать регулярные уведомления',
   },
+  {
+    value: NotificationPeriod.thrice,
+    label: 'Три раза в день (ПН-ПТ) в 8:10, 12:10 и 16:10',
+  },
   { value: NotificationPeriod.daily, label: 'Ежедневно (ПН-ПТ) в 8:15' },
   { value: NotificationPeriod.weekly, label: 'Еженедельно (ПН) в 8:00' },
 ];
