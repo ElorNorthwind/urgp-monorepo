@@ -32,4 +32,4 @@ SELECT
 FROM control.cases_ c
 LEFT JOIN operation_info o ON o."caseId" = c.id
 WHERE c.archive_date IS NULL
-	AND (c.approve_status = 'approved' OR ${userId} = ANY(ARRAY[c.author_id,c.approve_from_id,c.approve_to_id]::integer[]) )
+	AND (c.approve_status = 'approved' OR ${userId} = ANY(ARRAY[c.author_id,c.approve_from_id,c.approve_to_id]::integer[]) OR o."hasControlToMe")

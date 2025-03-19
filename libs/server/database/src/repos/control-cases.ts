@@ -72,6 +72,7 @@ export class ControlCasesRepository {
           `(
             c.approve_status = 'approved' 
             OR $1 = ANY(ARRAY[c.author_id,c.approve_from_id,c.approve_to_id]::integer[]) 
+            OR o."hasControlToMe"
            )`,
           userId,
         ),
