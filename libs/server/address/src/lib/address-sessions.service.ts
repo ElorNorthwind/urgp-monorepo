@@ -45,7 +45,7 @@ export class AddressSessionsService {
   public async startSessionsQueue(): Promise<void> {
     if (
       this.sessionQueue.length === 0 ||
-      this.sessionQueue[0].status === AddressSessionStatuses.running
+      this.sessionQueue[0]?.status === AddressSessionStatuses.running
     )
       return;
 

@@ -19,6 +19,7 @@ export class DaDataService {
   public async getFiasGuidByAddressString(
     address: string,
     validationStr?: string,
+    mainWord?: string,
   ): Promise<DaDataResult> {
     const apiKey = this.configService.get<string>('DADATA_KEY1');
     if (!apiKey) throw new NotFoundException('Не найден ключь ДаДаты!');
@@ -74,7 +75,10 @@ export class DaDataService {
 
       const validatedAddress = dadataSuggestions.find(
         (address) =>
-          addressToParts(address?.value)?.validationStr === validationStr,
+          validationStr &&
+          mainWord &&
+          addressToParts(address.value)?.validationStr === validationStr &&
+          address.value.toLowerCase().includes(mainWord.toLowerCase()),
       );
 
       const requestResult = validatedAddress

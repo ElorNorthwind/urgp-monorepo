@@ -1,30 +1,17 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AxiosRequestConfig } from 'axios';
-import {
-  catchError,
-  concatMap,
-  firstValueFrom,
-  from,
-  map,
-  of,
-  retry,
-  tap,
-  throwError,
-  timer,
-} from 'rxjs';
 import {
   addressNotFound,
+  addressToParts,
   FIAS_RETRY_COUNT,
   FiasAddress,
   FiasAddressPart,
   FiasAddressWithDetails,
-  FiasHint,
-  hintNotFound,
-  addressToParts,
 } from '@urgp/shared/entities';
+import { AxiosRequestConfig } from 'axios';
 import { DaDataService } from 'libs/server/dadata/src/lib/dadata.service';
+import { catchError, firstValueFrom, of, retry, tap } from 'rxjs';
 import { shouldRetry } from '../config/constants';
 
 @Injectable()
@@ -41,18 +28,36 @@ export class FiasService {
 
     let fiasRequests = 0;
     let dadataRequests = 0;
+    let extra: Object = {};
 
-    const { validationStr, parts, shortAddress } = addressToParts(address);
+    const { validationStr, parts, shortAddress, mainWord } =
+      addressToParts(address);
 
     try {
       // Поиск 1: по частям адреса
-      let fiasAddress = await this.getAddressByPart(parts);
+      let fiasAddress = await this.getAddressByPart(
+        parts,
+        validationStr,
+        mainWord,
+      );
       fiasRequests += fiasAddress?.fiasRequests || 0;
+      extra = {
+        ...extra,
+        ...fiasAddress?.extra,
+      };
 
       // Поиск 2: по полному адресу
       if (fiasAddress?.confidence === 'none' || fiasAddress?.object_id < 0) {
-        fiasAddress = await this.getAddressByString(address, validationStr);
+        fiasAddress = await this.getAddressByString(
+          address,
+          validationStr,
+          mainWord,
+        );
         fiasRequests += fiasAddress?.fiasRequests || 0;
+        extra = {
+          ...extra,
+          ...fiasAddress?.extra,
+        };
       }
 
       // Поиск 3: по сокращенному адресу
@@ -63,11 +68,16 @@ export class FiasService {
         const shortSearchResult = await this.getAddressByString(
           shortAddress,
           validationStr,
+          mainWord,
         );
         fiasRequests += fiasAddress?.fiasRequests || 0;
         if (['medium', 'high'].includes(shortSearchResult.confidence)) {
           fiasAddress = shortSearchResult;
         }
+        extra = {
+          ...extra,
+          ...fiasAddress?.extra,
+        };
       }
 
       // Поиск 4: DaData :(
@@ -96,9 +106,14 @@ export class FiasService {
             response_source: 'dadata-hint',
             confidence: 'medium',
           };
+          extra = {
+            ...extra,
+            ...fiasAddress?.extra,
+          };
         }
       }
 
+      // TODO: Проверить почему в кадастр помещения попадают кадастры дома
       if (!fiasAddress?.house_cad_num || fiasAddress?.house_cad_num === '') {
         const houseId = fiasAddress?.hierarchy?.find(
           (item) => item.object_level_id === 10,
@@ -121,6 +136,7 @@ export class FiasService {
           parts,
           shortAddress,
           fiasRequests,
+          ...extra,
         },
       };
     } catch (error) {
@@ -131,6 +147,8 @@ export class FiasService {
 
   public async getAddressByPart(
     part: FiasAddressPart,
+    validationStr?: string,
+    mainWord?: string,
   ): Promise<FiasAddressWithDetails> {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
@@ -179,6 +197,20 @@ export class FiasService {
         (data?.address_item as FiasAddress | undefined) ?? addressNotFound;
       const problems = data?.description ?? null;
 
+      // isDev && Logger.warn(problems);
+
+      const foundAddress = data?.address_item?.full_name || '';
+
+      const confidence =
+        resultData?.object_id > 0
+          ? validationStr &&
+            mainWord &&
+            addressToParts(foundAddress)?.validationStr === validationStr &&
+            foundAddress.toLowerCase().includes(mainWord.toLowerCase())
+            ? 'high'
+            : 'low'
+          : 'none';
+
       return {
         ...resultData,
         fiasRequests,
@@ -187,8 +219,8 @@ export class FiasService {
           resultData?.object_level_id === 10
             ? (resultData?.address_details?.cadastral_number ?? null)
             : null,
-        confidence: resultData?.object_id > 0 ? 'high' : 'none',
-        extra: { problems },
+        confidence,
+        extra: { problems: problems },
       };
     } catch (error) {
       Logger.error(error);
@@ -199,6 +231,7 @@ export class FiasService {
   public async getAddressByString(
     address: string,
     validationStr?: string,
+    mainWord?: string,
   ): Promise<FiasAddressWithDetails> {
     const apiKey = this.configService.get<string>('FIAS_KEY');
     if (!apiKey) throw new NotFoundException('Не найден ключь ФИАС!');
@@ -254,7 +287,13 @@ export class FiasService {
       if (fiasSuggestions.length === 0) return notFoundResult;
       const validatedAddress = fiasSuggestions.find(
         (address) =>
-          addressToParts(address.full_name)?.validationStr === validationStr,
+          validationStr &&
+          mainWord &&
+          addressToParts(address?.full_name || '')?.validationStr ===
+            validationStr &&
+          (address?.full_name || '')
+            .toLowerCase()
+            .includes(mainWord.toLowerCase()),
       );
 
       const requestResult = validatedAddress
@@ -281,7 +320,8 @@ export class FiasService {
           validationStr:
             validationStr +
               ' -> ' +
-              addressToParts(requestResult.full_name)?.validationStr || '',
+              addressToParts(requestResult?.full_name || '')?.validationStr ||
+            '',
         },
       };
     } catch (error) {

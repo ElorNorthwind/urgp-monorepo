@@ -5,7 +5,7 @@ import {
   replacePatterns,
 } from './helperFunctions';
 import {
-  extraWhitespacePattern,
+  extraWhitespaceAndCommasPattern,
   streetTypeReplacements,
   moscowCityPattern,
   municipalPartPattern,
@@ -15,6 +15,8 @@ import {
   houseTypeReplacements,
   splitAddressPatternn,
   numericPartPattern,
+  mainWordPattern,
+  extraWhitespacePattern,
 } from './patterns';
 
 type SplitAdress = {
@@ -22,6 +24,7 @@ type SplitAdress = {
   shortAddress: string;
   parts: FiasAddressPart;
   validationStr: string;
+  mainWord: string;
 };
 
 type HouseAndFlatPart = {
@@ -59,9 +62,11 @@ export function clearStreet(street: string): StreetPart {
     streetTypePattern,
   ]).trim();
 
+  const isCity = /([Гг](?:ор)?(?:од)?\.?)/i.test(streetType || '');
+
   return {
     name: streetName,
-    type_name: streetType ? streetType : undefined,
+    type_name: streetType && !isCity ? streetType : undefined,
   };
 }
 
@@ -77,7 +82,7 @@ export function clearHouseAndFlat(addressHalf: string): HouseAndFlatPart {
       ' ',
       ' ',
     ),
-    [extraWhitespacePattern],
+    [extraWhitespaceAndCommasPattern], // Ok here? It's a final result
   ).trim();
 
   return {
@@ -97,8 +102,17 @@ export function addressToParts(address: string): SplitAdress {
   const addressHalfs = splitAddressPatternn.exec(clearedAddress);
 
   const streetPart = clearStreet(addressHalfs?.[1] || '');
+  const mainWord = streetPart.name.match(mainWordPattern)?.[1] || '';
 
-  const numbers = (addressHalfs?.[2] || '').match(numericPartPattern) || [];
+  const houseAndFlatParts = clearHouseAndFlat(addressHalfs?.[2] || '');
+  const hasFlat = houseAndFlatParts?.flat ? true : false;
+
+  const numbers =
+    (
+      houseAndFlatParts?.house?.number +
+        ' квартира ' +
+        houseAndFlatParts?.flat?.number || ''
+    ).match(numericPartPattern) || [];
 
   const shortAddress =
     (/[Мм]осква/.test(streetPart?.name)
@@ -107,8 +121,9 @@ export function addressToParts(address: string): SplitAdress {
     ' ' +
     numbers.join(' ');
 
-  const houseAndFlatParts = clearHouseAndFlat(addressHalfs?.[2] || '');
-  const hasFlat = houseAndFlatParts?.flat ? true : false;
+  // console.log(
+  //   `\n-------------\nOriginal: ${address} \nFirstSplit: ${addressHalfs?.[1]} | ${addressHalfs?.[2]} \nFlat: ${houseAndFlatParts?.flat?.number} \nStreet: ${streetPart?.name} \nStreetType: ${streetPart?.type_name} \nNums: ${numbers.join('|')} \nWord: ${mainWord}\n`,
+  // );
 
   const parts = {
     region: {
@@ -121,9 +136,10 @@ export function addressToParts(address: string): SplitAdress {
   };
 
   return {
-    original: address.replace(extraWhitespacePattern, ' '),
+    original: address.replace(extraWhitespaceAndCommasPattern, ' '), // Ok here? It's a final result
     shortAddress,
     parts,
     validationStr: numbers.join('|').toLowerCase(),
+    mainWord,
   };
 }
