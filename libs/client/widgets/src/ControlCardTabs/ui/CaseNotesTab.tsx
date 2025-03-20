@@ -40,12 +40,13 @@ const CaseNotesTab = (props: CaseNotesTabProps): JSX.Element | null => {
           {controlCase?.notes
             .replace(/(?:\r\n|\r|\n|\n\n)/gi, '\\n')
             .split('\\n')
+            .filter((item) => item !== '')
             .map((item, index) => {
               return (
-                <span key={index}>
+                <div key={index} className="pb-1 indent-4 last-of-type:pb-0">
                   {item}
                   <br />
-                </span>
+                </div>
               );
             })}
         </ScrollArea>
