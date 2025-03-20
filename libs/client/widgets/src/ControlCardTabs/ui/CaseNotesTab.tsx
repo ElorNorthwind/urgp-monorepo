@@ -1,4 +1,4 @@
-import { cn } from '@urgp/client/shared';
+import { cn, ScrollArea } from '@urgp/client/shared';
 import { CaseFull } from '@urgp/shared/entities';
 
 import { CardTab } from '@urgp/client/features';
@@ -32,10 +32,24 @@ const CaseNotesTab = (props: CaseNotesTabProps): JSX.Element | null => {
       button={<ManageReminderButton caseId={controlCase?.id} />}
       className={className}
       titleClassName={titleClassName}
-      contentClassName={cn(contentClassName)}
+      contentClassName={cn('max-h-72 flex flex-col p-0', contentClassName)}
       accordionItemName={accordionItemName}
     >
-      {controlCase?.notes}
+      {
+        <ScrollArea className={cn('w-full flex-grow overflow-y-auto p-2')}>
+          {controlCase?.notes
+            .replace(/(?:\r\n|\r|\n|\n\n)/gi, '\\n')
+            .split('\\n')
+            .map((item, index) => {
+              return (
+                <span key={index}>
+                  {item}
+                  <br />
+                </span>
+              );
+            })}
+        </ScrollArea>
+      }
     </CardTab>
   );
 };

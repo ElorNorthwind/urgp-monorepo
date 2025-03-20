@@ -1,5 +1,6 @@
 import {
   cn,
+  ScrollArea,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -55,10 +56,7 @@ const DispatchesTab = (props: DispatchesTabProps): JSX.Element | null => {
       }
       className={className}
       titleClassName={titleClassName}
-      contentClassName={cn(
-        'p-0 grid grid-cols-[auto_1fr_auto] overflow-hidden',
-        contentClassName,
-      )}
+      contentClassName={cn('p-0 overflow-hidden', contentClassName)}
       accordionItemName={accordionItemName}
     >
       {sortedDispatches?.length === 0 ? (
@@ -67,76 +65,86 @@ const DispatchesTab = (props: DispatchesTabProps): JSX.Element | null => {
           <span>Нет поручений</span>
         </div>
       ) : (
-        sortedDispatches.map((d, index) => {
-          const sameController = d?.controlTo?.id === d?.controlFrom?.id;
-          return (
-            <Fragment key={d.id}>
-              <div
-                className={cn(
-                  'border-r px-4 py-1',
-                  'bg-muted-foreground/5',
-                  index < sortedDispatches.length - 1 && !d.notes && 'border-b',
-                )}
-              >
-                {d?.controlTo?.fio}
-              </div>
+        <ScrollArea className={cn('max-h-56  overflow-y-auto')}>
+          <div className="grid grid-cols-[auto_1fr_auto]">
+            {sortedDispatches.map((d, index) => {
+              const sameController = d?.controlTo?.id === d?.controlFrom?.id;
+              return (
+                <Fragment key={d.id}>
+                  <div
+                    className={cn(
+                      'border-r px-4 py-1',
+                      'bg-muted-foreground/5',
+                      index < sortedDispatches.length - 1 &&
+                        !d.notes &&
+                        'border-b',
+                    )}
+                  >
+                    {d?.controlTo?.fio}
+                  </div>
 
-              <div
-                className={cn(
-                  'bg-background group flex flex-row items-center gap-1 px-4 py-1',
-                  sameController ? 'col-span-2' : 'col-span-1 border-r',
-                  index < sortedDispatches.length - 1 && !d.notes && 'border-b',
-                )}
-              >
-                <EditDispatchButton controlDispatch={d} />
-                {d?.extra &&
-                  ![
-                    'Без переноса срока',
-                    'Первично установленный срок',
-                  ].includes(d?.extra) && (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Repeat className="text-muted-foreground size-4" />
-                      </TooltipTrigger>
+                  <div
+                    className={cn(
+                      'bg-background group flex flex-row items-center gap-1 px-4 py-1',
+                      sameController ? 'col-span-2' : 'col-span-1 border-r',
+                      index < sortedDispatches.length - 1 &&
+                        !d.notes &&
+                        'border-b',
+                    )}
+                  >
+                    <EditDispatchButton controlDispatch={d} />
+                    {d?.extra &&
+                      ![
+                        'Без переноса срока',
+                        'Первично установленный срок',
+                      ].includes(d?.extra) && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Repeat className="text-muted-foreground size-4" />
+                          </TooltipTrigger>
 
-                      <TooltipContent side="top">
-                        <span className="font-bold">Причина переноса: </span>
-                        <span>{d?.extra}</span>
-                      </TooltipContent>
-                    </Tooltip>
+                          <TooltipContent side="top">
+                            <span className="font-bold">
+                              Причина переноса:{' '}
+                            </span>
+                            <span>{d?.extra}</span>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
+                  </div>
+                  {!sameController && (
+                    <div
+                      className={cn(
+                        'bg-muted-foreground/5 flex flex-row items-center gap-1 px-4 py-1',
+                        index < sortedDispatches.length - 1 &&
+                          !d.notes &&
+                          'border-b',
+                      )}
+                    >
+                      <span>{'от: ' + d?.controlFrom?.fio}</span>
+                      {d?.controlFrom?.priority &&
+                      d?.controlFrom?.priority >= CONTROL_THRESHOLD ? (
+                        <CirclePower className="text-muted-foreground size-4" />
+                      ) : (
+                        <></>
+                      )}
+                    </div>
                   )}
-              </div>
-              {!sameController && (
-                <div
-                  className={cn(
-                    'bg-muted-foreground/5 flex flex-row items-center gap-1 px-4 py-1',
-                    index < sortedDispatches.length - 1 &&
-                      !d.notes &&
-                      'border-b',
+                  {d?.notes && (
+                    <div
+                      className={cn(
+                        index < sortedDispatches?.length - 1 && 'border-b',
+                        'text-muted-foreground bg-background/50 col-span-3 border-t px-4 py-1 text-xs',
+                      )}
+                    >
+                      {d?.notes}
+                    </div>
                   )}
-                >
-                  <span>{'от: ' + d?.controlFrom?.fio}</span>
-                  {d?.controlFrom?.priority &&
-                  d?.controlFrom?.priority >= CONTROL_THRESHOLD ? (
-                    <CirclePower className="text-muted-foreground size-4" />
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              )}
-              {d?.notes && (
-                <div
-                  className={cn(
-                    index < sortedDispatches?.length - 1 && 'border-b',
-                    'text-muted-foreground bg-background/50 col-span-3 border-t px-4 py-1 text-xs',
-                  )}
-                >
-                  {d?.notes}
-                </div>
-              )}
-            </Fragment>
-          );
-        })
+                </Fragment>
+              );
+            })}
+          </div>
+        </ScrollArea>
       )}
     </CardTab>
   );
