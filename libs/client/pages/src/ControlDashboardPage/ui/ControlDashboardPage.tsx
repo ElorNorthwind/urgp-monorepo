@@ -4,6 +4,9 @@ import { ViewStatusChart } from './cards/ViewStatusChart';
 import { CreateCaseButton } from '@urgp/client/entities';
 import { DepartmentChart } from './cards/DepartmentChart';
 import { PendingActionChart } from './cards/PendingActionsChart';
+import { DispatchesToMeChart } from './cards/DispatchesToMeChart';
+import { DispatchesToMeDoneChart } from './cards/DispatchesToMeDoneChart';
+import { CasesFromMeChart } from './cards/CasesFromMeChart';
 
 const ControlDashboardPage = (): JSX.Element => {
   return (
@@ -30,6 +33,11 @@ const ControlDashboardPage = (): JSX.Element => {
                 className="flex-grow rounded-lg py-6 text-base shadow-sm"
               />
             </div>
+          </div>
+          <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <DispatchesToMeChart className="col-span-1 md:col-span-2 lg:col-span-1" />
+            <DispatchesToMeDoneChart />
+            <CasesFromMeChart />
           </div>
         </div>
       </div>

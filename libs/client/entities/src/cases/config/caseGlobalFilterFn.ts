@@ -2,6 +2,7 @@ import {
   CaseActions,
   CaseFull,
   CasesPageSearchDto,
+  ControlToMeStatus,
 } from '@urgp/shared/entities';
 import { Row } from '@tanstack/react-table';
 import { toDate } from 'date-fns';
@@ -26,6 +27,8 @@ export function caseGlobalFilterFn(
     relevant,
     selectedCase,
     action,
+    fromMe,
+    control,
   } = filterValue;
   const userId = store.getState().auth.user?.id;
   // const userSettings = await store.dispatch(
@@ -119,6 +122,14 @@ export function caseGlobalFilterFn(
     allowed = false;
   }
 
+  if (
+    fromMe &&
+    row?.original?.author?.id !== userId && // Автор
+    row?.original?.approveFrom?.id !== userId // Направлено от (согласование)
+  ) {
+    allowed = false;
+  }
+
   const rowActions = row?.original?.actions || [];
   if (
     action &&
@@ -127,6 +138,15 @@ export function caseGlobalFilterFn(
       (rowActions.length === 0 && action.includes(CaseActions.unknown))
     )
   ) {
+    allowed = false;
+  }
+
+  const rowControlToMeStatus = row?.original?.hasControlToMe
+    ? row?.original?.hasControlFromMe
+      ? ControlToMeStatus.deligated
+      : ControlToMeStatus.direct
+    : ControlToMeStatus.none;
+  if (control && !control.includes(rowControlToMeStatus)) {
     allowed = false;
   }
 

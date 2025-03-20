@@ -26,6 +26,8 @@ import { RelevantFilter } from './filterInputs/RelevantFilter';
 import { useLocation } from '@tanstack/react-router';
 import { PendingActionChart } from 'libs/client/pages/src/ControlDashboardPage/ui/cards/PendingActionsChart';
 import { PendingActionsFilter } from './filterInputs/PendingActionsFilter';
+import { ControlToMeFilter } from './filterInputs/ControlToMeFilter';
+import { FromMeFilter } from './filterInputs/FromMeFilter';
 
 type ControlSidebarProps = {
   side?: 'left' | 'right';
@@ -64,6 +66,7 @@ const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
             <AuthorFilter className="h-8 flex-shrink-0" />
             <DueDateFilter className="flex-shrink-0" />
             <RelevantFilter className="h-8 flex-shrink-0" />
+            <FromMeFilter className="h-8 flex-shrink-0" />
             <Accordion
               type="multiple"
               defaultValue={
@@ -71,6 +74,7 @@ const CaseFilterSidebar = (props: ControlSidebarProps): JSX.Element => {
               }
             >
               <DepartmentsFilter variant="accordion" />
+              <ControlToMeFilter variant="accordion" />
               <PendingActionsFilter variant="accordion" />
               <StatusFilter variant="accordion" />
               <DirectionsFilter variant="accordion" />

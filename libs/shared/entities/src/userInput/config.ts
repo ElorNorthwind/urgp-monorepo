@@ -106,3 +106,11 @@ export const emptyApproveData = {
   approveNotes: '',
   dueDate: GET_DEFAULT_CONTROL_DUE_DATE(),
 };
+
+export const ControlToMeStatus = {
+  deligated: 'deligated',
+  direct: 'direct',
+  none: 'none',
+} as const;
+export type ControlToMeStatus =
+  (typeof ControlToMeStatus)[keyof typeof ControlToMeStatus];

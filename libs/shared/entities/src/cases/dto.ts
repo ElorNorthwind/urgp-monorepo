@@ -132,6 +132,8 @@ export const casesPageFilter = z
     dueTo: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
     viewStatus: z.enum(viewStatusValues),
     action: queryStringArray,
+    control: queryStringArray,
+    fromMe: z.boolean(),
   })
   .partial();
 export type CasesPageFilter = z.infer<typeof casesPageFilter>;

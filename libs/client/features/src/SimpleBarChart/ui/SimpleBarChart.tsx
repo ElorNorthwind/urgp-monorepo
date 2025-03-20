@@ -34,6 +34,7 @@ type SimpleBarChartProps = {
   isLoading?: boolean;
   skeletonCount?: number;
   isError?: boolean;
+  extraBarClass?: (val: SimpleBarValue) => string;
   onBarClick?: (key: string | number) => void;
 };
 
@@ -64,6 +65,7 @@ const SimpleBarChart = forwardRef<
       isError = false,
       skeletonCount = 1,
       onBarClick,
+      extraBarClass,
     }: SimpleBarChartProps,
     ref,
   ): JSX.Element => {
@@ -116,7 +118,11 @@ const SimpleBarChart = forwardRef<
                       }
                       labelFit={labelFit}
                       className={cn('h-8', barRowClassName)}
-                      barClassName={cn(barClassName, entry.style)}
+                      barClassName={cn(
+                        barClassName,
+                        entry.style,
+                        extraBarClass && extraBarClass(entry),
+                      )}
                       onClick={() => onBarClick && onBarClick(entry.key)}
                     />
                   </TooltipTrigger>

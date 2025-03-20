@@ -1,5 +1,9 @@
 import { cn } from '@urgp/client/shared';
-import { CaseActions, ViewStatus } from '@urgp/shared/entities';
+import {
+  CaseActions,
+  ControlToMeStatus,
+  ViewStatus,
+} from '@urgp/shared/entities';
 import {
   Circle,
   CircleAlert,
@@ -27,9 +31,11 @@ import {
   ClipboardType,
   ClipboardX,
   LucideProps,
+  MessageSquareDashed,
   MessageSquareHeart,
   MessageSquareMore,
   MessageSquarePlus,
+  MessageSquareReply,
   MessageSquareText,
   MessageSquareX,
 } from 'lucide-react';
@@ -121,6 +127,21 @@ export const pendingActionStyles = {
     label: 'Отработать поручение',
   },
 } as Record<CaseActions, StyleData>;
+
+export const controlToMeStyles = {
+  [ControlToMeStatus.direct]: {
+    icon: MessageSquareMore,
+    // iconStyle: 'bg-blue-500 rounded-full text-blue-500',
+  },
+  [ControlToMeStatus.deligated]: {
+    icon: MessageSquareReply,
+    // iconStyle: 'bg-teal-500 rounded-full text-teal-500',
+  },
+  [ControlToMeStatus.none]: {
+    icon: MessageSquareDashed,
+    // iconStyle: 'bg-orange-500 rounded-full text-orange-500',
+  },
+} as Record<string, StyleData>;
 
 export const directionCategoryStyles = {
   УРЖП: {
