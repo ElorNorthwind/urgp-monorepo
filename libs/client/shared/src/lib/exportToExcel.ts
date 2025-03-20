@@ -1,6 +1,6 @@
 import * as XLSX from 'xlsx';
 
-export const exportToExcel = (jsonData, fileName = 'export.xlsx') => {
+export const exportToExcel = (jsonData, fileName = 'export') => {
   // Convert JSON data to a worksheet
   const worksheet = XLSX.utils.json_to_sheet(jsonData);
 
@@ -11,5 +11,5 @@ export const exportToExcel = (jsonData, fileName = 'export.xlsx') => {
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Список');
 
   // Write the workbook to a file
-  XLSX.writeFile(workbook, fileName);
+  XLSX.writeFile(workbook, fileName + '.xlsx');
 };

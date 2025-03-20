@@ -1,4 +1,4 @@
-import { Row, VisibilityState } from '@tanstack/react-table';
+import { Row } from '@tanstack/react-table';
 
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
@@ -81,9 +81,14 @@ const ControlCasesPage = (): JSX.Element => {
   return (
     <TooltipProvider delayDuration={50}>
       <CaseFilterSidebar side="left" className={`left-[${NAVBAR_WIDTH}]`} />
+
       <SidebarInset className="overflow-hidden">
         <main className="h-screen flex-col flex-wrap">
-          <CasesPageHeader total={cases?.length} filtered={filtered.length} />
+          <CasesPageHeader
+            total={cases?.length}
+            filtered={filtered.length}
+            exportedRows={filtered}
+          />
           <VirtualDataTable
             autofocus
             columnVisibility={columnVisibility}

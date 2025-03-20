@@ -1,6 +1,14 @@
 import { getRouteApi, useLocation } from '@tanstack/react-router';
-import { CreateCaseButton, useCases } from '@urgp/client/entities';
-import { ColumnVisibilitySelector } from '@urgp/client/features';
+import { Row } from '@tanstack/react-table';
+import {
+  CreateCaseButton,
+  formatCaseRowForExcel,
+  useCases,
+} from '@urgp/client/entities';
+import {
+  ColumnVisibilitySelector,
+  ExportToExcelButton,
+} from '@urgp/client/features';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,24 +23,31 @@ import {
   useIsMobile,
 } from '@urgp/client/shared';
 import { QueryFilter, ResetFilter, UserFilter } from '@urgp/client/widgets';
-import { CasesPageSearchDto } from '@urgp/shared/entities';
-import { useEffect } from 'react';
+import { CaseFull, CasesPageSearchDto } from '@urgp/shared/entities';
+import { useEffect, useMemo } from 'react';
 type CasePageHeaderProps = {
   total?: number;
   filtered?: number;
   className?: string;
+  exportedRows?: Row<CaseFull>[];
   // columnVisibility?: VisibilityState;
   // setColumnVisibility?: Dispatch<VisibilityState>;
 };
 
 const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
-  const { total, filtered, className } = props;
+  const { total, filtered, className, exportedRows } = props;
   const isMobile = useIsMobile();
   const pathname = useLocation().pathname as CaseRoutes;
   const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
   const paramLength = Object.keys(search).filter(
     (key) => !['selectedCase', 'sortKey', 'sortDir'].includes(key),
   ).length;
+
+  const exportedData = useMemo(() => {
+    if (exportedRows) {
+      return exportedRows?.map((r) => formatCaseRowForExcel(r));
+    } else return [];
+  }, [exportedRows]);
 
   return (
     <header
@@ -75,6 +90,14 @@ const CasesPageHeader = (props: CasePageHeaderProps): JSX.Element => {
 
       {!isMobile && (
         <QueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
+      )}
+      {!isMobile && exportedRows && (
+        <ExportToExcelButton
+          data={exportedData}
+          size="icon"
+          className="size-8 p-0"
+          fileName="Заявки"
+        />
       )}
       {pathname === '/control/cases' && (
         <CreateCaseButton className={isMobile ? 'ml-auto' : ''} />
