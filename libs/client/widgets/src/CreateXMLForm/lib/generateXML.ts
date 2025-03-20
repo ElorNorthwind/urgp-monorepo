@@ -33,7 +33,7 @@ export const generateXml = (data: RdXMLFormValues) => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = data.guid + '.xml';
+  a.download = 'KAISToGKN_' + data.guid + '.xml';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
