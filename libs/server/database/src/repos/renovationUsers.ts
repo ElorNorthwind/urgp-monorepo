@@ -171,4 +171,11 @@ export class RenovationUsersRepository {
       (user) => user.id,
     );
   }
+  async readCanNotify(userId: number): Promise<boolean> {
+    const sql = `SELECT telegram_chat_id IS NOT NULL AND control_settings->'notifications'->>'realtime' = 'true' as data
+FROM renovation.users
+WHERE id = $1`;
+    const result = await this.db.oneOrNone(sql, [userId]);
+    return result.data ?? false;
+  }
 }

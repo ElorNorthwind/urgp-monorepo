@@ -8,6 +8,10 @@ import { handleError } from './helpers/handleError';
 import { replyHelpInfo } from './helpers/replyHelpInfo.command';
 import { replyUserStatus } from './helpers/replyUserStatus.command';
 import { connectAccount } from './helpers/connectAccount.command';
+import { OperationFull } from '@urgp/shared/entities';
+import { notifyResolution } from './helpers/notifyResolution';
+import { notifyStage } from './helpers/notifyStage';
+import { escapeMarkdownCharacters } from './helpers/escapeMarkdownCharacters';
 
 @Injectable()
 export class TelegramService implements OnModuleDestroy {
@@ -15,7 +19,7 @@ export class TelegramService implements OnModuleDestroy {
   public bot: Bot;
 
   constructor(
-    private configService: ConfigService,
+    readonly configService: ConfigService,
     readonly dbService: DatabaseService,
   ) {
     const token = this.configService.get<string>('TELEGRAM_BOT_TOKEN');
@@ -38,6 +42,10 @@ export class TelegramService implements OnModuleDestroy {
     await this.bot.stop();
   }
 
+  public escapeCharacters(text: string) {
+    return escapeMarkdownCharacters(text);
+  }
+
   public async messageUser(
     userId: number,
     text: string,
@@ -51,6 +59,22 @@ export class TelegramService implements OnModuleDestroy {
     return await this.bot.api
       .sendMessage(chatId, text, other)
       .then((m) => m.message_id);
+  }
+
+  public async sendResolutionInfo(
+    userId: number,
+    operation: OperationFull,
+    mode: 'new' | 'change' = 'new',
+  ) {
+    return notifyResolution(userId, operation, this, mode);
+  }
+
+  public async sendStageInfo(
+    userId: number,
+    operation: OperationFull,
+    mode: 'pending' | 'reject' = 'pending',
+  ) {
+    return notifyStage(userId, operation, this, mode);
   }
 
   public async sendUserStatus(userId: number) {

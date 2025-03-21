@@ -1,13 +1,15 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import {
   ApproveControlEntityDto,
+  ApproveStatus,
   CaseSlim,
   CreateOperationDto,
   EntityClasses,
   GET_DEFAULT_CONTROL_DUE_DATE,
   MarkOperationDto,
+  OperationClasses,
   OperationFull,
   OperationSlim,
   ReadEntityDto,
@@ -15,11 +17,14 @@ import {
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 import { ControlClassificatorsService } from './control-classificators.service';
+import { TelegramService } from '@urgp/server/telegram';
+import { endOfDay, format, isEqual } from 'date-fns';
 
 @Injectable()
 export class ControlOperationsService {
   constructor(
     private readonly dbServise: DatabaseService,
+    private readonly telegram: TelegramService,
     // private readonly controlCases: ControlCasesService,
     private readonly classificators: ControlClassificatorsService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
@@ -34,7 +39,36 @@ export class ControlOperationsService {
         dto,
         userId,
       )) as number;
-    return this.readFullOperationById(createdOperationId);
+
+    const operation = await this.readFullOperationById(createdOperationId);
+
+    // Уведомления о поручении
+    if (
+      operation?.class === OperationClasses.dispatch &&
+      operation?.approveStatus === ApproveStatus.approved &&
+      operation?.controlTo?.id
+    ) {
+      this.telegram?.sendResolutionInfo(
+        operation?.controlTo?.id,
+        operation,
+        'new',
+      );
+    }
+
+    // Уведомления о проекте на согласование
+    if (
+      operation?.class === OperationClasses.stage &&
+      operation?.approveStatus === ApproveStatus.pending &&
+      operation?.approveTo?.id
+    ) {
+      this.telegram?.sendStageInfo(
+        operation?.approveTo?.id,
+        operation,
+        'pending',
+      );
+    }
+
+    return operation;
   }
 
   public async readOperations(
@@ -80,12 +114,34 @@ export class ControlOperationsService {
     dto: UpdateOperationDto,
     updatedById: number,
   ): Promise<OperationFull> {
+    const oldOperation = await this.readSlimOperationById(dto?.id);
+
     const updatedOperationId =
       (await this.dbServise.db.controlOperations.updateOperation(
         dto,
         updatedById,
       )) as number;
-    return this.readFullOperationById(updatedOperationId);
+
+    const operation = await this.readFullOperationById(updatedOperationId);
+
+    // Уведомления об изменении поручения
+    if (
+      operation?.class === OperationClasses.dispatch &&
+      operation?.approveStatus === ApproveStatus.approved &&
+      operation?.controlTo?.id &&
+      // dto?.dueDate &&
+      // oldOperation?.dueDate &&
+      // !isEqual(endOfDay(dto?.dueDate), endOfDay(oldOperation?.dueDate))
+      !isEqual(dto?.dueDate || '', oldOperation?.dueDate || '')
+    ) {
+      this.telegram?.sendResolutionInfo(
+        operation?.controlTo?.id,
+        operation,
+        'change',
+      );
+    }
+
+    return operation;
   }
 
   public async markOperation(
@@ -122,10 +178,35 @@ export class ControlOperationsService {
   ): Promise<OperationFull> {
     const approvedOperationId =
       await this.dbServise.db.controlOperations.approveOperation(dto, userId);
-    return this.readFullOperationById(
+
+    const operation = await this.readFullOperationById(
       approvedOperationId,
       userId,
-    ) as Promise<OperationFull>;
+    );
+
+    // Уведомления о проекте на согласование
+    if (
+      operation?.class === OperationClasses.stage &&
+      operation?.approveStatus === ApproveStatus.pending &&
+      operation?.approveTo?.id
+    ) {
+      this.telegram?.sendStageInfo(
+        operation?.approveTo?.id,
+        operation,
+        'pending',
+      );
+    }
+
+    // Уведомления об отказе в согласовании
+    if (
+      operation?.class === OperationClasses.stage &&
+      operation?.approveStatus === ApproveStatus.rejected &&
+      operation?.author?.id
+    ) {
+      this.telegram?.sendStageInfo(operation?.author?.id, operation, 'reject');
+    }
+
+    return operation;
   }
 
   public async createDispatchesAndReminderForCase(

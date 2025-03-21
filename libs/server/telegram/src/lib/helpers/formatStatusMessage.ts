@@ -1,4 +1,6 @@
 import { UserCaseStatus } from '@urgp/shared/entities';
+import { format } from 'date-fns';
+import { escapeMarkdownCharacters as esc } from './escapeMarkdownCharacters';
 
 export const numericCases = (value: number) => {
   const lastLetter = value.toString().slice(-1);
@@ -45,22 +47,23 @@ export const formatStatusMessage = (status: UserCaseStatus) => {
     escalation +
     control_to_me;
 
-  if (needMyAttention === 0 && updated === 0) {
-    return '⏹ Нет заявок, ожидающих Вашего внимания\\.';
-  } else {
-    let messages = [
-      '*Напоминания ИС [Кон\\(троль\\)](http://10.9.96.230/control):*\n',
-    ];
+  let messages = [
+    `*\\[${esc(format(new Date(), 'dd.MM.yyyy HH:MM'))}\\] 🔩 ИС [Кон\\(троль\\)](http://10.9.96.230/control):*`,
+  ];
 
+  if (needMyAttention === 0 && updated === 0) {
+    messages.push(`>😴 Нет заявок, ожидающих Вашего внимания\\.`);
+    return messages.join('\n');
+  } else {
     if (needMyAttention > 0) {
       messages.push(
-        `    ⏯ [*${needMyAttention} ${numericCases(needMyAttention)}*](http://10.9.96.230/control/pending) \\- ${numericRequire(needMyAttention)} Ваших действий\\.`,
+        `>📬 [*${needMyAttention} ${numericCases(needMyAttention)}*](http://10.9.96.230/control/pending) \\- ${numericRequire(needMyAttention)} Ваших действий\\.`,
       );
     }
 
     if (updated > 0) {
       messages.push(
-        `    🔄 [*${needMyAttention} ${numericCases(needMyAttention)}*](http://10.9.96.230/control/cases?viewStatus=%5Bchanged%2Cnew%5D) \\- Вы еще не видели изменений\\.`,
+        `>👁 [*${needMyAttention} ${numericCases(needMyAttention)}*](http://10.9.96.230/control/cases?viewStatus=%5Bchanged%2Cnew%5D) \\- Вы еще не видели изменений\\.`,
       );
     }
     return messages.join('\n');
