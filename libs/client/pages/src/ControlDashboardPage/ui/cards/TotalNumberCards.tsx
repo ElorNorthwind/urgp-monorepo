@@ -22,7 +22,9 @@ const countByStatus = (status: number[], cases?: CaseFull[]) => {
         (c) =>
           status.includes(c?.status?.id) &&
           ([2, 3, 4, 11].includes(c?.status?.id)
-            ? isThisWeek(c?.createdAt, { weekStartsOn: 1 })
+            ? isThisWeek(c?.approveDate ?? c?.createdAt, {
+                weekStartsOn: 1,
+              })
             : isThisWeek(c?.lastEdit ?? c?.createdAt, { weekStartsOn: 1 })),
       )?.length || 0,
   };
