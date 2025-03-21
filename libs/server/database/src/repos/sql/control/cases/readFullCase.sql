@@ -12,7 +12,7 @@ WITH user_info AS (SELECT id, fio FROM renovation.users), -- (control_data->>'pr
 			(jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, controlToId, approveToId}'::text[])
 				FILTER (WHERE o."class" = 'stage' AND o."approveStatus" = ANY(ARRAY['approved', 'pending']) AND o."caseOrder" = 1))->0  as "lastStage",
 			jsonb_agg(to_jsonb(o) - '{caseOrder, controlFromOrder, approveToOrder, maxControlLevel, controlLevel, controlFromId, controlToId, approveToId}'::text[]
-				ORDER BY (o."controlFrom"->>'priority')::integer DESC, o."dueDate" ASC )
+				ORDER BY (o."controlFrom"->>'priority')::integer DESC, (o."controlTo"->>'priority')::integer DESC, o."dueDate" ASC )
 				FILTER (WHERE o."class" = 'dispatch') as dispatches,
 			COALESCE(COUNT(*) FILTER (WHERE (o."type"->>'id')::integer = 12 AND o."doneDate" IS NULL) > 0, false) as "hasEscalations",
 			COALESCE(COUNT(*) FILTER (WHERE o."class" = 'dispatch' AND o."controlFromId" = ${userId} AND o."controlToId" <> ${userId}) > 0, false) as "hasControlFromMe",
