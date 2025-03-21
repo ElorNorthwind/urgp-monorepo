@@ -63,7 +63,7 @@ export const formatStatusMessage = (status: UserCaseStatus) => {
 
     if (updated > 0) {
       messages.push(
-        `>👁 [*${needMyAttention} ${numericCases(needMyAttention)}*](http://10.9.96.230/control/cases?viewStatus=%5Bchanged%2Cnew%5D) \\- Вы еще не видели изменений\\.`,
+        `>👁 [*${updated} ${numericCases(updated)}*](http://10.9.96.230/control/cases?viewStatus=%5Bchanged%2Cnew%5D) \\- Вы еще не видели изменений\\.`,
       );
     }
     return messages.join('\n');

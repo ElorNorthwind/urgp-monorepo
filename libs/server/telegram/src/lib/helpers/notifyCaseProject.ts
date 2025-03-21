@@ -20,7 +20,7 @@ export const notifyCaseProject = async (
   // Уведомления о новом поручении поручении
   const esc = parentThis.escapeCharacters;
   const message =
-    `${mode === 'pending' ? 'Поступил [новоый проект заявки]' : 'Отказано в согласовании [проекта заявки]'}(${origin}/control/case?id=${controlCase?.id})\\.` +
+    `${mode === 'pending' ? 'Поступил [новый проект заявки]' : 'Отказано в согласовании [проекта заявки]'}(${origin}/control/case?id=${controlCase?.id})\\.` +
     (controlCase?.title
       ? `\n**>🙋‍♂️ *Заявитель:* ${esc(controlCase?.title)}`
       : '') +
