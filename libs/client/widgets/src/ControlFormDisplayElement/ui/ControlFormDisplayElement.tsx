@@ -56,7 +56,7 @@ const ControlFormDisplayElement = ({
           </div>
         </div>
 
-        <div className="max-h-50 overflow-hidden rounded-b border-t p-4">
+        <div className="max-h-50 line-clamp-4 overflow-hidden rounded-b border-t p-4">
           {controlCase?.notes}
         </div>
         {controlCase && (

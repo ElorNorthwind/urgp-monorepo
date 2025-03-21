@@ -48,7 +48,7 @@ export const formatStatusMessage = (status: UserCaseStatus) => {
     control_to_me;
 
   let messages = [
-    `*\\[${esc(format(new Date(), 'dd.MM.yyyy HH:MM'))}\\] 🔩 ИС [Кон\\(троль\\)](http://10.9.96.230/control):*`,
+    `*\\[${esc(format(new Date(), 'dd.MM.yyyy HH:MM'))}\\] 🔩 [ИС Кон\\(троль\\)](http://10.9.96.230/control):*`,
   ];
 
   if (needMyAttention === 0 && updated === 0) {

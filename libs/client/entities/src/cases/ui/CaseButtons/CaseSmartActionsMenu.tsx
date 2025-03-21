@@ -60,6 +60,7 @@ import { pendingActionStyles } from '../../config/caseStyles';
 type CaseSmartActionsMenuProps = {
   controlCase: CaseFull;
   className?: string;
+  disableActions?: CaseActions[];
 } & VariantProps<typeof buttonVariants>;
 
 // const submenuItems = {
@@ -94,15 +95,21 @@ const CaseSmartActionsMenu = ({
   className,
   size,
   variant,
+  disableActions,
 }: CaseSmartActionsMenuProps): JSX.Element | null => {
   const i = useUserAbility();
   const user = useAuth();
   const [markAsDone, { isLoading: isMarkLoading }] = useMarkReminderAsDone();
   const [createOp, { isLoading: isCreateLoading }] = useCreateOperation();
+  const avaliableActions = disableActions
+    ? (controlCase?.actions || []).filter((a) => {
+        return !disableActions.includes(a);
+      })
+    : controlCase?.actions || [];
 
   const { icon: ActionIcon, label } =
-    controlCase?.actions?.length === 1
-      ? pendingActionStyles?.[controlCase?.actions?.[0]] ||
+    avaliableActions.length === 1
+      ? pendingActionStyles?.[avaliableActions?.[0]] ||
         pendingActionStyles['unknown']
       : pendingActionStyles['unknown'];
 
@@ -384,10 +391,10 @@ const CaseSmartActionsMenu = ({
     [controlCase?.actions],
   );
 
-  if (!controlCase || controlCase?.actions?.length === 0) return null;
+  if (!controlCase || avaliableActions?.length === 0) return null;
 
-  if (controlCase?.actions?.length === 1) {
-    const item = submenuItems[controlCase?.actions?.[0]];
+  if (avaliableActions?.length === 1) {
+    const item = submenuItems[avaliableActions?.[0]];
 
     if (item.sub?.length > 0) {
       return (
@@ -473,8 +480,8 @@ const CaseSmartActionsMenu = ({
         >
           {ActionIcon && <ActionIcon className="size-4 flex-shrink-0" />}
           <span className="truncate">
-            {controlCase?.actions?.length > 1
-              ? controlCase?.actions?.length + ' действия'
+            {avaliableActions?.length > 1
+              ? avaliableActions?.length + ' действия'
               : label}
           </span>
         </Button>
@@ -486,7 +493,7 @@ const CaseSmartActionsMenu = ({
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          {controlCase?.actions.map((action) => {
+          {avaliableActions.map((action) => {
             const { icon: CurrentActionIcon, label } =
               pendingActionStyles[action];
 

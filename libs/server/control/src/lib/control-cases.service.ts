@@ -3,10 +3,12 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import {
   ApproveControlEntityDto,
+  ApproveStatus,
   CaseFull,
   CaseSlim,
   CreateCaseDto,
   GET_DEFAULT_CONTROL_DUE_DATE,
+  OperationClasses,
   ReadEntityDto,
   SetConnectionsDto,
   SetConnectionsToDto,
@@ -15,12 +17,14 @@ import {
 import { Cache } from 'cache-manager';
 import { ControlOperationsService } from './control-operations.service';
 import { defineAbility } from '@casl/ability';
+import { TelegramService } from '@urgp/server/telegram';
 
 @Injectable()
 export class ControlCasesService {
   constructor(
     private readonly dbServise: DatabaseService,
     private readonly operations: ControlOperationsService,
+    private readonly telegram: TelegramService,
     // private readonly classificators: ControlClassificatorsService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
@@ -49,7 +53,21 @@ export class ControlCasesService {
       );
     }
 
-    return this.readFullCaseById(createdCaseId, authorId) as Promise<CaseFull>;
+    const controlCase = await this.readFullCaseById(createdCaseId, authorId);
+
+    // Уведомления о поступлении заявки на согласование
+    if (
+      controlCase?.approveStatus === ApproveStatus.pending &&
+      controlCase?.approveTo?.id
+    ) {
+      this.telegram?.sendCaseProjectInfo(
+        controlCase?.approveTo?.id,
+        controlCase,
+        'pending',
+      );
+    }
+
+    return controlCase;
   }
 
   public async readCases(
@@ -168,7 +186,33 @@ export class ControlCasesService {
       );
     }
 
-    return this.readFullCaseById(approvedCaseId, userId) as Promise<CaseFull>;
+    const controlCase = await this.readFullCaseById(approvedCaseId, userId);
+
+    // Уведомления о поступлении заявки на согласование
+    if (
+      controlCase?.approveStatus === ApproveStatus.pending &&
+      controlCase?.approveTo?.id
+    ) {
+      this.telegram?.sendCaseProjectInfo(
+        controlCase?.approveTo?.id,
+        controlCase,
+        'pending',
+      );
+    }
+
+    // Уведомления об отказе в согласовании заявки
+    if (
+      controlCase?.approveStatus === ApproveStatus.rejected &&
+      controlCase?.approveFrom?.id
+    ) {
+      this.telegram?.sendCaseProjectInfo(
+        controlCase?.approveFrom?.id,
+        controlCase,
+        'reject',
+      );
+    }
+
+    return controlCase;
   }
 
   public async setCaseConnections(

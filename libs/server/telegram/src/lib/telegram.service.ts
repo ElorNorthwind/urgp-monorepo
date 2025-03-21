@@ -8,10 +8,11 @@ import { handleError } from './helpers/handleError';
 import { replyHelpInfo } from './helpers/replyHelpInfo.command';
 import { replyUserStatus } from './helpers/replyUserStatus.command';
 import { connectAccount } from './helpers/connectAccount.command';
-import { OperationFull } from '@urgp/shared/entities';
+import { CaseFull, OperationFull } from '@urgp/shared/entities';
 import { notifyResolution } from './helpers/notifyResolution';
 import { notifyStage } from './helpers/notifyStage';
 import { escapeMarkdownCharacters } from './helpers/escapeMarkdownCharacters';
+import { notifyCaseProject } from './helpers/notifyCaseProject';
 
 @Injectable()
 export class TelegramService implements OnModuleDestroy {
@@ -75,6 +76,14 @@ export class TelegramService implements OnModuleDestroy {
     mode: 'pending' | 'reject' = 'pending',
   ) {
     return notifyStage(userId, operation, this, mode);
+  }
+
+  public async sendCaseProjectInfo(
+    userId: number,
+    controlCase: CaseFull,
+    mode: 'pending' | 'reject' = 'pending',
+  ) {
+    return notifyCaseProject(userId, controlCase, this, mode);
   }
 
   public async sendUserStatus(userId: number) {

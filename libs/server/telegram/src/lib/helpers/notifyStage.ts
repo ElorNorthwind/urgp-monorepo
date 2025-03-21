@@ -1,7 +1,5 @@
 import { OperationFull } from '@urgp/shared/entities';
-import { format } from 'date-fns';
 import { TelegramService } from '../telegram.service';
-import { Logger } from '@nestjs/common';
 
 export const notifyStage = async (
   userId: number,
@@ -20,7 +18,7 @@ export const notifyStage = async (
     })
   )?.[0];
 
-  if (!operation?.controlTo?.id || !canNotifyUser) return;
+  if (!userId || !canNotifyUser) return;
   const origin =
     parentThis.configService.get<string>('ORIGIN') || 'http://localhost:4200';
 
@@ -31,11 +29,16 @@ export const notifyStage = async (
     (parentCase?.title ? `\n**>📁 *Заявка:* ${parentCase?.title}` : '') +
     `\n**>👤 *${mode === 'pending' ? 'Направлено от' : 'Отказ от'}:* ${esc(operation?.approveFrom?.fio || '')}` +
     `\n>🧳 *Тип решения:* ${esc(operation?.type?.name || '')}` +
-    (operation?.notes && operation?.notes?.length > 0
+    (mode === 'pending' && operation?.notes && operation?.notes?.length > 0
       ? `\n**>💬 *Комментарий*: ${esc(mode === 'pending' ? operation?.notes || '' : operation?.approveNotes || '')}`
+      : '') +
+    (mode === 'reject' &&
+    operation?.approveNotes &&
+    operation?.approveNotes?.length > 0
+      ? `\n**>💬 *Причина возврата*: ${esc(operation?.approveNotes)}`
       : '');
 
-  parentThis.messageUser(operation?.controlTo?.id, message, {
+  parentThis.messageUser(userId, message, {
     parse_mode: 'MarkdownV2',
   });
 };

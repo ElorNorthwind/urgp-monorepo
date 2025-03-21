@@ -20,7 +20,7 @@ export const notifyResolution = async (
     })
   )?.[0];
 
-  if (!operation?.controlTo?.id || !canNotifyUser) return;
+  if (!userId || !canNotifyUser) return;
   const origin =
     parentThis.configService.get<string>('ORIGIN') || 'http://localhost:4200';
 
@@ -40,7 +40,7 @@ export const notifyResolution = async (
       ? `\n**>💬 *Причина изменения*: ${esc(operation?.extra)}`
       : '');
 
-  parentThis.messageUser(operation?.controlTo?.id, message, {
+  parentThis.messageUser(userId, message, {
     parse_mode: 'MarkdownV2',
   });
 };

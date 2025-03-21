@@ -13,6 +13,7 @@ import {
   ApproveControlEntityDto,
   caseClassesValues,
   CaseFull,
+  CaseSlim,
   CasesPageFilter,
   Classificator,
   CreateCaseDto,
@@ -309,7 +310,8 @@ export class ControlClassificatorsService {
         // Данные по отказному делу
         approveStatus: 'rejected',
         approveFromId: user.id,
-        approveToId: dto?.approveToId || null, // Не забыть прокинуть сюда id направившего согл!
+        // approveToId: dto?.approveToId || null, // Не забыть прокинуть сюда id направившего согл!
+        approveToId: (currentEntity as CaseSlim)?.approveToId || null, // Не забыть прокинуть сюда id направившего согл!
         approveDate: new Date().toISOString(),
         approveNotes: dto?.approveNotes ?? null,
       };
