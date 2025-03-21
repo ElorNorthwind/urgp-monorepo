@@ -1,4 +1,4 @@
-import { EntityApproveData } from '@urgp/shared/entities';
+import { ApproveStatus, EntityApproveData } from '@urgp/shared/entities';
 
 const statusTextVariants = {
   pending: 'На утверждении',
@@ -21,10 +21,17 @@ export const getApproveInfo = (payload: EntityApproveData): ApproveInfo => {
   return {
     approveText,
     currentFio,
-    previousFio,
+    previousFio:
+      payload?.approveStatus === ApproveStatus.approved
+        ? undefined
+        : previousFio,
     approveNotes:
-      payload?.approveStatus === 'approved' ? payload?.approveNotes : undefined,
+      payload?.approveStatus === ApproveStatus.approved
+        ? payload?.approveNotes
+        : undefined,
     rejectNotes:
-      payload?.approveStatus === 'rejected' ? payload?.approveNotes : undefined,
+      payload?.approveStatus === ApproveStatus.rejected
+        ? payload?.approveNotes
+        : undefined,
   };
 };
