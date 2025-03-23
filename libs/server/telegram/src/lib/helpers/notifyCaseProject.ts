@@ -1,7 +1,5 @@
-import { CaseFull, OperationFull } from '@urgp/shared/entities';
-import { format } from 'date-fns';
+import { CaseFull } from '@urgp/shared/entities';
 import { TelegramService } from '../telegram.service';
-import { Logger } from '@nestjs/common';
 
 export const notifyCaseProject = async (
   userId: number,

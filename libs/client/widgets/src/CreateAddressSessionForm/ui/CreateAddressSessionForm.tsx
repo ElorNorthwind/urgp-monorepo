@@ -2,8 +2,11 @@ import {
   Button,
   cn,
   Form,
-  Separator,
-  Skeleton,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Textarea,
   useIsMobile,
 } from '@urgp/client/shared';
 import {
@@ -13,12 +16,12 @@ import {
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateSession } from '@urgp/client/entities';
+import { ExcelFileInput } from '@urgp/client/features';
 import { InputFormField } from '@urgp/client/widgets';
-import { Loader, LoaderCircle, Send, SquareX, ThumbsUp } from 'lucide-react';
+import { LoaderCircle } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { ExcelFileInput } from '@urgp/client/features';
 
 type CreateAddressSessionFormProps = {
   className?: string;
@@ -41,7 +44,9 @@ const CreateAddressSessionForm = ({
 }: CreateAddressSessionFormProps): JSX.Element | null => {
   const [addresses, setAddresses] = useState([] as string[]);
   const [fileName, setFileName] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [textValue, setTextValue] = useState<string>('');
+  const singleFileInputRef = useRef<HTMLInputElement>(null);
+  // const textInputRef = useRef<HTMLTextAreaElement>(null);
   const isMobile = useIsMobile();
 
   const values = {
@@ -72,7 +77,14 @@ const CreateAddressSessionForm = ({
     if (title === '' && shortFileName.length > 0) {
       form.setValue('title', shortFileName);
     }
-    if (notes === '' && addresses.length > 0) {
+    if (
+      (title === '' || title === 'Из текстового поля') &&
+      shortFileName.length === 0 &&
+      textValue
+    ) {
+      form.setValue('title', 'Из текстового поля');
+    }
+    if ((notes === '' || textValue) && addresses.length > 0) {
       form.setValue(
         'notes',
         addresses.slice(0, 3).join('; ').slice(0, 100) + '...',
@@ -80,21 +92,23 @@ const CreateAddressSessionForm = ({
     }
   }, [fileName, addresses]);
 
-  const parseAddresses = useCallback((data: any[]) => {
+  const parseSingleFile = useCallback((data: any[]) => {
     const filteredData = data
       .filter(
         (item: any) =>
           'Адрес' in item && item?.['Адрес'] && item?.['Адрес'] !== '',
       )
       .map((item: any) => item['Адрес']);
+    setTextValue(filteredData.join('\n'));
     setAddressCount && setAddressCount(filteredData?.length ?? 0);
     return filteredData;
   }, []);
 
   async function onReset() {
-    if (fileInputRef?.current) fileInputRef.current.value = '';
+    if (singleFileInputRef?.current) singleFileInputRef.current.value = '';
     if (setAddressCount) setAddressCount(0);
     setFileName && setFileName(null);
+    setTextValue('');
     form.reset(values);
   }
 
@@ -117,26 +131,71 @@ const CreateAddressSessionForm = ({
   return (
     <Form {...form}>
       <form className={cn('relative flex flex-col gap-4', className)}>
-        <ExcelFileInput
-          ref={fileInputRef}
-          setData={setAddresses}
-          parseData={parseAddresses}
-          setIsParsing={setIsParsing}
-          fileName={fileName}
-          setFileName={setFileName}
-          extraElement={
-            isParsing ? (
-              <div className="flex flex-row items-center justify-center gap-1">
-                <LoaderCircle className="size-4 animate-spin" />
-                <span>Обработка файла...</span>
-              </div>
-            ) : addressCount && addressCount > 0 ? (
-              `Содержит ${addressCount.toLocaleString('ru-RU')} адресов`
-            ) : (
-              'Файл Excel со столбцом "Адрес"'
-            )
-          }
-        />
+        <Tabs defaultValue="oneFile">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="oneFile">Из таблицы Excel</TabsTrigger>
+            <TabsTrigger value="text">Из текстовой строки</TabsTrigger>
+          </TabsList>
+          <TabsContent value="oneFile">
+            <ExcelFileInput
+              className="h-36"
+              ref={singleFileInputRef}
+              setData={setAddresses}
+              parseData={parseSingleFile}
+              setIsParsing={setIsParsing}
+              fileName={fileName}
+              setFileName={setFileName}
+              extraElement={
+                isParsing ? (
+                  <div className="flex flex-row items-center justify-center gap-1">
+                    <LoaderCircle className="size-4 animate-spin" />
+                    <span>Обработка файла...</span>
+                  </div>
+                ) : addressCount && !!fileName && addressCount > 0 ? (
+                  `Содержит ${addressCount.toLocaleString('ru-RU')} адресов`
+                ) : (
+                  'Файл Excel со столбцом "Адрес"'
+                )
+              }
+            />
+          </TabsContent>
+
+          <TabsContent value="text">
+            <p
+              className={cn(
+                'mb-2 flex justify-between truncate text-left',
+                'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+              )}
+            >
+              <span>Список адресов</span>
+            </p>
+            <Textarea
+              value={textValue}
+              // ref={textInputRef}
+              disabled={isParsing}
+              placeholder={
+                'Список адресов (разделённых символом ";" или переноса строки)'
+              }
+              onChange={(event) => {
+                setIsParsing && setIsParsing(true);
+                setTextValue(event.target.value);
+                setAddresses &&
+                  setAddresses(
+                    textValue
+                      .split(/[\n\r]+/)
+                      .map((item) => item.trim())
+                      .filter((item) => item !== ''),
+                  );
+                setAddressCount && setAddressCount(addresses.length ?? 0);
+                if (singleFileInputRef?.current)
+                  singleFileInputRef.current.value = '';
+                setFileName && setFileName(null);
+                setIsParsing && setIsParsing(false);
+              }}
+              className={cn('min-h-36 w-full')}
+            />
+          </TabsContent>
+        </Tabs>
         <div
           className={cn(
             'flex w-full gap-4',
