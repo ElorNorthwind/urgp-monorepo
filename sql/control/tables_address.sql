@@ -84,6 +84,7 @@ CREATE TABLE address.sessions (
     type VARCHAR(255) DEFAULT 'fias-search',
     title VARCHAR(255),
     notes TEXT,
+
     -- is_error BOOLEAN NOT NULL DEFAULT false,
     -- is_done BOOLEAN NOT NULL DEFAULT false,
     -- status VARCHAR(255) DEFAULT 'pending',
@@ -104,6 +105,7 @@ CREATE TABLE address.results (
     is_error BOOLEAN NOT NULL DEFAULT false,
     is_done BOOLEAN NOT NULL DEFAULT false,
     session_npp INTEGER,
+    list_index INTEGER NOT NULL DEFAULT 0,
     original_address TEXT,
     response_source VARCHAR(255),
     confidence VARCHAR(255) DEFAULT 'medium',
@@ -195,6 +197,7 @@ CREATE TABLE address.rates (
     response_source VARCHAR(255),
     amount INTEGER,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT (now())::timestamp(0) with time zone,
+    token_index INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
 

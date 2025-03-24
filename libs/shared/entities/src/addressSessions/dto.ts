@@ -14,6 +14,7 @@ export const createAddressSessionSchema = addressSessionSchema
   .partial()
   .extend({
     addresses: z.array(z.string()).optional(),
+    addresses2: z.array(z.string()).optional(),
   });
 export type CreateAddressSessionDto = z.infer<
   typeof createAddressSessionSchema

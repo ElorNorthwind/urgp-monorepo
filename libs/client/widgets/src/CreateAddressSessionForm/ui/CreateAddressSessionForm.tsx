@@ -28,6 +28,8 @@ type CreateAddressSessionFormProps = {
   setSessionId?: (id: number) => void;
   addressCount?: number;
   setAddressCount?: (count: number) => void;
+  addressCount2?: number;
+  setAddressCount2?: (count: number) => void;
   isParsing?: boolean;
   setIsParsing?: (isParsing: boolean) => void;
   extraOnSubmit?: (data: CreateAddressSessionDto) => void;
@@ -38,6 +40,8 @@ const CreateAddressSessionForm = ({
   setSessionId,
   addressCount,
   setAddressCount,
+  addressCount2,
+  setAddressCount2,
   isParsing,
   setIsParsing,
   extraOnSubmit,
@@ -45,7 +49,14 @@ const CreateAddressSessionForm = ({
   const [addresses, setAddresses] = useState([] as string[]);
   const [fileName, setFileName] = useState<string | null>(null);
   const [textValue, setTextValue] = useState<string>('');
-  const singleFileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Oh God that's bad...
+  const [addresses2, setAddresses2] = useState([] as string[]);
+  const [fileName2, setFileName2] = useState<string | null>(null);
+  const [textValue2, setTextValue2] = useState<string>('');
+  const fileInputRef2 = useRef<HTMLInputElement>(null);
+
   // const textInputRef = useRef<HTMLTextAreaElement>(null);
   const isMobile = useIsMobile();
 
@@ -54,6 +65,7 @@ const CreateAddressSessionForm = ({
     title: '',
     notes: '',
     addresses: [],
+    addresses2: [],
   };
 
   const [createSession, { isLoading, data: sessionData }] = useCreateSession();
@@ -69,6 +81,10 @@ const CreateAddressSessionForm = ({
   useEffect(() => {
     form.setValue('addresses', addresses || []);
   }, [addresses]);
+
+  useEffect(() => {
+    form.setValue('addresses2', addresses2 || []);
+  }, [addresses2]);
 
   useEffect(() => {
     const shortFileName = fileName?.replace(/(\.[a-z]+)$/, '') || '';
@@ -92,7 +108,7 @@ const CreateAddressSessionForm = ({
     }
   }, [fileName, addresses]);
 
-  const parseSingleFile = useCallback((data: any[]) => {
+  const parseFile = useCallback((data: any[]) => {
     const filteredData = data
       .filter(
         (item: any) =>
@@ -104,11 +120,27 @@ const CreateAddressSessionForm = ({
     return filteredData;
   }, []);
 
+  const parseFile2 = useCallback((data: any[]) => {
+    const filteredData = data
+      .filter(
+        (item: any) =>
+          'Адрес' in item && item?.['Адрес'] && item?.['Адрес'] !== '',
+      )
+      .map((item: any) => item['Адрес']);
+    setTextValue2(filteredData.join('\n'));
+    setAddressCount2 && setAddressCount2(filteredData?.length ?? 0);
+    return filteredData;
+  }, []);
+
   async function onReset() {
-    if (singleFileInputRef?.current) singleFileInputRef.current.value = '';
+    if (fileInputRef?.current) fileInputRef.current.value = '';
+    if (fileInputRef2?.current) fileInputRef2.current.value = '';
     if (setAddressCount) setAddressCount(0);
+    if (setAddressCount2) setAddressCount2(0);
     setFileName && setFileName(null);
+    setFileName2 && setFileName2(null);
     setTextValue('');
+    setTextValue2('');
     form.reset(values);
   }
 
@@ -136,12 +168,15 @@ const CreateAddressSessionForm = ({
             <TabsTrigger value="oneFile">Из таблицы Excel</TabsTrigger>
             <TabsTrigger value="text">Из текстовой строки</TabsTrigger>
           </TabsList>
-          <TabsContent value="oneFile">
+          <TabsContent
+            value="oneFile"
+            className="items-ceter flex flex-row gap-2 [&>div]:flex-grow"
+          >
             <ExcelFileInput
               className="h-36"
-              ref={singleFileInputRef}
+              ref={fileInputRef}
               setData={setAddresses}
-              parseData={parseSingleFile}
+              parseData={parseFile}
               setIsParsing={setIsParsing}
               fileName={fileName}
               setFileName={setFileName}
@@ -158,42 +193,103 @@ const CreateAddressSessionForm = ({
                 )
               }
             />
+            <ExcelFileInput
+              label={'Второй список'}
+              className="h-36"
+              ref={fileInputRef2}
+              setData={setAddresses2}
+              parseData={parseFile2}
+              setIsParsing={setIsParsing}
+              fileName={fileName2}
+              setFileName={setFileName2}
+              extraElement={
+                isParsing ? (
+                  <div className="flex flex-row items-center justify-center gap-1">
+                    <LoaderCircle className="size-4 animate-spin" />
+                    <span>Обработка файла...</span>
+                  </div>
+                ) : addressCount && !!fileName && addressCount > 0 ? (
+                  `Содержит ${addressCount.toLocaleString('ru-RU')} адресов`
+                ) : (
+                  'Файл Excel со столбцом "Адрес"'
+                )
+              }
+            />
           </TabsContent>
 
-          <TabsContent value="text">
-            <p
-              className={cn(
-                'mb-2 flex justify-between truncate text-left',
-                'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-              )}
-            >
-              <span>Список адресов</span>
-            </p>
-            <Textarea
-              value={textValue}
-              // ref={textInputRef}
-              disabled={isParsing}
-              placeholder={
-                'Список адресов (разделённых символом ";" или переноса строки)'
-              }
-              onChange={(event) => {
-                setIsParsing && setIsParsing(true);
-                setTextValue(event.target.value);
-                setAddresses &&
-                  setAddresses(
-                    textValue
-                      .split(/[\n\r]+/)
-                      .map((item) => item.trim())
-                      .filter((item) => item !== ''),
-                  );
-                setAddressCount && setAddressCount(addresses.length ?? 0);
-                if (singleFileInputRef?.current)
-                  singleFileInputRef.current.value = '';
-                setFileName && setFileName(null);
-                setIsParsing && setIsParsing(false);
-              }}
-              className={cn('min-h-36 w-full')}
-            />
+          <TabsContent
+            value="text"
+            className="items-ceter flex flex-row gap-2 [&>div]:flex-grow"
+          >
+            <div>
+              <p
+                className={cn(
+                  'mb-2 flex justify-between truncate text-left',
+                  'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+                )}
+              >
+                <span>Список адресов</span>
+              </p>
+              <Textarea
+                value={textValue}
+                // ref={textInputRef}
+                disabled={isParsing}
+                placeholder={
+                  'Список адресов (разделённых символом ";" или переноса строки)'
+                }
+                onChange={(event) => {
+                  setIsParsing && setIsParsing(true);
+                  setTextValue(event.target.value);
+                  setAddresses &&
+                    setAddresses(
+                      textValue
+                        .split(/[\n\r]+/)
+                        .map((item) => item.trim())
+                        .filter((item) => item !== ''),
+                    );
+                  setAddressCount && setAddressCount(addresses.length ?? 0);
+                  if (fileInputRef?.current) fileInputRef.current.value = '';
+                  setFileName && setFileName(null);
+                  setIsParsing && setIsParsing(false);
+                }}
+                className={cn('min-h-36 w-full')}
+              />
+            </div>
+            <div>
+              <p
+                className={cn(
+                  'mb-2 flex justify-between truncate text-left',
+                  'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+                )}
+              >
+                <span>Второй список</span>
+              </p>
+
+              <Textarea
+                value={textValue2}
+                // ref={textInputRef}
+                disabled={isParsing}
+                placeholder={
+                  'Список адресов (разделённых символом ";" или переноса строки)'
+                }
+                onChange={(event) => {
+                  setIsParsing && setIsParsing(true);
+                  setTextValue(event.target.value);
+                  setAddresses &&
+                    setAddresses(
+                      textValue
+                        .split(/[\n\r]+/)
+                        .map((item) => item.trim())
+                        .filter((item) => item !== ''),
+                    );
+                  setAddressCount && setAddressCount(addresses.length ?? 0);
+                  if (fileInputRef?.current) fileInputRef.current.value = '';
+                  setFileName && setFileName(null);
+                  setIsParsing && setIsParsing(false);
+                }}
+                className={cn('min-h-36 w-full')}
+              />
+            </div>
           </TabsContent>
         </Tabs>
         <div

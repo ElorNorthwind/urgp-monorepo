@@ -99,7 +99,7 @@ const AddressUploadPage = (): JSX.Element => {
             <Card>
               <CardHeader className="bg-muted-foreground/5 mb-4 pb-4">
                 <CardTitle className="relative flex flex-row items-center justify-between">
-                  <div>Файл в формате Excel</div>
+                  <div>Запрос по списку адресов</div>
                   {isMobile === false &&
                     (isParsing ? (
                       <Skeleton className="absolute right-2 top-1 h-7 w-60" />
@@ -110,7 +110,7 @@ const AddressUploadPage = (): JSX.Element => {
                     ))}
                 </CardTitle>
                 <CardDescription>
-                  Должен содержать столбец "Адрес"
+                  Файл Excel должен содержать столбец "Адрес"
                 </CardDescription>
               </CardHeader>
               <CardContent>

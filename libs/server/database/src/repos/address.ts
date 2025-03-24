@@ -130,6 +130,8 @@ export class AddressRepository {
     return this.db.none(update + ' WHERE v.global_id = t.global_id');
   }
 
+  // ===== FIAS ======
+
   insertSession(dto: CreateAddressSessionDto, userId: number): Promise<number> {
     const columns = [{ name: 'user_id', prop: 'userId' }];
     Object.keys(dto).forEach((key) => {
@@ -210,12 +212,14 @@ export class AddressRepository {
   insertSessionAddresses(
     addresses: string[],
     sessionId: number,
+    listIndex?: number,
   ): Promise<null> {
     const resultTableColumnSet = new this.pgp.helpers.ColumnSet(
       [
         { name: 'session_id', prop: 'sessionId' },
         { name: 'original_address', prop: 'address' },
         { name: 'session_npp', prop: 'npp' },
+        { name: 'list_index', prop: 'listIndex' },
       ],
       {
         table: {
@@ -226,7 +230,12 @@ export class AddressRepository {
     );
 
     const insert = this.pgp.helpers.insert(
-      addresses.map((a, i) => ({ sessionId, address: a, npp: i + 1 })),
+      addresses.map((a, i) => ({
+        sessionId,
+        address: a,
+        npp: i + 1,
+        listIndex: listIndex || 0,
+      })),
       resultTableColumnSet,
     );
 
@@ -249,11 +258,13 @@ export class AddressRepository {
     sessionId: number,
     amount: number,
     responseSource: string = 'fias',
+    tokenIndex?: number,
   ): Promise<null> {
     const q = this.pgp.as.format(rates.insertSpendRates, {
       sessionId,
       responseSource,
       amount,
+      tokenIndex: tokenIndex ?? 0,
     });
 
     return this.db.none(q);

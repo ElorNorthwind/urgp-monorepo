@@ -41,7 +41,7 @@ export class AddressController {
     @Body(new ZodValidationPipe(createAddressSessionSchema))
     dto: CreateAddressSessionDto,
   ) {
-    const { addresses, ...rest } = dto;
+    const { addresses, addresses2, ...rest } = dto;
 
     if (!addresses || addresses.length === 0)
       throw new BadRequestException('Требуется список адресов');
@@ -51,6 +51,17 @@ export class AddressController {
       addresses,
       sessionId,
     );
+
+    if (addresses2 && addresses2.length > 0) {
+      const unfinishedAddresses2 = await this.address.addSessionAddresses(
+        addresses2,
+        sessionId,
+        1,
+      );
+
+      return unfinishedAddresses2; // Подумать над этим
+    }
+
     return unfinishedAddresses;
   }
 

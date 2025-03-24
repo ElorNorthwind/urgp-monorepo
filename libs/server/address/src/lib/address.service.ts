@@ -46,10 +46,12 @@ export class AddressService {
   public async addSessionAddresses(
     addresses: string[],
     sessionId: number,
+    listIndex?: number,
   ): Promise<AddressSessionFull | null> {
     await this.dbServise.db.address.insertSessionAddresses(
       addresses,
       sessionId,
+      listIndex,
     );
     return this.dbServise.db.address.getSessionById(sessionId);
   }
@@ -58,7 +60,11 @@ export class AddressService {
     return this.dbServise.db.address.getAddressResultsBySessionId(sessionId);
   }
 
-  public async hydrateSessionAdresses(sessionId: number, limit = FIAS_DB_STEP) {
+  public async hydrateSessionAdresses(
+    sessionId: number,
+    tokenIndex = 0,
+    limit = FIAS_DB_STEP,
+  ) {
     const isDev = this.configService.get<string>('NODE_ENV') === 'development';
     isDev && Logger.log(`Getting FIAS data for session ${sessionId}`);
 
@@ -120,6 +126,7 @@ export class AddressService {
             sessionId,
             fiasRequests,
             'fias',
+            tokenIndex,
           );
         }
 
@@ -128,6 +135,7 @@ export class AddressService {
             sessionId,
             dadataRequests,
             'dadata',
+            tokenIndex,
           );
         }
 

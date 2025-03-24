@@ -3,13 +3,14 @@ WITH rate_info AS (
 		id as session_id,
 		user_id,
 		${responseSource} as response_source,
-		${amount} as amount
+		${amount} as amount,
+		${tokenIndex} as token_index
 	FROM address.sessions
 	WHERE id = ${sessionId}
 )
 
-INSERT INTO address.rates (session_id, user_id, response_source, amount)
-(SELECT r.session_id, r.user_id, r.response_source, r.amount
+INSERT INTO address.rates (session_id, user_id, response_source, amount, token_index)
+(SELECT r.session_id, r.user_id, r.response_source, r.amount, r.token_index
 FROM rate_info as r);
 
 -- DROP TABLE IF EXISTS address.rates CASCADE;
