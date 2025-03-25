@@ -17,6 +17,7 @@ import {
   numericPartPattern,
   mainWordPattern,
   extraWhitespacePattern,
+  flatTypeReplecement,
 } from './patterns';
 
 type SplitAdress = {
@@ -71,9 +72,16 @@ export function clearStreet(street: string): StreetPart {
 }
 
 export function clearHouseAndFlat(addressHalf: string): HouseAndFlatPart {
-  const result = splitHouseAndFlatPattern.exec(addressHalf);
-  // TODO: Доп проверки на плохо написанные квартиры?
-  const hasFlat = result?.[2] && result?.[2] !== '' ? true : false;
+  let result = splitHouseAndFlatPattern.exec(addressHalf);
+  let hasFlat = result?.[2] && result?.[2] !== '' ? true : false;
+  if (!hasFlat) {
+    const clearedAddressHalf = addressHalf.replace(
+      flatTypeReplecement,
+      ' квартира ',
+    );
+    result = splitHouseAndFlatPattern.exec(clearedAddressHalf);
+    hasFlat = result?.[2] && result?.[2] !== '' ? true : false;
+  }
 
   const houseNum = deletePatterns(
     replacePatterns(

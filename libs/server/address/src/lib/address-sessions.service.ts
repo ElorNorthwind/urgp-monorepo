@@ -54,7 +54,9 @@ export class AddressSessionsService {
       await this.address.hydrateSessionAdresses(this.sessionQueue[0].id);
       this.sessionQueue[0].status = AddressSessionStatuses.done;
     } catch (error) {
-      this.sessionQueue[0].status = AddressSessionStatuses.error;
+      if (this.sessionQueue[0]) {
+        this.sessionQueue[0].status = AddressSessionStatuses.error;
+      }
       Logger.error(error);
     } finally {
       this.refreshSessionQueue();
