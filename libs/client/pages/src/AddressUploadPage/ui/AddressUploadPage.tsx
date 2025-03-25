@@ -36,6 +36,7 @@ import { useMemo, useState } from 'react';
 
 const AddressUploadPage = (): JSX.Element => {
   const [addressCount, setAddressCount] = useState(0);
+  const [addressCount2, setAddressCount2] = useState(0);
   const [isParsing, setIsParsing] = useState(false);
 
   const isMobile = useIsMobile();
@@ -105,7 +106,7 @@ const AddressUploadPage = (): JSX.Element => {
                       <Skeleton className="absolute right-2 top-1 h-7 w-60" />
                     ) : (
                       addressCount > 0 && (
-                        <div className="text-muted-foreground/50 absolute right-2 top-1 text-2xl font-semibold">{`${addressCount.toLocaleString('ru-RU')} адресов`}</div>
+                        <div className="text-muted-foreground/50 absolute right-2 top-1 text-2xl font-semibold">{`${addressCount.toLocaleString('ru-RU') + (addressCount2 > 0 ? ' + ' + addressCount2.toLocaleString('ru-RU') : '')} адресов`}</div>
                       )
                     ))}
                 </CardTitle>
@@ -119,6 +120,8 @@ const AddressUploadPage = (): JSX.Element => {
                   setIsParsing={setIsParsing}
                   addressCount={addressCount}
                   setAddressCount={setAddressCount}
+                  addressCount2={addressCount2}
+                  setAddressCount2={setAddressCount2}
                   setSessionId={(id: number) => {
                     navigate({
                       to: pathname,

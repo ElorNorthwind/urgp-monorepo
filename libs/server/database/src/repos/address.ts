@@ -209,6 +209,18 @@ export class AddressRepository {
     return this.db.any(results.getAddressResultsBySessionId, { sessionId });
   }
 
+  getTwoListsResultsBySessionId(sessionId: number): Promise<any[]> {
+    return this.db.any(results.getTwoListsResultsBySessionId, { sessionId });
+  }
+
+  async getResultIndexBySessionId(sessionId: number): Promise<number> {
+    const sql = `SELECT MAX(list_index)::integer as data
+FROM address.results
+WHERE session_id = $1;`;
+    const result = await this.db.oneOrNone(sql, [sessionId]);
+    return result.data ?? 0;
+  }
+
   insertSessionAddresses(
     addresses: string[],
     sessionId: number,

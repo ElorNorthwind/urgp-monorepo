@@ -10,6 +10,7 @@ type ExcelFileInputProps = {
   setIsParsing?: (isParsing: boolean) => void;
   parseData?: (data: any[]) => any[];
   className?: string;
+  containerClassName?: string;
   inputId?: string;
   setFileName?: (name: string) => void;
   fileName?: string | null;
@@ -26,6 +27,7 @@ const ExcelFileInput = forwardRef<
     label = 'Выбрать файл',
     extraElement = '.xls или .xlsx',
     className,
+    containerClassName,
     inputId = 'excel-file-input',
     setFileName,
     fileName = null,
@@ -53,7 +55,7 @@ const ExcelFileInput = forwardRef<
   };
 
   return (
-    <div>
+    <div className={containerClassName}>
       <label
         // htmlFor={inputId}
         className={cn(

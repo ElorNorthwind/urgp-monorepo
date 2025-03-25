@@ -57,7 +57,25 @@ export class AddressService {
   }
 
   public async getAddressResultsBySessionId(sessionId: number) {
+    const isDouble = await this.getIsSessionDouble(sessionId);
+
+    if (isDouble) return this.getTwoListsResultsBySessionId(sessionId);
+    return this.getSingleListResultsBySessionId(sessionId);
+  }
+
+  async getIsSessionDouble(sessionId: number) {
+    return (
+      (await this.dbServise.db.address.getResultIndexBySessionId(sessionId)) ===
+      1
+    );
+  }
+
+  async getSingleListResultsBySessionId(sessionId: number) {
     return this.dbServise.db.address.getAddressResultsBySessionId(sessionId);
+  }
+
+  async getTwoListsResultsBySessionId(sessionId: number) {
+    return this.dbServise.db.address.getTwoListsResultsBySessionId(sessionId);
   }
 
   public async hydrateSessionAdresses(

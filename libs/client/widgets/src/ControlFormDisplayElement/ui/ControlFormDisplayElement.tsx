@@ -78,7 +78,7 @@ const ControlFormDisplayElement = ({
     return (
       <StageItem
         stage={operation}
-        className="my-2 rounded-t shadow-sm"
+        className="my-2 max-h-72 overflow-y-auto rounded-t shadow-sm"
         hover={false}
       />
     );

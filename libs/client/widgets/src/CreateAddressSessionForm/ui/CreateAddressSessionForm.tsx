@@ -2,6 +2,8 @@ import {
   Button,
   cn,
   Form,
+  Label,
+  Switch,
   Tabs,
   TabsContent,
   TabsList,
@@ -56,6 +58,8 @@ const CreateAddressSessionForm = ({
   const [fileName2, setFileName2] = useState<string | null>(null);
   const [textValue2, setTextValue2] = useState<string>('');
   const fileInputRef2 = useRef<HTMLInputElement>(null);
+
+  const [showDouble, setShowDouble] = useState(false);
 
   // const textInputRef = useRef<HTMLTextAreaElement>(null);
   const isMobile = useIsMobile();
@@ -163,132 +167,135 @@ const CreateAddressSessionForm = ({
   return (
     <Form {...form}>
       <form className={cn('relative flex flex-col gap-4', className)}>
+        {JSON.stringify(addresses)}
+        {JSON.stringify(addresses2)}
         <Tabs defaultValue="oneFile">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="oneFile">Из таблицы Excel</TabsTrigger>
             <TabsTrigger value="text">Из текстовой строки</TabsTrigger>
           </TabsList>
-          <TabsContent
-            value="oneFile"
-            className="items-ceter flex flex-row gap-2 [&>div]:flex-grow"
-          >
-            <ExcelFileInput
-              className="h-36"
-              ref={fileInputRef}
-              setData={setAddresses}
-              parseData={parseFile}
-              setIsParsing={setIsParsing}
-              fileName={fileName}
-              setFileName={setFileName}
-              extraElement={
-                isParsing ? (
-                  <div className="flex flex-row items-center justify-center gap-1">
-                    <LoaderCircle className="size-4 animate-spin" />
-                    <span>Обработка файла...</span>
-                  </div>
-                ) : addressCount && !!fileName && addressCount > 0 ? (
-                  `Содержит ${addressCount.toLocaleString('ru-RU')} адресов`
-                ) : (
-                  'Файл Excel со столбцом "Адрес"'
-                )
-              }
-            />
-            <ExcelFileInput
-              label={'Второй список'}
-              className="h-36"
-              ref={fileInputRef2}
-              setData={setAddresses2}
-              parseData={parseFile2}
-              setIsParsing={setIsParsing}
-              fileName={fileName2}
-              setFileName={setFileName2}
-              extraElement={
-                isParsing ? (
-                  <div className="flex flex-row items-center justify-center gap-1">
-                    <LoaderCircle className="size-4 animate-spin" />
-                    <span>Обработка файла...</span>
-                  </div>
-                ) : addressCount && !!fileName && addressCount > 0 ? (
-                  `Содержит ${addressCount.toLocaleString('ru-RU')} адресов`
-                ) : (
-                  'Файл Excel со столбцом "Адрес"'
-                )
-              }
-            />
-          </TabsContent>
-
-          <TabsContent
-            value="text"
-            className="items-ceter flex flex-row gap-2 [&>div]:flex-grow"
-          >
-            <div>
-              <p
-                className={cn(
-                  'mb-2 flex justify-between truncate text-left',
-                  'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-                )}
-              >
-                <span>Список адресов</span>
-              </p>
-              <Textarea
-                value={textValue}
-                // ref={textInputRef}
-                disabled={isParsing}
-                placeholder={
-                  'Список адресов (разделённых символом ";" или переноса строки)'
+          <TabsContent value="oneFile">
+            <div className="items-ceter flex flex-row gap-2 [&>div]:flex-grow">
+              <ExcelFileInput
+                className="h-36"
+                ref={fileInputRef}
+                setData={setAddresses}
+                parseData={parseFile}
+                setIsParsing={setIsParsing}
+                fileName={fileName}
+                setFileName={setFileName}
+                extraElement={
+                  isParsing ? (
+                    <div className="flex flex-row items-center justify-center gap-1">
+                      <LoaderCircle className="size-4 animate-spin" />
+                      <span>Обработка файла...</span>
+                    </div>
+                  ) : addressCount && !!fileName && addressCount > 0 ? (
+                    `Содержит ${addressCount.toLocaleString('ru-RU')} адресов`
+                  ) : (
+                    'Файл Excel со столбцом "Адрес"'
+                  )
                 }
-                onChange={(event) => {
-                  setIsParsing && setIsParsing(true);
-                  setTextValue(event.target.value);
-                  setAddresses &&
-                    setAddresses(
-                      textValue
-                        .split(/[\n\r]+/)
-                        .map((item) => item.trim())
-                        .filter((item) => item !== ''),
-                    );
-                  setAddressCount && setAddressCount(addresses.length ?? 0);
-                  if (fileInputRef?.current) fileInputRef.current.value = '';
-                  setFileName && setFileName(null);
-                  setIsParsing && setIsParsing(false);
-                }}
-                className={cn('min-h-36 w-full')}
+              />
+              <ExcelFileInput
+                label={'Второй список'}
+                containerClassName={cn(showDouble ? '' : 'hidden')}
+                className="h-36"
+                ref={fileInputRef2}
+                setData={setAddresses2}
+                parseData={parseFile2}
+                setIsParsing={setIsParsing}
+                fileName={fileName2}
+                setFileName={setFileName2}
+                extraElement={
+                  isParsing ? (
+                    <div className="flex flex-row items-center justify-center gap-1">
+                      <LoaderCircle className="size-4 animate-spin" />
+                      <span>Обработка файла...</span>
+                    </div>
+                  ) : addressCount2 && !!fileName && addressCount2 > 0 ? (
+                    `Содержит ${addressCount2.toLocaleString('ru-RU')} адресов`
+                  ) : (
+                    'Файл Excel со столбцом "Адрес"'
+                  )
+                }
               />
             </div>
-            <div>
-              <p
-                className={cn(
-                  'mb-2 flex justify-between truncate text-left',
-                  'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-                )}
-              >
-                <span>Второй список</span>
-              </p>
+          </TabsContent>
 
-              <Textarea
-                value={textValue2}
-                // ref={textInputRef}
-                disabled={isParsing}
-                placeholder={
-                  'Список адресов (разделённых символом ";" или переноса строки)'
-                }
-                onChange={(event) => {
-                  setIsParsing && setIsParsing(true);
-                  setTextValue(event.target.value);
-                  setAddresses &&
-                    setAddresses(
-                      textValue
-                        .split(/[\n\r]+/)
-                        .map((item) => item.trim())
-                        .filter((item) => item !== ''),
-                    );
-                  setAddressCount && setAddressCount(addresses.length ?? 0);
-                  if (fileInputRef?.current) fileInputRef.current.value = '';
-                  setFileName && setFileName(null);
-                  setIsParsing && setIsParsing(false);
-                }}
-                className={cn('min-h-36 w-full')}
-              />
+          <TabsContent value="text">
+            <div className="items-ceter flex flex-row gap-2 [&>div]:flex-grow">
+              <div>
+                <p
+                  className={cn(
+                    'mb-2 flex justify-between truncate text-left',
+                    'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+                  )}
+                >
+                  Список адресов
+                </p>
+                <Textarea
+                  value={textValue}
+                  // ref={textInputRef}
+                  disabled={isParsing}
+                  placeholder={
+                    'Список адресов (разделённых символом ";" или переноса строки)'
+                  }
+                  onChange={(event) => {
+                    setIsParsing && setIsParsing(true);
+                    setTextValue(event.target.value);
+                    setAddresses &&
+                      setAddresses(
+                        textValue
+                          .split(/[\n\r]+/)
+                          .map((item) => item.trim())
+                          .filter((item) => item !== ''),
+                      );
+                    setAddressCount && setAddressCount(addresses.length ?? 0);
+                    if (fileInputRef?.current) fileInputRef.current.value = '';
+                    setFileName && setFileName(null);
+                    setIsParsing && setIsParsing(false);
+                  }}
+                  className={cn('min-h-36 w-full')}
+                />
+              </div>
+              <div className={cn(showDouble ? '' : 'hidden')}>
+                <p
+                  className={cn(
+                    'mb-2 flex justify-between truncate text-left',
+                    'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+                  )}
+                >
+                  Второй список
+                </p>
+
+                <Textarea
+                  value={textValue2}
+                  // ref={textInputRef}
+                  disabled={isParsing}
+                  placeholder={
+                    'Список адресов (разделённых символом ";" или переноса строки)'
+                  }
+                  onChange={(event) => {
+                    setIsParsing && setIsParsing(true);
+                    setTextValue2(event.target.value);
+                    setAddresses2 &&
+                      setAddresses2(
+                        textValue
+                          .split(/[\n\r\;]+/)
+                          .map((item) => item.trim())
+                          .filter((item) => item !== ''),
+                      );
+                    setAddressCount2 &&
+                      setAddressCount2(addresses2.length ?? 0);
+                    if (fileInputRef2?.current)
+                      fileInputRef2.current.value = '';
+                    setFileName2 && setFileName2(null);
+                    setIsParsing && setIsParsing(false);
+                  }}
+                  className={cn('min-h-36 w-full')}
+                />
+              </div>
             </div>
           </TabsContent>
         </Tabs>
@@ -314,37 +321,69 @@ const CreateAddressSessionForm = ({
           />
         </div>
 
-        {addressCount && addressCount > 0 ? (
-          <div className="mt-6 flex w-full flex-row justify-end gap-4">
-            <Button
-              className={cn(
-                'flex flex-row gap-2',
-                isMobile ? 'flex-grow' : 'min-w-[30%]',
-              )}
-              type="button"
-              variant={'outline'}
-              disabled={isLoading || isParsing}
-              onClick={onReset}
-            >
-              {/* <SquareX className="size-4 flex-shrink-0" /> */}
-              <span>Отмена</span>
-            </Button>
-
-            <Button
-              type="button"
-              className={cn(
-                'flex flex-row gap-2',
-                isMobile ? 'flex-grow' : 'min-w-[30%]',
-              )}
-              variant="default"
-              disabled={isLoading || addresses?.length === 0 || isParsing}
-              onClick={form.handleSubmit((data) => onSubmit(data))}
-            >
-              {/* <Send className="size-4 flex-shrink-0" /> */}
-              <span>Отправить</span>
-            </Button>
+        <div
+          className={cn(
+            'mt-6 flex w-full justify-start gap-4',
+            isMobile ? 'flex-col' : 'min-h-10 flex-row',
+          )}
+        >
+          <div
+            className={cn('flex flex-col gap-2', isMobile ? 'flex-grow' : '')}
+          >
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="showDouble"
+                checked={showDouble}
+                onCheckedChange={(v) => {
+                  if (fileInputRef2?.current) fileInputRef2.current.value = '';
+                  if (setAddressCount2) setAddressCount2(0);
+                  setFileName2 && setFileName2(null);
+                  setTextValue2('');
+                  setShowDouble(v);
+                }}
+              />
+              <Label htmlFor="showDouble" className={'cursor-pointer pr-2'}>
+                {showDouble ? (
+                  <p>Режим сравнения списков</p>
+                ) : (
+                  <p>Режим одного списка</p>
+                )}
+              </Label>
+            </div>
           </div>
-        ) : null}
+
+          {addressCount && addressCount > 0 ? (
+            <>
+              <Button
+                className={cn(
+                  'flex flex-row gap-2',
+                  isMobile ? 'flex-grow' : 'ml-auto min-w-[30%]',
+                )}
+                type="button"
+                variant={'outline'}
+                disabled={isLoading || isParsing}
+                onClick={onReset}
+              >
+                {/* <SquareX className="size-4 flex-shrink-0" /> */}
+                <span>Отмена</span>
+              </Button>
+
+              <Button
+                type="button"
+                className={cn(
+                  'flex flex-row gap-2',
+                  isMobile ? 'flex-grow' : 'min-w-[30%]',
+                )}
+                variant="default"
+                disabled={isLoading || addresses?.length === 0 || isParsing}
+                onClick={form.handleSubmit((data) => onSubmit(data))}
+              >
+                {/* <Send className="size-4 flex-shrink-0" /> */}
+                <span>Отправить</span>
+              </Button>
+            </>
+          ) : null}
+        </div>
       </form>
     </Form>
   );

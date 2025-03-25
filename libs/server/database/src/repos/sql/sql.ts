@@ -153,6 +153,9 @@ export const results = {
   getAddressResultsBySessionId: sql(
     'sql/address/results/getAddressResultsBySessionId.sql',
   ),
+  getTwoListsResultsBySessionId: sql(
+    'sql/address/results/getTwoListsResultsBySessionId.sql',
+  ),
   addUnomsToResultAddress: sql(
     'sql/address/results/addUnomsToResultAddress.sql',
   ),

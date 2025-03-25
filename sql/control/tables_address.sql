@@ -168,6 +168,16 @@ CREATE INDEX idx_results_cad_num
     (cad_num COLLATE pg_catalog."default" ASC NULLS LAST)
     TABLESPACE pg_default;
 
+CREATE INDEX idx_results_original_address
+    ON address.results USING btree
+    (original_address COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
+ 
+CREATE INDEX idx_results_fias_id
+    ON address.results USING btree
+    (fias_id)
+    TABLESPACE pg_default;
+
 ALTER TABLE address.results
     OWNER to renovation_user;
  
