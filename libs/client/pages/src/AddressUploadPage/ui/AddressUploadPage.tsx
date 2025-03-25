@@ -4,25 +4,12 @@ import {
   SessionCard,
   SessionQueue,
   useGetSessionById,
-  useGetSessionsQueue,
-  useGetUserSessions,
 } from '@urgp/client/entities';
-import {
-  BarRow,
-  DailyRatesUsageBar,
-  ExcelFileInput,
-} from '@urgp/client/features';
+import { DailyRatesUsageBar } from '@urgp/client/features';
 import {
   Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
   cn,
   Separator,
-  Skeleton,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -30,15 +17,9 @@ import {
 } from '@urgp/client/shared';
 import { CreateAddressSessionForm } from '@urgp/client/widgets';
 import { AddressUploadPageSearchDto } from '@urgp/shared/entities';
-import { isMonday } from 'date-fns';
-import { Loader, SquareArrowLeft } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { SquareArrowLeft } from 'lucide-react';
 
 const AddressUploadPage = (): JSX.Element => {
-  const [addressCount, setAddressCount] = useState(0);
-  const [addressCount2, setAddressCount2] = useState(0);
-  const [isParsing, setIsParsing] = useState(false);
-
   const isMobile = useIsMobile();
 
   const pathname = useLocation().pathname;
@@ -96,42 +77,7 @@ const AddressUploadPage = (): JSX.Element => {
         <Separator className="my-6" />
 
         <div className="flex flex-col gap-4">
-          {!sessionId && (
-            <Card>
-              <CardHeader className="bg-muted-foreground/5 mb-4 pb-4">
-                <CardTitle className="relative flex flex-row items-center justify-between">
-                  <div>Запрос по списку адресов</div>
-                  {isMobile === false &&
-                    (isParsing ? (
-                      <Skeleton className="absolute right-2 top-1 h-7 w-60" />
-                    ) : (
-                      addressCount > 0 && (
-                        <div className="text-muted-foreground/50 absolute right-2 top-1 text-2xl font-semibold">{`${addressCount.toLocaleString('ru-RU') + (addressCount2 > 0 ? ' + ' + addressCount2.toLocaleString('ru-RU') : '')} адресов`}</div>
-                      )
-                    ))}
-                </CardTitle>
-                <CardDescription>
-                  Файл Excel должен содержать столбец "Адрес"
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <CreateAddressSessionForm
-                  isParsing={isParsing}
-                  setIsParsing={setIsParsing}
-                  addressCount={addressCount}
-                  setAddressCount={setAddressCount}
-                  addressCount2={addressCount2}
-                  setAddressCount2={setAddressCount2}
-                  setSessionId={(id: number) => {
-                    navigate({
-                      to: pathname,
-                      search: { sessionId: id },
-                    });
-                  }}
-                />
-              </CardContent>
-            </Card>
-          )}
+          {!sessionId && <CreateAddressSessionForm />}
           {sessionId && session && (
             <SessionCard session={session} className="w-full" />
           )}
