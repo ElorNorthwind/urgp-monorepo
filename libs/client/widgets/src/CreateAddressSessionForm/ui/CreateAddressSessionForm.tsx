@@ -50,15 +50,12 @@ const CreateAddressSessionForm = ({
   const pathname = useLocation().pathname;
   const navigate = useNavigate({ from: pathname });
 
-  const setSessionId = useCallback(
-    (id: number) => {
-      navigate({
-        to: pathname,
-        search: { sessionId: id },
-      });
-    },
-    [pathname, navigate],
-  );
+  const setSessionId = (id: number) => {
+    navigate({
+      to: pathname,
+      search: { sessionId: id },
+    });
+  };
 
   const splitTextToAddresses = (text: string): string[] => {
     return (
@@ -69,19 +66,17 @@ const CreateAddressSessionForm = ({
     );
   };
 
-  const [createSession, { isLoading, data: sessionData }] = useCreateSession();
+  const [createSession, { isLoading }] = useCreateSession();
   const [isParsing, setIsParsing] = useState<boolean>(false);
-  const [fileName, setFileName] = useState<string | null>(null);
-  const [fileName2, setFileName2] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const fileInputRef2 = useRef<HTMLInputElement>(null);
-
-  // const [addresses, setAddresses] = useState([] as string[]);
-  const [textValue, setTextValue] = useState<string>('');
 
   // Oh God that's bad...
-  // const [addresses2, setAddresses2] = useState([] as string[]);
+  const [textValue, setTextValue] = useState<string>('');
+  const [fileName, setFileName] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [textValue2, setTextValue2] = useState<string>('');
+  const [fileName2, setFileName2] = useState<string | null>(null);
+  const fileInputRef2 = useRef<HTMLInputElement>(null);
 
   const [showDouble, setShowDouble] = useState(false);
 
@@ -133,26 +128,24 @@ const CreateAddressSessionForm = ({
           'Адрес' in item && item?.['Адрес'] && item?.['Адрес'] !== '',
       )
       .map((item: any) => item['Адрес']);
-    // setTextValue(filteredData.join('\n'));
     return filteredData;
   }, []);
 
   async function onReset() {
     if (fileInputRef?.current) fileInputRef.current.value = '';
     if (fileInputRef2?.current) fileInputRef2.current.value = '';
-
     setFileName && setFileName(null);
     setFileName2 && setFileName2(null);
-    // setTextValue('');
-    // setTextValue2('');
+    setTextValue('');
+    setTextValue2('');
     form.reset(values);
   }
 
   async function onSubmit(data: CreateAddressSessionDto) {
     createSession(data)
       .unwrap()
-      .then(() => {
-        setSessionId && sessionData?.id && setSessionId(sessionData.id);
+      .then((data) => {
+        data?.id && setSessionId(data.id);
         toast.success('Сессия создана');
       })
       .catch((rejected: any) =>
@@ -184,16 +177,15 @@ const CreateAddressSessionForm = ({
       <CardContent>
         <Form {...form}>
           <form className={cn('relative flex flex-col gap-4', className)}>
-            {JSON.stringify(addresses)}
-            {JSON.stringify(addresses2)}
             <Tabs defaultValue="oneFile">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="mb-4 grid w-full grid-cols-2 gap-4">
                 <TabsTrigger value="oneFile">Из таблицы Excel</TabsTrigger>
                 <TabsTrigger value="text">Из текстовой строки</TabsTrigger>
               </TabsList>
               <TabsContent value="oneFile">
-                <div className="items-ceter flex flex-row gap-2 [&>div]:flex-grow">
+                <div className="items-ceter flex flex-row gap-4 [&>div]:flex-grow">
                   <ExcelFileInput
+                    label={showDouble ? 'Первый список' : 'Выбрать файл'}
                     className="h-36"
                     ref={fileInputRef}
                     setData={(a) => {
@@ -247,7 +239,7 @@ const CreateAddressSessionForm = ({
               </TabsContent>
 
               <TabsContent value="text">
-                <div className="items-ceter flex flex-row gap-2 [&>div]:flex-grow">
+                <div className="items-ceter flex flex-row gap-4 [&>div]:flex-grow">
                   <div>
                     <p
                       className={cn(
@@ -255,7 +247,7 @@ const CreateAddressSessionForm = ({
                         'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
                       )}
                     >
-                      Список адресов
+                      {showDouble ? 'Первый список' : 'Список адресов'}
                     </p>
                     <Textarea
                       value={textValue}
