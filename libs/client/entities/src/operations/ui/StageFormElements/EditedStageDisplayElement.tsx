@@ -32,7 +32,11 @@ const EditedStageDisplayElement = ({
   ) : editStage ? (
     <StageHistoryItem
       item={editStage}
-      className={cn('bg-amber-50', className)}
+      // className="my-2 max-h-72 overflow-y-auto rounded-t shadow-sm"
+      className={cn(
+        'my-2 max-h-72 overflow-y-auto rounded-t bg-amber-50 shadow-sm',
+        className,
+      )}
     />
   ) : null;
 };

@@ -66,7 +66,7 @@ const CreateStageDialog = ({
           ? null
           : values.approveToId,
     }),
-    displayedElement: <EditedStageDisplayElement />,
+    // displayedElement: <EditedStageDisplayElement />,
     dialogWidth: '600px',
     className,
     createTitle: 'Добавить операцию',
