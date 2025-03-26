@@ -120,13 +120,16 @@ export const classificatorsApi = rtkApi
         providesTags: ['classificator'],
       }),
 
-      getUserControlTo: build.query<NestedClassificatorInfo[], void>({
-        query: () => ({
-          url: '/control/classificators/control-to',
-          method: 'GET',
-        }),
-        providesTags: ['classificator'],
-      }),
+      getUserControlTo: build.query<NestedClassificatorInfo[], number[] | void>(
+        {
+          query: (extraIds) => ({
+            url: '/control/classificators/control-to',
+            method: 'GET',
+            params: { extraIds },
+          }),
+          providesTags: ['classificator'],
+        },
+      ),
 
       getEscalationTargets: build.query<SelectOption<number>[], void>({
         query: () => ({

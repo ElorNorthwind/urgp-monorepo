@@ -2,6 +2,7 @@ import { cn } from '@urgp/client/shared';
 import { ClassificatorFormField, SelectFormField } from '@urgp/client/widgets';
 import { UseFormReturn } from 'react-hook-form';
 import { useUserControlTo } from '../api/classificatorsApi';
+import { useMemo } from 'react';
 
 type ControlToSelectorProps = {
   className?: string;
@@ -28,11 +29,14 @@ const ControlToSelector = (props: ControlToSelectorProps): JSX.Element => {
     dirtyIndicator = false,
   } = props;
 
+  // Обновлять только при ререндере, не при смене значения в поле
+  const selectedControlTo = useMemo(() => form.getValues(fieldName), []);
+
   const {
     data: controlTo,
     isLoading: isControlToLoading,
     isFetching: isControlToFetching,
-  } = useUserControlTo();
+  } = useUserControlTo(selectedControlTo || undefined);
 
   return (
     <ClassificatorFormField

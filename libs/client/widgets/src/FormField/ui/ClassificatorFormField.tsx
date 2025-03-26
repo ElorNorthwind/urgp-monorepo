@@ -161,44 +161,48 @@ const ClassificatorFormField = (
                   <CommandInput placeholder="Поиск значения..." />
                   <CommandList>
                     <CommandEmpty>Ничего не найдено.</CommandEmpty>
-                    {classificator.map((category) => {
-                      return (
-                        <CommandGroup
-                          key={category.value}
-                          heading={category.label}
-                        >
-                          {category.items.map((item) => {
-                            return (
-                              <CommandItem
-                                value={item.label}
-                                key={item.value}
-                                keywords={item.tags}
-                                onSelect={() => {
-                                  setOpen(false);
-                                  field.onChange(item.value);
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    'mr-2 size-4',
-                                    item.value === field.value
-                                      ? 'opacity-100'
-                                      : 'opacity-0',
-                                  )}
-                                />
-                                <p className="flex w-full flex-col gap-0 truncate">
-                                  <span className="truncate">{item.label}</span>
-                                  <span className="text-muted-foreground/60 truncate text-xs">
-                                    {item.fullname}
-                                  </span>
-                                </p>
-                                {addItemBadge && addItemBadge(item)}
-                              </CommandItem>
-                            );
-                          })}
-                        </CommandGroup>
-                      );
-                    })}
+                    {classificator
+                      .filter((c) => c?.items?.length && c?.items?.length > 0)
+                      .map((category) => {
+                        return (
+                          <CommandGroup
+                            key={category.value}
+                            heading={category.label}
+                          >
+                            {category.items.map((item) => {
+                              return (
+                                <CommandItem
+                                  value={item.label}
+                                  key={item.value}
+                                  keywords={item.tags}
+                                  onSelect={() => {
+                                    setOpen(false);
+                                    field.onChange(item.value);
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      'mr-2 size-4',
+                                      item.value === field.value
+                                        ? 'opacity-100'
+                                        : 'opacity-0',
+                                    )}
+                                  />
+                                  <p className="flex w-full flex-col gap-0 truncate">
+                                    <span className="truncate">
+                                      {item.label}
+                                    </span>
+                                    <span className="text-muted-foreground/60 truncate text-xs">
+                                      {item.fullname}
+                                    </span>
+                                  </p>
+                                  {addItemBadge && addItemBadge(item)}
+                                </CommandItem>
+                              );
+                            })}
+                          </CommandGroup>
+                        );
+                      })}
                   </CommandList>
                 </Command>
               </PopoverContent>

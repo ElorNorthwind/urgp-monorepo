@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -35,6 +36,7 @@ import { AccessTokenGuard } from '@urgp/server/auth';
 import { ControlClassificatorsService } from './control-classificators.service';
 import { CacheTTL } from '@nestjs/cache-manager';
 import { ZodValidationPipe } from '@urgp/server/pipes';
+import { z } from 'zod';
 
 @Controller('control/classificators')
 @CacheTTL(1000 * 60 * 60)
@@ -74,9 +76,36 @@ export class ControlClassificatorsController {
   @Get('control-to')
   async getUserControlTo(
     @Req() req: RequestWithUserData,
+    @Query('extraIds')
+    extraIds: OperationClass,
   ): Promise<NestedClassificatorInfo[]> {
-    return await this.classificators.readUserControlTo(req.user.id);
+    try {
+      const correctExtraIds = z
+        .string()
+        .transform((value) => value.split(','))
+        .pipe(
+          z.array(
+            z
+              .string()
+              .transform((value) => Number(value))
+              .pipe(z.number()),
+          ),
+        )
+        .or(z.number().array())
+        .optional()
+        .parse(extraIds);
+
+      return await this.classificators.readUserControlTo(
+        req.user.id,
+        correctExtraIds,
+      );
+    } catch (e) {
+      throw new BadRequestException('Некорректный список ID пользователей');
+    }
   }
+
+  // ): Promise<NestedClassificatorInfo[]> {
+  //   const correctClass = operationClassSchema.parse(operationClass);
 
   @Get('escalation-targets')
   async getEscalationTargets(): Promise<SelectOption<number>[]> {

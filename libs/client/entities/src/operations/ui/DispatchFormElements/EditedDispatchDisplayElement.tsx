@@ -26,9 +26,9 @@ const EditedDispatchDisplayElement = ({
   return isCaseLoading ? (
     <Skeleton className={className} />
   ) : controlCase ? (
-    <div>
+    <div className="overflow-auto">
       <CaseCardHeader controlCase={controlCase} className="rounded-t" />
-      <div className="bg-sidebar/80 max-h-50 overflow-hidden rounded-b border-t p-4">
+      <div className="bg-sidebar/80 max-h-40 overflow-y-auto rounded-b border-t p-4">
         {controlCase?.notes}
       </div>
     </div>

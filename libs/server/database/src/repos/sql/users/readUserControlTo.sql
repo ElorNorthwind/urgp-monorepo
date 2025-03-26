@@ -24,4 +24,21 @@ SELECT
 		'category', 'controlTo'
 	)), '[]'::jsonb) as items
 FROM (SELECT jsonb_array_elements(control_data->'controlTo')::integer as id FROM renovation.users WHERE id = ${userId}) u1
-LEFT JOIN renovation.users u2 ON u1.id = u2.id;
+LEFT JOIN renovation.users u2 ON u1.id = u2.id
+
+UNION
+
+SELECT     
+	'current' as value,
+    'Текущий исполнитель' as label,    
+	COALESCE(JSONB_AGG(jsonb_build_object(
+		'value', id,        
+		'label', fio,
+        'fullname', 'текущий исполнитель ' || COALESCE(control_settings->>'department', ''),
+		'tags', jsonb_build_array('начальник', LOWER(COALESCE(control_settings->>'department', ''))),
+		'category', 'executors'
+	)), '[]'::jsonb) as items
+FROM renovation.users
+WHERE NOT(control_data->'roles' ? 'executor') 
+AND id = ANY(ARRAY[${extraIds:list}]::integer[])
+AND NOT (id = ANY((SELECT jsonb_array_elements(control_data->'controlTo')::integer as id FROM renovation.users WHERE id = ${userId})));

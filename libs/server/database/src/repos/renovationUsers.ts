@@ -18,6 +18,7 @@ import {
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { users } from './sql/sql';
+import { Logger } from '@nestjs/common';
 
 export class RenovationUsersRepository {
   constructor(
@@ -161,10 +162,16 @@ export class RenovationUsersRepository {
     });
   }
 
-  async readUserControlTo(userId: number): Promise<NestedClassificatorInfo[]> {
-    return this.db.any(users.readUserControlTo, {
+  async readUserControlTo(
+    userId: number,
+    extraIds?: number[],
+  ): Promise<NestedClassificatorInfo[]> {
+    const q = this.pgp.as.format(users.readUserControlTo, {
       userId,
+      extraIds: extraIds || [],
     });
+    // Logger.debug(q);
+    return this.db.any(q);
   }
   async readSubscriptions(period: NotificationPeriod): Promise<number[]> {
     return (await this.db.any(users.getSubscribers, [period])).map(
