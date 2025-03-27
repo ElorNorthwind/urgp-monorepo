@@ -5,7 +5,8 @@ WITH houses AS (
         DATE_PART('year', (terms->'actual'->>'firstResetlementStart')::date)::integer AS start_year,  
         DATE_PART('year', (terms->>'doneDate')::date)::integer AS end_year,
         AGE((terms->>'doneDate')::date, (terms->'actual'->>'firstResetlementStart')::date) AS age,
-        relocation_type
+        relocation_type,
+        terms->>'partialStart' IS NOT NULL AND terms->>'partialEnd' IS NULL AS is_partial
     FROM renovation.buildings_old
     WHERE   
         ( (terms->'actual'->>'firstResetlementStart')::date IS NOT NULL AND (terms->>'doneDate')::date IS NULL )
@@ -25,7 +26,7 @@ WITH houses AS (
             ELSE 4 -- 'Более 8 месяцев'  
         END as relocation_age_index,  
         COUNT(*)::integer as count,
-        COUNT(*) FILTER(WHERE relocation_type = 1)::integer as full_count
+        COUNT(*) FILTER(WHERE relocation_type = 1 AND NOT is_partial)::integer as full_count
         FROM houses  
         GROUP BY
             CASE    

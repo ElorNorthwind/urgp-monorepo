@@ -11,15 +11,20 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
+  TooltipContent,
+  useAuth,
+  Tooltip,
+  TooltipTrigger,
 } from '@urgp/client/shared';
 import { OldBuilding, OldBuildingsPageSearch } from '@urgp/shared/entities';
-import { Focus, Map, X } from 'lucide-react';
+import { CalendarPlus, Focus, Map, PencilRuler, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { LatLngBounds, LatLngTuple, Map as LeafletMap } from 'leaflet';
 import {
   OldBuildingTermsTable,
   useConnectedPlots,
+  useManualDates,
   useOldBuildingConnections,
   useOldBuildingRelocationMap,
   useProblematicApartments,
@@ -28,6 +33,7 @@ import { ProblematicApartsTable } from './components/ProblematicApartsTable';
 import { NewBuildingsTable } from './components/NewBuildingsTable';
 import { OldApartmentDetailsSheet } from '../../OldApartmentDetailsSheet';
 import { OldBuildingRelocationMap } from '../../OldBuildingRelocationMap';
+import { ManualDatesCard } from '../../ManualDatesCard';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
@@ -48,6 +54,7 @@ const OldBuildingCard = ({
   onCenter,
 }: OldBuildingCardProps): JSX.Element | null => {
   const mapRef = useRef<LeafletMap>(null);
+  const user = useAuth();
   const { data: mapItems } = useOldBuildingRelocationMap(building?.id || 0);
   const { tab, selectedBuildingId, apartment } = getRouteApi(
     mode === 'map'
@@ -119,6 +126,36 @@ const OldBuildingCard = ({
             <Focus className="h-6 w-6" />
           </Button>
         )}
+        {mode !== 'map' &&
+          (user?.roles.includes('admin') || user?.roles.includes('editor')) && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="h-10 w-10 p-0"
+                  onClick={(e) => {
+                    navigate({
+                      search: (prev: OldBuildingsPageSearch) => ({
+                        ...prev,
+                        apartment: prev?.apartment === -1 ? undefined : -1,
+                      }),
+                    });
+                  }}
+                >
+                  <CalendarPlus className="h-6 w-6" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Вручную введенные даты дома</TooltipContent>
+            </Tooltip>
+          )}
+
+        {/* navigate({
+                  search: (prev: OldBuildingsPageSearch) => ({
+                    ...prev,
+                    apartment: 0,
+                  }),
+                }) */}
+
         <div className="flex flex-col">
           {building ? (
             <>
@@ -271,7 +308,11 @@ const OldBuildingCard = ({
                 <X className="stroke-muted-foreground opacity-50 group-hover:opacity-100" />
               </Button>
             )}
-
+            <ManualDatesCard
+              buildingId={building?.id || 0}
+              isOpen={apartment === -1}
+              className="right-[calc(var(--renovation-sidebar-width)+0.5rem)]"
+            />
             <OldApartmentDetailsSheet
               apartmentId={apartment}
               className="right-[calc(var(--renovation-sidebar-width)+0.5rem)]"

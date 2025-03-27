@@ -81,7 +81,9 @@ const OldBuildingsPage = (): JSX.Element => {
             'bg-background absolute left-0 h-full transition-all ease-in-out',
             filters.selectedBuildingId && buildings
               ? filters.apartment
-                ? 'w-[calc(100%-var(--renovation-sidebar-width)-var(--messagebar-width)-var(--detailsbar-width)-1.5rem)]'
+                ? filters.apartment === -1
+                  ? 'w-[calc(100%-var(--renovation-sidebar-width)-var(--detailsbar-width)-1rem)]'
+                  : 'w-[calc(100%-var(--renovation-sidebar-width)-var(--messagebar-width)-var(--detailsbar-width)-1.5rem)]'
                 : 'w-[calc(100%-var(--renovation-sidebar-width)-0.5rem)]'
               : 'w-[calc(100%)]',
           )}

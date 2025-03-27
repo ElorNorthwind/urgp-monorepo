@@ -42,6 +42,7 @@ import {
   MonthlyProgressInfo,
   MonthlyDoneInfo,
   SankeyData,
+  ManualDate,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -116,6 +117,13 @@ export class RenovationRepository {
   getOldBuildingById(id: number): Promise<OldBuilding | null> {
     return this.db.oneOrNone(renovation.oldBuildingById, {
       id,
+    });
+  }
+
+  // Returns old houses for renovation;
+  getManualDatesByBuildingId(buildingId: number): Promise<ManualDate[]> {
+    return this.db.any(renovation.manualDatesByBuildingId, {
+      buildingId,
     });
   }
 

@@ -7,7 +7,7 @@ WITH building_ages AS (
         DATE_PART('year', COALESCE((b.terms->>'doneDate')::date,  NOW())) as done_year,   
         DATE_PART('month', COALESCE((b.terms->>'doneDate')::date,  NOW())) as done_month,   
             to_char((b.terms->>'doneDate')::date, 'TMMonth YYYY') as period, 
-        COALESCE(b.manual_relocation_type, b.relocation_type) = 1 AS is_full,  
+        COALESCE(b.manual_relocation_type, b.relocation_type) = 1 OR b.terms->>'partialEnd' IS NOT NULL AS is_full,  
         (b.terms->>'doneDate')::date IS NOT NULL AS is_done  
     FROM renovation.buildings_old b  
     WHERE (b.terms->>'doneDate')::date >= date_trunc('month', NOW() - '2 year'::interval) -- последние Х лет

@@ -13,7 +13,7 @@ WITH apartment_totals AS (
         END as age,
         CASE
             WHEN (b.terms->>'doneDate')::date IS NOT NULL THEN 'Работа завершена'::text
-            WHEN COALESCE(b.manual_relocation_type, b.relocation_type) = ANY(ARRAY[2,3]) OR b.moves_outside_district = true THEN 'Без отклонений'::text
+            WHEN ((COALESCE(b.manual_relocation_type, b.relocation_type) = ANY(ARRAY[2,3]) OR b.terms->>'partialStart' IS NOT NULL) AND b.terms->>'partialEnd' IS NULL) OR b.moves_outside_district = true THEN 'Без отклонений'::text
             WHEN at.risk > 0 THEN 'Наступили риски'::text
             WHEN at.attention > 0 THEN 'Требует внимания'::text
             ELSE 'Без отклонений'::text
@@ -26,6 +26,7 @@ WITH apartment_totals AS (
             ELSE 'Переселение'
         END as relocation_status,
         COALESCE(b.manual_relocation_type, b.relocation_type) as relocation_type_id,
+        b.terms->>'partialStart' IS NOT NULL AND b.terms->>'partialEnd' IS NULL AS is_partial,
         b.adress
     FROM renovation.buildings_old b
     LEFT JOIN apartment_totals at ON at.building_id = b.id
@@ -54,7 +55,7 @@ SELECT
     COUNT(*) FILTER (WHERE building_deviation = 'Наступили риски' AND relocation_status = 'Переселение')::integer as risk,
     COUNT(*) FILTER (WHERE building_deviation = 'Требует внимания' AND relocation_status = 'Переселение')::integer as warning,
     COUNT(*) FILTER (WHERE building_deviation = 'Без отклонений' AND relocation_status = 'Переселение')::integer as none,
-    COUNT(*) FILTER (WHERE building_deviation = 'Без отклонений' AND relocation_status = 'Переселение' AND relocation_type_id = 1)::integer as full
+    COUNT(*) FILTER (WHERE building_deviation = 'Без отклонений' AND relocation_status = 'Переселение' AND relocation_type_id = 1 AND NOT is_partial)::integer as full
 FROM prepared_data
 GROUP BY
     relocation_age,

@@ -60,6 +60,7 @@ import {
   MonthlyProgressInfo,
   MonthlyDoneInfo,
   SankeyData,
+  ManualDate,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
@@ -313,6 +314,13 @@ export class RenovationController {
     @Param('id') id: number,
   ): Promise<BuildingRelocationMapElement[]> {
     return this.renovation.getOldBuildingRelocationMap(id);
+  }
+
+  @Get('old-building-manual-dates/:id')
+  getManualDatesByBuildingId(
+    @Param('id') buildingId: number,
+  ): Promise<ManualDate[]> {
+    return this.renovation.getManualDatesByBuildingId(buildingId);
   }
 
   @Get('new-building-relocation-map/:id')

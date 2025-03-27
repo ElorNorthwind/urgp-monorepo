@@ -32,6 +32,7 @@ import {
   MonthlyProgressInfo,
   MonthlyDoneInfo,
   SankeyData,
+  ManualDate,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -246,5 +247,11 @@ export class RenovationService {
 
   public async getCurrentYearApartmentsSankey(): Promise<SankeyData> {
     return this.dbServise.db.renovation.getCurrentYearApartmentsSankey();
+  }
+
+  public async getManualDatesByBuildingId(
+    buildingId: number,
+  ): Promise<ManualDate[]> {
+    return this.dbServise.db.renovation.getManualDatesByBuildingId(buildingId);
   }
 }

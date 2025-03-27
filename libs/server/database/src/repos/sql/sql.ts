@@ -57,6 +57,7 @@ export const renovation = {
   currentYearApartmentsSankey: sql(
     'sql/renovation/currentYearApartmentsSankey.sql',
   ),
+  manualDatesByBuildingId: sql('sql/renovation/manualDatesByBuildingId.sql'),
 };
 
 export const users = {

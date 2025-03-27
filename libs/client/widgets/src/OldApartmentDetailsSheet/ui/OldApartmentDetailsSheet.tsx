@@ -41,12 +41,16 @@ const OldApartmentDetailsSheet = ({
     data: apartmentTimeline,
     isLoading: timelineIsLoading,
     isFetching: timelineIsFetching,
-  } = useOldApartmentTimeline(apartmentId || 0, { skip: !apartmentId });
+  } = useOldApartmentTimeline(apartmentId || 0, {
+    skip: !apartmentId || apartmentId === -1,
+  });
   const {
     data: apartmentDetails,
     isLoading: detailsIsLoading,
     isFetching: detailsIsFetching,
-  } = useOldApartmentDetails(apartmentId || 0, { skip: !apartmentId });
+  } = useOldApartmentDetails(apartmentId || 0, {
+    skip: !apartmentId || apartmentId === -1,
+  });
 
   const [coloredTimeline, setColoredTimeline] = useState<
     (OldApartmentTimeline & { color: string })[]
@@ -76,7 +80,7 @@ const OldApartmentDetailsSheet = ({
       className={cn(
         'w-detailsbar absolute bottom-0 top-0',
         'transition-all ease-in-out',
-        apartmentId ? 'w-detailsbar' : 'hidden w-0',
+        apartmentId && apartmentId !== -1 ? 'w-detailsbar' : 'hidden w-0',
         className,
       )}
     >

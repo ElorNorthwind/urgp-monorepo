@@ -7,6 +7,7 @@ import {
   BuildingsGeoJSON,
   NewBuilding,
   OldBuildingConnectionsInfo,
+  ManualDate,
 } from '@urgp/shared/entities';
 
 export const oldBuildingsApi = rtkApi.injectEndpoints({
@@ -68,6 +69,14 @@ export const oldBuildingsApi = rtkApi.injectEndpoints({
       }),
     }),
 
+    getManualDates: build.query<ManualDate[], number>({
+      query: (query) => ({
+        url: '/renovation/old-building-manual-dates/' + query.toString(),
+        method: 'GET',
+      }),
+      providesTags: ['old-building-date'],
+    }),
+
     getOldBuildingList: build.query<{ value: number; label: string }[], void>({
       query: () => ({
         url: '/renovation/old-building-list',
@@ -117,4 +126,5 @@ export const {
   useGetOldBuildingRelocationMapQuery: useOldBuildingRelocationMap,
   useGetNewBuildingRelocationMapQuery: useNewBuildingRelocationMap,
   useGetOldBuildingConnectionsQuery: useOldBuildingConnections,
+  useGetManualDatesQuery: useManualDates,
 } = oldBuildingsApi;

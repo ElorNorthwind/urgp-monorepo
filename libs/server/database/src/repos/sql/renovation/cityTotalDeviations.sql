@@ -9,7 +9,7 @@ WITH apartment_totals AS (
     SELECT  
         CASE 
             WHEN (b.terms->>'doneDate')::date IS NOT NULL THEN 'Работа завершена'::text 
-            WHEN COALESCE(b.manual_relocation_type, b.relocation_type) = ANY(ARRAY[2,3]) OR b.moves_outside_district = true THEN 'Без отклонений'::text 
+            WHEN ((COALESCE(b.manual_relocation_type, b.relocation_type) = ANY(ARRAY[2,3]) OR b.terms->>'partialStart' IS NOT NULL) AND b.terms->>'partialEnd' IS NULL) OR b.moves_outside_district = true THEN 'Без отклонений'::text 
             WHEN at.risk > 0 THEN 'Наступили риски'::text 
             WHEN at.attention > 0 THEN 'Требует внимания'::text 
             ELSE 'Без отклонений'::text 

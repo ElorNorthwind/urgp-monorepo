@@ -1,5 +1,6 @@
 import { LatLngExpression, LatLngTuple } from 'leaflet';
 import { MultiPolygon } from 'geojson';
+import { z } from 'zod';
 
 type OldBuildingTerms = {
   firstResetlementStart: string | null;
@@ -174,3 +175,15 @@ export type BuildingsGeoJSON = GeoJSON.FeatureCollection<
   MultiPolygon,
   { id: number; adress: string }
 >;
+
+export const manualDateSchema = z.object({
+  id: z.coerce.number().int().nonnegative(),
+  buildingId: z.coerce.number().int().nonnegative(),
+  type: z.string(),
+  priority: z.coerce.number().int().nonnegative(),
+  controlDate: z.string().datetime(),
+  createdAt: z.string().datetime(),
+  documents: z.string().nullable(),
+  notes: z.string().nullable(),
+});
+export type ManualDate = z.infer<typeof manualDateSchema>;
