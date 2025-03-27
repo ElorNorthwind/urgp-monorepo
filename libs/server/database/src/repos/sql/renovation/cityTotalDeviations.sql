@@ -20,7 +20,8 @@ WITH apartment_totals AS (
             WHEN (b.terms->'actual'->>'firstResetlementEnd')::date IS NOT NULL THEN 'Отселение' 
             WHEN (b.terms->'actual'->>'firstResetlementStart')::date IS NULL THEN 'Не начато' 
             ELSE 'Переселение' 
-        END as relocation_status 
+        END as relocation_status, 
+		CASE WHEN b.terms->>'partialEnd' IS NOT NULL THEN true ELSE false END as partial_end
     FROM renovation.buildings_old b 
     LEFT JOIN apartment_totals at ON at.building_id = b.id 
 ) 
@@ -31,7 +32,9 @@ FROM
         CASE 
             WHEN building_deviation = 'Работа завершена' THEN 'done' 
             WHEN relocation_status = 'Не начато' THEN 'notStarted' 
+			WHEN building_deviation = 'Требует внимания' AND partial_end THEN 'warningMoved' 
             WHEN building_deviation = 'Требует внимания' THEN 'warning' 
+			WHEN building_deviation = 'Наступили риски' AND partial_end THEN 'riskMoved' 
             WHEN building_deviation = 'Наступили риски' THEN 'risk' 
             ELSE 'none' 
         END as key, 
@@ -41,8 +44,10 @@ FROM
         CASE 
             WHEN building_deviation = 'Работа завершена' THEN 'done' 
             WHEN relocation_status = 'Не начато' THEN 'notStarted' 
+			WHEN building_deviation = 'Требует внимания' AND partial_end THEN 'warningMoved' 
             WHEN building_deviation = 'Требует внимания' THEN 'warning' 
+			WHEN building_deviation = 'Наступили риски' AND partial_end THEN 'riskMoved' 
             WHEN building_deviation = 'Наступили риски' THEN 'risk' 
-            ELSE 'none' 
+            ELSE 'none'  
         END 
 ) t;

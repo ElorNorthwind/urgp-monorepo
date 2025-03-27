@@ -6,6 +6,7 @@ import {
   cn,
   Skeleton,
 } from '@urgp/client/shared';
+import { se } from 'date-fns/locale';
 
 type DashboardNumberCardProps = {
   label: string;
@@ -16,6 +17,7 @@ type DashboardNumberCardProps = {
   className?: string;
   accentClassName?: string;
   onClick?: () => void;
+  secondaryDescription?: string;
 };
 
 const DashboardNumberCard = ({
@@ -27,6 +29,7 @@ const DashboardNumberCard = ({
   className,
   accentClassName,
   onClick,
+  secondaryDescription,
 }: DashboardNumberCardProps): JSX.Element => {
   return (
     <Card
@@ -68,6 +71,11 @@ const DashboardNumberCard = ({
           ) : (
             <p className="text-muted-foreground text-xs">{description}</p>
           ))}
+        {secondaryDescription && secondaryDescription !== '' && (
+          <div className=" bg-muted-foreground/5 -mx-6 -mb-6 mt-2 p-2 px-4 text-center text-xs leading-tight ">
+            {secondaryDescription}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

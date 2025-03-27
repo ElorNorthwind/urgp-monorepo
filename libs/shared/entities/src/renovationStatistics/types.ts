@@ -27,7 +27,9 @@ export type CityTotalDeviations = {
   done: number;
   none: number;
   risk: number;
+  riskMoved?: number;
   warning: number;
+  warningMoved?: number;
   notStarted: number;
 };
 

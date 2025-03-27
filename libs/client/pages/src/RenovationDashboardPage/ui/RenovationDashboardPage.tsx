@@ -15,6 +15,7 @@ import {
   StartTimelineChart,
 } from '@urgp/client/widgets';
 import { formatDate } from 'date-fns';
+import { de } from 'date-fns/locale';
 import {
   CircleAlert,
   CircleCheck,
@@ -102,7 +103,7 @@ const RenovationDashboardPage = (): JSX.Element => {
           />
           <DashboardNumberCard
             label="Требуют внимания"
-            value={deviations?.warning || 0}
+            value={(deviations?.warning || 0) + (deviations?.warningMoved || 0)}
             Icon={CircleAlert}
             description={numericHouses(deviations?.warning || 0)}
             accentClassName={cn('text-amber-600')}
@@ -120,12 +121,17 @@ const RenovationDashboardPage = (): JSX.Element => {
           />
           <DashboardNumberCard
             label="Имеются риски"
-            value={deviations?.risk || 0}
+            value={(deviations?.risk || 0) + (deviations?.riskMoved || 0)}
             Icon={CircleX}
             description={numericHouses(deviations?.risk || 0)}
             accentClassName={cn('text-rose-600')}
             isLoading={isDeviationsLoading || isDeviationsFetching}
             className={'col-span-3 sm:col-span-1'}
+            secondaryDescription={
+              deviations?.riskMoved && deviations?.riskMoved > 0
+                ? `из них ${deviations?.riskMoved} - перешли из частичного`
+                : ''
+            }
             onClick={() =>
               navigate({
                 to: './oldbuildings',
