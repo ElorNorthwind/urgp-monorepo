@@ -1,4 +1,4 @@
-import { useManualDates } from '@urgp/client/entities';
+import { useDeleteManualDate, useManualDates } from '@urgp/client/entities';
 import {
   Card,
   CardContent,
@@ -12,6 +12,7 @@ import {
 import { ManualDate } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import { ConfirmationButton } from '../../../ConfirmationButton';
+import { toast } from 'sonner';
 
 type ManualDateItemProps = {
   item: ManualDate;
@@ -23,6 +24,7 @@ const ManualDateItem = ({
 }: ManualDateItemProps): JSX.Element | null => {
   const user = useAuth();
   const canEdit = user.roles.includes('admin') || user.roles.includes('editor');
+  const [deleteDate, { isLoading }] = useDeleteManualDate();
 
   return (
     <Card className="relative overflow-hidden">
@@ -40,14 +42,25 @@ const ManualDateItem = ({
       {item?.notes && (
         <div className="border-t p-2 text-xs font-light">{item?.notes}</div>
       )}
-      <div className="bg-background absolute right-2 top-1 rounded-full">
-        <ConfirmationButton
-          onAccept={() => {
-            console.log('accept');
-          }}
-          label="Удалить?"
-        />
-      </div>
+      {canEdit && item?.id && (
+        <div className="bg-background absolute right-2 top-1 rounded-full">
+          <ConfirmationButton
+            onAccept={() => {
+              deleteDate(item.id)
+                .unwrap()
+                .then(() => {
+                  toast.success('Дата удалена');
+                })
+                .catch((rejected: any) =>
+                  toast.error('Не удалось удалить дату', {
+                    description: rejected.data?.message || 'Неизвестная ошибка',
+                  }),
+                );
+            }}
+            label="Удалить?"
+          />
+        </div>
+      )}
     </Card>
   );
 };

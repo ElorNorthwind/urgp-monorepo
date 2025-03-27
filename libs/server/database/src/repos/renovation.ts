@@ -414,7 +414,7 @@ export class RenovationRepository {
       'Типы переселения' as label,    
       JSONB_AGG(jsonb_build_object(
         'value', id,        
-        'label', type,
+        'label', short_name,
         'fullname', type,
         'category', 'types'
       )) as items
@@ -423,21 +423,34 @@ export class RenovationRepository {
   }
 
   createManualDate(dto: CreateManualDateDto): Promise<number> {
-    const columns = Object.keys(dto)
-      // .filter((key) => key !== 'id')
-      .map((key) => {
-        return { name: camelToSnakeCase(key), prop: key };
+    let columns = [
+      { name: 'date_type', prop: 'typeId' },
+      { name: 'is_manual', prop: 'isManual' },
+    ];
+
+    Object.keys(dto)
+      .filter((key) => key !== 'typeId')
+      .forEach((key) => {
+        columns.push({ name: camelToSnakeCase(key), prop: key });
       });
+    // Logger.log(columns);
     const datesColumnSet = new this.pgp.helpers.ColumnSet(columns, {
       table: {
         table: 'dates_buildings_old',
         schema: 'renovation',
       },
     });
-    const insert = this.pgp.helpers.insert(dto, datesColumnSet);
-    return this.db.none(insert + ' RETURNING id').then((result: any) => {
-      return result.id;
-    });
+    const insert = this.pgp.helpers.insert(
+      { isManual: true, ...dto },
+      datesColumnSet,
+    );
+
+    // Logger.debug(insert);
+    return this.db
+      .one(insert + ' ON CONFLICT DO NOTHING RETURNING id')
+      .then((result: any) => {
+        return result.id;
+      });
   }
 
   deleteManualDate(id: number): Promise<null> {

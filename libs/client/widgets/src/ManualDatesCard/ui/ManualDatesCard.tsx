@@ -10,6 +10,7 @@ import {
   useAuth,
 } from '@urgp/client/shared';
 import { ManualDatesList } from './components/ManualDatesList';
+import { ManualDateForm } from './components/ManualDateForm';
 
 type ManualDatesCardProps = {
   buildingId: number;
@@ -47,8 +48,8 @@ const ManualDatesCard = ({
       <ScrollArea className="w-full flex-grow space-y-2 bg-slate-100 px-2">
         <ManualDatesList items={manualDates} />
       </ScrollArea>
-      <CardFooter className="flex-shrink-0 border-t">
-        Тут будет форма
+      <CardFooter className="flex-shrink-0 border-t p-2">
+        <ManualDateForm buildingId={buildingId} />
       </CardFooter>
     </Card>
   );

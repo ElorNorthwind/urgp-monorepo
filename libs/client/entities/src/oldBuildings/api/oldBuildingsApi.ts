@@ -153,4 +153,7 @@ export const {
   useGetNewBuildingRelocationMapQuery: useNewBuildingRelocationMap,
   useGetOldBuildingConnectionsQuery: useOldBuildingConnections,
   useGetManualDatesQuery: useManualDates,
+  useGetRelocationTypesQuery: useRelocationTypes,
+  useCreateManualDateMutation: useCreateManualDate,
+  useDeleteManualDateMutation: useDeleteManualDate,
 } = oldBuildingsApi;

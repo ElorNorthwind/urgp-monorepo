@@ -181,7 +181,7 @@ export const manualDateSchema = z.object({
   buildingId: z.coerce.number().int().nonnegative(),
   type: z.string(),
   priority: z.coerce.number().int().nonnegative(),
-  controlDate: z.string().datetime(),
+  controlDate: z.string().datetime({ message: 'Нужна дата' }),
   createdAt: z.string().datetime(),
   documents: z.string().nullable(),
   notes: z.string().nullable(),
@@ -196,6 +196,6 @@ export const createManualDateSchema = manualDateSchema
     notes: true,
   })
   .extend({
-    typeId: z.coerce.number().int().nonnegative(),
+    typeId: z.coerce.number().int().nonnegative({ message: 'Нужен тип даты' }),
   });
 export type CreateManualDateDto = z.infer<typeof createManualDateSchema>;
