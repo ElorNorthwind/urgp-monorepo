@@ -33,6 +33,8 @@ import {
   MonthlyDoneInfo,
   SankeyData,
   ManualDate,
+  NestedClassificatorInfo,
+  CreateManualDateDto,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -253,5 +255,15 @@ export class RenovationService {
     buildingId: number,
   ): Promise<ManualDate[]> {
     return this.dbServise.db.renovation.getManualDatesByBuildingId(buildingId);
+  }
+  public async createManualDate(dto: CreateManualDateDto): Promise<number> {
+    return this.dbServise.db.renovation.createManualDate(dto);
+  }
+  public async deleteManualDate(id: number): Promise<null> {
+    return this.dbServise.db.renovation.deleteManualDate(id);
+  }
+
+  public async getRelocationTypes(): Promise<NestedClassificatorInfo[]> {
+    return this.dbServise.db.renovation.getRelocationTypes();
   }
 }

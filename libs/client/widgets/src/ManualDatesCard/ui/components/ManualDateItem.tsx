@@ -11,6 +11,7 @@ import {
 } from '@urgp/client/shared';
 import { ManualDate } from '@urgp/shared/entities';
 import { format } from 'date-fns';
+import { ConfirmationButton } from '../../../ConfirmationButton';
 
 type ManualDateItemProps = {
   item: ManualDate;
@@ -24,7 +25,7 @@ const ManualDateItem = ({
   const canEdit = user.roles.includes('admin') || user.roles.includes('editor');
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="relative overflow-hidden">
       <div className="bg-muted-foreground/5 text-thin truncate p-2 text-xs">
         {item?.type}
       </div>
@@ -39,6 +40,14 @@ const ManualDateItem = ({
       {item?.notes && (
         <div className="border-t p-2 text-xs font-light">{item?.notes}</div>
       )}
+      <div className="bg-background absolute right-2 top-1 rounded-full">
+        <ConfirmationButton
+          onAccept={() => {
+            console.log('accept');
+          }}
+          label="Удалить?"
+        />
+      </div>
     </Card>
   );
 };

@@ -187,3 +187,15 @@ export const manualDateSchema = z.object({
   notes: z.string().nullable(),
 });
 export type ManualDate = z.infer<typeof manualDateSchema>;
+
+export const createManualDateSchema = manualDateSchema
+  .pick({
+    buildingId: true,
+    controlDate: true,
+    documents: true,
+    notes: true,
+  })
+  .extend({
+    typeId: z.coerce.number().int().nonnegative(),
+  });
+export type CreateManualDateDto = z.infer<typeof createManualDateSchema>;

@@ -61,6 +61,9 @@ import {
   MonthlyDoneInfo,
   SankeyData,
   ManualDate,
+  NestedClassificatorInfo,
+  createManualDateSchema,
+  CreateManualDateDto,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
@@ -272,6 +275,13 @@ export class RenovationController {
 
   @CacheTTL(1000 * 60 * 60)
   @UseInterceptors(CacheInterceptor)
+  @Get('relocation-type-classificator')
+  async getRelocationTypes(): Promise<NestedClassificatorInfo[]> {
+    return this.renovation.getRelocationTypes();
+  }
+
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('start-timeline')
   async getCityStartTimeline(): Promise<StartTimelineInfo[]> {
     return this.renovation.getCityStartTimeline();
@@ -321,6 +331,29 @@ export class RenovationController {
     @Param('id') buildingId: number,
   ): Promise<ManualDate[]> {
     return this.renovation.getManualDatesByBuildingId(buildingId);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Post('old-building-manual-date/')
+  createManualDate(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(createManualDateSchema))
+    dto: CreateManualDateDto,
+  ): Promise<number> {
+    if (!['admin', 'editor'].some((role) => req.user.roles.includes(role)))
+      throw new UnauthorizedException('Нет прав на создание ручных дат');
+    return this.renovation.createManualDate(dto);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Delete('old-building-manual-date/:id')
+  deleteManualDate(
+    @Req() req: RequestWithUserData,
+    @Param('id') id: number,
+  ): Promise<null> {
+    if (!['admin', 'editor'].some((role) => req.user.roles.includes(role)))
+      throw new UnauthorizedException('Нет прав на удаление ручных дат');
+    return this.renovation.deleteManualDate(id);
   }
 
   @Get('new-building-relocation-map/:id')

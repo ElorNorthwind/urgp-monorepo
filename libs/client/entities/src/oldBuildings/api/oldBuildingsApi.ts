@@ -8,6 +8,8 @@ import {
   NewBuilding,
   OldBuildingConnectionsInfo,
   ManualDate,
+  NestedClassificatorInfo,
+  CreateManualDateDto,
 } from '@urgp/shared/entities';
 
 export const oldBuildingsApi = rtkApi.injectEndpoints({
@@ -75,6 +77,30 @@ export const oldBuildingsApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
       providesTags: ['old-building-date'],
+    }),
+
+    createManualDate: build.mutation<number, CreateManualDateDto>({
+      query: (dto) => ({
+        url: '/renovation/old-building-manual-date/',
+        method: 'POST',
+        body: dto,
+      }),
+      invalidatesTags: ['old-building-date'],
+    }),
+
+    deleteManualDate: build.mutation<void, number>({
+      query: (id) => ({
+        url: '/renovation/old-building-manual-date/' + id.toString(),
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['old-building-date'],
+    }),
+
+    getRelocationTypes: build.query<NestedClassificatorInfo[], void>({
+      query: () => ({
+        url: '/renovation/relocation-type-classificator/',
+        method: 'GET',
+      }),
     }),
 
     getOldBuildingList: build.query<{ value: number; label: string }[], void>({

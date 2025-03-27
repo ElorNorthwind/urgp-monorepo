@@ -43,11 +43,15 @@ import {
   MonthlyDoneInfo,
   SankeyData,
   ManualDate,
+  Classificator,
+  NestedClassificatorInfo,
+  CreateManualDateDto,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
 import { toDate } from 'date-fns';
 import { Logger } from '@nestjs/common';
+import { camelToSnakeCase } from '../lib/to-snake-case';
 
 // import { Logger } from '@nestjs/common';
 
@@ -401,5 +405,43 @@ export class RenovationRepository {
 
   getCurrentYearApartmentsSankey(): Promise<SankeyData> {
     return this.db.one(renovation.currentYearApartmentsSankey);
+  }
+
+  getRelocationTypes(): Promise<NestedClassificatorInfo[]> {
+    const sql = `
+    SELECT     
+      'types' as value,
+      'Типы переселения' as label,    
+      JSONB_AGG(jsonb_build_object(
+        'value', id,        
+        'label', type,
+        'fullname', type,
+        'category', 'types'
+      )) as items
+    FROM renovation.dates_buildings_old_types;`;
+    return this.db.any(sql);
+  }
+
+  createManualDate(dto: CreateManualDateDto): Promise<number> {
+    const columns = Object.keys(dto)
+      // .filter((key) => key !== 'id')
+      .map((key) => {
+        return { name: camelToSnakeCase(key), prop: key };
+      });
+    const datesColumnSet = new this.pgp.helpers.ColumnSet(columns, {
+      table: {
+        table: 'dates_buildings_old',
+        schema: 'renovation',
+      },
+    });
+    const insert = this.pgp.helpers.insert(dto, datesColumnSet);
+    return this.db.none(insert + ' RETURNING id').then((result: any) => {
+      return result.id;
+    });
+  }
+
+  deleteManualDate(id: number): Promise<null> {
+    const sql = 'DELETE FROM renovation.dates_buildings_old WHERE id = $1';
+    return this.db.none(sql, [id]);
   }
 }
