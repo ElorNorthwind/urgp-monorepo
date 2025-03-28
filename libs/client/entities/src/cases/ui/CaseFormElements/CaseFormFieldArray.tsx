@@ -13,9 +13,12 @@ import {
   SelectFormField,
   TextAreaFormField,
 } from '@urgp/client/widgets';
-import { CaseFormDto } from '@urgp/shared/entities';
+import {
+  CaseFormDto,
+  GET_DEFAULT_CONTROL_DUE_DATE,
+} from '@urgp/shared/entities';
 import { SquareAsterisk, SquareUserRound } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 import {
   CaseTypeSelector,
@@ -25,7 +28,12 @@ import {
   useCurrentUserApproveTo,
 } from '../../../classificators';
 import { ExternalCaseFieldArray } from './ExternalCaseFieldArray';
-import { endOfYesterday, isBefore } from 'date-fns';
+import {
+  addBusinessDays,
+  endOfYesterday,
+  isBefore,
+  startOfToday,
+} from 'date-fns';
 
 const CaseFormFieldArray = ({
   form,
@@ -42,6 +50,19 @@ const CaseFormFieldArray = ({
     );
 
   const watchApproveTo = form.watch('approveToId');
+  const watchExternal = form.watch('externalCases', []);
+
+  useEffect(() => {
+    if (watchExternal.some((e) => e.system === 'EDO')) {
+      form.setValue(
+        'dueDate',
+        addBusinessDays(startOfToday(), 5).toISOString(),
+      );
+    } else {
+      form.setValue('dueDate', GET_DEFAULT_CONTROL_DUE_DATE());
+    }
+  }, [watchExternal.some((e) => e.system === 'EDO'), watchApproveTo]);
+
   // const isApproved = form.getValues('approveStatus') === 'approved';
   const { data: approvers, isLoading: isApproversLoading } =
     useCurrentUserApproveTo();

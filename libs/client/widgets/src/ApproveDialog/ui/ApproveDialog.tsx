@@ -34,6 +34,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   useApproveCase,
   useApproveOperation,
+  useCaseById,
   useCaseByOperationId,
   useCurrentUserApproveTo,
 } from '@urgp/client/entities';
@@ -48,7 +49,12 @@ import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
-import { endOfYesterday, isBefore } from 'date-fns';
+import {
+  addBusinessDays,
+  endOfYesterday,
+  isBefore,
+  startOfToday,
+} from 'date-fns';
 
 type ApproveDialogProps = {
   className?: string;
@@ -78,13 +84,37 @@ const ApproveDialog = ({
     values?.id,
     { skip: !isOperation || !values?.id || values.id === 0 },
   );
+
+  // Корректировка контрольной даты
+  const { data: controlCaseById, isLoading: isCaseLoading } = useCaseById(
+    values?.id,
+    {
+      skip: isOperation || !values?.id || values.id === 0,
+    },
+  );
+
   const i = useUserAbility();
 
   const form = useForm<ApproveControlEntityFormDto>({
     resolver: zodResolver(approveControlEntityFormSchema),
     values,
   });
-  const watchApprover = form.watch('approveToId');
+  const watchApproveTo = form.watch('approveToId');
+
+  useEffect(() => {
+    if (!controlCaseById) return;
+    if (controlCaseById?.externalCases.some((e) => e.system === 'EDO')) {
+      form.setValue(
+        'dueDate',
+        addBusinessDays(startOfToday(), 5).toISOString(),
+      );
+    } else {
+      form.setValue('dueDate', GET_DEFAULT_CONTROL_DUE_DATE());
+    }
+  }, [
+    controlCaseById?.externalCases?.some((e) => e.system === 'EDO'),
+    watchApproveTo,
+  ]);
 
   const filteredApproveTo = approveTo?.filter((approver) => {
     if (approver.value === 0) return true;
@@ -100,9 +130,9 @@ const ApproveDialog = ({
   });
 
   const approveText =
-    watchApprover === 0
+    watchApproveTo === 0
       ? 'Оставить в проекте'
-      : watchApprover === user.id
+      : watchApproveTo === user.id
         ? 'Одобрить'
         : 'Направить согласующему';
 
@@ -203,9 +233,9 @@ const ApproveDialog = ({
                 placeholder="Контрольный срок"
                 className={cn(
                   'flex-shrink-0',
-                  (user?.id !== watchApprover || isOperation) && 'hidden',
+                  (user?.id !== watchApproveTo || isOperation) && 'hidden',
                 )}
-                disabled={user?.id !== watchApprover || isOperation}
+                disabled={user?.id !== watchApproveTo || isOperation}
               />
             </div>
             <Footer
