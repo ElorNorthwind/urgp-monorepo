@@ -96,7 +96,7 @@ SELECT
 			, CASE WHEN u_cur.control_data->'roles' ? 'executor' AND o."lastStage"->'type'->>'category' = 'решение' AND o."lastStage"->>'approveStatus' = 'approved' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL AND o."hasEscalations" IS DISTINCT FROM true THEN 'reminder-done' ELSE null END
 			, CASE WHEN u_cur.control_data->'roles' ? 'executor' AND (o."lastStage"->'type'->>'category' <> 'решение' AND (o."myReminder"->>'dueDate')::date < current_date) AND o."hasEscalations" IS DISTINCT FROM true THEN 'reminder-overdue' ELSE null END
 			, CASE WHEN (u_cur.control_data->>'priority')::integer >= ${controlThreshold} AND (o."myReminder"->'type'->>'id')::integer = 12 AND o."myReminder"->>'doneDate' IS NULL AND COALESCE(o."controlLevel", 0) < ${controlThreshold} THEN 'escalation' ELSE null END
-			, CASE WHEN (o."hasControlToMe" AND NOT (o."hasControlFromMe" OR o."lastStage"->'type'->>'category' IS NOT DISTINCT FROM 'решение')) THEN 'control-to-me' ELSE null END
+			, CASE WHEN (o."hasControlToMe" AND NOT (o."hasControlFromMe" OR o."lastStage"->'type'->>'category' IS NOT DISTINCT FROM 'решение' AND (o."lastStage"->'type'->>'priority')::integer >= o."controlLevel" )) THEN 'control-to-me' ELSE null END
 		]
 	, null) as actions,
 	c.revision,
