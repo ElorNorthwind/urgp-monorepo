@@ -107,6 +107,12 @@ CREATE TABLE control.operations_
 	revision integer NOT NULL DEFAULT 1,
 	PRIMARY KEY (id)
 );
+
+-- Индекс на уникаольность напоминалок
+CREATE UNIQUE INDEX operations_unique_reminder 
+ON control.operations_ (case_id, control_to_id)
+WHERE class = 'reminder';
+
 ALTER TABLE control.operations_
     OWNER to renovation_user;
 

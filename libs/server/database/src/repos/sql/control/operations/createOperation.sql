@@ -38,4 +38,36 @@ VALUES (
     ${extra} -- extra (optional)
     -- ${archiveDate} -- archive_date (optional)
 )
-RETURNING id; -- Optional: Return the ID of the inserted row
+ON CONFLICT (case_id, control_to_id) WHERE class = 'reminder' DO UPDATE 
+SET (
+    type_id,
+    author_id,
+    approve_from_id,
+    approve_to_id,
+    approve_status,
+    approve_date,
+    approve_notes,
+    due_date,
+    done_date,
+    control_from_id,
+    control_to_id,
+    title,
+    notes,
+    extra
+) = (
+    EXCLUDED.type_id,
+    EXCLUDED.author_id,
+    EXCLUDED.approve_from_id,
+    EXCLUDED.approve_to_id,
+    EXCLUDED.approve_status,
+    EXCLUDED.approve_date,
+    EXCLUDED.approve_notes,
+    EXCLUDED.due_date,
+    EXCLUDED.done_date,
+    EXCLUDED.control_from_id,
+    EXCLUDED.control_to_id,
+    EXCLUDED.title,
+    EXCLUDED.notes,
+    EXCLUDED.extra
+)
+RETURNING id;
