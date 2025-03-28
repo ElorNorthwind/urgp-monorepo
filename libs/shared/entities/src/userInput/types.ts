@@ -48,6 +48,7 @@ export const userInfoSchema = z.object({
   id: z.coerce.number(),
   fio: z.string(),
   priority: z.coerce.number().nullable().optional(),
+  department: z.string().nullable().optional(),
 });
 export type UserInfo = z.infer<typeof userInfoSchema>;
 

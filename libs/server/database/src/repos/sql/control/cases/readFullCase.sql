@@ -1,4 +1,4 @@
-WITH user_info AS (SELECT id, fio FROM renovation.users), -- (control_data->>'priority')::integer as priority
+WITH user_info AS (SELECT id, fio, control_settings->>'department' as department FROM renovation.users), -- (control_data->>'priority')::integer as priority
      operation_info AS (
 		SELECT 
 			o."caseId",

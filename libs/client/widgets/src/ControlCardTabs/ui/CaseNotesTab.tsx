@@ -32,7 +32,7 @@ const CaseNotesTab = (props: CaseNotesTabProps): JSX.Element | null => {
       button={<ManageReminderButton caseId={controlCase?.id} />}
       className={className}
       titleClassName={titleClassName}
-      contentClassName={cn('max-h-72 flex flex-col p-0', contentClassName)}
+      contentClassName={cn('flex flex-col p-0', contentClassName)}
       accordionItemName={accordionItemName}
     >
       {

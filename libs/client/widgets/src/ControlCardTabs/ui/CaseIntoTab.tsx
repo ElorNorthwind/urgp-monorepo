@@ -6,7 +6,7 @@ import {
   TooltipTrigger,
   useUserAbility,
 } from '@urgp/client/shared';
-import { CaseFull } from '@urgp/shared/entities';
+import { ApproveStatus, CaseFull } from '@urgp/shared/entities';
 
 import { DirectionsChangeMenu } from '@urgp/client/widgets';
 import { format } from 'date-fns';
@@ -14,9 +14,11 @@ import {
   CaseDirectionsList,
   caseStatusStyles,
   caseTypeStyles,
+  directionCategoryStyles,
   ManageReminderButton,
 } from '@urgp/client/entities';
 import { CardTab } from '@urgp/client/features';
+import { UserAndDateBadge } from './components/UserAndDateBadge';
 
 type CaseInfoTabProps = {
   controlCase?: CaseFull;
@@ -91,18 +93,6 @@ const CaseInfoTab = (props: CaseInfoTabProps): JSX.Element | null => {
           </div>
         </TooltipTrigger>
         <TooltipContent side="bottom">
-          {caseApproveInfo?.currentFio && caseApproveInfo?.approveText && (
-            <>
-              <p>{caseApproveInfo.approveText + ': '}</p>
-              <p className="font-bold">{caseApproveInfo?.currentFio}</p>
-              {caseApproveInfo?.previousFio && (
-                <>
-                  <p>Перенаправил:</p>
-                  <p className="font-bold">{caseApproveInfo.previousFio}</p>
-                </>
-              )}
-            </>
-          )}
           {controlCase?.lastEdit && (
             <>
               <p>Последнее действие:</p>
@@ -119,12 +109,74 @@ const CaseInfoTab = (props: CaseInfoTabProps): JSX.Element | null => {
           )}
         </TooltipContent>
       </Tooltip>
+      <div className="bg-muted-foreground/5 border-b border-r px-2 py-1 text-right font-bold">
+        От:
+      </div>
+      <UserAndDateBadge
+        user={controlCase?.author}
+        date={controlCase?.createdAt}
+      />
+      {controlCase?.approveStatus === ApproveStatus.project && (
+        <div className="text-muted-foreground col-span-2 border-b border-l text-center">
+          Проект не направлен
+        </div>
+      )}
+
+      {controlCase?.approveStatus === ApproveStatus.approved &&
+        controlCase?.approveDate &&
+        controlCase?.approveFrom && (
+          <>
+            <div className="bg-muted-foreground/5 border-x border-b px-2 py-1 text-right font-bold">
+              Утвер.:
+            </div>
+            <UserAndDateBadge
+              user={controlCase?.approveFrom}
+              date={controlCase?.approveDate}
+            />
+          </>
+        )}
+
+      {controlCase?.approveStatus === ApproveStatus.rejected &&
+        controlCase?.approveDate &&
+        controlCase?.approveFrom && (
+          <>
+            <div className="bg-muted-foreground/5 border-x border-b px-2 py-1 text-right font-bold">
+              Отказал:
+            </div>
+            <UserAndDateBadge
+              user={controlCase?.approveFrom}
+              date={controlCase?.approveDate}
+            />
+          </>
+        )}
+
+      {controlCase?.approveStatus === ApproveStatus.pending &&
+        controlCase?.approveTo &&
+        controlCase?.approveFrom && (
+          <>
+            <div className="bg-muted-foreground/5 border-x border-b px-2 py-1 text-right font-bold">
+              Нап.:
+            </div>
+            <div
+              className={cn(
+                'flex flex-col items-center gap-0 border-b text-xs leading-none',
+              )}
+            >
+              <p className="text-muted-foreground w-full truncate">
+                {'' + controlCase?.approveFrom?.fio + ' →'}
+              </p>
+              <p className="w-full truncate">
+                {'→ ' + controlCase?.approveTo?.fio}
+              </p>
+            </div>
+          </>
+        )}
       {caseApproveInfo?.rejectNotes && (
         <div className="col-span-4 border-b bg-rose-50 px-2 py-1 text-sm">
           <span>{caseApproveInfo.rejectNotes}</span>
         </div>
       )}
-      <div className="bg-muted-foreground/5 flex items-center truncate border-r px-2 py-1 text-right font-bold">
+      <div className="bg-muted-foreground/5 col-start-1 flex items-center truncate border-r px-2 py-1 text-right font-bold">
         {i.can('update', controlCase) ? (
           <DirectionsChangeMenu
             controlCase={controlCase}

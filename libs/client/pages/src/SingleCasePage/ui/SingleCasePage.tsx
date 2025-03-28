@@ -19,6 +19,7 @@ import {
   ConnectedCasesTab,
   DispatchesTab,
   ExternalCasesTab,
+  StagesTab,
 } from '@urgp/client/widgets';
 import { CaseFull, OperationClasses } from '@urgp/shared/entities';
 import { SingleCasePageHeader } from './SingleCasePageHeader';
@@ -59,12 +60,12 @@ const SingleCasePage = (): JSX.Element => {
             <div className="flex flex-1 flex-col gap-6">
               <CaseInfoTab controlCase={controlCase} label="Карточка дела" />
               <ExternalCasesTab controlCase={controlCase} />
-              <CaseNotesTab controlCase={controlCase} />
               <ConnectedCasesTab controlCase={controlCase} />
               <DispatchesTab controlCase={controlCase} />
+              <CaseNotesTab controlCase={controlCase} />
             </div>
             <div className="lg:bg-muted-foreground/5 flex flex-col gap-2 lg:rounded-lg lg:p-2">
-              <StagesHeader
+              {/* <StagesHeader
                 caseId={controlCase?.id}
                 className="text-lg font-semibold"
               />
@@ -72,6 +73,10 @@ const SingleCasePage = (): JSX.Element => {
                 stages={stages}
                 isLoading={isStageLoading || isStageFetching}
                 controlLevel={controlCase?.controlLevel || 0}
+              /> */}
+              <StagesTab
+                controlCase={controlCase}
+                // contentClassName="border-b"
               />
             </div>
           </div>

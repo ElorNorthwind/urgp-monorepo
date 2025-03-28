@@ -1,10 +1,12 @@
-import { Accordion } from '@urgp/client/shared';
+import { Accordion, ScrollArea } from '@urgp/client/shared';
 import {
+  CaseAuthorTab,
   CaseInfoTab,
   CaseNotesTab,
   ConnectedCasesTab,
   DispatchesTab,
   ExternalCasesTab,
+  StagesTab,
 } from '@urgp/client/widgets';
 import { CaseFull, OperationClasses } from '@urgp/shared/entities';
 import { StagesHeader, StagesList, useOperations } from '../../../operations';
@@ -38,37 +40,34 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
         onPrevCase={onPrevCase}
         onNextCase={onNextCase}
       />
-      <Accordion
-        type="multiple"
-        className="w-full px-4"
-        defaultValue={['description']}
-      >
-        <CaseInfoTab controlCase={controlCase} label={null} />
-        <CaseNotesTab
-          controlCase={controlCase}
-          accordionItemName="description"
-        />
-        <ExternalCasesTab
-          controlCase={controlCase}
-          accordionItemName="external"
-        />
+      <ScrollArea>
+        <Accordion
+          type="multiple"
+          className="w-full px-4"
+          defaultValue={['description', 'stages']}
+        >
+          <CaseInfoTab controlCase={controlCase} label={null} />
+          <CaseNotesTab
+            controlCase={controlCase}
+            contentClassName=""
+            accordionItemName="description"
+          />
+          <ExternalCasesTab
+            controlCase={controlCase}
+            accordionItemName="external"
+          />
 
-        <ConnectedCasesTab
-          controlCase={controlCase}
-          accordionItemName="connections"
-        />
-        <DispatchesTab
-          controlCase={controlCase}
-          accordionItemName="dispatches"
-        />
-      </Accordion>
-      <StagesHeader caseId={controlCase?.id} className="mx-4 mt-4 pr-6" />
-      <StagesList
-        stages={stages}
-        isLoading={isLoading || isFetching}
-        className="m-4"
-        controlLevel={controlCase?.controlLevel || 0}
-      />
+          <ConnectedCasesTab
+            controlCase={controlCase}
+            accordionItemName="connections"
+          />
+          <DispatchesTab
+            controlCase={controlCase}
+            accordionItemName="dispatches"
+          />
+          <StagesTab controlCase={controlCase} accordionItemName="stages" />
+        </Accordion>
+      </ScrollArea>
       <CaseCardFooter controlCase={controlCase} />
     </>
   );
