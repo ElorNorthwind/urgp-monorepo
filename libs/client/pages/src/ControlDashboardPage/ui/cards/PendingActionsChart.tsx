@@ -8,8 +8,13 @@ import {
   CardHeader,
   CardTitle,
   cn,
+  useAuth,
 } from '@urgp/client/shared';
-import { CaseActions, CaseFull } from '@urgp/shared/entities';
+import {
+  CaseActions,
+  CaseFull,
+  CONTROL_THRESHOLD,
+} from '@urgp/shared/entities';
 import { ExternalLink, ServerCrash } from 'lucide-react';
 import { forwardRef, useMemo } from 'react';
 
@@ -31,6 +36,7 @@ const PendingActionChart = forwardRef<
     isFetching: isCasesFetching,
     isError,
   } = useCases();
+  const user = useAuth();
   const isLoading = isCasesLoading || isCasesFetching;
   const filteredCases = useMemo(
     () =>
@@ -47,6 +53,7 @@ const PendingActionChart = forwardRef<
         label: 'По заявкам запрошено мое решение',
         icon: pendingActionStyles[CaseActions.escalation]?.icon,
         value: countByPendingAction(CaseActions.escalation, cases),
+        isDisabled: (user?.controlData?.priority || 0) < CONTROL_THRESHOLD,
         // style: 'bg-rose-200',
       },
       {
@@ -54,6 +61,7 @@ const PendingActionChart = forwardRef<
         label: 'Поступило ко мне на исполнение',
         icon: pendingActionStyles[CaseActions.controlToMe]?.icon,
         value: countByPendingAction(CaseActions.controlToMe, cases),
+        isDisabled: (user?.controlData?.priority || 0) >= CONTROL_THRESHOLD,
         // style: 'bg-rose-200',
       },
       {
@@ -77,6 +85,10 @@ const PendingActionChart = forwardRef<
         label: 'Приняты решения по заявкам, за которыми я слежу',
         icon: pendingActionStyles[CaseActions.reminderDone]?.icon,
         value: countByPendingAction(CaseActions.reminderDone, cases),
+        isDisabled:
+          !((user?.controlData?.roles as string[]) || []).includes(
+            'executor',
+          ) && (user?.controlData?.priority || 0) < CONTROL_THRESHOLD,
         // style: 'bg-green-200',
       },
       {
@@ -84,6 +96,10 @@ const PendingActionChart = forwardRef<
         label: 'Истек срок напоминания по заявкам, за которыми я слежу',
         icon: pendingActionStyles[CaseActions.reminderOverdue]?.icon,
         value: countByPendingAction(CaseActions.reminderOverdue, cases),
+        isDisabled:
+          !((user?.controlData?.roles as string[]) || []).includes(
+            'executor',
+          ) && (user?.controlData?.priority || 0) < CONTROL_THRESHOLD,
         // style: 'bg-red-300',
       },
 
@@ -92,6 +108,7 @@ const PendingActionChart = forwardRef<
         label: 'По моим заявкам отказали в согласовании',
         icon: pendingActionStyles[CaseActions.caseRejected]?.icon,
         value: countByPendingAction(CaseActions.caseRejected, filteredCases),
+        isDisabled: (user?.controlData?.priority || 0) >= CONTROL_THRESHOLD,
         // style: 'bg-yellow-200',
       },
       {
@@ -132,7 +149,7 @@ const PendingActionChart = forwardRef<
       <CardContent className="flex flex-row items-end gap-4">
         <SimpleBarChart
           // values={chartData.sort((a, b) => b.value - a.value)}
-          values={chartData}
+          values={chartData.filter((item) => !item.isDisabled)}
           isLoading={isLoading}
           isError={isError}
           skeletonCount={3}

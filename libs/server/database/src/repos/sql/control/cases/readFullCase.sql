@@ -93,9 +93,9 @@ SELECT
 			, CASE WHEN c.approve_status = 'rejected' AND c.author_id = ${userId} THEN 'case-rejected' ELSE null END
 			, CASE WHEN c.approve_status = 'project' AND c.author_id = ${userId} THEN 'case-project' ELSE null END
 			, CASE WHEN o."myPendingStage" IS NOT NULL THEN 'operation-approve' ELSE null END
-			, CASE WHEN o."lastStage"->'type'->>'category' = 'решение' AND o."lastStage"->>'approveStatus' = 'approved' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL AND o."hasEscalations" IS DISTINCT FROM true THEN 'reminder-done' ELSE null END
-			, CASE WHEN (o."lastStage"->'type'->>'category' <> 'решение' AND (o."myReminder"->>'dueDate')::date < current_date) AND o."hasEscalations" IS DISTINCT FROM true THEN 'reminder-overdue' ELSE null END
-			, CASE WHEN (o."myReminder"->'type'->>'id')::integer = 12 AND o."myReminder"->>'doneDate' IS NULL AND COALESCE(o."controlLevel", 0) < ${controlThreshold} THEN 'escalation' ELSE null END
+			, CASE WHEN u_cur.control_data->'roles' ? 'executor' AND o."lastStage"->'type'->>'category' = 'решение' AND o."lastStage"->>'approveStatus' = 'approved' AND o."myReminder" IS NOT NULL AND o."myReminder"->>'doneDate' IS NULL AND o."hasEscalations" IS DISTINCT FROM true THEN 'reminder-done' ELSE null END
+			, CASE WHEN u_cur.control_data->'roles' ? 'executor' AND (o."lastStage"->'type'->>'category' <> 'решение' AND (o."myReminder"->>'dueDate')::date < current_date) AND o."hasEscalations" IS DISTINCT FROM true THEN 'reminder-overdue' ELSE null END
+			, CASE WHEN (u_cur.control_data->>'priority')::integer >= ${controlThreshold} AND (o."myReminder"->'type'->>'id')::integer = 12 AND o."myReminder"->>'doneDate' IS NULL AND COALESCE(o."controlLevel", 0) < ${controlThreshold} THEN 'escalation' ELSE null END
 			, CASE WHEN (o."hasControlToMe" AND NOT (o."hasControlFromMe" OR o."lastStage"->'type'->>'category' IS NOT DISTINCT FROM 'решение')) THEN 'control-to-me' ELSE null END
 		]
 	, null) as actions,
@@ -113,6 +113,7 @@ LEFT JOIN user_info u ON u.id = c.author_id
 LEFT JOIN user_info u2 ON u2.id = c.updated_by_id
 LEFT JOIN user_info u3 ON u3.id = c.approve_from_id
 LEFT JOIN user_info u4 ON u4.id = c.approve_to_id
+LEFT JOIN (SELECT id, control_data FROM renovation.users) u_cur ON u_cur.id = ${userId}
 LEFT JOIN operation_info o ON o."caseId" = c.id
 LEFT JOIN directions d ON d.id = c.id
 LEFT JOIN connections_from cf ON cf.id = c.id
