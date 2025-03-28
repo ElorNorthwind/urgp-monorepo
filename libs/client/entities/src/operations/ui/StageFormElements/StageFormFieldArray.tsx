@@ -69,7 +69,13 @@ const StageFormFieldArray = ({
         form={form}
         fieldName={'typeId'}
         popoverMinWidth={popoverMinWidth}
-        disabled={isEdit}
+        // disabled={isEdit}
+        filterData={(data) => {
+          if (!isEdit) return data;
+          return data.filter((group) => {
+            return group.items.some((item) => item.value === watchType);
+          });
+        }}
       />
       <div className="flex w-full flex-row gap-4">
         <DateFormField

@@ -4,6 +4,10 @@ import { ClassificatorFormField } from '@urgp/client/widgets';
 import { operationTypeStyles } from '../../operations/config/operationStyles';
 import { Circle } from 'lucide-react';
 import { cn } from '@urgp/client/shared';
+import {
+  ClassificatorInfo,
+  NestedClassificatorInfo,
+} from '@urgp/shared/entities';
 
 type OperationTypeSelectorProps = {
   className?: string;
@@ -15,6 +19,7 @@ type OperationTypeSelectorProps = {
   label?: string | null;
   placeholder?: string;
   dirtyIndicator?: boolean;
+  filterData?: (data: NestedClassificatorInfo[]) => NestedClassificatorInfo[];
 };
 
 const OperationTypeSelector = (
@@ -30,8 +35,10 @@ const OperationTypeSelector = (
     label = 'Тип операции',
     placeholder = 'Выберите тип операции',
     dirtyIndicator = false,
+    filterData,
   } = props;
   const { data, isLoading, isFetching } = useOperationTypes();
+
   return (
     <ClassificatorFormField
       fieldName={fieldName}
@@ -40,7 +47,7 @@ const OperationTypeSelector = (
       placeholder={placeholder}
       disabled={disabled}
       triggerClassName={triggerClassName}
-      classificator={data}
+      classificator={filterData && data ? filterData(data) : data}
       isLoading={isLoading || isFetching}
       className={className}
       popoverMinWidth={popoverMinWidth}

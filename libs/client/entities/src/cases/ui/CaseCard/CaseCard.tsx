@@ -23,15 +23,6 @@ type CaseCardProps = {
 const CaseCard = (props: CaseCardProps): JSX.Element => {
   const { controlCase, onNextCase, onPrevCase } = props;
 
-  const {
-    data: stages,
-    isLoading,
-    isFetching,
-  } = useOperations(
-    { class: OperationClasses.stage, case: controlCase?.id },
-    { skip: !controlCase?.id || controlCase?.id === 0 },
-  );
-
   return (
     <>
       <CaseCardHeader
@@ -43,7 +34,7 @@ const CaseCard = (props: CaseCardProps): JSX.Element => {
       <ScrollArea>
         <Accordion
           type="multiple"
-          className="w-full px-4"
+          className="w-full px-4 pb-4"
           defaultValue={['description', 'stages']}
         >
           <CaseInfoTab controlCase={controlCase} label={null} />
