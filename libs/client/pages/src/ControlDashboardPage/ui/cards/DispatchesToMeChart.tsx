@@ -26,7 +26,15 @@ import { useMemo } from 'react';
 const countDispatchesToMe = (cases?: CaseFull[]) => {
   return (cases || [])
     .filter(
-      (c) => c?.hasControlToMe && c?.approveStatus === ApproveStatus.approved,
+      (c) =>
+        c?.hasControlToMe &&
+        (
+          [
+            ApproveStatus.approved,
+            ApproveStatus.pending,
+            ApproveStatus.project,
+          ] as ApproveStatus[]
+        ).includes(c?.approveStatus),
     )
     .reduce(
       (prev, cur) => {
