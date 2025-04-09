@@ -28,6 +28,7 @@ const countDispatchesToMe = (cases?: CaseFull[]) => {
     .filter(
       (c) =>
         c?.hasControlToMe &&
+        c?.status?.category !== 'рассмотрено' &&
         (
           [
             ApproveStatus.approved,
