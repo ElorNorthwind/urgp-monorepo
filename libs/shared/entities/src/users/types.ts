@@ -24,6 +24,7 @@ export type UserAccessTokenInfo = {
   id: number;
   login: string;
   roles: string[];
+  controlData: UserControlData;
   iat: number;
   exp: number;
 };

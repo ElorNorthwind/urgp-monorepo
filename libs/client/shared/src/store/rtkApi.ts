@@ -7,44 +7,11 @@ import {
   operationClassesValues,
   User,
 } from '@urgp/shared/entities';
-// import type { BaseQueryFn } from '@reduxjs/toolkit/query';
-// import axios from 'axios';
-// import type { AxiosRequestConfig, AxiosError } from 'axios';
+import { RootState } from './store';
 
-// const axiosBaseQuery =
-//   (
-//     { baseUrl }: { baseUrl: string } = { baseUrl: '' },
-//   ): BaseQueryFn<
-//     {
-//       url: string;
-//       method?: AxiosRequestConfig['method'];
-//       data?: AxiosRequestConfig['data'];
-//       params?: AxiosRequestConfig['params'];
-//       headers?: AxiosRequestConfig['headers'];
-//     },
-//     unknown,
-//     unknown
-//   > =>
-//   async ({ url, method, data, params, headers }) => {
-//     try {
-//       const result = await axios({
-//         url: baseUrl + url,
-//         method,
-//         data,
-//         params,
-//         headers,
-//       });
-//       return { data: result.data };
-//     } catch (axiosError) {
-//       const err = axiosError as AxiosError;
-//       return {
-//         error: {
-//           status: err.response?.status,
-//           data: err.response?.data || err.message,
-//         },
-//       };
-//     }
-//   };
+// const result = dispatch(
+//   casesApi.endpoints.getCaseByOperationId.initiate(opId),
+// );
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
@@ -52,16 +19,25 @@ const baseQuery = fetchBaseQuery({
 });
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
-  let result = await baseQuery(args, api, extraOptions);
+  const state = api.getState() as RootState;
+  const poseUser = state.auth.poseAsUser;
+
+  let result = await baseQuery(
+    { ...args, headers: { 'pose-user-id': poseUser?.id?.toString() } },
+    api,
+    extraOptions,
+  );
 
   if (result?.error?.status === 403) {
-    // console.log('sending refresh token');
     // send refresh token to get new access token
     const refreshResult = await baseQuery('/auth/refresh', api, extraOptions);
-    // console.log(refreshResult);
     if (refreshResult?.data) {
       api.dispatch(setUser(refreshResult.data as User));
-      result = await baseQuery(args, api, extraOptions);
+      result = await baseQuery(
+        { ...args, headers: { 'pose-user-id': poseUser?.id?.toString() } },
+        api,
+        extraOptions,
+      );
     } else {
       api.dispatch(clearUser());
     }

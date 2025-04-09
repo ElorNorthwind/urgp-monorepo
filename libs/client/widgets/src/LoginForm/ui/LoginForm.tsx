@@ -85,16 +85,18 @@ const LoginForm = ({ className }: LoginMenuProps): JSX.Element => {
           <Button type="submit" className="w-full" disabled={isLoading}>
             Вход
           </Button>
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={(e) => {
-              e.preventDefault();
-              onSetGuest();
-            }}
-          >
-            Войти как гость
-          </Button>
+          {(!redirect || !redirect.includes('/control')) && (
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={(e) => {
+                e.preventDefault();
+                onSetGuest();
+              }}
+            >
+              Войти как гость
+            </Button>
+          )}
           <div className="text-red-500">
             {isError && 'Неверный логин или пароль'}
           </div>

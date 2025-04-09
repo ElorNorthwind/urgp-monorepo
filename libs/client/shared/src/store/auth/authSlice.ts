@@ -5,6 +5,7 @@ import { lsKeys } from '../../config/localStorageKeys';
 
 type UserState = {
   user: User | null;
+  poseAsUser: User | null;
 };
 
 export const guestUser = {
@@ -25,8 +26,12 @@ export const guestUser = {
 const initialUser =
   JSON.parse(localStorage.getItem(lsKeys.USER_KEY)) || guestUser;
 
+const initialPoseUser =
+  JSON.parse(localStorage.getItem(lsKeys.POSE_USER_KEY)) || null;
+
 export const initialUserState: UserState = {
   user: initialUser,
+  poseAsUser: { ...initialUser, id: 60 }, //initialPoseUser,
 };
 
 const authSlice = createSlice({
@@ -41,12 +46,21 @@ const authSlice = createSlice({
       localStorage.removeItem(lsKeys.USER_KEY);
       state.user = guestUser;
     },
+    setPoseUser: (state, { payload }: PayloadAction<User>) => {
+      localStorage.setItem(lsKeys.POSE_USER_KEY, JSON.stringify(payload));
+      state.user = payload;
+    },
+    clearPoseUser: (state) => {
+      localStorage.removeItem(lsKeys.POSE_USER_KEY);
+      state.user = guestUser;
+    },
   },
 
   //   extraReducers: {},
 });
 
-export const { setUser, clearUser } = authSlice.actions;
+export const { setUser, clearUser, setPoseUser, clearPoseUser } =
+  authSlice.actions;
 export const selectCurrentUser = (state: RootState) => state.auth.user;
 export const selectUserApproveTo = (state: RootState) =>
   state.auth.user.controlData?.approveTo;

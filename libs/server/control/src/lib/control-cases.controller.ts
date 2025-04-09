@@ -121,7 +121,11 @@ export class ControlCasesController {
   ) {
     const i = defineControlAbilityFor(req.user);
     if (dto?.visibility === 'all' && i.cannot('read-all', 'Case'))
-      throw new UnauthorizedException('Нет прав на чтение скрытых дел');
+      return this.controlCases.readCases(
+        { ...dto, visibility: 'visible' },
+        req.user.id,
+      );
+    // throw new UnauthorizedException('Нет прав на чтение скрытых дел');
     return this.controlCases.readCases(dto, req.user.id);
   }
 
