@@ -1,7 +1,15 @@
 import { useNavigate } from '@tanstack/react-router';
 import { useLastUpdatedDate, useTotalDeviations } from '@urgp/client/entities';
 import { DashboardNumberCard, ResetCacheButton } from '@urgp/client/features';
-import { cn, selectCurrentUser, Separator } from '@urgp/client/shared';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  cn,
+  selectCurrentUser,
+  Separator,
+} from '@urgp/client/shared';
 import {
   CurrentYearApartmentsSankeyChart,
   CurrentYearSankeyChart,
@@ -17,6 +25,7 @@ import {
 import { formatDate } from 'date-fns';
 import { de } from 'date-fns/locale';
 import {
+  AreaChart,
   CircleAlert,
   CircleCheck,
   CircleEllipsis,
@@ -165,20 +174,34 @@ const RenovationDashboardPage = (): JSX.Element => {
           <StartAndFinishTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
           <StartTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
 
-          <DoneByYearChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
-          <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
+          {user && user.id !== 0 && (
+            <Accordion type="multiple" className="col-span-full">
+              <AccordionItem value="extra-charts">
+                <AccordionTrigger className="text-2xl font-bold tracking-tight hover:no-underline">
+                  <div className="flex items-start gap-2">
+                    <AreaChart className="ml-2 size-8 flex-shrink-0" />
+                    <span>Дополнительные графики</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="grid w-full grid-cols-3 gap-6 lg:grid-cols-5">
+                  <DoneByYearChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
+                  <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
 
-          {user &&
-            (user.roles.includes('admin') ||
-              user.roles.includes('editor') ||
-              user.roles.includes('boss')) && (
-              <>
-                <MonthlyProgressTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
-                <MonthlyDoneTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
-                <CurrentYearSankeyChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
-                {/* <CurrentYearApartmentsSankeyChart className="col-span-3 lg:col-span-5 xl:col-span-3" /> */}
-              </>
-            )}
+                  {user &&
+                    (user.roles.includes('admin') ||
+                      user.roles.includes('editor') ||
+                      user.roles.includes('boss')) && (
+                      <>
+                        <MonthlyProgressTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
+                        <MonthlyDoneTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
+                        <CurrentYearSankeyChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
+                        {/* <CurrentYearApartmentsSankeyChart className="col-span-3 lg:col-span-5 xl:col-span-3" /> */}
+                      </>
+                    )}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
         </div>
       </div>
     </div>
