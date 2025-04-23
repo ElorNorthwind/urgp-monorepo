@@ -4,7 +4,7 @@ import { RootState } from '../store';
 import { lsKeys } from '../../config/localStorageKeys';
 
 type UserState = {
-  user: User | null;
+  user: (User | null) & { realUser?: User };
   poseAsUser: User | null;
 };
 
@@ -31,7 +31,7 @@ const initialPoseUser =
 
 export const initialUserState: UserState = {
   user: initialUser,
-  poseAsUser: { ...initialUser, id: 60 }, //initialPoseUser,
+  poseAsUser: initialPoseUser, // { ...initialUser, id: 60, fio: 'Позер' }, // initialPoseUser,
 };
 
 const authSlice = createSlice({
@@ -61,7 +61,12 @@ const authSlice = createSlice({
 
 export const { setUser, clearUser, setPoseUser, clearPoseUser } =
   authSlice.actions;
-export const selectCurrentUser = (state: RootState) => state.auth.user;
+export const selectCurrentUser = (state: RootState) =>
+  state.auth?.poseAsUser
+    ? { ...state.auth.poseAsUser, realUser: state.auth.user }
+    : state.auth.user;
 export const selectUserApproveTo = (state: RootState) =>
-  state.auth.user.controlData?.approveTo;
+  state.auth?.poseAsUser
+    ? { ...state.auth.poseAsUser?.controlData?.approveTo }
+    : state.auth.user.controlData?.approveTo;
 export default authSlice.reducer;

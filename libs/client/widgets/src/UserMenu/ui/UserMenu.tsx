@@ -16,6 +16,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  useAuth,
   useLogoutMutation,
 } from '@urgp/client/shared';
 import { CircleUser, KeyRound, LogOut, PenLine, User } from 'lucide-react';
@@ -29,7 +30,7 @@ const UserMenu = ({ className }: UserMenuProps): JSX.Element => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
-  const user = selectCurrentUser(store.getState());
+  const user = useAuth(); //selectCurrentUser(store.getState());
 
   return (
     <DropdownMenu>

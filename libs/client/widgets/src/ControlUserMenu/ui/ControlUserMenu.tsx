@@ -17,6 +17,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  useAuth,
   useIsMobile,
   useLogoutMutation,
 } from '@urgp/client/shared';
@@ -31,14 +32,14 @@ const ControlUserMenu = ({ className }: ControlUserMenuProps): JSX.Element => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
-  const user = selectCurrentUser(store.getState());
+  const user = useAuth(); //selectCurrentUser(store.getState());
   const isMobile = useIsMobile();
   const router = useRouterState();
 
   if (isMobile) {
     return (
       <>
-        {!user || user?.fio === 'Гость' ? (
+        {!user || user?.id === 0 ? (
           <Link
             to="/login"
             className={cn(
@@ -57,6 +58,11 @@ const ControlUserMenu = ({ className }: ControlUserMenuProps): JSX.Element => {
         ) : (
           <>
             <span className="mb-2 text-lg font-bold">{user.fio}</span>
+            {user?.realUser?.fio && (
+              <span className="text-muted-foreground -mt-2 mb-2 font-thin">
+                {user?.realUser?.fio}
+              </span>
+            )}
             <Link
               to="/control/settings"
               className={cn(
@@ -118,9 +124,16 @@ const ControlUserMenu = ({ className }: ControlUserMenuProps): JSX.Element => {
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent className="mx-4">
-          <DropdownMenuLabel>{user?.fio || 'Гость'}</DropdownMenuLabel>
+          <DropdownMenuLabel className="flex flex-col gap-1">
+            <span>{user?.fio || 'Гость'}</span>
+            {user?.realUser?.fio && (
+              <span className="text-muted-foreground font-thin">
+                {'(' + user?.realUser?.fio + ')'}
+              </span>
+            )}
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {!user || user?.fio === 'Гость' ? (
+          {!user || user?.id === 0 ? (
             <DropdownMenuItem
               onSelect={() =>
                 navigate({
