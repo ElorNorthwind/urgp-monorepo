@@ -13,8 +13,16 @@ export const emptyFormValues = {
 export const RdTypeOptions = [
   { value: RdType.PremiseToResidential, label: 'Перевод помещения в жилье' },
   {
+    value: RdType.PremiseToResidentialGu,
+    label: 'Перевод помещения в жилье (ГУ)',
+  },
+  {
     value: RdType.PremiseToNonResidential,
     label: 'Перевод помещения в нежилье',
+  },
+  {
+    value: RdType.PremiseToNonResidentialGu,
+    label: 'Перевод помещения в нежилье (ГУ)',
   },
   { value: RdType.BuildingToNonResidential, label: 'Перевод здания в нежилое' },
 ];

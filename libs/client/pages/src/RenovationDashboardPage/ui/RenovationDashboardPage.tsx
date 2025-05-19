@@ -172,7 +172,9 @@ const RenovationDashboardPage = (): JSX.Element => {
           <OkrugTotalDeviationsChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
 
           <StartAndFinishTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
-          <StartTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
+          <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
+
+          <StartTimelineChart className="col-span-full" />
 
           {user && user.id !== 0 && (
             <Accordion type="multiple" className="col-span-full">
@@ -184,8 +186,7 @@ const RenovationDashboardPage = (): JSX.Element => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="grid w-full grid-cols-3 gap-6 lg:grid-cols-5">
-                  <DoneByYearChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
-                  <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
+                  <DoneByYearChart className="col-span-full" />
 
                   {user &&
                     (user.roles.includes('admin') ||
