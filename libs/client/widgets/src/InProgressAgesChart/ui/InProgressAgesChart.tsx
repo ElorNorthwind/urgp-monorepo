@@ -27,14 +27,14 @@ const inProgressAgeChartConfig = {
     label: 'Имеются риски',
     color: 'hsl(var(--chart-1))', // '#f43f5e',
   },
-  warning: {
-    label: 'Требуют внимания',
-    color: 'hsl(var(--chart-4))', // '#f59e0b',
-  },
-  none: {
-    label: 'В работе по плану',
-    color: 'hsl(var(--chart-3))', // '#06b6d4',
-  },
+  // warning: {
+  //   label: 'Требуют внимания',
+  //   color: 'hsl(var(--chart-4))', // '#f59e0b',
+  // },
+  // none: {
+  //   label: 'В работе по плану',
+  //   color: 'hsl(var(--chart-3))', // '#06b6d4',
+  // },
 } satisfies ChartConfig;
 
 type inProgressAgesChartProps = {
@@ -58,10 +58,10 @@ const InProgressAgesChart = ({
           </div>
         ) : (
           <CardTitle className="flex flex-row items-center justify-between">
-            <span>Сроки по домам в работе</span>
-            <Button
+            <span>Сроки работы по домам с рисками</span>
+            {/* <Button
               variant={'ghost'}
-              className="h-6 py-0 px-1"
+              className="h-6 px-1 py-0"
               onClick={() => setOnlyFull((value) => !value)}
             >
               <span
@@ -80,7 +80,7 @@ const InProgressAgesChart = ({
                   </>
                 )}
               </span>
-            </Button>
+            </Button> */}
           </CardTitle>
         )}
         {isLoading || isFetching ? (
@@ -151,11 +151,12 @@ const InProgressAgesChart = ({
                     to: './oldbuildings',
                     search: {
                       relocationAge: [data.age],
+                      deviation: 'Наступили риски',
                     },
                   });
                 },
               })}
-              <ChartLegend content={<ChartLegendContent />} />
+              {/* <ChartLegend content={<ChartLegendContent />} /> */}
             </BarChart>
           </ChartContainer>
         )}

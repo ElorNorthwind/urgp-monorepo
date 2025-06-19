@@ -186,7 +186,7 @@ const RenovationDashboardPage = (): JSX.Element => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="grid w-full grid-cols-3 gap-6 lg:grid-cols-5">
-                  <DoneByYearChart className="col-span-full" />
+                  {/* <DoneByYearChart className="col-span-full" /> */}
 
                   {user &&
                     (user.roles.includes('admin') ||
@@ -195,7 +195,7 @@ const RenovationDashboardPage = (): JSX.Element => {
                       <>
                         <MonthlyProgressTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
                         <MonthlyDoneTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
-                        <CurrentYearSankeyChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
+                        {/* <CurrentYearSankeyChart className="col-span-3 lg:col-span-5 xl:col-span-5" /> */}
                         {/* <CurrentYearApartmentsSankeyChart className="col-span-3 lg:col-span-5 xl:col-span-3" /> */}
                       </>
                     )}
