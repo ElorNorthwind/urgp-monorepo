@@ -156,8 +156,14 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 		op."typeId" as "lastOperationTypeId",
 		op."typeName" as "lastOperationTypeName",
 		op.date as "lastOperationDate",
-		op."hasDoubleSell",
-		op."hasDefects",
+		
+		ARRAY_REMOVE(
+			ARRAY[
+				  CASE WHEN o.is_identified IS DISTINCT FROM TRUE THEN 'unidentified' ELSE null END
+				, CASE WHEN op."hasDoubleSell" THEN 'double-sell' ELSE null END
+				, CASE WHEN op."hasDefects" THEN 'defects' ELSE null END
+			]
+		, null) as problems,
 		
         b.unom,
         o.unkv,
