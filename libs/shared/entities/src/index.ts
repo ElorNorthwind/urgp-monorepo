@@ -46,3 +46,8 @@ export * from './rdXml/types';
 export * from './equityObjects/config';
 export * from './equityObjects/types';
 export * from './equityObjects/dto';
+
+export * from './equityClaims/config';
+export * from './equityClaims/types';
+
+export * from './equityOperations/types';

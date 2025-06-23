@@ -71,5 +71,4 @@ export const equityObjectSchema = z.object({
   egrnTitleDate: z.string().datetime().nullable().default(null), // ISO 8601 date string // Title registration date
   egrnHolderName: z.string().nullable(), // Current title holder
 });
-
 export type EquityObject = z.infer<typeof equityObjectSchema>;
