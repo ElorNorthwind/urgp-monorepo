@@ -6,13 +6,11 @@ CREATE OR REPLACE VIEW equity.claims_full_view  AS
         SELECT
             c.id,
             c.object_id,
-            c.claim_item_type_id,
-            it.name as claim_item_type_name,
-            c.claim_source_type_id,
-            s.name as claim_source_name,
-
-            s.priority,
-            MAX(s.priority) OVER (PARTITION BY c.object_id) as max_priority,
+	   		to_jsonb(it) as "claimItemType",
+	   		to_jsonb(so) as "claimSourceType",
+	   
+			so.priority,   
+            MAX(so.priority) OVER (PARTITION BY c.object_id) as max_priority,
             c.claim_status,
 
             c.claim_registry_date,
@@ -48,18 +46,17 @@ CREATE OR REPLACE VIEW equity.claims_full_view  AS
             c.notes,
             c.identification_notes
         FROM equity.claims c
-            LEFT JOIN equity.claim_source_types s ON s.id = c.claim_source_type_id
-            LEFT JOIN equity.claim_item_types it ON it.id = c.claim_item_type_id
+            LEFT JOIN (SELECT id, name, priority FROM equity.claim_source_types) so ON so.id = c.claim_source_type_id
+            LEFT JOIN (SELECT id, name FROM equity.claim_item_types) it ON it.id = c.claim_item_type_id
     )
     SELECT 
         c.id,
         c.object_id as "objectId",
         c.max_priority = c.priority AND c.claim_status = 'active' as "isRelevant",
-        c.claim_item_type_id as "claimItemTypeId",
-        c.claim_item_type_name as "claimItemTypeName",
-        c.claim_source_type_id as "claimSourceName",
-        c.claim_status as "claimStatus",
-        
+		c.claim_status as "claimStatus",
+        c."claimItemType",
+		c."claimSourceType",
+
         c.claim_registry_date as "claimRegistryDate",
         c.claim_registry_num as "claimRegistryNum",
         c.creditor_registry_num as "creditorRegistryNum",
@@ -101,7 +98,7 @@ ALTER TABLE equity.claims_full_view
 DROP VIEW IF EXISTS equity.objects_full_view CASCADE;
 CREATE OR REPLACE VIEW equity.objects_full_view AS
     ---------------------------------------------------------------------
-    WITH relevant_claims AS (
+     WITH relevant_claims AS (
         SELECT 
             c."objectId",
             COUNT(*) as "claimsCount",
@@ -135,28 +132,39 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 				LEFT JOIN equity.operation_types t ON t.id = o.type_id
 		) op
 		WHERE op.row_num = 1
+	), buildings_full AS (
+		SELECT
+			b.id,
+			c.id as "complexId",
+			c.name as "complexName",
+			c.developer,
+			b.unom,
+			b.cad_num as "cadNum",
+			b.address_short as "addressShort",
+			b.address_full as "addressFull",
+			b.address_construction as "addressConstruction"
+		FROM equity.buildings b
+		LEFT JOIN equity.complexes c ON b.complex_id = c.id
 	)
     SELECT
         o.id,
-        com.developer,
-        com.name as complex,
-        o.building_id as "buildingId",
-        b.address_short as building,
-        o.object_type_id as "objectTypeId",
-        ot.name as "objectType",
-        o.is_identified as "isIdentified",
-		s.id as "statusId",
-		s.name as "statusName",
+		o.is_identified as "isIdentified",
+		to_jsonb(b) as building,	
+		to_jsonb(ot) as "objectType",
+		to_jsonb(s) as status,	
+		
         o.cad_num as "cadNum",
         o.num,
         c."claimsCount",
         c.notes as "identificationNotes",
         c.creditor,
-		
-		op."typeId" as "lastOperationTypeId",
-		op."typeName" as "lastOperationTypeName",
-		op.date as "lastOperationDate",
-		
+		CASE WHEN op.id IS NULL THEN NULL 
+		ELSE jsonb_build_object(
+			'id', op.id,
+			'typeId', op."typeId",
+			'typeName', op."typeName",
+			'date', op.date
+		) END as "lastOperation",	
 		ARRAY_REMOVE(
 			ARRAY[
 				  CASE WHEN o.is_identified IS DISTINCT FROM TRUE THEN 'unidentified' ELSE null END
@@ -175,12 +183,11 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
         o.egrn_title_date as "egrnTitleDate",
         o.egrn_holder_name as "egrnHolderName"
     FROM equity.objects o
-        LEFT JOIN equity.object_types ot ON ot.id = o.object_type_id
-        LEFT JOIN equity.buildings b ON o.building_id = b.id
-        LEFT JOIN equity.complexes com ON com.id = b.complex_id
+        LEFT JOIN (SELECT id, name FROM equity.object_types) ot ON ot.id = o.object_type_id
+        LEFT JOIN buildings_full b ON o.building_id = b.id
         LEFT JOIN relevant_claims c ON c."objectId" = o.id
 		LEFT JOIN last_operation op ON op."objectId" = o.id
-		LEFT JOIN equity.object_status_types s ON s.id =
+		LEFT JOIN (SELECT id, name FROM equity.object_status_types) s ON s.id =
 			CASE
 				WHEN o.egrn_status = ANY(ARRAY['Москва', 'город Москва (ОУ Жилищника)']) THEN 5
 				WHEN o.is_identified = FALSE THEN 6
