@@ -1,3 +1,4 @@
+// ИС Дашборд Реновации
 export * from './oldApartments/dto';
 export * from './oldApartments/types';
 
@@ -28,6 +29,7 @@ export * from './operations/config';
 
 export * from './users/ability';
 
+// Разбиралка адресов
 export * from './addressSessions/config';
 export * from './addressSessions/types';
 export * from './addressSessions/dto';
@@ -37,4 +39,10 @@ export * from './addressResults/config';
 export * from './addressResults/types';
 export * from './addressResults/dto';
 
+// XML парсер
 export * from './rdXml/types';
+
+// Дольщики
+export * from './equityObjects/config';
+export * from './equityObjects/types';
+export * from './equityObjects/dto';
