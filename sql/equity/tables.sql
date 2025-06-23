@@ -279,5 +279,6 @@ CREATE TABLE equity.operations
 CREATE INDEX idx_operations_object_id ON equity.operations USING btree (object_id);
 CREATE INDEX idx_operations_claim_id ON equity.operations USING btree (claim_id);
 CREATE INDEX idx_operations_type_id ON equity.operations USING btree (type_id);
+CREATE INDEX idx_operations_sort_order ON equity.operations USING btree (object_id, date NULLS LAST, created_at NULLS LAST, id DESC);
 ALTER TABLE equity.operations
     OWNER to renovation_user;

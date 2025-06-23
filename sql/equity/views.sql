@@ -192,3 +192,37 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
     ---------------------------------------------------------------------
 ALTER TABLE equity.objects_full_view
     OWNER TO renovation_user;
+
+
+
+-- Операции
+DROP VIEW IF EXISTS equity.operations_full_view CASCADE;
+CREATE OR REPLACE VIEW equity.operations_full_view AS
+    ---------------------------------------------------------------------
+    WITH user_info AS (SELECT id, fio, control_settings->>'department' as department FROM renovation.users),
+        op_type_info AS (SELECT id, name, priority FROM equity.operation_types)
+    SELECT 
+        o.id,
+        o.object_id as "objectId",
+        o.claim_id as "claimId",
+        to_jsonb(t) as type,
+        COALESCE(o.date, o.created_at, NOW()) as date,
+        o.source,
+        o.notes,
+        o.number,
+        o.result,
+        
+        o.created_at as "createdAt",
+        to_jsonb(u1) as "createdBy",
+        o.updated_at as "updatedAt",
+        to_jsonb(u2) as "updatedBy"
+
+    FROM equity.operations o
+        LEFT JOIN op_type_info t ON t.id = o.type_id
+        LEFT JOIN user_info u1 ON u1.id = o.created_by_id
+        LEFT JOIN user_info u2 ON u2.id = o.updated_by_id
+    -- WHERE o.object_id = 35436
+    ORDER BY o.object_id, o.date NULLS LAST, o.created_at NULLS LAST, o.id DESC;
+    ---------------------------------------------------------------------
+ALTER TABLE equity.operations_full_view
+    OWNER TO renovation_user;

@@ -8,6 +8,7 @@ import { ControlCasesRepository } from './control-cases';
 import { ControlOperationsRepository } from './control-operations';
 import { ControlClassificatorsRepository } from './control-classificators';
 import { AddressRepository } from './address';
+import { EquityRepository } from './equity';
 
 // Database Interface Extensions:
 interface DbExtensions {
@@ -21,6 +22,7 @@ interface DbExtensions {
   controlOperations: ControlOperationsRepository;
   controlClassificators: ControlClassificatorsRepository;
   address: AddressRepository;
+  equity: EquityRepository;
 }
 
 export {
@@ -32,4 +34,8 @@ export {
   RenovationRepository,
   RenovationUsersRepository,
   ControlCasesRepository,
+  ControlOperationsRepository,
+  ControlClassificatorsRepository,
+  AddressRepository,
+  EquityRepository,
 };
