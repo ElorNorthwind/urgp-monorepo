@@ -2,37 +2,23 @@ import { Row } from '@tanstack/react-table';
 
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
-  CaseCard,
-  caseGlobalFilterFn,
   equityObjectsColumns,
   equityObjectsGlobalFilterFn,
-  incidentsTableColumns,
-  useCases,
   useEquityObjects,
 } from '@urgp/client/entities';
 import {
   cn,
   NAVBAR_WIDTH,
   selectEquityObjectTableColumns,
-  selectIncidentTableColumns,
   SidebarInset,
   TooltipProvider,
-  useUserAbility,
   VirtualDataTable,
 } from '@urgp/client/shared';
 import {
-  CaseFilterSidebar,
   ControlSidePanel,
   EquityObjectsFilterSidebar,
-  SelectedCasesActionBar,
 } from '@urgp/client/widgets';
-import {
-  CaseFull,
-  CasesPageSearchDto,
-  EquityObject,
-  EquityObjectsPageSearch,
-  ViewStatus,
-} from '@urgp/shared/entities';
+import { EquityObject, EquityObjectsPageSearch } from '@urgp/shared/entities';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { EquityObjectsPageHeader } from './EquityObjectsPageHeader';

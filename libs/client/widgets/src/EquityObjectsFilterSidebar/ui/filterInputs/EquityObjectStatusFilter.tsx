@@ -1,47 +1,51 @@
 import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import {
   directionCategoryStyles,
-  useCaseDirectionTypes,
+  equityBuildingStyles,
+  useEquityBuildings,
+  useEquityObjectStatus,
 } from '@urgp/client/entities';
 import { ClassificatorFilter } from '@urgp/client/features';
-import { CaseRoutes, cn } from '@urgp/client/shared';
-import { CasesPageSearchDto } from '@urgp/shared/entities';
+import { cn, EquityRoutes } from '@urgp/client/shared';
+import { EquityObjectsPageSearch } from '@urgp/shared/entities';
 
-type DirectionsFilterProps = {
+type EquityObjectStatusFilterProps = {
   variant?: 'popover' | 'checkbox' | 'accordion';
   className?: string;
   accordionItemValue?: string;
 };
 
-const DirectionsFilter = (props: DirectionsFilterProps): JSX.Element => {
+const EquityObjectStatusFilter = (
+  props: EquityObjectStatusFilterProps,
+): JSX.Element => {
   const {
     className,
     variant = 'accordion',
-    accordionItemValue = 'directions',
+    accordionItemValue = 'status',
   } = props;
-  const pathname = useLocation().pathname as CaseRoutes;
+  const pathname = useLocation().pathname as EquityRoutes;
 
   const navigate = useNavigate({ from: pathname });
-  const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
-  const { data, isLoading, isFetching } = useCaseDirectionTypes();
+  const search = getRouteApi(pathname).useSearch() as EquityObjectsPageSearch;
+  const { data, isLoading, isFetching } = useEquityObjectStatus();
 
   return (
     <ClassificatorFilter
       accordionItemValue={accordionItemValue}
-      label="Направления"
+      label="Статусы"
       className={cn('w-full', className)}
       variant={variant}
       isLoading={isLoading || isFetching}
       options={data || []}
-      categoryStyles={directionCategoryStyles}
-      selectedValues={search.direction}
+      categoryStyles={equityBuildingStyles}
+      selectedValues={search.status}
       iconClassName="size-3"
       shortBadge
       setSelectedValues={(values) =>
         navigate({
           search: {
             ...search,
-            direction: values.length > 0 ? values : undefined,
+            status: values.length > 0 ? values : undefined,
           },
         })
       }
@@ -49,4 +53,4 @@ const DirectionsFilter = (props: DirectionsFilterProps): JSX.Element => {
   );
 };
 
-export { DirectionsFilter };
+export { EquityObjectStatusFilter };

@@ -15,6 +15,9 @@ import { ChevronLeft } from 'lucide-react';
 import { useLocation } from '@tanstack/react-router';
 import { EquityResetFilter } from './filterInputs/EquityResetFilter';
 import { EquityQueryFilter } from './filterInputs/EquityQueryFilter';
+import { EquityBuildingsFilter } from './filterInputs/EquityBuildingsFilter';
+import { EquityObjectStatusFilter } from './filterInputs/EquityObjectStatusFilter';
+import { EquityObjectTypeFilter } from './filterInputs/EquityObjectTypesFilter';
 
 type EquityObjectsFilterSidebarProps = {
   side?: 'left' | 'right';
@@ -52,23 +55,12 @@ const EquityObjectsFilterSidebar = (
             {/* <AuthorFilter className="h-8 flex-shrink-0" />
             <DueDateFilter className="flex-shrink-0" />
             <RelevantFilter className="h-8 flex-shrink-0" />
-            <FromMeFilter className="h-8 flex-shrink-0" />
-            <Accordion
-              type="multiple"
-              defaultValue={
-                pathname === '/control/pending' ? ['action'] : ['departments']
-              }
-            >
-              <DepartmentsFilter variant="accordion" />
-              <ControlToMeFilter variant="accordion" />
-              <PendingActionsFilter variant="accordion" />
-              <StatusFilter variant="accordion" />
-              <DirectionsFilter variant="accordion" />
-              {pathname !== '/control/problems' && (
-                <CaseTypesFilter variant="accordion" />
-              )}
-              <ViewStatusFilter variant="accordion" />
-            </Accordion> */}
+            <FromMeFilter className="h-8 flex-shrink-0" /> */}
+            <Accordion type="multiple" defaultValue={['status']}>
+              <EquityObjectStatusFilter variant="accordion" />
+              <EquityObjectTypeFilter variant="accordion" />
+              <EquityBuildingsFilter variant="accordion" />
+            </Accordion>
           </div>
         </ScrollArea>
       </SidebarContent>

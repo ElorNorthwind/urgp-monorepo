@@ -10,6 +10,7 @@ import {
   EquityClaim,
   EquityObject,
   EquityOperation,
+  NestedClassificatorInfo,
 } from '@urgp/shared/entities';
 
 import { EquityService } from './equity.service';
@@ -43,5 +44,25 @@ export class EquityController {
     @Param('id', ParseIntPipe) objectId: number,
   ): Promise<EquityOperation[]> {
     return this.equity.getOperationsByObjectId(objectId);
+  }
+
+  @Get('/classificators/buildings')
+  async getBuildingsClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.equity.getBuildingsClassificator();
+  }
+
+  @Get('/classificators/object-status')
+  async getObjectStatusClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.equity.getObjectStatusClassificator();
+  }
+
+  @Get('/classificators/object-type')
+  async getObjectTypeClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.equity.getObjectTypeClassificator();
+  }
+
+  @Get('/classificators/operation-type')
+  async getOperationTypeClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.equity.getOperationTypeClassificator();
   }
 }

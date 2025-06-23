@@ -12,3 +12,4 @@ export * from './addresses';
 export * from './equityObjects';
 export * from './equityClaims';
 export * from './equityOperations';
+export * from './equityClassificators';

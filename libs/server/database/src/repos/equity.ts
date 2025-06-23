@@ -2,8 +2,10 @@ import {
   EquityClaim,
   EquityObject,
   EquityOperation,
+  NestedClassificatorInfo,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
+import { equityClassificators } from './sql/sql';
 
 // @Injectable()
 export class EquityRepository {
@@ -32,5 +34,21 @@ export class EquityRepository {
     const sql =
       'SELECT * FROM equity.operations_full_view WHERE "objectId" = $1';
     return this.db.any(sql, [objectId]);
+  }
+
+  getBuildingsClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.db.any(equityClassificators.readBuildingsClassificator);
+  }
+
+  getObjectStatusClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.db.any(equityClassificators.readObjectStatusClassificator);
+  }
+
+  getObjectTypeClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.db.any(equityClassificators.readObjectTypeClassificator);
+  }
+
+  getOperationTypeClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.db.any(equityClassificators.readOperationTypeClassificator);
   }
 }

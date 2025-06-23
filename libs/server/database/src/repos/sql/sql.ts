@@ -166,3 +166,18 @@ export const rates = {
   getDailyUsage: sql('sql/address/rates/getDailyUsage.sql'),
   insertSpendRates: sql('sql/address/rates/insertSpendRates.sql'),
 };
+
+export const equityClassificators = {
+  readBuildingsClassificator: sql(
+    'sql/equity/classificators/readBuildingsClassificator.sql',
+  ),
+  readObjectStatusClassificator: sql(
+    'sql/equity/classificators/readObjectStatusClassificator.sql',
+  ),
+  readObjectTypeClassificator: sql(
+    'sql/equity/classificators/readObjectTypeClassificator.sql',
+  ),
+  readOperationTypeClassificator: sql(
+    'sql/equity/classificators/readOperationTypeClassificator.sql',
+  ),
+};

@@ -1,5 +1,8 @@
 import { rtkApi } from '@urgp/client/shared';
-import { EquityOperation } from '@urgp/shared/entities';
+import {
+  EquityOperation,
+  NestedClassificatorInfo,
+} from '@urgp/shared/entities';
 
 export const equityOperationsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({

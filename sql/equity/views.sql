@@ -233,3 +233,5 @@ CREATE OR REPLACE VIEW equity.operations_full_view AS
     ---------------------------------------------------------------------
 ALTER TABLE equity.operations_full_view
     OWNER TO renovation_user;
+
+

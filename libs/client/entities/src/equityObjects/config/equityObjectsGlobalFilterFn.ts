@@ -15,7 +15,7 @@ export function equityObjectsGlobalFilterFn(
   columnId: string,
   filterValue: EquityObjectsPageSearch,
 ): boolean {
-  const { query, status } = filterValue;
+  const { query, status, building, type } = filterValue;
   let allowed = true;
 
   if (
@@ -29,6 +29,18 @@ export function equityObjectsGlobalFilterFn(
       row.original?.cadNum?.toLowerCase().includes(query.toLowerCase())
     )
   ) {
+    allowed = false;
+  }
+
+  if (status && !status.includes(row.original?.status?.id || 0)) {
+    allowed = false;
+  }
+
+  if (building && !building.includes(row.original?.building?.id || 0)) {
+    allowed = false;
+  }
+
+  if (type && !type.includes(row.original?.objectType?.id || 0)) {
     allowed = false;
   }
 

@@ -17,7 +17,8 @@
     "src/**/*.tsx",
     "../entities/src/oldBuildings/ui/DeviationChart.tsx",
     "../entities/src/oldBuildings/ui/OldBuildingsTermsChart.tsx",
-    "../entities/src/oldBuildings/ui/OldBuildingTermsTable.tsx"
+    "../entities/src/oldBuildings/ui/OldBuildingTermsTable.tsx",
+    "src/EquityObjectsFilterSidebar/ui/filterInputs/EquityObjectTypesFiltertsx"
   ],
   "exclude": [
     "vite.config.ts",

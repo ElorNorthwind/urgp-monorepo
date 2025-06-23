@@ -1,0 +1,11 @@
+SELECT     
+	'Статусы объектов' as value,
+    'Статусы объектов' as label,    
+	JSONB_AGG(jsonb_build_object(
+		'value', id,        
+		'label', name,
+        'fullname', name,  
+		'tags', ARRAY[]::text[],
+		'category', 'object_status'
+	)) as items
+FROM equity.object_status_types;

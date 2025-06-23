@@ -26,6 +26,7 @@ export const equityObjectsPageFilterSchema = z
     building: queryNumberArray,
     problems: queryNumberArray,
     status: queryNumberArray,
+    type: queryNumberArray,
   })
   .partial();
 export type EquityObjectsPageFilter = z.infer<

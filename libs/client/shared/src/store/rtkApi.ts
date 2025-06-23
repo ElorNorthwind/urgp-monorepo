@@ -70,5 +70,6 @@ export const rtkApi = createApi({
     'equity-objects',
     'equity-claims',
     'equity-operations',
+    'equity-classificators',
   ],
 });

@@ -71,13 +71,13 @@ module.exports = {
         //   from: '../../libs/server/database/src/repos/sql/equity/operations',
         //   to: join(__dirname, '../../dist/apps/server/sql/equity/operations'),
         // },
-        // {
-        //   from: '../../libs/server/database/src/repos/sql/equity/classificators',
-        //   to: join(
-        //     __dirname,
-        //     '../../dist/apps/server/sql/equity/classificators',
-        //   ),
-        // },
+        {
+          from: '../../libs/server/database/src/repos/sql/equity/classificators',
+          to: join(
+            __dirname,
+            '../../dist/apps/server/sql/equity/classificators',
+          ),
+        },
       ],
     }),
   ],
