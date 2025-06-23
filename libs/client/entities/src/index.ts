@@ -9,3 +9,6 @@ export * from './cases';
 export * from './operations';
 export * from './classificators';
 export * from './addresses';
+export * from './equityObjects';
+export * from './equityClaims';
+export * from './equityOperations';

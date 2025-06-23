@@ -67,5 +67,8 @@ export const rtkApi = createApi({
     'address-session',
     'address-result',
     'old-building-date',
+    'equity-objects',
+    'equity-claims',
+    'equity-operations',
   ],
 });
