@@ -45,7 +45,7 @@ const ExportToExcelButton = forwardRef<
           variant={variant}
           disabled={disabled}
           onClick={onClick}
-          className={cn('flex flex-row gap-1', className)}
+          className={cn('flex flex-shrink-0 flex-row gap-1', className)}
         >
           <FileSpreadsheet className="size-5 flex-shrink-0" />
         </Button>

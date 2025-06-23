@@ -17,10 +17,12 @@ import { Route as OldbuildingsImport } from './routes/oldbuildings'
 import { Route as LoginImport } from './routes/login'
 import { Route as XmlRouteImport } from './routes/xml/route'
 import { Route as RenovationRouteImport } from './routes/renovation/route'
+import { Route as EquityRouteImport } from './routes/equity/route'
 import { Route as ControlRouteImport } from './routes/control/route'
 import { Route as AddressRouteImport } from './routes/address/route'
 import { Route as XmlIndexImport } from './routes/xml/index'
 import { Route as RenovationIndexImport } from './routes/renovation/index'
+import { Route as EquityIndexImport } from './routes/equity/index'
 import { Route as ControlIndexImport } from './routes/control/index'
 import { Route as AddressIndexImport } from './routes/address/index'
 import { Route as RenovationStagesImport } from './routes/renovation/stages'
@@ -29,6 +31,7 @@ import { Route as RenovationOldbuildingsImport } from './routes/renovation/oldbu
 import { Route as RenovationOldapartmentsImport } from './routes/renovation/oldapartments'
 import { Route as RenovationMessagesImport } from './routes/renovation/messages'
 import { Route as RenovationBuildingRelocationMapImport } from './routes/renovation/building-relocation-map'
+import { Route as EquityObjectsImport } from './routes/equity/objects'
 import { Route as ControlProblemsImport } from './routes/control/problems'
 import { Route as ControlPendingImport } from './routes/control/pending'
 import { Route as ControlCasesImport } from './routes/control/cases'
@@ -95,6 +98,12 @@ const RenovationRouteRoute = RenovationRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const EquityRouteRoute = EquityRouteImport.update({
+  id: '/equity',
+  path: '/equity',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ControlRouteRoute = ControlRouteImport.update({
   id: '/control',
   path: '/control',
@@ -123,6 +132,12 @@ const RenovationIndexRoute = RenovationIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => RenovationRouteRoute,
+} as any)
+
+const EquityIndexRoute = EquityIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EquityRouteRoute,
 } as any)
 
 const ControlIndexRoute = ControlIndexImport.update({
@@ -180,6 +195,12 @@ const RenovationBuildingRelocationMapRoute =
       (d) => d.Route,
     ),
   )
+
+const EquityObjectsRoute = EquityObjectsImport.update({
+  id: '/objects',
+  path: '/objects',
+  getParentRoute: () => EquityRouteRoute,
+} as any)
 
 const ControlProblemsRoute = ControlProblemsImport.update({
   id: '/problems',
@@ -294,6 +315,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ControlRouteImport
       parentRoute: typeof rootRoute
     }
+    '/equity': {
+      id: '/equity'
+      path: '/equity'
+      fullPath: '/equity'
+      preLoaderRoute: typeof EquityRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/renovation': {
       id: '/renovation'
       path: '/renovation'
@@ -392,6 +420,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ControlProblemsImport
       parentRoute: typeof ControlRouteImport
     }
+    '/equity/objects': {
+      id: '/equity/objects'
+      path: '/objects'
+      fullPath: '/equity/objects'
+      preLoaderRoute: typeof EquityObjectsImport
+      parentRoute: typeof EquityRouteImport
+    }
     '/renovation/building-relocation-map': {
       id: '/renovation/building-relocation-map'
       path: '/building-relocation-map'
@@ -447,6 +482,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/control/'
       preLoaderRoute: typeof ControlIndexImport
       parentRoute: typeof ControlRouteImport
+    }
+    '/equity/': {
+      id: '/equity/'
+      path: '/'
+      fullPath: '/equity/'
+      preLoaderRoute: typeof EquityIndexImport
+      parentRoute: typeof EquityRouteImport
     }
     '/renovation/': {
       id: '/renovation/'
@@ -571,6 +613,20 @@ const ControlRouteRouteWithChildren = ControlRouteRoute._addFileChildren(
   ControlRouteRouteChildren,
 )
 
+interface EquityRouteRouteChildren {
+  EquityObjectsRoute: typeof EquityObjectsRoute
+  EquityIndexRoute: typeof EquityIndexRoute
+}
+
+const EquityRouteRouteChildren: EquityRouteRouteChildren = {
+  EquityObjectsRoute: EquityObjectsRoute,
+  EquityIndexRoute: EquityIndexRoute,
+}
+
+const EquityRouteRouteWithChildren = EquityRouteRoute._addFileChildren(
+  EquityRouteRouteChildren,
+)
+
 interface RenovationSettingsRouteRouteChildren {
   RenovationSettingsChangePasswordRoute: typeof RenovationSettingsChangePasswordRoute
   RenovationSettingsIndexRoute: typeof RenovationSettingsIndexRoute
@@ -630,6 +686,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/address': typeof AddressRouteRouteWithChildren
   '/control': typeof ControlRouteRouteWithChildren
+  '/equity': typeof EquityRouteRouteWithChildren
   '/renovation': typeof RenovationRouteRouteWithChildren
   '/xml': typeof XmlRouteRouteWithChildren
   '/login': typeof LoginRoute
@@ -644,6 +701,7 @@ export interface FileRoutesByFullPath {
   '/control/cases': typeof ControlCasesRoute
   '/control/pending': typeof ControlPendingRoute
   '/control/problems': typeof ControlProblemsRoute
+  '/equity/objects': typeof EquityObjectsRoute
   '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
   '/renovation/messages': typeof RenovationMessagesRoute
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
@@ -652,6 +710,7 @@ export interface FileRoutesByFullPath {
   '/renovation/stages': typeof RenovationStagesRoute
   '/address/': typeof AddressIndexRoute
   '/control/': typeof ControlIndexRoute
+  '/equity/': typeof EquityIndexRoute
   '/renovation/': typeof RenovationIndexRoute
   '/xml/': typeof XmlIndexRoute
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
@@ -675,6 +734,7 @@ export interface FileRoutesByTo {
   '/control/cases': typeof ControlCasesRoute
   '/control/pending': typeof ControlPendingRoute
   '/control/problems': typeof ControlProblemsRoute
+  '/equity/objects': typeof EquityObjectsRoute
   '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
   '/renovation/messages': typeof RenovationMessagesRoute
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
@@ -683,6 +743,7 @@ export interface FileRoutesByTo {
   '/renovation/stages': typeof RenovationStagesRoute
   '/address': typeof AddressIndexRoute
   '/control': typeof ControlIndexRoute
+  '/equity': typeof EquityIndexRoute
   '/renovation': typeof RenovationIndexRoute
   '/xml': typeof XmlIndexRoute
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
@@ -699,6 +760,7 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/address': typeof AddressRouteRouteWithChildren
   '/control': typeof ControlRouteRouteWithChildren
+  '/equity': typeof EquityRouteRouteWithChildren
   '/renovation': typeof RenovationRouteRouteWithChildren
   '/xml': typeof XmlRouteRouteWithChildren
   '/login': typeof LoginRoute
@@ -713,6 +775,7 @@ export interface FileRoutesById {
   '/control/cases': typeof ControlCasesRoute
   '/control/pending': typeof ControlPendingRoute
   '/control/problems': typeof ControlProblemsRoute
+  '/equity/objects': typeof EquityObjectsRoute
   '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
   '/renovation/messages': typeof RenovationMessagesRoute
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
@@ -721,6 +784,7 @@ export interface FileRoutesById {
   '/renovation/stages': typeof RenovationStagesRoute
   '/address/': typeof AddressIndexRoute
   '/control/': typeof ControlIndexRoute
+  '/equity/': typeof EquityIndexRoute
   '/renovation/': typeof RenovationIndexRoute
   '/xml/': typeof XmlIndexRoute
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
@@ -738,6 +802,7 @@ export interface FileRouteTypes {
     | '/'
     | '/address'
     | '/control'
+    | '/equity'
     | '/renovation'
     | '/xml'
     | '/login'
@@ -752,6 +817,7 @@ export interface FileRouteTypes {
     | '/control/cases'
     | '/control/pending'
     | '/control/problems'
+    | '/equity/objects'
     | '/renovation/building-relocation-map'
     | '/renovation/messages'
     | '/renovation/oldapartments'
@@ -760,6 +826,7 @@ export interface FileRouteTypes {
     | '/renovation/stages'
     | '/address/'
     | '/control/'
+    | '/equity/'
     | '/renovation/'
     | '/xml/'
     | '/control/settings/approve-chain'
@@ -782,6 +849,7 @@ export interface FileRouteTypes {
     | '/control/cases'
     | '/control/pending'
     | '/control/problems'
+    | '/equity/objects'
     | '/renovation/building-relocation-map'
     | '/renovation/messages'
     | '/renovation/oldapartments'
@@ -790,6 +858,7 @@ export interface FileRouteTypes {
     | '/renovation/stages'
     | '/address'
     | '/control'
+    | '/equity'
     | '/renovation'
     | '/xml'
     | '/control/settings/approve-chain'
@@ -804,6 +873,7 @@ export interface FileRouteTypes {
     | '/'
     | '/address'
     | '/control'
+    | '/equity'
     | '/renovation'
     | '/xml'
     | '/login'
@@ -818,6 +888,7 @@ export interface FileRouteTypes {
     | '/control/cases'
     | '/control/pending'
     | '/control/problems'
+    | '/equity/objects'
     | '/renovation/building-relocation-map'
     | '/renovation/messages'
     | '/renovation/oldapartments'
@@ -826,6 +897,7 @@ export interface FileRouteTypes {
     | '/renovation/stages'
     | '/address/'
     | '/control/'
+    | '/equity/'
     | '/renovation/'
     | '/xml/'
     | '/control/settings/approve-chain'
@@ -842,6 +914,7 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AddressRouteRoute: typeof AddressRouteRouteWithChildren
   ControlRouteRoute: typeof ControlRouteRouteWithChildren
+  EquityRouteRoute: typeof EquityRouteRouteWithChildren
   RenovationRouteRoute: typeof RenovationRouteRouteWithChildren
   XmlRouteRoute: typeof XmlRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
@@ -855,6 +928,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AddressRouteRoute: AddressRouteRouteWithChildren,
   ControlRouteRoute: ControlRouteRouteWithChildren,
+  EquityRouteRoute: EquityRouteRouteWithChildren,
   RenovationRouteRoute: RenovationRouteRouteWithChildren,
   XmlRouteRoute: XmlRouteRouteWithChildren,
   LoginRoute: LoginRoute,
@@ -877,6 +951,7 @@ export const routeTree = rootRoute
         "/",
         "/address",
         "/control",
+        "/equity",
         "/renovation",
         "/xml",
         "/login",
@@ -905,6 +980,13 @@ export const routeTree = rootRoute
         "/control/pending",
         "/control/problems",
         "/control/"
+      ]
+    },
+    "/equity": {
+      "filePath": "equity/route.tsx",
+      "children": [
+        "/equity/objects",
+        "/equity/"
       ]
     },
     "/renovation": {
@@ -980,6 +1062,10 @@ export const routeTree = rootRoute
       "filePath": "control/problems.tsx",
       "parent": "/control"
     },
+    "/equity/objects": {
+      "filePath": "equity/objects.tsx",
+      "parent": "/equity"
+    },
     "/renovation/building-relocation-map": {
       "filePath": "renovation/building-relocation-map.tsx",
       "parent": "/renovation"
@@ -1011,6 +1097,10 @@ export const routeTree = rootRoute
     "/control/": {
       "filePath": "control/index.tsx",
       "parent": "/control"
+    },
+    "/equity/": {
+      "filePath": "equity/index.tsx",
+      "parent": "/equity"
     },
     "/renovation/": {
       "filePath": "renovation/index.tsx",

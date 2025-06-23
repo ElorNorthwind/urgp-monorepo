@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import {
   Button,
   CaseRoutes,
+  clearEquityObjectTableColumns,
   clearIncidentTableColumns,
   clearPendingTableColumns,
   clearProblemTableColumns,
@@ -15,10 +16,12 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  selectEquityObjectTableColumns,
   selectIncidentTableColumns,
   selectPendingTableColumns,
   selectProblemTableColumns,
   Separator,
+  setEquityObjectTableColumns,
   setIncidentTableColumns,
   setPendingTableColumns,
   setProblemTableColumns,
@@ -27,6 +30,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from '@tanstack/react-router';
 import { VisibilityState } from '@tanstack/react-table';
 import {
+  defaultEquityObjectsColumns,
   defaultIncidentColumns,
   defaultPendingColumns,
   defaultProblemColumns,
@@ -59,6 +63,7 @@ function ColumnVisibilitySelector(
   const incidentColumnVisibility = useSelector(selectIncidentTableColumns);
   const pendingColumnVisibility = useSelector(selectPendingTableColumns);
   const problemColumnVisibility = useSelector(selectProblemTableColumns);
+  const equityObjectsVisibility = useSelector(selectEquityObjectTableColumns);
   const dispatch = useDispatch();
 
   const pathnameOptions: PathnameOptions = {
@@ -79,6 +84,12 @@ function ColumnVisibilitySelector(
       columnVisibility: problemColumnVisibility,
       setDispatch: setProblemTableColumns,
       clearDisparch: clearProblemTableColumns,
+    },
+    '/equity/objects': {
+      defaultVisibility: defaultEquityObjectsColumns,
+      columnVisibility: equityObjectsVisibility,
+      setDispatch: setEquityObjectTableColumns,
+      clearDisparch: clearEquityObjectTableColumns,
     },
   };
 
