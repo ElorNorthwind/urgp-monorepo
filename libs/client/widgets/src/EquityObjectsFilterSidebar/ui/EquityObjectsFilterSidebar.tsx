@@ -12,22 +12,9 @@ import {
   useSidebar,
 } from '@urgp/client/shared';
 import { ChevronLeft } from 'lucide-react';
-import { CaseTypesFilter } from './filterInputs/CaseTypesFilter';
-import { DepartmentsFilter } from './filterInputs/DepartmentsFilter';
-import { DirectionsFilter } from './filterInputs/DirectionsFilter';
-import { DueDateFilter } from './filterInputs/DueDateFilter';
-import { NumberFilter } from './filterInputs/NumberFilter';
-import { QueryFilter } from './filterInputs/QueryFilter';
-import { ResetFilter } from './filterInputs/ResetFilter';
-import { StatusFilter } from './filterInputs/StatusFilter';
-import { ViewStatusFilter } from './filterInputs/ViewStatusFilter';
-import { AuthorFilter } from './filterInputs/AuthorFilter';
-import { RelevantFilter } from './filterInputs/RelevantFilter';
 import { useLocation } from '@tanstack/react-router';
-import { PendingActionChart } from 'libs/client/pages/src/ControlDashboardPage/ui/cards/PendingActionsChart';
-import { PendingActionsFilter } from './filterInputs/PendingActionsFilter';
-import { ControlToMeFilter } from './filterInputs/ControlToMeFilter';
-import { FromMeFilter } from './filterInputs/FromMeFilter';
+import { EquityResetFilter } from './filterInputs/EquityResetFilter';
+import { EquityQueryFilter } from './filterInputs/EquityQueryFilter';
 
 type EquityObjectsFilterSidebarProps = {
   side?: 'left' | 'right';
@@ -60,12 +47,9 @@ const EquityObjectsFilterSidebar = (
       </SidebarHeader>
       <SidebarContent>
         <ScrollArea className={cn('h-full')}>
-          {/* <div className="m-3 flex h-full flex-col gap-2">
-            <QueryFilter className="h-8 flex-shrink-0" />
-            {pathname !== '/control/problems' && (
-              <NumberFilter className="h-8 flex-shrink-0" />
-            )}
-            <AuthorFilter className="h-8 flex-shrink-0" />
+          <div className="m-3 flex h-full flex-col gap-2">
+            <EquityQueryFilter className="h-8 flex-shrink-0" />
+            {/* <AuthorFilter className="h-8 flex-shrink-0" />
             <DueDateFilter className="flex-shrink-0" />
             <RelevantFilter className="h-8 flex-shrink-0" />
             <FromMeFilter className="h-8 flex-shrink-0" />
@@ -84,14 +68,14 @@ const EquityObjectsFilterSidebar = (
                 <CaseTypesFilter variant="accordion" />
               )}
               <ViewStatusFilter variant="accordion" />
-            </Accordion>
-          </div> */}
+            </Accordion> */}
+          </div>
         </ScrollArea>
       </SidebarContent>
       <SidebarFooter className="">
         <SidebarMenu>
           <SidebarMenuItem>
-            <ResetFilter className="w-full" />
+            <EquityResetFilter className="w-full" />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

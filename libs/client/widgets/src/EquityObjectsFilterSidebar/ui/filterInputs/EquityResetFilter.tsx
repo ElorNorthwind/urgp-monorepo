@@ -1,6 +1,9 @@
 import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import { Button, CaseRoutes, cn } from '@urgp/client/shared';
-import { CasesPageSearchDto } from '@urgp/shared/entities';
+import {
+  CasesPageSearchDto,
+  EquityObjectsPageSearch,
+} from '@urgp/shared/entities';
 import { X } from 'lucide-react';
 
 type ResetFilterProps = {
@@ -8,7 +11,7 @@ type ResetFilterProps = {
   variant?: 'full' | 'mini';
 };
 
-const ResetFilter = (props: ResetFilterProps): JSX.Element => {
+const EquityResetFilter = (props: ResetFilterProps): JSX.Element => {
   const { className, variant = 'full' } = props;
   const pathname = useLocation().pathname as CaseRoutes;
 
@@ -16,7 +19,7 @@ const ResetFilter = (props: ResetFilterProps): JSX.Element => {
   const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
 
   const paramLength = Object.keys(search).filter(
-    (key) => !['selectedCase', 'sortKey', 'sortDir'].includes(key),
+    (key) => !['selectedObject', 'sortKey', 'sortDir'].includes(key),
   ).length;
 
   return (
@@ -32,8 +35,8 @@ const ResetFilter = (props: ResetFilterProps): JSX.Element => {
       disabled={!paramLength}
       onClick={() =>
         navigate({
-          search: (prev: CasesPageSearchDto) => ({
-            selectedCase: prev.selectedCase,
+          search: (prev: EquityObjectsPageSearch) => ({
+            selectedObject: prev.selectedObject,
             sortKey: prev.sortKey,
             sortDir: prev.sortDir,
           }),
@@ -48,4 +51,4 @@ const ResetFilter = (props: ResetFilterProps): JSX.Element => {
   );
 };
 
-export { ResetFilter };
+export { EquityResetFilter };

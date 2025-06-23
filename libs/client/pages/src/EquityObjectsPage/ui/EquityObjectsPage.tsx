@@ -5,6 +5,7 @@ import {
   CaseCard,
   caseGlobalFilterFn,
   equityObjectsColumns,
+  equityObjectsGlobalFilterFn,
   incidentsTableColumns,
   useCases,
   useEquityObjects,
@@ -100,8 +101,8 @@ const EquityObjectsPage = (): JSX.Element => {
             setSelectedRows={setSelected}
             setFilteredRows={setFiltered}
             clientSide
-            // globalFilter={search}
-            // globalFilterFn={caseGlobalFilterFn}
+            globalFilter={search}
+            globalFilterFn={equityObjectsGlobalFilterFn}
             className={cn(
               'h-[calc(100vh-3rem)] flex-1 duration-200 ease-linear',
             )}

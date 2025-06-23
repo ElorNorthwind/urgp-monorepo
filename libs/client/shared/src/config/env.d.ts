@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 
 import '@tanstack/react-table';
+import { EQUITY_ROUTES } from './controlConstants';
 
 interface ImportMetaEnv {
   readonly VITE_API_URL: string;
@@ -29,3 +30,4 @@ declare module '@tanstack/table-core' {
 }
 
 export type CaseRoutes = (typeof CASE_ROUTES)[number];
+export type EquityRoutes = (typeof EQUITY_ROUTES)[number];

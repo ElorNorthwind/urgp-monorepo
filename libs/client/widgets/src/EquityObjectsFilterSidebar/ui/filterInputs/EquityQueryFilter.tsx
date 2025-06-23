@@ -1,18 +1,21 @@
 import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
-import { CaseRoutes, cn, Input } from '@urgp/client/shared';
-import { CasesPageSearchDto } from '@urgp/shared/entities';
+import { CaseRoutes, cn, EquityRoutes, Input } from '@urgp/client/shared';
+import {
+  CasesPageSearchDto,
+  EquityObjectsPageSearch,
+} from '@urgp/shared/entities';
 import { Search } from 'lucide-react';
 
 type QueryFilterProps = {
   className?: string;
 };
 
-const QueryFilter = (props: QueryFilterProps): JSX.Element => {
+const EquityQueryFilter = (props: QueryFilterProps): JSX.Element => {
   const { className } = props;
-  const pathname = useLocation().pathname as CaseRoutes;
+  const pathname = useLocation().pathname as EquityRoutes;
 
   const navigate = useNavigate({ from: pathname });
-  const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
+  const search = getRouteApi(pathname).useSearch() as EquityObjectsPageSearch;
 
   return (
     <Input
@@ -23,7 +26,7 @@ const QueryFilter = (props: QueryFilterProps): JSX.Element => {
       value={search?.query || ''}
       onChange={(event) =>
         navigate({
-          search: (prev: CasesPageSearchDto) => ({
+          search: (prev: EquityObjectsPageSearch) => ({
             ...prev,
             query:
               event.target.value && event.target.value.length > 0
@@ -36,4 +39,4 @@ const QueryFilter = (props: QueryFilterProps): JSX.Element => {
   );
 };
 
-export { QueryFilter };
+export { EquityQueryFilter };

@@ -1,10 +1,6 @@
 import { getRouteApi, useLocation } from '@tanstack/react-router';
 import { Row } from '@tanstack/react-table';
-import {
-  CreateCaseButton,
-  formatCaseRowForExcel,
-  formatEquityObjectRowForExcel,
-} from '@urgp/client/entities';
+import { formatEquityObjectRowForExcel } from '@urgp/client/entities';
 import {
   ColumnVisibilitySelector,
   ExportToExcelButton,
@@ -22,12 +18,12 @@ import {
   SidebarTrigger,
   useIsMobile,
 } from '@urgp/client/shared';
-import { QueryFilter, ResetFilter, UserFilter } from '@urgp/client/widgets';
 import {
-  CaseFull,
-  CasesPageSearchDto,
-  EquityObject,
-} from '@urgp/shared/entities';
+  EquityResetFilter,
+  QueryFilter,
+  ResetFilter,
+} from '@urgp/client/widgets';
+import { CasesPageSearchDto, EquityObject } from '@urgp/shared/entities';
 import { useMemo } from 'react';
 type CasePageHeaderProps = {
   total?: number;
@@ -67,7 +63,7 @@ const EquityObjectsPageHeader = (props: CasePageHeaderProps): JSX.Element => {
         </div>
       )}
       {/* <UserFilter variant="mini" /> */}
-      <ResetFilter variant="mini" className="" />
+      <EquityResetFilter variant="mini" className="" />
       <Separator orientation="vertical" className="mr-2 h-4 shrink-0" />
       <Breadcrumb className="shrink-0">
         <BreadcrumbList>
