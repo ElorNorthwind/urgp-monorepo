@@ -58,26 +58,26 @@ module.exports = {
           from: '../../libs/server/database/src/repos/sql/address/rates',
           to: join(__dirname, '../../dist/apps/server/sql/address/rates'),
         },
-        // equity
-        {
-          from: '../../libs/server/database/src/repos/sql/equity/objects',
-          to: join(__dirname, '../../dist/apps/server/sql/equity/objects'),
-        },
-        {
-          from: '../../libs/server/database/src/repos/sql/equity/claims',
-          to: join(__dirname, '../../dist/apps/server/sql/equity/claims'),
-        },
-        {
-          from: '../../libs/server/database/src/repos/sql/equity/operations',
-          to: join(__dirname, '../../dist/apps/server/sql/equity/operations'),
-        },
-        {
-          from: '../../libs/server/database/src/repos/sql/equity/classificators',
-          to: join(
-            __dirname,
-            '../../dist/apps/server/sql/equity/classificators',
-          ),
-        },
+        // // equity
+        // {
+        //   from: '../../libs/server/database/src/repos/sql/equity/objects',
+        //   to: join(__dirname, '../../dist/apps/server/sql/equity/objects'),
+        // },
+        // {
+        //   from: '../../libs/server/database/src/repos/sql/equity/claims',
+        //   to: join(__dirname, '../../dist/apps/server/sql/equity/claims'),
+        // },
+        // {
+        //   from: '../../libs/server/database/src/repos/sql/equity/operations',
+        //   to: join(__dirname, '../../dist/apps/server/sql/equity/operations'),
+        // },
+        // {
+        //   from: '../../libs/server/database/src/repos/sql/equity/classificators',
+        //   to: join(
+        //     __dirname,
+        //     '../../dist/apps/server/sql/equity/classificators',
+        //   ),
+        // },
       ],
     }),
   ],

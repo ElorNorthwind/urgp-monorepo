@@ -1,0 +1,9 @@
+{
+  "name": "server/equity",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/server/equity/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project server/equity --web",
+  "targets": {}
+}

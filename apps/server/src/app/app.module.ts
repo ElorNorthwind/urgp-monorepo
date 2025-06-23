@@ -20,6 +20,7 @@ import { FiasModule } from '@urgp/server/fias';
 import { DaDataModule } from '@urgp/server/dadata';
 import { TelegramModule } from '@urgp/server/telegram';
 import { ScheduleModule } from '@nestjs/schedule';
+import { EquityModule } from '@urgp/server/equity';
 
 @Module({
   // dot env files
@@ -57,6 +58,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     FiasModule,
     AddressModule,
     TelegramModule,
+    EquityModule,
   ],
 })
 export class AppModule {}
