@@ -24,7 +24,7 @@ export const equityObjectsPageFilterSchema = z
   .object({
     query: z.string(),
     building: queryNumberArray,
-    problems: queryNumberArray,
+    problem: queryStringArray,
     status: queryNumberArray,
     type: queryNumberArray,
   })

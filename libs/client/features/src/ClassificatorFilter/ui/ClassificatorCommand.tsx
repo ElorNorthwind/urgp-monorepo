@@ -40,6 +40,7 @@ const ClassificatorCommand = forwardRef<
     selectedValues = [],
     setSelectedValues,
     categoryStyles,
+    categoryPropertyStyles,
     valueStyles,
     variant = 'popover',
     placeholder = 'Поиск значения',
@@ -135,7 +136,10 @@ const ClassificatorCommand = forwardRef<
                   : categoryStyles
                     ? categoryStyles[category.value] ||
                       Object.values(categoryStyles)[0]
-                    : { icon: null, iconStyle: '+' };
+                    : categoryPropertyStyles && option?.category
+                      ? categoryPropertyStyles[option.category] ||
+                        Object.values(categoryPropertyStyles)[0]
+                      : { icon: null, iconStyle: '+' };
                 return (
                   <CommandItem
                     key={option.value}

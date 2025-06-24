@@ -34,6 +34,7 @@ export interface ClassificatorFilterProps<TValue extends string | number>
   selectedValues?: TValue[];
   setSelectedValues: (value: TValue[]) => void;
   categoryStyles?: Record<string, StyleData>;
+  categoryPropertyStyles?: Record<string, StyleData>;
   valueStyles?: Record<TValue, StyleData>;
   variant?: 'popover' | 'checkbox' | 'accordion';
   accordionItemValue?: string;

@@ -2,6 +2,7 @@ import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import {
   directionCategoryStyles,
   equityBuildingStyles,
+  equityObjectTypeStyles,
   useEquityBuildings,
   useEquityObjectTypes,
 } from '@urgp/client/entities';
@@ -37,9 +38,9 @@ const EquityObjectTypeFilter = (
       variant={variant}
       isLoading={isLoading || isFetching}
       options={data || []}
-      categoryStyles={equityBuildingStyles}
+      valueStyles={equityObjectTypeStyles}
       selectedValues={search.type}
-      iconClassName="size-3"
+      iconClassName="size-5"
       shortBadge
       setSelectedValues={(values) =>
         navigate({

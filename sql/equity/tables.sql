@@ -138,6 +138,8 @@ CREATE TABLE equity.buildings
     address_full character varying(255),
     address_construction character varying(255),
 
+    is_done boolean NOT NULL DEFAULT true,
+
 	PRIMARY KEY (id)
 );
 ALTER TABLE equity.buildings

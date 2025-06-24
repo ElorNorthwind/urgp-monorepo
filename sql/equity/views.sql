@@ -149,13 +149,13 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
     SELECT
         o.id,
 		o.is_identified as "isIdentified",
-		to_jsonb(b) as building,	
+		to_jsonb(b) as building,
 		to_jsonb(ot) as "objectType",
-		to_jsonb(s) as status,	
+		to_jsonb(s) as status,
 		
         o.cad_num as "cadNum",
         o.num,
-        c."claimsCount",
+        COALESCE(c."claimsCount", 0) as "claimsCount",
         c.notes as "identificationNotes",
         c.creditor,
 		CASE WHEN op.id IS NULL THEN NULL 
@@ -189,12 +189,14 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 		LEFT JOIN last_operation op ON op."objectId" = o.id
 		LEFT JOIN (SELECT id, name FROM equity.object_status_types) s ON s.id =
 			CASE
-				WHEN o.egrn_status = ANY(ARRAY['Москва', 'город Москва (ОУ Жилищника)']) THEN 5
+				WHEN o.egrn_status = ANY(ARRAY['город Москва']) THEN 5
+				WHEN o.egrn_status = ANY(ARRAY['Физ.лицо', 'Юр.лицо', 'Российская Федерация']) THEN 3
 				WHEN o.is_identified = FALSE THEN 6
-				WHEN c."claimsCount" IS NOT DISTINCT FROM 0 THEN 4
+				WHEN COALESCE(c."claimsCount", 0) = 0 THEN 4
 				WHEN op."typeId" = 1 THEN 2
 				ELSE 1
 			END
+    WHERE o.egrn_status <> 'Общее имущество мкд'
     ORDER BY o.building_id, o.is_identified DESC, o.object_type_id, o.npp;
     ---------------------------------------------------------------------
 ALTER TABLE equity.objects_full_view

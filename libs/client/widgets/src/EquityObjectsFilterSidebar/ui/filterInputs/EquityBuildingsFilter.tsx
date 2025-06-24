@@ -36,9 +36,10 @@ const EquityBuildingsFilter = (
       variant={variant}
       isLoading={isLoading || isFetching}
       options={data || []}
-      categoryStyles={equityBuildingStyles}
+      // categoryStyles={equityBuildingStyles}
+      categoryPropertyStyles={equityBuildingStyles}
       selectedValues={search.building}
-      iconClassName="size-3"
+      iconClassName="size-5"
       shortBadge
       setSelectedValues={(values) =>
         navigate({
