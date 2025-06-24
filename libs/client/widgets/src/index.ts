@@ -48,3 +48,4 @@ export * from './ManualDatesCard';
 export * from './EquityNavbar';
 export * from './EquityObjectsFilterSidebar';
 export * from './EquityObjectSidePanel';
+export * from './EquityObjectCardTabs';

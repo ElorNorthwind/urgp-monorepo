@@ -53,7 +53,7 @@ const EquityObjectsPage = (): JSX.Element => {
       navigate({
         search: (prev: EquityObjectsPageSearch) => ({
           ...prev,
-          selectedCase: prevObjectId,
+          selectedObject: prevObjectId,
         }),
       });
     }
@@ -63,7 +63,7 @@ const EquityObjectsPage = (): JSX.Element => {
       navigate({
         search: (prev: EquityObjectsPageSearch) => ({
           ...prev,
-          selectedCase: nextObjectId,
+          selectedObject: nextObjectId,
         }),
       });
     }

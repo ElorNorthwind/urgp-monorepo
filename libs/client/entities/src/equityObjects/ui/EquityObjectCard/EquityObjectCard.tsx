@@ -5,6 +5,8 @@ import {
   CaseNotesTab,
   ConnectedCasesTab,
   DispatchesTab,
+  EquityClaimsTab,
+  EquityObjectInfoTab,
   ExternalCasesTab,
   StagesTab,
 } from '@urgp/client/widgets';
@@ -38,8 +40,19 @@ const EquityObjectCard = (props: EquityObjectCardProps): JSX.Element => {
         <Accordion
           type="multiple"
           className="w-full px-4 pb-4"
-          defaultValue={['description', 'stages']}
+          defaultValue={['description', 'claims']}
         >
+          <EquityObjectInfoTab
+            equityObject={equityObject}
+            contentClassName=""
+            // accordionItemName="description"
+          />
+          <EquityClaimsTab
+            equityObject={equityObject}
+            contentClassName=""
+            accordionItemName="claims"
+          />
+
           {/* <CaseInfoTab controlCase={controlCase} label={null} />
           <CaseNotesTab
             controlCase={controlCase}

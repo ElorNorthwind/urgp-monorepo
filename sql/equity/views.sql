@@ -88,7 +88,7 @@ CREATE OR REPLACE VIEW equity.claims_full_view  AS
         c.identification_notes as "identificationNotes"
 
     FROM raw_claims c
-        ORDER BY c.object_id, c.claim_status = 'active' DESC,  c.priority;
+        ORDER BY c.object_id, c.claim_status = 'active' DESC, c.priority DESC;
     ---------------------------------------------------------------------
 ALTER TABLE equity.claims_full_view
     OWNER TO renovation_user;

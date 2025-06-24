@@ -4,3 +4,4 @@ export * from './ui/equityObjectsTable/defaultColumnVisibility';
 export * from './lib/formatEquityObjectRowForExcel';
 export * from './config/equityObjectsGlobalFilterFn';
 export * from './ui/EquityObjectCard/EquityObjectCard';
+export * from './ui/EquityObjectProblemList';
