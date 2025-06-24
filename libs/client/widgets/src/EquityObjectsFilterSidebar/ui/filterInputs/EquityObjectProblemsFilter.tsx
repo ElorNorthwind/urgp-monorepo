@@ -1,12 +1,5 @@
 import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
-import {
-  directionCategoryStyles,
-  equityBuildingStyles,
-  equityObjectTypeStyles,
-  equityProblemsStyles,
-  useEquityBuildings,
-  useEquityObjectTypes,
-} from '@urgp/client/entities';
+import { equityProblemsStyles } from '@urgp/client/entities';
 import { ClassificatorFilter } from '@urgp/client/features';
 import { cn, EquityRoutes } from '@urgp/client/shared';
 import {
@@ -78,7 +71,7 @@ const EquityObjectProblemsFilter = (
         navigate({
           search: {
             ...search,
-            type: values.length > 0 ? values : undefined,
+            problem: values.length > 0 ? values : undefined,
           },
         })
       }

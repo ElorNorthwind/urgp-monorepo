@@ -1,9 +1,6 @@
 import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
-import { CaseRoutes, cn, EquityRoutes, Input } from '@urgp/client/shared';
-import {
-  CasesPageSearchDto,
-  EquityObjectsPageSearch,
-} from '@urgp/shared/entities';
+import { cn, EquityRoutes, Input } from '@urgp/client/shared';
+import { EquityObjectsPageSearch } from '@urgp/shared/entities';
 import { Search } from 'lucide-react';
 
 type QueryFilterProps = {

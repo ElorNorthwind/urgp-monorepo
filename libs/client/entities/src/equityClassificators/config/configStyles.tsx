@@ -1,6 +1,9 @@
 import { cn } from '@urgp/client/shared';
 import { EquityObjectProblems } from '@urgp/shared/entities';
 import {
+  BadgeAlert,
+  BadgeQuestionMark,
+  BadgeRussianRuble,
   Building,
   Building2,
   Car,
@@ -81,22 +84,22 @@ export const equityObjectStatusStyles = {
 } as Record<number, StyleData>;
 
 export const equityObjectTypeStyles = {
-  1: { icon: House, iconStyle: cn('text-green-500') },
+  1: { icon: House, iconStyle: cn('text-teal-500') },
   2: { icon: Car, iconStyle: cn('text-indigo-500') },
   3: { icon: Package, iconStyle: cn('text-stone-500') },
 } as Record<number, StyleData>;
 
 export const equityProblemsStyles = {
   [EquityObjectProblems.unidentified]: {
-    icon: House,
+    icon: BadgeQuestionMark,
     iconStyle: cn('text-amber-500'),
   },
   [EquityObjectProblems.defects]: {
-    icon: House,
+    icon: BadgeAlert,
     iconStyle: cn('text-fuchsia-500'),
   },
   [EquityObjectProblems['double-sell']]: {
-    icon: House,
+    icon: BadgeRussianRuble,
     iconStyle: cn('text-red-500'),
   },
 } as Record<string, StyleData>;

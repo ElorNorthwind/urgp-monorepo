@@ -15,7 +15,7 @@ export function equityObjectsGlobalFilterFn(
   columnId: string,
   filterValue: EquityObjectsPageSearch,
 ): boolean {
-  const { query, status, building, type } = filterValue;
+  const { query, status, building, type, problem } = filterValue;
   if (
     query &&
     !(
@@ -39,6 +39,13 @@ export function equityObjectsGlobalFilterFn(
   }
 
   if (type && !type.includes(row.original?.objectType?.id || 0)) {
+    return false;
+  }
+
+  if (
+    problem &&
+    row.original?.problems.filter((p) => problem.includes(p)).length === 0
+  ) {
     return false;
   }
 

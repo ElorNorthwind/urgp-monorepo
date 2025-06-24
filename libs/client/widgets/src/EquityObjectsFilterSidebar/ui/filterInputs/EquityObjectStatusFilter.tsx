@@ -1,9 +1,6 @@
 import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import {
-  directionCategoryStyles,
-  equityBuildingStyles,
   equityObjectStatusStyles,
-  useEquityBuildings,
   useEquityObjectStatus,
 } from '@urgp/client/entities';
 import { ClassificatorFilter } from '@urgp/client/features';

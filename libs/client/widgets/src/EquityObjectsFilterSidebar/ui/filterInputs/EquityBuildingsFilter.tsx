@@ -36,7 +36,6 @@ const EquityBuildingsFilter = (
       variant={variant}
       isLoading={isLoading || isFetching}
       options={data || []}
-      // categoryStyles={equityBuildingStyles}
       categoryPropertyStyles={equityBuildingStyles}
       selectedValues={search.building}
       iconClassName="size-5"
