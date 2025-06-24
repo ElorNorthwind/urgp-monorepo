@@ -1,14 +1,5 @@
-import {
-  CaseActions,
-  CaseFull,
-  CasesPageSearchDto,
-  ControlToMeStatus,
-  EquityObject,
-  EquityObjectsPageSearch,
-} from '@urgp/shared/entities';
 import { Row } from '@tanstack/react-table';
-import { toDate } from 'date-fns';
-import { store } from '@urgp/client/shared';
+import { EquityObject, EquityObjectsPageSearch } from '@urgp/shared/entities';
 
 export function equityObjectsGlobalFilterFn(
   row: Row<EquityObject>,

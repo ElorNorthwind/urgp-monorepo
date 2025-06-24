@@ -19,6 +19,9 @@ import {
   useIsMobile,
 } from '@urgp/client/shared';
 import {
+  EquityBuildingsFilter,
+  EquityObjectTypeFilter,
+  EquityQueryFilter,
   EquityResetFilter,
   QueryFilter,
   ResetFilter,
@@ -87,7 +90,7 @@ const EquityObjectsPageHeader = (props: CasePageHeaderProps): JSX.Element => {
       )}
 
       {!isMobile && (
-        <QueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
+        <EquityQueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
       )}
 
       {!isMobile && exportedRows && (

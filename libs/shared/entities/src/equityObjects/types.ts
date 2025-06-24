@@ -8,6 +8,8 @@ const buildingSchema = z
     complexId: z.coerce.number().int().nonnegative(),
     complexName: z.string().nullable(),
     developer: z.string().nullable(),
+    developerShort: z.string().nullable(),
+    isDone: z.coerce.boolean(),
     unom: z.coerce.number().int().nonnegative().nullable(),
     cadNum: z.string().nullable(),
     addressShort: z.string().nullable(),
@@ -51,6 +53,7 @@ export const equityObjectSchema = z.object({
   // Core object properties
   cadNum: z.string().nullable(),
   num: z.string(),
+  npp: z.coerce.number().int(),
   claimsCount: z.number().int().nonnegative().nullable(), // Count of claims
   identificationNotes: z.string().nullable(), // Claim identification notes
   creditor: z.string().nullable(), // Aggregated creditor names

@@ -19,7 +19,8 @@
     "../widgets/src/DoneTimelineChart/ui/DoneTimelineChart.tsx",
     "../widgets/src/OldBuildingCard/ui/OldBuildingCard.tsx",
     "../features/src/MapCurve/ui/AddCurve.tsx",
-    "src/cases/ui/CaseFormElements"
+    "src/cases/ui/CaseFormElements",
+    "src/equityObjects/ui/equityObjectsTable/cells/EquityObjectStatusCelltsx"
   ],
   "exclude": [
     "vite.config.ts",

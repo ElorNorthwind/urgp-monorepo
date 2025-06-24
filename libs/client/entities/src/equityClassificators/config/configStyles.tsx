@@ -9,24 +9,18 @@ import {
   Car,
   Circle,
   CircleCheck,
+  CircleEllipsis,
   CircleUser,
   CircleUserRound,
   Construction,
+  DoorOpen,
   House,
   LucideProps,
   Package,
   ShieldCheck,
   ShieldEllipsis,
 } from 'lucide-react';
-
-export type StyleData = {
-  icon?: React.ForwardRefExoticComponent<
-    Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
-  >;
-  iconStyle?: string;
-  badgeStyle?: string;
-  label?: string;
-};
+import { StyleData } from '../../cases';
 
 const mosotdelStyle = {
   icon: Building,
@@ -76,30 +70,45 @@ export const equityBuildingStyles = {
 } as Record<string, StyleData>;
 
 export const equityObjectStatusStyles = {
-  1: { icon: CircleUserRound, iconStyle: cn('text-yellow-500') },
-  2: { icon: CircleUser, iconStyle: cn('text-orange-500') },
-  3: { icon: CircleCheck, iconStyle: cn('text-emerald-500') },
+  1: { icon: CircleEllipsis, iconStyle: cn('text-yellow-500') },
+  2: { icon: CircleCheck, iconStyle: cn('text-orange-500') },
+  3: { icon: CircleUserRound, iconStyle: cn('text-emerald-500') },
   4: { icon: ShieldEllipsis, iconStyle: cn('text-gray-500') },
   5: { icon: ShieldCheck, iconStyle: cn('text-blue-500') },
 } as Record<number, StyleData>;
 
 export const equityObjectTypeStyles = {
-  1: { icon: House, iconStyle: cn('text-teal-500') },
-  2: { icon: Car, iconStyle: cn('text-indigo-500') },
-  3: { icon: Package, iconStyle: cn('text-stone-500') },
+  1: { icon: DoorOpen, iconStyle: cn('text-teal-500'), label: 'кв.' },
+  2: { icon: Car, iconStyle: cn('text-indigo-500'), label: 'мм.' },
+  3: { icon: Package, iconStyle: cn('text-stone-500'), label: 'пом.' },
 } as Record<number, StyleData>;
 
 export const equityProblemsStyles = {
   [EquityObjectProblems.unidentified]: {
     icon: BadgeQuestionMark,
     iconStyle: cn('text-amber-500'),
+    label: 'Не опознано',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-amber-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-amber-500 before:mr-1",
+    ),
   },
   [EquityObjectProblems.defects]: {
     icon: BadgeAlert,
     iconStyle: cn('text-fuchsia-500'),
+    label: 'Дефекты',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-fuchsia-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-fuchsia-500 before:mr-1",
+    ),
   },
   [EquityObjectProblems['double-sell']]: {
     icon: BadgeRussianRuble,
     iconStyle: cn('text-red-500'),
+    label: 'Двойная продажа',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-red-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-red-500 before:mr-1",
+    ),
   },
 } as Record<string, StyleData>;

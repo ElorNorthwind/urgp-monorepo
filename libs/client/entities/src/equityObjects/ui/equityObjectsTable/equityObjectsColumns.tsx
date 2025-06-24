@@ -2,6 +2,11 @@ import { EquityObject } from '@urgp/shared/entities';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Checkbox } from '@urgp/client/shared';
 import { EquityCheckboxCell } from './cells/EquityCheckboxCell';
+import { EquityBuildingCell } from './cells/EquityBuildingCell';
+import { EquityObjectNumberCell } from './cells/EquityObjectNumberCell';
+import { EquityObjectStatusCell } from './cells/EquityObjectStatusCell';
+import { EquityObjectProblemCell } from './cells/EquityObjectProblemCell';
+import { EquityCreditorCell } from './cells/EquityCreditorCell';
 
 const columnHelper = createColumnHelper<EquityObject>();
 
@@ -28,20 +33,82 @@ export const equityObjectsColumns = [
     },
   }),
 
-  columnHelper.accessor((row) => row?.building?.addressShort, {
-    id: 'address',
-    header: 'Адрес',
-    size: 120,
-    enableHiding: true,
-    enableSorting: true,
-    sortDescFirst: true,
-  }),
+  columnHelper.accessor(
+    (row) => {
+      return row?.building?.addressShort || '';
+    },
+    {
+      id: 'address',
+      header: 'Адрес',
+      size: 120,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      cell: (props) => {
+        return <EquityBuildingCell {...props} />;
+      },
+    },
+  ),
+
+  columnHelper.accessor(
+    (row) => {
+      return row?.npp || 0;
+    },
+    {
+      id: 'number',
+      header: 'Помещение',
+      size: 160,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      cell: (props) => {
+        return <EquityObjectNumberCell {...props} />;
+      },
+    },
+  ),
+
+  columnHelper.accessor(
+    (row) => {
+      return row?.status?.id || 0;
+    },
+    {
+      id: 'workStatus',
+      header: 'Статус работы',
+      size: 120,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      cell: (props) => {
+        return <EquityObjectStatusCell {...props} />;
+      },
+    },
+  ),
 
   columnHelper.accessor((row): string => row?.creditor || '', {
     id: 'creditor',
     header: 'ФИО кредитора',
-    size: 100,
+    size: 120,
     enableSorting: true,
     sortDescFirst: true,
+    cell: (props) => {
+      return <EquityCreditorCell {...props} />;
+    },
   }),
+
+  columnHelper.accessor(
+    (row) => {
+      return row?.problems?.join(', ') || '';
+    },
+    {
+      id: 'problem',
+      header: 'Проблемы',
+      size: 100,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      cell: (props) => {
+        return <EquityObjectProblemCell {...props} />;
+      },
+    },
+  ),
 ];

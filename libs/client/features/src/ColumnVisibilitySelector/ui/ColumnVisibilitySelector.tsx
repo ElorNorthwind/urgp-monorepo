@@ -108,6 +108,11 @@ function ColumnVisibilitySelector(
     directions: 'Направления',
     type: 'Тип проблемы',
     stage: 'Этап',
+    address: 'Адрес',
+    number: 'Помещение',
+    workStatus: 'Статус работы',
+    creditor: 'ФИО кредитора',
+    problem: 'Проблемы',
   };
 
   const isDefault = useMemo(() => {

@@ -5,9 +5,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { CaseFull, Classificator } from '@urgp/shared/entities';
-import { directionCategoryStyles } from '../config/caseStyles';
+import { Classificator } from '@urgp/shared/entities';
 import { forwardRef } from 'react';
+import { directionCategoryStyles } from '../config/caseStyles';
 
 type CaseDirectionsListProps = {
   className?: string;

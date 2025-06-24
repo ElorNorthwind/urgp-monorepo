@@ -138,6 +138,8 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 			c.id as "complexId",
 			c.name as "complexName",
 			c.developer,
+            c.developer_short as "developerShort",
+            b.is_done as "isDone",
 			b.unom,
 			b.cad_num as "cadNum",
 			b.address_short as "addressShort",
@@ -155,6 +157,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 		
         o.cad_num as "cadNum",
         o.num,
+        o.npp,
         COALESCE(c."claimsCount", 0) as "claimsCount",
         c.notes as "identificationNotes",
         c.creditor,
@@ -220,7 +223,7 @@ CREATE OR REPLACE VIEW equity.operations_full_view AS
         o.notes,
         o.number,
         o.result,
-        
+
         o.created_at as "createdAt",
         to_jsonb(u1) as "createdBy",
         o.updated_at as "updatedAt",
