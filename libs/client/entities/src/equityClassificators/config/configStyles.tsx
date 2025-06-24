@@ -1,6 +1,7 @@
 import { cn } from '@urgp/client/shared';
 import { EquityObjectProblems } from '@urgp/shared/entities';
 import {
+  Badge,
   BadgeAlert,
   BadgeQuestionMark,
   BadgeRussianRuble,
@@ -109,6 +110,15 @@ export const equityProblemsStyles = {
     badgeStyle: cn(
       'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-red-500',
       "before:content-[''] before:rounded-full before:size-3 before:bg-red-500 before:mr-1",
+    ),
+  },
+  none: {
+    icon: Badge,
+    iconStyle: cn('text-slate-500'),
+    label: 'Двойная продажа',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-slate-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-slate-500 before:mr-1",
     ),
   },
 } as Record<string, StyleData>;

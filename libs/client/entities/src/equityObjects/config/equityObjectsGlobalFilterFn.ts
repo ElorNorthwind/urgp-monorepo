@@ -35,7 +35,8 @@ export function equityObjectsGlobalFilterFn(
 
   if (
     problem &&
-    row.original?.problems.filter((p) => problem.includes(p)).length === 0
+    row.original?.problems.filter((p) => problem.includes(p)).length === 0 &&
+    !(problem.includes('none') && row.original?.problems.length === 0)
   ) {
     return false;
   }

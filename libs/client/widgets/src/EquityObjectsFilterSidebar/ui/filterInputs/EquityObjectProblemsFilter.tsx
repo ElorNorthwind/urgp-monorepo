@@ -52,6 +52,13 @@ const EquityObjectProblemsFilter = (
           category: 'problems',
           fullname: 'Выявлены признаки конкурирубщих требований',
         },
+        {
+          tags: [],
+          label: 'Нет выявленых проблем',
+          value: 'none',
+          category: 'problems',
+          fullname: 'Проблем в работе не выявлено',
+        },
       ],
     },
   ];
