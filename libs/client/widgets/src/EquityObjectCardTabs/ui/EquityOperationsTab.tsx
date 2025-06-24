@@ -8,23 +8,25 @@ import {
 import {
   CaseFull,
   CONTROL_THRESHOLD,
+  EquityObject,
   OperationClasses,
 } from '@urgp/shared/entities';
 
 import { CardTab } from '@urgp/client/features';
 import { Fragment, useMemo } from 'react';
-import { isBefore } from 'date-fns';
+import { format, isAfter, isBefore } from 'date-fns';
 import {
   CreateDispatchButton,
   CreateStageButton,
   EditDispatchButton,
   StagesList,
+  useEquityOperations,
   useOperations,
 } from '@urgp/client/entities';
 import { BedSingle, CirclePower, Repeat } from 'lucide-react';
 
-type StagesTabProps = {
-  controlCase?: CaseFull;
+type EquityOperationsTabProps = {
+  equityObject?: EquityObject;
   label?: string | null;
   className?: string;
   titleClassName?: string;
@@ -32,34 +34,35 @@ type StagesTabProps = {
   accordionItemName?: string;
 };
 
-const StagesTab = (props: StagesTabProps): JSX.Element | null => {
+const EquityOperationsTab = (
+  props: EquityOperationsTabProps,
+): JSX.Element | null => {
   const {
-    controlCase,
+    equityObject,
     className,
-    label = 'Работа с делом',
+    label = 'Работа с объектом',
     titleClassName,
     contentClassName,
     accordionItemName,
   } = props;
 
   const {
-    data: stages,
+    data: operations,
     isLoading,
     isFetching,
-  } = useOperations(
-    { class: OperationClasses.stage, case: controlCase?.id || 0 },
-    { skip: !controlCase?.id || controlCase?.id === 0 },
-  );
+  } = useEquityOperations(equityObject?.id || 0, {
+    skip: !equityObject?.id || equityObject?.id === 0,
+  });
 
   return (
     <CardTab
       label={label}
-      button={
-        <CreateStageButton
-          caseId={controlCase?.id || 0}
-          className="absolute right-6 top-3 h-8 px-2 py-1"
-        />
-      }
+      // button={
+      //   <CreateStageButton
+      //     caseId={0}
+      //     className="absolute right-6 top-3 h-8 px-2 py-1"
+      //   />
+      // }
       className={className}
       titleClassName={titleClassName}
       contentClassName={cn(
@@ -69,14 +72,31 @@ const StagesTab = (props: StagesTabProps): JSX.Element | null => {
       )}
       accordionItemName={accordionItemName}
     >
-      <StagesList
+      {/* <EquityOperationsList
         stages={stages}
         isLoading={isLoading || isFetching}
         className="border-0"
         controlLevel={controlCase?.controlLevel || 0}
-      />
+      /> */}
+      {operations &&
+        operations.length > 0 &&
+        operations.map((op) => {
+          return (
+            <div
+              className="bg-background flex flex-row items-center gap-1 rounded"
+              key={op.id}
+            >
+              <p className="mr-2 border-r p-2">
+                {op?.date && isAfter(op.date, new Date(2000, 1, 1))
+                  ? format(op.date, 'dd.MM.yyyy')
+                  : 'без даты'}
+              </p>
+              <p>{op?.type?.name}</p>
+            </div>
+          );
+        })}
     </CardTab>
   );
 };
 
-export { StagesTab };
+export { EquityOperationsTab };
