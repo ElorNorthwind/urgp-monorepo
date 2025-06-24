@@ -24,7 +24,9 @@ function EquityCreditorCell(
       <TooltipTrigger asChild>
         <div className="flex w-full flex-row gap-2">
           <div className="flex flex-1 flex-col items-start justify-start">
-            <span className="text-bold line-clamp-3">{rowData?.creditor}</span>
+            <span className="text-bold line-clamp-3 leading-tight">
+              {rowData?.creditor}
+            </span>
             {/* <div className="text-muted-foreground w-full truncate text-xs">
               <span className="w-full truncate font-thin">
                 {rowData?.claimsCount || '-'}

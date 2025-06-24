@@ -2,6 +2,7 @@ import { Row } from '@tanstack/react-table';
 
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
+  EquityObjectCard,
   equityObjectsColumns,
   equityObjectsGlobalFilterFn,
   useEquityObjects,
@@ -17,6 +18,7 @@ import {
 import {
   ControlSidePanel,
   EquityObjectsFilterSidebar,
+  EquityObjectSidePanel,
 } from '@urgp/client/widgets';
 import { EquityObject, EquityObjectsPageSearch } from '@urgp/shared/entities';
 import { useState } from 'react';
@@ -141,24 +143,23 @@ const EquityObjectsPage = (): JSX.Element => {
           {/* <SelectedCasesActionBar selected={selected} /> */}
         </main>
       </SidebarInset>
-      <ControlSidePanel
+      <EquityObjectSidePanel
         isOpen={search.selectedObject !== undefined && currentIndex >= 0}
       >
-        <div className="p-10">Тут будет карочка объекта</div>
-        {/* <CaseCard
-          onPrevCase={prevObjectId ? onPrevObject : undefined}
-          onNextCase={nextObjectId ? onNextCase : undefined}
-          controlCase={cases?.find((c) => c.id === search.selectedCase)!}
+        <EquityObjectCard
+          onPrevRow={prevObjectId ? onPrevObject : undefined}
+          onNextRow={nextObjectId ? onNextObject : undefined}
+          equityObject={data?.find((o) => o.id === search.selectedObject)!}
           onClose={() =>
             navigate({
-              search: (prev: CasesPageSearchDto) => ({
+              search: (prev: EquityObjectsPageSearch) => ({
                 ...prev,
-                selectedCase: undefined,
+                selectedObject: undefined,
               }),
             })
           }
-        /> */}
-      </ControlSidePanel>
+        />
+      </EquityObjectSidePanel>
     </TooltipProvider>
   );
 };
