@@ -25,7 +25,7 @@ function EquityBuildingCell(
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 truncate">
           {BuildingIcon && (
             <BuildingIcon className={cn('size-8 flex-shrink-0', iconStyle)} />
           )}

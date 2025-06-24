@@ -26,7 +26,7 @@ function EquityObjectNumberCell(
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="flex w-full flex-row gap-2">
+        <div className="flex w-full flex-row gap-2 truncate">
           {TypeIcon && (
             <TypeIcon className={cn('size-8 flex-shrink-0', iconStyle)} />
           )}
