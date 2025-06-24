@@ -74,7 +74,7 @@ export const equityObjectsColumns = [
     {
       id: 'workStatus',
       header: 'Статус работы',
-      size: 120,
+      size: 180,
       enableHiding: true,
       enableSorting: true,
       sortDescFirst: true,

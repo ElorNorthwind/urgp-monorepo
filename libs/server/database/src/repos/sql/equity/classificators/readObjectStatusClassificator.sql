@@ -10,4 +10,4 @@ SELECT
 	)) as items
 FROM (SELECT * FROM equity.object_status_types
 WHERE id <> 6
-ORDER BY id) s;
+ORDER BY priority) s;

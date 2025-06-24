@@ -116,12 +116,14 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 			op.type_name as "typeName",
 			op.has_double_sell as "hasDoubleSell",
 			op.has_defects as "hasDefects",
+			op.has_request as "hasRequest",
 			op.date
 		FROM (
 			SELECT 
 				ROW_NUMBER() OVER(PARTITION BY o.object_id ORDER BY t.priority DESC, o.date DESC, o.id) as row_num,
 				COUNT(*) FILTER (WHERE o.type_id = 8) OVER(PARTITION BY o.object_id) > 0 as has_double_sell,
 				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[2,3,4])) OVER(PARTITION BY o.object_id) > 0 as has_defects,
+				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[5,6,7])) OVER(PARTITION BY o.object_id) > 0 as has_request,
 				o.type_id,
 				t.name as type_name,
 				o.id,
@@ -194,6 +196,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 			CASE
 				WHEN o.egrn_status = ANY(ARRAY['город Москва']) THEN 5
 				WHEN o.egrn_status = ANY(ARRAY['Физ.лицо', 'Юр.лицо', 'Российская Федерация']) THEN 3
+                WHEN op."hasRequest" THEN 7
 				WHEN o.is_identified = FALSE THEN 6
 				WHEN COALESCE(c."claimsCount", 0) = 0 THEN 4
 				WHEN op."typeId" = 1 THEN 2

@@ -11,6 +11,7 @@ import {
   Circle,
   CircleCheck,
   CircleEllipsis,
+  CirclePlay,
   CircleUser,
   CircleUserRound,
   Construction,
@@ -71,7 +72,8 @@ export const equityBuildingStyles = {
 } as Record<string, StyleData>;
 
 export const equityObjectStatusStyles = {
-  1: { icon: CircleEllipsis, iconStyle: cn('text-yellow-500') },
+  1: { icon: CircleEllipsis, iconStyle: cn('text-stone-500') },
+  7: { icon: CirclePlay, iconStyle: cn('text-yellow-500') },
   2: { icon: CircleCheck, iconStyle: cn('text-orange-500') },
   3: { icon: CircleUserRound, iconStyle: cn('text-emerald-500') },
   4: { icon: ShieldEllipsis, iconStyle: cn('text-gray-500') },
