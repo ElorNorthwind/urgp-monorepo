@@ -33,10 +33,10 @@ export const equityClaimSchema = z.object({
   changeBasis: z.string().nullable(),
   subject: z.string().nullable(),
 
-  // Monetary values (stored as strings for precision)
-  sumPaid: z.string().nullable(),
-  sumUnpaid: z.string().nullable(),
-  sumDamages: z.string().nullable(),
+  // Monetary values
+  sumPaid: z.number().nullable(),
+  sumUnpaid: z.number().nullable(),
+  sumDamages: z.number().nullable(),
 
   // Settlement/exclusion info
   claimSettlementReason: z.string().nullable(),
