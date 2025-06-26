@@ -1,28 +1,14 @@
 import {
   cn,
-  ScrollArea,
-  Skeleton,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import {
-  CaseFull,
-  CONTROL_THRESHOLD,
-  EquityObject,
-} from '@urgp/shared/entities';
+import { EquityObject } from '@urgp/shared/entities';
 
-import { CardTab } from '@urgp/client/features';
-import { Fragment, useMemo } from 'react';
-import { format, isBefore } from 'date-fns';
-import {
-  CreateDispatchButton,
-  EditDispatchButton,
-  EquityClaimElement,
-  useEquityClaims,
-} from '@urgp/client/entities';
-import { BedSingle, CirclePower, Gift, Repeat } from 'lucide-react';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
+import { CardTab } from '@urgp/client/features';
+import { format } from 'date-fns';
 
 type EquityEgrnTabProps = {
   equityObject?: EquityObject;
@@ -48,39 +34,47 @@ const EquityEgrnTab = (props: EquityEgrnTabProps): JSX.Element | null => {
       label={label}
       className={className}
       titleClassName={titleClassName}
-      contentClassName={cn(
-        'grid grid-cols-[auto_auto_auto_1fr] [&>*]:px-3 [&>*]:py-1 p-0',
-        contentClassName,
-      )}
+      contentClassName="p-0"
+      // contentClassName={cn(
+      //   'grid grid-cols-[auto_auto_auto_1fr] [&>*]:px-3 [&>*]:py-1 p-0',
+      //   contentClassName,
+      // )}
       accordionItemName={accordionItemName}
     >
-      <div className="bg-muted-foreground/5 border-b border-r px-2 py-1 text-right font-bold">
-        Дата:
-      </div>
-      <div className="flex items-start justify-start gap-2 truncate border-b p-1 ">
-        <p className="my-auto w-full truncate font-light">
-          {equityObject?.egrnTitleDate
-            ? format(equityObject?.egrnTitleDate, 'dd.MM.yyyy')
-            : '-'}
-        </p>
-      </div>
-      <div className="bg-muted-foreground/5 border-b border-l px-2 py-1 text-right font-bold">
-        Номер:
-      </div>
-      <div className="flex items-start justify-start gap-2 truncate border-b border-l p-1 ">
-        <p className="my-auto w-full truncate font-light">
-          {equityObject?.egrnTitleNum || '-'}
-        </p>
-      </div>
-      <div className="bg-muted-foreground/5  border-r px-2 py-1 text-right font-bold">
-        Субъект:
-      </div>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="col-span-3 flex items-start justify-start gap-2 truncate p-1">
-            <p className="my-auto w-full truncate font-light">
-              {equityObject?.egrnHolderName || '-'}
-            </p>
+          <div
+            className={cn(
+              'grid grid-cols-[auto_auto_auto_1fr] p-0 [&>*]:px-3 [&>*]:py-1',
+              contentClassName,
+            )}
+          >
+            <div className="bg-muted-foreground/5 border-b border-r px-2 py-1 text-right font-bold">
+              Дата:
+            </div>
+            <div className="flex items-start justify-start gap-2 truncate border-b p-1 ">
+              <p className="my-auto w-full truncate font-light">
+                {equityObject?.egrnTitleDate
+                  ? format(equityObject?.egrnTitleDate, 'dd.MM.yyyy')
+                  : '-'}
+              </p>
+            </div>
+            <div className="bg-muted-foreground/5 border-b border-l px-2 py-1 text-right font-bold">
+              Номер:
+            </div>
+            <div className="flex items-start justify-start gap-2 truncate border-b border-l p-1 ">
+              <p className="my-auto w-full truncate font-light">
+                {equityObject?.egrnTitleNum || '-'}
+              </p>
+            </div>
+            <div className="bg-muted-foreground/5  border-r px-2 py-1 text-right font-bold">
+              Субъект:
+            </div>
+            <div className="col-span-3 flex items-start justify-start gap-2 truncate p-1">
+              <p className="my-auto w-full truncate font-light">
+                {equityObject?.egrnHolderName || 'Права не оформлены'}
+              </p>
+            </div>
           </div>
         </TooltipTrigger>
         <TooltipPortal>

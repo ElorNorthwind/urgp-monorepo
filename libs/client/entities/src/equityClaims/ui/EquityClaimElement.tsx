@@ -46,9 +46,7 @@ const EquityClaimElement = (
         className="bg-muted-foreground/10 -mx-4 -mt-4 w-[calc(100%+2rem)] px-4 py-2 "
       />
       <ClaimItem claim={claim} />
-
       <Separator className="" />
-
       <ClaimBasis claim={claim} />
       {claim?.notes && <ClaimNotes claim={claim} />}
       {claim?.changeBasis && <ClaimChange claim={claim} />}
@@ -66,32 +64,6 @@ const EquityClaimElement = (
           className="-mx-4 -mb-4 w-[calc(100%+2rem)] bg-yellow-500/10 px-4 py-2"
         />
       )}
-      {/* 
-      <div> {claim?.changeBasis}</div>
-
-      <div>
-        {claim?.claimRegistryDate
-          ? format(claim?.claimRegistryDate, 'dd.MM.yyyy')
-          : '-'}
-      </div>
-      <div> Погашение</div>
-      <div> {claim?.claimSettlementReason}</div>
-      <div>
-        {claim?.claimSettlementDate
-          ? format(claim?.claimSettlementDate, 'dd.MM.yyyy')
-          : '-'}
-      </div>
-      <div> Исключение</div>
-      <div> {claim?.claimExclusionReason}</div>
-      <div>
-        {claim?.claimExclusionDate
-          ? format(claim?.claimExclusionDate, 'dd.MM.yyyy')
-          : '-'}
-      </div>
-      <div> {claim?.creditorName}</div>
-      <div> {claim?.identificationNotes}</div>
-      <div> {claim?.notes}</div>
-      <div> {claim?.subject}</div> */}
     </div>
   );
 };

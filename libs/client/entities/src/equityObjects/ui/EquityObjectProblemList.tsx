@@ -36,7 +36,7 @@ const EquityObjectProblemList = forwardRef<
               <Badge
                 variant={'outline'}
                 className={cn(
-                  'text-nowrap',
+                  'truncate text-nowrap',
                   equityProblemsStyles[p]?.badgeStyle,
                 )}
                 key={p}

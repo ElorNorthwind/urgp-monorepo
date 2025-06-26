@@ -19,6 +19,7 @@ import {
   CreateDispatchButton,
   CreateStageButton,
   EditDispatchButton,
+  EquityOperationsList,
   StagesList,
   useEquityOperations,
   useOperations,
@@ -72,29 +73,11 @@ const EquityOperationsTab = (
       )}
       accordionItemName={accordionItemName}
     >
-      {/* <EquityOperationsList
-        stages={stages}
+      <EquityOperationsList
+        operations={operations}
         isLoading={isLoading || isFetching}
         className="border-0"
-        controlLevel={controlCase?.controlLevel || 0}
-      /> */}
-      {operations &&
-        operations.length > 0 &&
-        operations.map((op) => {
-          return (
-            <div
-              className="bg-background flex flex-row items-center gap-1 rounded"
-              key={op.id}
-            >
-              <p className="mr-2 border-r p-2">
-                {op?.date && isAfter(op.date, new Date(2000, 1, 1))
-                  ? format(op.date, 'dd.MM.yyyy')
-                  : 'без даты'}
-              </p>
-              <p>{op?.type?.name}</p>
-            </div>
-          );
-        })}
+      />
     </CardTab>
   );
 };

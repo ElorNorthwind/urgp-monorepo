@@ -1,24 +1,12 @@
 import { Accordion, ScrollArea } from '@urgp/client/shared';
 import {
-  CaseAuthorTab,
-  CaseInfoTab,
-  CaseNotesTab,
-  ConnectedCasesTab,
-  DispatchesTab,
   EquityClaimsArchiveTab,
   EquityClaimsTab,
   EquityEgrnTab,
   EquityObjectInfoTab,
   EquityOperationsTab,
-  ExternalCasesTab,
-  StagesTab,
 } from '@urgp/client/widgets';
-import {
-  CaseFull,
-  EquityObject,
-  OperationClasses,
-} from '@urgp/shared/entities';
-import { StagesHeader, StagesList, useOperations } from '../../../operations';
+import { EquityObject } from '@urgp/shared/entities';
 import { EquityObjectCardHeader } from './EquityObjectCardHeader';
 
 type EquityObjectCardProps = {
@@ -45,52 +33,20 @@ const EquityObjectCard = (props: EquityObjectCardProps): JSX.Element => {
           className="w-full px-4 pb-4"
           defaultValue={['operations', 'claims']}
         >
-          <EquityObjectInfoTab
-            equityObject={equityObject}
-            contentClassName=""
-            // accordionItemName="description"
-          />
-          <EquityEgrnTab
-            equityObject={equityObject}
-            contentClassName=""
-            accordionItemName="egrn"
-          />
+          <EquityObjectInfoTab equityObject={equityObject} />
+          <EquityEgrnTab equityObject={equityObject} accordionItemName="egrn" />
           <EquityClaimsTab
             equityObject={equityObject}
-            contentClassName=""
             accordionItemName="claims"
           />
           <EquityClaimsArchiveTab
             equityObject={equityObject}
-            contentClassName=""
             accordionItemName="claims-archive"
           />
           <EquityOperationsTab
             equityObject={equityObject}
-            contentClassName=""
             accordionItemName="operations"
           />
-
-          {/* <CaseInfoTab controlCase={controlCase} label={null} />
-          <CaseNotesTab
-            controlCase={controlCase}
-            contentClassName=""
-            accordionItemName="description"
-          />
-          <ExternalCasesTab
-            controlCase={controlCase}
-            accordionItemName="external"
-          />
-
-          <ConnectedCasesTab
-            controlCase={controlCase}
-            accordionItemName="connections"
-          />
-          <DispatchesTab
-            controlCase={controlCase}
-            accordionItemName="dispatches"
-          />
-          <StagesTab controlCase={controlCase} accordionItemName="stages" /> */}
         </Accordion>
       </ScrollArea>
       {/* <EquityObjectCardFooter controlCase={controlCase} /> */}

@@ -22,6 +22,14 @@ import {
   Package,
   ShieldCheck,
   ShieldEllipsis,
+  Square,
+  SquareAsterisk,
+  SquareCheck,
+  SquareDashedBottom,
+  SquareDashedBottomCode,
+  SquarePen,
+  SquaresIntersect,
+  SquareUserRound,
 } from 'lucide-react';
 import { StyleData } from '../../cases';
 
@@ -100,7 +108,7 @@ export const equityProblemsStyles = {
     label: 'Не опознано',
     badgeStyle: cn(
       'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-amber-500',
-      "before:content-[''] before:rounded-full before:size-3 before:bg-amber-500 before:mr-1",
+      "before:content-[''] before:rounded-full before:size-3 before:bg-amber-500 before:mr-1 before:flex-shrink-0",
     ),
   },
   [EquityObjectProblems.defects]: {
@@ -109,7 +117,7 @@ export const equityProblemsStyles = {
     label: 'Дефекты',
     badgeStyle: cn(
       'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-fuchsia-500',
-      "before:content-[''] before:rounded-full before:size-3 before:bg-fuchsia-500 before:mr-1",
+      "before:content-[''] before:rounded-full before:size-3 before:bg-fuchsia-500 before:mr-1 before:flex-shrink-0",
     ),
   },
   [EquityObjectProblems['double-sell']]: {
@@ -118,7 +126,7 @@ export const equityProblemsStyles = {
     label: 'Двойная продажа',
     badgeStyle: cn(
       'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-red-500',
-      "before:content-[''] before:rounded-full before:size-3 before:bg-red-500 before:mr-1",
+      "before:content-[''] before:rounded-full before:size-3 before:bg-red-500 before:mr-1 before:flex-shrink-0",
     ),
   },
   none: {
@@ -127,7 +135,19 @@ export const equityProblemsStyles = {
     label: 'Двойная продажа',
     badgeStyle: cn(
       'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-slate-500',
-      "before:content-[''] before:rounded-full before:size-3 before:bg-slate-500 before:mr-1",
+      "before:content-[''] before:rounded-full before:size-3 before:bg-slate-500 before:mr-1 before:flex-shrink-0",
     ),
   },
 } as Record<string, StyleData>;
+
+export const equityOperationTypeStyles = {
+  0: { icon: Square, iconStyle: cn('text-slate-500') }, // Фолбэк
+  1: { icon: SquareCheck, iconStyle: cn('text-teal-500') }, // Акт Подписан
+  2: { icon: SquareDashedBottom, iconStyle: cn('text-orange-500') }, // Дефектная ведомость открыта
+  3: { icon: SquareDashedBottomCode, iconStyle: cn('text-cyan-500') }, // Дефектная ведомость закрыта
+  4: { icon: CircleUser, iconStyle: cn('text-teal-500') }, // Дефекты выявлены
+  5: { icon: SquareUserRound, iconStyle: cn('text-indigo-500') }, // Запись на прием
+  6: { icon: SquareAsterisk, iconStyle: cn('text-yellow-500') }, // Заключение УРЖП запрошено
+  7: { icon: SquarePen, iconStyle: cn('text-blue-500') }, // Заключение УРЖП дано
+  8: { icon: SquaresIntersect, iconStyle: cn('text-red-500') }, // Выявлены признаки двойной продажи
+} as Record<number, StyleData>;
