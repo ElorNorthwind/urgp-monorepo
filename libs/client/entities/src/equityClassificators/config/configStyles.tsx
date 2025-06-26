@@ -16,6 +16,7 @@ import {
   CircleUserRound,
   Construction,
   DoorOpen,
+  HandCoins,
   House,
   LucideProps,
   Package,
@@ -78,6 +79,12 @@ export const equityObjectStatusStyles = {
   3: { icon: CircleUserRound, iconStyle: cn('text-emerald-500') },
   4: { icon: ShieldEllipsis, iconStyle: cn('text-gray-500') },
   5: { icon: ShieldCheck, iconStyle: cn('text-blue-500') },
+} as Record<number, StyleData>;
+
+export const equityClaimItemTypeStyles = {
+  1: { icon: DoorOpen, iconStyle: cn('text-teal-500') },
+  2: { icon: Car, iconStyle: cn('text-indigo-500') },
+  3: { icon: HandCoins, iconStyle: cn('text-amber-500') },
 } as Record<number, StyleData>;
 
 export const equityObjectTypeStyles = {

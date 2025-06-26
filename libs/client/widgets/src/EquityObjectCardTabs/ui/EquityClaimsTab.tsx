@@ -18,6 +18,7 @@ import { isBefore } from 'date-fns';
 import {
   CreateDispatchButton,
   EditDispatchButton,
+  EquityClaimElement,
   useEquityClaims,
 } from '@urgp/client/entities';
 import { BedSingle, CirclePower, Gift, Repeat } from 'lucide-react';
@@ -85,8 +86,11 @@ const EquityClaimsTab = (props: EquityClaimsTabProps): JSX.Element | null => {
           <span>Нет требований</span>
         </div>
       ) : (
-        <div className="grid grid-cols-[auto_1fr_auto]">
+        <div className="">
           {equityClaims.map((claim, index) => {
+            return <EquityClaimElement claim={claim} key={claim.id} />;
+          })}
+          {/* {equityClaims.map((claim, index) => {
             return (
               <Fragment key={claim.id}>
                 <div
@@ -126,7 +130,7 @@ const EquityClaimsTab = (props: EquityClaimsTabProps): JSX.Element | null => {
                 )}
               </Fragment>
             );
-          })}
+          })} */}
         </div>
       )}
     </CardTab>

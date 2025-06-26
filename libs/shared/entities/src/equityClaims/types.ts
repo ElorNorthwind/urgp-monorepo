@@ -20,9 +20,9 @@ export const equityClaimSchema = z.object({
   id: z.coerce.number().int().nonnegative(),
   objectId: z.coerce.number().int().nonnegative(),
   isRelevant: z.coerce.boolean(),
-  problems: z.enum(equityClaimStatusesValues),
   claimItemType: claimItemTypeSchema,
   claimSourceType: claimSourceTypeSchema,
+  claimStatus: z.enum(equityClaimStatusesValues),
 
   // Main claim details
   claimRegistryDate: z.string().datetime().nullable().default(null), // ISO 8601 date string,

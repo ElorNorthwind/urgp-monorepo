@@ -5,7 +5,7 @@ function getValues<T extends Record<string, any>>(obj: T) {
 
 export const EquityClaimStatuses = {
   active: 'active',
-  settled: 'settled',
+  historical: 'historical',
   excluded: 'excluded',
 } as const;
 export type EquityClaimStatuses =
