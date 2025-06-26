@@ -87,34 +87,39 @@ export class TelegramService implements OnModuleDestroy {
   }
 
   public async sendUserStatus(userId: number) {
-    const chatId =
-      await this.dbService.db.renovationUsers.getUserChatId(userId);
-    if (!chatId) {
-      throw new Error('Пользователь не привязан к боту!');
+    try {
+      const chatId =
+        await this.dbService.db.renovationUsers.getUserChatId(userId);
+      if (!chatId) {
+        throw new Error('Пользователь не привязан к боту!');
+      }
+      const status =
+        await this.dbService.db.controlCases.readUserCaseStatuses(userId);
+
+      const totalCount =
+        status.case_approve +
+        status.case_rejected +
+        status.case_project +
+        status.operation_pprove +
+        status.reminder_done +
+        status.reminder_overdue +
+        status.escalation +
+        status.control_to_me +
+        status.updated;
+
+      if (totalCount === 0) {
+        return -1;
+      }
+
+      return await this.bot.api
+        .sendMessage(chatId, formatStatusMessage(status), {
+          parse_mode: 'MarkdownV2',
+        })
+        .then((m) => m.message_id);
+    } catch (e) {
+      Logger.error(e);
+      return 0;
     }
-    const status =
-      await this.dbService.db.controlCases.readUserCaseStatuses(userId);
-
-    const totalCount =
-      status.case_approve +
-      status.case_rejected +
-      status.case_project +
-      status.operation_pprove +
-      status.reminder_done +
-      status.reminder_overdue +
-      status.escalation +
-      status.control_to_me +
-      status.updated;
-
-    if (totalCount === 0) {
-      return -1;
-    }
-
-    return await this.bot.api
-      .sendMessage(chatId, formatStatusMessage(status), {
-        parse_mode: 'MarkdownV2',
-      })
-      .then((m) => m.message_id);
   }
 
   private registerHandlers() {
