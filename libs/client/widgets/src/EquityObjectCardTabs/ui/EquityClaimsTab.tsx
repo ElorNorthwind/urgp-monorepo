@@ -50,17 +50,7 @@ const EquityClaimsTab = (props: EquityClaimsTabProps): JSX.Element | null => {
     skip: !equityObject?.id || equityObject?.id === 0,
   });
 
-  const firstClaim = equityClaims && equityClaims.find((c) => c?.isRelevant);
-
-  // const sortedEquityClaims = useMemo(() => {
-  //   if (!controlCase || !controlCase?.dispatches) return [];
-  //   return [...controlCase?.dispatches].sort((a, b) => {
-  //     const dif1 =
-  //       (a?.controlFrom?.priority || 0) - (b?.controlFrom?.priority || 0);
-  //     const dif2 = isBefore(a?.dueDate || 0, b?.dueDate || 0);
-  //     return dif1 > 0 ? 1 : dif1 < 0 ? -1 : dif2 ? -1 : 1;
-  //   });
-  // }, [controlCase?.dispatches]);
+  // const firstClaim = equityClaims && equityClaims.find((c) => c?.isRelevant);
 
   return (
     <CardTab
@@ -80,16 +70,19 @@ const EquityClaimsTab = (props: EquityClaimsTabProps): JSX.Element | null => {
     >
       {/* {isLoading || isFetching && <Skeleton className="h-10 w-full" />} */}
 
-      {!equityClaims || equityClaims?.length === 0 ? (
+      {!equityClaims ||
+      equityClaims?.filter((c) => c?.isRelevant)?.length === 0 ? (
         <div className="text-muted-foreground flex flex-row items-center gap-1 p-2">
           <Gift className="size-4" />
-          <span>Нет требований</span>
+          <span>Нет действующих требований</span>
         </div>
       ) : (
         <div className="">
-          {equityClaims.map((claim, index) => {
-            return <EquityClaimElement claim={claim} key={claim.id} />;
-          })}
+          {equityClaims
+            .filter((c) => c.isRelevant)
+            .map((claim, index) => {
+              return <EquityClaimElement claim={claim} key={claim.id} />;
+            })}
           {/* {equityClaims.map((claim, index) => {
             return (
               <Fragment key={claim.id}>

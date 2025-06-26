@@ -5,6 +5,7 @@ import {
   CaseNotesTab,
   ConnectedCasesTab,
   DispatchesTab,
+  EquityClaimsArchiveTab,
   EquityClaimsTab,
   EquityObjectInfoTab,
   EquityOperationsTab,
@@ -52,6 +53,11 @@ const EquityObjectCard = (props: EquityObjectCardProps): JSX.Element => {
             equityObject={equityObject}
             contentClassName=""
             accordionItemName="claims"
+          />
+          <EquityClaimsArchiveTab
+            equityObject={equityObject}
+            contentClassName=""
+            accordionItemName="claims-archive"
           />
           <EquityOperationsTab
             equityObject={equityObject}
