@@ -1,6 +1,6 @@
 import { cn, Skeleton } from '@urgp/client/shared';
 import { EquityOperation } from '@urgp/shared/entities';
-import { format } from 'date-fns';
+import { format, isAfter } from 'date-fns';
 import { equityOperationTypeStyles } from '../../../equityClassificators';
 
 type EquityOperationItemProps = {
@@ -42,7 +42,9 @@ const EquityOperationItem = (props: EquityOperationItemProps): JSX.Element => {
           {operation?.result || ''}
         </span>
         <span className={cn('text-muted-foreground')}>
-          {operation?.date ? format(operation?.date, 'dd.MM.yyyy') : 'без даты'}
+          {operation?.date && isAfter(operation?.date, new Date(2000, 1, 1))
+            ? format(operation?.date, 'dd.MM.yyyy')
+            : 'без даты'}
         </span>
       </div>
       <div className="font-light">{operation?.notes}</div>

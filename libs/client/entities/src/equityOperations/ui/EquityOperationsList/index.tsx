@@ -16,9 +16,9 @@ const EquityOperationsList = (
 
   if (!operations || operations?.length === 0) {
     return (
-      <div className="text-muted-foreground/50 flex flex-col items-center gap-2 py-4">
+      <div className="text-muted-foreground/80 flex flex-col items-center gap-2 py-4">
         <Coffee className="size-12 stroke-1" />
-        <span>На рассмотрении...</span>
+        <span>Нет записанных действий</span>
       </div>
     );
   }

@@ -50,6 +50,8 @@ const EquityClaimsTab = (props: EquityClaimsTabProps): JSX.Element | null => {
     skip: !equityObject?.id || equityObject?.id === 0,
   });
 
+  const noClaims =
+    !equityClaims || equityClaims?.filter((c) => c?.isRelevant)?.length === 0;
   // const firstClaim = equityClaims && equityClaims.find((c) => c?.isRelevant);
 
   return (
@@ -65,15 +67,18 @@ const EquityClaimsTab = (props: EquityClaimsTabProps): JSX.Element | null => {
       // }
       className={className}
       titleClassName={titleClassName}
-      contentClassName={cn('p-0 overflow-hidden', contentClassName)}
+      contentClassName={cn(
+        'p-0 overflow-hidden',
+        noClaims && 'bg-transparent',
+        contentClassName,
+      )}
       accordionItemName={accordionItemName}
     >
       {/* {isLoading || isFetching && <Skeleton className="h-10 w-full" />} */}
 
-      {!equityClaims ||
-      equityClaims?.filter((c) => c?.isRelevant)?.length === 0 ? (
-        <div className="text-muted-foreground flex flex-row items-center gap-1 p-2">
-          <Gift className="size-4" />
+      {noClaims ? (
+        <div className="text-muted-foreground/80 flex flex-col items-center gap-2 py-4">
+          <Gift className="size-12 stroke-1" />
           <span>Нет действующих требований</span>
         </div>
       ) : (
@@ -83,47 +88,6 @@ const EquityClaimsTab = (props: EquityClaimsTabProps): JSX.Element | null => {
             .map((claim, index) => {
               return <EquityClaimElement claim={claim} key={claim.id} />;
             })}
-          {/* {equityClaims.map((claim, index) => {
-            return (
-              <Fragment key={claim.id}>
-                <div
-                  className={cn(
-                    'border-r px-4 py-1',
-                    'bg-muted-foreground/5',
-                    index < equityClaims.length - 1 &&
-                      !claim.notes &&
-                      'border-b',
-                  )}
-                >
-                  {claim?.creditorName}
-                </div>
-
-                <div
-                  className={cn(
-                    'bg-background group flex flex-row items-center gap-1 px-4 py-1',
-                    'col-span-2',
-                    index < equityClaims.length - 1 &&
-                      !claim.notes &&
-                      'border-b',
-                  )}
-                >
-                  {claim?.claimItemType?.name + ' | '}
-                  {claim?.source}
-                </div>
-
-                {claim?.notes && (
-                  <div
-                    className={cn(
-                      index < equityClaims.length - 1 && 'border-b',
-                      'text-muted-foreground bg-background/50 col-span-3 border-t px-4 py-1 text-xs',
-                    )}
-                  >
-                    {claim?.notes}
-                  </div>
-                )}
-              </Fragment>
-            );
-          })} */}
         </div>
       )}
     </CardTab>
