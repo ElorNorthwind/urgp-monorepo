@@ -212,7 +212,7 @@ const OldApartmentDetailsSheet = ({
         <MessageTab
           apartmentId={apartmentId || 0}
           refetchAll={refetch}
-          className="w-messagebar absolute bottom-0 right-[calc(var(--detailsbar-width)+0.5rem)] top-0"
+          className="w-messagebar absolute bottom-0 right-[calc(var(--detailsbar-width)+0.5rem)] top-0 max-w-[calc(100vw-var(--detailsbar-width)-var(--messagebar-width)-4rem)]"
         />
       </CardContent>
     </Card>
