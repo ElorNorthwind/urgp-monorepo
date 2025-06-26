@@ -25,7 +25,7 @@ const ClaimItem = (props: ClaimItemProps): JSX.Element | null => {
         <div
           className={cn(
             'flex w-full flex-row flex-nowrap justify-start gap-2 overflow-hidden truncate',
-            '[&>*]:truncate [&>*]:border-l [&>*]:pl-2 [&>*]:font-thin',
+            '[&>*]:truncate [&>*]:border-l [&>*]:pl-2 [&>*]:font-light',
             'first:[&>*]:flex-shrink-0 first:[&>*]:border-l-0 first:[&>*]:pl-0 first:[&>*]:font-semibold',
             className,
           )}

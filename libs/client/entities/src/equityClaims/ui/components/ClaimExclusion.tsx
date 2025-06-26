@@ -33,7 +33,7 @@ const ClaimExclusion = (props: ClaimExclusionProps): JSX.Element | null => {
               ? format(claim?.claimExclusionDate, 'dd.MM.yyyy')
               : 'без даты'}
           </div>
-          <div className="w-0 flex-grow font-thin">
+          <div className="w-0 flex-grow font-light">
             {claim?.claimExclusionReason}
           </div>
         </div>

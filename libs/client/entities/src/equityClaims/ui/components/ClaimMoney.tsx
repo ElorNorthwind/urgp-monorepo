@@ -23,7 +23,7 @@ const ClaimMoney = (props: ClaimMoneyProps): JSX.Element | null => {
         <div className="flex flex-row items-center gap-1 ">
           <TicketCheck className="size-4 flex-shrink-0 text-sky-500" />
           <span className="text-sky-500">{'внесено:'}</span>
-          <span className="font-thin">
+          <span className="font-light">
             {new Intl.NumberFormat('ru-RU', {
               style: 'currency',
               currency: 'RUB',
@@ -35,7 +35,7 @@ const ClaimMoney = (props: ClaimMoneyProps): JSX.Element | null => {
         <div className="flex flex-row items-center gap-1 ">
           <TicketX className="size-4 flex-shrink-0 text-rose-500" />
           <span className="text-rose-500">{'недоплата:'}</span>
-          <span className="font-thin">
+          <span className="font-light">
             {new Intl.NumberFormat('ru-RU', {
               style: 'currency',
               currency: 'RUB',
@@ -47,7 +47,7 @@ const ClaimMoney = (props: ClaimMoneyProps): JSX.Element | null => {
         <div className="flex flex-row items-center gap-1 ">
           <TicketX className="size-4 flex-shrink-0 text-orange-500" />
           <span className="text-orange-500">{'убытки:'}</span>
-          <span className="font-thin">
+          <span className="font-light">
             {new Intl.NumberFormat('ru-RU', {
               style: 'currency',
               currency: 'RUB',

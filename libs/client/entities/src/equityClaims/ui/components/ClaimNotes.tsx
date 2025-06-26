@@ -27,7 +27,7 @@ const ClaimNotes = (props: ClaimNotesProps): JSX.Element | null => {
           )}
         >
           <div className="w-24 flex-shrink-0 font-semibold">Примечания:</div>
-          <div className="w-0 flex-grow font-thin">{claim?.notes}</div>
+          <div className="w-0 flex-grow font-light">{claim?.notes}</div>
         </div>
       </TooltipTrigger>
       <TooltipPortal>

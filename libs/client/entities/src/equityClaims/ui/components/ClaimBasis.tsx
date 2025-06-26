@@ -34,10 +34,10 @@ const ClaimBasis = (props: ClaimBasisProps): JSX.Element | null => {
               : 'без даты'}
           </div>
           {claim?.legalAct && (
-            <div className="w-0 flex-grow font-thin">{claim?.legalAct}</div>
+            <div className="w-0 flex-grow font-light">{claim?.legalAct}</div>
           )}
           {claim?.basis && (
-            <div className="w-0 flex-grow font-thin">{claim?.basis}</div>
+            <div className="w-0 flex-grow font-light">{claim?.basis}</div>
           )}
         </div>
       </TooltipTrigger>

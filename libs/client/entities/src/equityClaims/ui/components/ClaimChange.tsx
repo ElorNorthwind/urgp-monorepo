@@ -28,7 +28,7 @@ const ClaimChange = (props: ClaimChangeProps): JSX.Element | null => {
           )}
         >
           <div className="w-24 flex-shrink-0 font-semibold">Изменение:</div>
-          <div className="w-0 flex-grow font-thin">{claim?.changeBasis}</div>
+          <div className="w-0 flex-grow font-light">{claim?.changeBasis}</div>
         </div>
       </TooltipTrigger>
       <TooltipPortal>

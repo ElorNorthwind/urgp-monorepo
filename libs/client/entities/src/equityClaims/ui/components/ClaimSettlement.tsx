@@ -33,7 +33,7 @@ const ClaimSettlement = (props: ClaimSettlementProps): JSX.Element | null => {
               ? format(claim?.claimSettlementDate, 'dd.MM.yyyy')
               : 'без даты'}
           </div>
-          <div className="w-0 flex-grow font-thin">
+          <div className="w-0 flex-grow font-light">
             {claim?.claimSettlementReason}
           </div>
         </div>
