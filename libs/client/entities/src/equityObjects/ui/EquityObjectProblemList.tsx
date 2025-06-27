@@ -36,7 +36,7 @@ const EquityObjectProblemList = forwardRef<
               <Badge
                 variant={'outline'}
                 className={cn(
-                  'truncate text-nowrap',
+                  'truncate whitespace-nowrap text-nowrap',
                   equityProblemsStyles[p]?.badgeStyle,
                 )}
                 key={p}
@@ -78,7 +78,10 @@ const EquityObjectProblemList = forwardRef<
       {problems.length > 2 ? (
         <Badge
           variant={'outline'}
-          className={cn('text-nowrap', equityProblemsStyles[1].badgeStyle)}
+          className={cn(
+            'whitespace-nowrap text-nowrap',
+            equityProblemsStyles[1].badgeStyle,
+          )}
           key={'problems-more'}
         >
           {problems.length + ' пробл.'}
@@ -92,7 +95,7 @@ const EquityObjectProblemList = forwardRef<
               <Badge
                 variant={'outline'}
                 className={cn(
-                  'text-nowrap',
+                  'whitespace-nowrap text-nowrap',
                   equityProblemsStyles[p]?.badgeStyle,
                 )}
                 key={p}

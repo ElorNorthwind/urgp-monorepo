@@ -44,12 +44,12 @@ const ControlAccountPage = (): JSX.Element => {
       </CardHeader>
       <CardContent className="space-y-8 pb-0">
         <div className="flex flex-col gap-4">
-          <div className="flex flex-row justify-between gap-4 text-nowrap">
+          <div className="flex flex-row justify-between gap-4 whitespace-nowrap text-nowrap">
             <InfoBox label="ID:" value={user?.id} />
             <InfoBox label="Логин:" value={user?.login} />
             <InfoBox label="ФИО:" value={user?.fio} />
           </div>
-          <div className="flex flex-row justify-between gap-4 text-nowrap">
+          <div className="flex flex-row justify-between gap-4 whitespace-nowrap text-nowrap">
             <InfoBox
               label="Управление:"
               isLoading={isSettingsLoading || isSettingsFetching}

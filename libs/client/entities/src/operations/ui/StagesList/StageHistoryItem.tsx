@@ -49,7 +49,7 @@ const StageHistoryItem = (props: StageHistoryItemProps): JSX.Element => {
         <span className={cn('truncate font-bold', fontStyle)}>
           {item.type.fullname}
         </span>
-        <div className="text-muted-foreground ml-auto flex flex-row gap-1 text-nowrap text-xs">
+        <div className="text-muted-foreground ml-auto flex flex-row gap-1 whitespace-nowrap text-nowrap text-xs">
           <span>{item?.updatedBy?.fio || item?.author?.fio || '-'}</span>
           <span>
             {format(item?.updatedAt || item?.createdAt, 'dd.MM.yyyy HH:mm')}
@@ -80,10 +80,12 @@ const StageHistoryItem = (props: StageHistoryItemProps): JSX.Element => {
       >
         <span className="font-medium">{label}</span>
         {item?.approveTo?.fio && (
-          <span className="text-nowrap">{': ' + item?.approveTo?.fio}</span>
+          <span className="whitespace-nowrap text-nowrap">
+            {': ' + item?.approveTo?.fio}
+          </span>
         )}
         {item?.approveDate && (
-          <span className="ml-auto text-nowrap">
+          <span className="ml-auto whitespace-nowrap text-nowrap">
             {format(item.approveDate, 'dd.MM.yyyy HH:mm')}
           </span>
         )}

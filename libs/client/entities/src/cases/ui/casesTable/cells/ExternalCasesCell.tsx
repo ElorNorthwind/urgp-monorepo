@@ -22,7 +22,7 @@ function ExternalCasesCell(props: CellContext<CaseFull, string>): JSX.Element {
         <div className="text-muted-foreground line-clamp-1 flex w-full flex-col items-start justify-start gap-0">
           {externalCases?.slice(0, 2).map((c) => (
             <div
-              className={cn('w-full truncate text-nowrap')}
+              className={cn('w-full truncate whitespace-nowrap text-nowrap')}
               key={c.num || '' + c.id || ''}
             >
               {c.num || '-'}

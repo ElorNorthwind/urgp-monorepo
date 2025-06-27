@@ -93,7 +93,7 @@ const CaseDirectionsList = forwardRef<
                   <Badge
                     variant={'outline'}
                     className={cn(
-                      'text-nowrap',
+                      'whitespace-nowrap text-nowrap',
                       d?.category &&
                         directionCategoryStyles[d.category].badgeStyle,
                     )}
@@ -140,7 +140,7 @@ const CaseDirectionsList = forwardRef<
                 <Badge
                   variant={'outline'}
                   className={cn(
-                    'text-nowrap',
+                    'whitespace-nowrap text-nowrap',
                     directionCategoryStyles[d?.name].badgeStyle,
                   )}
                   key={d?.name}
@@ -155,7 +155,7 @@ const CaseDirectionsList = forwardRef<
                 <Badge
                   variant={'outline'}
                   className={cn(
-                    'text-nowrap',
+                    'whitespace-nowrap text-nowrap',
                     d?.category &&
                       directionCategoryStyles[d.category].badgeStyle,
                   )}

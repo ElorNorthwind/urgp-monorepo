@@ -46,13 +46,13 @@ const ExternalCaseFieldArray = ({
         <div className="mx-6 mb-2 grid grid-cols-[auto_auto_1fr_auto_auto] items-center gap-2">
           {fields.length > 0 ? (
             <>
-              <Label className="bg-sidebar sticky top-0 col-span-2 truncate text-nowrap pb-1">
+              <Label className="bg-sidebar sticky top-0 col-span-2 truncate whitespace-nowrap text-nowrap pb-1">
                 Источник
               </Label>
-              <Label className="bg-sidebar sticky top-0 truncate text-nowrap pb-1">
+              <Label className="bg-sidebar sticky top-0 truncate whitespace-nowrap text-nowrap pb-1">
                 Номер
               </Label>
-              <Label className="bg-sidebar sticky top-0 col-span-2 truncate text-nowrap pb-1">
+              <Label className="bg-sidebar sticky top-0 col-span-2 truncate whitespace-nowrap text-nowrap pb-1">
                 Дата
               </Label>
             </>

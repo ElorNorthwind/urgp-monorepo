@@ -1,19 +1,6 @@
 import { CellContext } from '@tanstack/react-table';
-import {
-  cn,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@urgp/client/shared';
-import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
-import { format, isAfter } from 'date-fns';
-import { CaseClasses, CaseFull, EquityObject } from '@urgp/shared/entities';
-import {
-  equityObjectStatusStyles,
-  equityObjectTypeStyles,
-} from '../../../../equityClassificators';
+import { EquityObject } from '@urgp/shared/entities';
 import { EquityObjectProblemList } from '../../EquityObjectProblemList';
-// import { equityBuildingStyles } from 'libs/client/entities/src/equityClassificators';
 
 function EquityObjectProblemCell(
   props: CellContext<EquityObject, string>,

@@ -87,7 +87,7 @@ const StageItem = (props: StageItemProps): JSX.Element => {
                 : stage?.approveTo?.fio}
             </span>
             {stage?.approveDate && (
-              <span className="ml-auto text-nowrap">
+              <span className="ml-auto whitespace-nowrap text-nowrap">
                 {format(stage?.approveDate, 'dd.MM.yyyy HH:mm')}
               </span>
             )}

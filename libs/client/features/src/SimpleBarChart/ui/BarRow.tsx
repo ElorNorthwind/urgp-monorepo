@@ -69,7 +69,7 @@ const BarRow = forwardRef<
             (label && typeof label === 'object' ? (
               label
             ) : (
-              <div className="mx-2 w-full truncate text-nowrap text-sm">
+              <div className="mx-2 w-full truncate whitespace-nowrap text-nowrap text-sm">
                 {label}
               </div>
             ))}
@@ -79,7 +79,9 @@ const BarRow = forwardRef<
             {label && typeof label === 'object' ? (
               label
             ) : (
-              <div className="w-full truncate text-nowrap text-sm">{label}</div>
+              <div className="w-full truncate whitespace-nowrap text-nowrap text-sm">
+                {label}
+              </div>
             )}
           </div>
         )}
