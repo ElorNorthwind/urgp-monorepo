@@ -1,7 +1,9 @@
 import {
   EquityClaim,
+  EquityComplexData,
   EquityObject,
   EquityOperation,
+  EquityTimeline,
   EquityTotals,
   NestedClassificatorInfo,
 } from '@urgp/shared/entities';
@@ -55,5 +57,13 @@ export class EquityRepository {
 
   getObjectsTotals(): Promise<EquityTotals[]> {
     return this.db.any(equityObjects.readEquityObjectsTotals);
+  }
+
+  getObjectsTimeline(): Promise<EquityTimeline[]> {
+    return this.db.any(equityObjects.readEquityObjectsTimeline);
+  }
+
+  getComplexList(): Promise<EquityComplexData[]> {
+    return this.db.any(equityObjects.readComplexList);
   }
 }

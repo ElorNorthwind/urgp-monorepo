@@ -186,4 +186,8 @@ export const equityObjects = {
   readEquityObjectsTotals: sql(
     'sql/equity/objects/readEquityObjectsTotals.sql',
   ),
+  readEquityObjectsTimeline: sql(
+    'sql/equity/objects/readEquityObjectsTimeline.sql',
+  ),
+  readComplexList: sql('sql/equity/objects/readComplexList.sql'),
 };

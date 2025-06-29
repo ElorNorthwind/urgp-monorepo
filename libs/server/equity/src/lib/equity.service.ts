@@ -3,8 +3,10 @@ import { DatabaseService } from '@urgp/server/database';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   EquityClaim,
+  EquityComplexData,
   EquityObject,
   EquityOperation,
+  EquityTimeline,
   EquityTotals,
   NestedClassificatorInfo,
 } from '@urgp/shared/entities';
@@ -58,5 +60,13 @@ export class EquityService {
 
   public async getEquityObjectsTotals(): Promise<EquityTotals[]> {
     return this.dbServise.db.equity.getObjectsTotals();
+  }
+
+  public async getEquityObjectsTimeline(): Promise<EquityTimeline[]> {
+    return this.dbServise.db.equity.getObjectsTimeline();
+  }
+
+  public async getEquityComplexList(): Promise<EquityComplexData[]> {
+    return this.dbServise.db.equity.getComplexList();
   }
 }

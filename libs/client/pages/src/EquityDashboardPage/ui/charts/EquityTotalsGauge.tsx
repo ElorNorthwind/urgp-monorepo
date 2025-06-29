@@ -1,12 +1,7 @@
 import { useNavigate } from '@tanstack/react-router';
 import { equityObjectStatusStyles } from '@urgp/client/entities';
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  cn,
-} from '@urgp/client/shared';
+import { renderRechartsTooltip } from '@urgp/client/features';
+import { ChartConfig, ChartContainer, cn } from '@urgp/client/shared';
 import { EquityTotals } from '@urgp/shared/entities';
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from 'recharts';
 import { countByTypeAndStatuses } from '../../lib/countBy';
@@ -41,7 +36,7 @@ const EquityTotalsGauge = ({
       textY: -4,
       endAngle: 180,
       startAngle: undefined,
-      marginStyle: '-mt-4',
+      marginStyle: '-mt-8',
     },
     bottom: {
       cy: 0,
@@ -49,7 +44,7 @@ const EquityTotalsGauge = ({
       textY: 12,
       endAngle: undefined,
       startAngle: 180,
-      marginStyle: '-mb-4',
+      marginStyle: '-mb-10',
     },
     full: {
       cy: 140,
@@ -57,7 +52,7 @@ const EquityTotalsGauge = ({
       textY: 16,
       endAngle: 180,
       startAngle: 540,
-      marginStyle: '-mb-4',
+      marginStyle: '-mb-10 -mt-2',
     },
   } as Record<'top' | 'bottom' | 'full', any>;
 
@@ -174,10 +169,22 @@ const EquityTotalsGauge = ({
         outerRadius={outerRadius}
         cy={chartVariant.cy}
       >
-        <ChartTooltip
+        {renderRechartsTooltip({
+          config: chartConfig,
+          // cursor: true,
+          labelWidth: '16rem',
+          labelFormatter: () => {
+            return (
+              <div className="text-lg font-bold">
+                {action == 'give' ? 'Передача дольщикам' : 'Передача Москве'}
+              </div>
+            );
+          },
+        })}
+        {/* <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent hideLabel />}
-        />
+        /> */}
         <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
           <Label
             content={({ viewBox }) => {

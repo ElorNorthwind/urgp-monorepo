@@ -8,8 +8,10 @@ import {
 import { AccessTokenGuard } from '@urgp/server/auth';
 import {
   EquityClaim,
+  EquityComplexData,
   EquityObject,
   EquityOperation,
+  EquityTimeline,
   EquityTotals,
   NestedClassificatorInfo,
 } from '@urgp/shared/entities';
@@ -21,9 +23,19 @@ import { EquityService } from './equity.service';
 export class EquityController {
   constructor(private readonly equity: EquityService) {}
 
+  @Get('/complex-list')
+  async getComplexList(): Promise<EquityComplexData[]> {
+    return this.equity.getEquityComplexList();
+  }
+
   @Get('/objects/totals')
   async getObjectsTotals(): Promise<EquityTotals[]> {
     return this.equity.getEquityObjectsTotals();
+  }
+
+  @Get('/objects/timeline')
+  async getObjectsTimeline(): Promise<EquityTimeline[]> {
+    return this.equity.getEquityObjectsTimeline();
   }
 
   @Get('/objects')

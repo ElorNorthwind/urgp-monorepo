@@ -27,6 +27,7 @@ import { countByTypeAndStatuses } from '../../lib/countBy';
 import { stat } from 'fs';
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from 'recharts';
 import { EquityTotalsGauge } from '../charts/EquityTotalsGauge';
+import { EquityTotalsBar } from '../charts/EquityTotalsBar';
 
 // const countByViewStatus = (status: string, cases?: CaseFull[]) => {
 //   return cases?.filter((c) => c?.viewStatus === status)?.length || 0;

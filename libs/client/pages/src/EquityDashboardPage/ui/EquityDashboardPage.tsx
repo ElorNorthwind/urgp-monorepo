@@ -2,6 +2,9 @@ import { ScrollArea, Separator } from '@urgp/client/shared';
 import { ApartmentsTotalChart } from './cards/ApartmentsTotalChart';
 import { CarSpotsTotalChart } from './cards/CarSpotsTotalChart';
 import { NonresidentialTotalChart } from './cards/NonresidentialTotalChart';
+import { MonthlyDoneTimelineChart } from '@urgp/client/widgets';
+import { MonthlyProgressTimelineChart } from './cards/MonthlyProgressTImeline';
+import { ComplexesChart } from './cards/ComplexesChart';
 
 const EquityDashboardPage = (): JSX.Element => {
   return (
@@ -22,6 +25,8 @@ const EquityDashboardPage = (): JSX.Element => {
             <CarSpotsTotalChart />
             <NonresidentialTotalChart />
           </div>
+          <MonthlyProgressTimelineChart />
+          <ComplexesChart />
           {/* <TotalNumberCards />
           <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
             <PendingActionChart className="col-span-2" />

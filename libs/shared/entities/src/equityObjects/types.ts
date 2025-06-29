@@ -83,3 +83,33 @@ export const equityTotalsSchema = z.object({
   total: z.number().int().nonnegative(),
 });
 export type EquityTotals = z.infer<typeof equityTotalsSchema>;
+
+export const equityTimelineSchema = z.object({
+  year: z.number().int().nonnegative(),
+  month: z.number().int().nonnegative(),
+  period: z.string(),
+  given: z.number().int().nonnegative(),
+  taken: z.number().int().nonnegative(),
+});
+export type EquityTimeline = z.infer<typeof equityTimelineSchema>;
+
+export const equityComplexDataSchema = z.object({
+  complex: z.object({
+    id: z.coerce.number().int().nonnegative(),
+    name: z.string().nullable(),
+    developer: z.string().nullable(),
+  }),
+  buildingsDone: z.number().int().nonnegative(),
+  buildingsProject: z.number().int().nonnegative(),
+  buildingIds: z.array(z.number().int().nonnegative()),
+  maxApartments: z.number().int().nonnegative(),
+  maxParkings: z.number().int().nonnegative(),
+});
+export type EquityComplexData = z.infer<typeof equityComplexDataSchema>;
+
+// to_jsonb(c) as complex,
+// COUNT(*) FILTER (WHERE o.apartments > 0) as "buildingsDone",
+// COUNT(*) FILTER (WHERE o.apartments IS NULL OR o.apartments = 0) as "buildingsProject",
+// ARRAY_AGG(b.id) as "buildingIds",
+// MAX(o.apartments) as "maxApartments",
+// MAX(o.parkings) as "maxParkings"
