@@ -20,3 +20,4 @@ export * from './AddressMySessionsPage';
 export * from './XMLGeneratorPage';
 export * from './SpecialApartmentsPage';
 export * from './EquityObjectsPage';
+export * from './EquityDashboardPage';

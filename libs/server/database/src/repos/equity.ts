@@ -2,10 +2,11 @@ import {
   EquityClaim,
   EquityObject,
   EquityOperation,
+  EquityTotals,
   NestedClassificatorInfo,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
-import { equityClassificators } from './sql/sql';
+import { equityClassificators, equityObjects } from './sql/sql';
 
 // @Injectable()
 export class EquityRepository {
@@ -50,5 +51,9 @@ export class EquityRepository {
 
   getOperationTypeClassificator(): Promise<NestedClassificatorInfo[]> {
     return this.db.any(equityClassificators.readOperationTypeClassificator);
+  }
+
+  getObjectsTotals(): Promise<EquityTotals[]> {
+    return this.db.any(equityObjects.readEquityObjectsTotals);
   }
 }

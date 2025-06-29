@@ -181,3 +181,9 @@ export const equityClassificators = {
     'sql/equity/classificators/readOperationTypeClassificator.sql',
   ),
 };
+
+export const equityObjects = {
+  readEquityObjectsTotals: sql(
+    'sql/equity/objects/readEquityObjectsTotals.sql',
+  ),
+};

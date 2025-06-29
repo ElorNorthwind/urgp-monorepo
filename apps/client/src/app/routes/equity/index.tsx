@@ -1,13 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { AddressUploadPage } from '@urgp/client/pages';
-import { addressUploadPageSearchSchema } from '@urgp/shared/entities';
+import { EquityDashboardPage } from '@urgp/client/pages';
 
 export const Route = createFileRoute('/equity/')({
   // beforeLoad: () => {
   //   throw redirect({ to: '/control/cases' });
   // },
   // component: () => <ExcelFileInput />,
-  component: () => <div>Тут будут дольщики</div>,
+  component: () => <EquityDashboardPage />,
   // validateSearch: (search) => {
   //   return addressUploadPageSearchSchema.parse(search);
   // },

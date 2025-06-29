@@ -75,3 +75,11 @@ export const equityObjectSchema = z.object({
   egrnHolderName: z.string().nullable(), // Current title holder
 });
 export type EquityObject = z.infer<typeof equityObjectSchema>;
+
+export const equityTotalsSchema = z.object({
+  building: buildingSchema,
+  objectType: objectTypeSchema,
+  status: statusSchema,
+  total: z.number().int().nonnegative(),
+});
+export type EquityTotals = z.infer<typeof equityTotalsSchema>;

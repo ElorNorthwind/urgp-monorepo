@@ -10,6 +10,7 @@ import {
   EquityClaim,
   EquityObject,
   EquityOperation,
+  EquityTotals,
   NestedClassificatorInfo,
 } from '@urgp/shared/entities';
 
@@ -19,6 +20,11 @@ import { EquityService } from './equity.service';
 // @UseGuards(AccessTokenGuard)
 export class EquityController {
   constructor(private readonly equity: EquityService) {}
+
+  @Get('/objects/totals')
+  async getObjectsTotals(): Promise<EquityTotals[]> {
+    return this.equity.getEquityObjectsTotals();
+  }
 
   @Get('/objects')
   async getObjects(): Promise<EquityObject[]> {

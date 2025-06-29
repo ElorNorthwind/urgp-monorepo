@@ -59,10 +59,10 @@ module.exports = {
           to: join(__dirname, '../../dist/apps/server/sql/address/rates'),
         },
         // // equity
-        // {
-        //   from: '../../libs/server/database/src/repos/sql/equity/objects',
-        //   to: join(__dirname, '../../dist/apps/server/sql/equity/objects'),
-        // },
+        {
+          from: '../../libs/server/database/src/repos/sql/equity/objects',
+          to: join(__dirname, '../../dist/apps/server/sql/equity/objects'),
+        },
         // {
         //   from: '../../libs/server/database/src/repos/sql/equity/claims',
         //   to: join(__dirname, '../../dist/apps/server/sql/equity/claims'),

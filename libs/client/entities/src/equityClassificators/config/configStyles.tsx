@@ -81,12 +81,36 @@ export const equityBuildingStyles = {
 } as Record<string, StyleData>;
 
 export const equityObjectStatusStyles = {
-  1: { icon: CircleEllipsis, iconStyle: cn('text-stone-500') },
-  7: { icon: CirclePlay, iconStyle: cn('text-yellow-500') },
-  2: { icon: CircleCheck, iconStyle: cn('text-orange-500') },
-  3: { icon: CircleUserRound, iconStyle: cn('text-emerald-500') },
-  4: { icon: ShieldEllipsis, iconStyle: cn('text-gray-500') },
-  5: { icon: ShieldCheck, iconStyle: cn('text-blue-500') },
+  1: {
+    icon: CircleEllipsis,
+    iconStyle: cn('text-stone-500'),
+    chartColor: '#cbd5e1',
+  },
+  7: {
+    icon: CirclePlay,
+    iconStyle: cn('text-yellow-500'),
+    chartColor: '#cbd5e1',
+  },
+  2: {
+    icon: CircleCheck,
+    iconStyle: cn('text-orange-500'),
+    chartColor: '#f97316',
+  },
+  3: {
+    icon: CircleUserRound,
+    iconStyle: cn('text-emerald-500'),
+    chartColor: '#10b981',
+  },
+  4: {
+    icon: ShieldEllipsis,
+    iconStyle: cn('text-gray-500'),
+    chartColor: '#cbd5e1',
+  },
+  5: {
+    icon: ShieldCheck,
+    iconStyle: cn('text-blue-500'),
+    chartColor: '#3b82f6',
+  },
 } as Record<number, StyleData>;
 
 export const equityClaimItemTypeStyles = {

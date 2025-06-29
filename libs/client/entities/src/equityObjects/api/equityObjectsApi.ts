@@ -1,5 +1,5 @@
 import { rtkApi } from '@urgp/client/shared';
-import { EquityObject } from '@urgp/shared/entities';
+import { EquityObject, EquityTotals } from '@urgp/shared/entities';
 
 export const equityObjectsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
@@ -18,6 +18,14 @@ export const equityObjectsApi = rtkApi.injectEndpoints({
       }),
       providesTags: ['equity-objects'],
     }),
+
+    getObjectsTotals: build.query<EquityTotals[], void>({
+      query: () => ({
+        url: '/equity/objects/totals',
+        method: 'GET',
+      }),
+      providesTags: ['equity-objects'],
+    }),
   }),
   overrideExisting: false,
 });
@@ -25,4 +33,5 @@ export const equityObjectsApi = rtkApi.injectEndpoints({
 export const {
   useGetObjectsQuery: useEquityObjects,
   useGetObjectByIdQuery: useEquityObjectById,
+  useGetObjectsTotalsQuery: useEquityTotals,
 } = equityObjectsApi;
