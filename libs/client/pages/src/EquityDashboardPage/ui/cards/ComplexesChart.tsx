@@ -71,7 +71,7 @@ const ComplexesChart = ({ className }: ComplexesChartProps): JSX.Element => {
           complexList &&
           complexList.length > 0 && (
             <>
-              <h1 className="bg-muted-foreground/5 /w-full -mx-6 mt-4 py-2 text-center text-2xl font-bold">
+              <h1 className="/w-full -mx-6 mt-4 bg-blue-500/10 py-2 text-center text-2xl font-bold">
                 АО "Мосотделстрой № 1"
               </h1>
               {complexList
@@ -97,7 +97,7 @@ const ComplexesChart = ({ className }: ComplexesChartProps): JSX.Element => {
                     customMax={1500}
                   />
                 ))}
-              <h1 className="bg-muted-foreground/5 /w-full -mx-6 mt-4 py-2 text-center text-2xl font-bold">
+              <h1 className="/w-full -mx-6 mt-8 bg-green-500/10 py-2 text-center text-2xl font-bold">
                 Фонд защиты прав участников долевого строительства
               </h1>
               {complexList
