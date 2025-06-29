@@ -73,7 +73,7 @@ const CarSpotsTotalChart = ({
         {Icon && <Icon className="size-12 flex-shrink-0" />}
         <div>
           <CardTitle className="flex flex-row gap-2">
-            <span>Машино-места</span>
+            <span>Машиноместа</span>
             <ExternalLink className="hidden size-6 flex-shrink-0 group-hover/header:block" />
           </CardTitle>
           <CardDescription>Подземный паркинг</CardDescription>

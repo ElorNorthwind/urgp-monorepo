@@ -91,7 +91,7 @@ const NonresidentialTotalChart = ({
 
         <div
           className={cn(
-            'select-none text-5xl font-semibold text-slate-200',
+            'select-none text-5xl font-semibold text-slate-500/50',
             'absolute right-5 top-7 z-0',
           )}
         >

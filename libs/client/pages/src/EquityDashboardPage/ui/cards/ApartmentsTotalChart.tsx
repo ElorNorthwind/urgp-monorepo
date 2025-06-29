@@ -99,7 +99,7 @@ const ApartmentsTotalChart = ({
 
         <div
           className={cn(
-            'select-none text-5xl font-semibold text-green-500/50',
+            'select-none text-5xl font-semibold text-green-500/60',
             'absolute right-5 top-7 z-0',
           )}
         >
