@@ -23,11 +23,11 @@ function EquityObjectStatusCell(
     icon: StatusIcon,
     iconStyle,
     label: statusLabel,
-  } = equityObjectStatusStyles?.[rowData.status?.id || 0] ||
+  } = equityObjectStatusStyles?.[rowData.statusId || 0] ||
   Object.values(equityObjectStatusStyles)[0];
 
   const { label } =
-    equityObjectTypeStyles?.[rowData.objectType?.id || 0] ||
+    equityObjectTypeStyles?.[rowData.objectTypeId || 0] ||
     Object.values(equityObjectTypeStyles)[0];
 
   return (
@@ -39,16 +39,16 @@ function EquityObjectStatusCell(
           )}
           <div className="flex flex-1 flex-col items-start justify-start truncate">
             <div className="truncate">
-              <span className="text-bold">{rowData?.status?.name}</span>
+              <span className="text-bold">{rowData?.statusName}</span>
             </div>
             <div className="text-muted-foreground w-full truncate text-xs">
               <span className="w-full truncate font-thin">
-                {rowData?.lastOperation?.typeName || '-'}
+                {rowData?.lastOpTypeName || '-'}
               </span>
-              {rowData?.lastOperation?.date &&
-                isAfter(rowData?.lastOperation?.date, new Date(2000, 1, 1)) && (
+              {rowData?.lastOpDate &&
+                isAfter(rowData?.lastOpDate, new Date(2000, 1, 1)) && (
                   <span className="ml-1 w-full truncate border-l pl-1 font-thin">
-                    {format(rowData?.lastOperation?.date, 'dd.MM.yyyy')}
+                    {format(rowData?.lastOpDate, 'dd.MM.yyyy')}
                   </span>
                 )}
             </div>
@@ -60,7 +60,7 @@ function EquityObjectStatusCell(
           <TooltipArrow />
           <div className="flex max-w-[450px] flex-col gap-0">
             <div className="font-bold">
-              {(rowData?.building?.addressShort || '-') +
+              {(rowData?.addressShort || '-') +
                 ' ' +
                 label +
                 ' ' +
@@ -69,29 +69,29 @@ function EquityObjectStatusCell(
             <div className="flex items-start justify-between">
               <span>Статус:</span>
               <span className="text-muted-foreground ml-2 font-normal">
-                {rowData?.status?.name}
+                {rowData?.statusName}
               </span>
             </div>
             <div className="flex items-start justify-between">
-              <span>Собственник:</span>
+              <span>Собственность:</span>
               <span className="text-muted-foreground ml-2 font-normal">
-                {rowData?.egrnHolderName || '-'}
+                {rowData?.egrnStatus || '-'}
               </span>
             </div>
-            {rowData?.lastOperation?.typeName && (
+            {rowData?.lastOpTypeName && (
               <div className="flex items-start justify-between">
                 <span>Последнее действие:</span>
                 <span className="text-muted-foreground ml-2 font-normal">
-                  {rowData?.lastOperation?.typeName}
+                  {rowData?.lastOpTypeName}
                 </span>
               </div>
             )}
-            {rowData?.lastOperation?.date &&
-              isAfter(rowData?.lastOperation?.date, new Date(2000, 1, 1)) && (
+            {rowData?.lastOpDate &&
+              isAfter(rowData?.lastOpDate, new Date(2000, 1, 1)) && (
                 <div className="flex items-start justify-between">
                   <span>Дата последнего действи:</span>
                   <span className="text-muted-foreground ml-2 font-normal">
-                    {format(rowData?.lastOperation?.date, 'dd.MM.yyyy')}
+                    {format(rowData?.lastOpDate, 'dd.MM.yyyy')}
                   </span>
                 </div>
               )}

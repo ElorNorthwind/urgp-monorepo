@@ -4,9 +4,11 @@ function getValues<T extends Record<string, any>>(obj: T) {
 }
 
 export const EquityObjectProblems = {
-  'double-sell': 'double-sell',
+  doublesell: 'doublesell',
   unidentified: 'unidentified',
   defects: 'defects',
+  potentialclaim: 'potentialclaim',
+  idproblem: 'idproblem',
 } as const;
 export type EquityObjectProblems =
   (typeof EquityObjectProblems)[keyof typeof EquityObjectProblems];

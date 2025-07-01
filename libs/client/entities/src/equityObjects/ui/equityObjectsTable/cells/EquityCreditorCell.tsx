@@ -1,17 +1,7 @@
-import { CellContext } from '@tanstack/react-table';
-import {
-  cn,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@urgp/client/shared';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
-import { format, isAfter } from 'date-fns';
-import { CaseClasses, CaseFull, EquityObject } from '@urgp/shared/entities';
-import {
-  equityObjectStatusStyles,
-  equityObjectTypeStyles,
-} from '../../../../equityClassificators';
+import { CellContext } from '@tanstack/react-table';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@urgp/client/shared';
+import { EquityObject } from '@urgp/shared/entities';
 // import { equityBuildingStyles } from 'libs/client/entities/src/equityClassificators';
 
 function EquityCreditorCell(
@@ -46,11 +36,11 @@ function EquityCreditorCell(
                 {rowData?.claimsCount}
               </span>
             </div>
-            <div className="flex items-start justify-between">
+            {/* <div className="flex items-start justify-between">
               <span className="text-muted-foreground ml-2 font-normal">
                 {rowData?.identificationNotes}
               </span>
-            </div>
+            </div> */}
           </div>
         </TooltipContent>
       </TooltipPortal>

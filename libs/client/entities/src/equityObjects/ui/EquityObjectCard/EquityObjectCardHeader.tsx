@@ -32,7 +32,7 @@ const EquityObjectCardHeader = (
     icon: TypeIcon,
     iconStyle,
     label,
-  } = equityObjectTypeStyles?.[equityObject?.objectType?.id || 0] ||
+  } = equityObjectTypeStyles?.[equityObject?.objectTypeId || 0] ||
   Object.values(equityObjectTypeStyles)[0];
 
   return (
@@ -57,17 +57,13 @@ const EquityObjectCardHeader = (
           //   })
           // }
         >
-          {equityObject?.building?.addressShort +
-            ' ' +
-            label +
-            ' ' +
-            equityObject?.num}
+          {equityObject?.addressShort + ' ' + label + ' ' + equityObject?.num}
         </h1>
       )}
 
       {equityObject && (
         <p className="border-foreground/20 text-muted-foreground h-full flex-shrink truncate border-l pl-2">
-          {'ЖК ' + equityObject?.building?.complexName || ''}
+          {'ЖК ' + equityObject?.complexName || ''}
         </p>
       )}
       {onClose && (

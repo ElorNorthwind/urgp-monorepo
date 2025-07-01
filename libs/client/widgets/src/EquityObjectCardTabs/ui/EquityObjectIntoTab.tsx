@@ -34,7 +34,7 @@ const EquityObjectInfoTab = (
   if (!equityObject) return null;
 
   const { icon: StatusIcon, iconStyle: statusIconStyle } =
-    equityObjectStatusStyles?.[equityObject?.status?.id || 0] ||
+    equityObjectStatusStyles?.[equityObject?.statusId || 0] ||
     Object.entries(caseStatusStyles)[0];
 
   return (
@@ -58,7 +58,7 @@ const EquityObjectInfoTab = (
           />
         )}
         <p className="my-auto w-full truncate font-light">
-          {equityObject?.status?.name || '-'}
+          {equityObject?.statusName || '-'}
         </p>
       </div>
 

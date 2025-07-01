@@ -20,7 +20,7 @@ function EquityObjectNumberCell(
     icon: TypeIcon,
     iconStyle,
     label,
-  } = equityObjectTypeStyles?.[rowData.objectType?.id || 0] ||
+  } = equityObjectTypeStyles?.[rowData.objectTypeId || 0] ||
   Object.values(equityObjectTypeStyles)[0];
 
   return (
@@ -62,7 +62,7 @@ function EquityObjectNumberCell(
           <TooltipArrow />
           <div className="flex max-w-[300px] flex-col gap-0">
             <div className="font-bold">
-              {(rowData?.building?.addressShort || '-') +
+              {(rowData?.addressShort || '-') +
                 ' ' +
                 label +
                 ' ' +

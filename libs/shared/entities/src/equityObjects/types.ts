@@ -32,47 +32,59 @@ const statusSchema = z
   })
   .nullable();
 
-const lastOperationSchema = z
-  .object({
-    id: z.coerce.number().int().nonnegative().nullable(),
-    typeId: z.number().int().nonnegative().nullable(),
-    typeName: z.string().nullable(),
-    date: z.string().datetime().nullable().default(null), // ISO 8601 date string,
-  })
-  .nullable();
+// const lastOperationSchema = z
+//   .object({
+//     id: z.coerce.number().int().nonnegative().nullable(),
+//     typeId: z.number().int().nonnegative().nullable(),
+//     typeName: z.string().nullable(),
+//     date: z.string().datetime().nullable().default(null), // ISO 8601 date string,
+//   })
+//   .nullable();
 
-// Main schema for query results
 export const equityObjectSchema = z.object({
   id: z.coerce.number().int().nonnegative(),
   isIdentified: z.coerce.boolean(),
 
-  building: buildingSchema,
-  objectType: objectTypeSchema,
-  status: statusSchema,
+  buildingId: z.coerce.number().int().nonnegative(),
+  buildingCadNum: z.string().nullable(),
+  developerShort: z.string(),
+  complexId: z.coerce.number().int().nonnegative(),
+  complexName: z.string(),
+  buildingIsDone: z.coerce.boolean(),
+  addressShort: z.string(),
 
-  // Core object properties
+  objectTypeId: z.coerce.number().int().nonnegative(),
+  objectTypeName: z.string(),
+
+  statusId: z.coerce.number().int().nonnegative(),
+  statusName: z.string(),
+
   cadNum: z.string().nullable(),
   num: z.string(),
   npp: z.coerce.number().int(),
-  claimsCount: z.number().int().nonnegative().nullable(), // Count of claims
-  identificationNotes: z.string().nullable(), // Claim identification notes
-  creditor: z.string().nullable(), // Aggregated creditor names
+  claimsCount: z.number().int().nonnegative(),
+  creditor: z.string().nullable(),
 
-  lastOperation: lastOperationSchema,
+  lastOpId: z.coerce.number().int().nonnegative().nullable(),
+  lastOpTypeId: z.coerce.number().int().nonnegative().nullable(),
+  lastOpTypeName: z.string().nullable(),
+  lastOpDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
+
   problems: z.array(z.enum(equityObjectProblemsValues)).default([]),
 
-  // Additional attributes
   unom: z.number().int().nonnegative().nullable(),
   unkv: z.string().nullable(),
   rooms: z.number().int().nonnegative().nullable(),
   floor: z.number().int().nullable(),
   s: z.number().nonnegative().nullable(),
 
-  // EGRN registry information
-  egrnStatus: z.string().nullable(), // Ownership status
-  egrnTitleNum: z.string().nullable(), // Title number
-  egrnTitleDate: z.string().datetime().nullable().default(null), // ISO 8601 date string // Title registration date
-  egrnHolderName: z.string().nullable(), // Current title holder
+  egrnStatus: z.string().nullable(),
+
+  needsOpinion: z.boolean(),
+  // TBD - show opinion result
+  opinionUrgp: z.boolean(),
+  opinionUpozh: z.boolean(),
+  opinionUork: z.boolean(),
 });
 export type EquityObject = z.infer<typeof equityObjectSchema>;
 
@@ -116,10 +128,3 @@ export const equityComplexDataSchema = z.object({
   maxParkings: z.number().int().nonnegative(),
 });
 export type EquityComplexData = z.infer<typeof equityComplexDataSchema>;
-
-// to_jsonb(c) as complex,
-// COUNT(*) FILTER (WHERE o.apartments > 0) as "buildingsDone",
-// COUNT(*) FILTER (WHERE o.apartments IS NULL OR o.apartments = 0) as "buildingsProject",
-// ARRAY_AGG(b.id) as "buildingIds",
-// MAX(o.apartments) as "maxApartments",
-// MAX(o.parkings) as "maxParkings"

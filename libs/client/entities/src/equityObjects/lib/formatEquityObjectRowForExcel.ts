@@ -6,9 +6,14 @@ export const formatEquityObjectRowForExcel = (row: Row<EquityObject>) => {
 
   return {
     ID: data.id,
-    ФИО: data.creditor,
-    Адрес: data.building?.addressShort || '',
+    ЖК: data.complexName,
+    Адрес: data.addressShort || '',
     Квартира: data.num,
-    Статус: data.status?.name,
+    'Кадастровый номер': data.cadNum,
+    ФИО: data.creditor,
+    Статус: data.statusName,
+    Тип: data.objectTypeName,
+    Права: data.egrnStatus,
+    Этаж: data.floor,
   };
 };

@@ -94,17 +94,131 @@ ALTER TABLE equity.claims_full_view
     OWNER TO renovation_user;
 
 
+-- -- Объекты
+-- DROP VIEW IF EXISTS equity.objects_full_view CASCADE;
+-- CREATE OR REPLACE VIEW equity.objects_full_view AS
+--     ---------------------------------------------------------------------
+--      WITH relevant_claims AS (
+--         SELECT 
+--             c."objectId",
+--             COUNT(*) as "claimsCount",
+--             STRING_AGG("creditorName", '; ') as creditor,
+--             MAX(c."identificationNotes") as notes
+
+--         FROM equity.claims_full_view c
+--         WHERE c."isRelevant" = true
+--         GROUP BY c."objectId"
+--     ), last_operation AS (
+-- 		SELECT 
+-- 			op.id,
+-- 			op.object_id as "objectId",
+-- 			op.type_id as "typeId",
+-- 			op.type_name as "typeName",
+-- 			op.has_double_sell as "hasDoubleSell",
+-- 			op.has_defects as "hasDefects",
+-- 			op.has_request as "hasRequest",
+-- 			op.date
+-- 		FROM (
+-- 			SELECT 
+-- 				ROW_NUMBER() OVER(PARTITION BY o.object_id ORDER BY t.priority DESC, o.date DESC, o.id) as row_num,
+-- 				COUNT(*) FILTER (WHERE o.type_id = 8) OVER(PARTITION BY o.object_id) > 0 as has_double_sell,
+-- 				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[2,3,4])) OVER(PARTITION BY o.object_id) > 0 as has_defects,
+-- 				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[5,6,7])) OVER(PARTITION BY o.object_id) > 0 as has_request,
+-- 				o.type_id,
+-- 				t.name as type_name,
+-- 				o.id,
+-- 				o.object_id,
+-- 				o.claim_id,
+-- 				COALESCE(o.date, o.created_at, NOW()) as date
+-- 			FROM equity.operations o
+-- 				LEFT JOIN equity.operation_types t ON t.id = o.type_id
+-- 		) op
+-- 		WHERE op.row_num = 1
+-- 	), buildings_full AS (
+-- 		SELECT
+-- 			b.id,
+-- 			c.id as "complexId",
+-- 			c.name as "complexName",
+-- 			c.developer,
+--             c.developer_short as "developerShort",
+--             b.is_done as "isDone",
+-- 			b.unom,
+-- 			b.cad_num as "cadNum",
+-- 			b.address_short as "addressShort",
+-- 			b.address_full as "addressFull",
+-- 			b.address_construction as "addressConstruction"
+-- 		FROM equity.buildings b
+-- 		LEFT JOIN equity.complexes c ON b.complex_id = c.id
+-- 	)
+--     SELECT
+--         o.id,
+-- 		o.is_identified as "isIdentified",
+-- 		to_jsonb(b) as building,
+-- 		to_jsonb(ot) as "objectType",
+-- 		to_jsonb(s) as status,
+		
+--         o.cad_num as "cadNum",
+--         o.num,
+--         o.npp,
+--         COALESCE(c."claimsCount", 0) as "claimsCount",
+--         c.notes as "identificationNotes",
+--         c.creditor,
+-- 		CASE WHEN op.id IS NULL THEN NULL 
+-- 		ELSE jsonb_build_object(
+-- 			'id', op.id,
+-- 			'typeId', op."typeId",
+-- 			'typeName', op."typeName",
+-- 			'date', op.date
+-- 		) END as "lastOperation",	
+-- 		ARRAY_REMOVE(
+-- 			ARRAY[
+-- 				  CASE WHEN o.is_identified IS DISTINCT FROM TRUE THEN 'unidentified' ELSE null END
+-- 				, CASE WHEN op."hasDoubleSell" THEN 'double-sell' ELSE null END
+-- 				, CASE WHEN op."hasDefects" THEN 'defects' ELSE null END
+-- 			]
+-- 		, null) as problems,
+		
+--         b.unom,
+--         o.unkv,
+--         o.rooms,
+--         o.floor,
+--         o.s_obsh as s,
+--         o.egrn_status as "egrnStatus",
+--         o.egrn_title_num as "egrnTitleNum",
+--         o.egrn_title_date as "egrnTitleDate",
+--         o.egrn_holder_name as "egrnHolderName"
+--     FROM equity.objects o
+--         LEFT JOIN (SELECT id, name FROM equity.object_types) ot ON ot.id = o.object_type_id
+--         LEFT JOIN buildings_full b ON o.building_id = b.id
+--         LEFT JOIN relevant_claims c ON c."objectId" = o.id
+-- 		LEFT JOIN last_operation op ON op."objectId" = o.id
+-- 		LEFT JOIN (SELECT id, name FROM equity.object_status_types) s ON s.id =
+-- 			CASE
+-- 				WHEN o.egrn_status = ANY(ARRAY['город Москва']) THEN 5
+-- 				WHEN o.egrn_status = ANY(ARRAY['Физ.лицо', 'Юр.лицо', 'Российская Федерация']) THEN 3
+--                 WHEN op."hasRequest" THEN 7
+-- 				WHEN o.is_identified = FALSE THEN 6
+-- 				WHEN COALESCE(c."claimsCount", 0) = 0 THEN 4
+-- 				WHEN op."typeId" = 1 THEN 2
+-- 				ELSE 1
+-- 			END
+--     WHERE o.egrn_status <> 'Общее имущество мкд'
+--     ORDER BY o.building_id, o.is_identified DESC, o.object_type_id, o.npp;
+--     ---------------------------------------------------------------------
+-- ALTER TABLE equity.objects_full_view
+--     OWNER TO renovation_user;
+
+
+
 -- Объекты
 DROP VIEW IF EXISTS equity.objects_full_view CASCADE;
 CREATE OR REPLACE VIEW equity.objects_full_view AS
     ---------------------------------------------------------------------
-     WITH relevant_claims AS (
+      WITH relevant_claims AS (
         SELECT 
             c."objectId",
             COUNT(*) as "claimsCount",
-            STRING_AGG("creditorName", '; ') as creditor,
-            MAX(c."identificationNotes") as notes
-
+            STRING_AGG("creditorName", '; ') as creditor
         FROM equity.claims_full_view c
         WHERE c."isRelevant" = true
         GROUP BY c."objectId"
@@ -117,13 +231,25 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 			op.has_double_sell as "hasDoubleSell",
 			op.has_defects as "hasDefects",
 			op.has_request as "hasRequest",
+			op.needs_opinion as "needsOpinion",
+            op.opinion_urgp as "opinionUrgp",
+            op.opinion_upozh as "opinionUpozh",
+            op.opinion_uork as "opinionUork",
+            op.opinion_urgp AND op.opinion_upozh AND op.opinion_uork as "opinionAll",
+            op.id_problem as "idProblem",
 			op.date
 		FROM (
 			SELECT 
 				ROW_NUMBER() OVER(PARTITION BY o.object_id ORDER BY t.priority DESC, o.date DESC, o.id) as row_num,
 				COUNT(*) FILTER (WHERE o.type_id = 8) OVER(PARTITION BY o.object_id) > 0 as has_double_sell,
 				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[2,3,4])) OVER(PARTITION BY o.object_id) > 0 as has_defects,
-				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[5,6,7])) OVER(PARTITION BY o.object_id) > 0 as has_request,
+				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[5,6,7,11,12,14,15])) OVER(PARTITION BY o.object_id) > 0 as has_request,
+                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[6,11])) OVER(PARTITION BY o.object_id) > 0 as needs_opinion,
+                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[5])) OVER(PARTITION BY o.object_id) > 0 as opinion_urgp,
+                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[14])) OVER(PARTITION BY o.object_id) > 0 as opinion_upozh,
+                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[15])) OVER(PARTITION BY o.object_id) > 0 as opinion_uork,
+                COUNT(*) FILTER (WHERE o.type_id = 9) OVER(PARTITION BY o.object_id) > 0 AND COUNT(*) FILTER (WHERE o.type_id = 10) OVER(PARTITION BY o.object_id) = 0 as id_problem,
+
 				o.type_id,
 				t.name as type_name,
 				o.id,
@@ -137,56 +263,72 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 	), buildings_full AS (
 		SELECT
 			b.id,
+		    b.problems,
 			c.id as "complexId",
 			c.name as "complexName",
-			c.developer,
+			-- c.developer,
             c.developer_short as "developerShort",
             b.is_done as "isDone",
 			b.unom,
 			b.cad_num as "cadNum",
-			b.address_short as "addressShort",
-			b.address_full as "addressFull",
-			b.address_construction as "addressConstruction"
+			b.address_short as "addressShort"
+			-- b.address_full as "addressFull",
+			-- b.address_construction as "addressConstruction"
 		FROM equity.buildings b
 		LEFT JOIN equity.complexes c ON b.complex_id = c.id
 	)
     SELECT
         o.id,
-		o.is_identified as "isIdentified",
-		to_jsonb(b) as building,
-		to_jsonb(ot) as "objectType",
-		to_jsonb(s) as status,
-		
+        o.is_identified as "isIdentified",
+
+        b.id as "buildingId",
+        b."cadNum" as "buildingCadNum",
+        b."developerShort",
+        b."complexId",
+        b."complexName",
+        b."isDone" as "buildingIsDone",
+        b."addressShort",
+
+        ot.id as "objectTypeId",
+        ot.name as "objectTypeName",
+        s.id as "statusId",
+        s.name as "statusName",
+        
         o.cad_num as "cadNum",
         o.num,
         o.npp,
         COALESCE(c."claimsCount", 0) as "claimsCount",
-        c.notes as "identificationNotes",
         c.creditor,
-		CASE WHEN op.id IS NULL THEN NULL 
-		ELSE jsonb_build_object(
-			'id', op.id,
-			'typeId', op."typeId",
-			'typeName', op."typeName",
-			'date', op.date
-		) END as "lastOperation",	
-		ARRAY_REMOVE(
-			ARRAY[
-				  CASE WHEN o.is_identified IS DISTINCT FROM TRUE THEN 'unidentified' ELSE null END
-				, CASE WHEN op."hasDoubleSell" THEN 'double-sell' ELSE null END
-				, CASE WHEN op."hasDefects" THEN 'defects' ELSE null END
-			]
-		, null) as problems,
-		
+
+        op.id as "lastOpId",
+        op."typeId" as "lastOpTypeId",
+        op."typeName" as "lastOpTypeName",
+        op.date as "lastOpDate",
+
+        ARRAY_REMOVE(
+            ARRAY[
+                    CASE WHEN o.is_identified IS DISTINCT FROM TRUE THEN 'unidentified' ELSE null END
+                , CASE WHEN op."hasDoubleSell" THEN 'doublesell' ELSE null END
+                , CASE WHEN op."hasDefects" THEN 'defects' ELSE null END
+                , CASE WHEN (('claim-ap' = ANY(b.problems) AND o.object_type_id = 1) 
+                    OR ('claim-mm' = ANY(b.problems) AND o.object_type_id = 2)) AND s.id = 4 
+                    THEN 'potentialclaim' ELSE null END
+                , CASE WHEN op."idProblem" THEN 'idproblem' ELSE null END
+            ]
+        , null) as problems,
+
         b.unom,
         o.unkv,
         o.rooms,
         o.floor,
         o.s_obsh as s,
         o.egrn_status as "egrnStatus",
-        o.egrn_title_num as "egrnTitleNum",
-        o.egrn_title_date as "egrnTitleDate",
-        o.egrn_holder_name as "egrnHolderName"
+
+        COALESCE(op."needsOpinion", false) as "needsOpinion",
+        COALESCE(op."opinionUrgp", false) as "opinionUrgp",
+        COALESCE(op."opinionUpozh", false) as "opinionUpozh",
+        COALESCE(op."opinionUork", false) as "opinionUork"
+
     FROM equity.objects o
         LEFT JOIN (SELECT id, name FROM equity.object_types) ot ON ot.id = o.object_type_id
         LEFT JOIN buildings_full b ON o.building_id = b.id
@@ -207,7 +349,6 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
     ---------------------------------------------------------------------
 ALTER TABLE equity.objects_full_view
     OWNER TO renovation_user;
-
 
 
 -- Операции

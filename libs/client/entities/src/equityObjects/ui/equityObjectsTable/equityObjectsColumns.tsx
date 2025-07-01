@@ -35,7 +35,7 @@ export const equityObjectsColumns = [
 
   columnHelper.accessor(
     (row) => {
-      return row?.building?.addressShort || '';
+      return row?.addressShort || '';
     },
     {
       id: 'address',
@@ -69,7 +69,7 @@ export const equityObjectsColumns = [
 
   columnHelper.accessor(
     (row) => {
-      return row?.status?.id || 0;
+      return row?.statusId || 0;
     },
     {
       id: 'workStatus',
