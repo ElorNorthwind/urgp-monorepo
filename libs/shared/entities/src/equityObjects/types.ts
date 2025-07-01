@@ -76,6 +76,16 @@ export const equityObjectSchema = z.object({
 });
 export type EquityObject = z.infer<typeof equityObjectSchema>;
 
+export const egrnDetailsSchema = z.object({
+  id: z.coerce.number().int().nonnegative(),
+  status: z.string().nullable(),
+  titleNum: z.string().nullable(),
+  titleDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
+  holderName: z.string().nullable(),
+  holderType: z.string().nullable(),
+});
+export type EgrnDetails = z.infer<typeof egrnDetailsSchema>;
+
 export const equityTotalsSchema = z.object({
   building: buildingSchema,
   objectType: objectTypeSchema,

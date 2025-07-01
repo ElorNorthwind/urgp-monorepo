@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import {
+  EgrnDetails,
   EquityClaim,
   EquityComplexData,
   EquityObject,
@@ -48,6 +49,13 @@ export class EquityController {
     @Param('id', ParseIntPipe) objectId: number,
   ): Promise<EquityObject | null> {
     return this.equity.getObjectById(objectId);
+  }
+
+  @Get('/by-object/:id/egrn')
+  async getEgrnDetailsByObjectId(
+    @Param('id', ParseIntPipe) objectId: number,
+  ): Promise<EgrnDetails | null> {
+    return this.equity.getEgrnDetailsByObjectId(objectId);
   }
 
   @Get('/by-object/:id/claims')

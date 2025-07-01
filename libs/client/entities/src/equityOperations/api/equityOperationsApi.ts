@@ -11,7 +11,10 @@ export const equityOperationsApi = rtkApi.injectEndpoints({
         url: '/equity/by-object/' + objectId.toString() + '/operations',
         method: 'GET',
       }),
-      providesTags: ['equity-operations'],
+      providesTags: (result, error, arg) => [
+        'equity-operations',
+        { type: 'equity-operations', objectId: arg },
+      ],
     }),
   }),
   overrideExisting: false,

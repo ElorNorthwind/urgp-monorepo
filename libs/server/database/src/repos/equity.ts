@@ -1,4 +1,5 @@
 import {
+  EgrnDetails,
   EquityClaim,
   EquityComplexData,
   EquityObject,
@@ -25,6 +26,20 @@ export class EquityRepository {
   }
   getObjectById(objectId: number): Promise<EquityObject | null> {
     const sql = 'SELECT * FROM equity.objects_full_view WHERE id = $1';
+    return this.db.oneOrNone(sql, [objectId]);
+  }
+
+  getEgrnDetailsByObjectId(objectId: number): Promise<EgrnDetails | null> {
+    const sql = `
+      SELECT 
+        id,
+        egrn_title_type as "titleType",
+        egrn_title_date as "titleDate",
+        egrn_holder_name as "holderName",
+        egrn_holder_type as "holderType",
+        egrn_status as status
+      FROM equity.objects
+      WHERE id = $1;`;
     return this.db.oneOrNone(sql, [objectId]);
   }
 

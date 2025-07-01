@@ -8,7 +8,10 @@ export const equityClaimsApi = rtkApi.injectEndpoints({
         url: '/equity/by-object/' + objectId.toString() + '/claims',
         method: 'GET',
       }),
-      providesTags: ['equity-claims'],
+      providesTags: (result, error, arg) => [
+        'equity-claims',
+        { type: 'equity-claims', objectId: arg },
+      ],
     }),
   }),
   overrideExisting: false,

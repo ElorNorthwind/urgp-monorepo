@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
+  EgrnDetails,
   EquityClaim,
   EquityComplexData,
   EquityObject,
@@ -24,6 +25,12 @@ export class EquityService {
 
   public async getObjectById(objectId: number): Promise<EquityObject | null> {
     return this.dbServise.db.equity.getObjectById(objectId);
+  }
+
+  public async getEgrnDetailsByObjectId(
+    objectId: number,
+  ): Promise<EgrnDetails | null> {
+    return this.dbServise.db.equity.getEgrnDetailsByObjectId(objectId);
   }
 
   public async getClaimsByObjectId(objectId: number): Promise<EquityClaim[]> {
