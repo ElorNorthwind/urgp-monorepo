@@ -1,7 +1,14 @@
-import { Badge, cn } from '@urgp/client/shared';
+import {
+  Badge,
+  cn,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@urgp/client/shared';
 import { EquityObject } from '@urgp/shared/entities';
 import { forwardRef } from 'react';
 import { equityProblemsStyles } from '../../equityClassificators';
+import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 
 type EquityObjectProblemListProps = {
   className?: string;
@@ -31,45 +38,37 @@ const EquityObjectProblemList = forwardRef<
         {problems?.map(
           (p) =>
             p && (
-              //   <Tooltip key={'t_' + p}>
-              //     <TooltipTrigger>
-              <Badge
-                variant={'outline'}
-                className={cn(
-                  'truncate whitespace-nowrap text-nowrap',
-                  equityProblemsStyles[p]?.badgeStyle,
-                )}
-                key={p}
-              >
-                {equityProblemsStyles[p]?.label || '-'}
-              </Badge>
-              //     </TooltipTrigger>
-              //     <TooltipContent side="left">
-              //       <span>{p}</span>
-              //       <span className="text-muted-foreground/80 ml-2">
-              //         {d?.category && `(${d.category})`}
-              //       </span>
-              //     </TooltipContent>
-              //   </Tooltip>
+              <Tooltip key={'t_' + p}>
+                <TooltipTrigger>
+                  <Badge
+                    variant={'outline'}
+                    className={cn(
+                      'truncate whitespace-nowrap text-nowrap',
+                      equityProblemsStyles[p]?.badgeStyle,
+                    )}
+                    key={p}
+                  >
+                    {equityProblemsStyles[p]?.label || '-'}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipPortal>
+                  <TooltipContent side="bottom">
+                    <TooltipArrow />
+                    <span>{equityProblemsStyles[p]?.fullLabel || '-'}</span>
+                  </TooltipContent>
+                </TooltipPortal>
+              </Tooltip>
             ),
         )}
       </div>
     );
   }
 
-  //   const reducedDirectionsMap = problems.reduce((acc, cur) => {
-  //     return acc.set(cur?.category, (acc.get(cur?.category) || 0) + 1);
-  //   }, new Map());
-  //   const reducedDirections = Array.from(
-  //     reducedDirectionsMap,
-  //     ([name, value]) => ({ name, value }),
-  //   );
-
   return (
     <div
       ref={ref}
       className={cn(
-        'pointer-events-none',
+        // 'pointer-events-none',
         'flex flex-wrap items-start justify-start gap-1',
         className,
       )}
@@ -90,26 +89,26 @@ const EquityObjectProblemList = forwardRef<
         problems?.map(
           (p) =>
             p && (
-              //   <Tooltip key={'t_' + p}>
-              //     <TooltipTrigger>
-              <Badge
-                variant={'outline'}
-                className={cn(
-                  'whitespace-nowrap text-nowrap',
-                  equityProblemsStyles[p]?.badgeStyle,
-                )}
-                key={p}
-              >
-                {equityProblemsStyles[p]?.label || '-'}
-              </Badge>
-              //     </TooltipTrigger>
-              //     <TooltipContent side="left">
-              //       <span>{p}</span>
-              //       <span className="text-muted-foreground/80 ml-2">
-              //         {d?.category && `(${d.category})`}
-              //       </span>
-              //     </TooltipContent>
-              //   </Tooltip>
+              <Tooltip key={'t_' + p}>
+                <TooltipTrigger>
+                  <Badge
+                    variant={'outline'}
+                    className={cn(
+                      'whitespace-nowrap text-nowrap',
+                      equityProblemsStyles[p]?.badgeStyle,
+                    )}
+                    key={p}
+                  >
+                    {equityProblemsStyles[p]?.label || '-'}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipPortal>
+                  <TooltipContent side="bottom">
+                    <TooltipArrow />
+                    <span>{equityProblemsStyles[p]?.fullLabel || '-'}</span>
+                  </TooltipContent>
+                </TooltipPortal>
+              </Tooltip>
             ),
         )
       )}

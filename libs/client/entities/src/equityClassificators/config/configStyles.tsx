@@ -3,6 +3,9 @@ import { EquityObjectProblems } from '@urgp/shared/entities';
 import {
   Badge,
   BadgeAlert,
+  BadgeInfo,
+  BadgePercent,
+  BadgePlus,
   BadgeQuestionMark,
   BadgeRussianRuble,
   Building,
@@ -130,24 +133,48 @@ export const equityProblemsStyles = {
     icon: BadgeQuestionMark,
     iconStyle: cn('text-amber-500'),
     label: 'Не опознано',
+    fullLabel: 'Требование не удалось соотнести с реальным объектом',
     badgeStyle: cn(
       'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-amber-500',
       "before:content-[''] before:rounded-full before:size-3 before:bg-amber-500 before:mr-1 before:flex-shrink-0",
     ),
   },
+  [EquityObjectProblems.idproblem]: {
+    icon: BadgePercent,
+    iconStyle: cn('text-indigo-500'),
+    label: 'Сомнение в адресе',
+    fullLabel: 'Требование из РТУС соотнесено с объектом условно',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-indigo-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-indigo-500 before:mr-1 before:flex-shrink-0",
+    ),
+  },
+  [EquityObjectProblems.potentialclaim]: {
+    icon: BadgePlus,
+    iconStyle: cn('text-lime-500'),
+    label: 'Потенциальное треб.',
+    fullLabel: 'В корпусе есть неопределенное требование на данный тип объекта',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-lime-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-lime-500 before:mr-1 before:flex-shrink-0",
+    ),
+  },
+
   [EquityObjectProblems.defects]: {
     icon: BadgeAlert,
     iconStyle: cn('text-fuchsia-500'),
     label: 'Дефекты',
+    fullLabel: 'В ходе работы с объектом выявлены дефекты',
     badgeStyle: cn(
       'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-fuchsia-500',
       "before:content-[''] before:rounded-full before:size-3 before:bg-fuchsia-500 before:mr-1 before:flex-shrink-0",
     ),
   },
-  [EquityObjectProblems['double-sell']]: {
+  [EquityObjectProblems.doublesell]: {
     icon: BadgeRussianRuble,
     iconStyle: cn('text-red-500'),
     label: 'Двойная продажа',
+    fullLabel: 'Выявлены признаки конкурирубщих требований',
     badgeStyle: cn(
       'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-red-500',
       "before:content-[''] before:rounded-full before:size-3 before:bg-red-500 before:mr-1 before:flex-shrink-0",
@@ -156,7 +183,8 @@ export const equityProblemsStyles = {
   none: {
     icon: Badge,
     iconStyle: cn('text-slate-500'),
-    label: 'Двойная продажа',
+    label: 'Нет выявленых проблем',
+    fullLabel: 'Проблем в работе не выявлено',
     badgeStyle: cn(
       'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-slate-500',
       "before:content-[''] before:rounded-full before:size-3 before:bg-slate-500 before:mr-1 before:flex-shrink-0",

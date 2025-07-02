@@ -47,6 +47,7 @@ export type StyleData = {
   iconStyle?: string;
   badgeStyle?: string;
   label?: string;
+  fullLabel?: string;
   chartColor?: string;
 };
 

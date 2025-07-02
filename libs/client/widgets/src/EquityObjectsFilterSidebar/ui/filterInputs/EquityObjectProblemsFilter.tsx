@@ -2,10 +2,7 @@ import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import { equityProblemsStyles } from '@urgp/client/entities';
 import { ClassificatorFilter } from '@urgp/client/features';
 import { cn, EquityRoutes } from '@urgp/client/shared';
-import {
-  EquityObjectProblems,
-  EquityObjectsPageSearch,
-} from '@urgp/shared/entities';
+import { EquityObjectsPageSearch } from '@urgp/shared/entities';
 
 type EquityObjectProblemsFilterProps = {
   variant?: 'popover' | 'checkbox' | 'accordion';
@@ -31,34 +28,13 @@ const EquityObjectProblemsFilter = (
       value: 'Типы объектов',
       label: 'Типы объектов',
       items: [
-        {
+        ...Object.keys(equityProblemsStyles).map((key) => ({
           tags: [],
-          label: 'Не идентифицировано',
-          value: EquityObjectProblems.unidentified,
+          label: equityProblemsStyles[key]?.label || '',
+          value: key,
           category: 'problems',
-          fullname: 'Требование не удалось соотнести с реальным объектом',
-        },
-        {
-          tags: [],
-          label: 'Дефекты',
-          value: EquityObjectProblems.defects,
-          category: 'problems',
-          fullname: 'В ходе работы с объектом выявлены дефекты',
-        },
-        {
-          tags: [],
-          label: 'Двойная продажа',
-          value: EquityObjectProblems['double-sell'],
-          category: 'problems',
-          fullname: 'Выявлены признаки конкурирубщих требований',
-        },
-        {
-          tags: [],
-          label: 'Нет выявленых проблем',
-          value: 'none',
-          category: 'problems',
-          fullname: 'Проблем в работе не выявлено',
-        },
+          fullname: equityProblemsStyles[key]?.fullLabel || '',
+        })),
       ],
     },
   ];
