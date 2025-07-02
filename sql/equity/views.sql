@@ -101,6 +101,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
         SELECT 
             c."objectId",
             COUNT(*) as "claimsCount",
+            SUM(c."sumUnpaid") as "sumUnpaid",
             STRING_AGG("creditorName", '; ') as creditor
         FROM equity.claims_full_view c
         WHERE c."isRelevant" = true
@@ -197,6 +198,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
                     OR ('claim-mm' = ANY(b.problems) AND o.object_type_id = 2)) AND s.id = 4 
                     THEN 'potentialclaim' ELSE null END
                 , CASE WHEN op."idProblem" THEN 'idproblem' ELSE null END
+                , CASE WHEN c."sumUnpaid" > 0 THEN 'unpaid' ELSE null END
             ]
         , null) as problems,
 

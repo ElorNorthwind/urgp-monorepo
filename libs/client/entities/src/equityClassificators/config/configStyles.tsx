@@ -8,6 +8,7 @@ import {
   BadgePlus,
   BadgeQuestionMark,
   BadgeRussianRuble,
+  BadgeX,
   Building,
   Building2,
   Car,
@@ -171,13 +172,23 @@ export const equityProblemsStyles = {
     ),
   },
   [EquityObjectProblems.doublesell]: {
-    icon: BadgeRussianRuble,
+    icon: BadgeX,
     iconStyle: cn('text-red-500'),
     label: 'Двойная продажа',
     fullLabel: 'Выявлены признаки конкурирубщих требований',
     badgeStyle: cn(
       'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-red-500',
       "before:content-[''] before:rounded-full before:size-3 before:bg-red-500 before:mr-1 before:flex-shrink-0",
+    ),
+  },
+  [EquityObjectProblems.unpaid]: {
+    icon: BadgeRussianRuble,
+    iconStyle: cn('text-teal-500'),
+    label: 'Недоплата',
+    fullLabel: 'Сумма по требования оплачена не полностью',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-teal-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-teal-500 before:mr-1 before:flex-shrink-0",
     ),
   },
   none: {

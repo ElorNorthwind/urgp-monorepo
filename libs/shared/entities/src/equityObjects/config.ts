@@ -9,6 +9,7 @@ export const EquityObjectProblems = {
   defects: 'defects',
   potentialclaim: 'potentialclaim',
   idproblem: 'idproblem',
+  unpaid: 'unpaid',
 } as const;
 export type EquityObjectProblems =
   (typeof EquityObjectProblems)[keyof typeof EquityObjectProblems];
