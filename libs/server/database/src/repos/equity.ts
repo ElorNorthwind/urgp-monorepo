@@ -156,8 +156,11 @@ export class EquityRepository {
     const sql = `
   DELETE
   FROM equity.operations
-  WHERE id = ${id};
+  WHERE id = ${id}
+  RETURNING object_id;
 `;
-    return this.db.oneOrNone(sql, { id });
+    return this.db
+      .oneOrNone(sql, { id })
+      .then((result) => result?.object_id || null);
   }
 }

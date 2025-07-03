@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { object, z } from 'zod';
 import { equityOperationSchema } from './types';
 
 export const createEquityOperationSchema = equityOperationSchema
@@ -31,10 +31,11 @@ export type CreateEquityOperationDto = z.infer<
 >;
 
 export const updateEquityOperationSchema = equityOperationSchema
-  .omit({ class: true })
+  .omit({ class: true, objectId: true })
   .partial()
   .extend({
     id: z.coerce.number().int().nonnegative(),
+    objectId: z.coerce.number().int().nonnegative(),
     class: z.literal('operation').default('operation'),
     updatedById: z.coerce
       .number()
