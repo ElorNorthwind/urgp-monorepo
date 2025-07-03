@@ -16,15 +16,17 @@ const operationTypeSchema = z.object({
 
 export const equityOperationSchema = z.object({
   id: z.coerce.number().int().nonnegative(),
+  class: z.literal('operation').default('operation'),
   objectId: z.coerce.number().int().nonnegative(),
-  claimId: z.coerce.number().int().nonnegative().nullable(),
+  claimId: z.coerce.number().int().nonnegative().nullable().default(null),
 
   type: operationTypeSchema.nullable(), // Can be null if no matching type
   date: z.string().datetime().nullable().default(null), // ISO 8601 date string,                 // Timestamp as ISO string
-  source: z.string().nullable(),
-  notes: z.string().nullable(),
-  number: z.string().nullable(),
-  result: z.string().nullable(),
+  source: z.string().nullable().default(null),
+  notes: z.string().nullable().default(null),
+  number: z.string().nullable().default(null),
+  result: z.string().nullable().default(null),
+  fio: z.string().nullable().default(null),
   createdAt: z.string().datetime().nullable().default(null), // ISO 8601 date string,
   createdBy: userInfoSchema.nullable(), // Can be null if user deleted
   updatedAt: z.string().datetime().nullable().default(null), // ISO 8601 date string,

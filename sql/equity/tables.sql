@@ -285,6 +285,7 @@ CREATE TABLE equity.operations
     source character varying(255),
     date timestamp with time zone,
     notes text,
+    fio text,
     number character varying(255),
     result character varying(255),
 

@@ -44,6 +44,7 @@ const statusSchema = z
 export const equityObjectSchema = z.object({
   id: z.coerce.number().int().nonnegative(),
   isIdentified: z.coerce.boolean(),
+  class: z.literal('object').default('object'),
 
   buildingId: z.coerce.number().int().nonnegative(),
   buildingCadNum: z.string().nullable(),

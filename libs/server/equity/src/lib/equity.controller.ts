@@ -1,12 +1,23 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
+  NotFoundException,
   Param,
   ParseIntPipe,
+  Patch,
+  Post,
+  Req,
+  UnauthorizedException,
   UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import {
+  CreateEquityOperationDto,
+  createEquityOperationSchema,
+  defineEquityAbilityFor,
   EgrnDetails,
   EquityClaim,
   EquityComplexData,
@@ -15,9 +26,11 @@ import {
   EquityTimeline,
   EquityTotals,
   NestedClassificatorInfo,
+  RequestWithUserData,
 } from '@urgp/shared/entities';
 
 import { EquityService } from './equity.service';
+import { ZodValidationPipe } from '@urgp/server/pipes';
 
 @Controller('equity')
 // @UseGuards(AccessTokenGuard)
@@ -90,5 +103,47 @@ export class EquityController {
   @Get('/classificators/operation-type')
   async getOperationTypeClassificator(): Promise<NestedClassificatorInfo[]> {
     return this.equity.getOperationTypeClassificator();
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Post('/operation')
+  async createOperation(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(createEquityOperationSchema))
+    dto: CreateEquityOperationDto,
+  ) {
+    const userId = req.user.id;
+    const i = defineEquityAbilityFor(req.user);
+    if (i.cannot('create', dto))
+      throw new UnauthorizedException('Нет прав на создание');
+    return this.equity.createOperation(userId, dto);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Patch('/operation')
+  async updateOperation(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(createEquityOperationSchema))
+    dto: CreateEquityOperationDto,
+  ) {
+    const userId = req.user.id;
+    const i = defineEquityAbilityFor(req.user);
+    if (i.cannot('update', dto))
+      throw new UnauthorizedException('Нет прав на редактирование');
+    return this.equity.createOperation(userId, dto);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Delete('/operation')
+  async deleteOperation(
+    @Req() req: RequestWithUserData,
+    @Body('id', ParseIntPipe) id: number,
+  ) {
+    const oldOperation = await this.equity.getOperationById(id);
+    if (!oldOperation) throw new NotFoundException('Операция не найдена');
+    const i = defineEquityAbilityFor(req.user);
+    if (i.cannot('delete', oldOperation))
+      throw new UnauthorizedException('Нет прав на редактирование');
+    return this.equity.deleteOperation(id);
   }
 }

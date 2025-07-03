@@ -51,6 +51,7 @@ CREATE OR REPLACE VIEW equity.claims_full_view  AS
     )
     SELECT 
         c.id,
+        'claim' as "class",
         c.object_id as "objectId",
         c.max_priority = c.priority AND c.claim_status = 'active' as "isRelevant",
 		c.claim_status as "claimStatus",
@@ -164,6 +165,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
     SELECT
         o.id,
         o.is_identified as "isIdentified",
+        'object' as "class",
 
         b.id as "buildingId",
         b."cadNum" as "buildingCadNum",
@@ -244,6 +246,7 @@ CREATE OR REPLACE VIEW equity.operations_full_view AS
         op_type_info AS (SELECT id, name, priority FROM equity.operation_types)
     SELECT 
         o.id,
+        'operation' as "class",
         o.object_id as "objectId",
         o.claim_id as "claimId",
         to_jsonb(t) as type,

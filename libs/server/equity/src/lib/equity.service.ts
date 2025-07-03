@@ -1,7 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
+  CreateEquityOperationDto,
   EgrnDetails,
   EquityClaim,
   EquityComplexData,
@@ -10,6 +11,7 @@ import {
   EquityTimeline,
   EquityTotals,
   NestedClassificatorInfo,
+  UpdateEquityOperationDto,
 } from '@urgp/shared/entities';
 
 @Injectable()
@@ -41,6 +43,12 @@ export class EquityService {
     objectId: number,
   ): Promise<EquityOperation[]> {
     return this.dbServise.db.equity.getOperationsByObjectId(objectId);
+  }
+
+  public async getOperationById(
+    operationId: number,
+  ): Promise<EquityOperation | null> {
+    return this.dbServise.db.equity.getOperationById(operationId);
   }
 
   public async getBuildingsClassificator(): Promise<NestedClassificatorInfo[]> {
@@ -75,5 +83,50 @@ export class EquityService {
 
   public async getEquityComplexList(): Promise<EquityComplexData[]> {
     return this.dbServise.db.equity.getComplexList();
+  }
+
+  public async createOperation(
+    userId: number,
+    dto: CreateEquityOperationDto,
+  ): Promise<EquityOperation | null> {
+    try {
+      const newOperationId = await this.dbServise.db.equity.createOperation(
+        userId,
+        dto,
+      );
+      const newOperation =
+        await this.dbServise.db.equity.getOperationById(newOperationId);
+      return newOperation;
+    } catch (error) {
+      Logger.error(error);
+      return null;
+    }
+  }
+
+  public async updateOperation(
+    userId: number,
+    dto: UpdateEquityOperationDto,
+  ): Promise<EquityOperation | null> {
+    try {
+      const newOperationId = await this.dbServise.db.equity.updateOperation(
+        userId,
+        dto,
+      );
+      const newOperation =
+        await this.dbServise.db.equity.getOperationById(newOperationId);
+      return newOperation;
+    } catch (error) {
+      Logger.error(error);
+      return null;
+    }
+  }
+
+  public async deleteOperation(id: number): Promise<number | null> {
+    try {
+      return this.dbServise.db.equity.deleteOperation(id);
+    } catch (error) {
+      Logger.error(error);
+      return null;
+    }
   }
 }

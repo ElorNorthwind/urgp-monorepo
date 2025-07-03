@@ -18,6 +18,8 @@ const claimSourceTypeSchema = z
 
 export const equityClaimSchema = z.object({
   id: z.coerce.number().int().nonnegative(),
+  class: z.literal('claim').default('claim'),
+
   objectId: z.coerce.number().int().nonnegative(),
   isRelevant: z.coerce.boolean(),
   claimItemType: claimItemTypeSchema,

@@ -28,6 +28,7 @@ export * from './operations/dto';
 export * from './operations/config';
 
 export * from './users/ability';
+export * from './users/equityAbility';
 
 // Разбиралка адресов
 export * from './addressSessions/config';
@@ -51,3 +52,4 @@ export * from './equityClaims/config';
 export * from './equityClaims/types';
 
 export * from './equityOperations/types';
+export * from './equityOperations/dto';

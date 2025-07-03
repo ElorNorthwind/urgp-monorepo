@@ -1,4 +1,5 @@
 import {
+  CreateEquityOperationDto,
   EgrnDetails,
   EquityClaim,
   EquityComplexData,
@@ -7,9 +8,22 @@ import {
   EquityTimeline,
   EquityTotals,
   NestedClassificatorInfo,
+  UpdateEquityOperationDto,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { equityClassificators, equityObjects } from './sql/sql';
+import { camelToSnakeCase } from '../lib/to-snake-case';
+
+// const operationColumns = [
+//   { name: 'object_id', prop: 'objectId' },
+//   { name: 'type_id', prop: 'typeId' },
+//   { name: 'source', prop: 'source' },
+//   { name: 'date', prop: 'date' },
+//   { name: 'notes', prop: 'notes' },
+//   { name: 'number', prop: 'number' },
+//   { name: 'result', prop: 'result' },
+//   { name: 'fio', prop: 'fio' },
+// ];
 
 // @Injectable()
 export class EquityRepository {
@@ -17,6 +31,7 @@ export class EquityRepository {
     private db: IDatabase<unknown>,
     private pgp: IMain,
   ) {}
+
   getObjects(showUnidentified: boolean = true): Promise<EquityObject[]> {
     const sql =
       'SELECT * FROM equity.objects_full_view' +
@@ -54,6 +69,11 @@ export class EquityRepository {
     return this.db.any(sql, [objectId]);
   }
 
+  getOperationById(operationId: number): Promise<EquityOperation | null> {
+    const sql = 'SELECT * FROM equity.operations_full_view WHERE "id" = $1';
+    return this.db.oneOrNone(sql, [operationId]);
+  }
+
   getBuildingsClassificator(): Promise<NestedClassificatorInfo[]> {
     return this.db.any(equityClassificators.readBuildingsClassificator);
   }
@@ -80,5 +100,64 @@ export class EquityRepository {
 
   getComplexList(): Promise<EquityComplexData[]> {
     return this.db.any(equityObjects.readComplexList);
+  }
+
+  createOperation(
+    userId: number,
+    dto: CreateEquityOperationDto,
+  ): Promise<number> {
+    const columns = [{ name: 'createdById', prop: 'userId' }];
+    Object.keys(dto).forEach((key) => {
+      columns.push({ name: camelToSnakeCase(key), prop: key });
+    });
+    const operationsColumnSet = new this.pgp.helpers.ColumnSet(columns, {
+      table: {
+        table: 'operations',
+        schema: 'equity',
+      },
+    });
+    const insert =
+      this.pgp.helpers.insert({ ...dto, userId }, operationsColumnSet) +
+      ' returning id;';
+    return this.db.one(insert).then((result: any) => result.id);
+  }
+
+  updateOperation(
+    userId: number,
+    dto: UpdateEquityOperationDto,
+  ): Promise<number> {
+    const columns = [
+      { name: 'id', prop: 'id', cnd: true },
+      { name: 'updated_at', prop: 'updatedAt' },
+      { name: 'updated_by_id', prop: 'updatedById' },
+    ];
+
+    Object.keys(dto)
+      .filter((key) => key !== 'id')
+      .forEach((key) => {
+        columns.push({ name: camelToSnakeCase(key), prop: key });
+      });
+
+    const operationsColumnSet = new this.pgp.helpers.ColumnSet(columns, {
+      table: {
+        table: 'operations',
+        schema: 'equity',
+      },
+    });
+    const update =
+      this.pgp.helpers.update(
+        { ...dto, updatedById: userId, updatedAt: new Date().toISOString() },
+        operationsColumnSet,
+      ) + ` WHERE id = ${dto.id} RETURNING id`;
+    return this.db.one(update).then((result: any) => result.id);
+  }
+
+  deleteOperation(id: number): Promise<number | null> {
+    const sql = `
+  DELETE
+  FROM equity.operations
+  WHERE id = ${id};
+`;
+    return this.db.oneOrNone(sql, { id });
   }
 }
