@@ -53,3 +53,4 @@ export * from './equityClaims/types';
 
 export * from './equityOperations/types';
 export * from './equityOperations/dto';
+export * from './equityOperations/config';
