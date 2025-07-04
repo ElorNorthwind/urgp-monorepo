@@ -2,11 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { VisibilityState } from '@tanstack/react-table';
 import { RootState } from '../store';
 
-import {
-  defaultEquityObjectsColumns,
-  defaultIncidentColumns,
-} from '@urgp/client/entities';
-import { lsKeys } from '../../config/localStorageKeys';
+import { defaultEquityObjectsColumns } from '@urgp/client/entities';
 import {
   CreateEquityOperationDto,
   DialogFormState,
@@ -14,6 +10,7 @@ import {
   EquityOperation,
   getFormDataFromEquityOperation,
 } from '@urgp/shared/entities';
+import { lsKeys } from '../../config/localStorageKeys';
 
 type EquityState = {
   objectTableColumns: VisibilityState;
@@ -77,6 +74,10 @@ const equitySlice = createSlice({
     ) => {
       state.operationForm.values = { ...payload };
     },
+
+    setOperationFormObjectId: (state, { payload }: PayloadAction<number>) => {
+      state.operationForm.values.objectId = payload;
+    },
   },
 });
 
@@ -92,10 +93,11 @@ export const {
   setOperationFormValuesEmpty,
   setOperationFormValuesFromDto,
   setOperationFormValuesFromOperation,
+  setOperationFormObjectId,
 } = equitySlice.actions;
-export const selectOperationFormValues = (state: RootState) =>
+export const selectEquityOperationFormValues = (state: RootState) =>
   state.equity.operationForm.values;
-export const selectOperationFormState = (state: RootState) =>
+export const selectEquityOperationFormState = (state: RootState) =>
   state.equity.operationForm.state;
 
 export default equitySlice.reducer;

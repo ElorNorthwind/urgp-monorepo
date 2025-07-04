@@ -2,6 +2,8 @@ import { cn, Skeleton } from '@urgp/client/shared';
 import { EquityOperation } from '@urgp/shared/entities';
 import { format, isAfter } from 'date-fns';
 import { equityOperationTypeStyles } from '../../../equityClassificators';
+import { DeleteEquityOperationButton } from '../operationButtons/DeleteEquityOperationButton';
+import { EditEquityOperationButton } from '../operationButtons/EditEquityOperationButton';
 
 type EquityOperationItemProps = {
   operation?: EquityOperation | null;
@@ -50,12 +52,19 @@ const EquityOperationItem = (props: EquityOperationItemProps): JSX.Element => {
       <div className="font-light">{operation?.notes}</div>
 
       {hover && (
-        <div className="bg-background absolute bottom-3 right-4 hidden flex-row items-center gap-2 rounded-full p-1 text-right text-xs font-thin shadow-sm group-hover:flex">
+        <div className="bg-background absolute bottom-3 right-4 hidden flex-row items-center gap-2 rounded-full px-2 text-right text-xs font-thin shadow-sm group-hover:flex">
+          {/*          
+                   <DeleteStageButton stage={stage} />
+          <ApproveButton entity={stage} variant="mini" />
+          <EditStageButton stage={stage} /> */}
+
           <span>
             {operation?.createdAt
               ? format(operation?.createdAt, 'dd.MM.yyyy')
               : 'без даты'}
           </span>
+          <DeleteEquityOperationButton operation={operation} />
+          <EditEquityOperationButton operation={operation} />
           <span className="bg-muted-foreground/5 border-x px-2 font-bold">
             {operation?.source || 'Ручной ввод'}
           </span>

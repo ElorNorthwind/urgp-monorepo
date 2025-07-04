@@ -17,6 +17,7 @@ import { Fragment, useMemo } from 'react';
 import { format, isAfter, isBefore } from 'date-fns';
 import {
   CreateDispatchButton,
+  CreateEquityOperationButton,
   CreateStageButton,
   EditDispatchButton,
   EquityOperationsList,
@@ -58,12 +59,12 @@ const EquityOperationsTab = (
   return (
     <CardTab
       label={label}
-      // button={
-      //   <CreateStageButton
-      //     caseId={0}
-      //     className="absolute right-6 top-3 h-8 px-2 py-1"
-      //   />
-      // }
+      button={
+        <CreateEquityOperationButton
+          objectId={equityObject?.id}
+          className="absolute right-6 top-3 h-8 px-2 py-1"
+        />
+      }
       className={className}
       titleClassName={titleClassName}
       contentClassName={cn(

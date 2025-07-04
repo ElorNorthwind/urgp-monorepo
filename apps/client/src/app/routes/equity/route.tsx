@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { CreateEquityOperationDialog } from '@urgp/client/entities';
 import {
   cn,
   ScrollArea,
@@ -32,6 +33,7 @@ export const Route = createFileRoute('/equity')({
         <SidebarProvider cookieName="equity-sidebar" defaultOpen={false}>
           <EquityNavbar />
           <Outlet />
+          <CreateEquityOperationDialog />
         </SidebarProvider>
       </div>
     );

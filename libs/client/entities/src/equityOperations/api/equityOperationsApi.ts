@@ -10,7 +10,7 @@ import { equityObjectsApi } from '../../equityObjects';
 
 export const equityOperationsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    getOperationsByObjectId: build.query<EquityOperation[], number>({
+    getEquityOperationsByObjectId: build.query<EquityOperation[], number>({
       query: (objectId) => ({
         url: '/equity/by-object/' + objectId.toString() + '/operations',
         method: 'GET',
@@ -20,7 +20,7 @@ export const equityOperationsApi = rtkApi.injectEndpoints({
         { type: 'equity-operations', objectId: arg },
       ],
     }),
-    createOperation: build.mutation<
+    createEquityOperation: build.mutation<
       EquityOperation | null,
       CreateEquityOperationDto
     >({
@@ -43,7 +43,7 @@ export const equityOperationsApi = rtkApi.injectEndpoints({
         );
       },
     }),
-    updateOperation: build.mutation<
+    updateEquityOperation: build.mutation<
       EquityOperation | null,
       UpdateEquityOperationDto
     >({
@@ -66,7 +66,10 @@ export const equityOperationsApi = rtkApi.injectEndpoints({
         );
       },
     }),
-    deleteOperation: build.mutation<number | null, DeleteControlEntityDto>({
+    deleteEquityOperation: build.mutation<
+      number | null,
+      DeleteControlEntityDto
+    >({
       query: (dto) => ({
         url: '/equity/operation',
         method: 'DELETE',
@@ -90,5 +93,9 @@ export const equityOperationsApi = rtkApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const { useGetOperationsByObjectIdQuery: useEquityOperations } =
-  equityOperationsApi;
+export const {
+  useGetEquityOperationsByObjectIdQuery: useEquityOperations,
+  useCreateEquityOperationMutation: useCreateEquityOperation,
+  useUpdateEquityOperationMutation: useUpdateEquityOperation,
+  useDeleteEquityOperationMutation: useDeleteEquityOperation,
+} = equityOperationsApi;

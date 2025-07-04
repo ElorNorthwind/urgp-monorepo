@@ -70,5 +70,6 @@ export * from './store/equity/equitySlice';
 export * from './hooks/useIsMobile';
 export * from './hooks/usePageMeta';
 export * from './hooks/useUserAbility';
+export * from './hooks/useEquityAbility';
 export * from './hooks/useAvaliableCaseActions';
 export * from './hooks/useAuth';

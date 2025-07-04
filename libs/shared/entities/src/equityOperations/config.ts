@@ -5,7 +5,7 @@ export const emptyEquityOperation = {
   class: 'operation',
   objectId: 0,
   claimId: null,
-  typeId: 1,
+  typeId: 17,
   date: new Date().toISOString(),
   source: '',
   notes: '',
@@ -18,8 +18,9 @@ export const getFormDataFromEquityOperation = (
   payload: EquityOperation,
 ): CreateEquityOperationDto => {
   return {
+    id: payload?.id || 0,
     class: 'operation',
-    createdById: payload?.createdBy?.id || 0,
+    // createdById: payload?.createdBy?.id || 0,
     objectId: payload?.objectId || 0,
     claimId: payload?.claimId || null,
     typeId: payload?.type?.id || 1,

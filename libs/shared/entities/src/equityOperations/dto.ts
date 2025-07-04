@@ -1,4 +1,4 @@
-import { object, z } from 'zod';
+import { z } from 'zod';
 import { equityOperationSchema } from './types';
 
 export const createEquityOperationSchema = equityOperationSchema
@@ -18,13 +18,14 @@ export const createEquityOperationSchema = equityOperationSchema
       .number()
       .int()
       .nonnegative({ message: 'Нужен тип операции' }),
-    createdById: z.coerce
-      .number()
-      .int()
-      .nonnegative()
-      .nullable()
-      .optional()
-      .default(null),
+    id: z.coerce.number().int().nonnegative().optional(),
+    // createdById: z.coerce
+    //   .number()
+    //   .int()
+    //   .nonnegative()
+    //   .nullable()
+    //   .optional()
+    //   .default(null),
   });
 export type CreateEquityOperationDto = z.infer<
   typeof createEquityOperationSchema
@@ -37,13 +38,13 @@ export const updateEquityOperationSchema = equityOperationSchema
     id: z.coerce.number().int().nonnegative(),
     objectId: z.coerce.number().int().nonnegative(),
     class: z.literal('operation').default('operation'),
-    updatedById: z.coerce
-      .number()
-      .int()
-      .nonnegative()
-      .nullable()
-      .optional()
-      .default(null),
+    // updatedById: z.coerce
+    //   .number()
+    //   .int()
+    //   .nonnegative()
+    //   .nullable()
+    //   .optional()
+    //   .default(null),
   });
 export type UpdateEquityOperationDto = z.infer<
   typeof updateEquityOperationSchema

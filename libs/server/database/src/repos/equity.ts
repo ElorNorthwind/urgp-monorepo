@@ -13,6 +13,7 @@ import {
 import { IDatabase, IMain } from 'pg-promise';
 import { equityClassificators, equityObjects } from './sql/sql';
 import { camelToSnakeCase } from '../lib/to-snake-case';
+import { Logger } from '@nestjs/common';
 
 // const operationColumns = [
 //   { name: 'object_id', prop: 'objectId' },
@@ -106,10 +107,22 @@ export class EquityRepository {
     userId: number,
     dto: CreateEquityOperationDto,
   ): Promise<number> {
-    const columns = [{ name: 'createdById', prop: 'userId' }];
-    Object.keys(dto).forEach((key) => {
-      columns.push({ name: camelToSnakeCase(key), prop: key });
-    });
+    const columns = [{ name: 'created_by_id', prop: 'userId' }];
+    Object.keys(dto)
+      .filter(
+        (key) =>
+          ![
+            'id',
+            'class',
+            'createdById',
+            'createdAt',
+            'updatedById',
+            'updatedAt',
+          ].includes(key),
+      )
+      .forEach((key) => {
+        columns.push({ name: camelToSnakeCase(key), prop: key });
+      });
     const operationsColumnSet = new this.pgp.helpers.ColumnSet(columns, {
       table: {
         table: 'operations',
@@ -131,9 +144,18 @@ export class EquityRepository {
       { name: 'updated_at', prop: 'updatedAt' },
       { name: 'updated_by_id', prop: 'updatedById' },
     ];
-
     Object.keys(dto)
-      .filter((key) => key !== 'id')
+      .filter(
+        (key) =>
+          ![
+            'id',
+            'class',
+            'createdById',
+            'createdAt',
+            'updatedById',
+            'updatedAt',
+          ].includes(key),
+      )
       .forEach((key) => {
         columns.push({ name: camelToSnakeCase(key), prop: key });
       });
@@ -149,6 +171,7 @@ export class EquityRepository {
         { ...dto, updatedById: userId, updatedAt: new Date().toISOString() },
         operationsColumnSet,
       ) + ` WHERE id = ${dto.id} RETURNING id`;
+
     return this.db.one(update).then((result: any) => result.id);
   }
 

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   NotFoundException,
   Param,
   ParseIntPipe,
@@ -27,6 +28,7 @@ import {
   EquityTotals,
   NestedClassificatorInfo,
   RequestWithUserData,
+  UpdateEquityOperationDto,
 } from '@urgp/shared/entities';
 
 import { EquityService } from './equity.service';
@@ -124,13 +126,13 @@ export class EquityController {
   async updateOperation(
     @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(createEquityOperationSchema))
-    dto: CreateEquityOperationDto,
+    dto: UpdateEquityOperationDto,
   ) {
     const userId = req.user.id;
     const i = defineEquityAbilityFor(req.user);
     if (i.cannot('update', dto))
       throw new UnauthorizedException('Нет прав на редактирование');
-    return this.equity.createOperation(userId, dto);
+    return this.equity.updateOperation(userId, dto);
   }
 
   @UseGuards(AccessTokenGuard)

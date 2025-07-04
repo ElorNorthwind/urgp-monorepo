@@ -5,7 +5,7 @@ SELECT
 		'value', id,        
 		'label', name,
         'fullname', name,  
-		'tags', ARRAY[]::text[],
+		'tags', fields,
 		'category', 'operation_type'
-	)) as items
+	) ORDER BY priority, id) as items
 FROM equity.operation_types;
