@@ -1,31 +1,14 @@
-import {
-  cn,
-  ScrollArea,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@urgp/client/shared';
-import {
-  CaseFull,
-  CONTROL_THRESHOLD,
-  EquityObject,
-  OperationClasses,
-} from '@urgp/shared/entities';
+import { cn, setOperationFormValuesEmpty } from '@urgp/client/shared';
+import { EquityObject } from '@urgp/shared/entities';
 
-import { CardTab } from '@urgp/client/features';
-import { Fragment, useMemo } from 'react';
-import { format, isAfter, isBefore } from 'date-fns';
 import {
-  CreateDispatchButton,
   CreateEquityOperationButton,
-  CreateStageButton,
-  EditDispatchButton,
   EquityOperationsList,
-  StagesList,
   useEquityOperations,
-  useOperations,
 } from '@urgp/client/entities';
-import { BedSingle, CirclePower, Repeat } from 'lucide-react';
+import { CardTab } from '@urgp/client/features';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 type EquityOperationsTabProps = {
   equityObject?: EquityObject;
@@ -47,6 +30,7 @@ const EquityOperationsTab = (
     contentClassName,
     accordionItemName,
   } = props;
+  const dispatch = useDispatch();
 
   const {
     data: operations,
@@ -56,11 +40,16 @@ const EquityOperationsTab = (
     skip: !equityObject?.id || equityObject?.id === 0,
   });
 
+  useEffect(() => {
+    dispatch(setOperationFormValuesEmpty());
+  }, [equityObject?.id]);
+
   return (
     <CardTab
       label={label}
       button={
         <CreateEquityOperationButton
+          fio={equityObject?.creditor?.split('; ')[0]}
           objectId={equityObject?.id}
           className="absolute right-6 top-3 h-8 px-2 py-1"
         />

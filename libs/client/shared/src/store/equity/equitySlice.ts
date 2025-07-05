@@ -78,6 +78,9 @@ const equitySlice = createSlice({
     setOperationFormObjectId: (state, { payload }: PayloadAction<number>) => {
       state.operationForm.values.objectId = payload;
     },
+    setOperationFormFio: (state, { payload }: PayloadAction<string>) => {
+      state.operationForm.values.fio = payload;
+    },
   },
 });
 
@@ -94,6 +97,7 @@ export const {
   setOperationFormValuesFromDto,
   setOperationFormValuesFromOperation,
   setOperationFormObjectId,
+  setOperationFormFio,
 } = equitySlice.actions;
 export const selectEquityOperationFormValues = (state: RootState) =>
   state.equity.operationForm.values;

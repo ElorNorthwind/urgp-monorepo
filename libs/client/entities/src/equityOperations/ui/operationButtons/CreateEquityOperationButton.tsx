@@ -3,6 +3,7 @@ import {
   buttonVariants,
   cn,
   selectEquityOperationFormValues,
+  setOperationFormFio,
   setOperationFormObjectId,
   setOperationFormState,
   useEquityAbility,
@@ -14,16 +15,14 @@ import { useDispatch, useSelector } from 'react-redux';
 
 type CreateEquityOperationButtonProps = {
   objectId?: number;
+  fio?: string | null;
   className?: string;
-  label?: string;
 } & VariantProps<typeof buttonVariants>;
 
 const CreateEquityOperationButton = ({
   objectId,
   className,
-  label,
-  variant = 'outline',
-  size,
+  fio,
 }: CreateEquityOperationButtonProps): JSX.Element | null => {
   const emptyValues = useSelector(selectEquityOperationFormValues);
   const dispatch = useDispatch();
@@ -36,6 +35,7 @@ const CreateEquityOperationButton = ({
       variant={'outline'}
       className={cn('h-8 p-1', className)} // pr-2
       onClick={() => {
+        fio && dispatch(setOperationFormFio(fio));
         dispatch(setOperationFormObjectId(objectId));
         dispatch(setOperationFormState(DialogFormState.create));
       }}

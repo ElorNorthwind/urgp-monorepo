@@ -3,6 +3,7 @@ import {
   DateFormField,
   FieldsArrayProps,
   InputFormField,
+  SelectFormField,
   TextAreaFormField,
 } from '@urgp/client/widgets';
 import {
@@ -42,6 +43,25 @@ const EquityOperationFieldArray = ({
   ];
 
   if (!fields) return null;
+
+  const resultOptions = useMemo(() => {
+    if ([5].includes(watchType))
+      return [
+        { label: 'документы получены', value: 'документы получены' },
+        { label: 'документы не получены', value: 'документы не получены' },
+      ];
+    if ([7, 14, 15].includes(watchType))
+      return [
+        { label: 'положительное', value: 'положительное' },
+        { label: 'условно-положительное', value: 'условно-положительное' },
+        { label: 'отрицательное', value: 'отрицательное' },
+      ];
+
+    return [
+      { label: 'ок', value: 'ок' },
+      { label: 'не ок', value: 'не ок' },
+    ];
+  }, [watchType]);
 
   // const watchApproveTo = form.watch('approveToId');
   // const watchExternal = form.watch('externalCases', []);
@@ -114,14 +134,16 @@ const EquityOperationFieldArray = ({
         className={cn('flex-grow', !fields?.includes('source') && 'hidden')}
         dirtyIndicator={isEdit}
       />
-
-      <InputFormField
+      <SelectFormField
         form={form}
         fieldName={'result'}
-        label="Итог (переделай меня!)"
-        placeholder="Итог (переделай меня!)"
+        options={resultOptions}
+        label="Результат"
+        placeholder="Выбрать из списка"
         className={cn('flex-grow', !fields?.includes('result') && 'hidden')}
+        popoverMinWidth={popoverMinWidth}
         dirtyIndicator={isEdit}
+        valueType="string"
       />
 
       {/* <CaseTypeSelector
