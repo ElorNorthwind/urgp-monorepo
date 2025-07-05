@@ -11,6 +11,9 @@ const userInfoSchema = z.object({
 const operationTypeSchema = z.object({
   id: z.number(),
   name: z.string(),
+  fullname: z.string(),
+  category: z.string(),
+  fields: z.array(z.string()).nullable(),
   priority: z.number(),
 });
 
