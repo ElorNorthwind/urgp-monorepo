@@ -29,6 +29,7 @@ type ClassificatorFormFieldProps = {
   classificator?: NestedClassificatorInfo[];
   className?: string;
   triggerClassName?: string;
+  commandListClassName?: string;
   popoverMinWidth?: string;
   label?: string | null;
   placeholder?: string;
@@ -47,6 +48,7 @@ const ClassificatorFormField = (
     classificator,
     className,
     triggerClassName,
+    commandListClassName,
     popoverMinWidth,
     isLoading,
     form,
@@ -159,7 +161,7 @@ const ClassificatorFormField = (
                   }}
                 >
                   <CommandInput placeholder="Поиск значения..." />
-                  <CommandList>
+                  <CommandList className={commandListClassName}>
                     <CommandEmpty>Ничего не найдено.</CommandEmpty>
                     {classificator
                       .filter((c) => c?.items?.length && c?.items?.length > 0)

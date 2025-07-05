@@ -5,11 +5,15 @@ import {
   InputFormField,
   TextAreaFormField,
 } from '@urgp/client/widgets';
-import { CreateEquityOperationDto } from '@urgp/shared/entities';
+import {
+  CreateEquityOperationDto,
+  NestedClassificatorInfo,
+} from '@urgp/shared/entities';
 import { Fragment } from 'react/jsx-runtime';
 
 import { EquityOperationTypeSelector } from '../selectors/EquityOperationTypeSelector';
 import { useEquityOperationTypes } from '../../../equityClassificators';
+import { useMemo } from 'react';
 
 const EquityOperationFieldArray = ({
   form,
@@ -19,7 +23,19 @@ const EquityOperationFieldArray = ({
   const user = useAuth();
   const watchType = form.watch('typeId');
   const { data, isLoading, isFetching } = useEquityOperationTypes();
-  const fields = data?.[0]?.items?.find((v) => v.value === watchType)?.tags ?? [
+
+  const flatItems = useMemo(
+    () =>
+      data?.reduce(
+        (acc, cur) => {
+          return [...acc, ...cur.items];
+        },
+        [] as NestedClassificatorInfo['items'],
+      ) ?? [],
+    [data],
+  );
+
+  const fields = flatItems.find((v) => v.value === watchType)?.fields ?? [
     'date',
     'notes',
     'number',
@@ -53,24 +69,35 @@ const EquityOperationFieldArray = ({
         placeholder="Тип операции"
         fieldName="typeId"
         popoverMinWidth={popoverMinWidth}
-        dirtyIndicator={isEdit}
-      />
-      <DateFormField
-        form={form}
-        fieldName={'date'}
-        label="Дата"
-        placeholder="Дата"
-        className={cn('flex-shrink-0', !fields?.includes('date') && 'hidden')}
+        commandListClassName="max-h-[25rem]"
         dirtyIndicator={isEdit}
       />
       <InputFormField
         form={form}
-        fieldName={'number'}
-        label="Номер"
-        placeholder="Номер"
-        className={cn('flex-grow', !fields?.includes('number') && 'hidden')}
+        fieldName={'fio'}
+        label="Заявитель"
+        placeholder="ФИО заявителя"
+        className={cn('flex-grow', !fields?.includes('fio') && 'hidden')}
         dirtyIndicator={isEdit}
       />
+      <div className="flex w-full flex-row items-end gap-2">
+        <DateFormField
+          form={form}
+          fieldName={'date'}
+          label="Дата"
+          placeholder="Дата"
+          className={cn('flex-shrink-0', !fields?.includes('date') && 'hidden')}
+          dirtyIndicator={isEdit}
+        />
+        <InputFormField
+          form={form}
+          fieldName={'number'}
+          label="Номер"
+          placeholder="Номер"
+          className={cn('flex-grow', !fields?.includes('number') && 'hidden')}
+          dirtyIndicator={isEdit}
+        />
+      </div>
       <TextAreaFormField
         form={form}
         fieldName={'notes'}
@@ -87,14 +114,7 @@ const EquityOperationFieldArray = ({
         className={cn('flex-grow', !fields?.includes('source') && 'hidden')}
         dirtyIndicator={isEdit}
       />
-      <InputFormField
-        form={form}
-        fieldName={'fio'}
-        label="Кредитор"
-        placeholder="ФИО кредитора"
-        className={cn('flex-grow', !fields?.includes('fio') && 'hidden')}
-        dirtyIndicator={isEdit}
-      />
+
       <InputFormField
         form={form}
         fieldName={'result'}

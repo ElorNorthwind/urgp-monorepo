@@ -9,6 +9,7 @@ import {
   BadgeQuestionMark,
   BadgeRussianRuble,
   BadgeX,
+  Blocks,
   Building,
   Building2,
   Car,
@@ -20,18 +21,27 @@ import {
   CircleUserRound,
   Construction,
   DoorOpen,
+  Grid2X2Check,
   HandCoins,
   House,
+  KeySquare,
   LucideProps,
+  MessageSquareQuote,
   Package,
+  Phone,
+  PhoneCall,
   ShieldCheck,
   ShieldEllipsis,
   Square,
   SquareAsterisk,
   SquareCheck,
+  SquareCheckBig,
   SquareDashedBottom,
   SquareDashedBottomCode,
+  SquareDot,
   SquarePen,
+  SquarePi,
+  SquaresExclude,
   SquaresIntersect,
   SquareUserRound,
 } from 'lucide-react';
@@ -205,12 +215,29 @@ export const equityProblemsStyles = {
 
 export const equityOperationTypeStyles = {
   0: { icon: Square, iconStyle: cn('text-slate-500') }, // Фолбэк
+
   1: { icon: SquareCheck, iconStyle: cn('text-teal-500') }, // Акт Подписан
+  16: { icon: KeySquare, iconStyle: cn('text-teal-500') }, // Выданы ключи
+
   2: { icon: SquareDashedBottom, iconStyle: cn('text-orange-500') }, // Дефектная ведомость открыта
   3: { icon: SquareDashedBottomCode, iconStyle: cn('text-cyan-500') }, // Дефектная ведомость закрыта
-  4: { icon: CircleUser, iconStyle: cn('text-teal-500') }, // Дефекты выявлены
-  5: { icon: SquareUserRound, iconStyle: cn('text-indigo-500') }, // Запись на прием
-  6: { icon: SquareAsterisk, iconStyle: cn('text-yellow-500') }, // Заключение УРЖП запрошено
+  4: { icon: SquarePi, iconStyle: cn('text-amber-500') }, // Дефекты выявлены
+
+  5: { icon: SquareUserRound, iconStyle: cn('text-indigo-500') }, // Запись на прием - подача документов
+  12: { icon: Phone, iconStyle: cn('text-sky-500') }, // Запись на прием - консультация
+  13: { icon: PhoneCall, iconStyle: cn('text-green-500') }, // Консультация оказана
+
+  6: { icon: SquareAsterisk, iconStyle: cn('text-yellow-500') }, // Заключение запрошено - подписать акт
+  11: { icon: SquareDot, iconStyle: cn('text-yellow-500') }, // Заключение запрошено - выдать ключи
   7: { icon: SquarePen, iconStyle: cn('text-blue-500') }, // Заключение УРЖП дано
+  14: { icon: SquarePen, iconStyle: cn('text-violet-500') }, // Заключение УПОЖС
+  15: { icon: SquarePen, iconStyle: cn('text-emerald-500') }, // Заключение УОРК
+
   8: { icon: SquaresIntersect, iconStyle: cn('text-red-500') }, // Выявлены признаки двойной продажи
+  18: { icon: SquaresExclude, iconStyle: cn('text-lime-500') }, // Двойная снята
+
+  9: { icon: Blocks, iconStyle: cn('text-rose-500') }, // Выявлены проблемы идентификации
+  10: { icon: Grid2X2Check, iconStyle: cn('text-green-500') }, // Проблемы идентификации сняты
+
+  17: { icon: MessageSquareQuote, iconStyle: cn('text-stone-500') }, // Примечание
 } as Record<number, StyleData>;

@@ -10,6 +10,7 @@ type EquityOperationTypeSelectorProps = {
   className?: string;
   triggerClassName?: string;
   popoverMinWidth?: string;
+  commandListClassName?: string;
   disabled?: boolean;
   form: UseFormReturn<any, any>;
   fieldName: string;
@@ -24,6 +25,7 @@ const EquityOperationTypeSelector = (
   const {
     className,
     triggerClassName,
+    commandListClassName,
     popoverMinWidth,
     disabled,
     form,
@@ -41,6 +43,7 @@ const EquityOperationTypeSelector = (
       placeholder={placeholder}
       disabled={disabled}
       triggerClassName={triggerClassName}
+      commandListClassName={commandListClassName}
       fieldName={fieldName}
       classificator={data}
       isLoading={isLoading || isFetching || !data}

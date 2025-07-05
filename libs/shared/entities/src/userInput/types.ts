@@ -39,6 +39,7 @@ export const classificatorSchema = z.object({
   category: z.string().nullable().optional(),
   fullname: z.string().nullable().optional(),
   tags: z.array(z.string()).nullable().optional(),
+  fields: z.array(z.string()).nullable().optional(),
   priority: z.coerce.number().nullable().optional(),
   autoApprove: z.coerce.boolean().nullable().optional(),
 });

@@ -11,20 +11,8 @@ import {
   UpdateEquityOperationDto,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
-import { equityClassificators, equityObjects } from './sql/sql';
 import { camelToSnakeCase } from '../lib/to-snake-case';
-import { Logger } from '@nestjs/common';
-
-// const operationColumns = [
-//   { name: 'object_id', prop: 'objectId' },
-//   { name: 'type_id', prop: 'typeId' },
-//   { name: 'source', prop: 'source' },
-//   { name: 'date', prop: 'date' },
-//   { name: 'notes', prop: 'notes' },
-//   { name: 'number', prop: 'number' },
-//   { name: 'result', prop: 'result' },
-//   { name: 'fio', prop: 'fio' },
-// ];
+import { equityClassificators, equityObjects } from './sql/sql';
 
 // @Injectable()
 export class EquityRepository {
