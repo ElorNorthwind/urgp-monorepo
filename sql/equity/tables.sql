@@ -110,10 +110,8 @@ ALTER TABLE equity.claim_source_types
     OWNER to renovation_user;
 INSERT INTO equity.claim_source_types (id, name, priority) VALUES
     (1, 'Информация застройщика', 2),
-    (2, 'РТУС', 3),
-    (3, 'Обременение в ЕГРН', 4),
-    (4, 'Судебное решение', 5),
-    (5, 'Обращение гражданина', 1);
+    (2, 'РТУС (рабочий)', 3),
+    (3, 'РТУС (официальный)', 4);
 
 -- Жилые комплексы
 DROP TABLE IF EXISTS equity.complexes CASCADE;
@@ -231,6 +229,7 @@ CREATE TABLE equity.claims
     legacy_fk_object character varying(255) NOT NULL,
     claim_item_type_id integer NOT NULL REFERENCES equity.claim_item_types(id),
     claim_source_type_id integer NOT NULL REFERENCES equity.claim_source_types(id),
+    source text,
 
     claim_registry_date timestamp with time zone,
     claim_registry_num character varying(255),
@@ -254,11 +253,9 @@ CREATE TABLE equity.claims
     claim_exclusion_date timestamp with time zone,
 
     claim_status character varying(255),
-    claim_status_legacy character varying(255),
     notes text,
 
     identification_notes text,
-    source character varying(255),
 
     unit character varying(50),
     section integer,

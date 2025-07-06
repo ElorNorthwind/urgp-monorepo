@@ -9,7 +9,7 @@ WITH date_series AS(
 SELECT   
     d.year::integer, 
     d.month::integer,  
-    d.period, 
+    CASE WHEN d.year::integer = DATE_PART('year', NOW())::integer AND d.month::integer = DATE_PART('month', NOW())::integer THEN 'На сегодня' ELSE d.period END as period, 
 	(COUNT(*) FILTER (WHERE o.egrn_status = ANY(ARRAY['Физ.лицо', 'Юр.лицо'])))::integer as given,
 	(COUNT(*) FILTER (WHERE o.egrn_status = ANY(ARRAY['город Москва'])))::integer as taken
 	

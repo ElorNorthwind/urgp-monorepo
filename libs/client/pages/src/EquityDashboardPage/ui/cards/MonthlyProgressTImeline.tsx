@@ -86,7 +86,7 @@ const MonthlyProgressTimelineChart = ({
                 tickMargin={10}
                 axisLine={false}
                 tickFormatter={(value) =>
-                  value === 'Июнь 2025'
+                  value === 'На сегодня'
                     ? format(new Date(), 'dd.MM')
                     : value.slice(0, 3)
                 }

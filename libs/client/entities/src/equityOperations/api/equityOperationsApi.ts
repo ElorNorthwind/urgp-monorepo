@@ -32,15 +32,18 @@ export const equityOperationsApi = rtkApi.injectEndpoints({
       invalidatesTags: (result, error, arg) => [
         { type: 'equity-operations', objectId: arg.objectId },
       ],
-      async onQueryStarted(
-        { objectId },
-        { dispatch, queryFulfilled, getState },
-      ) {
-        dispatch(
-          equityObjectsApi.endpoints.getObjectById.initiate(objectId, {
-            forceRefetch: true,
-          }),
-        );
+      async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
+        await queryFulfilled.then(({ data }) => {
+          data?.objectId &&
+            dispatch(
+              equityObjectsApi.endpoints.getObjectById.initiate(
+                data?.objectId,
+                {
+                  forceRefetch: true,
+                },
+              ),
+            );
+        });
       },
     }),
     updateEquityOperation: build.mutation<
@@ -55,15 +58,18 @@ export const equityOperationsApi = rtkApi.injectEndpoints({
       invalidatesTags: (result, error, arg) => [
         { type: 'equity-operations', objectId: arg.objectId },
       ],
-      async onQueryStarted(
-        { objectId },
-        { dispatch, queryFulfilled, getState },
-      ) {
-        dispatch(
-          equityObjectsApi.endpoints.getObjectById.initiate(objectId, {
-            forceRefetch: true,
-          }),
-        );
+      async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
+        await queryFulfilled.then(({ data }) => {
+          data?.objectId &&
+            dispatch(
+              equityObjectsApi.endpoints.getObjectById.initiate(
+                data?.objectId,
+                {
+                  forceRefetch: true,
+                },
+              ),
+            );
+        });
       },
     }),
     deleteEquityOperation: build.mutation<
