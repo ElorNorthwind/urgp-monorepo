@@ -38,6 +38,7 @@ const EquityOperationItem = (props: EquityOperationItemProps): JSX.Element => {
           className={cn(
             'text-muted-foreground ml-auto font-semibold',
             operation?.result === 'отрицательное' && 'text-red-600',
+            operation?.result === 'пакет с замечаниями' && 'text-amber-600',
             operation?.result === 'положительное' && 'text-green-600',
           )}
         >
