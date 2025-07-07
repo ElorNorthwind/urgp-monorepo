@@ -19,6 +19,7 @@ import { EquityBuildingsFilter } from './filterInputs/EquityBuildingsFilter';
 import { EquityObjectStatusFilter } from './filterInputs/EquityObjectStatusFilter';
 import { EquityObjectTypeFilter } from './filterInputs/EquityObjectTypesFilter';
 import { EquityObjectProblemsFilter } from './filterInputs/EquityObjectProblemsFilter';
+import { EquityObjectDocumentsFilter } from './filterInputs/EquityObjectDocumentsFilter';
 
 type EquityObjectsFilterSidebarProps = {
   side?: 'left' | 'right';
@@ -62,6 +63,7 @@ const EquityObjectsFilterSidebar = (
               <EquityObjectTypeFilter variant="accordion" />
               <EquityObjectProblemsFilter variant="accordion" />
               <EquityBuildingsFilter variant="accordion" />
+              <EquityObjectDocumentsFilter variant="accordion" />
             </Accordion>
           </div>
         </ScrollArea>

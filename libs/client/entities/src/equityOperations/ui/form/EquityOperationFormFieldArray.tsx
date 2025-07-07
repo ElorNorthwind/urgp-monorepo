@@ -56,6 +56,11 @@ const EquityOperationFieldArray = ({
         { label: 'условно-положительное', value: 'условно-положительное' },
         { label: 'отрицательное', value: 'отрицательное' },
       ];
+    if ([20].includes(watchType))
+      return [
+        { label: 'полный пакет', value: 'полный пакет' },
+        { label: 'пакет с замечаниями', value: 'пакет с замечаниями' },
+      ];
 
     return [
       { label: 'ок', value: 'ок' },

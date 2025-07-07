@@ -49,15 +49,17 @@ const EquityOperationItem = (props: EquityOperationItemProps): JSX.Element => {
             : 'без даты'}
         </span>
       </div>
+
+      {operation?.fio && (
+        <div className="bg-muted-foreground/5 text-semibold -mx-4 my-1 flex flex-row gap-2 truncate px-4">
+          {operation?.fio}
+        </div>
+      )}
+
       <div className="font-light">{operation?.notes}</div>
 
       {hover && (
         <div className="bg-background absolute bottom-3 right-4 hidden flex-row items-center gap-2 rounded-full px-2 text-right text-xs font-thin shadow-sm group-hover:flex">
-          {/*          
-                   <DeleteStageButton stage={stage} />
-          <ApproveButton entity={stage} variant="mini" />
-          <EditStageButton stage={stage} /> */}
-
           <span>
             {operation?.createdAt
               ? format(operation?.createdAt, 'dd.MM.yyyy')

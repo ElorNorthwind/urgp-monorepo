@@ -27,6 +27,7 @@ export const equityObjectsPageFilterSchema = z
     problem: queryStringArray,
     status: queryNumberArray,
     type: queryNumberArray,
+    documents: queryStringArray,
   })
   .partial();
 export type EquityObjectsPageFilter = z.infer<

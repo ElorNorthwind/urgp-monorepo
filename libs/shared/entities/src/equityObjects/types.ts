@@ -86,6 +86,11 @@ export const equityObjectSchema = z.object({
   opinionUrgp: z.boolean(),
   opinionUpozh: z.boolean(),
   opinionUork: z.boolean(),
+  opinionUpozi: z.boolean(),
+
+  documentsOk: z.boolean(),
+  documentsProblem: z.boolean(),
+  operationsFio: z.string().nullable(),
 });
 export type EquityObject = z.infer<typeof equityObjectSchema>;
 

@@ -1,5 +1,8 @@
 import { cn } from '@urgp/client/shared';
-import { EquityObjectProblems } from '@urgp/shared/entities';
+import {
+  EquityObjectDocuments,
+  EquityObjectProblems,
+} from '@urgp/shared/entities';
 import {
   Badge,
   BadgeAlert,
@@ -21,6 +24,9 @@ import {
   CircleUserRound,
   Construction,
   DoorOpen,
+  FileCheck,
+  FileMinus,
+  FileX,
   Grid2X2Check,
   HandCoins,
   House,
@@ -44,6 +50,7 @@ import {
   SquaresExclude,
   SquaresIntersect,
   SquareUserRound,
+  StickyNote,
 } from 'lucide-react';
 import { StyleData } from '../../cases';
 
@@ -213,6 +220,39 @@ export const equityProblemsStyles = {
   },
 } as Record<string, StyleData>;
 
+export const equityDocumentsStyles = {
+  [EquityObjectDocuments.ok]: {
+    icon: FileCheck,
+    iconStyle: cn('text-emerald-500'),
+    label: 'Полный пакет',
+    fullLabel: 'Заявитель представил все требуемые документы',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-green-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-green-500 before:mr-1 before:flex-shrink-0",
+    ),
+  },
+  [EquityObjectDocuments.problem]: {
+    icon: FileMinus,
+    iconStyle: cn('text-amber-500'),
+    label: 'Неполный пакет',
+    fullLabel: 'Заявитель представил документы, но к ним есть замечания',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-amber-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-amber-500 before:mr-1 before:flex-shrink-0",
+    ),
+  },
+  [EquityObjectDocuments.none]: {
+    icon: FileX,
+    iconStyle: cn('text-gray-500'),
+    label: 'Нет пакета',
+    fullLabel: 'Заявитель не представил документы',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-gray-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-gray-500 before:mr-1 before:flex-shrink-0",
+    ),
+  },
+} as Record<string, StyleData>;
+
 export const equityOperationTypeStyles = {
   0: { icon: Square, iconStyle: cn('text-slate-500') }, // Фолбэк
 
@@ -223,6 +263,7 @@ export const equityOperationTypeStyles = {
   3: { icon: SquareDashedBottomCode, iconStyle: cn('text-cyan-500') }, // Дефектная ведомость закрыта
   4: { icon: SquarePi, iconStyle: cn('text-amber-500') }, // Дефекты выявлены
 
+  20: { icon: StickyNote, iconStyle: cn('text-stone-500') }, // Сданы документы
   5: { icon: SquareUserRound, iconStyle: cn('text-indigo-500') }, // Запись на прием - подача документов
   12: { icon: Phone, iconStyle: cn('text-sky-500') }, // Запись на прием - консультация
   13: { icon: PhoneCall, iconStyle: cn('text-green-500') }, // Консультация оказана
@@ -232,6 +273,7 @@ export const equityOperationTypeStyles = {
   7: { icon: SquarePen, iconStyle: cn('text-blue-500') }, // Заключение УРЖП дано
   14: { icon: SquarePen, iconStyle: cn('text-violet-500') }, // Заключение УПОЖС
   15: { icon: SquarePen, iconStyle: cn('text-emerald-500') }, // Заключение УОРК
+  19: { icon: SquarePen, iconStyle: cn('text-lime-500') }, // Заключение УПОЗИ
 
   8: { icon: SquaresIntersect, iconStyle: cn('text-red-500') }, // Выявлены признаки двойной продажи
   18: { icon: SquaresExclude, iconStyle: cn('text-lime-500') }, // Двойная снята

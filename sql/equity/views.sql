@@ -98,7 +98,7 @@ ALTER TABLE equity.claims_full_view
 DROP VIEW IF EXISTS equity.objects_full_view CASCADE;
 CREATE OR REPLACE VIEW equity.objects_full_view AS
     ---------------------------------------------------------------------
-      WITH relevant_claims AS (
+  WITH relevant_claims AS (
         SELECT 
             c."objectId",
             COUNT(*) as "claimsCount",
@@ -120,7 +120,13 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
             op.opinion_urgp as "opinionUrgp",
             op.opinion_upozh as "opinionUpozh",
             op.opinion_uork as "opinionUork",
+            op.opinion_uork as "opinionUpozi",
             op.opinion_urgp AND op.opinion_upozh AND op.opinion_uork as "opinionAll",
+
+            op.documents_ok as "documentsOk",
+            op.documents_problem as "documentsProblem",
+            op.operations_fio as "operationsFio",
+
             op.id_problem as "idProblem",
 			op.date
 		FROM (
@@ -128,11 +134,15 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 				ROW_NUMBER() OVER(PARTITION BY o.object_id ORDER BY t.priority DESC, o.date DESC, o.id) as row_num,
 				COUNT(*) FILTER (WHERE o.type_id = 8) OVER(PARTITION BY o.object_id) > 0 as has_double_sell,
 				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[2,3,4])) OVER(PARTITION BY o.object_id) > 0 as has_defects,
-				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[5,6,7,11,12,14,15])) OVER(PARTITION BY o.object_id) > 0 as has_request,
+				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[5,6,7,11,12,14,15,20])) OVER(PARTITION BY o.object_id) > 0 as has_request,
                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[6,11])) OVER(PARTITION BY o.object_id) > 0 as needs_opinion,
                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[5])) OVER(PARTITION BY o.object_id) > 0 as opinion_urgp,
                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[14])) OVER(PARTITION BY o.object_id) > 0 as opinion_upozh,
                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[15])) OVER(PARTITION BY o.object_id) > 0 as opinion_uork,
+                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[19])) OVER(PARTITION BY o.object_id) > 0 as opinion_upozi,
+                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[20]) AND o.result = 'полный пакет') OVER(PARTITION BY o.object_id) > 0 as documents_ok,
+                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[20]) AND o.result <> 'полный пакет') OVER(PARTITION BY o.object_id) > 0 as documents_problem,
+                string_agg(o.fio, '; ') OVER(PARTITION BY o.object_id) as operations_fio,
                 COUNT(*) FILTER (WHERE o.type_id = 9) OVER(PARTITION BY o.object_id) > 0 AND COUNT(*) FILTER (WHERE o.type_id = 10) OVER(PARTITION BY o.object_id) = 0 as id_problem,
 
 				o.type_id,
@@ -214,7 +224,12 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
         COALESCE(op."needsOpinion", false) as "needsOpinion",
         COALESCE(op."opinionUrgp", false) as "opinionUrgp",
         COALESCE(op."opinionUpozh", false) as "opinionUpozh",
-        COALESCE(op."opinionUork", false) as "opinionUork"
+        COALESCE(op."opinionUork", false) as "opinionUork",
+        COALESCE(op."opinionUpozi", false) as "opinionUpozi",
+        
+        COALESCE(op."documentsOk", false) as "documentsOk",
+        COALESCE(op."documentsProblem", false) as "documentsProblem",
+        COALESCE(op."operationsFio", '') as "operationsFio"
 
     FROM equity.objects o
         LEFT JOIN (SELECT id, name FROM equity.object_types) ot ON ot.id = o.object_type_id
@@ -231,7 +246,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 				WHEN op."typeId" = 1 THEN 2
 				ELSE 1
 			END
-    WHERE o.egrn_status <> 'Общее имущество мкд'
+    WHERE o.egrn_status <> 'Общее имущество мкд' AND (o.is_identified OR c."claimsCount" > 0)
     ORDER BY o.building_id, o.is_identified DESC, o.object_type_id, o.npp;
     ---------------------------------------------------------------------
 ALTER TABLE equity.objects_full_view
@@ -255,6 +270,7 @@ CREATE OR REPLACE VIEW equity.operations_full_view AS
         o.notes,
         o.number,
         o.result,
+        o.fio,
 
         o.created_at as "createdAt",
         to_jsonb(u1) as "createdBy",

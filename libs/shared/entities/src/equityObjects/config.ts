@@ -14,3 +14,12 @@ export const EquityObjectProblems = {
 export type EquityObjectProblems =
   (typeof EquityObjectProblems)[keyof typeof EquityObjectProblems];
 export const equityObjectProblemsValues = getValues(EquityObjectProblems);
+
+export const EquityObjectDocuments = {
+  ok: 'ok',
+  problem: 'problem',
+  none: 'none',
+} as const;
+export type EquityObjectDocuments =
+  (typeof EquityObjectDocuments)[keyof typeof EquityObjectDocuments];
+export const equityObjectDocumentsValues = getValues(EquityObjectDocuments);

@@ -46,7 +46,7 @@ export function defineEquityAbilityFor(user: User) {
 
   can(['read', 'create'], 'all'); // Все могут читать или создавать все
   can(['update', 'delete'], 'all', {
-    createdBy: { $eq: user.id }, // FE // Все могу менять или удалять то, что они создали
+    'createdBy.id': { $eq: user.id }, // Все могу менять или удалять то, что они создали
   });
 
   return build({
