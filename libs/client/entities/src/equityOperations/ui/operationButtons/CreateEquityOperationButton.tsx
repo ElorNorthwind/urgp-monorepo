@@ -6,6 +6,7 @@ import {
   setOperationFormFio,
   setOperationFormObjectId,
   setOperationFormState,
+  useAuth,
   useEquityAbility,
 } from '@urgp/client/shared';
 import { DialogFormState } from '@urgp/shared/entities';
@@ -27,8 +28,10 @@ const CreateEquityOperationButton = ({
   const emptyValues = useSelector(selectEquityOperationFormValues);
   const dispatch = useDispatch();
   const i = useEquityAbility();
+  const user = useAuth();
 
-  if (i.cannot('create', 'EquityOperation') || !objectId) return null;
+  if (user?.id === 0 || i.cannot('create', 'EquityOperation') || !objectId)
+    return null;
 
   return (
     <Button
