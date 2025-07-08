@@ -23,3 +23,13 @@ export const EquityObjectDocuments = {
 export type EquityObjectDocuments =
   (typeof EquityObjectDocuments)[keyof typeof EquityObjectDocuments];
 export const equityObjectDocumentsValues = getValues(EquityObjectDocuments);
+
+export const EquityObjectOpinions = {
+  положительное: 'положительное',
+  'условно-положительное': 'условно-положительное',
+  отрицательное: 'отрицательное',
+  нет: 'нет',
+} as const;
+export type EquityObjectOpinions =
+  (typeof EquityObjectOpinions)[keyof typeof EquityObjectOpinions];
+export const equityObjectOpinionsValues = getValues(EquityObjectOpinions);

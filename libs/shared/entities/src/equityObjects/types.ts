@@ -1,5 +1,8 @@
 import { z } from 'zod';
-import { equityObjectProblemsValues } from './config';
+import {
+  equityObjectOpinionsValues,
+  equityObjectProblemsValues,
+} from './config';
 
 // Sub-schemas for nested objects
 const buildingSchema = z
@@ -83,10 +86,17 @@ export const equityObjectSchema = z.object({
 
   needsOpinion: z.boolean(),
   // TBD - show opinion result
-  opinionUrgp: z.boolean(),
-  opinionUpozh: z.boolean(),
-  opinionUork: z.boolean(),
-  opinionUpozi: z.boolean(),
+  opinionUrgp: z.enum(equityObjectOpinionsValues).default('нет'),
+  opinionUpozh: z.enum(equityObjectOpinionsValues).default('нет'),
+  opinionUork: z.enum(equityObjectOpinionsValues).default('нет'),
+  opinionUpozi: z.enum(equityObjectOpinionsValues).default('нет'),
+  // opinionUrgp: z.boolean(),
+  // opinionUpozh: z.boolean(),
+  // opinionUork: z.boolean(),
+  // opinionUpozi: z.boolean(),
+
+  documentsFio: z.string().nullable(),
+  documentsDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
 
   documentsOk: z.boolean(),
   documentsProblem: z.boolean(),

@@ -117,11 +117,15 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 			op.has_defects as "hasDefects",
 			op.has_request as "hasRequest",
 			op.needs_opinion as "needsOpinion",
+
             op.opinion_urgp as "opinionUrgp",
             op.opinion_upozh as "opinionUpozh",
             op.opinion_uork as "opinionUork",
-            op.opinion_uork as "opinionUpozi",
-            op.opinion_urgp AND op.opinion_upozh AND op.opinion_uork as "opinionAll",
+            op.opinion_upozi as "opinionUpozi",
+            op.documents_fio as "documentsFio",
+            op.documents_date as "documentsDate",
+
+            -- op.opinion_urgp AND op.opinion_upozh AND op.opinion_uork as "opinionAll",
 
             op.documents_ok as "documentsOk",
             op.documents_problem as "documentsProblem",
@@ -136,10 +140,14 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[2,3,4])) OVER(PARTITION BY o.object_id) > 0 as has_defects,
 				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[5,6,7,11,12,14,15,20])) OVER(PARTITION BY o.object_id) > 0 as has_request,
                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[6,11])) OVER(PARTITION BY o.object_id) > 0 as needs_opinion,
-                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[5])) OVER(PARTITION BY o.object_id) > 0 as opinion_urgp,
-                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[14])) OVER(PARTITION BY o.object_id) > 0 as opinion_upozh,
-                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[15])) OVER(PARTITION BY o.object_id) > 0 as opinion_uork,
-                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[19])) OVER(PARTITION BY o.object_id) > 0 as opinion_upozi,
+
+                MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[7])) OVER(PARTITION BY o.object_id) as opinion_urgp,
+                MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[14])) OVER(PARTITION BY o.object_id) as opinion_upozh,
+                MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[15])) OVER(PARTITION BY o.object_id) as opinion_uork,
+                MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[19])) OVER(PARTITION BY o.object_id) as opinion_upozi,
+
+                MAX(o.date) FILTER (WHERE o.type_id = ANY(ARRAY[20])) OVER(PARTITION BY o.object_id) as documents_date,
+                MAX(o.fio) FILTER (WHERE o.type_id = ANY(ARRAY[20])) OVER(PARTITION BY o.object_id) as documents_fio,
                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[20]) AND o.result = 'полный пакет') OVER(PARTITION BY o.object_id) > 0 as documents_ok,
                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[20]) AND o.result <> 'полный пакет') OVER(PARTITION BY o.object_id) > 0 as documents_problem,
                 string_agg(o.fio, '; ') OVER(PARTITION BY o.object_id) as operations_fio,
@@ -222,11 +230,14 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
         o.egrn_status as "egrnStatus",
 
         COALESCE(op."needsOpinion", false) as "needsOpinion",
-        COALESCE(op."opinionUrgp", false) as "opinionUrgp",
-        COALESCE(op."opinionUpozh", false) as "opinionUpozh",
-        COALESCE(op."opinionUork", false) as "opinionUork",
-        COALESCE(op."opinionUpozi", false) as "opinionUpozi",
+
+        COALESCE(op."opinionUrgp", 'нет') as "opinionUrgp",
+        COALESCE(op."opinionUpozh", 'нет') as "opinionUpozh",
+        COALESCE(op."opinionUork", 'нет') as "opinionUork",
+        COALESCE(op."opinionUpozi", 'нет') as "opinionUpozi",
         
+        op."documentsFio",
+        op."documentsDate",
         COALESCE(op."documentsOk", false) as "documentsOk",
         COALESCE(op."documentsProblem", false) as "documentsProblem",
         COALESCE(op."operationsFio", '') as "operationsFio"

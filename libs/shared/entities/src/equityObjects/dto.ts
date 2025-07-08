@@ -28,6 +28,11 @@ export const equityObjectsPageFilterSchema = z
     status: queryNumberArray,
     type: queryNumberArray,
     documents: queryStringArray,
+
+    opinionUrgp: queryStringArray,
+    opinionUpozh: queryStringArray,
+    opinionUork: queryStringArray,
+    opinionUpozi: queryStringArray,
   })
   .partial();
 export type EquityObjectsPageFilter = z.infer<

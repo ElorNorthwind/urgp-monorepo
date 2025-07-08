@@ -1,6 +1,7 @@
 import { cn } from '@urgp/client/shared';
 import {
   EquityObjectDocuments,
+  EquityObjectOpinions,
   EquityObjectProblems,
 } from '@urgp/shared/entities';
 import {
@@ -28,7 +29,9 @@ import {
   FileMinus,
   FileX,
   Grid2X2Check,
+  Hand,
   HandCoins,
+  HandHelping,
   House,
   KeySquare,
   LucideProps,
@@ -51,6 +54,8 @@ import {
   SquaresIntersect,
   SquareUserRound,
   StickyNote,
+  ThumbsDown,
+  ThumbsUp,
 } from 'lucide-react';
 import { StyleData } from '../../cases';
 
@@ -246,6 +251,49 @@ export const equityDocumentsStyles = {
     iconStyle: cn('text-gray-500'),
     label: 'Нет пакета',
     fullLabel: 'Заявитель не представил документы',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-gray-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-gray-500 before:mr-1 before:flex-shrink-0",
+    ),
+  },
+} as Record<string, StyleData>;
+
+export const equityOpinionsStyles = {
+  [EquityObjectOpinions['положительное']]: {
+    icon: ThumbsUp,
+    iconStyle: cn('text-emerald-500'),
+    label: 'Положительное',
+    fullLabel: 'По делу вынесено положительное заключение',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-emerald-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-emerald-500 before:mr-1 before:flex-shrink-0",
+    ),
+  },
+  [EquityObjectOpinions['условно-положительное']]: {
+    icon: HandHelping,
+    iconStyle: cn('text-amber-500'),
+    label: 'Условно-положительное',
+    fullLabel: 'Требуется заключение или доработка других подразделений',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-amber-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-amber-500 before:mr-1 before:flex-shrink-0",
+    ),
+  },
+  [EquityObjectOpinions['отрицательное']]: {
+    icon: ThumbsDown,
+    iconStyle: cn('text-rose-500'),
+    label: 'Отрицательное',
+    fullLabel: 'По делу выявлены препятствия к подписанию акта',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-rose-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-rose-500 before:mr-1 before:flex-shrink-0",
+    ),
+  },
+  [EquityObjectOpinions['нет']]: {
+    icon: Hand,
+    iconStyle: cn('text-gray-500'),
+    label: 'Не выносилось',
+    fullLabel: 'Дело не рассматривалось',
     badgeStyle: cn(
       'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-gray-500',
       "before:content-[''] before:rounded-full before:size-3 before:bg-gray-500 before:mr-1 before:flex-shrink-0",

@@ -6,7 +6,8 @@ export function equityObjectsGlobalFilterFn(
   columnId: string,
   filterValue: EquityObjectsPageSearch,
 ): boolean {
-  const { query, status, building, type, problem, documents } = filterValue;
+  const { query, status, building, type, problem, documents, opinionUrgp } =
+    filterValue;
   if (
     query &&
     !(
@@ -40,7 +41,7 @@ export function equityObjectsGlobalFilterFn(
     return false;
   }
 
-  // Screams for backedn view refactor
+  // Screams for backend view refactor
   if (
     documents &&
     !(
@@ -51,6 +52,22 @@ export function equityObjectsGlobalFilterFn(
       (documents.includes('none') &&
         !row?.original?.documentsOk &&
         !row?.original?.documentsProblem)
+    )
+  ) {
+    return false;
+  }
+
+  // Screams for backend view refactor
+  if (
+    opinionUrgp &&
+    !(
+      (opinionUrgp.includes('положительное') &&
+        row?.original?.opinionUrgp === 'положительное') ||
+      (opinionUrgp.includes('условно-положительное') &&
+        row?.original?.opinionUrgp === 'условно-положительное') ||
+      (opinionUrgp.includes('отрицательное') &&
+        row?.original?.opinionUrgp === 'отрицательное') ||
+      (opinionUrgp.includes('нет') && row?.original?.opinionUrgp === 'нет')
     )
   ) {
     return false;
