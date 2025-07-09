@@ -10,7 +10,7 @@ export const createEquityOperationSchema = equityOperationSchema
     source: true,
     notes: true,
     number: true,
-    result: true,
+    // result: true,
     fio: true,
   })
   .extend({
@@ -19,6 +19,7 @@ export const createEquityOperationSchema = equityOperationSchema
       .int()
       .nonnegative({ message: 'Нужен тип операции' }),
     id: z.coerce.number().int().nonnegative().optional(),
+    result: z.string().min(1, { message: 'Необходимо указать результат' }),
     // createdById: z.coerce
     //   .number()
     //   .int()

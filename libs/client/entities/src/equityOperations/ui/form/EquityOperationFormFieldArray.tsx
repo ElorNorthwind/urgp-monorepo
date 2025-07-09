@@ -14,7 +14,7 @@ import { Fragment } from 'react/jsx-runtime';
 
 import { EquityOperationTypeSelector } from '../selectors/EquityOperationTypeSelector';
 import { useEquityOperationTypes } from '../../../equityClassificators';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 const EquityOperationFieldArray = ({
   form,
@@ -42,7 +42,13 @@ const EquityOperationFieldArray = ({
     'number',
   ];
 
-  if (!fields) return null;
+  useEffect(() => {
+    if (fields?.includes('result')) {
+      form.setValue('result', '');
+    } else {
+      form.setValue('result', 'ок');
+    }
+  }, [watchType]);
 
   const resultOptions = useMemo(() => {
     if ([5].includes(watchType))
@@ -60,6 +66,11 @@ const EquityOperationFieldArray = ({
       return [
         { label: 'полный пакет', value: 'полный пакет' },
         { label: 'пакет с замечаниями', value: 'пакет с замечаниями' },
+      ];
+    if ([22].includes(watchType))
+      return [
+        { label: 'положительное', value: 'положительное' },
+        { label: 'отрицательное', value: 'отрицательное' },
       ];
 
     return [
@@ -85,6 +96,8 @@ const EquityOperationFieldArray = ({
   // const isApproved = form.getValues('approveStatus') === 'approved';
   // const { data: approvers, isLoading: isApproversLoading } =
   // useCurrentUserApproveTo();
+
+  if (!fields) return null;
 
   return (
     <Fragment>
@@ -139,6 +152,14 @@ const EquityOperationFieldArray = ({
         className={cn('flex-grow', !fields?.includes('source') && 'hidden')}
         dirtyIndicator={isEdit}
       />
+      {/* <InputFormField
+        form={form}
+        fieldName={'result'}
+        label="DELETE ME"
+        placeholder="Источнк"
+        className={cn('flex-grow')}
+        dirtyIndicator={isEdit}
+      /> */}
       <SelectFormField
         form={form}
         fieldName={'result'}

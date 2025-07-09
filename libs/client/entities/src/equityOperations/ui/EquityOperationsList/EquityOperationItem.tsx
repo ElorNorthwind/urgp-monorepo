@@ -1,4 +1,9 @@
-import { cn, Skeleton } from '@urgp/client/shared';
+import {
+  cn,
+  EQUITY_SIDEBAR_WIDTH,
+  Skeleton,
+  useIsMobile,
+} from '@urgp/client/shared';
 import { EquityOperation } from '@urgp/shared/entities';
 import { format, isAfter } from 'date-fns';
 import { equityOperationTypeStyles } from '../../../equityClassificators';
@@ -13,6 +18,7 @@ type EquityOperationItemProps = {
 
 const EquityOperationItem = (props: EquityOperationItemProps): JSX.Element => {
   const { className, operation, hover = true } = props;
+  const isMobile = useIsMobile();
 
   if (!operation || operation === null) {
     return <Skeleton className="h-8 w-full" />;
@@ -28,6 +34,10 @@ const EquityOperationItem = (props: EquityOperationItemProps): JSX.Element => {
         'group relative flex w-full flex-col border-b p-4 last:border-b-0',
         className,
       )}
+      style={{
+        maxWidth:
+          'calc(' + (isMobile ? '100%' : EQUITY_SIDEBAR_WIDTH) + ' - 2.2rem)',
+      }}
     >
       <div className="flex items-center justify-start gap-2 text-sm">
         {StageIcon && <StageIcon className={cn('-mr-1 size-4', iconStyle)} />}
@@ -42,7 +52,8 @@ const EquityOperationItem = (props: EquityOperationItemProps): JSX.Element => {
             operation?.result === 'положительное' && 'text-green-600',
           )}
         >
-          {operation?.result || ''}
+          {(operation?.type?.fields?.includes('result') && operation?.result) ||
+            ''}
         </span>
         <span className={cn('text-muted-foreground')}>
           {operation?.date && isAfter(operation?.date, new Date(2000, 1, 1))
@@ -51,9 +62,19 @@ const EquityOperationItem = (props: EquityOperationItemProps): JSX.Element => {
         </span>
       </div>
 
-      {operation?.fio && (
+      {/* {operation?.number && operation?.type?.fields?.includes('number') && (
         <div className="bg-muted-foreground/5 text-semibold -mx-4 my-1 flex flex-row gap-2 truncate px-4">
-          {operation?.fio}
+          {operation?.number}
+        </div>
+      )} */}
+
+      {((operation?.fio && operation?.type?.fields?.includes('fio')) ||
+        (operation?.number && operation?.type?.fields?.includes('number'))) && (
+        <div className="bg-muted-foreground/5 text-semibold lex-row -mx-4 my-1 flex  flex-row gap-2 truncate px-4">
+          <span className="flex-shrink truncate">{operation?.fio || ''}</span>
+          <span className="ml-auto flex-shrink-0">
+            {operation?.number || ''}
+          </span>
         </div>
       )}
 

@@ -2,7 +2,6 @@ import {
   Button,
   cn,
   EQUITY_SIDEBAR_WIDTH,
-  SIDEBAR_WIDTH,
   useIsMobile,
 } from '@urgp/client/shared';
 import { X } from 'lucide-react';
@@ -25,7 +24,6 @@ const EquityObjectSidePanel = (
       className={cn(
         'transform[width] duration-200 ease-linear',
         'bg-sidebar text-sidebar-foreground relative h-screen overflow-hidden border-l p-0',
-        // isOpen ? (isMobile ? 'w-full' : `w-[${SIDEBAR_WIDTH}]`) : 'w-0',
         className,
       )}
       style={{

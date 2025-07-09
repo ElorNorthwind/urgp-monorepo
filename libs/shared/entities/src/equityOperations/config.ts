@@ -10,7 +10,7 @@ export const emptyEquityOperation = {
   source: '',
   notes: '',
   number: '',
-  result: '',
+  result: 'ок',
   fio: '',
 } as CreateEquityOperationDto;
 

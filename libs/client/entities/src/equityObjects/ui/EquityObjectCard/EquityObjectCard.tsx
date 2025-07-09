@@ -1,4 +1,9 @@
-import { Accordion, ScrollArea } from '@urgp/client/shared';
+import {
+  Accordion,
+  EQUITY_SIDEBAR_WIDTH,
+  ScrollArea,
+  useIsMobile,
+} from '@urgp/client/shared';
 import {
   EquityClaimsArchiveTab,
   EquityClaimsTab,
@@ -18,6 +23,7 @@ type EquityObjectCardProps = {
 
 const EquityObjectCard = (props: EquityObjectCardProps): JSX.Element => {
   const { equityObject, onNextRow, onPrevRow } = props;
+  const isMobile = useIsMobile();
 
   return (
     <>
@@ -27,7 +33,7 @@ const EquityObjectCard = (props: EquityObjectCardProps): JSX.Element => {
         onPrevRow={onPrevRow}
         onNextRow={onNextRow}
       />
-      <ScrollArea>
+      <ScrollArea className="w-full">
         <Accordion
           type="multiple"
           className="w-full px-4 pb-4"

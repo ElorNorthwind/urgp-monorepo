@@ -38,7 +38,7 @@ const EquityTotalsBar = ({
   const { icon: Icon, label } = equityObjectTypeStyles[objectType];
 
   const giveStatuses = {
-    noact: [1, 7],
+    noact: [1, 7, 8],
     hasact: [2],
     done: [3],
   };

@@ -98,11 +98,12 @@ ALTER TABLE equity.claims_full_view
 DROP VIEW IF EXISTS equity.objects_full_view CASCADE;
 CREATE OR REPLACE VIEW equity.objects_full_view AS
     ---------------------------------------------------------------------
-  WITH relevant_claims AS (
+   WITH relevant_claims AS (
         SELECT 
             c."objectId",
             COUNT(*) as "claimsCount",
             SUM(c."sumUnpaid") as "sumUnpaid",
+            MAX(c."claimRegistryDate") as "claimRegistryDate",
             STRING_AGG("creditorName", '; ') as creditor
         FROM equity.claims_full_view c
         WHERE c."isRelevant" = true
@@ -125,6 +126,8 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
             op.documents_fio as "documentsFio",
             op.documents_date as "documentsDate",
 
+            op.has_rg as "hasRg",
+
             -- op.opinion_urgp AND op.opinion_upozh AND op.opinion_uork as "opinionAll",
 
             op.documents_ok as "documentsOk",
@@ -140,6 +143,8 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[2,3,4])) OVER(PARTITION BY o.object_id) > 0 as has_defects,
 				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[5,6,7,11,12,14,15,20])) OVER(PARTITION BY o.object_id) > 0 as has_request,
                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[6,11])) OVER(PARTITION BY o.object_id) > 0 as needs_opinion,
+
+                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[21, 22])) OVER(PARTITION BY o.object_id) > 0 as has_rg,
 
                 MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[7])) OVER(PARTITION BY o.object_id) as opinion_urgp,
                 MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[14])) OVER(PARTITION BY o.object_id) as opinion_upozh,
@@ -169,6 +174,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 		    b.problems,
 			c.id as "complexId",
 			c.name as "complexName",
+            c.transfer_date as "transferDate",
 			-- c.developer,
             c.developer_short as "developerShort",
             b.is_done as "isDone",
@@ -198,11 +204,12 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
         s.id as "statusId",
         s.name as "statusName",
         
-        o.cad_num as "cadNum",
+        o.cad_num as "cadNum", 
         o.num,
         o.npp,
         COALESCE(c."claimsCount", 0) as "claimsCount",
         c.creditor,
+        CASE WHEN c."claimRegistryDate" IS NULL THEN 'Не в РТУС' WHEN c."claimRegistryDate" <= b."transferDate" THEN 'До передачи' ELSE 'После передачи' END as "claimTransfer",
 
         op.id as "lastOpId",
         op."typeId" as "lastOpTypeId",
@@ -238,6 +245,10 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
         
         op."documentsFio",
         op."documentsDate",
+
+        b."transferDate",
+        c."claimRegistryDate",
+
         COALESCE(op."documentsOk", false) as "documentsOk",
         COALESCE(op."documentsProblem", false) as "documentsProblem",
         COALESCE(op."operationsFio", '') as "operationsFio"
@@ -251,6 +262,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 			CASE
 				WHEN o.egrn_status = ANY(ARRAY['город Москва']) THEN 5
 				WHEN o.egrn_status = ANY(ARRAY['Физ.лицо', 'Юр.лицо', 'Российская Федерация']) THEN 3
+                WHEN op."hasRg" THEN 8
                 WHEN op."hasRequest" THEN 7
 				WHEN o.is_identified = FALSE THEN 6
 				WHEN COALESCE(c."claimsCount", 0) = 0 THEN 4

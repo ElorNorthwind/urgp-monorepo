@@ -14,6 +14,8 @@ import {
   BadgeRussianRuble,
   BadgeX,
   Blocks,
+  BookCheck,
+  BookUser,
   Building,
   Building2,
   Car,
@@ -21,12 +23,14 @@ import {
   CircleCheck,
   CircleEllipsis,
   CirclePlay,
+  CirclePlus,
   CircleUser,
   CircleUserRound,
   Construction,
   DoorOpen,
   FileCheck,
   FileMinus,
+  Files,
   FileX,
   Grid2X2Check,
   Hand,
@@ -116,6 +120,11 @@ export const equityObjectStatusStyles = {
     icon: CirclePlay,
     iconStyle: cn('text-yellow-500'),
     chartColor: '#cbd5e1',
+  },
+  8: {
+    icon: CirclePlus,
+    iconStyle: cn('text-lime-500'),
+    chartColor: '#84cc16',
   },
   2: {
     icon: CircleCheck,
@@ -311,7 +320,7 @@ export const equityOperationTypeStyles = {
   3: { icon: SquareDashedBottomCode, iconStyle: cn('text-cyan-500') }, // Дефектная ведомость закрыта
   4: { icon: SquarePi, iconStyle: cn('text-amber-500') }, // Дефекты выявлены
 
-  20: { icon: StickyNote, iconStyle: cn('text-stone-500') }, // Сданы документы
+  20: { icon: Files, iconStyle: cn('text-stone-500') }, // Сданы документы
   5: { icon: SquareUserRound, iconStyle: cn('text-indigo-500') }, // Запись на прием - подача документов
   12: { icon: Phone, iconStyle: cn('text-sky-500') }, // Запись на прием - консультация
   13: { icon: PhoneCall, iconStyle: cn('text-green-500') }, // Консультация оказана
@@ -328,6 +337,9 @@ export const equityOperationTypeStyles = {
 
   9: { icon: Blocks, iconStyle: cn('text-rose-500') }, // Выявлены проблемы идентификации
   10: { icon: Grid2X2Check, iconStyle: cn('text-green-500') }, // Проблемы идентификации сняты
+
+  21: { icon: BookUser, iconStyle: cn('text-cyan-500') }, // Подготовка к РГ
+  22: { icon: BookCheck, iconStyle: cn('text-sky-500') }, // Решение РГ
 
   17: { icon: MessageSquareQuote, iconStyle: cn('text-stone-500') }, // Примечание
 } as Record<number, StyleData>;

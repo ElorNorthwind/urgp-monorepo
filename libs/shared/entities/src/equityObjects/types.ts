@@ -68,6 +68,7 @@ export const equityObjectSchema = z.object({
   npp: z.coerce.number().int(),
   claimsCount: z.number().int().nonnegative(),
   creditor: z.string().nullable(),
+  claimTransfer: z.string().nullable(), // TODO: сделать enum
 
   lastOpId: z.coerce.number().int().nonnegative().nullable(),
   lastOpTypeId: z.coerce.number().int().nonnegative().nullable(),
@@ -97,6 +98,8 @@ export const equityObjectSchema = z.object({
 
   documentsFio: z.string().nullable(),
   documentsDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
+  transferDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
+  claimRegistryDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
 
   documentsOk: z.boolean(),
   documentsProblem: z.boolean(),

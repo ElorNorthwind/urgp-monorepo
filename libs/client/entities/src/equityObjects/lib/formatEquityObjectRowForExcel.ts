@@ -7,10 +7,16 @@ export const formatEquityObjectRowForExcel = (row: Row<EquityObject>) => {
   return {
     ID: data?.id,
     ЖК: data?.complexName,
+    'Дата договора о передаче ЖК': data?.transferDate
+      ? new Date(data?.transferDate)
+      : '',
     Адрес: data?.addressShort || '',
     Квартира: data?.num,
     'Кадастровый номер': data?.cadNum,
     Кредитор: data?.creditor,
+    'Дата включения в РТУС': data?.claimRegistryDate
+      ? new Date(data?.claimRegistryDate)
+      : '',
     Статус: data?.statusName,
     Тип: data?.objectTypeName,
     Права: data?.egrnStatus,
@@ -24,6 +30,7 @@ export const formatEquityObjectRowForExcel = (row: Row<EquityObject>) => {
     'Дата подачи документов': data?.documentsDate
       ? new Date(data?.documentsDate)
       : '',
+
     'ФИО по представленным документам':
       data?.documentsFio || data?.creditor || '',
     'Заключение УРЖП': data?.opinionUrgp,

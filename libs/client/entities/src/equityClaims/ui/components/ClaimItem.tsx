@@ -42,7 +42,7 @@ const ClaimItem = (props: ClaimItemProps): JSX.Element | null => {
               <span>{'№ в секц.: ' + claim?.sectionOrder}</span>
             )} */}
           {claim?.unit && <span>{'блок: ' + claim?.unit}</span>}
-          {claim?.section && <span>{'сек.: ' + claim?.floor}</span>}
+          {claim?.section && <span>{'сек.: ' + claim?.section}</span>}
           {claim?.floor && <span>{'этаж: ' + claim?.floor}</span>}
           {claim?.roomCount && <span>{'комн.: ' + claim?.roomCount}</span>}
           {claim?.s && <span>{claim?.s + ' м²'}</span>}

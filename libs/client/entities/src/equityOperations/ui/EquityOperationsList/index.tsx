@@ -25,7 +25,7 @@ const EquityOperationsList = (
   return (
     <ScrollArea
       className={cn(
-        'bg-background flex flex-col gap-2 rounded border',
+        'bg-background borde flex w-full flex-col gap-2 rounded',
         className,
       )}
     >

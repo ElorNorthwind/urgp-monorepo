@@ -57,7 +57,7 @@ const EquityOperationsTab = (
       className={className}
       titleClassName={titleClassName}
       contentClassName={cn(
-        'p-0 border rounded-lg bg-transparent',
+        'p-0 border rounded-lg bg-transparent w-full',
         accordionItemName ? 'border-b-0 rounded-b-none' : '',
         contentClassName,
       )}
