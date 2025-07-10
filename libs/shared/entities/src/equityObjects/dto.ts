@@ -23,6 +23,7 @@ const queryStringArray = z
 export const equityObjectsPageFilterSchema = z
   .object({
     query: z.string(),
+    apartment: z.string(),
     building: queryNumberArray,
     problem: queryStringArray,
     status: queryNumberArray,
@@ -33,6 +34,8 @@ export const equityObjectsPageFilterSchema = z
     opinionUpozh: queryStringArray,
     opinionUork: queryStringArray,
     opinionUpozi: queryStringArray,
+
+    claimTransfer: queryStringArray,
   })
   .partial();
 export type EquityObjectsPageFilter = z.infer<

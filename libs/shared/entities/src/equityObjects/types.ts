@@ -67,6 +67,7 @@ export const equityObjectSchema = z.object({
   num: z.string(),
   npp: z.coerce.number().int(),
   claimsCount: z.number().int().nonnegative(),
+  numProject: z.string().nullable(),
   creditor: z.string().nullable(),
   claimTransfer: z.string().nullable(), // TODO: сделать enum
 

@@ -1,5 +1,6 @@
 import { cn } from '@urgp/client/shared';
 import {
+  EquityClaimTransferStatuses,
   EquityObjectDocuments,
   EquityObjectOpinions,
   EquityObjectProblems,
@@ -18,6 +19,9 @@ import {
   BookUser,
   Building,
   Building2,
+  CalendarArrowDown,
+  CalendarArrowUp,
+  CalendarOff,
   Car,
   Circle,
   CircleCheck,
@@ -306,6 +310,39 @@ export const equityOpinionsStyles = {
     badgeStyle: cn(
       'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-gray-500',
       "before:content-[''] before:rounded-full before:size-3 before:bg-gray-500 before:mr-1 before:flex-shrink-0",
+    ),
+  },
+} as Record<string, StyleData>;
+
+export const equityClaimTransferStyles = {
+  [EquityClaimTransferStatuses['До передачи']]: {
+    icon: CalendarArrowDown,
+    iconStyle: cn('text-blue-500'),
+    label: 'До передачи объекта',
+    fullLabel: 'Требование включено до даты договора о передаче объекта',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-blue-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-blue-500 before:mr-1 before:flex-shrink-0",
+    ),
+  },
+  [EquityClaimTransferStatuses['После передачи']]: {
+    icon: CalendarArrowUp,
+    iconStyle: cn('text-rose-500'),
+    label: 'После передачи объекта',
+    fullLabel: 'Требование включено после даты договора о передаче объекта',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-rose-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-rose-500 before:mr-1 before:flex-shrink-0",
+    ),
+  },
+  [EquityClaimTransferStatuses['Не в РТУС']]: {
+    icon: CalendarOff,
+    iconStyle: cn('text-zinc-500'),
+    label: 'Не включено в РТУС',
+    fullLabel: 'В РТУС не содержится требования',
+    badgeStyle: cn(
+      'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-zinc-500',
+      "before:content-[''] before:rounded-full before:size-3 before:bg-zinc-500 before:mr-1 before:flex-shrink-0",
     ),
   },
 } as Record<string, StyleData>;

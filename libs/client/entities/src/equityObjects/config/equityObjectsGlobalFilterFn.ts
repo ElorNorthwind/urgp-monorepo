@@ -6,8 +6,17 @@ export function equityObjectsGlobalFilterFn(
   columnId: string,
   filterValue: EquityObjectsPageSearch,
 ): boolean {
-  const { query, status, building, type, problem, documents, opinionUrgp } =
-    filterValue;
+  const {
+    query,
+    apartment,
+    status,
+    building,
+    type,
+    problem,
+    documents,
+    claimTransfer,
+    opinionUrgp,
+  } = filterValue;
   if (
     query &&
     !(
@@ -16,6 +25,16 @@ export function equityObjectsGlobalFilterFn(
       row.original?.num?.toLowerCase().includes(query.toLowerCase()) ||
       row.original?.cadNum?.toLowerCase().includes(query.toLowerCase()) ||
       row.original?.operationsFio?.toLowerCase().includes(query.toLowerCase())
+    )
+  ) {
+    return false;
+  }
+  if (
+    apartment &&
+    !(
+      row.original?.num?.toLowerCase() === apartment.toLowerCase() ||
+      row.original?.numProject?.toLowerCase() === apartment.toLowerCase() ||
+      row.original?.npp?.toString()?.toLowerCase() === apartment.toLowerCase()
     )
   ) {
     return false;
@@ -30,6 +49,13 @@ export function equityObjectsGlobalFilterFn(
   }
 
   if (type && !type.includes(row.original?.objectTypeId || 0)) {
+    return false;
+  }
+
+  if (
+    claimTransfer &&
+    !claimTransfer.includes(row.original?.claimTransfer || '')
+  ) {
     return false;
   }
 

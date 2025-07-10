@@ -21,6 +21,8 @@ import { EquityObjectTypeFilter } from './filterInputs/EquityObjectTypesFilter';
 import { EquityObjectProblemsFilter } from './filterInputs/EquityObjectProblemsFilter';
 import { EquityObjectDocumentsFilter } from './filterInputs/EquityObjectDocumentsFilter';
 import { EquityOpinionUrgpFilter } from './filterInputs/EquityOpinionUrgpFilter';
+import { EquityClaimTransferFilter } from './filterInputs/EquityClaimTransferFilter';
+import { EquityApartmentNumberFilter } from './filterInputs/EquityApartmentNumberFilter';
 
 type EquityObjectsFilterSidebarProps = {
   side?: 'left' | 'right';
@@ -55,6 +57,7 @@ const EquityObjectsFilterSidebar = (
         <ScrollArea className={cn('h-full')}>
           <div className="m-3 flex h-full flex-col gap-2">
             <EquityQueryFilter className="h-8 flex-shrink-0" />
+            <EquityApartmentNumberFilter className="h-8 flex-shrink-0" />
             {/* <AuthorFilter className="h-8 flex-shrink-0" />
             <DueDateFilter className="flex-shrink-0" />
             <RelevantFilter className="h-8 flex-shrink-0" />
@@ -65,6 +68,7 @@ const EquityObjectsFilterSidebar = (
               <EquityObjectProblemsFilter variant="accordion" />
               <EquityBuildingsFilter variant="accordion" />
               <EquityObjectDocumentsFilter variant="accordion" />
+              <EquityClaimTransferFilter variant="accordion" />
               <EquityOpinionUrgpFilter variant="accordion" />
             </Accordion>
           </div>

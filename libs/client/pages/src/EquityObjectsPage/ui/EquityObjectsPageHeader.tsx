@@ -19,6 +19,7 @@ import {
   useIsMobile,
 } from '@urgp/client/shared';
 import {
+  EquityApartmentNumberFilter,
   EquityBuildingsFilter,
   EquityObjectTypeFilter,
   EquityQueryFilter,
@@ -67,8 +68,11 @@ const EquityObjectsPageHeader = (props: CasePageHeaderProps): JSX.Element => {
       )}
       {/* <UserFilter variant="mini" /> */}
       <EquityResetFilter variant="mini" className="" />
-      <Separator orientation="vertical" className="mr-2 h-4 shrink-0" />
-      <Breadcrumb className="shrink-0">
+      <Separator
+        orientation="vertical"
+        className="mr-2 hidden h-4 shrink-0 lg:block"
+      />
+      <Breadcrumb className="hidden shrink-0 lg:block">
         <BreadcrumbList>
           <BreadcrumbItem className="hidden md:block">
             <BreadcrumbLink href="/equity">Дольщики</BreadcrumbLink>
@@ -82,8 +86,11 @@ const EquityObjectsPageHeader = (props: CasePageHeaderProps): JSX.Element => {
 
       {!isMobile && (
         <>
-          <Separator orientation="vertical" className="mx-2 h-4 shrink-0" />
-          <div className="text-muted-foreground mr-4 shrink-0">
+          <Separator
+            orientation="vertical"
+            className="mx-2 hidden h-4 shrink-0 lg:block"
+          />
+          <div className="text-muted-foreground mr-4 hidden shrink-0 lg:block">
             {filtered || 0} из {total || 0}
           </div>
         </>
@@ -92,6 +99,8 @@ const EquityObjectsPageHeader = (props: CasePageHeaderProps): JSX.Element => {
       {!isMobile && (
         <EquityQueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
       )}
+
+      {!isMobile && <EquityApartmentNumberFilter className="h-8 w-20" />}
 
       {!isMobile && exportedRows && (
         <ExportToExcelButton

@@ -33,3 +33,14 @@ export const EquityObjectOpinions = {
 export type EquityObjectOpinions =
   (typeof EquityObjectOpinions)[keyof typeof EquityObjectOpinions];
 export const equityObjectOpinionsValues = getValues(EquityObjectOpinions);
+
+export const EquityClaimTransferStatuses = {
+  'До передачи': 'До передачи',
+  'После передачи': 'После передачи',
+  'Не в РТУС': 'Не в РТУС',
+} as const;
+export type EquityClaimTransferStatuses =
+  (typeof EquityClaimTransferStatuses)[keyof typeof EquityClaimTransferStatuses];
+export const equityClaimTransferStatusesValues = getValues(
+  EquityClaimTransferStatuses,
+);

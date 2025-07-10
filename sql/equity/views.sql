@@ -104,7 +104,8 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
             COUNT(*) as "claimsCount",
             SUM(c."sumUnpaid") as "sumUnpaid",
             MAX(c."claimRegistryDate") as "claimRegistryDate",
-            STRING_AGG("creditorName", '; ') as creditor
+            STRING_AGG(DISTINCT c."creditorName", '; ') as creditor,
+            STRING_AGG(DISTINCT c."numProject", '; ') as "numProject"
         FROM equity.claims_full_view c
         WHERE c."isRelevant" = true
         GROUP BY c."objectId"
@@ -207,6 +208,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
         o.cad_num as "cadNum", 
         o.num,
         o.npp,
+        COALESCE(c."numProject", o.num) as "numProject",
         COALESCE(c."claimsCount", 0) as "claimsCount",
         c.creditor,
         CASE WHEN c."claimRegistryDate" IS NULL THEN 'Не в РТУС' WHEN c."claimRegistryDate" <= b."transferDate" THEN 'До передачи' ELSE 'После передачи' END as "claimTransfer",
