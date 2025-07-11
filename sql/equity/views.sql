@@ -181,9 +181,10 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
             b.is_done as "isDone",
 			b.unom,
 			b.cad_num as "cadNum",
-			b.address_short as "addressShort"
+			b.address_short as "addressShort",
 			-- b.address_full as "addressFull",
 			-- b.address_construction as "addressConstruction"
+			b.address_construction_short as "addressConstructionShort"
 		FROM equity.buildings b
 		LEFT JOIN equity.complexes c ON b.complex_id = c.id
 	)
@@ -199,6 +200,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
         b."complexName",
         b."isDone" as "buildingIsDone",
         b."addressShort",
+        b."addressConstructionShort",
 
         ot.id as "objectTypeId",
         ot.name as "objectTypeName",

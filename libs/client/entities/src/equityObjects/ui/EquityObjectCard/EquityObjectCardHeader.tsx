@@ -1,9 +1,16 @@
 import { Separator } from '@radix-ui/react-separator';
 import { useLocation, useMatch, useNavigate } from '@tanstack/react-router';
-import { Button, cn } from '@urgp/client/shared';
+import {
+  Button,
+  cn,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@urgp/client/shared';
 import { CaseClasses, CaseFull, EquityObject } from '@urgp/shared/entities';
 import { ChevronDown, X } from 'lucide-react';
 import { equityObjectTypeStyles } from '../../../equityClassificators';
+import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 
 type EquityObjectCardHeaderProps = {
   className?: string;
@@ -45,6 +52,30 @@ const EquityObjectCardHeader = (
       {TypeIcon && (
         <TypeIcon className={cn('size-6 flex-shrink-0', iconStyle)} />
       )}
+
+      {equityObject && (
+        <Tooltip>
+          <TooltipTrigger>
+            <p className="border-foreground/20 text-muted-foreground bg-muted-foreground/5 h-full flex-shrink truncate rounded-r border-l px-2">
+              {equityObject?.addressConstructionShort || ''}
+            </p>
+          </TooltipTrigger>
+          <TooltipPortal>
+            <TooltipContent>
+              <TooltipArrow />
+              <p>
+                {'Строительный адрес объекта: ' +
+                  equityObject?.addressConstructionShort +
+                  ' ' +
+                  label +
+                  ' ' +
+                  equityObject?.numProject}
+              </p>
+            </TooltipContent>
+          </TooltipPortal>
+        </Tooltip>
+      )}
+
       {equityObject && (
         <h1
           className="font-bold"

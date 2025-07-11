@@ -165,6 +165,7 @@ CREATE TABLE equity.buildings
     address_short character varying(255),
     address_full character varying(255),
     address_construction character varying(255),
+    address_construction_short character varying(255),
 
     is_done boolean NOT NULL DEFAULT true,
     problems text[] NOT NULL DEFAULT ARRAY[]::text,

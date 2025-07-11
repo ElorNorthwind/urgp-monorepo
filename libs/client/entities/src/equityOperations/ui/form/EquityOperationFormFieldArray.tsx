@@ -44,7 +44,6 @@ const EquityOperationFieldArray = ({
 
   useEffect(() => {
     if (form.getValues('result') !== 'ок') return;
-
     if (fields?.includes('result')) {
       form.setValue('result', '');
     } else {

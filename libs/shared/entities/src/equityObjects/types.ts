@@ -56,6 +56,7 @@ export const equityObjectSchema = z.object({
   complexName: z.string(),
   buildingIsDone: z.coerce.boolean(),
   addressShort: z.string(),
+  addressConstructionShort: z.string(),
 
   objectTypeId: z.coerce.number().int().nonnegative(),
   objectTypeName: z.string(),
