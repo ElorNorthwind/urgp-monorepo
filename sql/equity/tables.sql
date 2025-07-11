@@ -60,6 +60,7 @@ CREATE TABLE equity.operation_types
     category character varying(255),
     priority integer NOT NULL DEFAULT 0,
     sort_order integer NOT NULL DEFAULT 0,
+    is_important boolean NOT NULL DEFAULT false,
     fields text[] NOT NULL DEFAULT ARRAY['date', 'notes', 'number']::text
 
     PRIMARY KEY (id)

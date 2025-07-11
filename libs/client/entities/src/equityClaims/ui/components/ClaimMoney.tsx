@@ -1,6 +1,6 @@
 import { cn } from '@urgp/client/shared';
 import { EquityClaim } from '@urgp/shared/entities';
-import { TicketCheck, TicketX } from 'lucide-react';
+import { TicketCheck, TicketPercent, TicketX } from 'lucide-react';
 
 type ClaimMoneyProps = {
   claim?: EquityClaim;
@@ -45,7 +45,7 @@ const ClaimMoney = (props: ClaimMoneyProps): JSX.Element | null => {
       )}
       {claim?.sumDamages && claim?.sumDamages > 0 && (
         <div className="flex flex-row items-center gap-1 ">
-          <TicketX className="size-4 flex-shrink-0 text-orange-500" />
+          <TicketPercent className="size-4 flex-shrink-0 text-orange-500" />
           <span className="text-orange-500">{'убытки:'}</span>
           <span className="font-light">
             {new Intl.NumberFormat('ru-RU', {

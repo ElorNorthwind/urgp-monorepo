@@ -129,8 +129,11 @@ export class EquityController {
     dto: UpdateEquityOperationDto,
   ) {
     const userId = req.user.id;
+    const oldOperation = await this.equity.getOperationById(dto.id);
+    if (!oldOperation) throw new NotFoundException('Операция не найдена');
+
     const i = defineEquityAbilityFor(req.user);
-    if (i.cannot('update', dto))
+    if (i.cannot('update', oldOperation))
       throw new UnauthorizedException('Нет прав на редактирование');
     return this.equity.updateOperation(userId, dto);
   }
