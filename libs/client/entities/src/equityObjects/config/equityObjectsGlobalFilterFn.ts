@@ -23,6 +23,9 @@ export function equityObjectsGlobalFilterFn(
       row.original?.creditor?.toLowerCase().includes(query.toLowerCase()) ||
       row.original?.egrnStatus?.toLowerCase().includes(query.toLowerCase()) ||
       row.original?.num?.toLowerCase().includes(query.toLowerCase()) ||
+      row.original?.operationsNums
+        ?.toLowerCase()
+        .includes(query.toLowerCase()) ||
       row.original?.cadNum?.toLowerCase().includes(query.toLowerCase()) ||
       row.original?.operationsFio?.toLowerCase().includes(query.toLowerCase())
     )

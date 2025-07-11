@@ -106,6 +106,7 @@ export const equityObjectSchema = z.object({
   documentsOk: z.boolean(),
   documentsProblem: z.boolean(),
   operationsFio: z.string().nullable(),
+  operationsNums: z.string().nullable(),
 });
 export type EquityObject = z.infer<typeof equityObjectSchema>;
 

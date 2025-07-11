@@ -134,6 +134,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
             op.documents_ok as "documentsOk",
             op.documents_problem as "documentsProblem",
             op.operations_fio as "operationsFio",
+            op.operations_nums as "operationsNums",
 
             op.id_problem as "idProblem",
 			op.date
@@ -157,6 +158,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[20]) AND o.result = 'полный пакет') OVER(PARTITION BY o.object_id) > 0 as documents_ok,
                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[20]) AND o.result <> 'полный пакет') OVER(PARTITION BY o.object_id) > 0 as documents_problem,
                 string_agg(o.fio, '; ') OVER(PARTITION BY o.object_id) as operations_fio,
+                string_agg(o.number, '; ') OVER(PARTITION BY o.object_id) as operations_nums,
                 COUNT(*) FILTER (WHERE o.type_id = 9) OVER(PARTITION BY o.object_id) > 0 AND COUNT(*) FILTER (WHERE o.type_id = 10) OVER(PARTITION BY o.object_id) = 0 as id_problem,
 
 				o.type_id,
@@ -255,7 +257,8 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 
         COALESCE(op."documentsOk", false) as "documentsOk",
         COALESCE(op."documentsProblem", false) as "documentsProblem",
-        COALESCE(op."operationsFio", '') as "operationsFio"
+        COALESCE(op."operationsFio", '') as "operationsFio",
+        COALESCE(op."operationsNums", '') as "operationsNums"
 
     FROM equity.objects o
         LEFT JOIN (SELECT id, name FROM equity.object_types) ot ON ot.id = o.object_type_id
