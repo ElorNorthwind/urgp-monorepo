@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { equityObjectSchema } from '../equityObjects/types';
 
 // Schema for user information
 const userInfoSchema = z.object({
@@ -15,6 +16,7 @@ const operationTypeSchema = z.object({
   category: z.string(),
   fields: z.array(z.string()).nullable(),
   priority: z.number(),
+  isImportant: z.coerce.boolean(),
 });
 
 export const equityOperationSchema = z.object({
@@ -36,3 +38,10 @@ export const equityOperationSchema = z.object({
   updatedBy: userInfoSchema.nullable(), // Can be null if user deleted
 });
 export type EquityOperation = z.infer<typeof equityOperationSchema>;
+
+export const equityOperationLogItem = z.object({
+  operationId: z.coerce.number().int().nonnegative(),
+  operation: equityOperationSchema.nullable(),
+  ...equityObjectSchema.shape,
+});
+export type EquityOperationLogItem = z.infer<typeof equityOperationLogItem>;

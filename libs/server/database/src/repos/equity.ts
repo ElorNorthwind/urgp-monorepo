@@ -5,6 +5,7 @@ import {
   EquityComplexData,
   EquityObject,
   EquityOperation,
+  EquityOperationLogItem,
   EquityTimeline,
   EquityTotals,
   NestedClassificatorInfo,
@@ -61,6 +62,19 @@ export class EquityRepository {
   getOperationById(operationId: number): Promise<EquityOperation | null> {
     const sql = 'SELECT * FROM equity.operations_full_view WHERE "id" = $1';
     return this.db.oneOrNone(sql, [operationId]);
+  }
+  getOperationsLog(): Promise<EquityOperationLogItem[]> {
+    const sql = `
+    SELECT 
+      op.id as "operationId",
+      to_jsonb(op) as operation,
+      ob.*
+    FROM equity.operations_full_view op 
+    LEFT JOIN equity.objects_full_view ob ON ob.id = op."objectId"
+    WHERE (op.type->>'isImportant')::boolean
+      AND op.date > '30.06.2025'::date
+    ORDER BY op.date, op."createdAt";`;
+    return this.db.any(sql);
   }
 
   getBuildingsClassificator(): Promise<NestedClassificatorInfo[]> {

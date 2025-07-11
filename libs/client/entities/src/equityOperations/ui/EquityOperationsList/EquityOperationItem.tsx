@@ -49,6 +49,7 @@ const EquityOperationItem = (props: EquityOperationItemProps): JSX.Element => {
             'text-muted-foreground ml-auto font-semibold',
             operation?.result === 'отрицательное' && 'text-red-600',
             operation?.result === 'пакет с замечаниями' && 'text-amber-600',
+            operation?.result === 'условно-положительное' && 'text-amber-600',
             operation?.result === 'положительное' && 'text-green-600',
           )}
         >
@@ -78,7 +79,25 @@ const EquityOperationItem = (props: EquityOperationItemProps): JSX.Element => {
         </div>
       )}
 
-      <div className="font-light">{operation?.notes}</div>
+      <div className="font-light">
+        {operation?.notes
+          ? operation?.notes
+              .replace(/(?:\r\n|\r|\n|\n\n)/gi, '\\n')
+              .split('\\n')
+              .filter((item) => item !== '')
+              .map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="border-muted-foreground/10 mb-1 border-b border-dashed pb-1 last-of-type:border-b-0 last-of-type:pb-0"
+                  >
+                    {item}
+                    <br />
+                  </div>
+                );
+              })
+          : ''}
+      </div>
 
       {hover && (
         <div className="bg-background absolute bottom-3 right-4 hidden flex-row items-center gap-2 rounded-full px-2 text-right text-xs font-thin shadow-sm group-hover:flex">

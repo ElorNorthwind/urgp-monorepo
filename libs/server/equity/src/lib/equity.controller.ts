@@ -107,6 +107,11 @@ export class EquityController {
     return this.equity.getOperationTypeClassificator();
   }
 
+  @Get('/operation-log')
+  async gerOperationsLog() {
+    return this.equity.getOperationLog();
+  }
+
   @UseGuards(AccessTokenGuard)
   @Post('/operation')
   async createOperation(

@@ -8,6 +8,7 @@ import {
   EquityComplexData,
   EquityObject,
   EquityOperation,
+  EquityOperationLogItem,
   EquityTimeline,
   EquityTotals,
   NestedClassificatorInfo,
@@ -49,6 +50,10 @@ export class EquityService {
     operationId: number,
   ): Promise<EquityOperation | null> {
     return this.dbServise.db.equity.getOperationById(operationId);
+  }
+
+  public async getOperationLog(): Promise<EquityOperationLogItem[]> {
+    return this.dbServise.db.equity.getOperationsLog();
   }
 
   public async getBuildingsClassificator(): Promise<NestedClassificatorInfo[]> {

@@ -3,6 +3,7 @@ import {
   CreateEquityOperationDto,
   DeleteControlEntityDto,
   EquityOperation,
+  EquityOperationLogItem,
   NestedClassificatorInfo,
   UpdateEquityOperationDto,
 } from '@urgp/shared/entities';
@@ -19,6 +20,13 @@ export const equityOperationsApi = rtkApi.injectEndpoints({
         'equity-operations',
         { type: 'equity-operations', objectId: arg },
       ],
+    }),
+    getEquityOperationLog: build.query<EquityOperationLogItem[], void>({
+      query: () => ({
+        url: '/equity/operation-log',
+        method: 'GET',
+      }),
+      providesTags: ['equity-operations', 'equity-objects'],
     }),
     createEquityOperation: build.mutation<
       EquityOperation | null,
@@ -104,4 +112,5 @@ export const {
   useCreateEquityOperationMutation: useCreateEquityOperation,
   useUpdateEquityOperationMutation: useUpdateEquityOperation,
   useDeleteEquityOperationMutation: useDeleteEquityOperation,
+  useGetEquityOperationLogQuery: useEquityOperationLog,
 } = equityOperationsApi;

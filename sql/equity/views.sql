@@ -288,7 +288,7 @@ DROP VIEW IF EXISTS equity.operations_full_view CASCADE;
 CREATE OR REPLACE VIEW equity.operations_full_view AS
     ---------------------------------------------------------------------
  WITH user_info AS (SELECT id, fio, control_settings->>'department' as department FROM renovation.users),
-      op_type_info AS (SELECT id, name, fullname, category, fields, priority FROM equity.operation_types)
+      op_type_info AS (SELECT id, name, fullname, category, fields, priority, is_important as "isImportant" FROM equity.operation_types)
     SELECT 
         o.id,
         'operation' as "class",
