@@ -20,6 +20,7 @@ import {
   EquityResetFilter,
 } from '../../EquityObjectsFilterSidebar';
 import { EquityOperationTypeFilter } from './filterInputs/EquityOperationTypeFilter';
+import { EquityOperationDateFilter } from './filterInputs/EquityOperationDateFilter';
 
 type EquityOperationLogFilterSidebarProps = {
   side?: 'left' | 'right';
@@ -54,10 +55,7 @@ const EquityOperationLogFilterSidebar = (
         <ScrollArea className={cn('h-full')}>
           <div className="m-3 flex h-full flex-col gap-2">
             <EquityQueryFilter className="h-8 flex-shrink-0" />
-            {/* <AuthorFilter className="h-8 flex-shrink-0" />
-            <DueDateFilter className="flex-shrink-0" />
-            <RelevantFilter className="h-8 flex-shrink-0" />
-            <FromMeFilter className="h-8 flex-shrink-0" /> */}
+            <EquityOperationDateFilter className="h-8 flex-shrink-0" />
             <Accordion type="multiple" defaultValue={['optype']}>
               <EquityOperationTypeFilter variant="accordion" />
               <EquityObjectTypeFilter variant="accordion" />

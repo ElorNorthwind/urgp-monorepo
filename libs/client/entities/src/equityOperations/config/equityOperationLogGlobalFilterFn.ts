@@ -3,13 +3,17 @@ import {
   EquityOperationLogItem,
   EquityOperationLogPageSearch,
 } from '@urgp/shared/entities';
+import { toDate } from 'date-fns';
 
 export function equityOperationLogGlobalFilterFn(
   row: Row<EquityOperationLogItem>,
   columnId: string,
   filterValue: EquityOperationLogPageSearch,
 ): boolean {
-  const { query, building, type, opType } = filterValue;
+  const { query, building, type, opType, dateFrom, dateTo } = filterValue;
+  const opDate =
+    row.original?.operation?.date ?? row.original?.operation?.createdAt;
+
   if (
     query &&
     !(
@@ -36,6 +40,27 @@ export function equityOperationLogGlobalFilterFn(
   }
 
   if (opType && !opType.includes(row.original?.operation?.type?.id || 0)) {
+    return false;
+  }
+
+  if (
+    dateFrom &&
+    !(
+      opDate &&
+      toDate(dateFrom).setHours(0, 0, 0, 0) <=
+        toDate(opDate).setHours(0, 0, 0, 0)
+    )
+  ) {
+    return false;
+  }
+
+  if (
+    dateTo &&
+    !(
+      opDate &&
+      toDate(dateTo).setHours(0, 0, 0, 0) >= toDate(opDate).setHours(0, 0, 0, 0)
+    )
+  ) {
     return false;
   }
 

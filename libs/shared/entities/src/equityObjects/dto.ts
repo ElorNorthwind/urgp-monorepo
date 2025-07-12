@@ -65,6 +65,12 @@ export const equityOperationLogPageFilterSchema = z
     building: queryNumberArray,
     type: queryNumberArray,
     opType: queryNumberArray,
+    dateFrom: z.string().regex(/\d{4}-\d{2}-\d{2}/, {
+      message: 'Некорректная дата',
+    }),
+    dateTo: z.string().regex(/\d{4}-\d{2}-\d{2}/, {
+      message: 'Некорректная дата',
+    }),
   })
   .partial();
 export type EquityOperationLogPageFilter = z.infer<

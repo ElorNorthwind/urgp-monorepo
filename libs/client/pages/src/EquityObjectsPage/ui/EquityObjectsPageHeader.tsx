@@ -12,30 +12,24 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  CaseRoutes,
   cn,
+  EquityRoutes,
   Separator,
   SidebarTrigger,
   useIsMobile,
 } from '@urgp/client/shared';
 import {
   EquityApartmentNumberFilter,
-  EquityBuildingsFilter,
-  EquityObjectTypeFilter,
   EquityQueryFilter,
   EquityResetFilter,
-  QueryFilter,
-  ResetFilter,
 } from '@urgp/client/widgets';
-import { CasesPageSearchDto, EquityObject } from '@urgp/shared/entities';
+import { EquityObject, EquityObjectsPageSearch } from '@urgp/shared/entities';
 import { useMemo } from 'react';
 type EquityObjectsPageHeaderProps = {
   total?: number;
   filtered?: number;
   className?: string;
   exportedRows?: Row<EquityObject>[];
-  // columnVisibility?: VisibilityState;
-  // setColumnVisibility?: Dispatch<VisibilityState>;
 };
 
 const EquityObjectsPageHeader = (
@@ -43,8 +37,8 @@ const EquityObjectsPageHeader = (
 ): JSX.Element => {
   const { total, filtered, className, exportedRows } = props;
   const isMobile = useIsMobile();
-  const pathname = useLocation().pathname as CaseRoutes;
-  const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
+  const pathname = useLocation().pathname as EquityRoutes;
+  const search = getRouteApi(pathname).useSearch() as EquityObjectsPageSearch;
   const paramLength = Object.keys(search).filter(
     (key) => !['selectedObject', 'sortKey', 'sortDir'].includes(key),
   ).length;
@@ -70,21 +64,25 @@ const EquityObjectsPageHeader = (
       )}
       {/* <UserFilter variant="mini" /> */}
       <EquityResetFilter variant="mini" className="" />
-      <Separator
-        orientation="vertical"
-        className="mr-2 hidden h-4 shrink-0 lg:block"
-      />
-      <Breadcrumb className="hidden shrink-0 lg:block">
-        <BreadcrumbList>
-          <BreadcrumbItem className="hidden md:block">
-            <BreadcrumbLink href="/equity">Дольщики</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator className="hidden md:block" />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{'Объекты'}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      {!search?.selectedObject && (
+        <>
+          <Separator
+            orientation="vertical"
+            className="mx-2 hidden h-4 shrink-0 lg:block"
+          />
+          <Breadcrumb className="hidden shrink-0 lg:block">
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="/equity">Дольщики</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{'Объекты'}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </>
+      )}
 
       {!isMobile && (
         <>
@@ -92,7 +90,7 @@ const EquityObjectsPageHeader = (
             orientation="vertical"
             className="mx-2 hidden h-4 shrink-0 lg:block"
           />
-          <div className="text-muted-foreground mr-4 hidden shrink-0 lg:block">
+          <div className="text-muted-foreground hidden shrink-0 lg:block">
             {filtered || 0} из {total || 0}
           </div>
         </>

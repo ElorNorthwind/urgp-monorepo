@@ -12,20 +12,20 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  CaseRoutes,
   cn,
+  EquityRoutes,
   Separator,
   SidebarTrigger,
   useIsMobile,
 } from '@urgp/client/shared';
 import {
-  EquityApartmentNumberFilter,
+  EquityOperationDateFilter,
   EquityQueryFilter,
   EquityResetFilter,
 } from '@urgp/client/widgets';
 import {
-  CasesPageSearchDto,
   EquityOperationLogItem,
+  EquityOperationLogPageSearch,
 } from '@urgp/shared/entities';
 import { useMemo } from 'react';
 type EquityOperationLogPageHeaderProps = {
@@ -33,8 +33,6 @@ type EquityOperationLogPageHeaderProps = {
   filtered?: number;
   className?: string;
   exportedRows?: Row<EquityOperationLogItem>[];
-  // columnVisibility?: VisibilityState;
-  // setColumnVisibility?: Dispatch<VisibilityState>;
 };
 
 const EquityOperationLogPageHeader = (
@@ -42,8 +40,10 @@ const EquityOperationLogPageHeader = (
 ): JSX.Element => {
   const { total, filtered, className, exportedRows } = props;
   const isMobile = useIsMobile();
-  const pathname = useLocation().pathname as CaseRoutes;
-  const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
+  const pathname = useLocation().pathname as EquityRoutes;
+  const search = getRouteApi(
+    pathname,
+  ).useSearch() as EquityOperationLogPageSearch;
   const paramLength = Object.keys(search).filter(
     (key) => !['selectedObject', 'sortKey', 'sortDir'].includes(key),
   ).length;
@@ -67,23 +67,26 @@ const EquityOperationLogPageHeader = (
           {paramLength}
         </div>
       )}
-      {/* <UserFilter variant="mini" /> */}
       <EquityResetFilter variant="mini" className="" />
-      <Separator
-        orientation="vertical"
-        className="mr-2 hidden h-4 shrink-0 lg:block"
-      />
-      <Breadcrumb className="hidden shrink-0 lg:block">
-        <BreadcrumbList>
-          <BreadcrumbItem className="hidden md:block">
-            <BreadcrumbLink href="/equity">Дольщики</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator className="hidden md:block" />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{'Журнал операций'}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      {!search?.selectedObject && (
+        <>
+          <Separator
+            orientation="vertical"
+            className="mx-2 hidden h-4 shrink-0 lg:block"
+          />
+          <Breadcrumb className="hidden shrink-0 lg:block">
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="/equity">Дольщики</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{'Журнал операций'}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </>
+      )}
 
       {!isMobile && (
         <>
@@ -91,7 +94,7 @@ const EquityOperationLogPageHeader = (
             orientation="vertical"
             className="mx-2 hidden h-4 shrink-0 lg:block"
           />
-          <div className="text-muted-foreground mr-4 hidden shrink-0 lg:block">
+          <div className="text-muted-foreground hidden shrink-0 lg:block">
             {filtered || 0} из {total || 0}
           </div>
         </>
@@ -100,6 +103,7 @@ const EquityOperationLogPageHeader = (
       {!isMobile && (
         <EquityQueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
       )}
+      {!isMobile && <EquityOperationDateFilter />}
 
       {!isMobile && exportedRows && (
         <ExportToExcelButton
