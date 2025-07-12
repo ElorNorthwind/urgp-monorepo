@@ -47,20 +47,13 @@ function EquityOperationTypeCell(
                 {rowData?.operation?.type?.name}
               </span>
             </div>
-            <div className="text-muted-foreground w-full truncate text-xs">
+            <div className="text-muted-foreground w-full truncate text-xs font-thin">
+              <span className={cn('truncate')}>{dateStr}</span>
               {resultOrNumberStr && (
-                <span className="w-full truncate font-thin">
+                <span className="ml-1 truncate border-l pl-1">
                   {resultOrNumberStr || '-'}
                 </span>
               )}
-              <span
-                className={cn(
-                  'w-full truncate font-thin',
-                  resultOrNumberStr && 'ml-1 border-l pl-1',
-                )}
-              >
-                {dateStr}
-              </span>
             </div>
           </div>
         </div>
@@ -87,12 +80,23 @@ function EquityOperationTypeCell(
                   </span>
                 </div>
               )}
-            <div className="border-muted-foreground/10 mt-1 flex items-start justify-between border-t border-dashed pt-1">
-              {/* <span>Примечания:</span> */}
-              <span className="text-muted-foreground ml-2 line-clamp-3 font-normal">
-                {rowData?.operation?.notes || '-'}
-              </span>
-            </div>
+            {rowData?.operation?.type?.fields?.includes('number') &&
+              rowData?.operation?.number && (
+                <div className="flex items-start justify-between">
+                  <span>Номер:</span>
+                  <span className="text-muted-foreground ml-2 font-normal">
+                    {rowData?.operation?.number}
+                  </span>
+                </div>
+              )}
+            {rowData?.operation?.createdBy?.fio && (
+              <div className="flex items-start justify-between">
+                <span>Автор:</span>
+                <span className="text-muted-foreground ml-2 font-normal">
+                  {rowData?.operation?.createdBy?.fio}
+                </span>
+              </div>
+            )}
           </div>
         </TooltipContent>
       </TooltipPortal>

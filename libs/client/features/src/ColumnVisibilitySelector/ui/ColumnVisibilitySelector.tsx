@@ -127,6 +127,7 @@ function ColumnVisibilitySelector(
     creditor: 'ФИО кредитора',
     problem: 'Проблемы',
     opType: 'Тип Операции',
+    notes: 'Примечания',
   };
 
   const isDefault = useMemo(() => {

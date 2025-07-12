@@ -312,7 +312,9 @@ CREATE OR REPLACE VIEW equity.operations_full_view AS
         LEFT JOIN user_info u1 ON u1.id = o.created_by_id
         LEFT JOIN user_info u2 ON u2.id = o.updated_by_id
     -- WHERE o.object_id = 35436
-    ORDER BY o.object_id, o.date NULLS LAST, o.created_at NULLS LAST, o.id DESC;
+    -- ORDER BY op.date::date DESC, (op.type->>'priority')::integer DESC, op."createdAt" DESC;
+    -- ORDER BY o.object_id, o.date NULLS LAST, o.created_at NULLS LAST, o.id DESC;
+    ORDER BY o.object_id, o.date::date NULLS LAST, t.priority, o.created_at NULLS LAST, o.id DESC;
     ---------------------------------------------------------------------
 ALTER TABLE equity.operations_full_view
     OWNER TO renovation_user;

@@ -1,7 +1,10 @@
 import { VisibilityState } from '@tanstack/react-table';
 import { equityOperationLogColumns } from './equityOperationLogColumns';
 
-const defaultEquityOperationLogHiddenColumns: string[] = [];
+const defaultEquityOperationLogHiddenColumns: string[] = [
+  'problem',
+  'workStatus',
+];
 
 export const defaultEquityOperationLogColumns: VisibilityState = {
   ...equityOperationLogColumns

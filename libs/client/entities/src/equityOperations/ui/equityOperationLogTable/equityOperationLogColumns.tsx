@@ -7,6 +7,8 @@ import { EquityObjectNumberCell } from './cells/EquityObjectNumberCell';
 import { EquityObjectStatusCell } from './cells/EquityObjectStatusCell';
 import { EquityCreditorCell } from './cells/EquityCreditorCell';
 import { EquityOperationTypeCell } from './cells/EquityOperationTypeCell';
+import { EquityObjectProblemCell } from './cells/EquityObjectProblemCell';
+import { EquityOperationNotesCell } from './cells/EquityOperationNotesCell';
 
 const columnHelper = createColumnHelper<EquityOperationLogItem>();
 
@@ -40,12 +42,29 @@ export const equityOperationLogColumns = [
     {
       id: 'opType',
       header: 'Тип операции',
-      size: 180,
+      size: 140,
       enableHiding: true,
       enableSorting: true,
       sortDescFirst: true,
       cell: (props) => {
         return <EquityOperationTypeCell {...props} />;
+      },
+    },
+  ),
+
+  columnHelper.accessor(
+    (row) => {
+      return row?.operation?.notes || '';
+    },
+    {
+      id: 'notes',
+      header: 'Примечания',
+      size: 120,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      cell: (props) => {
+        return <EquityOperationNotesCell {...props} />;
       },
     },
   ),
@@ -80,6 +99,40 @@ export const equityOperationLogColumns = [
       sortDescFirst: true,
       cell: (props) => {
         return <EquityObjectNumberCell {...props} />;
+      },
+    },
+  ),
+
+  columnHelper.accessor(
+    (row) => {
+      return row?.statusId || 0;
+    },
+    {
+      id: 'workStatus',
+      header: 'Статус работы',
+      size: 180,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      cell: (props) => {
+        return <EquityObjectStatusCell {...props} />;
+      },
+    },
+  ),
+
+  columnHelper.accessor(
+    (row) => {
+      return row?.problems?.join(', ') || '';
+    },
+    {
+      id: 'problem',
+      header: 'Проблемы',
+      size: 100,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      cell: (props) => {
+        return <EquityObjectProblemCell {...props} />;
       },
     },
   ),
