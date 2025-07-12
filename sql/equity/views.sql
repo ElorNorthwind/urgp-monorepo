@@ -128,6 +128,8 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
             op.documents_date as "documentsDate",
 
             op.has_rg as "hasRg",
+            op.has_rg_ok as "hasRgOk",
+            op.has_rg_bad as "hasRgBad",
 
             -- op.opinion_urgp AND op.opinion_upozh AND op.opinion_uork as "opinionAll",
 
@@ -146,7 +148,9 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[5,6,7,11,12,14,15,20])) OVER(PARTITION BY o.object_id) > 0 as has_request,
                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[6,11])) OVER(PARTITION BY o.object_id) > 0 as needs_opinion,
 
-                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[21, 22])) OVER(PARTITION BY o.object_id) > 0 as has_rg,
+                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[21])) OVER(PARTITION BY o.object_id) > 0 as has_rg,
+                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[22])) OVER(PARTITION BY o.object_id) > 0 as has_rg_ok,
+                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[23])) OVER(PARTITION BY o.object_id) > 0 as has_rg_bad,
 
                 MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[7])) OVER(PARTITION BY o.object_id) as opinion_urgp,
                 MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[14])) OVER(PARTITION BY o.object_id) as opinion_upozh,
@@ -269,6 +273,8 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 			CASE
 				WHEN o.egrn_status = ANY(ARRAY['город Москва']) THEN 5
 				WHEN o.egrn_status = ANY(ARRAY['Физ.лицо', 'Юр.лицо', 'Российская Федерация']) THEN 3
+                WHEN op."hasRgOk" THEN 10
+                WHEN op."hasRgBad" THEN 9
                 WHEN op."hasRg" THEN 8
                 WHEN op."hasRequest" THEN 7
 				WHEN o.is_identified = FALSE THEN 6

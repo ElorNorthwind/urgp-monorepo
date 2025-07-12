@@ -59,7 +59,7 @@ const EquityTotalsGauge = ({
   const chartVariant = chartVariations[variant];
 
   const giveStatuses = {
-    noact: [1, 7, 8],
+    noact: [1, 7, 8, 9, 10],
     hasact: [2],
     done: [3],
   };

@@ -27,6 +27,8 @@ import {
   Circle,
   CircleCheck,
   CircleEllipsis,
+  CircleFadingPlus,
+  CircleMinus,
   CirclePlay,
   CirclePlus,
   CircleUser,
@@ -127,9 +129,19 @@ export const equityObjectStatusStyles = {
     chartColor: '#cbd5e1',
   },
   8: {
-    icon: CirclePlus,
+    icon: CircleFadingPlus,
     iconStyle: cn('text-lime-500'),
     chartColor: '#84cc16',
+  },
+  9: {
+    icon: CircleMinus,
+    iconStyle: cn('text-pink-500'),
+    chartColor: '#ec4899',
+  },
+  10: {
+    icon: CirclePlus,
+    iconStyle: cn('text-sky-500'),
+    chartColor: '#0ea5e9',
   },
   2: {
     icon: CircleCheck,

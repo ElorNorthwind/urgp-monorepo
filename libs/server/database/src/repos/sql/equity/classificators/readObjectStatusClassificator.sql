@@ -6,7 +6,7 @@ SELECT
 		'label', name,
         'fullname', name,  
 		'tags', ARRAY[]::text[],
-		'category', 'object_status'
+		'category', category
 	)) as items
 FROM (SELECT * FROM equity.object_status_types
 WHERE id <> 6
