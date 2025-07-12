@@ -2,7 +2,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { VisibilityState } from '@tanstack/react-table';
 import { RootState } from '../store';
 
-import { defaultEquityObjectsColumns } from '@urgp/client/entities';
+import {
+  defaultEquityObjectsColumns,
+  defaultEquityOperationLogColumns,
+} from '@urgp/client/entities';
 import {
   CreateEquityOperationDto,
   DialogFormState,
@@ -14,6 +17,7 @@ import { lsKeys } from '../../config/localStorageKeys';
 
 type EquityState = {
   objectTableColumns: VisibilityState;
+  operationLogTableColumns: VisibilityState;
   operationForm: {
     state: DialogFormState;
     values: CreateEquityOperationDto & { saved?: boolean };
@@ -24,8 +28,13 @@ const initialEquityObjectsTableColumns =
   JSON.parse(localStorage.getItem(lsKeys.EQUITY_OBJECTS_TABLE_KEY)) ||
   defaultEquityObjectsColumns;
 
+const initialEquityOperationLogTableColumns =
+  JSON.parse(localStorage.getItem(lsKeys.EQUITY_OPERATION_LOG_TABLE_KEY)) ||
+  defaultEquityOperationLogColumns;
+
 const initialState: EquityState = {
   objectTableColumns: initialEquityObjectsTableColumns,
+  operationLogTableColumns: initialEquityOperationLogTableColumns,
   operationForm: { state: DialogFormState.close, values: emptyEquityOperation },
 };
 
@@ -33,7 +42,7 @@ const equitySlice = createSlice({
   name: 'equity',
   initialState,
   reducers: {
-    // =============================== TABLE STATE ================================
+    // =============================== TABLE STATE - OBJECTS ================================
     setEquityObjectTableColumns: (
       state,
       { payload }: PayloadAction<VisibilityState>,
@@ -48,7 +57,21 @@ const equitySlice = createSlice({
       localStorage.removeItem(lsKeys.EQUITY_OBJECTS_TABLE_KEY);
       state.objectTableColumns = defaultEquityObjectsColumns;
     },
-
+    // =============================== TABLE STATE - OP LOG ================================
+    setEquityOperationLogTableColumns: (
+      state,
+      { payload }: PayloadAction<VisibilityState>,
+    ) => {
+      localStorage.setItem(
+        lsKeys.EQUITY_OPERATION_LOG_TABLE_KEY,
+        JSON.stringify(payload),
+      );
+      state.operationLogTableColumns = payload;
+    },
+    clearEquityOperationLogTableColumns: (state) => {
+      localStorage.removeItem(lsKeys.EQUITY_OPERATION_LOG_TABLE_KEY);
+      state.operationLogTableColumns = defaultEquityOperationLogColumns;
+    },
     // ================================= OPERATION =================================
     setOperationFormState: (
       state,
@@ -84,11 +107,18 @@ const equitySlice = createSlice({
   },
 });
 
-// ================================ TABLE STATE ================================
+// ================================ TABLE STATE - OBJECTS ================================
 export const { setEquityObjectTableColumns, clearEquityObjectTableColumns } =
   equitySlice.actions;
 export const selectEquityObjectTableColumns = (state: RootState) =>
   state.equity.objectTableColumns;
+// ================================ TABLE STATE - OP LOG ================================
+export const {
+  setEquityOperationLogTableColumns,
+  clearEquityOperationLogTableColumns,
+} = equitySlice.actions;
+export const selectEquityOperationLogTableColumns = (state: RootState) =>
+  state.equity.operationLogTableColumns;
 
 // =========================== OPERATION FORM STATE ==============================
 export const {

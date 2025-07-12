@@ -58,3 +58,27 @@ export const getEquityObjectById = z.object({
 });
 
 export type GetEquityObjectDto = z.infer<typeof getEquityObjectById>;
+
+export const equityOperationLogPageFilterSchema = z
+  .object({
+    query: z.string(),
+    building: queryNumberArray,
+    type: queryNumberArray,
+    opType: queryNumberArray,
+  })
+  .partial();
+export type EquityOperationLogPageFilter = z.infer<
+  typeof equityObjectsPageFilterSchema
+>;
+
+export const equityOperationLogPageSearchSchema =
+  equityOperationLogPageFilterSchema
+    .extend({
+      selectedObject: z.coerce.number(),
+      sortKey: z.string(),
+      sortDir: z.enum(['asc', 'desc']),
+    })
+    .partial();
+export type EquityOperationLogPageSearch = z.infer<
+  typeof equityOperationLogPageSearchSchema
+>;

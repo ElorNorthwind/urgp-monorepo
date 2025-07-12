@@ -17,6 +17,16 @@ export const equityClassificatorsApi = rtkApi.injectEndpoints({
       }),
       providesTags: ['equity-operations'],
     }),
+    getEquityImportantOperationTypes: build.query<
+      NestedClassificatorInfo[],
+      void
+    >({
+      query: () => ({
+        url: '/equity/classificators/important-operation-type',
+        method: 'GET',
+      }),
+      providesTags: ['equity-operations'],
+    }),
     getObjectTypes: build.query<NestedClassificatorInfo[], void>({
       query: () => ({
         url: '/equity/classificators/object-type',
@@ -38,6 +48,7 @@ export const equityClassificatorsApi = rtkApi.injectEndpoints({
 export const {
   useGetBuildingsQuery: useEquityBuildings,
   useGetEquityOperationTypesQuery: useEquityOperationTypes,
+  useGetEquityImportantOperationTypesQuery: useEquityImpornantOperationTypes,
   useGetObjectTypesQuery: useEquityObjectTypes,
   useGetObjectStatusQuery: useEquityObjectStatus,
 } = equityClassificatorsApi;

@@ -4,6 +4,7 @@ import {
   Button,
   CaseRoutes,
   clearEquityObjectTableColumns,
+  clearEquityOperationLogTableColumns,
   clearIncidentTableColumns,
   clearPendingTableColumns,
   clearProblemTableColumns,
@@ -17,11 +18,13 @@ import {
   PopoverContent,
   PopoverTrigger,
   selectEquityObjectTableColumns,
+  selectEquityOperationLogTableColumns,
   selectIncidentTableColumns,
   selectPendingTableColumns,
   selectProblemTableColumns,
   Separator,
   setEquityObjectTableColumns,
+  setEquityOperationLogTableColumns,
   setIncidentTableColumns,
   setPendingTableColumns,
   setProblemTableColumns,
@@ -31,6 +34,7 @@ import { useLocation } from '@tanstack/react-router';
 import { VisibilityState } from '@tanstack/react-table';
 import {
   defaultEquityObjectsColumns,
+  defaultEquityOperationLogColumns,
   defaultIncidentColumns,
   defaultPendingColumns,
   defaultProblemColumns,
@@ -64,6 +68,9 @@ function ColumnVisibilitySelector(
   const pendingColumnVisibility = useSelector(selectPendingTableColumns);
   const problemColumnVisibility = useSelector(selectProblemTableColumns);
   const equityObjectsVisibility = useSelector(selectEquityObjectTableColumns);
+  const equityOperationLogVisibility = useSelector(
+    selectEquityOperationLogTableColumns,
+  );
   const dispatch = useDispatch();
 
   const pathnameOptions: PathnameOptions = {
@@ -91,6 +98,12 @@ function ColumnVisibilitySelector(
       setDispatch: setEquityObjectTableColumns,
       clearDisparch: clearEquityObjectTableColumns,
     },
+    '/equity/operations': {
+      defaultVisibility: defaultEquityOperationLogColumns,
+      columnVisibility: equityOperationLogVisibility,
+      setDispatch: setEquityOperationLogTableColumns,
+      clearDisparch: clearEquityOperationLogTableColumns,
+    },
   };
 
   const pathname = useLocation().pathname as CaseRoutes;
@@ -113,6 +126,7 @@ function ColumnVisibilitySelector(
     workStatus: 'Статус работы',
     creditor: 'ФИО кредитора',
     problem: 'Проблемы',
+    opType: 'Тип Операции',
   };
 
   const isDefault = useMemo(() => {

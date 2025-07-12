@@ -31,6 +31,7 @@ import { Route as RenovationOldbuildingsImport } from './routes/renovation/oldbu
 import { Route as RenovationOldapartmentsImport } from './routes/renovation/oldapartments'
 import { Route as RenovationMessagesImport } from './routes/renovation/messages'
 import { Route as RenovationBuildingRelocationMapImport } from './routes/renovation/building-relocation-map'
+import { Route as EquityOperationsImport } from './routes/equity/operations'
 import { Route as EquityObjectsImport } from './routes/equity/objects'
 import { Route as ControlProblemsImport } from './routes/control/problems'
 import { Route as ControlPendingImport } from './routes/control/pending'
@@ -195,6 +196,12 @@ const RenovationBuildingRelocationMapRoute =
       (d) => d.Route,
     ),
   )
+
+const EquityOperationsRoute = EquityOperationsImport.update({
+  id: '/operations',
+  path: '/operations',
+  getParentRoute: () => EquityRouteRoute,
+} as any)
 
 const EquityObjectsRoute = EquityObjectsImport.update({
   id: '/objects',
@@ -427,6 +434,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EquityObjectsImport
       parentRoute: typeof EquityRouteImport
     }
+    '/equity/operations': {
+      id: '/equity/operations'
+      path: '/operations'
+      fullPath: '/equity/operations'
+      preLoaderRoute: typeof EquityOperationsImport
+      parentRoute: typeof EquityRouteImport
+    }
     '/renovation/building-relocation-map': {
       id: '/renovation/building-relocation-map'
       path: '/building-relocation-map'
@@ -615,11 +629,13 @@ const ControlRouteRouteWithChildren = ControlRouteRoute._addFileChildren(
 
 interface EquityRouteRouteChildren {
   EquityObjectsRoute: typeof EquityObjectsRoute
+  EquityOperationsRoute: typeof EquityOperationsRoute
   EquityIndexRoute: typeof EquityIndexRoute
 }
 
 const EquityRouteRouteChildren: EquityRouteRouteChildren = {
   EquityObjectsRoute: EquityObjectsRoute,
+  EquityOperationsRoute: EquityOperationsRoute,
   EquityIndexRoute: EquityIndexRoute,
 }
 
@@ -702,6 +718,7 @@ export interface FileRoutesByFullPath {
   '/control/pending': typeof ControlPendingRoute
   '/control/problems': typeof ControlProblemsRoute
   '/equity/objects': typeof EquityObjectsRoute
+  '/equity/operations': typeof EquityOperationsRoute
   '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
   '/renovation/messages': typeof RenovationMessagesRoute
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
@@ -735,6 +752,7 @@ export interface FileRoutesByTo {
   '/control/pending': typeof ControlPendingRoute
   '/control/problems': typeof ControlProblemsRoute
   '/equity/objects': typeof EquityObjectsRoute
+  '/equity/operations': typeof EquityOperationsRoute
   '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
   '/renovation/messages': typeof RenovationMessagesRoute
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
@@ -776,6 +794,7 @@ export interface FileRoutesById {
   '/control/pending': typeof ControlPendingRoute
   '/control/problems': typeof ControlProblemsRoute
   '/equity/objects': typeof EquityObjectsRoute
+  '/equity/operations': typeof EquityOperationsRoute
   '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
   '/renovation/messages': typeof RenovationMessagesRoute
   '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
@@ -818,6 +837,7 @@ export interface FileRouteTypes {
     | '/control/pending'
     | '/control/problems'
     | '/equity/objects'
+    | '/equity/operations'
     | '/renovation/building-relocation-map'
     | '/renovation/messages'
     | '/renovation/oldapartments'
@@ -850,6 +870,7 @@ export interface FileRouteTypes {
     | '/control/pending'
     | '/control/problems'
     | '/equity/objects'
+    | '/equity/operations'
     | '/renovation/building-relocation-map'
     | '/renovation/messages'
     | '/renovation/oldapartments'
@@ -889,6 +910,7 @@ export interface FileRouteTypes {
     | '/control/pending'
     | '/control/problems'
     | '/equity/objects'
+    | '/equity/operations'
     | '/renovation/building-relocation-map'
     | '/renovation/messages'
     | '/renovation/oldapartments'
@@ -986,6 +1008,7 @@ export const routeTree = rootRoute
       "filePath": "equity/route.tsx",
       "children": [
         "/equity/objects",
+        "/equity/operations",
         "/equity/"
       ]
     },
@@ -1064,6 +1087,10 @@ export const routeTree = rootRoute
     },
     "/equity/objects": {
       "filePath": "equity/objects.tsx",
+      "parent": "/equity"
+    },
+    "/equity/operations": {
+      "filePath": "equity/operations.tsx",
       "parent": "/equity"
     },
     "/renovation/building-relocation-map": {

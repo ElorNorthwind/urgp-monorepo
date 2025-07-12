@@ -121,9 +121,9 @@ export function DataTable<TData, TValue>({
                   onDoubleClick={() => onRowDoubleClick(row)}
                   className={cn(onRowClick && 'cursor-pointer')}
                   key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
+                  data-state={row?.getIsSelected() && 'selected'}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row?.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
                       compact={compact}

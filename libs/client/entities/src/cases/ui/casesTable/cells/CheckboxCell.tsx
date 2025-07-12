@@ -15,9 +15,9 @@ function CheckboxCell(props: CellContext<any, unknown>): JSX.Element {
     >
       <Checkbox
         className="size-5"
-        checked={props.row.getIsSelected()}
-        disabled={!props.row.getCanSelect()}
-        onClick={props.row.getToggleSelectedHandler()}
+        checked={props.row?.getIsSelected()}
+        disabled={!props.row?.getCanSelect()}
+        onClick={props.row?.getToggleSelectedHandler()}
       />
       {search?.selectedCase === props.row.original?.id && (
         <>

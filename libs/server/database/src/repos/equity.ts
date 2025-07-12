@@ -72,8 +72,8 @@ export class EquityRepository {
     FROM equity.operations_full_view op 
     LEFT JOIN equity.objects_full_view ob ON ob.id = op."objectId"
     WHERE (op.type->>'isImportant')::boolean
-      AND op.date > '30.06.2025'::date
-    ORDER BY op.date, op."createdAt";`;
+      AND op.date > '31.05.2025'::date
+    ORDER BY op.date::date DESC, (op.type->>'priority')::integer DESC, op."createdAt" DESC;`;
     return this.db.any(sql);
   }
 
@@ -91,6 +91,12 @@ export class EquityRepository {
 
   getOperationTypeClassificator(): Promise<NestedClassificatorInfo[]> {
     return this.db.any(equityClassificators.readOperationTypeClassificator);
+  }
+
+  getImportantOperationTypeClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.db.any(
+      equityClassificators.readImportantOperationTypeClassificator,
+    );
   }
 
   getObjectsTotals(): Promise<EquityTotals[]> {

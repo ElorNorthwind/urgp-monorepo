@@ -1,6 +1,6 @@
 import { getRouteApi, useLocation } from '@tanstack/react-router';
 import { Row } from '@tanstack/react-table';
-import { formatEquityObjectRowForExcel } from '@urgp/client/entities';
+import { formatEquityOperationLogRowForExcel } from '@urgp/client/entities';
 import {
   ColumnVisibilitySelector,
   ExportToExcelButton,
@@ -20,26 +20,25 @@ import {
 } from '@urgp/client/shared';
 import {
   EquityApartmentNumberFilter,
-  EquityBuildingsFilter,
-  EquityObjectTypeFilter,
   EquityQueryFilter,
   EquityResetFilter,
-  QueryFilter,
-  ResetFilter,
 } from '@urgp/client/widgets';
-import { CasesPageSearchDto, EquityObject } from '@urgp/shared/entities';
+import {
+  CasesPageSearchDto,
+  EquityOperationLogItem,
+} from '@urgp/shared/entities';
 import { useMemo } from 'react';
-type EquityObjectsPageHeaderProps = {
+type EquityOperationLogPageHeaderProps = {
   total?: number;
   filtered?: number;
   className?: string;
-  exportedRows?: Row<EquityObject>[];
+  exportedRows?: Row<EquityOperationLogItem>[];
   // columnVisibility?: VisibilityState;
   // setColumnVisibility?: Dispatch<VisibilityState>;
 };
 
-const EquityObjectsPageHeader = (
-  props: EquityObjectsPageHeaderProps,
+const EquityOperationLogPageHeader = (
+  props: EquityOperationLogPageHeaderProps,
 ): JSX.Element => {
   const { total, filtered, className, exportedRows } = props;
   const isMobile = useIsMobile();
@@ -51,7 +50,7 @@ const EquityObjectsPageHeader = (
 
   const exportedData = useMemo(() => {
     if (exportedRows) {
-      return exportedRows?.map((r) => formatEquityObjectRowForExcel(r));
+      return exportedRows?.map((r) => formatEquityOperationLogRowForExcel(r));
     } else return [];
   }, [exportedRows]);
 
@@ -81,7 +80,7 @@ const EquityObjectsPageHeader = (
           </BreadcrumbItem>
           <BreadcrumbSeparator className="hidden md:block" />
           <BreadcrumbItem>
-            <BreadcrumbPage>{'Объекты'}</BreadcrumbPage>
+            <BreadcrumbPage>{'Журнал операций'}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -102,8 +101,6 @@ const EquityObjectsPageHeader = (
         <EquityQueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
       )}
 
-      {!isMobile && <EquityApartmentNumberFilter className="h-8 w-20" />}
-
       {!isMobile && exportedRows && (
         <ExportToExcelButton
           data={exportedData}
@@ -112,10 +109,9 @@ const EquityObjectsPageHeader = (
           fileName="Объекты"
         />
       )}
-
       <ColumnVisibilitySelector />
     </header>
   );
 };
 
-export { EquityObjectsPageHeader };
+export { EquityOperationLogPageHeader };

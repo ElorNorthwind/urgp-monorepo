@@ -49,3 +49,4 @@ export * from './EquityNavbar';
 export * from './EquityObjectsFilterSidebar';
 export * from './EquityObjectSidePanel';
 export * from './EquityObjectCardTabs';
+export * from './EquityOperationLogFilterSidebar';

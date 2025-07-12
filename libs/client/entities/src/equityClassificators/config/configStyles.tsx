@@ -17,6 +17,7 @@ import {
   Blocks,
   BookCheck,
   BookUser,
+  BookX,
   Building,
   Building2,
   CalendarArrowDown,
@@ -375,8 +376,9 @@ export const equityOperationTypeStyles = {
   9: { icon: Blocks, iconStyle: cn('text-rose-500') }, // Выявлены проблемы идентификации
   10: { icon: Grid2X2Check, iconStyle: cn('text-green-500') }, // Проблемы идентификации сняты
 
-  21: { icon: BookUser, iconStyle: cn('text-cyan-500') }, // Подготовка к РГ
+  21: { icon: BookUser, iconStyle: cn('text-lime-500') }, // Подготовка к РГ
   22: { icon: BookCheck, iconStyle: cn('text-sky-500') }, // Решение РГ
+  23: { icon: BookX, iconStyle: cn('text-pink-500') }, // Снято с РГ
 
   17: { icon: MessageSquareQuote, iconStyle: cn('text-stone-500') }, // Примечание
 } as Record<number, StyleData>;

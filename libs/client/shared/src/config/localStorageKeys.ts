@@ -5,4 +5,5 @@ export const lsKeys = {
   PENDING_TABLE_KEY: 'pendingTable',
   PROBLEM_TABLE_KEY: 'problemTable',
   EQUITY_OBJECTS_TABLE_KEY: 'equityObjectsTable',
+  EQUITY_OPERATION_LOG_TABLE_KEY: 'equityOperationLogTable',
 } as const;

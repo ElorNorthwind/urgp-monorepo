@@ -11,6 +11,7 @@ import { CaseClasses, CaseFull, EquityObject } from '@urgp/shared/entities';
 import { ChevronDown, X } from 'lucide-react';
 import { equityObjectTypeStyles } from '../../../equityClassificators';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
+import { on } from 'events';
 
 type EquityObjectCardHeaderProps = {
   className?: string;
@@ -99,25 +100,34 @@ const EquityObjectCardHeader = (
       )}
       {onClose && (
         <>
-          <Button
-            role="button"
-            variant="ghost"
-            className="ml-auto size-6 p-0"
-            onClick={() => onPrevCase && onPrevCase()}
-            disabled={!onPrevCase}
-          >
-            <ChevronDown className="size-5 rotate-180" />
-          </Button>
-          <Button
-            role="button"
-            variant="ghost"
-            className="size-6 p-0"
-            onClick={() => onNextCase && onNextCase()}
-            disabled={!onNextCase}
-          >
-            <ChevronDown className="size-5" />
-          </Button>
-          <Separator className="border-foreground/20 border-l" />
+          {(onPrevCase || onNextCase) && (
+            <>
+              <Button
+                role="button"
+                variant="ghost"
+                className="ml-auto size-6 p-0"
+                onClick={() => onPrevCase && onPrevCase()}
+                disabled={!onPrevCase}
+              >
+                <ChevronDown className="size-5 rotate-180" />
+              </Button>
+              <Button
+                role="button"
+                variant="ghost"
+                className="size-6 p-0"
+                onClick={() => onNextCase && onNextCase()}
+                disabled={!onNextCase}
+              >
+                <ChevronDown className="size-5" />
+              </Button>
+            </>
+          )}
+          <Separator
+            className={cn(
+              'border-foreground/20',
+              onPrevCase || onNextCase ? 'border-l' : 'ml-auto',
+            )}
+          />
           <Button
             role="button"
             variant="ghost"

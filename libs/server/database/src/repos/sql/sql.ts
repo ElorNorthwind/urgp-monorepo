@@ -180,6 +180,9 @@ export const equityClassificators = {
   readOperationTypeClassificator: sql(
     'sql/equity/classificators/readOperationTypeClassificator.sql',
   ),
+  readImportantOperationTypeClassificator: sql(
+    'sql/equity/classificators/readImportantOperationTypeClassificator.sql',
+  ),
 };
 
 export const equityObjects = {

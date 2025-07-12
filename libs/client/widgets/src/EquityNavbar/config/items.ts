@@ -1,4 +1,4 @@
-import { Castle, ClipboardList, FileUp, ListTodo } from 'lucide-react';
+import { Castle, ClipboardList, FileUp, ListTodo, Scroll } from 'lucide-react';
 
 // Menu items.
 export const items = [
@@ -11,6 +11,11 @@ export const items = [
     title: 'Список объектов',
     url: '/equity/objects',
     icon: ClipboardList,
+  },
+  {
+    title: 'Журнал операций',
+    url: '/equity/operations',
+    icon: Scroll,
   },
 ];
 

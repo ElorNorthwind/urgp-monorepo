@@ -21,3 +21,4 @@ export * from './XMLGeneratorPage';
 export * from './SpecialApartmentsPage';
 export * from './EquityObjectsPage';
 export * from './EquityDashboardPage';
+export * from './EquityOperationLogPage';

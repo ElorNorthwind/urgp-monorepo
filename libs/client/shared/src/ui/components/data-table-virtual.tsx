@@ -196,12 +196,12 @@ export function VirtualDataTable<TData, TValue>({
           )}
         >
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} style={{ display: 'flex' }}>
+            <TableRow key={headerGroup?.id || 0} style={{ display: 'flex' }}>
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead
                     compact={compact}
-                    key={header.id}
+                    key={header?.id || 0}
                     className={cn(
                       'text-muted-foreground items-center text-center align-middle',
                       header?.column?.columnDef?.meta?.headerClass,
@@ -305,7 +305,7 @@ export function VirtualDataTable<TData, TValue>({
               const row = rows[virtualRow.index] as Row<TData>;
               return (
                 <TableRow
-                  key={row.id}
+                  key={row?.id || 0}
                   className={cn(
                     'overflow-y-clip',
                     onRowClick && 'cursor-pointer',
@@ -314,7 +314,7 @@ export function VirtualDataTable<TData, TValue>({
                   onDoubleClick={
                     onRowDoubleClick ? () => onRowDoubleClick(row) : undefined
                   }
-                  data-state={row.getIsSelected() && 'selected'}
+                  data-state={row?.getIsSelected() && 'selected'}
                   data-index={virtualRow.index} //needed for dynamic row height measurement
                   ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
                   style={{
@@ -324,10 +324,10 @@ export function VirtualDataTable<TData, TValue>({
                     width: '100%',
                   }}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row?.getVisibleCells().map((cell) => (
                     <TableCell
                       compact={compact}
-                      key={cell.id}
+                      key={cell?.id || 0}
                       className={cn(
                         'items-center justify-items-center overflow-y-clip',
                         cell?.column?.columnDef?.meta?.cellClass,

@@ -107,6 +107,13 @@ export class EquityController {
     return this.equity.getOperationTypeClassificator();
   }
 
+  @Get('/classificators/important-operation-type')
+  async getImportantOperationTypeClassificator(): Promise<
+    NestedClassificatorInfo[]
+  > {
+    return this.equity.getImportantOperationTypeClassificator();
+  }
+
   @Get('/operation-log')
   async gerOperationsLog() {
     return this.equity.getOperationLog();

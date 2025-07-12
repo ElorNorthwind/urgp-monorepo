@@ -78,6 +78,12 @@ export class EquityService {
     return this.dbServise.db.equity.getOperationTypeClassificator();
   }
 
+  public async getImportantOperationTypeClassificator(): Promise<
+    NestedClassificatorInfo[]
+  > {
+    return this.dbServise.db.equity.getImportantOperationTypeClassificator();
+  }
+
   public async getEquityObjectsTotals(): Promise<EquityTotals[]> {
     return this.dbServise.db.equity.getObjectsTotals();
   }
