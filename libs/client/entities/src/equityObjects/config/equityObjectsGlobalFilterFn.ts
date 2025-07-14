@@ -17,21 +17,24 @@ export function equityObjectsGlobalFilterFn(
     claimTransfer,
     opinionUrgp,
   } = filterValue;
+
   if (
     query &&
     !(
-      row.original?.creditor?.toLowerCase().includes(query.toLowerCase()) ||
-      row.original?.egrnStatus?.toLowerCase().includes(query.toLowerCase()) ||
-      row.original?.num?.toLowerCase().includes(query.toLowerCase()) ||
-      row.original?.operationsNums
-        ?.toLowerCase()
-        .includes(query.toLowerCase()) ||
-      row.original?.cadNum?.toLowerCase().includes(query.toLowerCase()) ||
-      row.original?.operationsFio?.toLowerCase().includes(query.toLowerCase())
+      (row.original?.creditor || '') +
+      (row.original?.egrnStatus || '') +
+      (row.original?.num || '') +
+      (row.original?.operationsNums || '') +
+      (row.original?.cadNum || '') +
+      (row.original?.operationsFio || '')
     )
+      ?.toLowerCase()
+      .replace('ё', 'е')
+      .includes(query.toLowerCase().replace('ё', 'е'))
   ) {
     return false;
   }
+
   if (
     apartment &&
     !(

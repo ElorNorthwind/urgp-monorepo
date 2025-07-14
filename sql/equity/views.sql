@@ -94,6 +94,7 @@ CREATE OR REPLACE VIEW equity.claims_full_view  AS
 ALTER TABLE equity.claims_full_view
     OWNER TO renovation_user;
 
+
 -- Объекты
 DROP VIEW IF EXISTS equity.objects_full_view CASCADE;
 CREATE OR REPLACE VIEW equity.objects_full_view AS
@@ -137,6 +138,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
             op.documents_problem as "documentsProblem",
             op.operations_fio as "operationsFio",
             op.operations_nums as "operationsNums",
+            op.urgp_notes as "urgpNotes",
 
             op.id_problem as "idProblem",
 			op.date
@@ -163,6 +165,9 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[20]) AND o.result <> 'полный пакет') OVER(PARTITION BY o.object_id) > 0 as documents_problem,
                 string_agg(o.fio, '; ') OVER(PARTITION BY o.object_id) as operations_fio,
                 string_agg(o.number, '; ') OVER(PARTITION BY o.object_id) as operations_nums,
+
+                string_agg(o.notes, '; ') FILTER (WHERE o.type_id = 7) OVER(PARTITION BY o.object_id) as urgp_notes,
+
                 COUNT(*) FILTER (WHERE o.type_id = 9) OVER(PARTITION BY o.object_id) > 0 AND COUNT(*) FILTER (WHERE o.type_id = 10) OVER(PARTITION BY o.object_id) = 0 as id_problem,
 
 				o.type_id,
@@ -262,7 +267,8 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
         COALESCE(op."documentsOk", false) as "documentsOk",
         COALESCE(op."documentsProblem", false) as "documentsProblem",
         COALESCE(op."operationsFio", '') as "operationsFio",
-        COALESCE(op."operationsNums", '') as "operationsNums"
+        COALESCE(op."operationsNums", '') as "operationsNums",
+        COALESCE(op."urgpNotes", '') as "urgpNotes"
 
     FROM equity.objects o
         LEFT JOIN (SELECT id, name FROM equity.object_types) ot ON ot.id = o.object_type_id

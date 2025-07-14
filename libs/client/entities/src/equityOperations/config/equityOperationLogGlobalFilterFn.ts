@@ -17,16 +17,15 @@ export function equityOperationLogGlobalFilterFn(
   if (
     query &&
     !(
-      row.original?.creditor?.toLowerCase().includes(query.toLowerCase()) ||
-      row.original?.egrnStatus?.toLowerCase().includes(query.toLowerCase()) ||
-      row.original?.operation?.fio
-        ?.toLowerCase()
-        .includes(query.toLowerCase()) ||
-      row.original?.operation?.number
-        ?.toLowerCase()
-        .includes(query.toLowerCase()) ||
-      row.original?.cadNum?.toLowerCase().includes(query.toLowerCase())
+      (row.original?.creditor || '') +
+      (row.original?.egrnStatus || '') +
+      (row.original?.operation?.fio || '') +
+      (row.original?.operation?.number || '') +
+      (row.original?.cadNum || '')
     )
+      ?.toLowerCase()
+      .replace('ё', 'е')
+      .includes(query.toLowerCase().replace('ё', 'е'))
   ) {
     return false;
   }

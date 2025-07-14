@@ -34,5 +34,6 @@ export const formatEquityObjectRowForExcel = (row: Row<EquityObject>) => {
     'ФИО по представленным документам':
       data?.documentsFio || data?.creditor || '',
     'Заключение УРЖП': data?.opinionUrgp,
+    'Примечание УРЖП': data?.urgpNotes,
   };
 };

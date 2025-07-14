@@ -34,5 +34,7 @@ export const formatEquityOperationLogRowForExcel = (
     Права: data?.egrnStatus,
     Этаж: data?.floor,
     Площадь: data?.s,
+    'Заключение УРЖП': data?.opinionUrgp,
+    'Примечание УРЖП': data?.urgpNotes,
   };
 };
