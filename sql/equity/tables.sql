@@ -133,6 +133,10 @@ CREATE TABLE equity.complexes
     developer character varying(255),
     developer_short character varying(255),
     transfer_date timestamp with time zone,
+    district character varying(255),
+    old_developer text,
+    bankruptcy_case text,
+    bankruptcy_end_date timestamp with time zone,
     PRIMARY KEY (id)
 );
 ALTER TABLE equity.complexes

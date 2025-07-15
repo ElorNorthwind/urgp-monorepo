@@ -101,6 +101,9 @@ export const equityObjectSchema = z.object({
   documentsFio: z.string().nullable(),
   documentsDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
   transferDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
+  district: z.string().nullable(),
+  oldDeveloper: z.string().nullable(),
+
   claimRegistryDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
 
   documentsOk: z.boolean(),

@@ -187,6 +187,8 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 			c.id as "complexId",
 			c.name as "complexName",
             c.transfer_date as "transferDate",
+            c.district,
+            c.old_developer as "oldDeveloper",
 			-- c.developer,
             c.developer_short as "developerShort",
             b.is_done as "isDone",
@@ -262,6 +264,8 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
         op."documentsDate",
 
         b."transferDate",
+        b.district,
+        b."oldDeveloper",
         c."claimRegistryDate",
 
         COALESCE(op."documentsOk", false) as "documentsOk",

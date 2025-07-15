@@ -1,4 +1,10 @@
-import { cn, useUserAbility } from '@urgp/client/shared';
+import {
+  cn,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  useUserAbility,
+} from '@urgp/client/shared';
 import { EquityObject } from '@urgp/shared/entities';
 
 import {
@@ -8,6 +14,8 @@ import {
 } from '@urgp/client/entities';
 import { CardTab } from '@urgp/client/features';
 import { eu } from 'date-fns/locale';
+import { format } from 'date-fns';
+import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 
 type EquityObjectInfoTabProps = {
   equityObject?: EquityObject;
@@ -84,6 +92,36 @@ const EquityObjectInfoTab = (
           <p className="mr-2 border-r pr-2">{equityObject?.rooms + ' комн.'}</p>
         )}
         {equityObject?.s && <p>{equityObject?.s + ' м²'}</p>}
+      </div>
+
+      <div className="bg-muted-foreground/5 border-r border-t px-2 py-1 text-right font-bold">
+        Перед.:
+      </div>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="text-muted-foreground col-span-1 border-t font-light">
+            {equityObject?.transferDate
+              ? format(equityObject?.transferDate, 'dd.MM.yyyy')
+              : 'без банкротства'}
+          </div>
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent side="bottom">
+            <TooltipArrow />
+            <div className="max-w-80">
+              {equityObject?.transferDate
+                ? `Дата соглашения о передаче объекта и обязательств между Конкурсным управляющим ${equityObject?.oldDeveloper} и ${equityObject?.developerShort}`
+                : 'По объекту не открывалось дело о банкротстве'}
+            </div>
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
+
+      <div className="bg-muted-foreground/5 border-l border-t px-2 py-1 text-right font-bold">
+        АО:
+      </div>
+      <div className="text-muted-foreground col-span-1 flex flex-row gap-0 border-l border-t px-2 font-light">
+        {equityObject?.district ?? '-'}
       </div>
 
       {equityObject?.problems?.length > 0 && (
