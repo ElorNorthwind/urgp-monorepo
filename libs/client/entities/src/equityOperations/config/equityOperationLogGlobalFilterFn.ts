@@ -10,7 +10,19 @@ export function equityOperationLogGlobalFilterFn(
   columnId: string,
   filterValue: EquityOperationLogPageSearch,
 ): boolean {
-  const { query, building, type, opType, dateFrom, dateTo } = filterValue;
+  const {
+    query,
+    building,
+    type,
+    opType,
+    dateFrom,
+    dateTo,
+    status,
+    problem,
+    documents,
+    claimTransfer,
+    opinionUrgp,
+  } = filterValue;
   const opDate =
     row.original?.operation?.date ?? row.original?.operation?.createdAt;
 
@@ -39,6 +51,57 @@ export function equityOperationLogGlobalFilterFn(
   }
 
   if (opType && !opType.includes(row.original?.operation?.type?.id || 0)) {
+    return false;
+  }
+
+  if (
+    claimTransfer &&
+    !claimTransfer.includes(row.original?.claimTransfer || '')
+  ) {
+    return false;
+  }
+
+  if (status && !status.includes(row.original?.statusId || 0)) {
+    return false;
+  }
+
+  if (
+    problem &&
+    row.original?.problems.filter((p) => problem.includes(p)).length === 0 &&
+    !(problem.includes('none') && row.original?.problems.length === 0)
+  ) {
+    return false;
+  }
+
+  // Screams for backend view refactor
+  if (
+    documents &&
+    !(
+      (documents.includes('ok') && row?.original?.documentsOk) ||
+      (documents.includes('problem') &&
+        row?.original?.documentsProblem &&
+        !row?.original?.documentsOk) ||
+      (documents.includes('none') &&
+        !row?.original?.documentsOk &&
+        !row?.original?.documentsProblem)
+    )
+  ) {
+    return false;
+  }
+
+  // Screams for backend view refactor
+  if (
+    opinionUrgp &&
+    !(
+      (opinionUrgp.includes('положительное') &&
+        row?.original?.opinionUrgp === 'положительное') ||
+      (opinionUrgp.includes('условно-положительное') &&
+        row?.original?.opinionUrgp === 'условно-положительное') ||
+      (opinionUrgp.includes('отрицательное') &&
+        row?.original?.opinionUrgp === 'отрицательное') ||
+      (opinionUrgp.includes('нет') && row?.original?.opinionUrgp === 'нет')
+    )
+  ) {
     return false;
   }
 

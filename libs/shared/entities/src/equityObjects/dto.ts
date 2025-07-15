@@ -71,10 +71,21 @@ export const equityOperationLogPageFilterSchema = z
     dateTo: z.string().regex(/\d{4}-\d{2}-\d{2}/, {
       message: 'Некорректная дата',
     }),
+
+    problem: queryStringArray,
+    status: queryNumberArray,
+    documents: queryStringArray,
+
+    opinionUrgp: queryStringArray,
+    opinionUpozh: queryStringArray,
+    opinionUork: queryStringArray,
+    opinionUpozi: queryStringArray,
+
+    claimTransfer: queryStringArray,
   })
   .partial();
 export type EquityOperationLogPageFilter = z.infer<
-  typeof equityObjectsPageFilterSchema
+  typeof equityOperationLogPageFilterSchema
 >;
 
 export const equityOperationLogPageSearchSchema =

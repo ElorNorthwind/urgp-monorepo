@@ -15,12 +15,17 @@ import { ChevronLeft } from 'lucide-react';
 import { useLocation } from '@tanstack/react-router';
 import {
   EquityBuildingsFilter,
+  EquityClaimTransferFilter,
+  EquityObjectProblemsFilter,
+  EquityObjectStatusFilter,
   EquityObjectTypeFilter,
   EquityQueryFilter,
   EquityResetFilter,
 } from '../../EquityObjectsFilterSidebar';
 import { EquityOperationTypeFilter } from './filterInputs/EquityOperationTypeFilter';
 import { EquityOperationDateFilter } from './filterInputs/EquityOperationDateFilter';
+import { EquityObjectDocumentsFilter } from '../../EquityObjectsFilterSidebar/ui/filterInputs/EquityObjectDocumentsFilter';
+import { EquityOpinionUrgpFilter } from '../../EquityObjectsFilterSidebar/ui/filterInputs/EquityOpinionUrgpFilter';
 
 type EquityOperationLogFilterSidebarProps = {
   side?: 'left' | 'right';
@@ -58,8 +63,13 @@ const EquityOperationLogFilterSidebar = (
             <EquityOperationDateFilter className="h-8 flex-shrink-0" />
             <Accordion type="multiple" defaultValue={['optype']}>
               <EquityOperationTypeFilter variant="accordion" />
+              <EquityObjectStatusFilter variant="accordion" />
               <EquityObjectTypeFilter variant="accordion" />
+              <EquityObjectProblemsFilter variant="accordion" />
               <EquityBuildingsFilter variant="accordion" />
+              <EquityObjectDocumentsFilter variant="accordion" />
+              <EquityClaimTransferFilter variant="accordion" />
+              <EquityOpinionUrgpFilter variant="accordion" />
             </Accordion>
           </div>
         </ScrollArea>
