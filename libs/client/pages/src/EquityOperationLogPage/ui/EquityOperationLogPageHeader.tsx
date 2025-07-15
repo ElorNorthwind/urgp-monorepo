@@ -110,7 +110,7 @@ const EquityOperationLogPageHeader = (
           data={exportedData}
           size="icon"
           className="size-8 p-0"
-          fileName="Объекты"
+          fileName="Операции"
         />
       )}
       <ColumnVisibilitySelector />
