@@ -12,7 +12,7 @@ SELECT
 			WHEN c.developer NOT LIKE '%Фонд%' AND b.is_done = true THEN 'ao_done'
 			WHEN c.developer NOT LIKE '%Фонд%' AND b.is_done = false THEN 'ao_construction'
 		END
-	)) as items
+	) ORDER BY b.id) as items
 FROM equity.buildings b
 LEFT JOIN equity.complexes c on b.complex_id = c.id
 GROUP BY b.complex_id, c.name
