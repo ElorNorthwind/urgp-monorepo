@@ -14,6 +14,8 @@ import {
 import { IDatabase, IMain } from 'pg-promise';
 import { camelToSnakeCase } from '../lib/to-snake-case';
 import { equityClassificators, equityObjects } from './sql/sql';
+import { Logger } from '@nestjs/common';
+import { object } from 'zod';
 
 // @Injectable()
 export class EquityRepository {
@@ -59,9 +61,10 @@ export class EquityRepository {
     return this.db.any(sql, [objectId]);
   }
 
-  getOperationById(operationId: number): Promise<EquityOperation | null> {
-    const sql = 'SELECT * FROM equity.operations_full_view WHERE "id" = $1';
-    return this.db.oneOrNone(sql, [operationId]);
+  getOperationById(operationId: number[]): Promise<EquityOperation[]> {
+    const sql =
+      'SELECT * FROM equity.operations_full_view WHERE "id" = ANY(ARRAY[$1:list]::integer[])';
+    return this.db.any(sql, [operationId]);
   }
   getOperationsLog(): Promise<EquityOperationLogItem[]> {
     const sql = `
@@ -114,8 +117,18 @@ export class EquityRepository {
   createOperation(
     userId: number,
     dto: CreateEquityOperationDto,
-  ): Promise<number> {
+  ): Promise<number[]> {
     const columns = [{ name: 'created_by_id', prop: 'userId' }];
+    const data = dto?.objectId?.map((objId) => ({
+      ...dto,
+      objectId: objId,
+      userId,
+    }));
+
+    if (!data || data?.length === 0) {
+      return Promise.resolve([]);
+    }
+
     Object.keys(dto)
       .filter(
         (key) =>
@@ -137,10 +150,13 @@ export class EquityRepository {
         schema: 'equity',
       },
     });
+
     const insert =
-      this.pgp.helpers.insert({ ...dto, userId }, operationsColumnSet) +
-      ' returning id;';
-    return this.db.one(insert).then((result: any) => result.id);
+      this.pgp.helpers.insert(data, operationsColumnSet) + ' returning id;';
+
+    return this.db
+      .any(insert)
+      .then((result: any) => result?.map((r: any) => r.id));
   }
 
   updateOperation(
@@ -179,7 +195,6 @@ export class EquityRepository {
         { ...dto, updatedById: userId, updatedAt: new Date().toISOString() },
         operationsColumnSet,
       ) + ` WHERE id = ${dto.id} RETURNING id`;
-
     return this.db.one(update).then((result: any) => result.id);
   }
 

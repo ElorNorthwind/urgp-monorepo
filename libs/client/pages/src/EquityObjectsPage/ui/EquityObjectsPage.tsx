@@ -19,6 +19,7 @@ import {
   ControlSidePanel,
   EquityObjectsFilterSidebar,
   EquityObjectSidePanel,
+  SelectedEquityObjectsActionBar,
 } from '@urgp/client/widgets';
 import { EquityObject, EquityObjectsPageSearch } from '@urgp/shared/entities';
 import { useState } from 'react';
@@ -140,7 +141,7 @@ const EquityObjectsPage = (): JSX.Element => {
                   });
             }}
           />
-          {/* <SelectedCasesActionBar selected={selected} /> */}
+          <SelectedEquityObjectsActionBar selected={selected} />
         </main>
       </SidebarInset>
       <EquityObjectSidePanel

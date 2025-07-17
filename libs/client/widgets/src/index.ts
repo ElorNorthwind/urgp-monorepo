@@ -50,3 +50,4 @@ export * from './EquityObjectsFilterSidebar';
 export * from './EquityObjectSidePanel';
 export * from './EquityObjectCardTabs';
 export * from './EquityOperationLogFilterSidebar';
+export * from './SelectedEquityObjectsActionBar';

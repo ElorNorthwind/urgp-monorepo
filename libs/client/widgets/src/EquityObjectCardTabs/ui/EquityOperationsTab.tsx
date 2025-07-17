@@ -50,7 +50,7 @@ const EquityOperationsTab = (
       button={
         <CreateEquityOperationButton
           fio={equityObject?.creditor?.split('; ')[0]}
-          objectId={equityObject?.id}
+          objectId={equityObject?.id ? [equityObject?.id] : []}
           className="absolute right-6 top-3 h-8 px-2 py-1"
         />
       }

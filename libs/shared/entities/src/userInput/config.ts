@@ -71,6 +71,7 @@ export const controlOptionsValues = getValues(ControlOptions);
 
 export const DialogFormState = {
   create: 'create',
+  // massCreate: 'massCreate',
   edit: 'edit',
   close: 'close',
 } as const;

@@ -29,7 +29,7 @@ export const equityOperationsApi = rtkApi.injectEndpoints({
       providesTags: ['equity-operations', 'equity-objects'],
     }),
     createEquityOperation: build.mutation<
-      EquityOperation | null,
+      EquityOperation[],
       CreateEquityOperationDto
     >({
       query: (dto) => ({
@@ -42,20 +42,22 @@ export const equityOperationsApi = rtkApi.injectEndpoints({
       ],
       async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
         await queryFulfilled.then(({ data }) => {
-          data?.objectId &&
-            dispatch(
-              equityObjectsApi.endpoints.getObjectById.initiate(
-                data?.objectId,
-                {
-                  forceRefetch: true,
-                },
-              ),
-            );
+          data?.forEach((operation) => {
+            operation?.objectId &&
+              dispatch(
+                equityObjectsApi.endpoints.getObjectById.initiate(
+                  operation?.objectId,
+                  {
+                    forceRefetch: true,
+                  },
+                ),
+              );
+          });
         });
       },
     }),
     updateEquityOperation: build.mutation<
-      EquityOperation | null,
+      EquityOperation[],
       UpdateEquityOperationDto
     >({
       query: (dto) => ({
@@ -68,15 +70,17 @@ export const equityOperationsApi = rtkApi.injectEndpoints({
       ],
       async onQueryStarted({}, { dispatch, queryFulfilled, getState }) {
         await queryFulfilled.then(({ data }) => {
-          data?.objectId &&
-            dispatch(
-              equityObjectsApi.endpoints.getObjectById.initiate(
-                data?.objectId,
-                {
-                  forceRefetch: true,
-                },
-              ),
-            );
+          data?.forEach((operation) => {
+            operation?.objectId &&
+              dispatch(
+                equityObjectsApi.endpoints.getObjectById.initiate(
+                  operation?.objectId,
+                  {
+                    forceRefetch: true,
+                  },
+                ),
+              );
+          });
         });
       },
     }),

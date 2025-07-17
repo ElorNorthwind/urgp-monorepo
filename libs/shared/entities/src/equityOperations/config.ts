@@ -3,7 +3,7 @@ import { EquityOperation } from './types';
 
 export const emptyEquityOperation = {
   class: 'operation',
-  objectId: 0,
+  objectId: [],
   claimId: null,
   typeId: 17,
   date: new Date().toISOString(),
@@ -21,7 +21,7 @@ export const getFormDataFromEquityOperation = (
     id: payload?.id || 0,
     class: 'operation',
     // createdById: payload?.createdBy?.id || 0,
-    objectId: payload?.objectId || 0,
+    objectId: [payload?.objectId || 0],
     claimId: payload?.claimId || null,
     typeId: payload?.type?.id || 1,
     date: payload?.date

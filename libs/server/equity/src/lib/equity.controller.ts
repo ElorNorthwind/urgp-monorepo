@@ -141,13 +141,15 @@ export class EquityController {
     dto: UpdateEquityOperationDto,
   ) {
     const userId = req.user.id;
-    const oldOperation = await this.equity.getOperationById(dto.id);
+    const oldOperation = await this.equity.getOperationById([dto.id]);
     if (!oldOperation) throw new NotFoundException('Операция не найдена');
-
     const i = defineEquityAbilityFor(req.user);
-    if (i.cannot('update', oldOperation))
+    if (i.cannot('update', oldOperation?.[0]))
       throw new UnauthorizedException('Нет прав на редактирование');
-    return this.equity.updateOperation(userId, dto);
+    return this.equity.updateOperation(userId, {
+      ...dto,
+      objectId: (dto?.objectId as unknown as number[])?.[0] || dto?.objectId,
+    });
   }
 
   @UseGuards(AccessTokenGuard)
@@ -156,10 +158,10 @@ export class EquityController {
     @Req() req: RequestWithUserData,
     @Body('id', ParseIntPipe) id: number,
   ) {
-    const oldOperation = await this.equity.getOperationById(id);
+    const oldOperation = await this.equity.getOperationById([id]);
     if (!oldOperation) throw new NotFoundException('Операция не найдена');
     const i = defineEquityAbilityFor(req.user);
-    if (i.cannot('delete', oldOperation))
+    if (i.cannot('delete', oldOperation?.[0]))
       throw new UnauthorizedException('Нет прав на редактирование');
     return this.equity.deleteOperation(id);
   }

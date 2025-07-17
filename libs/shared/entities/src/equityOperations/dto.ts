@@ -1,9 +1,10 @@
 import { z } from 'zod';
 import { equityOperationSchema } from './types';
+import { numberOrArraySchema } from '../userInput/dto';
 
 export const createEquityOperationSchema = equityOperationSchema
   .pick({
-    objectId: true,
+    // objectId: true,
     class: true,
     claimId: true,
     date: true,
@@ -14,6 +15,7 @@ export const createEquityOperationSchema = equityOperationSchema
     fio: true,
   })
   .extend({
+    objectId: numberOrArraySchema, // z.array(z.coerce.number().int().nonnegative()),
     typeId: z.coerce
       .number()
       .int()

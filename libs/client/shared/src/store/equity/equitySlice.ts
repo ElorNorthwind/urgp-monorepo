@@ -98,7 +98,7 @@ const equitySlice = createSlice({
       state.operationForm.values = { ...payload };
     },
 
-    setOperationFormObjectId: (state, { payload }: PayloadAction<number>) => {
+    setOperationFormObjectId: (state, { payload }: PayloadAction<number[]>) => {
       state.operationForm.values.objectId = payload;
     },
     setOperationFormFio: (state, { payload }: PayloadAction<string>) => {

@@ -20,6 +20,7 @@ import {
   useDeleteEquityOperation,
   useUpdateEquityOperation,
 } from '../../api/equityOperationsApi';
+import { object } from 'zod';
 
 type CreateEquityOperationDialogProps = {
   className?: string;
@@ -57,6 +58,7 @@ const CreateEquityOperationDialog = ({
     }),
     customizeUpdateValues: (values: CreateEquityOperationDto) => ({
       ...values,
+      objectId: values.objectId?.[0],
       class: 'operation',
     }),
     dialogWidth: '600px',

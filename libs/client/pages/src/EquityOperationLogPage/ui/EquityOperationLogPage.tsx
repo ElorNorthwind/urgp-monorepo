@@ -24,6 +24,7 @@ import {
   EquityObjectsFilterSidebar,
   EquityObjectSidePanel,
   EquityOperationLogFilterSidebar,
+  SelectedEquityObjectsActionBar,
 } from '@urgp/client/widgets';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -124,7 +125,7 @@ const EquityOperationLogPage = (): JSX.Element => {
                   });
             }}
           />
-          {/* <SelectedCasesActionBar selected={selected} /> */}
+          <SelectedEquityObjectsActionBar selected={selected} />
         </main>
       </SidebarInset>
       <EquityObjectSidePanel

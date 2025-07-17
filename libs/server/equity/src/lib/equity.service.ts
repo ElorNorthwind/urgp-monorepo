@@ -47,8 +47,8 @@ export class EquityService {
   }
 
   public async getOperationById(
-    operationId: number,
-  ): Promise<EquityOperation | null> {
+    operationId: number[],
+  ): Promise<EquityOperation[]> {
     return this.dbServise.db.equity.getOperationById(operationId);
   }
 
@@ -99,36 +99,37 @@ export class EquityService {
   public async createOperation(
     userId: number,
     dto: CreateEquityOperationDto,
-  ): Promise<EquityOperation | null> {
+  ): Promise<EquityOperation[]> {
     try {
-      const newOperationId = await this.dbServise.db.equity.createOperation(
+      const newOperationIds = await this.dbServise.db.equity.createOperation(
         userId,
         dto,
       );
       const newOperation =
-        await this.dbServise.db.equity.getOperationById(newOperationId);
+        await this.dbServise.db.equity.getOperationById(newOperationIds);
       return newOperation;
     } catch (error) {
       Logger.error(error);
-      return null;
+      return [];
     }
   }
 
   public async updateOperation(
     userId: number,
     dto: UpdateEquityOperationDto,
-  ): Promise<EquityOperation | null> {
+  ): Promise<EquityOperation[]> {
     try {
       const newOperationId = await this.dbServise.db.equity.updateOperation(
         userId,
         dto,
       );
-      const newOperation =
-        await this.dbServise.db.equity.getOperationById(newOperationId);
+      const newOperation = await this.dbServise.db.equity.getOperationById([
+        newOperationId,
+      ]);
       return newOperation;
     } catch (error) {
       Logger.error(error);
-      return null;
+      return [];
     }
   }
 
