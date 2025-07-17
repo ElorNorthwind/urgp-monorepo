@@ -100,7 +100,9 @@ const EquityObjectsPageHeader = (
         <EquityQueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
       )}
 
-      {!isMobile && <EquityApartmentNumberFilter className="h-8 w-20" />}
+      {!isMobile && (
+        <EquityApartmentNumberFilter className="h-8 w-20 flex-shrink-0 transition-all duration-200 ease-linear focus-within:w-40" />
+      )}
 
       {!isMobile && exportedRows && (
         <ExportToExcelButton

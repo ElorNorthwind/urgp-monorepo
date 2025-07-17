@@ -37,11 +37,16 @@ export function equityObjectsGlobalFilterFn(
 
   if (
     apartment &&
-    !(
-      row.original?.num?.toLowerCase() === apartment.toLowerCase() ||
-      row.original?.numProject?.toLowerCase() === apartment.toLowerCase() ||
-      row.original?.npp?.toString()?.toLowerCase() === apartment.toLowerCase()
-    )
+    !apartment
+      .toLowerCase()
+      ?.split('|')
+      ?.some((ap) =>
+        [
+          row.original?.num?.toLowerCase(),
+          row.original?.numProject?.toLowerCase(),
+          row.original?.npp?.toString()?.toLowerCase(),
+        ]?.includes(ap),
+      )
   ) {
     return false;
   }
