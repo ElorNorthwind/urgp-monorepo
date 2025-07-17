@@ -239,7 +239,7 @@ export const equityProblemsStyles = {
       "before:content-[''] before:rounded-full before:size-3 before:bg-teal-500 before:mr-1 before:flex-shrink-0",
     ),
   },
-  none: {
+  [EquityObjectProblems.none]: {
     icon: Badge,
     iconStyle: cn('text-slate-500'),
     label: 'Нет выявленых проблем',

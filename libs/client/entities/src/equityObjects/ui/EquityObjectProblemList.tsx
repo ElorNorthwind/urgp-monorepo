@@ -5,7 +5,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { EquityObject } from '@urgp/shared/entities';
+import { EquityObject, EquityObjectProblems } from '@urgp/shared/entities';
 import { forwardRef } from 'react';
 import { equityProblemsStyles } from '../../equityClassificators';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
@@ -79,7 +79,7 @@ const EquityObjectProblemList = forwardRef<
           variant={'outline'}
           className={cn(
             'whitespace-nowrap text-nowrap',
-            equityProblemsStyles[1].badgeStyle,
+            equityProblemsStyles[EquityObjectProblems['none']]?.badgeStyle,
           )}
           key={'problems-more'}
         >
