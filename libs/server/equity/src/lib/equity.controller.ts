@@ -12,6 +12,7 @@ import {
   Req,
   UnauthorizedException,
   UseGuards,
+  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { AccessTokenGuard } from '@urgp/server/auth';
@@ -33,22 +34,29 @@ import {
 
 import { EquityService } from './equity.service';
 import { ZodValidationPipe } from '@urgp/server/pipes';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @Controller('equity')
 // @UseGuards(AccessTokenGuard)
 export class EquityController {
   constructor(private readonly equity: EquityService) {}
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('/complex-list')
   async getComplexList(): Promise<EquityComplexData[]> {
     return this.equity.getEquityComplexList();
   }
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('/objects/totals')
   async getObjectsTotals(): Promise<EquityTotals[]> {
     return this.equity.getEquityObjectsTotals();
   }
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('/objects/timeline')
   async getObjectsTimeline(): Promise<EquityTimeline[]> {
     return this.equity.getEquityObjectsTimeline();
@@ -87,6 +95,8 @@ export class EquityController {
     return this.equity.getOperationsByObjectId(objectId);
   }
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('/classificators/buildings')
   async getBuildingsClassificator(): Promise<NestedClassificatorInfo[]> {
     return this.equity.getBuildingsClassificator();
@@ -97,6 +107,8 @@ export class EquityController {
     return this.equity.getObjectStatusClassificator();
   }
 
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   @Get('/classificators/object-type')
   async getObjectTypeClassificator(): Promise<NestedClassificatorInfo[]> {
     return this.equity.getObjectTypeClassificator();
