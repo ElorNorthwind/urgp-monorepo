@@ -25,6 +25,9 @@ export const formatEquityOperationLogRowForExcel = (
       : '',
     Адрес: data?.addressShort || '',
     Квартира: data?.num,
+    'Проектный номер': data?.numProject?.split('; ')?.[0] || '',
+    Этаж: data?.floor,
+    Площадь: data?.s,
     'Кадастровый номер': data?.cadNum,
     'Дата включения в РТУС': data?.claimRegistryDate
       ? new Date(data?.claimRegistryDate)
@@ -32,8 +35,6 @@ export const formatEquityOperationLogRowForExcel = (
     Статус: data?.statusName,
     Тип: data?.objectTypeName,
     Права: data?.egrnStatus,
-    Этаж: data?.floor,
-    Площадь: data?.s,
     'Заключение УРЖП': data?.opinionUrgp,
     'Примечание УРЖП': data?.urgpNotes,
   };
