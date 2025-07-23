@@ -235,7 +235,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 
         ARRAY_REMOVE(
             ARRAY[
-                    CASE WHEN o.is_identified IS DISTINCT FROM TRUE THEN 'unidentified' ELSE null END
+                  CASE WHEN o.is_identified IS DISTINCT FROM TRUE THEN 'unidentified' ELSE null END
                 , CASE WHEN op."hasDoubleSell" THEN 'doublesell' ELSE null END
                 , CASE WHEN op."hasDefects" THEN 'defects' ELSE null END
                 , CASE WHEN (('claim-ap' = ANY(b.problems) AND o.object_type_id = 1) 

@@ -220,6 +220,93 @@ CREATE TABLE equity.objects
     egrn_source text,
     egrn_status character varying(255),
 
+    -- Денормализация требований
+    claim_count integer NOT NULL DEFAULT 0,
+    first_claim_date timestamp with time zone,
+    sum_unpaid numeric NOT NULL DEFAULT 0,
+    creditors text,
+    basis text,
+
+    -- Денормализация операций
+    op_all_notes text,
+    op_all_fio text,
+    op_all_numbers text,
+
+    op_docs_id integer,
+    op_docs_date timestamp with time zone,
+    op_docs_notes text,
+    op_docs_fio text,
+    op_docs_result text,
+    op_docs_author text,
+
+    op_urgp_id integer,
+    op_urgp_date timestamp with time zone,
+    op_urgp_notes text,
+    op_urgp_fio text,
+    op_urgp_result text,
+    op_urgp_author text,
+
+    op_upozhs_id integer,
+    op_upozhs_date timestamp with time zone,
+    op_upozhs_notes text,
+    op_upozhs_fio text,
+    op_upozhs_result text,
+    op_upozhs_author text,
+
+    op_uork_id integer,
+    op_uork_date timestamp with time zone,
+    op_uork_notes text,
+    op_uork_fio text,
+    op_uork_result text,
+    op_uork_author text,
+
+    op_unpozi_id integer,
+    op_unpozi_date timestamp with time zone,
+    op_unpozi_notes text,
+    op_unpozi_fio text,
+    op_unpozi_result text,
+    op_unpozi_author text,
+
+    op_rg_prep_id integer,
+    op_rg_prep_date timestamp with time zone,
+    op_rg_prep_notes text,
+    op_rg_prep_fio text,
+
+    op_rg_decision_id integer,
+    op_rg_decision_date timestamp with time zone,
+    op_rg_decision_notes text,
+    op_rg_decision_number text,
+    op_rg_decision_result text,
+    op_rg_decision_fio text,
+
+    op_rg_rejection_id integer,
+    op_rg_rejection_date timestamp with time zone,
+    op_rg_rejection_notes text,
+    op_rg_rejection_result text,
+    op_rg_rejection_fio text,
+
+    op_defects_id integer,
+    op_defects_date timestamp with time zone,
+    op_defects_notes text,
+
+    op_act_id integer,
+    op_act_date timestamp with time zone,
+    op_act_notes text,
+
+    op_keys_id integer,
+    op_keys_date timestamp with time zone,
+    op_keys_notes text,
+
+    op_doublesell_id integer,
+    op_doublesell_type_id integer,
+    op_doublesell_date timestamp with time zone,
+    op_doublesell_notes text,
+
+    op_identification_id integer,
+    op_identification_type_id integer,
+    op_identification_date timestamp with time zone,
+    op_identification_notes text,
+
     npp integer GENERATED ALWAYS AS (("substring"((num)::text, '\d+'::text))::integer) STORED;
 	PRIMARY KEY (id)
 );
