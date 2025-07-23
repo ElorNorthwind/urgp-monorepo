@@ -10,4 +10,5 @@ SELECT
 		'category', category
 	) ORDER BY sort_order, id) as items
 FROM equity.operation_types
+WHERE is_active = true
 GROUP BY category;
