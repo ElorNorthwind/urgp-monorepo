@@ -194,3 +194,13 @@ export const equityObjects = {
   ),
   readComplexList: sql('sql/equity/objects/readComplexList.sql'),
 };
+
+export const equityClaims = {
+  updateClaimsTriggerInfo: sql('sql/equity/claims/updateClaimsTriggerInfo.sql'),
+};
+
+export const equityOperations = {
+  updateOperationsTriggerInfo: sql(
+    'sql/equity/operations/updateOperationsTriggerInfo.sql',
+  ),
+};

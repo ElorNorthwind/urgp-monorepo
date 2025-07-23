@@ -13,9 +13,13 @@ import {
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { camelToSnakeCase } from '../lib/to-snake-case';
-import { equityClassificators, equityObjects } from './sql/sql';
+import {
+  equityClaims,
+  equityClassificators,
+  equityObjects,
+  equityOperations,
+} from './sql/sql';
 import { Logger } from '@nestjs/common';
-import { object } from 'zod';
 
 // @Injectable()
 export class EquityRepository {
@@ -208,5 +212,13 @@ export class EquityRepository {
     return this.db
       .oneOrNone(sql, { id })
       .then((result) => result?.object_id || null);
+  }
+
+  updateClaimsTriggerInfo(): Promise<null> {
+    return this.db.none(equityClaims.updateClaimsTriggerInfo);
+  }
+
+  updateOperationsTriggerInfo(): Promise<null> {
+    return this.db.none(equityOperations.updateOperationsTriggerInfo);
   }
 }

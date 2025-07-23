@@ -141,4 +141,22 @@ export class EquityService {
       return null;
     }
   }
+
+  public async updateClaimsTriggerInfo(): Promise<null> {
+    try {
+      return this.dbServise.db.equity.updateClaimsTriggerInfo();
+    } catch (error) {
+      Logger.error(error);
+      return null;
+    }
+  }
+
+  public async updateOperationsTriggerInfo(): Promise<null> {
+    try {
+      return this.dbServise.db.equity.updateOperationsTriggerInfo();
+    } catch (error) {
+      Logger.error(error);
+      return null;
+    }
+  }
 }
