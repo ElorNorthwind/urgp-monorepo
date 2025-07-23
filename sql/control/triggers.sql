@@ -4,7 +4,7 @@ DROP TRIGGER IF EXISTS case_history_trigger ON control.cases_;
 CREATE OR REPLACE FUNCTION control.case_history_trigger_func()
 RETURNS trigger AS $body$
 BEGIN
-	if (TG_OP = 'CREATE') then
+	if (TG_OP = 'INSERT') then
 		INSERT INTO control.cases_history (
 			case_id,
 			class,
@@ -100,7 +100,7 @@ BEGIN
 				
 		RETURN NEW;
 
-	elsif (TG_OP = 'DELETE') then
+	elseif (TG_OP = 'DELETE') then
 		INSERT INTO control.cases_history (
 			case_id,
 			class,
@@ -163,7 +163,7 @@ DROP TRIGGER IF EXISTS operation_history_trigger ON control.operations_;
 CREATE OR REPLACE FUNCTION control.operation_history_trigger_func()
 RETURNS trigger AS $body$
 BEGIN
-	if (TG_OP = 'CREATE') then
+	if (TG_OP = 'INSERT') then
 		INSERT INTO control.operations_history (
 			operation_id,
 			case_id,
@@ -270,7 +270,7 @@ BEGIN
 		);
 				
 		RETURN NEW;
-	elsif (TG_OP = 'DELETE') then
+	elseif (TG_OP = 'DELETE') then
 		INSERT INTO control.operations_history (
 			operation_id,
 			case_id,
