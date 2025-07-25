@@ -1,6 +1,6 @@
 import { createHash } from 'crypto';
 
-function generateProofOfWork(input: string) {
+export function generateSudirPoW(input: string) {
   const alphabet =
     '0123456789/+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const parts = input.split(':');
