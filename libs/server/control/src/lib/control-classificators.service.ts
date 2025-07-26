@@ -1,11 +1,5 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { DatabaseService } from '@urgp/server/database';
 import { TelegramService } from '@urgp/server/telegram';
@@ -23,7 +17,6 @@ import {
   NestedClassificatorInfoString,
   NotificationPeriod,
   OperationClass,
-  OperationFull,
   SelectOption,
   User,
   UserApproveTo,
@@ -34,7 +27,6 @@ import {
   UserTelegramStatus,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
-import { from, map, tap, timeout } from 'rxjs';
 // type GetCorectApproveDataOperationProps = {
 //   user: User;
 //   dto: ApproveControlEntityDto | CreateOperationDto | UpdateOperationDto;

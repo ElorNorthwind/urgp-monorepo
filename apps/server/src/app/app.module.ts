@@ -21,6 +21,7 @@ import { DaDataModule } from '@urgp/server/dadata';
 import { TelegramModule } from '@urgp/server/telegram';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EquityModule } from '@urgp/server/equity';
+import { SudirModule } from '@urgp/server/sudir';
 
 @Module({
   // dot env files
@@ -59,6 +60,8 @@ import { EquityModule } from '@urgp/server/equity';
     AddressModule,
     TelegramModule,
     EquityModule,
+
+    SudirModule,
   ],
 })
 export class AppModule {}

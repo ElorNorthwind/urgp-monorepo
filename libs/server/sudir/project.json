@@ -1,0 +1,9 @@
+{
+  "name": "server/sudir",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/server/sudir/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project server/sudir --web",
+  "targets": {}
+}

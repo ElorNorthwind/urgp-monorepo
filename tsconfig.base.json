@@ -40,7 +40,8 @@
       "@urgp/server/address": ["libs/server/address/src/index.ts"],
       "@urgp/server/dadata": ["libs/server/dadata/src/index.ts"],
       "@urgp/server/telegram": ["libs/server/telegram/src/index.ts"],
-      "@urgp/server/equity": ["libs/server/equity/src/index.ts"]
+      "@urgp/server/equity": ["libs/server/equity/src/index.ts"],
+      "@urgp/server/sudir": ["libs/server/sudir/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
