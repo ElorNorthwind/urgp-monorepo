@@ -7,6 +7,7 @@ SELECT
     MIN(first_registry_date)::date as first_claim_date,
     SUM(sum_unpaid) as sum_unpaid,
     TRANSLATE(STRING_AGG(DISTINCT creditor_name, '; '), ',', ';') as creditors,
+    STRING_AGG(DISTINCT num_project, '; ') FILTER (WHERE num_project IS NOT NULL AND num_project <> '') as apartment_number,
     STRING_AGG(DISTINCT basis, '; ') as basis
 FROM (
     SELECT
@@ -36,6 +37,7 @@ SET
     claim_first_date = c.first_claim_date,
     claim_sum_unpaid = COALESCE(c.sum_unpaid, 0),
     claim_creditors = c.creditors,
-    claim_basis = c.basis
+    claim_basis = c.basis,
+    claim_apartment_number = c.apartment_number
 FROM claim_info c
 WHERE o.id = c.object_id;

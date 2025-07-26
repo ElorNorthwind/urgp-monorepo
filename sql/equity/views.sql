@@ -99,108 +99,220 @@ ALTER TABLE equity.claims_full_view
 DROP VIEW IF EXISTS equity.objects_full_view CASCADE;
 CREATE OR REPLACE VIEW equity.objects_full_view AS
     ---------------------------------------------------------------------
-   WITH relevant_claims AS (
-        SELECT 
-            c."objectId",
-            COUNT(*) as "claimsCount",
-            SUM(c."sumUnpaid") as "sumUnpaid",
-            MAX(c."claimRegistryDate") as "claimRegistryDate",
-            STRING_AGG(DISTINCT c."creditorName", '; ') as creditor,
-            STRING_AGG(DISTINCT c."numProject", '; ') as "numProject"
-        FROM equity.claims_full_view c
-        WHERE c."isRelevant" = true
-        GROUP BY c."objectId"
-    ), last_operation AS (
-		SELECT 
-			op.id,
-			op.object_id as "objectId",
-			op.type_id as "typeId",
-			op.type_name as "typeName",
-			op.has_double_sell as "hasDoubleSell",
-			op.has_defects as "hasDefects",
-			op.has_request as "hasRequest",
-			op.needs_opinion as "needsOpinion",
+--    WITH relevant_claims AS (
+--         SELECT 
+--             c."objectId",
+--             COUNT(*) as "claimsCount",
+--             SUM(c."sumUnpaid") as "sumUnpaid",
+--             MAX(c."claimRegistryDate") as "claimRegistryDate",
+--             STRING_AGG(DISTINCT c."creditorName", '; ') as creditor,
+--             STRING_AGG(DISTINCT c."numProject", '; ') as "numProject"
+--         FROM equity.claims_full_view c
+--         WHERE c."isRelevant" = true
+--         GROUP BY c."objectId"
+--     ), last_operation AS (
+-- 		SELECT 
+-- 			op.id,
+-- 			op.object_id as "objectId",
+-- 			op.type_id as "typeId",
+-- 			op.type_name as "typeName",
+-- 			op.has_double_sell as "hasDoubleSell",
+-- 			op.has_defects as "hasDefects",
+-- 			op.has_request as "hasRequest",
+-- 			op.needs_opinion as "needsOpinion",
 
-            op.opinion_urgp as "opinionUrgp",
-            op.opinion_upozh as "opinionUpozh",
-            op.opinion_uork as "opinionUork",
-            op.opinion_upozi as "opinionUpozi",
-            op.documents_fio as "documentsFio",
-            op.documents_date as "documentsDate",
+--             op.opinion_urgp as "opinionUrgp",
+--             op.opinion_upozh as "opinionUpozh",
+--             op.opinion_uork as "opinionUork",
+--             op.opinion_upozi as "opinionUpozi",
+--             op.documents_fio as "documentsFio",
+--             op.documents_date as "documentsDate",
 
-            op.has_rg as "hasRg",
-            op.has_rg_ok as "hasRgOk",
-            op.has_rg_bad as "hasRgBad",
+--             op.has_rg as "hasRg",
+--             op.has_rg_ok as "hasRgOk",
+--             op.has_rg_bad as "hasRgBad",
 
-            -- op.opinion_urgp AND op.opinion_upozh AND op.opinion_uork as "opinionAll",
+--             -- op.opinion_urgp AND op.opinion_upozh AND op.opinion_uork as "opinionAll",
 
-            op.documents_ok as "documentsOk",
-            op.documents_problem as "documentsProblem",
-            op.operations_fio as "operationsFio",
-            op.operations_nums as "operationsNums",
-            op.urgp_notes as "urgpNotes",
+--             op.documents_ok as "documentsOk",
+--             op.documents_problem as "documentsProblem",
+--             op.operations_fio as "operationsFio",
+--             op.operations_nums as "operationsNums",
+--             op.urgp_notes as "urgpNotes",
 
-            op.id_problem as "idProblem",
-			op.date
-		FROM (
-			SELECT 
-				ROW_NUMBER() OVER(PARTITION BY o.object_id ORDER BY t.priority DESC, o.date DESC, o.id) as row_num,
-				COUNT(*) FILTER (WHERE o.type_id = 8) OVER(PARTITION BY o.object_id) > 0 as has_double_sell,
-				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[2,3,4])) OVER(PARTITION BY o.object_id) > 0 as has_defects,
-				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[5,6,7,11,12,14,15,20])) OVER(PARTITION BY o.object_id) > 0 as has_request,
-                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[6,11])) OVER(PARTITION BY o.object_id) > 0 as needs_opinion,
+--             op.id_problem as "idProblem",
+-- 			op.date
+-- 		FROM (
+-- 			SELECT 
+-- 				ROW_NUMBER() OVER(PARTITION BY o.object_id ORDER BY t.priority DESC, o.date DESC, o.id) as row_num,
+-- 				COUNT(*) FILTER (WHERE o.type_id = 8) OVER(PARTITION BY o.object_id) > 0 as has_double_sell,
+-- 				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[2,3,4])) OVER(PARTITION BY o.object_id) > 0 as has_defects,
+-- 				COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[5,6,7,11,12,14,15,20])) OVER(PARTITION BY o.object_id) > 0 as has_request,
+--                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[6,11])) OVER(PARTITION BY o.object_id) > 0 as needs_opinion,
 
-                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[21])) OVER(PARTITION BY o.object_id) > 0 as has_rg,
-                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[22])) OVER(PARTITION BY o.object_id) > 0 as has_rg_ok,
-                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[23])) OVER(PARTITION BY o.object_id) > 0 as has_rg_bad,
+--                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[21])) OVER(PARTITION BY o.object_id) > 0 as has_rg,
+--                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[22])) OVER(PARTITION BY o.object_id) > 0 as has_rg_ok,
+--                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[23])) OVER(PARTITION BY o.object_id) > 0 as has_rg_bad,
 
-                MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[7])) OVER(PARTITION BY o.object_id) as opinion_urgp,
-                MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[14])) OVER(PARTITION BY o.object_id) as opinion_upozh,
-                MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[15])) OVER(PARTITION BY o.object_id) as opinion_uork,
-                MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[19])) OVER(PARTITION BY o.object_id) as opinion_upozi,
+--                 MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[7])) OVER(PARTITION BY o.object_id) as opinion_urgp,
+--                 MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[14])) OVER(PARTITION BY o.object_id) as opinion_upozh,
+--                 MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[15])) OVER(PARTITION BY o.object_id) as opinion_uork,
+--                 MAX(o.result) FILTER (WHERE o.type_id = ANY(ARRAY[19])) OVER(PARTITION BY o.object_id) as opinion_upozi,
 
-                MAX(o.date) FILTER (WHERE o.type_id = ANY(ARRAY[20])) OVER(PARTITION BY o.object_id) as documents_date,
-                MAX(o.fio) FILTER (WHERE o.type_id = ANY(ARRAY[20])) OVER(PARTITION BY o.object_id) as documents_fio,
-                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[20]) AND o.result = 'полный пакет') OVER(PARTITION BY o.object_id) > 0 as documents_ok,
-                COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[20]) AND o.result <> 'полный пакет') OVER(PARTITION BY o.object_id) > 0 as documents_problem,
-                string_agg(o.fio, '; ') OVER(PARTITION BY o.object_id) as operations_fio,
-                string_agg(o.number, '; ') OVER(PARTITION BY o.object_id) as operations_nums,
+--                 MAX(o.date) FILTER (WHERE o.type_id = ANY(ARRAY[20])) OVER(PARTITION BY o.object_id) as documents_date,
+--                 MAX(o.fio) FILTER (WHERE o.type_id = ANY(ARRAY[20])) OVER(PARTITION BY o.object_id) as documents_fio,
+--                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[20]) AND o.result = 'полный пакет') OVER(PARTITION BY o.object_id) > 0 as documents_ok,
+--                 COUNT(*) FILTER (WHERE o.type_id = ANY(ARRAY[20]) AND o.result <> 'полный пакет') OVER(PARTITION BY o.object_id) > 0 as documents_problem,
+--                 string_agg(o.fio, '; ') OVER(PARTITION BY o.object_id) as operations_fio,
+--                 string_agg(o.number, '; ') OVER(PARTITION BY o.object_id) as operations_nums,
 
-                string_agg(o.notes, '; ') FILTER (WHERE o.type_id = 7) OVER(PARTITION BY o.object_id) as urgp_notes,
+--                 string_agg(o.notes, '; ') FILTER (WHERE o.type_id = 7) OVER(PARTITION BY o.object_id) as urgp_notes,
 
-                COUNT(*) FILTER (WHERE o.type_id = 9) OVER(PARTITION BY o.object_id) > 0 AND COUNT(*) FILTER (WHERE o.type_id = 10) OVER(PARTITION BY o.object_id) = 0 as id_problem,
+--                 COUNT(*) FILTER (WHERE o.type_id = 9) OVER(PARTITION BY o.object_id) > 0 AND COUNT(*) FILTER (WHERE o.type_id = 10) OVER(PARTITION BY o.object_id) = 0 as id_problem,
 
-				o.type_id,
-				t.name as type_name,
-				o.id,
-				o.object_id,
-				o.claim_id,
-				COALESCE(o.date, o.created_at, NOW()) as date
-			FROM equity.operations o
-				LEFT JOIN equity.operation_types t ON t.id = o.type_id
-		) op
-		WHERE op.row_num = 1
-	), buildings_full AS (
-		SELECT
-			b.id,
-		    b.problems,
-			c.id as "complexId",
-			c.name as "complexName",
-            c.transfer_date as "transferDate",
-            c.district,
-            c.old_developer as "oldDeveloper",
-			-- c.developer,
-            c.developer_short as "developerShort",
-            b.is_done as "isDone",
-			b.unom,
-			b.cad_num as "cadNum",
-			b.address_short as "addressShort",
-			-- b.address_full as "addressFull",
-			-- b.address_construction as "addressConstruction"
-			b.address_construction_short as "addressConstructionShort"
-		FROM equity.buildings b
-		LEFT JOIN equity.complexes c ON b.complex_id = c.id
-	)
+-- 				o.type_id,
+-- 				t.name as type_name,
+-- 				o.id,
+-- 				o.object_id,
+-- 				o.claim_id,
+-- 				COALESCE(o.date, o.created_at, NOW()) as date
+-- 			FROM equity.operations o
+-- 				LEFT JOIN equity.operation_types t ON t.id = o.type_id
+-- 		) op
+-- 		WHERE op.row_num = 1
+-- 	), buildings_full AS (
+-- 		SELECT
+-- 			b.id,
+-- 		    b.problems,
+-- 			c.id as "complexId",
+-- 			c.name as "complexName",
+--             c.transfer_date as "transferDate",
+--             c.district,
+--             c.old_developer as "oldDeveloper",
+-- 			-- c.developer,
+--             c.developer_short as "developerShort",
+--             b.is_done as "isDone",
+-- 			b.unom,
+-- 			b.cad_num as "cadNum",
+-- 			b.address_short as "addressShort",
+-- 			-- b.address_full as "addressFull",
+-- 			-- b.address_construction as "addressConstruction"
+-- 			b.address_construction_short as "addressConstructionShort"
+-- 		FROM equity.buildings b
+-- 		LEFT JOIN equity.complexes c ON b.complex_id = c.id
+-- 	)
+--     SELECT
+--         o.id,
+--         o.is_identified as "isIdentified",
+--         'object' as "class",
+
+--         b.id as "buildingId",
+--         b."cadNum" as "buildingCadNum",
+--         b."developerShort",
+--         b."complexId",
+--         b."complexName",
+--         b."isDone" as "buildingIsDone",
+--         b."addressShort",
+--         b."addressConstructionShort",
+
+--         ot.id as "objectTypeId",
+--         ot.name as "objectTypeName",
+--         s.id as "statusId",
+--         s.name as "statusName",
+        
+--         o.cad_num as "cadNum", 
+--         o.num,
+--         o.npp,
+--         COALESCE(c."numProject", o.num) as "numProject",
+--         COALESCE(c."claimsCount", 0) as "claimsCount",
+--         c.creditor,
+--         CASE WHEN c."claimRegistryDate" IS NULL THEN 'Не в РТУС' WHEN c."claimRegistryDate" <= b."transferDate" THEN 'До передачи' ELSE 'После передачи' END as "claimTransfer",
+
+--         op.id as "lastOpId",
+--         op."typeId" as "lastOpTypeId",
+--         op."typeName" as "lastOpTypeName",
+--         op.date as "lastOpDate",
+
+--         ARRAY_REMOVE(
+--             ARRAY[
+--                   CASE WHEN o.is_identified IS DISTINCT FROM TRUE THEN 'unidentified' ELSE null END
+--                 , CASE WHEN op."hasDoubleSell" THEN 'doublesell' ELSE null END
+--                 , CASE WHEN op."hasDefects" THEN 'defects' ELSE null END
+--                 , CASE WHEN (('claim-ap' = ANY(b.problems) AND o.object_type_id = 1) 
+--                     OR ('claim-mm' = ANY(b.problems) AND o.object_type_id = 2)) AND s.id = 4 
+--                     THEN 'potentialclaim' ELSE null END
+--                 , CASE WHEN op."idProblem" THEN 'idproblem' ELSE null END
+--                 , CASE WHEN c."sumUnpaid" > 0 THEN 'unpaid' ELSE null END
+--             ]
+--         , null) as problems,
+
+--         b.unom,
+--         o.unkv,
+--         o.rooms,
+--         o.floor,
+--         o.s_obsh as s,
+--         o.egrn_status as "egrnStatus",
+
+--         COALESCE(op."needsOpinion", false) as "needsOpinion",
+
+--         COALESCE(op."opinionUrgp", 'нет') as "opinionUrgp",
+--         COALESCE(op."opinionUpozh", 'нет') as "opinionUpozh",
+--         COALESCE(op."opinionUork", 'нет') as "opinionUork",
+--         COALESCE(op."opinionUpozi", 'нет') as "opinionUpozi",
+        
+--         op."documentsFio",
+--         op."documentsDate",
+
+--         b."transferDate",
+--         b.district,
+--         b."oldDeveloper",
+--         c."claimRegistryDate",
+
+--         COALESCE(op."documentsOk", false) as "documentsOk",
+--         COALESCE(op."documentsProblem", false) as "documentsProblem",
+--         COALESCE(op."operationsFio", '') as "operationsFio",
+--         COALESCE(op."operationsNums", '') as "operationsNums",
+--         COALESCE(op."urgpNotes", '') as "urgpNotes"
+
+--     FROM equity.objects o
+--         LEFT JOIN (SELECT id, name FROM equity.object_types) ot ON ot.id = o.object_type_id
+--         LEFT JOIN buildings_full b ON o.building_id = b.id
+--         LEFT JOIN relevant_claims c ON c."objectId" = o.id
+-- 		LEFT JOIN last_operation op ON op."objectId" = o.id
+-- 		LEFT JOIN (SELECT id, name FROM equity.object_status_types) s ON s.id =
+-- 			CASE
+-- 				WHEN o.egrn_status = ANY(ARRAY['город Москва']) THEN 5
+-- 				WHEN o.egrn_status = ANY(ARRAY['Физ.лицо', 'Юр.лицо', 'Российская Федерация']) THEN 3
+--                 WHEN op."hasRgOk" THEN 10
+--                 WHEN op."hasRgBad" THEN 9
+--                 WHEN op."hasRg" THEN 8
+--                 WHEN op."hasRequest" THEN 7
+-- 				WHEN o.is_identified = FALSE THEN 6
+-- 				WHEN COALESCE(c."claimsCount", 0) = 0 THEN 4
+-- 				WHEN op."typeId" = 1 THEN 2
+-- 				ELSE 1
+-- 			END
+--     WHERE o.egrn_status <> 'Общее имущество мкд' AND (o.is_identified OR c."claimsCount" > 0)
+--     ORDER BY o.building_id, o.is_identified DESC, o.object_type_id, o.npp;
+ --------------------------------------------------------------------------
+    WITH buildings_full AS (
+    SELECT
+        b.id,
+        c.id as "complexId",
+        c.name as "complexName",
+        c.transfer_date as "transferDate",
+        c.district,
+        c.old_developer as "oldDeveloper",
+        c.developer_short as "developerShort",
+        b.is_done as "isDone",
+        b.unom,
+        b.cad_num as "cadNum",
+        b.address_short as "addressShort",
+        b.address_construction_short as "addressConstructionShort"
+    FROM equity.buildings b
+    LEFT JOIN equity.complexes c ON b.complex_id = c.id
+    )
+
     SELECT
         o.id,
         o.is_identified as "isIdentified",
@@ -217,34 +329,24 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
 
         ot.id as "objectTypeId",
         ot.name as "objectTypeName",
-        s.id as "statusId",
+        o.status_id as "statusId",
         s.name as "statusName",
-        
+
         o.cad_num as "cadNum", 
         o.num,
         o.npp,
-        COALESCE(c."numProject", o.num) as "numProject",
-        COALESCE(c."claimsCount", 0) as "claimsCount",
-        c.creditor,
-        CASE WHEN c."claimRegistryDate" IS NULL THEN 'Не в РТУС' WHEN c."claimRegistryDate" <= b."transferDate" THEN 'До передачи' ELSE 'После передачи' END as "claimTransfer",
+        o.claim_apartment_number as "numProject",
+        o.claim_count as "claimsCount",
+        o.claim_creditors as creditor,
+        
+        CASE WHEN o.claim_first_date IS NULL THEN 'Не в РТУС' WHEN o.claim_first_date <= b."transferDate" THEN 'До передачи' ELSE 'После передачи' END as "claimTransfer",
 
-        op.id as "lastOpId",
-        op."typeId" as "lastOpTypeId",
-        op."typeName" as "lastOpTypeName",
-        op.date as "lastOpDate",
+        o.op_last_id as "lastOpId", 
+        o.op_last_type_id as "lastOpTypeId",
+        op.name as "lastOpTypeName",
+        o.op_last_date as "lastOpDate",
 
-        ARRAY_REMOVE(
-            ARRAY[
-                  CASE WHEN o.is_identified IS DISTINCT FROM TRUE THEN 'unidentified' ELSE null END
-                , CASE WHEN op."hasDoubleSell" THEN 'doublesell' ELSE null END
-                , CASE WHEN op."hasDefects" THEN 'defects' ELSE null END
-                , CASE WHEN (('claim-ap' = ANY(b.problems) AND o.object_type_id = 1) 
-                    OR ('claim-mm' = ANY(b.problems) AND o.object_type_id = 2)) AND s.id = 4 
-                    THEN 'potentialclaim' ELSE null END
-                , CASE WHEN op."idProblem" THEN 'idproblem' ELSE null END
-                , CASE WHEN c."sumUnpaid" > 0 THEN 'unpaid' ELSE null END
-            ]
-        , null) as problems,
+        o.problems,
 
         b.unom,
         o.unkv,
@@ -253,46 +355,33 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
         o.s_obsh as s,
         o.egrn_status as "egrnStatus",
 
-        COALESCE(op."needsOpinion", false) as "needsOpinion",
+        CASE WHEN o.op_docs_id IS NOT NULL OR op_rg_prep_id IS NOT NULL THEN true ELSE false END as "needsOpinion",
+        COALESCE(o.op_urgp_result, 'нет') as "opinionUrgp",
+        COALESCE(o.op_upozhs_result, 'нет') as "opinionUpozh",
+        COALESCE(o.op_uork_result, 'нет') as "opinionUork",
+        COALESCE(o.op_unpozi_result, 'нет') as "opinionUpozi",
 
-        COALESCE(op."opinionUrgp", 'нет') as "opinionUrgp",
-        COALESCE(op."opinionUpozh", 'нет') as "opinionUpozh",
-        COALESCE(op."opinionUork", 'нет') as "opinionUork",
-        COALESCE(op."opinionUpozi", 'нет') as "opinionUpozi",
-        
-        op."documentsFio",
-        op."documentsDate",
+        o.op_docs_fio as "documentsFio",
+        o.op_docs_date as  "documentsDate",
 
         b."transferDate",
         b.district,
         b."oldDeveloper",
-        c."claimRegistryDate",
+        o.claim_first_date as  "claimRegistryDate", -- Еше и не первую дату?
 
-        COALESCE(op."documentsOk", false) as "documentsOk",
-        COALESCE(op."documentsProblem", false) as "documentsProblem",
-        COALESCE(op."operationsFio", '') as "operationsFio",
-        COALESCE(op."operationsNums", '') as "operationsNums",
-        COALESCE(op."urgpNotes", '') as "urgpNotes"
+        CASE WHEN o.op_docs_result = 'полный пакет' THEN true ELSE false END as "documentsOk",
+        CASE WHEN o.op_docs_result IS NOT NULL AND o.op_docs_result <> 'полный пакет' THEN true ELSE false END as "documentsProblem",
+        
+        COALESCE(o.op_all_fio, '') as "operationsFio",
+        COALESCE(o.op_all_numbers, '') as "operationsNums",
+        COALESCE(o.op_urgp_notes, '') as "urgpNotes"
 
     FROM equity.objects o
         LEFT JOIN (SELECT id, name FROM equity.object_types) ot ON ot.id = o.object_type_id
         LEFT JOIN buildings_full b ON o.building_id = b.id
-        LEFT JOIN relevant_claims c ON c."objectId" = o.id
-		LEFT JOIN last_operation op ON op."objectId" = o.id
-		LEFT JOIN (SELECT id, name FROM equity.object_status_types) s ON s.id =
-			CASE
-				WHEN o.egrn_status = ANY(ARRAY['город Москва']) THEN 5
-				WHEN o.egrn_status = ANY(ARRAY['Физ.лицо', 'Юр.лицо', 'Российская Федерация']) THEN 3
-                WHEN op."hasRgOk" THEN 10
-                WHEN op."hasRgBad" THEN 9
-                WHEN op."hasRg" THEN 8
-                WHEN op."hasRequest" THEN 7
-				WHEN o.is_identified = FALSE THEN 6
-				WHEN COALESCE(c."claimsCount", 0) = 0 THEN 4
-				WHEN op."typeId" = 1 THEN 2
-				ELSE 1
-			END
-    WHERE o.egrn_status <> 'Общее имущество мкд' AND (o.is_identified OR c."claimsCount" > 0)
+        LEFT JOIN (SELECT id, name FROM equity.object_status_types) s ON s.id = o.status_id
+        LEFT JOIN equity.operation_types op ON o.op_last_type_id = op.id
+    WHERE o.egrn_status <> 'Общее имущество мкд' AND (o.is_identified OR o.claim_count > 0)
     ORDER BY o.building_id, o.is_identified DESC, o.object_type_id, o.npp;
     ---------------------------------------------------------------------
 ALTER TABLE equity.objects_full_view

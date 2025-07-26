@@ -15,6 +15,15 @@
             fio
         FROM equity.operations o
         ORDER BY o.object_id, o.type_id, o.date DESC, o.created_at DESC
+    ), very_last_op_info AS (
+        SELECT 
+        DISTINCT ON (object_id)
+            id,
+            type_id,
+            object_id,
+            COALESCE(o.date, o.created_at) as date
+        FROM equity.operations o
+        ORDER BY o.object_id, o.date DESC, o.created_at DESC
     ), last_op_info AS (
         SELECT 
             object_id,
@@ -109,6 +118,10 @@
         op_all_fio = op.all_fio,
         op_all_numbers = op.all_numbers,
 
+        op_last_id = op.last_id,
+        op_last_type_id = op.last_type_id,
+        op_last_date = op.last_date,
+
         op_docs_id = op.docs_id,
         op_docs_date = op.docs_date,
         op_docs_notes = op.docs_notes,
@@ -182,8 +195,11 @@
         op_identification_date = op.identification_date,
         op_identification_notes = op.identification_notes
     FROM (
-        SELECT ot.all_notes, ot.all_fio, ot.all_numbers, op.*
+        SELECT ot.all_notes, ot.all_fio, ot.all_numbers, 
+		vop.id as last_id, vop.type_id as last_type_id, vop.date as last_date,
+		op.*
         FROM last_op_info op
         LEFT JOIN op_totals ot ON op.object_id = ot.object_id
+        LEFT JOIN very_last_op_info vop ON op.object_id = vop.object_id
     ) op
     WHERE ob.id = op.object_id;

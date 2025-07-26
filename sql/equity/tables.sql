@@ -226,11 +226,16 @@ CREATE TABLE equity.objects
     claim_sum_unpaid numeric NOT NULL DEFAULT 0,
     claim_creditors text,
     claim_basis text,
+    claim_apartment_number text,
 
     -- Денормализация операций
     op_all_notes text,
     op_all_fio text,
     op_all_numbers text,
+
+    op_last_id integer,
+    op_last_type_id integer,
+    op_last_date timestamp with time zone,
 
     op_docs_id integer,
     op_docs_date timestamp with time zone,

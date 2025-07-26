@@ -41,21 +41,21 @@ import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 export class EquityController {
   constructor(private readonly equity: EquityService) {}
 
-  @CacheTTL(1000 * 60 * 60)
+  @CacheTTL(1000 * 60)
   @UseInterceptors(CacheInterceptor)
   @Get('/complex-list')
   async getComplexList(): Promise<EquityComplexData[]> {
     return this.equity.getEquityComplexList();
   }
 
-  @CacheTTL(1000 * 60 * 60)
+  @CacheTTL(1000 * 60)
   @UseInterceptors(CacheInterceptor)
   @Get('/objects/totals')
   async getObjectsTotals(): Promise<EquityTotals[]> {
     return this.equity.getEquityObjectsTotals();
   }
 
-  @CacheTTL(1000 * 60 * 60)
+  @CacheTTL(1000 * 60)
   @UseInterceptors(CacheInterceptor)
   @Get('/objects/timeline')
   async getObjectsTimeline(): Promise<EquityTimeline[]> {
