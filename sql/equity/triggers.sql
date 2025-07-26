@@ -128,7 +128,7 @@ FOR EACH ROW EXECUTE FUNCTION equity.equity_operation_history_trigger_func();
 
 
 -- ===================== CLAIMS DENORMALIZATION TRIGGER =================================
-DROP TRIGGER IF EXISTS update_claim_status_trigger_func ON equity.claims;
+DROP TRIGGER IF EXISTS equity_claims_denormalization_trigger ON equity.claims;
 
 CREATE OR REPLACE function equity.update_claim_status(_object_id integer)
   RETURNS equity.objects
@@ -170,10 +170,10 @@ AS $$
   UPDATE equity.objects o
   SET 
     claim_count = COALESCE(c.claim_count, 0),
-    first_claim_date = c.first_claim_date,
-    sum_unpaid = COALESCE(c.sum_unpaid, 0),
-    creditors = c.creditors,
-    basis = c.basis
+    claim_first_date = c.first_claim_date,
+    claim_sum_unpaid = COALESCE(c.sum_unpaid, 0),
+    claim_creditors = c.creditors,
+    claim_basis = c.basis
   FROM claim_info c
   WHERE o.id = _object_id
   RETURNING o.*;
@@ -206,10 +206,8 @@ FOR EACH ROW EXECUTE FUNCTION equity.update_claim_status_trigger_func();
 
 
 
-
-
 -- ===================== OPERATIONS DENORMALIZATION TRIGGER =================================
-DROP TRIGGER IF EXISTS update_operation_status_trigger_func ON equity.claims;
+DROP TRIGGER IF EXISTS equity_operations_denormalization_trigger ON equity.claims;
 
 CREATE OR REPLACE function equity.update_operation_status(_object_id integer)
   RETURNS equity.objects
@@ -435,3 +433,36 @@ LANGUAGE plpgsql;
 CREATE TRIGGER equity_operations_denormalization_trigger
 AFTER INSERT OR UPDATE OR DELETE ON equity.operations
 FOR EACH ROW EXECUTE FUNCTION equity.update_operation_status_trigger_func();
+
+
+
+
+
+
+-- ===================== BUILDING PROBLEMS DENORMALIZATION TRIGGER =================================
+DROP TRIGGER IF EXISTS equity_building_problems_denormalization_trigger ON equity.building;
+ CREATE OR REPLACE function equity.update_building_problems(_building_id integer)
+  RETURNS equity.objects
+  security definer
+  language sql
+AS $$
+	UPDATE equity.objects o
+		SET building_problems = b.problems
+	FROM equity.buildings b
+	WHERE o.building_id = _building_id 
+	  AND b.id = _building_id
+	RETURNING o.*;
+$$;
+
+CREATE OR REPLACE FUNCTION equity.update_building_problems_trigger_func()
+RETURNS trigger AS $body$
+BEGIN
+    PERFORM equity.update_building_problems(NEW.id);
+    RETURN NEW;
+END;
+$body$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER equity_building_problems_denormalization_trigger
+AFTER UPDATE OF problems ON equity.buildings
+FOR EACH ROW EXECUTE FUNCTION equity.update_building_problems_trigger_func();

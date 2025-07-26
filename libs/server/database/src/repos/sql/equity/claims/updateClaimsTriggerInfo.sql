@@ -33,9 +33,9 @@ GROUP BY object_id
 UPDATE equity.objects o
 SET
     claim_count = COALESCE(c.claim_count, 0),
-    first_claim_date = c.first_claim_date,
-    sum_unpaid = COALESCE(c.sum_unpaid, 0),
-    creditors = c.creditors,
-    basis = c.basis
+    claim_first_date = c.first_claim_date,
+    claim_sum_unpaid = COALESCE(c.sum_unpaid, 0),
+    claim_creditors = c.creditors,
+    claim_basis = c.basis
 FROM claim_info c
 WHERE o.id = c.object_id;

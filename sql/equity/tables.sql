@@ -176,7 +176,7 @@ CREATE TABLE equity.buildings
     address_construction_short character varying(255),
 
     is_done boolean NOT NULL DEFAULT true,
-    problems text[] NOT NULL DEFAULT ARRAY[]::text,
+    problems text[] NOT NULL DEFAULT ARRAY[]::text[],
 
 	PRIMARY KEY (id)
 );
@@ -222,10 +222,10 @@ CREATE TABLE equity.objects
 
     -- Денормализация требований
     claim_count integer NOT NULL DEFAULT 0,
-    first_claim_date timestamp with time zone,
-    sum_unpaid numeric NOT NULL DEFAULT 0,
-    creditors text,
-    basis text,
+    claim_first_date timestamp with time zone,
+    claim_sum_unpaid numeric NOT NULL DEFAULT 0,
+    claim_creditors text,
+    claim_basis text,
 
     -- Денормализация операций
     op_all_notes text,
@@ -306,6 +306,8 @@ CREATE TABLE equity.objects
     op_identification_type_id integer,
     op_identification_date timestamp with time zone,
     op_identification_notes text,
+
+    building_problems text[] NOT NULL DEFAULT ARRAY[]::text[],
 
     npp integer GENERATED ALWAYS AS (("substring"((num)::text, '\d+'::text))::integer) STORED;
 	PRIMARY KEY (id)
