@@ -297,15 +297,13 @@ AS $$
             MAX(date) FILTER (WHERE type_id = 16) as keys_date,
             MAX(notes) FILTER (WHERE type_id = 16) as keys_notes,
 
-            MAX(id) FILTER (WHERE type_id = ANY(ARRAY[8,18])) as doublesell_id,
-            MAX(type_id) FILTER (WHERE type_id = ANY(ARRAY[8,18])) as doublesell_type,
-            MAX(date) FILTER (WHERE type_id = ANY(ARRAY[8,18])) as doublesell_date,
-            MAX(notes) FILTER (WHERE type_id = ANY(ARRAY[8,18])) as doublesell_notes,
+            CASE WHEN MAX(date) FILTER (WHERE type_id = ANY(ARRAY[18])) > MAX(date) FILTER (WHERE type_id = ANY(ARRAY[8])) THEN null ELSE MAX(id) FILTER (WHERE type_id = ANY(ARRAY[8])) END as doublesell_id,
+            CASE WHEN MAX(date) FILTER (WHERE type_id = ANY(ARRAY[18])) > MAX(date) FILTER (WHERE type_id = ANY(ARRAY[8])) THEN null ELSE MAX(date) FILTER (WHERE type_id = ANY(ARRAY[8])) END as doublesell_date,
+            CASE WHEN MAX(date) FILTER (WHERE type_id = ANY(ARRAY[18])) > MAX(date) FILTER (WHERE type_id = ANY(ARRAY[8])) THEN null ELSE MAX(notes) FILTER (WHERE type_id = ANY(ARRAY[8])) END as doublesell_notes,
 
-            MAX(id) FILTER (WHERE type_id = ANY(ARRAY[9,10])) as identification_id,
-            MAX(type_id) FILTER (WHERE type_id = ANY(ARRAY[9,10])) as identification_type,
-            MAX(date) FILTER (WHERE type_id = ANY(ARRAY[9,10])) as identification_date,
-            MAX(notes) FILTER (WHERE type_id = ANY(ARRAY[9,10])) as identification_notes
+            CASE WHEN MAX(date) FILTER (WHERE type_id = ANY(ARRAY[10])) > MAX(date) FILTER (WHERE type_id = ANY(ARRAY[9])) THEN null ELSE MAX(id) FILTER (WHERE type_id = ANY(ARRAY[9])) END as identification_id,
+            CASE WHEN MAX(date) FILTER (WHERE type_id = ANY(ARRAY[10])) > MAX(date) FILTER (WHERE type_id = ANY(ARRAY[9])) THEN null ELSE MAX(date) FILTER (WHERE type_id = ANY(ARRAY[9])) END as identification_date,
+            CASE WHEN MAX(date) FILTER (WHERE type_id = ANY(ARRAY[10])) > MAX(date) FILTER (WHERE type_id = ANY(ARRAY[9])) THEN null ELSE MAX(notes) FILTER (WHERE type_id = ANY(ARRAY[9])) END as identification_notes
 
         FROM last_ops
         WHERE object_id = _object_id
@@ -392,12 +390,10 @@ AS $$
         op_keys_notes = op.keys_notes,
 
         op_doublesell_id = op.doublesell_id,
-        op_doublesell_type_id = op.doublesell_type,
         op_doublesell_date = op.doublesell_date,
         op_doublesell_notes = op.doublesell_notes,
         
         op_identification_id = op.identification_id,
-        op_identification_type_id = op.identification_type,
         op_identification_date = op.identification_date,
         op_identification_notes = op.identification_notes
     FROM (

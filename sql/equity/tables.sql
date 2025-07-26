@@ -298,16 +298,44 @@ CREATE TABLE equity.objects
     op_keys_notes text,
 
     op_doublesell_id integer,
-    op_doublesell_type_id integer,
     op_doublesell_date timestamp with time zone,
     op_doublesell_notes text,
 
     op_identification_id integer,
-    op_identification_type_id integer,
     op_identification_date timestamp with time zone,
     op_identification_notes text,
 
     building_problems text[] NOT NULL DEFAULT ARRAY[]::text[],
+
+    status_id integer GENERATED ALWAYS AS (
+        (CASE
+            WHEN egrn_status = ANY(ARRAY['город Москва']) THEN 5 -- Передано городу
+            WHEN egrn_status = ANY(ARRAY['Физ.лицо', 'Юр.лицо', 'Российская Федерация']) THEN 3 -- Передано дольщику
+            WHEN op_rg_decision_date IS NOT NULL AND NOT(op_rg_rejection_date > op_rg_decision_date OR op_rg_prep_date > op_rg_decision_date) THEN 10 -- Решение РГ
+            WHEN op_rg_rejection_date IS NOT NULL AND NOT(op_rg_prep_date > op_rg_rejection_date) THEN 9 -- Снято с РГ
+            WHEN op_rg_prep_date IS NOT NULL THEN 8 -- Выносится на РГ
+            WHEN op_unpozi_id IS NOT NULL OR op_uork_id IS NOT NULL OR op_upozhs_id IS NOT NULL OR op_urgp_id IS NOT NULL OR op_docs_id IS NOT NULL THEN 7 -- Рассмотрение документов
+            WHEN is_identified = FALSE THEN 6 -- Статус не определен
+            WHEN claim_count = 0 THEN 4 -- Подрежит передаче городу
+            WHEN op_act_id IS NOT NULL THEN 2 -- Акт подписан
+        ELSE 1 -- Дольщик не обращался
+        END)::integer
+    ) STORED,
+
+    problems text[] GENERATED ALWAYS AS (
+	ARRAY_REMOVE(
+		ARRAY[
+			  CASE WHEN is_identified IS DISTINCT FROM TRUE THEN 'unidentified' ELSE null END
+			, CASE WHEN op_doublesell_id IS NOT null THEN 'doublesell' ELSE null END
+			, CASE WHEN op_defects_id IS NOT null THEN 'defects' ELSE null END
+			, CASE WHEN (('claim-ap' = ANY(building_problems) AND object_type_id = 1) 
+				OR ('claim-mm' = ANY(building_problems) AND object_type_id = 2)) AND claim_count = 0
+				THEN 'potentialclaim' ELSE null END
+			, CASE WHEN op_identification_id IS NOT null THEN 'idproblem' ELSE null END
+			, CASE WHEN claim_sum_unpaid > 0 THEN 'unpaid' ELSE null END
+		]
+	, null)
+	) STORED,
 
     npp integer GENERATED ALWAYS AS (("substring"((num)::text, '\d+'::text))::integer) STORED;
 	PRIMARY KEY (id)
