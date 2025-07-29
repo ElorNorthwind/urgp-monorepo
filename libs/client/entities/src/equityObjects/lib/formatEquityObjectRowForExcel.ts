@@ -1,5 +1,6 @@
 import { Row } from '@tanstack/react-table';
 import { EquityObject } from '@urgp/shared/entities';
+import { equityProblemsStyles } from '../../equityClassificators';
 
 export const formatEquityObjectRowForExcel = (row: Row<EquityObject>) => {
   const data = row.original;
@@ -38,5 +39,8 @@ export const formatEquityObjectRowForExcel = (row: Row<EquityObject>) => {
       data?.documentsFio || data?.creditor || '',
     'Заключение УРЖП': data?.opinionUrgp,
     'Примечание УРЖП': data?.urgpNotes,
+    Проблемы: data?.problems
+      ?.map((p) => equityProblemsStyles?.[p]?.label || '-')
+      .join('; '),
   };
 };

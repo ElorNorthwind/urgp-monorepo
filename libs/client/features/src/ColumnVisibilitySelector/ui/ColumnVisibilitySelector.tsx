@@ -128,6 +128,7 @@ function ColumnVisibilitySelector(
     problem: 'Проблемы',
     opType: 'Тип Операции',
     notes: 'Примечания',
+    rgProgress: 'Заключения',
   };
 
   const isDefault = useMemo(() => {

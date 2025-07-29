@@ -9,6 +9,7 @@ import { EquityCreditorCell } from './cells/EquityCreditorCell';
 import { EquityOperationTypeCell } from './cells/EquityOperationTypeCell';
 import { EquityObjectProblemCell } from './cells/EquityObjectProblemCell';
 import { EquityOperationNotesCell } from './cells/EquityOperationNotesCell';
+import { EquityOperationProgressCell } from './cells/EquityOperationProgressCell';
 
 const columnHelper = createColumnHelper<EquityOperationLogItem>();
 
@@ -116,6 +117,23 @@ export const equityOperationLogColumns = [
       sortDescFirst: true,
       cell: (props) => {
         return <EquityObjectStatusCell {...props} />;
+      },
+    },
+  ),
+
+  columnHelper.accessor(
+    (row) => {
+      return row?.statusId || 0;
+    },
+    {
+      id: 'rgProgress',
+      header: 'Заключения',
+      size: 120,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      cell: (props) => {
+        return <EquityOperationProgressCell {...props} />;
       },
     },
   ),

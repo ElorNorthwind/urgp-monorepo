@@ -1,7 +1,7 @@
 import { VisibilityState } from '@tanstack/react-table';
 import { equityObjectsColumns } from './equityObjectsColumns';
 
-const defaultEquityObjectsHiddenColumns: string[] = [];
+const defaultEquityObjectsHiddenColumns: string[] = ['rgProgress'];
 
 export const defaultEquityObjectsColumns: VisibilityState = {
   ...equityObjectsColumns

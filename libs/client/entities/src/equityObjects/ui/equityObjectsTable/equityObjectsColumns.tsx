@@ -7,6 +7,7 @@ import { EquityObjectNumberCell } from './cells/EquityObjectNumberCell';
 import { EquityObjectStatusCell } from './cells/EquityObjectStatusCell';
 import { EquityObjectProblemCell } from './cells/EquityObjectProblemCell';
 import { EquityCreditorCell } from './cells/EquityCreditorCell';
+import { EquityObjectProgressCell } from './cells/EquityObjectProgressCell';
 
 const columnHelper = createColumnHelper<EquityObject>();
 
@@ -74,12 +75,29 @@ export const equityObjectsColumns = [
     {
       id: 'workStatus',
       header: 'Статус работы',
-      size: 180,
+      size: 170,
       enableHiding: true,
       enableSorting: true,
       sortDescFirst: true,
       cell: (props) => {
         return <EquityObjectStatusCell {...props} />;
+      },
+    },
+  ),
+
+  columnHelper.accessor(
+    (row) => {
+      return row?.statusId || 0;
+    },
+    {
+      id: 'rgProgress',
+      header: 'Заключения',
+      size: 120,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      cell: (props) => {
+        return <EquityObjectProgressCell {...props} />;
       },
     },
   ),

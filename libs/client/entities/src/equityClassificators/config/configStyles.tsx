@@ -130,7 +130,7 @@ export const equityObjectStatusStyles = {
   },
   8: {
     icon: CircleFadingPlus,
-    iconStyle: cn('text-lime-500'),
+    iconStyle: cn('text-purple-500'),
     chartColor: '#84cc16',
   },
   9: {

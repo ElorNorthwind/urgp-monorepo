@@ -165,6 +165,18 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
         o.s_obsh as s,
         o.egrn_status as "egrnStatus",
 
+        o.op_urgp_date as "urgpDate",
+        o.op_rg_prep_date as "rgPrepDate",
+        o.op_rg_decision_date as "rgDecisionDate",
+        o.op_rg_rejection_date as "rgRejectionDate",
+
+        CASE 
+            WHEN op_rg_prep_date IS NOT NULL AND op_rg_prep_date > COALESCE(op_rg_decision_date, '-infinity') AND op_rg_prep_date > COALESCE(op_rg_rejection_date, '-infinity') THEN 'prep' 
+            WHEN op_rg_decision_date IS NOT NULL AND op_rg_decision_date > COALESCE(op_rg_rejection_date, '-infinity') THEN 'decision'
+            WHEN op_rg_rejection_date IS NOT NULL THEN 'rejection'
+            ELSE 'none'
+        END as "rgStatus",
+
         COALESCE(o.op_urgp_result, 'нет') as "opinionUrgp",
         COALESCE(o.op_upozhs_result, 'нет') as "opinionUpozh",
         COALESCE(o.op_uork_result, 'нет') as "opinionUork",

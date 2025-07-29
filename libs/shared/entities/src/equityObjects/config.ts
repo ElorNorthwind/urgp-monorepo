@@ -45,3 +45,13 @@ export type EquityClaimTransferStatuses =
 export const equityClaimTransferStatusesValues = getValues(
   EquityClaimTransferStatuses,
 );
+
+export const EquityRgStatuses = {
+  prep: 'prep',
+  decision: 'decision',
+  rejection: 'rejection',
+  none: 'none',
+} as const;
+export type EquityRgStatuses =
+  (typeof EquityRgStatuses)[keyof typeof EquityRgStatuses];
+export const equityRgStatusesValues = getValues(EquityRgStatuses);

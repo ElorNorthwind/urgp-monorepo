@@ -1,5 +1,6 @@
 import { Row } from '@tanstack/react-table';
 import { EquityObject, EquityOperationLogItem } from '@urgp/shared/entities';
+import { equityProblemsStyles } from '../../equityClassificators';
 
 export const formatEquityOperationLogRowForExcel = (
   row: Row<EquityOperationLogItem>,
@@ -25,6 +26,10 @@ export const formatEquityOperationLogRowForExcel = (
 
     'Заключение УРЖП': data?.opinionUrgp,
     'Примечание УРЖП': data?.urgpNotes,
+
+    Проблемы: data?.problems
+      ?.map((p) => equityProblemsStyles?.[p]?.label || '-')
+      .join('; '),
 
     'Тип операции': data?.operation?.type?.name,
     'Дата операции': data?.operation?.date

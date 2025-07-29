@@ -3,6 +3,7 @@ import {
   equityObjectDocumentsValues,
   equityObjectOpinionsValues,
   equityObjectProblemsValues,
+  equityRgStatusesValues,
 } from './config';
 
 // Sub-schemas for nested objects
@@ -108,6 +109,12 @@ export const equityObjectSchema = z.object({
   claimRegistryDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
   // documentsProblem: z.boolean(),
   documentsResult: z.enum(equityObjectDocumentsValues).default('none'),
+
+  rgStatus: z.enum(equityRgStatusesValues).default('none'),
+  urgpDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
+  rgPrepDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
+  rgDecisionDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
+  rgRejectionDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
 
   operationsFio: z.string().nullable(),
   operationsNums: z.string().nullable(),
