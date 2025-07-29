@@ -76,31 +76,14 @@ export function equityOperationLogGlobalFilterFn(
   // Screams for backend view refactor
   if (
     documents &&
-    !(
-      (documents.includes('ok') && row?.original?.documentsOk) ||
-      (documents.includes('problem') &&
-        row?.original?.documentsProblem &&
-        !row?.original?.documentsOk) ||
-      (documents.includes('none') &&
-        !row?.original?.documentsOk &&
-        !row?.original?.documentsProblem)
-    )
+    !documents.includes(row.original?.documentsResult || 'none')
   ) {
     return false;
   }
 
-  // Screams for backend view refactor
   if (
     opinionUrgp &&
-    !(
-      (opinionUrgp.includes('положительное') &&
-        row?.original?.opinionUrgp === 'положительное') ||
-      (opinionUrgp.includes('условно-положительное') &&
-        row?.original?.opinionUrgp === 'условно-положительное') ||
-      (opinionUrgp.includes('отрицательное') &&
-        row?.original?.opinionUrgp === 'отрицательное') ||
-      (opinionUrgp.includes('нет') && row?.original?.opinionUrgp === 'нет')
-    )
+    !opinionUrgp.includes(row.original?.opinionUrgp || 'нет')
   ) {
     return false;
   }

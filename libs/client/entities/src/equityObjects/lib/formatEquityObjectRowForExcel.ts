@@ -24,11 +24,12 @@ export const formatEquityObjectRowForExcel = (row: Row<EquityObject>) => {
     Тип: data?.objectTypeName,
     Права: data?.egrnStatus,
 
-    Документы: data?.documentsOk
-      ? 'полный пакет'
-      : data?.documentsProblem
-        ? 'пакет с замечаниями'
-        : 'нет документов',
+    Документы:
+      data?.documentsResult === 'ok'
+        ? 'полный пакет'
+        : data?.documentsResult === 'problem'
+          ? 'пакет с замечаниями'
+          : 'нет документов',
     'Дата подачи документов': data?.documentsDate
       ? new Date(data?.documentsDate)
       : '',

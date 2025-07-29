@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import {
+  equityObjectDocumentsValues,
   equityObjectOpinionsValues,
   equityObjectProblemsValues,
 } from './config';
@@ -87,7 +88,7 @@ export const equityObjectSchema = z.object({
 
   egrnStatus: z.string().nullable(),
 
-  needsOpinion: z.boolean(),
+  // needsOpinion: z.boolean(),
   // TBD - show opinion result
   opinionUrgp: z.enum(equityObjectOpinionsValues).default('нет'),
   opinionUpozh: z.enum(equityObjectOpinionsValues).default('нет'),
@@ -105,9 +106,9 @@ export const equityObjectSchema = z.object({
   oldDeveloper: z.string().nullable(),
 
   claimRegistryDate: z.string().datetime().nullable().default(null), // ISO 8601 date string
+  // documentsProblem: z.boolean(),
+  documentsResult: z.enum(equityObjectDocumentsValues).default('none'),
 
-  documentsOk: z.boolean(),
-  documentsProblem: z.boolean(),
   operationsFio: z.string().nullable(),
   operationsNums: z.string().nullable(),
   urgpNotes: z.string().nullable(),
