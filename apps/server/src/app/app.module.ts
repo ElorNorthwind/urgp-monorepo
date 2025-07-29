@@ -1,27 +1,28 @@
+import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ClsModule } from 'nestjs-cls';
-import { EdoModule } from '@urgp/server/edo';
+import { ScheduleModule } from '@nestjs/schedule';
+import { AddressModule } from '@urgp/server/address';
+import { AuthModule } from '@urgp/server/auth';
+import { ControlModule } from '@urgp/server/control';
+import { DaDataModule } from '@urgp/server/dadata';
+import { DataMosModule } from '@urgp/server/data-mos';
 import { DatabaseModule } from '@urgp/server/database';
-import { GptModule } from '@urgp/server/llm';
-import { RsmModule } from '@urgp/server/rsm';
+import { EdoModule } from '@urgp/server/edo';
+import { EquityModule } from '@urgp/server/equity';
 import {
-  ExternalAuthModule,
   EdoApiModule,
+  ExternalAuthModule,
   RsmApiModule,
 } from '@urgp/server/external-auth';
-import { RenovationModule } from '@urgp/server/renovation';
-import { AuthModule } from '@urgp/server/auth';
-import { CacheModule } from '@nestjs/cache-manager';
-import { ControlModule } from '@urgp/server/control';
-import { DataMosModule } from '@urgp/server/data-mos';
-import { AddressModule } from '@urgp/server/address';
 import { FiasModule } from '@urgp/server/fias';
-import { DaDataModule } from '@urgp/server/dadata';
-import { TelegramModule } from '@urgp/server/telegram';
-import { ScheduleModule } from '@nestjs/schedule';
-import { EquityModule } from '@urgp/server/equity';
+import { GptModule } from '@urgp/server/llm';
+import { QmsModule } from '@urgp/server/qms';
+import { RenovationModule } from '@urgp/server/renovation';
+import { RsmModule } from '@urgp/server/rsm';
 import { SudirModule } from '@urgp/server/sudir';
+import { TelegramModule } from '@urgp/server/telegram';
+import { ClsModule } from 'nestjs-cls';
 
 @Module({
   // dot env files
@@ -62,6 +63,7 @@ import { SudirModule } from '@urgp/server/sudir';
     EquityModule,
 
     SudirModule,
+    QmsModule,
   ],
 })
 export class AppModule {}
