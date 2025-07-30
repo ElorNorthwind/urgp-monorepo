@@ -5,6 +5,16 @@ import { AxiosRequestConfig } from 'axios';
 import { firstValueFrom } from 'rxjs';
 import * as XLSX from 'xlsx';
 import { ANKETOLOG_HTTP_OPTIONS, QMS_HTTP_OPTIONS } from '../config/constants';
+import {
+  AnketologQuery,
+  AnketologSurveyResponse,
+  BookingClient,
+  BookingRecord,
+  QmsQuery,
+  RawBookingRecord,
+} from '@urgp/shared/entities';
+import { formatBookingRecord } from './util/formatBookingRecord';
+import { formatBookingClient } from './util/formatBookingClient';
 
 @Injectable()
 export class VksService {
@@ -13,7 +23,9 @@ export class VksService {
     private configService: ConfigService,
   ) {}
 
-  public async GetQmsReport(): Promise<any> {
+  public async GetQmsReport(
+    q: QmsQuery,
+  ): Promise<{ clients: BookingClient[]; records: BookingRecord[] }> {
     const authHeader = this.configService.get<string>('QMS_AUTH_HEADER');
 
     if (!authHeader) {
@@ -45,7 +57,7 @@ export class VksService {
     );
     const reportId = data?.data?.id;
 
-    Logger.log('Creating report + ' + reportId);
+    Logger.log('Creating QMS report with id: ' + reportId);
 
     const saveSearchParamConfit: AxiosRequestConfig = {
       ...QMS_HTTP_OPTIONS,
@@ -79,8 +91,8 @@ export class VksService {
       id: reportId,
       inputId: dateRangeInputId,
       params: [
-        { id: null, feature: 'first', value: '28.07.2025', customData: true },
-        { id: null, feature: 'last', value: '29.07.2025', customData: true },
+        { id: null, feature: 'first', value: q.dateFrom, customData: true },
+        { id: null, feature: 'last', value: q.dateTo, customData: true },
       ],
     };
 
@@ -120,14 +132,33 @@ export class VksService {
     const wb = XLSX.read(resultBuffer, { type: 'array' });
     const ws = wb.Sheets[wb.SheetNames[0]];
 
-    Logger.debug(XLSX.utils.sheet_to_json(ws, { range: 1 }));
-
-    return firstValueFrom(this.axios.request(closeReportConfig)).then(
-      (res) => res.data,
+    const closeReport = await firstValueFrom(
+      this.axios.request(closeReportConfig),
     );
+
+    if (closeReport?.data?.status !== 'OK') {
+      throw new HttpException(closeReport?.data?.error, HttpStatus.BAD_REQUEST);
+    }
+
+    const rawData: RawBookingRecord[] = XLSX.utils.sheet_to_json(ws, {
+      range: 1,
+    });
+
+    const Clients = new Map<number, BookingClient>();
+    const records = rawData
+      .filter((r: RawBookingRecord) => r?.['Код бронирования']?.length > 1)
+      .map((r: RawBookingRecord) => {
+        const formatted = formatBookingRecord(r);
+        Clients.set(formatted.clientId, formatBookingClient(r));
+        return formatted;
+      });
+
+    return { clients: Array.from(Clients.values()), records };
   }
 
-  public async GetAnketologUserReport(): Promise<any> {
+  public async GetAnketologSurvey(
+    q: AnketologQuery,
+  ): Promise<AnketologSurveyResponse[]> {
     const apiToken = this.configService.get<string>('ANKETOLOG_API_TOKEN');
 
     if (!apiToken) {
@@ -145,47 +176,14 @@ export class VksService {
     };
 
     const surveyParams = {
-      survey_id: 124684,
-      date_from: '29.07.2025',
-      date_to: '30.07.2025',
+      survey_id: q.surveyId,
+      date_from: q.dateFrom,
+      date_to: q.dateTo,
     };
-
-    // servey_list = [124684, 124915]
 
     const { data } = await firstValueFrom(
       this.axios.request({ ...postSurveyCongig, data: surveyParams }),
     );
-    return data;
-  }
-
-  public async GetAnketologClientReport(): Promise<any> {
-    const apiToken = this.configService.get<string>('ANKETOLOG_API_TOKEN');
-
-    if (!apiToken) {
-      throw new HttpException(
-        'Anketolog api token not found',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const postSurveyCongig: AxiosRequestConfig = {
-      ...ANKETOLOG_HTTP_OPTIONS,
-      method: 'post',
-      url: '/survey/report/detail',
-      headers: { 'X-Anketolog-ApiKey': apiToken },
-    };
-
-    const surveyParams = {
-      survey_id: 124915,
-      date_from: '01.07.2025',
-      date_to: '30.07.2025',
-    };
-
-    // servey_list = [124684, 124915]
-
-    const { data } = await firstValueFrom(
-      this.axios.request({ ...postSurveyCongig, data: surveyParams }),
-    );
-    return data;
+    return data?.answers || [];
   }
 }
