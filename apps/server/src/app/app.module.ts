@@ -17,7 +17,7 @@ import {
 } from '@urgp/server/external-auth';
 import { FiasModule } from '@urgp/server/fias';
 import { GptModule } from '@urgp/server/llm';
-import { QmsModule } from '@urgp/server/qms';
+import { VksModule } from '@urgp/server/vks';
 import { RenovationModule } from '@urgp/server/renovation';
 import { RsmModule } from '@urgp/server/rsm';
 import { SudirModule } from '@urgp/server/sudir';
@@ -63,7 +63,7 @@ import { ClsModule } from 'nestjs-cls';
     EquityModule,
 
     SudirModule,
-    QmsModule,
+    VksModule,
   ],
 })
 export class AppModule {}

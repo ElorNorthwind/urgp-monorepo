@@ -1,50 +1,40 @@
 import { HttpService } from '@nestjs/axios';
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  Logger,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AxiosRequestConfig } from 'axios';
 import { firstValueFrom } from 'rxjs';
 import * as XLSX from 'xlsx';
+import { ANKETOLOG_HTTP_OPTIONS, QMS_HTTP_OPTIONS } from '../config/constants';
 
 @Injectable()
-export class QmsService {
+export class VksService {
   constructor(
     private readonly axios: HttpService,
     private configService: ConfigService,
   ) {}
 
-  public async test(): Promise<any> {
+  public async GetQmsReport(): Promise<any> {
     const authHeader = this.configService.get<string>('QMS_AUTH_HEADER');
-    const reportTemplate = this.configService.get<string>(
-      'QMS_REPORT_TEMPLATE_ID',
-    );
-    const dateRangeInputId = this.configService.get<string>(
-      'QMS_DATE_RANGE_INPUT_ID',
-    );
-    const departmentInputId = this.configService.get<string>(
-      'QMS_DEPARTMENT_INPUT_ID',
-    );
-    const departmentValue = this.configService.get<string>(
-      'QMS_DEPARTMENT_VALUE',
-    );
 
-    if (
-      !reportTemplate ||
-      !authHeader ||
-      !dateRangeInputId ||
-      !departmentInputId ||
-      !departmentValue
-    ) {
-      throw new HttpException('QMS env data not found', HttpStatus.BAD_REQUEST);
+    if (!authHeader) {
+      throw new HttpException(
+        'QMS auth data not found',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
+    const reportTemplate =
+      this.configService.get<string>('QMS_REPORT_TEMPLATE_ID') || 37;
+    const dateRangeInputId =
+      this.configService.get<string>('QMS_DATE_RANGE_INPUT_ID') || 226;
+    const departmentInputId =
+      this.configService.get<string>('QMS_DEPARTMENT_INPUT_ID') || 228;
+    const departmentValue =
+      this.configService.get<string>('QMS_DEPARTMENT_VALUE') ||
+      '^Д^е^п^а^р^т^а^м^е^н^т ^г^о^р^о^д^с^к^о^г^о ^и^м^у^щ^е^с^т^в^а ^г^о^р^о^д^а ^М^о^с^к^в^ы';
+
     const createReportConfit: AxiosRequestConfig = {
+      ...QMS_HTTP_OPTIONS,
       method: 'post',
       url: '/create/' + reportTemplate,
       headers: { contentType: 'application/json', Authorization: authHeader },
@@ -58,24 +48,28 @@ export class QmsService {
     Logger.log('Creating report + ' + reportId);
 
     const saveSearchParamConfit: AxiosRequestConfig = {
+      ...QMS_HTTP_OPTIONS,
       method: 'post',
       url: '/report/parameters/save',
       headers: { contentType: 'application/json', Authorization: authHeader },
     };
 
     const buildReportConfig: AxiosRequestConfig = {
+      ...QMS_HTTP_OPTIONS,
       method: 'put',
       url: `/report/${reportId}/build/`,
       headers: { contentType: 'application/json', Authorization: authHeader },
     };
 
     const getReportXlsConfig: AxiosRequestConfig = {
+      ...QMS_HTTP_OPTIONS,
       method: 'get',
       headers: { Authorization: authHeader },
       url: `/report/${reportId}/export/format/XLS/`,
       responseType: 'arraybuffer',
     };
     const closeReportConfig: AxiosRequestConfig = {
+      ...QMS_HTTP_OPTIONS,
       method: 'delete',
       headers: { contentType: 'application/json', Authorization: authHeader },
       url: `/session/close/${reportId}/`,
@@ -131,5 +125,67 @@ export class QmsService {
     return firstValueFrom(this.axios.request(closeReportConfig)).then(
       (res) => res.data,
     );
+  }
+
+  public async GetAnketologUserReport(): Promise<any> {
+    const apiToken = this.configService.get<string>('ANKETOLOG_API_TOKEN');
+
+    if (!apiToken) {
+      throw new HttpException(
+        'Anketolog api token not found',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const postSurveyCongig: AxiosRequestConfig = {
+      ...ANKETOLOG_HTTP_OPTIONS,
+      method: 'post',
+      url: '/survey/report/detail',
+      headers: { 'X-Anketolog-ApiKey': apiToken },
+    };
+
+    const surveyParams = {
+      survey_id: 124684,
+      date_from: '29.07.2025',
+      date_to: '30.07.2025',
+    };
+
+    // servey_list = [124684, 124915]
+
+    const { data } = await firstValueFrom(
+      this.axios.request({ ...postSurveyCongig, data: surveyParams }),
+    );
+    return data;
+  }
+
+  public async GetAnketologClientReport(): Promise<any> {
+    const apiToken = this.configService.get<string>('ANKETOLOG_API_TOKEN');
+
+    if (!apiToken) {
+      throw new HttpException(
+        'Anketolog api token not found',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const postSurveyCongig: AxiosRequestConfig = {
+      ...ANKETOLOG_HTTP_OPTIONS,
+      method: 'post',
+      url: '/survey/report/detail',
+      headers: { 'X-Anketolog-ApiKey': apiToken },
+    };
+
+    const surveyParams = {
+      survey_id: 124915,
+      date_from: '01.07.2025',
+      date_to: '30.07.2025',
+    };
+
+    // servey_list = [124684, 124915]
+
+    const { data } = await firstValueFrom(
+      this.axios.request({ ...postSurveyCongig, data: surveyParams }),
+    );
+    return data;
   }
 }

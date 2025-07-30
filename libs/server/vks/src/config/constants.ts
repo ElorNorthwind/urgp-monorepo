@@ -3,3 +3,7 @@ export const QMS_HTTP_OPTIONS = {
   contentType: 'application/json',
   accept: 'application/json',
 };
+
+export const ANKETOLOG_HTTP_OPTIONS = {
+  baseURL: 'https://ep-pos.mos.ru/apiv2',
+};
