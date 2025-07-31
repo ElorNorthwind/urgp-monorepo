@@ -3,9 +3,10 @@ import {
   booringReportAdditionalFields,
   getAdditionalField,
 } from './getAdditionalField';
+import { transformEmptyToNull } from './transformEmptyToNull';
 
 export function formatBookingRecord(r: RawBookingRecord): any {
-  return {
+  return transformEmptyToNull({
     org: r?.['Отделение'],
     date: r?.['Дата записи'],
     time: r?.['Время записи'],
@@ -61,5 +62,5 @@ export function formatBookingRecord(r: RawBookingRecord): any {
     //   ogrn: r?.['ОГРН (ю.л.)'],
     //   inn: r?.['ИНН (ю.л.)'],
     // },
-  };
+  });
 }

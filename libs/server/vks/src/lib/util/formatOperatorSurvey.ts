@@ -1,5 +1,6 @@
 import { AnketologSurveyResponse } from '@urgp/shared/entities';
 import { getSurveyAnswer } from './getSurveyAnswer';
+import { transformEmptyToNull } from './transformEmptyToNull';
 
 export const operatorSurveyQuestions = {
   10500176: 'operatorFio',
@@ -20,7 +21,7 @@ export const operatorSurveyQuestions = {
 };
 
 export function formatOperatorSurvey(s: AnketologSurveyResponse): any {
-  return {
+  return transformEmptyToNull({
     id: s?.id,
     surveyId: s?.survey_id,
     date: new Date(s?.start_date * 1000).toLocaleString('ru-Ru'),
@@ -61,5 +62,5 @@ export function formatOperatorSurvey(s: AnketologSurveyResponse): any {
         informationSource: '-',
       },
     ),
-  };
+  });
 }

@@ -1,7 +1,8 @@
 import { RawBookingRecord } from '@urgp/shared/entities';
+import { transformEmptyToNull } from './transformEmptyToNull';
 
 export function formatBookingClient(r: RawBookingRecord): any {
-  return {
+  return transformEmptyToNull({
     id: parseInt(
       (r?.['Тип заявителя'] === 'Физическое лицо'
         ? '1' + r?.['СНИЛС заявителя']?.match(/\d/g)?.join('') || ''
@@ -15,5 +16,5 @@ export function formatBookingClient(r: RawBookingRecord): any {
     snils: r?.['СНИЛС заявителя'],
     ogrn: r?.['ОГРН (ю.л.)'],
     inn: r?.['ИНН (ю.л.)'],
-  };
+  });
 }

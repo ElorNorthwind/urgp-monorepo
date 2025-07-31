@@ -1,16 +1,17 @@
 import { AnketologSurveyResponse } from '@urgp/shared/entities';
 import { getSurveyAnswer } from './getSurveyAnswer';
+import { transformEmptyToNull } from './transformEmptyToNull';
 
 export const clientSurveyQuestions = {
   10501053: 'operatorJoined',
   10501054: 'consultationReceived',
   10501216: 'operatorGrade',
-  10501056: 'comment',
-  10501217: 'comment2',
+  10501056: 'commentPositive',
+  10501217: 'commentNegative',
 };
 
 export function formatClientSurvey(s: AnketologSurveyResponse): any {
-  return {
+  return transformEmptyToNull({
     id: s?.id,
     surveyId: s?.survey_id,
     date: new Date(s?.start_date * 1000).toLocaleString('ru-Ru'),
@@ -35,9 +36,9 @@ export function formatClientSurvey(s: AnketologSurveyResponse): any {
         operatorJoined: '-',
         consultationReceived: '-',
         operatorGrade: '-',
-        comment: '-',
-        comment2: '-',
+        commentPositive: '-',
+        commentNegative: '-',
       },
     ),
-  };
+  });
 }
