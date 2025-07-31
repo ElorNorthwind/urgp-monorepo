@@ -180,6 +180,7 @@ export class VksService {
     q: AnketologQuery,
   ): Promise<{ found: number; updated: number }> {
     const apiToken = this.configService.get<string>('ANKETOLOG_API_TOKEN');
+    const isDev = this.configService.get<string>('NODE_ENV') === 'development';
 
     if (!apiToken) {
       throw new HttpException(
@@ -202,8 +203,20 @@ export class VksService {
     };
 
     const data = await firstValueFrom(
-      this.axios.request({ ...postSurveyCongig, data: surveyParams }),
-    )?.then((res) => res?.data);
+      this.axios
+        .request({
+          ...postSurveyCongig,
+          data: {
+            survey_id: q.surveyId,
+            date_from: q.dateFrom,
+            date_to: q.dateTo,
+          },
+        })
+        .pipe(
+          retry(1),
+          map((res) => res?.data),
+        ),
+    );
 
     const totalCount = data?.answer_count || 0;
 
@@ -226,16 +239,21 @@ export class VksService {
               surveys as ClientSurveyResponse[],
             )) || 0;
       surveys = await firstValueFrom(
-        this.axios.request({
-          ...postSurveyCongig,
-          data: { ...surveyParams, offset: collectedCount },
-        }),
-      )?.then((res) => formatSurvey(res?.data?.answers, q.surveyId) || []);
-      Logger.debug(
-        `collectedCount: ${collectedCount} totalCount: ${totalCount} udatedCount: ${udatedCount}`,
+        this.axios
+          .request({
+            ...postSurveyCongig,
+            data: { ...surveyParams, offset: collectedCount },
+          })
+          .pipe(
+            retry(1),
+            map((res) => formatSurvey(res?.data?.answers, q.surveyId) || []),
+          ),
       );
+      isDev &&
+        Logger.warn(
+          `totalCount: ${totalCount} collectedCount: ${collectedCount} udatedCount: ${udatedCount}`,
+        );
     } while (collectedCount < totalCount);
-
     return { found: totalCount, updated: udatedCount };
   }
 }
