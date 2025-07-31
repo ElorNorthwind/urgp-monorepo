@@ -12,7 +12,16 @@ import {
 } from '@urgp/shared/entities';
 import { AxiosRequestConfig } from 'axios';
 import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
-import { firstValueFrom } from 'rxjs';
+import {
+  concatMap,
+  firstValueFrom,
+  from,
+  lastValueFrom,
+  map,
+  pipe,
+  retry,
+  tap,
+} from 'rxjs';
 import * as XLSX from 'xlsx';
 import { ANKETOLOG_HTTP_OPTIONS, QMS_HTTP_OPTIONS } from '../config/constants';
 import { formatBookingClient } from './util/formatBookingClient';
@@ -31,14 +40,12 @@ export class VksService {
     q: QmsQuery,
   ): Promise<{ clients: number; records: number }> {
     const authHeader = this.configService.get<string>('QMS_AUTH_HEADER');
-
     if (!authHeader) {
       throw new HttpException(
         'QMS auth data not found',
         HttpStatus.BAD_REQUEST,
       );
     }
-
     const reportTemplate =
       this.configService.get<string>('QMS_REPORT_TEMPLATE_ID') || 37;
     const dateRangeInputId =
@@ -49,17 +56,22 @@ export class VksService {
       this.configService.get<string>('QMS_DEPARTMENT_VALUE') ||
       '^Д^е^п^а^р^т^а^м^е^н^т ^г^о^р^о^д^с^к^о^г^о ^и^м^у^щ^е^с^т^в^а ^г^о^р^о^д^а ^М^о^с^к^в^ы';
 
-    const createReportConfit: AxiosRequestConfig = {
-      ...QMS_HTTP_OPTIONS,
-      method: 'post',
-      url: '/create/' + reportTemplate,
-      headers: { contentType: 'application/json', Authorization: authHeader },
-    };
-
-    const { data } = await firstValueFrom(
-      this.axios.request(createReportConfit),
+    const reportId = await firstValueFrom(
+      this.axios
+        .request({
+          ...QMS_HTTP_OPTIONS,
+          method: 'post',
+          url: '/create/' + reportTemplate,
+          headers: {
+            contentType: 'application/json',
+            Authorization: authHeader,
+          },
+        })
+        .pipe(
+          retry(1),
+          map((res) => res?.data?.data?.id),
+        ),
     );
-    const reportId = data?.data?.id;
 
     Logger.log('Creating QMS report with id: ' + reportId);
 
@@ -84,12 +96,6 @@ export class VksService {
       url: `/report/${reportId}/export/format/XLS/`,
       responseType: 'arraybuffer',
     };
-    const closeReportConfig: AxiosRequestConfig = {
-      ...QMS_HTTP_OPTIONS,
-      method: 'delete',
-      headers: { contentType: 'application/json', Authorization: authHeader },
-      url: `/session/close/${reportId}/`,
-    };
 
     const dateRangeData = {
       id: reportId,
@@ -113,31 +119,35 @@ export class VksService {
       ],
     };
 
-    await firstValueFrom(
-      this.axios.request({ ...saveSearchParamConfit, data: dateRangeData }),
-    );
-    await firstValueFrom(
-      this.axios.request({
-        ...saveSearchParamConfit,
-        data: departmentData,
-      }),
+    await lastValueFrom(
+      from([
+        { ...saveSearchParamConfit, data: dateRangeData },
+        { ...saveSearchParamConfit, data: departmentData },
+        { ...buildReportConfig, data: '' },
+      ]).pipe(concatMap((config) => this.axios.request(config))),
     );
 
-    await firstValueFrom(
-      this.axios.request({ ...buildReportConfig, data: '' }),
-    );
-
-    const resultBuffer = new Uint8Array(
-      await firstValueFrom(this.axios.request(getReportXlsConfig)).then(
-        (res) => res?.data,
+    const wb = await firstValueFrom(
+      this.axios.request(getReportXlsConfig).pipe(
+        retry(1),
+        map((res) => XLSX.read(new Uint8Array(res?.data), { type: 'array' })),
       ),
     );
 
-    const wb = XLSX.read(resultBuffer, { type: 'array' });
-    const ws = wb.Sheets[wb.SheetNames[0]];
+    const ws = wb?.Sheets?.[wb?.SheetNames?.[0]];
 
     const closeReport = await firstValueFrom(
-      this.axios.request(closeReportConfig),
+      this.axios
+        .request({
+          ...QMS_HTTP_OPTIONS,
+          method: 'delete',
+          headers: {
+            contentType: 'application/json',
+            Authorization: authHeader,
+          },
+          url: `/session/close/${reportId}/`,
+        })
+        .pipe(retry(1)),
     );
 
     if (closeReport?.data?.status !== 'OK') {
