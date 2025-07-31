@@ -1,31 +1,35 @@
 import { HttpService } from '@nestjs/axios';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AxiosRequestConfig } from 'axios';
-import { firstValueFrom } from 'rxjs';
-import * as XLSX from 'xlsx';
-import { ANKETOLOG_HTTP_OPTIONS, QMS_HTTP_OPTIONS } from '../config/constants';
+import { DatabaseService } from '@urgp/server/database';
 import {
   AnketologQuery,
-  AnketologSurveyResponse,
   BookingClient,
-  BookingRecord,
+  ClientSurveyResponse,
+  OperatorSurveyResponse,
   QmsQuery,
   RawBookingRecord,
 } from '@urgp/shared/entities';
-import { formatBookingRecord } from './util/formatBookingRecord';
+import { AxiosRequestConfig } from 'axios';
+import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
+import { firstValueFrom } from 'rxjs';
+import * as XLSX from 'xlsx';
+import { ANKETOLOG_HTTP_OPTIONS, QMS_HTTP_OPTIONS } from '../config/constants';
 import { formatBookingClient } from './util/formatBookingClient';
+import { formatBookingRecord } from './util/formatBookingRecord';
+import { formatSurvey } from './util/fotmatSurvey';
 
 @Injectable()
 export class VksService {
   constructor(
+    private readonly dbServise: DatabaseService,
     private readonly axios: HttpService,
     private configService: ConfigService,
   ) {}
 
   public async GetQmsReport(
     q: QmsQuery,
-  ): Promise<{ clients: BookingClient[]; records: BookingRecord[] }> {
+  ): Promise<{ clients: number; records: number }> {
     const authHeader = this.configService.get<string>('QMS_AUTH_HEADER');
 
     if (!authHeader) {
@@ -153,12 +157,18 @@ export class VksService {
         return formatted;
       });
 
-    return { clients: Array.from(Clients.values()), records };
+    const clientsCount = await this.dbServise.db.vks.insertClients(
+      Array.from(Clients.values()),
+    );
+
+    const recordCount = await this.dbServise.db.vks.insertCases(records);
+
+    return { clients: clientsCount, records: recordCount };
   }
 
   public async GetAnketologSurvey(
     q: AnketologQuery,
-  ): Promise<AnketologSurveyResponse[]> {
+  ): Promise<{ found: number; updated: number }> {
     const apiToken = this.configService.get<string>('ANKETOLOG_API_TOKEN');
 
     if (!apiToken) {
@@ -181,9 +191,41 @@ export class VksService {
       date_to: q.dateTo,
     };
 
-    const { data } = await firstValueFrom(
+    const data = await firstValueFrom(
       this.axios.request({ ...postSurveyCongig, data: surveyParams }),
-    );
-    return data?.answers || [];
+    )?.then((res) => res?.data);
+
+    const totalCount = data?.answer_count || 0;
+
+    if (!totalCount || data?.answers?.length === 0) {
+      return { found: 0, updated: 0 };
+    }
+
+    let collectedCount = 0;
+    let udatedCount = 0;
+    let surveys = formatSurvey(data?.answers, q.surveyId) || [];
+
+    do {
+      collectedCount += data?.answers?.length || 0;
+      udatedCount +=
+        q.surveyId === AnketologSurveyTypes.operator
+          ? (await this.dbServise.db.vks.updateOperatorSurveys(
+              surveys as OperatorSurveyResponse[],
+            )) || 0
+          : (await this.dbServise.db.vks.updateClientSurveys(
+              surveys as ClientSurveyResponse[],
+            )) || 0;
+      surveys = await firstValueFrom(
+        this.axios.request({
+          ...postSurveyCongig,
+          data: { ...surveyParams, offset: collectedCount },
+        }),
+      )?.then((res) => formatSurvey(res?.data?.answers, q.surveyId) || []);
+      Logger.debug(
+        `collectedCount: ${collectedCount} totalCount: ${totalCount} udatedCount: ${udatedCount}`,
+      );
+    } while (collectedCount < totalCount);
+
+    return { found: totalCount, updated: udatedCount };
   }
 }

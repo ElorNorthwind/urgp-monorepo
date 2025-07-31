@@ -9,6 +9,7 @@ import { ControlOperationsRepository } from './control-operations';
 import { ControlClassificatorsRepository } from './control-classificators';
 import { AddressRepository } from './address';
 import { EquityRepository } from './equity';
+import { VksRepository } from './vks';
 
 // Database Interface Extensions:
 interface DbExtensions {
@@ -23,6 +24,7 @@ interface DbExtensions {
   controlClassificators: ControlClassificatorsRepository;
   address: AddressRepository;
   equity: EquityRepository;
+  vks: VksRepository;
 }
 
 export {
@@ -38,4 +40,5 @@ export {
   ControlClassificatorsRepository,
   AddressRepository,
   EquityRepository,
+  VksRepository,
 };

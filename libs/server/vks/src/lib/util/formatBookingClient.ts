@@ -2,6 +2,13 @@ import { RawBookingRecord } from '@urgp/shared/entities';
 import { transformEmptyToNull } from './transformEmptyToNull';
 
 export function formatBookingClient(r: RawBookingRecord): any {
+  // Logger.debug(
+  //   parseInt(
+  //     (r?.['Тип заявителя'] === 'Физическое лицо'
+  //       ? '1' + r?.['СНИЛС заявителя']?.match(/\d/g)?.join('') || ''
+  //       : '2' + r?.['ОГРН (ю.л.)'] || '') || '0',
+  //   ),
+  // );
   return transformEmptyToNull({
     id: parseInt(
       (r?.['Тип заявителя'] === 'Физическое лицо'
@@ -9,10 +16,10 @@ export function formatBookingClient(r: RawBookingRecord): any {
         : '2' + r?.['ОГРН (ю.л.)'] || '') || '0',
     ),
     type: r?.['Тип заявителя'],
-    Surname: r?.['Фамилия заявителя'],
-    FirstName: r?.['Имя заявителя'],
-    LastName: r?.['Отчество заявителя'],
-    OrgName: r?.['Название организации(для юридических лиц)'],
+    surname: r?.['Фамилия заявителя'],
+    firstName: r?.['Имя заявителя'],
+    lastName: r?.['Отчество заявителя'],
+    orgName: r?.['Название организации(для юридических лиц)'],
     snils: r?.['СНИЛС заявителя'],
     ogrn: r?.['ОГРН (ю.л.)'],
     inn: r?.['ИНН (ю.л.)'],

@@ -10,6 +10,16 @@ export function getSurveyAnswer(
   }
 
   if (
+    answer?.question_answer?.swagger_type === 'SurveyReportDetailScaleAnswer'
+  ) {
+    return (
+      answer?.question_answer?.answer?.ranges?.[0]?.options?.find(
+        (o) => o?.answer_value,
+      )?.option_name || '-'
+    );
+  }
+
+  if (
     answer?.question_answer?.swagger_type === 'SurveyReportDetailSelectAnswer'
   ) {
     return (

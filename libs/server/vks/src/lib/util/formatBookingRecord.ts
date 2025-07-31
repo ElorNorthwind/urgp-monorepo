@@ -1,11 +1,11 @@
-import { RawBookingRecord } from '@urgp/shared/entities';
+import { BookingRecord, RawBookingRecord } from '@urgp/shared/entities';
 import {
   booringReportAdditionalFields,
   getAdditionalField,
 } from './getAdditionalField';
 import { transformEmptyToNull } from './transformEmptyToNull';
 
-export function formatBookingRecord(r: RawBookingRecord): any {
+export function formatBookingRecord(r: RawBookingRecord): BookingRecord {
   return transformEmptyToNull({
     org: r?.['Отделение'],
     date: r?.['Дата записи'],
@@ -62,5 +62,5 @@ export function formatBookingRecord(r: RawBookingRecord): any {
     //   ogrn: r?.['ОГРН (ю.л.)'],
     //   inn: r?.['ИНН (ю.л.)'],
     // },
-  });
+  }) as BookingRecord;
 }

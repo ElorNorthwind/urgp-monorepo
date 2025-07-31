@@ -1,16 +1,8 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AccessTokenGuard } from '@urgp/server/auth';
-import { VksService } from './vks.service';
-import { format, startOfMonth, startOfYesterday } from 'date-fns';
-import {
-  AnketologSurveyResponse,
-  BookingClient,
-  BookingRecord,
-  RawBookingRecord,
-} from '@urgp/shared/entities';
+import { format, startOfYesterday } from 'date-fns';
 import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
-import { formatOperatorSurvey } from './util/formatOperatorSurvey';
-import { formatClientSurvey } from './util/formatClientSurvey';
+import { VksService } from './vks.service';
 
 @Controller('vks')
 @UseGuards(AccessTokenGuard)
@@ -19,41 +11,32 @@ export class VksController {
 
   @Get('qms')
   getQmsBookingReport(): Promise<{
-    clients: BookingClient[];
-    records: BookingRecord[];
+    clients: number;
+    records: number;
   }> {
     return this.vks.GetQmsReport({
       dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
-      // dateFrom: format(new Date(), 'dd.MM.yyyy'),
       dateTo: format(new Date(), 'dd.MM.yyyy'),
     });
   }
 
   @Get('anketolog/operator')
-  getAnketologOperatorSurvey(): Promise<any[]> {
-    return this.vks
-      .GetAnketologSurvey({
-        surveyId: AnketologSurveyTypes.operator,
-        // dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
-        dateFrom: '01.04.2025',
-        dateTo: format(new Date(), 'dd.MM.yyyy'),
-      })
-      .then((records: AnketologSurveyResponse[]) =>
-        records?.map((r) => formatOperatorSurvey(r)),
-      );
+  getAnketologOperatorSurvey(): Promise<{ found: number; updated: number }> {
+    return this.vks.GetAnketologSurvey({
+      surveyId: AnketologSurveyTypes.operator,
+      // dateFrom: '01.01.2024',
+      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
+      dateTo: format(new Date(), 'dd.MM.yyyy'),
+    });
   }
 
   @Get('anketolog/client')
-  getAnketologClientSurvey(): Promise<any[]> {
-    return this.vks
-      .GetAnketologSurvey({
-        surveyId: AnketologSurveyTypes.client,
-        // dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
-        dateFrom: '01.04.2025',
-        dateTo: format(new Date(), 'dd.MM.yyyy'),
-      })
-      .then((records: AnketologSurveyResponse[]) =>
-        records?.map((r) => formatClientSurvey(r)),
-      );
+  getAnketologClientSurvey(): Promise<{ found: number; updated: number }> {
+    return this.vks.GetAnketologSurvey({
+      surveyId: AnketologSurveyTypes.client,
+      // dateFrom: '01.01.2024',
+      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
+      dateTo: format(new Date(), 'dd.MM.yyyy'),
+    });
   }
 }

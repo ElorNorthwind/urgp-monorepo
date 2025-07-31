@@ -1,6 +1,7 @@
 import { AnketologSurveyResponse } from '@urgp/shared/entities';
 import { getSurveyAnswer } from './getSurveyAnswer';
 import { transformEmptyToNull } from './transformEmptyToNull';
+import { Logger } from '@nestjs/common';
 
 export const operatorSurveyQuestions = {
   10500176: 'operatorFio',
@@ -39,9 +40,27 @@ export function formatOperatorSurvey(s: AnketologSurveyResponse): any {
             ans?.question_id as keyof typeof operatorSurveyQuestions
           ];
         if (!questionName) return obj;
+        const surveyAnswer = getSurveyAnswer(ans);
+
+        if (
+          ['isHousingQuestion', 'isClient', 'needsAnswer'].includes(
+            questionName,
+          )
+        ) {
+          return {
+            ...obj,
+            [questionName]:
+              surveyAnswer === 'Да'
+                ? true
+                : surveyAnswer === 'Нет'
+                  ? false
+                  : null,
+          };
+        }
+
         return {
           ...obj,
-          [questionName]: getSurveyAnswer(ans),
+          [questionName]: surveyAnswer,
         };
       },
       {

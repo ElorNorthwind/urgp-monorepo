@@ -1,6 +1,7 @@
 import { AnketologSurveyResponse } from '@urgp/shared/entities';
 import { getSurveyAnswer } from './getSurveyAnswer';
 import { transformEmptyToNull } from './transformEmptyToNull';
+import { Logger } from '@nestjs/common';
 
 export const clientSurveyQuestions = {
   10501053: 'operatorJoined',
@@ -27,9 +28,30 @@ export function formatClientSurvey(s: AnketologSurveyResponse): any {
             ans?.question_id as keyof typeof clientSurveyQuestions
           ];
         if (!questionName) return obj;
+        const surveyAnswer = getSurveyAnswer(ans);
+
+        if (['operatorJoined', 'consultationReceived'].includes(questionName)) {
+          return {
+            ...obj,
+            [questionName]:
+              surveyAnswer === 'Да'
+                ? true
+                : surveyAnswer === 'Нет'
+                  ? false
+                  : null,
+          };
+        }
+
+        // if (['operatorGrade'].includes(questionName)) {
+        //   return {
+        //     ...obj,
+        //     [questionName]: parseInt(surveyAnswer as string),
+        //   };
+        // }
+
         return {
           ...obj,
-          [questionName]: getSurveyAnswer(ans),
+          [questionName]: surveyAnswer,
         };
       },
       {

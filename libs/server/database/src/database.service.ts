@@ -9,6 +9,7 @@ import {
   RenovationUsersRepository,
   StreetsRepository,
   UsersRepository,
+  VksRepository,
 } from './repos';
 import { CasesRepository } from './repos';
 import { ControlOperationsRepository } from './repos/control-operations';
@@ -51,6 +52,7 @@ export class DatabaseService {
         );
         obj.address = new AddressRepository(obj, pgPromise());
         obj.equity = new EquityRepository(obj, pgPromise());
+        obj.vks = new VksRepository(obj, pgPromise());
       },
     };
 
