@@ -281,6 +281,9 @@ export class VksService {
 
   @Cron('0 20 12,19 * * *')
   private async updateSurveyData() {
+    const isDev = this.configService.get<string>('NODE_ENV') === 'development';
+    if (isDev) return;
+
     await this.GetQmsReport({
       dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
       dateTo: format(new Date(), 'dd.MM.yyyy'),
