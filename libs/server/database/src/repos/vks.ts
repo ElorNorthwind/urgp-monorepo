@@ -44,7 +44,7 @@ export class VksRepository {
       { name: 'org', prop: 'org' },
       { name: 'date', prop: 'date', cast: 'date' },
       { name: 'service_id', prop: 'serviceId' },
-      { name: 'service_name', prop: 'serviceName' },
+      // { name: 'service_name', prop: 'serviceName' },
       { name: 'status', prop: 'status' },
       { name: 'case_count', prop: 'caseCount', def: 0 },
       { name: 'booking_id', prop: 'bookingId' },
@@ -217,5 +217,18 @@ export class VksRepository {
       this.pgp.helpers.update(surveys, operatorSurveyColumnSet) +
       ` WHERE t.booking_code = v.booking_code AND v.client_survey_date::date - t.date BETWEEN 0 AND 90 AND t.client_survey_id IS NULL RETURNING id;`;
     return this.db.any(update).then((result: any) => result?.length || 0);
+  }
+
+  getKnownServiceIds(): Promise<number[]> {
+    const query = 'SELECT id FROM vks.services;';
+    return this.db
+      .any(query)
+      .then((result: any) => result.map((r: any) => r.id));
+  }
+
+  insertNewService(id: number, fullName: string): Promise<null> {
+    const query =
+      'INSERT INTO vks.services (id, full_name) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING;';
+    return this.db.none(query, [id, fullName]);
   }
 }

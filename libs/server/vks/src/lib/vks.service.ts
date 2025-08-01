@@ -34,6 +34,14 @@ export class VksService {
     private configService: ConfigService,
   ) {}
 
+  private async getKnownServiceIds(): Promise<number[]> {
+    return this.dbServise.db.vks.getKnownServiceIds();
+  }
+
+  private async insertNewService(id: number, fullName: string): Promise<null> {
+    return this.dbServise.db.vks.insertNewService(id, fullName);
+  }
+
   public async GetQmsReport(
     q: QmsQuery,
   ): Promise<{ clients: number; records: number }> {
@@ -156,20 +164,34 @@ export class VksService {
       range: 1,
     });
 
+    const knownServiceIds = await this.getKnownServiceIds();
+
     const Clients = new Map<number, BookingClient>();
     const records = rawData
       .filter((r: RawBookingRecord) => r?.['Код бронирования']?.length > 1)
-      .map((r: RawBookingRecord) => {
+      .map(async (r: RawBookingRecord) => {
+        if (!knownServiceIds.includes(parseInt(r?.['id услуги']))) {
+          await this.insertNewService(
+            parseInt(r?.['id услуги']),
+            r?.['Услуга'],
+          );
+        }
         const formatted = formatBookingRecord(r);
         Clients.set(formatted.clientId, formatBookingClient(r));
         return formatted;
       });
 
-    const clientsCount = await this.dbServise.db.vks.insertClients(
-      Array.from(Clients.values()),
-    );
+    const clientsCount =
+      Clients.size > 0
+        ? await this.dbServise.db.vks.insertClients(
+            Array.from(Clients.values()),
+          )
+        : 0;
 
-    const recordCount = await this.dbServise.db.vks.insertCases(records);
+    const recordCount =
+      records?.length > 0
+        ? await this.dbServise.db.vks.insertCases(await Promise.all(records))
+        : 0;
 
     return { clients: clientsCount, records: recordCount };
   }

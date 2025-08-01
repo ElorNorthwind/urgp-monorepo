@@ -172,8 +172,8 @@ CREATE TABLE vks.cases
     date DATE,
     time TEXT CHECK (time ~ '^\d{2}:\d{2}:\d{2}-\d{2}:\d{2}:\d{2}$'),
 
-    service_id INTEGER, -- REFERENCES vks.services(id) ON DELETE SET NULL,
-    service_name TEXT,
+    service_id INTEGER REFERENCES vks.services(id) ON DELETE SET NULL,
+    -- service_name TEXT,
     status TEXT,
 
     case_count INTEGER NOT NULL DEFAULT 0,
