@@ -18,9 +18,7 @@ import {
   from,
   lastValueFrom,
   map,
-  pipe,
   retry,
-  tap,
 } from 'rxjs';
 import * as XLSX from 'xlsx';
 import { ANKETOLOG_HTTP_OPTIONS, QMS_HTTP_OPTIONS } from '../config/constants';
