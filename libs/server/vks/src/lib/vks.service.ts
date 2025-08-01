@@ -25,6 +25,8 @@ import { ANKETOLOG_HTTP_OPTIONS, QMS_HTTP_OPTIONS } from '../config/constants';
 import { formatBookingClient } from './util/formatBookingClient';
 import { formatBookingRecord } from './util/formatBookingRecord';
 import { formatSurvey } from './util/fotmatSurvey';
+import { Cron } from '@nestjs/schedule';
+import { format, startOfYesterday } from 'date-fns';
 
 @Injectable()
 export class VksService {
@@ -275,5 +277,24 @@ export class VksService {
         );
     } while (collectedCount < totalCount);
     return { found: totalCount, updated: udatedCount };
+  }
+
+  @Cron('0 20 12,19 * * *')
+  private async updateSurveyData() {
+    await this.GetQmsReport({
+      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
+      dateTo: format(new Date(), 'dd.MM.yyyy'),
+    });
+    await this.GetAnketologSurvey({
+      surveyId: AnketologSurveyTypes.operator,
+      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
+      dateTo: format(new Date(), 'dd.MM.yyyy'),
+    });
+    await this.GetAnketologSurvey({
+      surveyId: AnketologSurveyTypes.client,
+      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
+      dateTo: format(new Date(), 'dd.MM.yyyy'),
+    });
+    Logger.log('Survey data updated');
   }
 }
