@@ -4,6 +4,7 @@ import {
   BookingRecord,
   ClientSurveyResponse,
   OperatorSurveyResponse,
+  VksCaseSlim,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 
@@ -32,6 +33,7 @@ export class VksRepository {
         schema: 'vks',
       },
     });
+
     const insert =
       this.pgp.helpers.insert(clients, clientsColumnSet) +
       ' ON CONFLICT (id) DO NOTHING RETURNING id;';
@@ -43,6 +45,7 @@ export class VksRepository {
       // { name: 'id', prop: 'id', cnd: true },
       { name: 'org', prop: 'org' },
       { name: 'date', prop: 'date', cast: 'date' },
+      { name: 'time', prop: 'time' },
       { name: 'service_id', prop: 'serviceId' },
       // { name: 'service_name', prop: 'serviceName' },
       { name: 'status', prop: 'status' },
@@ -98,9 +101,58 @@ export class VksRepository {
         schema: 'vks',
       },
     });
+
+    const onConflict = `
+DO UPDATE 
+SET (
+    status,
+    deputy_fio,
+    phone,
+    email,
+    tiket_call_time,
+    tiket_cancel_user_time,
+    tiket_cancel_oiv_time,
+    problem_audio,
+    problem_video,
+    problem_connection,
+    problem_tech,
+    vks_search_speed,
+    online_grade,
+    online_grade_comment,
+    operator_link,
+    participant_fio,
+    problem_summary,
+    address,
+    contract_number,
+    letter_number,
+    fls_number
+) = (
+    EXCLUDED.status,
+    EXCLUDED.deputy_fio,
+    EXCLUDED.phone,
+    EXCLUDED.email,
+    EXCLUDED.tiket_call_time,
+    EXCLUDED.tiket_cancel_user_time,
+    EXCLUDED.tiket_cancel_oiv_time,
+    EXCLUDED.problem_audio,
+    EXCLUDED.problem_video,
+    EXCLUDED.problem_connection,
+    EXCLUDED.problem_tech,
+    EXCLUDED.vks_search_speed,
+    EXCLUDED.online_grade,
+    EXCLUDED.online_grade_comment,
+    EXCLUDED.operator_link,
+    EXCLUDED.participant_fio,
+    EXCLUDED.problem_summary,
+    EXCLUDED.address,
+    EXCLUDED.contract_number,
+    EXCLUDED.letter_number,
+    EXCLUDED.fls_number
+)`;
+
     const insert =
       this.pgp.helpers.insert(records, casesColumnSet) +
-      ' ON CONFLICT (booking_code, date) DO NOTHING RETURNING id;';
+      ` ON CONFLICT (booking_code, date) ${onConflict || 'DO NOTHING'} RETURNING id;`;
     return this.db.any(insert).then((result: any) => result?.length || 0);
   }
 
@@ -230,5 +282,11 @@ export class VksRepository {
     const query =
       'INSERT INTO vks.services (id, full_name) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING;';
     return this.db.none(query, [id, fullName]);
+  }
+
+  getVksCasesSlim(): Promise<VksCaseSlim[]> {
+    const query =
+      'SELECT * FROM vks.cases_slim_view WHERE CURRENT_TIMESTAMP::date - date::date < 31;';
+    return this.db.any(query);
   }
 }

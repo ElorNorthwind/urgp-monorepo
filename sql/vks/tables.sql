@@ -74,13 +74,15 @@ CREATE TABLE vks.services
     responsible_email VARCHAR(255),
     responsible_name VARCHAR(255),
     department_id INTEGER REFERENCES vks.departments(id) ON DELETE SET NULL,
+    display_name text COLLATE pg_catalog."default" GENERATED ALWAYS AS (regexp_replace("substring"(full_name, 'вопрос(?:у|ам)\:\s(.*?)(?:$|\n)'::text), '[»«]|\.$'::text, ''::text, 'g'::text)) STORED,
+
     PRIMARY KEY (id)
 );
 ALTER TABLE vks.services
     OWNER to renovation_user;
 
 INSERT INTO vks.services (id, full_name, short_name, property_type, mailbox, responsible_email, responsible_name, department_id) VALUES
-    (416, 'Онлайн-консультация по жилищным вопросам: Договоры социального найма (безвозмездного пользования) - заключение, внесение изменений.', 'ГУ ДСП', 'Жилищные вопросы', 'dgi-consult12@mos.ru', 'NaumovOV1@mos.ru', 'Наумов О.В.',1),
+    (416, 'Онлайн-консультация по жилищным вопросам: Договоры социального найма (безвозмездного пользования) - заключение, внесение изменений.', 'ГУ ДСН', 'Жилищные вопросы', 'dgi-consult12@mos.ru', 'NaumovOV1@mos.ru', 'Наумов О.В.',1),
     (417, 'Онлайн-консультация по жилищным вопросам: Приватизация/деприватизация жилых помещений', 'Приватизация', 'Жилищные вопросы', 'dgi-consult12@mos.ru', 'NaumovOV1@mos.ru', 'Наумов О.В.',1),
     (418, 'Онлайн-консультация по вопросу: «Получение справочной информации по обжалованию отказов в предоставлении государственных услуг в жилищной сфере в соответствии с Постановлением Правительства Москвы от 10.09.2014 № 521-ПП»', 'Отказы ГУ', 'Жилищные вопросы', 'dgi-consult8@mos.ru', 'PolyarushDB@mos.ru', 'Поляруш Д.Б.',2),
     (422, 'Онлайн-консультация по вопросу: «Судебные споры с Департаментом городского имущества города Москвы по жилищным вопросам в судах общей юрисдикции»', 'Суды с ДГИ', 'Жилищные вопросы', 'dgi-consult7@mos.ru', 'Ortega-khilMI@mos.ru', 'Ортега-Хиль М.И.',3),
@@ -153,6 +155,18 @@ CREATE TABLE vks.clients
     snils VARCHAR(14),
     ogrn VARCHAR(255),
     inn VARCHAR(255),
+    short_name text GENERATED ALWAYS AS (
+        CASE 
+            WHEN type = 'Юридическое лицо' OR surname IS NULL THEN 'Организация'
+            ELSE INITCAP(surname || ' ' || COALESCE(LEFT(first_name, 1) || '.', '') || COALESCE(LEFT(last_name, 1) || '.', ''))
+        END
+    ) STORED,
+    full_name text GENERATED ALWAYS AS (
+        CASE 
+            WHEN type = 'Юридическое лицо' OR surname IS NULL THEN org_name
+            ELSE INITCAP(surname || ' ' || COALESCE(first_name || ' ', '') || COALESCE(last_name || ' ', ''))
+        END
+    ) STORED,
 
     PRIMARY KEY (id),
 );

@@ -4,13 +4,13 @@ import {
   getAdditionalField,
 } from './getAdditionalField';
 import { transformEmptyToNull } from './transformEmptyToNull';
+import { Logger } from '@nestjs/common';
 
 export function formatBookingRecord(r: RawBookingRecord): BookingRecord {
   return transformEmptyToNull({
     org: r?.['Отделение'],
     date: r?.['Дата записи'],
     time: r?.['Время записи'],
-
     serviceId: parseInt(r?.['id услуги'] || '0'),
     serviceName: r?.['Услуга'],
 

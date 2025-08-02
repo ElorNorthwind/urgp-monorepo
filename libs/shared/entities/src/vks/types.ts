@@ -204,3 +204,34 @@ const clientSurveyResponseSchema = surveyResponseSchema.extend({
   commentNegative: z.string().nullable(),
 });
 export type ClientSurveyResponse = z.infer<typeof clientSurveyResponseSchema>;
+
+export const vksCaseSlimSchema = z.object({
+  id: z.coerce.number().int().nonnegative(),
+  date: z.string().datetime(), // ISO 8601 date string
+  serviceId: z.coerce.number().int().nonnegative(),
+  serviceName: z.string().nullable(),
+  propertyType: z.string().nullable(),
+  departmentId: z.coerce.number().int().nonnegative().nullable(),
+  departmentName: z.string().nullable(),
+  zamId: z.coerce.number().int().nonnegative(),
+  zamName: z.string().nullable(),
+  status: z.string(),
+  bookingCode: z.string().nullable(),
+  bookingSource: z.enum(['Онлайн', 'Календарь', 'Портал ГУ', 'Иной']),
+  hasTechnicalProblems: z.boolean(),
+  isTechnical: z.boolean(),
+  gradeSource: z.enum(['survey', 'online', 'none']),
+  grade: z.number().nullable(),
+  clientId: z.coerce.number().int().nonnegative(),
+  clientFio: z.string().nullable(),
+  operatorFio: z.string().nullable(),
+  operatorSurveyDate: z.string().datetime().nullable(), // ISO 8601 date string
+  clientSurveyDate: z.string().datetime().nullable(), // ISO 8601 date string
+});
+export type VksCaseSlim = z.infer<typeof vksCaseSlimSchema>;
+
+export type vksUpdateQueryReturnValue = {
+  qms: { clients: number; records: number };
+  operator: { found: number; updated: number };
+  client: { found: number; updated: number };
+};

@@ -9,6 +9,8 @@ import {
   OperatorSurveyResponse,
   QmsQuery,
   RawBookingRecord,
+  vksUpdateQueryReturnValue,
+  VksCaseSlim,
 } from '@urgp/shared/entities';
 import { AxiosRequestConfig } from 'axios';
 import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
@@ -35,6 +37,10 @@ export class VksService {
     private readonly axios: HttpService,
     private configService: ConfigService,
   ) {}
+
+  public async getVksSlimCases(): Promise<VksCaseSlim[]> {
+    return this.dbServise.db.vks.getVksCasesSlim();
+  }
 
   private async getKnownServiceIds(): Promise<number[]> {
     return this.dbServise.db.vks.getKnownServiceIds();
@@ -280,7 +286,7 @@ export class VksService {
   }
 
   @Cron('0 20 12,19 * * *')
-  private async updateSurveyData() {
+  private async cronUpdateSurveyData() {
     const isDev = this.configService.get<string>('NODE_ENV') === 'development';
     if (isDev) return;
 
@@ -299,5 +305,29 @@ export class VksService {
       dateTo: format(new Date(), 'dd.MM.yyyy'),
     });
     Logger.log('Survey data updated');
+  }
+
+  public async updateSurveyData(
+    q: QmsQuery,
+  ): Promise<vksUpdateQueryReturnValue> {
+    const qms = await this.GetQmsReport({
+      dateFrom: q.dateFrom,
+      dateTo: q.dateTo,
+    });
+    const operator = await this.GetAnketologSurvey({
+      surveyId: AnketologSurveyTypes.operator,
+      dateFrom: q.dateFrom,
+      dateTo: q.dateTo,
+    });
+    const client = await this.GetAnketologSurvey({
+      surveyId: AnketologSurveyTypes.client,
+      dateFrom: q.dateFrom,
+      dateTo: q.dateTo,
+    });
+    return {
+      qms,
+      operator,
+      client,
+    };
   }
 }
