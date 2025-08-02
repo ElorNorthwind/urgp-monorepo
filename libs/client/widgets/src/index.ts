@@ -51,3 +51,7 @@ export * from './EquityObjectSidePanel';
 export * from './EquityObjectCardTabs';
 export * from './EquityOperationLogFilterSidebar';
 export * from './SelectedEquityObjectsActionBar';
+
+export * from './VksNavbar';
+export * from './VksCasesSidePanel';
+export * from './VksCasesFilterSidebar';

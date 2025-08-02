@@ -8,6 +8,7 @@ import {
   clearIncidentTableColumns,
   clearPendingTableColumns,
   clearProblemTableColumns,
+  clearVksCasesTableColumns,
   cn,
   Command,
   CommandEmpty,
@@ -22,12 +23,14 @@ import {
   selectIncidentTableColumns,
   selectPendingTableColumns,
   selectProblemTableColumns,
+  selectVksCasesTableColumns,
   Separator,
   setEquityObjectTableColumns,
   setEquityOperationLogTableColumns,
   setIncidentTableColumns,
   setPendingTableColumns,
   setProblemTableColumns,
+  setVksCasesTableColumns,
 } from '@urgp/client/shared';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from '@tanstack/react-router';
@@ -38,6 +41,7 @@ import {
   defaultIncidentColumns,
   defaultPendingColumns,
   defaultProblemColumns,
+  defaultVksCasesColumns,
 } from '@urgp/client/entities';
 import {
   ActionCreatorWithoutPayload,
@@ -68,6 +72,7 @@ function ColumnVisibilitySelector(
   const pendingColumnVisibility = useSelector(selectPendingTableColumns);
   const problemColumnVisibility = useSelector(selectProblemTableColumns);
   const equityObjectsVisibility = useSelector(selectEquityObjectTableColumns);
+  const vksCasesVisibility = useSelector(selectVksCasesTableColumns);
   const equityOperationLogVisibility = useSelector(
     selectEquityOperationLogTableColumns,
   );
@@ -103,6 +108,12 @@ function ColumnVisibilitySelector(
       columnVisibility: equityOperationLogVisibility,
       setDispatch: setEquityOperationLogTableColumns,
       clearDisparch: clearEquityOperationLogTableColumns,
+    },
+    '/vks/cases': {
+      defaultVisibility: defaultVksCasesColumns,
+      columnVisibility: vksCasesVisibility,
+      setDispatch: setVksCasesTableColumns,
+      clearDisparch: clearVksCasesTableColumns,
     },
   };
 

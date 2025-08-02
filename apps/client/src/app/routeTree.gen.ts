@@ -16,15 +16,18 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as OldbuildingsImport } from './routes/oldbuildings'
 import { Route as LoginImport } from './routes/login'
 import { Route as XmlRouteImport } from './routes/xml/route'
+import { Route as VksRouteImport } from './routes/vks/route'
 import { Route as RenovationRouteImport } from './routes/renovation/route'
 import { Route as EquityRouteImport } from './routes/equity/route'
 import { Route as ControlRouteImport } from './routes/control/route'
 import { Route as AddressRouteImport } from './routes/address/route'
 import { Route as XmlIndexImport } from './routes/xml/index'
+import { Route as VksIndexImport } from './routes/vks/index'
 import { Route as RenovationIndexImport } from './routes/renovation/index'
 import { Route as EquityIndexImport } from './routes/equity/index'
 import { Route as ControlIndexImport } from './routes/control/index'
 import { Route as AddressIndexImport } from './routes/address/index'
+import { Route as VksCasesImport } from './routes/vks/cases'
 import { Route as RenovationStagesImport } from './routes/renovation/stages'
 import { Route as RenovationSpecialapartmentsImport } from './routes/renovation/specialapartments'
 import { Route as RenovationOldbuildingsImport } from './routes/renovation/oldbuildings'
@@ -93,6 +96,12 @@ const XmlRouteRoute = XmlRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const VksRouteRoute = VksRouteImport.update({
+  id: '/vks',
+  path: '/vks',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const RenovationRouteRoute = RenovationRouteImport.update({
   id: '/renovation',
   path: '/renovation',
@@ -129,6 +138,12 @@ const XmlIndexRoute = XmlIndexImport.update({
   getParentRoute: () => XmlRouteRoute,
 } as any)
 
+const VksIndexRoute = VksIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VksRouteRoute,
+} as any)
+
 const RenovationIndexRoute = RenovationIndexImport.update({
   id: '/',
   path: '/',
@@ -151,6 +166,12 @@ const AddressIndexRoute = AddressIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AddressRouteRoute,
+} as any)
+
+const VksCasesRoute = VksCasesImport.update({
+  id: '/cases',
+  path: '/cases',
+  getParentRoute: () => VksRouteRoute,
 } as any)
 
 const RenovationStagesRoute = RenovationStagesImport.update({
@@ -336,6 +357,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RenovationRouteImport
       parentRoute: typeof rootRoute
     }
+    '/vks': {
+      id: '/vks'
+      path: '/vks'
+      fullPath: '/vks'
+      preLoaderRoute: typeof VksRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/xml': {
       id: '/xml'
       path: '/xml'
@@ -483,6 +511,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RenovationStagesImport
       parentRoute: typeof RenovationRouteImport
     }
+    '/vks/cases': {
+      id: '/vks/cases'
+      path: '/cases'
+      fullPath: '/vks/cases'
+      preLoaderRoute: typeof VksCasesImport
+      parentRoute: typeof VksRouteImport
+    }
     '/address/': {
       id: '/address/'
       path: '/'
@@ -510,6 +545,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/renovation/'
       preLoaderRoute: typeof RenovationIndexImport
       parentRoute: typeof RenovationRouteImport
+    }
+    '/vks/': {
+      id: '/vks/'
+      path: '/'
+      fullPath: '/vks/'
+      preLoaderRoute: typeof VksIndexImport
+      parentRoute: typeof VksRouteImport
     }
     '/xml/': {
       id: '/xml/'
@@ -686,6 +728,20 @@ const RenovationRouteRouteWithChildren = RenovationRouteRoute._addFileChildren(
   RenovationRouteRouteChildren,
 )
 
+interface VksRouteRouteChildren {
+  VksCasesRoute: typeof VksCasesRoute
+  VksIndexRoute: typeof VksIndexRoute
+}
+
+const VksRouteRouteChildren: VksRouteRouteChildren = {
+  VksCasesRoute: VksCasesRoute,
+  VksIndexRoute: VksIndexRoute,
+}
+
+const VksRouteRouteWithChildren = VksRouteRoute._addFileChildren(
+  VksRouteRouteChildren,
+)
+
 interface XmlRouteRouteChildren {
   XmlIndexRoute: typeof XmlIndexRoute
 }
@@ -704,6 +760,7 @@ export interface FileRoutesByFullPath {
   '/control': typeof ControlRouteRouteWithChildren
   '/equity': typeof EquityRouteRouteWithChildren
   '/renovation': typeof RenovationRouteRouteWithChildren
+  '/vks': typeof VksRouteRouteWithChildren
   '/xml': typeof XmlRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/oldbuildings': typeof OldbuildingsRoute
@@ -725,10 +782,12 @@ export interface FileRoutesByFullPath {
   '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
   '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute
   '/renovation/stages': typeof RenovationStagesRoute
+  '/vks/cases': typeof VksCasesRoute
   '/address/': typeof AddressIndexRoute
   '/control/': typeof ControlIndexRoute
   '/equity/': typeof EquityIndexRoute
   '/renovation/': typeof RenovationIndexRoute
+  '/vks/': typeof VksIndexRoute
   '/xml/': typeof XmlIndexRoute
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
@@ -759,10 +818,12 @@ export interface FileRoutesByTo {
   '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
   '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute
   '/renovation/stages': typeof RenovationStagesRoute
+  '/vks/cases': typeof VksCasesRoute
   '/address': typeof AddressIndexRoute
   '/control': typeof ControlIndexRoute
   '/equity': typeof EquityIndexRoute
   '/renovation': typeof RenovationIndexRoute
+  '/vks': typeof VksIndexRoute
   '/xml': typeof XmlIndexRoute
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
@@ -780,6 +841,7 @@ export interface FileRoutesById {
   '/control': typeof ControlRouteRouteWithChildren
   '/equity': typeof EquityRouteRouteWithChildren
   '/renovation': typeof RenovationRouteRouteWithChildren
+  '/vks': typeof VksRouteRouteWithChildren
   '/xml': typeof XmlRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/oldbuildings': typeof OldbuildingsRoute
@@ -801,10 +863,12 @@ export interface FileRoutesById {
   '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
   '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute
   '/renovation/stages': typeof RenovationStagesRoute
+  '/vks/cases': typeof VksCasesRoute
   '/address/': typeof AddressIndexRoute
   '/control/': typeof ControlIndexRoute
   '/equity/': typeof EquityIndexRoute
   '/renovation/': typeof RenovationIndexRoute
+  '/vks/': typeof VksIndexRoute
   '/xml/': typeof XmlIndexRoute
   '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
@@ -823,6 +887,7 @@ export interface FileRouteTypes {
     | '/control'
     | '/equity'
     | '/renovation'
+    | '/vks'
     | '/xml'
     | '/login'
     | '/oldbuildings'
@@ -844,10 +909,12 @@ export interface FileRouteTypes {
     | '/renovation/oldbuildings'
     | '/renovation/specialapartments'
     | '/renovation/stages'
+    | '/vks/cases'
     | '/address/'
     | '/control/'
     | '/equity/'
     | '/renovation/'
+    | '/vks/'
     | '/xml/'
     | '/control/settings/approve-chain'
     | '/control/settings/change-password'
@@ -877,10 +944,12 @@ export interface FileRouteTypes {
     | '/renovation/oldbuildings'
     | '/renovation/specialapartments'
     | '/renovation/stages'
+    | '/vks/cases'
     | '/address'
     | '/control'
     | '/equity'
     | '/renovation'
+    | '/vks'
     | '/xml'
     | '/control/settings/approve-chain'
     | '/control/settings/change-password'
@@ -896,6 +965,7 @@ export interface FileRouteTypes {
     | '/control'
     | '/equity'
     | '/renovation'
+    | '/vks'
     | '/xml'
     | '/login'
     | '/oldbuildings'
@@ -917,10 +987,12 @@ export interface FileRouteTypes {
     | '/renovation/oldbuildings'
     | '/renovation/specialapartments'
     | '/renovation/stages'
+    | '/vks/cases'
     | '/address/'
     | '/control/'
     | '/equity/'
     | '/renovation/'
+    | '/vks/'
     | '/xml/'
     | '/control/settings/approve-chain'
     | '/control/settings/change-password'
@@ -938,6 +1010,7 @@ export interface RootRouteChildren {
   ControlRouteRoute: typeof ControlRouteRouteWithChildren
   EquityRouteRoute: typeof EquityRouteRouteWithChildren
   RenovationRouteRoute: typeof RenovationRouteRouteWithChildren
+  VksRouteRoute: typeof VksRouteRouteWithChildren
   XmlRouteRoute: typeof XmlRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
   OldbuildingsRoute: typeof OldbuildingsRoute
@@ -952,6 +1025,7 @@ const rootRouteChildren: RootRouteChildren = {
   ControlRouteRoute: ControlRouteRouteWithChildren,
   EquityRouteRoute: EquityRouteRouteWithChildren,
   RenovationRouteRoute: RenovationRouteRouteWithChildren,
+  VksRouteRoute: VksRouteRouteWithChildren,
   XmlRouteRoute: XmlRouteRouteWithChildren,
   LoginRoute: LoginRoute,
   OldbuildingsRoute: OldbuildingsRoute,
@@ -975,6 +1049,7 @@ export const routeTree = rootRoute
         "/control",
         "/equity",
         "/renovation",
+        "/vks",
         "/xml",
         "/login",
         "/oldbuildings",
@@ -1023,6 +1098,13 @@ export const routeTree = rootRoute
         "/renovation/specialapartments",
         "/renovation/stages",
         "/renovation/"
+      ]
+    },
+    "/vks": {
+      "filePath": "vks/route.tsx",
+      "children": [
+        "/vks/cases",
+        "/vks/"
       ]
     },
     "/xml": {
@@ -1117,6 +1199,10 @@ export const routeTree = rootRoute
       "filePath": "renovation/stages.tsx",
       "parent": "/renovation"
     },
+    "/vks/cases": {
+      "filePath": "vks/cases.tsx",
+      "parent": "/vks"
+    },
     "/address/": {
       "filePath": "address/index.tsx",
       "parent": "/address"
@@ -1132,6 +1218,10 @@ export const routeTree = rootRoute
     "/renovation/": {
       "filePath": "renovation/index.tsx",
       "parent": "/renovation"
+    },
+    "/vks/": {
+      "filePath": "vks/index.tsx",
+      "parent": "/vks"
     },
     "/xml/": {
       "filePath": "xml/index.tsx",

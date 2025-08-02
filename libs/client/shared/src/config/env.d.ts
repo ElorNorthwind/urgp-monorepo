@@ -31,3 +31,4 @@ declare module '@tanstack/table-core' {
 
 export type CaseRoutes = (typeof CASE_ROUTES)[number];
 export type EquityRoutes = (typeof EQUITY_ROUTES)[number];
+export type VksRoutes = (typeof EQUITY_ROUTES)[number];

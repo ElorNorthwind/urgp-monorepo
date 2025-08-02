@@ -65,6 +65,7 @@ export * from './store/auth/authApi';
 export * from './store/auth/authSlice';
 export * from './store/control/controlSlice';
 export * from './store/equity/equitySlice';
+export * from './store/vks/vksSlice';
 
 //export hooks
 export * from './hooks/useIsMobile';

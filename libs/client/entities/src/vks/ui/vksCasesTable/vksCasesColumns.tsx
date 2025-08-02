@@ -1,0 +1,200 @@
+import { EquityObject, VksCaseSlim } from '@urgp/shared/entities';
+import { createColumnHelper } from '@tanstack/react-table';
+import { Checkbox } from '@urgp/client/shared';
+import { EquityCheckboxCell } from './cells/EquityCheckboxCell';
+import { EquityBuildingCell } from './cells/EquityBuildingCell';
+import { EquityObjectNumberCell } from './cells/EquityObjectNumberCell';
+import { EquityObjectStatusCell } from './cells/EquityObjectStatusCell';
+import { EquityObjectProblemCell } from './cells/EquityObjectProblemCell';
+import { EquityCreditorCell } from './cells/EquityCreditorCell';
+import { EquityObjectProgressCell } from './cells/EquityObjectProgressCell';
+
+const columnHelper = createColumnHelper<VksCaseSlim>();
+
+export const vksCasesColumns = [
+  columnHelper.accessor(
+    (row) => {
+      return row?.date || '';
+    },
+    {
+      id: 'date',
+      header: 'Дата',
+      size: 60,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      // cell: (props) => {
+      //   return <EquityBuildingCell {...props} />;
+      // },
+    },
+  ),
+
+  columnHelper.accessor(
+    (row) => {
+      return row?.clientFio || '';
+    },
+    {
+      id: 'client',
+      header: 'Заявитель',
+      size: 80,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      // cell: (props) => {
+      //   return <EquityBuildingCell {...props} />;
+      // },
+    },
+  ),
+
+  columnHelper.accessor(
+    (row) => {
+      return row?.operatorFio || '';
+    },
+    {
+      id: 'operator',
+      header: 'Консультант',
+      size: 80,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      // cell: (props) => {
+      //   return <EquityBuildingCell {...props} />;
+      // },
+    },
+  ),
+
+  columnHelper.accessor(
+    (row) => {
+      return row?.grade || '';
+    },
+    {
+      id: 'grade',
+      header: 'Оценка',
+      size: 20,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      // cell: (props) => {
+      //   return <EquityBuildingCell {...props} />;
+      // },
+    },
+  ),
+
+  // columnHelper.display({
+  //   id: 'select',
+  //   size: 40,
+  //   enableHiding: false,
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       className="size-5"
+  //       checked={
+  //         table.getIsAllRowsSelected()
+  //           ? true
+  //           : table.getIsSomeRowsSelected()
+  //             ? 'indeterminate'
+  //             : false
+  //       }
+  //       onClick={table.getToggleAllRowsSelectedHandler()}
+  //     />
+  //   ),
+  //   cell: (props) => {
+  //     return <EquityCheckboxCell {...props} />;
+  //   },
+  // }),
+
+  // columnHelper.accessor(
+  //   (row) => {
+  //     return row?.addressShort || '';
+  //   },
+  //   {
+  //     id: 'address',
+  //     header: 'Адрес',
+  //     size: 120,
+  //     enableHiding: true,
+  //     enableSorting: true,
+  //     sortDescFirst: true,
+  //     cell: (props) => {
+  //       return <EquityBuildingCell {...props} />;
+  //     },
+  //   },
+  // ),
+
+  // columnHelper.accessor(
+  //   (row) => {
+  //     return row?.npp || 0;
+  //   },
+  //   {
+  //     id: 'number',
+  //     header: 'Помещение',
+  //     size: 160,
+  //     enableHiding: true,
+  //     enableSorting: true,
+  //     sortDescFirst: true,
+  //     cell: (props) => {
+  //       return <EquityObjectNumberCell {...props} />;
+  //     },
+  //   },
+  // ),
+
+  // columnHelper.accessor(
+  //   (row) => {
+  //     return row?.statusId || 0;
+  //   },
+  //   {
+  //     id: 'workStatus',
+  //     header: 'Статус работы',
+  //     size: 170,
+  //     enableHiding: true,
+  //     enableSorting: true,
+  //     sortDescFirst: true,
+  //     cell: (props) => {
+  //       return <EquityObjectStatusCell {...props} />;
+  //     },
+  //   },
+  // ),
+
+  // columnHelper.accessor(
+  //   (row) => {
+  //     return row?.statusId || 0;
+  //   },
+  //   {
+  //     id: 'rgProgress',
+  //     header: 'Заключения',
+  //     size: 120,
+  //     enableHiding: true,
+  //     enableSorting: true,
+  //     sortDescFirst: true,
+  //     cell: (props) => {
+  //       return <EquityObjectProgressCell {...props} />;
+  //     },
+  //   },
+  // ),
+
+  // columnHelper.accessor((row): string => row?.creditor || '', {
+  //   id: 'creditor',
+  //   header: 'ФИО кредитора',
+  //   size: 120,
+  //   enableSorting: true,
+  //   sortDescFirst: true,
+  //   cell: (props) => {
+  //     return <EquityCreditorCell {...props} />;
+  //   },
+  // }),
+
+  // columnHelper.accessor(
+  //   (row) => {
+  //     return row?.problems?.join(', ') || '';
+  //   },
+  //   {
+  //     id: 'problem',
+  //     header: 'Проблемы',
+  //     size: 100,
+  //     enableHiding: true,
+  //     enableSorting: true,
+  //     sortDescFirst: true,
+  //     cell: (props) => {
+  //       return <EquityObjectProblemCell {...props} />;
+  //     },
+  //   },
+  // ),
+];

@@ -12,10 +12,10 @@ import {
 import { VksService } from './vks.service';
 
 @Controller('vks')
-@UseGuards(AccessTokenGuard)
 export class VksController {
   constructor(private readonly vks: VksService) {}
 
+  @UseGuards(AccessTokenGuard)
   @Post('update')
   updateSurveyData(
     @Body(new ZodValidationPipe(qmsQuerySchema))

@@ -1,5 +1,25 @@
 import { z } from 'zod';
-import { AnketologSurveyTypes, anketologSurveyTypesValues } from './config';
+import { AnketologSurveyTypes } from './config';
+
+// Параметры поиска на странице
+const queryNumberArray = z
+  .string()
+  .transform((value) => value.split(','))
+  .pipe(
+    z.array(
+      z
+        .string()
+        .transform((value) => Number(value))
+        .pipe(z.number()),
+    ),
+  )
+  .or(z.number().array());
+
+const queryStringArray = z
+  .string()
+  .transform((value) => value.split(','))
+  .pipe(z.string().array())
+  .or(z.string().array());
 
 export const anketologQuerySchema = z.object({
   surveyId: z
@@ -51,3 +71,24 @@ export const vksCasesQuerySchema = z
   })
   .partial();
 export type VksCasesQuery = z.infer<typeof vksCasesQuerySchema>;
+
+export const vksCasesPageFilterSchema = z
+  .object({
+    query: z.string(),
+    service: queryNumberArray,
+    department: queryNumberArray,
+    status: queryStringArray,
+  })
+  .partial();
+export type VksCasesPageFilter = z.infer<typeof vksCasesPageFilterSchema>;
+
+export const vksCasesPageSearchSchema = vksCasesPageFilterSchema
+  .extend({
+    dateFrom: vksCasesQuerySchema.shape.dateFrom,
+    dateTo: vksCasesQuerySchema.shape.dateTo,
+    selectedCase: z.coerce.number(),
+    sortKey: z.string(),
+    sortDir: z.enum(['asc', 'desc']),
+  })
+  .partial();
+export type VksCasesPageSearch = z.infer<typeof vksCasesPageSearchSchema>;

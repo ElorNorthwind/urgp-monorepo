@@ -6,4 +6,5 @@ export const lsKeys = {
   PROBLEM_TABLE_KEY: 'problemTable',
   EQUITY_OBJECTS_TABLE_KEY: 'equityObjectsTable',
   EQUITY_OPERATION_LOG_TABLE_KEY: 'equityOperationLogTable',
+  VKS_CASES_TABLE_KEY: 'vksCasesTable',
 } as const;
