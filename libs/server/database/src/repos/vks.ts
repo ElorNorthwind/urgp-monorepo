@@ -4,7 +4,9 @@ import {
   BookingRecord,
   ClientSurveyResponse,
   OperatorSurveyResponse,
+  QmsQuery,
   VksCaseSlim,
+  VksCasesQuery,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 
@@ -105,6 +107,8 @@ export class VksRepository {
     const onConflict = `
 DO UPDATE 
 SET (
+    date,
+    time,
     status,
     deputy_fio,
     phone,
@@ -127,6 +131,8 @@ SET (
     letter_number,
     fls_number
 ) = (
+    EXCLUDED.date,
+    EXCLUDED.time,
     EXCLUDED.status,
     EXCLUDED.deputy_fio,
     EXCLUDED.phone,
@@ -284,9 +290,12 @@ SET (
     return this.db.none(query, [id, fullName]);
   }
 
-  getVksCasesSlim(): Promise<VksCaseSlim[]> {
+  getVksCasesSlim(q: VksCasesQuery): Promise<VksCaseSlim[]> {
     const query =
-      'SELECT * FROM vks.cases_slim_view WHERE CURRENT_TIMESTAMP::date - date::date < 31;';
-    return this.db.any(query);
+      'SELECT * FROM vks.cases_slim_view WHERE date BETWEEN $1::date AND $2::date;';
+    return this.db.any(query, [
+      q?.dateFrom || '-infinity',
+      q?.dateTo || 'infinity',
+    ]);
   }
 }

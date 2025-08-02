@@ -1,15 +1,15 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { AccessTokenGuard } from '@urgp/server/auth';
-import { format, startOfYesterday } from 'date-fns';
-import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
-import { VksService } from './vks.service';
+import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
   QmsQuery,
   qmsQuerySchema,
   VksCaseSlim,
+  VksCasesQuery,
+  vksCasesQuerySchema,
   vksUpdateQueryReturnValue,
 } from '@urgp/shared/entities';
-import { ZodValidationPipe } from '@urgp/server/pipes';
+import { VksService } from './vks.service';
 
 @Controller('vks')
 @UseGuards(AccessTokenGuard)
@@ -25,8 +25,10 @@ export class VksController {
   }
 
   @Get('cases')
-  getVksSlimCases(): Promise<VksCaseSlim[]> {
-    return this.vks.getVksSlimCases();
+  getVksSlimCases(
+    @Query(new ZodValidationPipe(vksCasesQuerySchema)) q: VksCasesQuery,
+  ): Promise<VksCaseSlim[]> {
+    return this.vks.getVksSlimCases(q);
   }
 
   // @Get('qms')
@@ -36,7 +38,7 @@ export class VksController {
   // }> {
   //   return this.vks.GetQmsReport({
   //     // dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
-  //     dateFrom: '30.07.2025',
+  //     dateFrom: '01.01.2024',
   //     dateTo: format(new Date(), 'dd.MM.yyyy'),
   //   });
   // }

@@ -33,3 +33,21 @@ export const qmsQuerySchema = anketologQuerySchema.pick({
   dateTo: true,
 });
 export type QmsQuery = z.infer<typeof qmsQuerySchema>;
+
+export const vksCasesQuerySchema = z
+  .object({
+    dateFrom: z
+      .string()
+      .datetime()
+      .or(z.string().regex(/\d{2}.\d{2}.\d{4}/))
+      .or(z.literal('-infinity'))
+      .default('-infinity'),
+    dateTo: z
+      .string()
+      .datetime()
+      .or(z.string().regex(/\d{2}.\d{2}.\d{4}/))
+      .or(z.literal('infinity'))
+      .default('infinity'),
+  })
+  .partial();
+export type VksCasesQuery = z.infer<typeof vksCasesQuerySchema>;

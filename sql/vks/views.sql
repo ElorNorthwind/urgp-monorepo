@@ -5,6 +5,7 @@ CREATE OR REPLACE VIEW vks.cases_slim_view  AS
     SELECT
         c.id,
         c.date,
+        c.time,
         c.service_id as "serviceId", 
         s.short_name as "serviceName",
 
@@ -41,7 +42,7 @@ CREATE OR REPLACE VIEW vks.cases_slim_view  AS
         COALESCE(c.client_survey_grade, c.online_grade) as grade,
         -- COALESCE(COALESCE(c.client_survey_comment_positive, '') || COALESCE(c.client_survey_comment_negative, ''), c.online_grade_comment) as "gradeComment",
         c.client_id as "clientId",
-        COALESCE(c.participant_fio, CASE WHEN cl.short_name = 'Организация' THEN null ELSE cl.short_name END, c.deputy_fio ) as "clientFio",
+        COALESCE(c.participant_fio, CASE WHEN cl.short_name = 'Организация' THEN null ELSE cl.full_name END, c.deputy_fio ) as "clientFio",
         c.operator_survey_fio as "operatorFio",
 
         
@@ -52,7 +53,8 @@ CREATE OR REPLACE VIEW vks.cases_slim_view  AS
     LEFT JOIN vks.clients cl ON cl.id = c.client_id
     LEFT JOIN vks.services s ON c.service_id = s.id
     LEFT JOIN vks.departments d ON s.department_id = d.id
-    LEFT JOIN vks.zams z ON d.zam_id = z.id;
+    LEFT JOIN vks.zams z ON d.zam_id = z.id
+    ORDER BY c.date DESC NULLS LAST, c.time DESC NULLS LAST, c.id DESC NULLS LAST;
 ----------------------------------------------------------------------
 ALTER TABLE vks.cases_slim_view
     OWNER TO renovation_user;

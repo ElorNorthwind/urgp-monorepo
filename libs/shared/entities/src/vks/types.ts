@@ -208,6 +208,12 @@ export type ClientSurveyResponse = z.infer<typeof clientSurveyResponseSchema>;
 export const vksCaseSlimSchema = z.object({
   id: z.coerce.number().int().nonnegative(),
   date: z.string().datetime(), // ISO 8601 date string
+  time: z
+    .string()
+    .regex(
+      /^\d{2}:\d{2}:\d{2}-\d{2}:\d{2}:\d{2}$/,
+      'Неверный формат времени (HH:MM:SS-HH:MM:SS)',
+    ),
   serviceId: z.coerce.number().int().nonnegative(),
   serviceName: z.string().nullable(),
   propertyType: z.string().nullable(),

@@ -263,3 +263,5 @@ CREATE TABLE vks.cases
 );
 ALTER TABLE vks.cases
     OWNER to renovation_user;
+
+CREATE INDEX new_first_order ON vks.cases (date DESC NULLS LAST, time DESC NULLS LAST, id DESC NULLS LAST);

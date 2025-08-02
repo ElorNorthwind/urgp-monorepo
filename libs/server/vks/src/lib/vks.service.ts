@@ -11,6 +11,7 @@ import {
   RawBookingRecord,
   vksUpdateQueryReturnValue,
   VksCaseSlim,
+  VksCasesQuery,
 } from '@urgp/shared/entities';
 import { AxiosRequestConfig } from 'axios';
 import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
@@ -38,8 +39,8 @@ export class VksService {
     private configService: ConfigService,
   ) {}
 
-  public async getVksSlimCases(): Promise<VksCaseSlim[]> {
-    return this.dbServise.db.vks.getVksCasesSlim();
+  public async getVksSlimCases(q: VksCasesQuery): Promise<VksCaseSlim[]> {
+    return this.dbServise.db.vks.getVksCasesSlim(q);
   }
 
   private async getKnownServiceIds(): Promise<number[]> {
