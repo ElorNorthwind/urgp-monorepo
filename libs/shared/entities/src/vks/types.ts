@@ -230,6 +230,13 @@ export const vksCaseSlimSchema = z.object({
   grade: z.number().nullable(),
   clientId: z.coerce.number().int().nonnegative(),
   clientFio: z.string().nullable(),
+  clientType: z
+    .enum([
+      'Физическое лицо',
+      'Индивидуальный предприниматель',
+      'Юридическое лицо',
+    ])
+    .nullable(),
   operatorFio: z.string().nullable(),
   operatorSurveyDate: z.string().datetime().nullable(), // ISO 8601 date string
   clientSurveyDate: z.string().datetime().nullable(), // ISO 8601 date string

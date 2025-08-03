@@ -43,6 +43,7 @@ CREATE OR REPLACE VIEW vks.cases_slim_view  AS
         -- COALESCE(COALESCE(c.client_survey_comment_positive, '') || COALESCE(c.client_survey_comment_negative, ''), c.online_grade_comment) as "gradeComment",
         c.client_id as "clientId",
         COALESCE(c.participant_fio, CASE WHEN cl.short_name = 'Организация' THEN null ELSE cl.full_name END, c.deputy_fio ) as "clientFio",
+        cl.type as "clientType",
         c.operator_survey_fio as "operatorFio",
 
         

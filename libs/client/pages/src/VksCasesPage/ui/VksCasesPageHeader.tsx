@@ -115,7 +115,7 @@ const VksCasesPageHeader = (props: VksCasesPageHeaderProps): JSX.Element => {
           data={exportedData}
           size="icon"
           className="size-8 p-0"
-          fileName="Объекты"
+          fileName="Консультации"
         />
       )}
 
