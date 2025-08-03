@@ -1,7 +1,7 @@
 import { Row } from '@tanstack/react-table';
-import { VksCaseSlim } from '@urgp/shared/entities';
+import { VksCase } from '@urgp/shared/entities';
 
-export const formatVksCaseRowForExcel = (row: Row<VksCaseSlim>) => {
+export const formatVksCaseRowForExcel = (row: Row<VksCase>) => {
   const data = row.original;
 
   return {

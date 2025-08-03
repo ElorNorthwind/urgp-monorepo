@@ -1,9 +1,9 @@
 import { rtkApi } from '@urgp/client/shared';
-import { VksCaseSlim, VksCasesQuery } from '@urgp/shared/entities';
+import { VksCase, VksCasesQuery } from '@urgp/shared/entities';
 
 export const vksApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    getVksSlimCases: build.query<VksCaseSlim[], VksCasesQuery>({
+    getVksCases: build.query<VksCase[], VksCasesQuery>({
       query: (q) => ({
         url: '/vks/cases/',
         method: 'GET',
@@ -15,4 +15,4 @@ export const vksApi = rtkApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const { useGetVksSlimCasesQuery: useVksSlimCases } = vksApi;
+export const { useGetVksCasesQuery: useVksCases } = vksApi;

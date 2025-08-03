@@ -1,4 +1,4 @@
-import { EquityObject, VksCaseSlim } from '@urgp/shared/entities';
+import { EquityObject, VksCase } from '@urgp/shared/entities';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Checkbox } from '@urgp/client/shared';
 import { EquityCheckboxCell } from './cells/EquityCheckboxCell';
@@ -9,7 +9,7 @@ import { EquityObjectProblemCell } from './cells/EquityObjectProblemCell';
 import { EquityCreditorCell } from './cells/EquityCreditorCell';
 import { EquityObjectProgressCell } from './cells/EquityObjectProgressCell';
 
-const columnHelper = createColumnHelper<VksCaseSlim>();
+const columnHelper = createColumnHelper<VksCase>();
 
 export const vksCasesColumns = [
   columnHelper.accessor(

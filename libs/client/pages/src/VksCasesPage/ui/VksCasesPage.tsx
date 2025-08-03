@@ -5,7 +5,7 @@ import {
   EquityObjectCard,
   equityObjectsColumns,
   equityObjectsGlobalFilterFn,
-  useVksSlimCases,
+  useVksCases,
   vksCasesColumns,
   vksCasesGlobalFilterFn,
 } from '@urgp/client/entities';
@@ -26,7 +26,7 @@ import {
 } from '@urgp/client/widgets';
 import {
   EquityObjectsPageSearch,
-  VksCaseSlim,
+  VksCase,
   VksCasesPageSearch,
 } from '@urgp/shared/entities';
 import { useState } from 'react';
@@ -39,14 +39,14 @@ const VksCasesPage = (): JSX.Element => {
 
   const columnVisibility = useSelector(selectVksCasesTableColumns);
 
-  const [selected, setSelected] = useState<Row<VksCaseSlim>[]>([]); // Этот селектед не тот селектед!
-  const [filtered, setFiltered] = useState<Row<VksCaseSlim>[]>([]);
+  const [selected, setSelected] = useState<Row<VksCase>[]>([]); // Этот селектед не тот селектед!
+  const [filtered, setFiltered] = useState<Row<VksCase>[]>([]);
 
   // const isMobile = useIsMobile();
   const navigate = useNavigate({ from: '/vks/cases' });
   const search = getRouteApi('/vks/cases').useSearch() as VksCasesPageSearch;
 
-  const { data, isLoading, isFetching } = useVksSlimCases({
+  const { data, isLoading, isFetching } = useVksCases({
     dateFrom: search?.dateFrom || '01.07.2025',
     dateTo: search?.dateTo || 'infinity',
   });

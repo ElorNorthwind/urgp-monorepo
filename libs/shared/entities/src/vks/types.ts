@@ -205,7 +205,7 @@ const clientSurveyResponseSchema = surveyResponseSchema.extend({
 });
 export type ClientSurveyResponse = z.infer<typeof clientSurveyResponseSchema>;
 
-export const vksCaseSlimSchema = z.object({
+export const vksCaseSchema = z.object({
   id: z.coerce.number().int().nonnegative(),
   date: z.string().datetime(), // ISO 8601 date string
   time: z
@@ -241,7 +241,62 @@ export const vksCaseSlimSchema = z.object({
   operatorSurveyDate: z.string().datetime().nullable(), // ISO 8601 date string
   clientSurveyDate: z.string().datetime().nullable(), // ISO 8601 date string
 });
-export type VksCaseSlim = z.infer<typeof vksCaseSlimSchema>;
+export type VksCase = z.infer<typeof vksCaseSchema>;
+
+export const VksCaseDetailsSchema = vksCaseSchema.extend({
+  bookingId: z.coerce.number().int().nonnegative().nullable(),
+  bookingDate: z.string().datetime().nullable(), // ISO 8601 date string
+  bookingResource: z.string().nullable(),
+  deputyFio: z.string().nullable(),
+  participantFio: z.string().nullable(),
+  phone: z.string().nullable(),
+  email: z.string().nullable(),
+
+  problemAudio: z.string().nullable(),
+  problemVideo: z.string().nullable(),
+  problemConnection: z.string().nullable(),
+  problemTech: z.string().nullable(),
+  vksSearchSpeed: z.string().nullable(),
+  operatorLink: z.string().nullable(),
+  problemSummary: z.string().nullable(),
+  privatizationAddress: z.string().nullable(),
+  contractNumber: z.string().nullable(),
+  letterNumber: z.string().nullable(),
+  flsNumber: z.string().nullable(),
+
+  operatorSurveyId: z.coerce.number().int().nonnegative().nullable(),
+  operatorSurveyStatus: z.string().nullable(),
+  operatorSurveyExtralinkId: z.coerce.number().int().nonnegative().nullable(),
+  operatorSurveyExtralinkUrl: z.string().url().nullable(),
+
+  operatorSurveyConsultationType: z.string().nullable(),
+  operatorSurveyIsHousing: z.coerce.boolean().nullable(),
+  operatorSurveyIsClient: z.coerce.boolean().nullable(),
+  operatorSurveyAddress: z.string().nullable(),
+  operatorSurveyRelation: z.string().nullable(),
+  operatorSurveyDocType: z.string().nullable(),
+  operatorSurveyDocDate: z.string().nullable(),
+  operatorSurveyDocNum: z.string().nullable(),
+  operatorSurveyDepartment: z.string().nullable(),
+  operatorSurveySummary: z.string().nullable(),
+  operatorSurveyMood: z.string().nullable(),
+  operatorSurveyNeedsAnswer: z.coerce.boolean().nullable(),
+  operatorSurveyProblems: z.array(z.string()).nullable(),
+  operatorSurveyInfoSource: z.string().nullable(),
+
+  clientSurveyId: z.coerce.number().int().nonnegative().nullable(),
+  clientSurveyStatus: z.string().nullable(),
+  clientSurveyExtralinkId: z.coerce.number().int().nonnegative().nullable(),
+  clientSurveyExtralinkUrl: z.string().url().nullable(),
+  clientSurveyJoined: z.coerce.boolean().nullable(),
+  clientSurveyConsultationReceived: z.coerce.boolean().nullable(),
+
+  serviceFullName: z.string().nullable(),
+  departmentFullName: z.string().nullable(),
+  zamFullName: z.string().nullable(),
+  gradeComment: z.string().nullable(),
+});
+export type VksCaseDetails = z.infer<typeof VksCaseDetailsSchema>;
 
 export type vksUpdateQueryReturnValue = {
   qms: { clients: number; records: number };

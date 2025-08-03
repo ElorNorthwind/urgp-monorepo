@@ -4,7 +4,7 @@ import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
   QmsQuery,
   qmsQuerySchema,
-  VksCaseSlim,
+  VksCase,
   VksCasesQuery,
   vksCasesQuerySchema,
   vksUpdateQueryReturnValue,
@@ -25,10 +25,10 @@ export class VksController {
   }
 
   @Get('cases')
-  getVksSlimCases(
+  getVksCases(
     @Query(new ZodValidationPipe(vksCasesQuerySchema)) q: VksCasesQuery,
-  ): Promise<VksCaseSlim[]> {
-    return this.vks.getVksSlimCases(q);
+  ): Promise<VksCase[]> {
+    return this.vks.getVksCases(q);
   }
 
   // @Get('qms')

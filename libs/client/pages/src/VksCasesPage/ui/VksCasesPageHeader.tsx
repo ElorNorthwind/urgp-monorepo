@@ -30,7 +30,7 @@ import {
 import {
   EquityObject,
   EquityObjectsPageSearch,
-  VksCaseSlim,
+  VksCase,
   VksCasesPageSearch,
 } from '@urgp/shared/entities';
 import { useMemo } from 'react';
@@ -38,7 +38,7 @@ type VksCasesPageHeaderProps = {
   total?: number;
   filtered?: number;
   className?: string;
-  exportedRows?: Row<VksCaseSlim>[];
+  exportedRows?: Row<VksCase>[];
 };
 
 const VksCasesPageHeader = (props: VksCasesPageHeaderProps): JSX.Element => {

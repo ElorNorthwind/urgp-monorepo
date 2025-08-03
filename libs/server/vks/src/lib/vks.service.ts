@@ -10,7 +10,7 @@ import {
   QmsQuery,
   RawBookingRecord,
   vksUpdateQueryReturnValue,
-  VksCaseSlim,
+  VksCase,
   VksCasesQuery,
 } from '@urgp/shared/entities';
 import { AxiosRequestConfig } from 'axios';
@@ -39,8 +39,8 @@ export class VksService {
     private configService: ConfigService,
   ) {}
 
-  public async getVksSlimCases(q: VksCasesQuery): Promise<VksCaseSlim[]> {
-    return this.dbServise.db.vks.getVksCasesSlim(q);
+  public async getVksCases(q: VksCasesQuery): Promise<VksCase[]> {
+    return this.dbServise.db.vks.getVksCases(q);
   }
 
   private async getKnownServiceIds(): Promise<number[]> {

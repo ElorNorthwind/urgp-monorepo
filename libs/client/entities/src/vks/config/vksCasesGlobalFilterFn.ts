@@ -1,8 +1,8 @@
 import { Row } from '@tanstack/react-table';
-import { VksCaseSlim, VksCasesPageSearch } from '@urgp/shared/entities';
+import { VksCase, VksCasesPageSearch } from '@urgp/shared/entities';
 
 export function vksCasesGlobalFilterFn(
-  row: Row<VksCaseSlim>,
+  row: Row<VksCase>,
   columnId: string,
   filterValue: VksCasesPageSearch,
 ): boolean {
