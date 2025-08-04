@@ -249,6 +249,7 @@ export const VksCaseDetailsSchema = vksCaseSchema.extend({
   bookingResource: z.string().nullable(),
   deputyFio: z.string().nullable(),
   participantFio: z.string().nullable(),
+  orgName: z.string().nullable(),
   phone: z.string().nullable(),
   email: z.string().nullable(),
 

@@ -12,6 +12,7 @@ import {
   vksUpdateQueryReturnValue,
   VksCase,
   VksCasesQuery,
+  VksCaseDetails,
 } from '@urgp/shared/entities';
 import { AxiosRequestConfig } from 'axios';
 import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
@@ -41,6 +42,10 @@ export class VksService {
 
   public async getVksCases(q: VksCasesQuery): Promise<VksCase[]> {
     return this.dbServise.db.vks.getVksCases(q);
+  }
+
+  public async getVksCaseDetails(id: number): Promise<VksCaseDetails> {
+    return this.dbServise.db.vks.getVksCaseDetailes(id);
   }
 
   private async getKnownServiceIds(): Promise<number[]> {

@@ -1,10 +1,20 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
   QmsQuery,
   qmsQuerySchema,
   VksCase,
+  VksCaseDetails,
   VksCasesQuery,
   vksCasesQuerySchema,
   vksUpdateQueryReturnValue,
@@ -29,6 +39,13 @@ export class VksController {
     @Query(new ZodValidationPipe(vksCasesQuerySchema)) q: VksCasesQuery,
   ): Promise<VksCase[]> {
     return this.vks.getVksCases(q);
+  }
+
+  @Get('cases/:id/details')
+  getVksCaseDetails(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<VksCaseDetails> {
+    return this.vks.getVksCaseDetails(id);
   }
 
   // @Get('qms')

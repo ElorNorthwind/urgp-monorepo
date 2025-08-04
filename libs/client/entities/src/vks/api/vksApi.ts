@@ -1,5 +1,5 @@
 import { rtkApi } from '@urgp/client/shared';
-import { VksCase, VksCasesQuery } from '@urgp/shared/entities';
+import { VksCase, VksCaseDetails, VksCasesQuery } from '@urgp/shared/entities';
 
 export const vksApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
@@ -11,8 +11,21 @@ export const vksApi = rtkApi.injectEndpoints({
       }),
       providesTags: ['vks-case'],
     }),
+    getVksCaseDetails: build.query<VksCaseDetails, number>({
+      query: (id) => ({
+        url: `/vks/cases/${id.toString()}/details`,
+        method: 'GET',
+      }),
+      providesTags: (result, error, arg) => [
+        'vks-case',
+        { type: 'vks-case', id: arg },
+      ],
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetVksCasesQuery: useVksCases } = vksApi;
+export const {
+  useGetVksCasesQuery: useVksCases,
+  useGetVksCaseDetailsQuery: useVksCaseDetails,
+} = vksApi;

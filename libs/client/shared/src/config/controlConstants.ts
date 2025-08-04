@@ -1,6 +1,6 @@
 export const SIDEBAR_WIDTH = '32rem';
 export const EQUITY_SIDEBAR_WIDTH = '40rem';
-export const VKS_SIDEBAR_WIDTH = '32rem';
+export const VKS_SIDEBAR_WIDTH = '40rem';
 export const NAVBAR_WIDTH = '3rem';
 export const CASE_ROUTES = [
   '/control/cases',

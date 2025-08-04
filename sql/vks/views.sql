@@ -121,6 +121,7 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
 		c.booking_resource as "bookingResource",
 		c.deputy_fio as "deputyFio",
 		c.participant_fio as "participantFio",
+        cl.org_name as "orgName",
 		c.phone,
 		c.email,
 		

@@ -6,6 +6,7 @@ import {
   equityObjectsColumns,
   equityObjectsGlobalFilterFn,
   useVksCases,
+  VksCaseCard,
   vksCasesColumns,
   vksCasesGlobalFilterFn,
 } from '@urgp/client/entities';
@@ -153,11 +154,10 @@ const VksCasesPage = (): JSX.Element => {
       <VksCasesSidePanel
         isOpen={search.selectedCase !== undefined && currentIndex >= 0}
       >
-        Тут будет карточка документа
-        {/* <EquityObjectCard
+        <VksCaseCard
           onPrevRow={prevObjectId ? onPrevObject : undefined}
           onNextRow={nextObjectId ? onNextObject : undefined}
-          equityObject={data?.find((o) => o.id === search.selectedCase)!}
+          caseId={search?.selectedCase || 0}
           onClose={() =>
             navigate({
               search: (prev: EquityObjectsPageSearch) => ({
@@ -166,7 +166,7 @@ const VksCasesPage = (): JSX.Element => {
               }),
             })
           }
-        /> */}
+        />
       </VksCasesSidePanel>
     </TooltipProvider>
   );

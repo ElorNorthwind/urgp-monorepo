@@ -6,6 +6,7 @@ import {
   OperatorSurveyResponse,
   QmsQuery,
   VksCase,
+  VksCaseDetails,
   VksCasesQuery,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
@@ -299,12 +300,8 @@ SET (
     ]);
   }
 
-  getVksCaseDetailes(q: VksCasesQuery): Promise<VksCase[]> {
-    const query =
-      'SELECT * FROM vks.cases_slim_view WHERE date BETWEEN $1::date AND $2::date;';
-    return this.db.any(query, [
-      q?.dateFrom || '-infinity',
-      q?.dateTo || 'infinity',
-    ]);
+  getVksCaseDetailes(id: number): Promise<VksCaseDetails> {
+    const query = 'SELECT * FROM vks.cases_detailed_view WHERE id = $1;';
+    return this.db.one(query, [id]);
   }
 }
