@@ -22,6 +22,6 @@ export class SudirController {
 
   @Get('edo/master-login')
   async loginMasterEdo() {
-    return this.sudir.loginMasterEdo;
+    return this.sudir.loginMasterEdo();
   }
 }

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Inject,
@@ -152,15 +153,23 @@ export class SudirService {
     const credentials =
       await this.dbServise.db.sudir.getUserCredentials(userId);
     if (!credentials) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new BadRequestException(
+        `Пользователь с id ${userId} не найден в БД`,
+      );
     }
+    if (!credentials.login || !credentials.password) {
+      throw new BadRequestException(
+        `Логин и пароль пользователя c id ${userId} не внесены в БД`,
+      );
+    }
+    Logger.debug(credentials);
     return this.loginEdo(credentials.login, credentials.password);
   }
 
   async loginMasterEdo() {
     const masterUserId =
-      parseInt(this.configService.get<string>('EDO_MASTER_USER_ID') || '10') ||
-      10;
+      parseInt(this.configService.get<string>('EDO_MASTER_USER_ID') || '22') ||
+      22;
     return this.loginUserEdo(masterUserId);
   }
 }
