@@ -21,7 +21,7 @@ export const Route = createFileRoute('/vks')({
   // },
 
   component: () => {
-    usePageMeta('Онлайн-консультации', '/favicon.ico');
+    usePageMeta('Онлайн-консультации', '/vks.ico');
     return (
       <div className="font-roboto">
         <SidebarProvider cookieName="vks-sidebar" defaultOpen={false}>
