@@ -7,10 +7,12 @@ import {
   Post,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
+  NestedClassificatorInfo,
   QmsQuery,
   qmsQuerySchema,
   VksCase,
@@ -20,6 +22,7 @@ import {
   vksUpdateQueryReturnValue,
 } from '@urgp/shared/entities';
 import { VksService } from './vks.service';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @Controller('vks')
 export class VksController {
@@ -34,6 +37,13 @@ export class VksController {
     return this.vks.updateSurveyData(q);
   }
 
+  @Get('cases/:id/details')
+  getVksCaseDetails(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<VksCaseDetails> {
+    return this.vks.getVksCaseDetails(id);
+  }
+
   @Get('cases')
   getVksCases(
     @Query(new ZodValidationPipe(vksCasesQuerySchema)) q: VksCasesQuery,
@@ -41,11 +51,25 @@ export class VksController {
     return this.vks.getVksCases(q);
   }
 
-  @Get('cases/:id/details')
-  getVksCaseDetails(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<VksCaseDetails> {
-    return this.vks.getVksCaseDetails(id);
+  @CacheTTL(1000 * 60 * 5)
+  @UseInterceptors(CacheInterceptor)
+  @Get('classificators/service-types')
+  getVksServiceTypeClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.vks.ReadVksServiceTypeClassificator();
+  }
+
+  @CacheTTL(1000 * 60 * 5)
+  @UseInterceptors(CacheInterceptor)
+  @Get('classificators/departments')
+  getVksDepartmentsClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.vks.ReadVksDepartmentClassificator();
+  }
+
+  @CacheTTL(1000 * 60 * 5)
+  @UseInterceptors(CacheInterceptor)
+  @Get('classificators/statuses')
+  getVksStatusesClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.vks.ReadVksStatusClassificator();
   }
 
   // @Get('qms')

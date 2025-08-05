@@ -3,6 +3,7 @@ import {
   BookingClient,
   BookingRecord,
   ClientSurveyResponse,
+  NestedClassificatorInfo,
   OperatorSurveyResponse,
   QmsQuery,
   VksCase,
@@ -10,6 +11,7 @@ import {
   VksCasesQuery,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
+import { vks } from './sql/sql';
 
 // @Injectable()
 export class VksRepository {
@@ -303,5 +305,17 @@ SET (
   getVksCaseDetailes(id: number): Promise<VksCaseDetails> {
     const query = 'SELECT * FROM vks.cases_detailed_view WHERE id = $1;';
     return this.db.one(query, [id]);
+  }
+
+  getServiceTypeClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.db.any(vks.readServiceTypesClassificator);
+  }
+
+  getDepartmentsClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.db.any(vks.readDepartmentsClassificator);
+  }
+
+  getStatusClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.db.any(vks.readStatusClassificator);
   }
 }

@@ -19,7 +19,6 @@ import {
   equityObjects,
   equityOperations,
 } from './sql/sql';
-import { Logger } from '@nestjs/common';
 
 // @Injectable()
 export class EquityRepository {

@@ -1,5 +1,10 @@
 import { rtkApi } from '@urgp/client/shared';
-import { VksCase, VksCaseDetails, VksCasesQuery } from '@urgp/shared/entities';
+import {
+  NestedClassificatorInfo,
+  VksCase,
+  VksCaseDetails,
+  VksCasesQuery,
+} from '@urgp/shared/entities';
 
 export const vksApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
@@ -21,6 +26,32 @@ export const vksApi = rtkApi.injectEndpoints({
         { type: 'vks-case', id: arg },
       ],
     }),
+    getVksServiceTypesClassificator: build.query<
+      NestedClassificatorInfo[],
+      void
+    >({
+      query: () => ({
+        url: `/vks/classificators/service-types`,
+        method: 'GET',
+      }),
+      providesTags: ['vks-classificator'],
+    }),
+    getVksDepartmentClassificator: build.query<NestedClassificatorInfo[], void>(
+      {
+        query: () => ({
+          url: `/vks/classificators/departments`,
+          method: 'GET',
+        }),
+        providesTags: ['vks-classificator'],
+      },
+    ),
+    getVksStatusClassificator: build.query<NestedClassificatorInfo[], void>({
+      query: () => ({
+        url: `/vks/classificators/statuses`,
+        method: 'GET',
+      }),
+      providesTags: ['vks-classificator'],
+    }),
   }),
   overrideExisting: false,
 });
@@ -28,4 +59,7 @@ export const vksApi = rtkApi.injectEndpoints({
 export const {
   useGetVksCasesQuery: useVksCases,
   useGetVksCaseDetailsQuery: useVksCaseDetails,
+  useGetVksDepartmentClassificatorQuery: useVksDepartmentClassificator,
+  useGetVksServiceTypesClassificatorQuery: useVksServiceTypesClassificator,
+  useGetVksStatusClassificatorQuery: useVksStatusClassificator,
 } = vksApi;

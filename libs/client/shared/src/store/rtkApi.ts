@@ -73,5 +73,6 @@ export const rtkApi = createApi({
     'equity-classificators',
     'vks-case',
     'vks-client',
+    'vks-classificator',
   ],
 });

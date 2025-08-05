@@ -204,3 +204,8 @@ export const equityOperations = {
     'sql/equity/operations/updateOperationsTriggerInfo.sql',
   ),
 };
+export const vks = {
+  readDepartmentsClassificator: 'sql/vks/readVksDepartmentsClassificator.sql',
+  readServiceTypesClassificator: 'sql/vks/readVksServiceTypeClassificator.sql',
+  readStatusClassificator: 'sql/vks/readVksStatusClassificator.sql',
+};

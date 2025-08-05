@@ -78,6 +78,10 @@ module.exports = {
             '../../dist/apps/server/sql/equity/classificators',
           ),
         },
+        {
+          from: '../../libs/server/database/src/repos/sql/vks',
+          to: join(__dirname, '../../dist/apps/server/sql/vks'),
+        },
       ],
     }),
   ],

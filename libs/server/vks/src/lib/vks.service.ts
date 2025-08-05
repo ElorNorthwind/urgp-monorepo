@@ -13,6 +13,7 @@ import {
   VksCase,
   VksCasesQuery,
   VksCaseDetails,
+  NestedClassificatorInfo,
 } from '@urgp/shared/entities';
 import { AxiosRequestConfig } from 'axios';
 import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
@@ -335,5 +336,23 @@ export class VksService {
       operator,
       client,
     };
+  }
+
+  public async ReadVksServiceTypeClassificator(): Promise<
+    NestedClassificatorInfo[]
+  > {
+    return this.dbServise.db.vks.getServiceTypeClassificator();
+  }
+
+  public async ReadVksDepartmentClassificator(): Promise<
+    NestedClassificatorInfo[]
+  > {
+    return this.dbServise.db.vks.getDepartmentsClassificator();
+  }
+
+  public async ReadVksStatusClassificator(): Promise<
+    NestedClassificatorInfo[]
+  > {
+    return this.dbServise.db.vks.getStatusClassificator();
   }
 }
