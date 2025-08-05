@@ -8,7 +8,7 @@ import {
   TooltipTrigger,
 } from '@urgp/client/shared';
 import { VksCase } from '@urgp/shared/entities';
-import { departmentStyles } from '../../../config/vksStyles';
+import { vksDepartmentStyles } from '../../../config/vksStyles';
 import { Star } from 'lucide-react';
 
 function VksCaseGradeCell(props: CellContext<VksCase, number>): JSX.Element {

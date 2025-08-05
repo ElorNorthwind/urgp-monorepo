@@ -7,7 +7,7 @@ SELECT
         'fullname', d.full_name,  
 		'tags', ARRAY[z.short_name, d.boss_surname]::text[],
 		'category', z.short_name
-	)) as items
+	) ORDER BY d.id) as items
 FROM vks.departments d
 LEFT JOIN vks.zams z on z.id = d.zam_id
 GROUP BY d.zam_id, z.short_name

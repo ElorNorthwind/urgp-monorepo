@@ -1,5 +1,6 @@
 import { useLocation } from '@tanstack/react-router';
 import {
+  Accordion,
   cn,
   ScrollArea,
   Sidebar,
@@ -15,6 +16,9 @@ import { ChevronLeft } from 'lucide-react';
 import { VksCasesQueryFilter } from './filterInputs/VksCasesQueryFilter';
 import { VksCasesResetFilter } from './filterInputs/VksCasesResetFilter';
 import { VksCasesDateFilter } from './filterInputs/VksCasesDateFilter';
+import { VksCaseStatusFilter } from './filterInputs/VksCaseStatusFilter';
+import { VksDepartmentFilter } from './filterInputs/VksDepartmentFilter';
+import { VksServiceFilter } from './filterInputs/VksServiceFilter';
 
 type VksCasesFilterSidebarProps = {
   side?: 'left' | 'right';
@@ -50,15 +54,11 @@ const VksCasesFilterSidebar = (
           <div className="flex h-full flex-col gap-2 p-2">
             <VksCasesQueryFilter className="h-8 flex-shrink-0" />
             <VksCasesDateFilter className="h-8 flex-shrink-0" />
-            {/* <Accordion type="multiple" defaultValue={['status']}>
-              <EquityObjectStatusFilter variant="accordion" />
-              <EquityObjectTypeFilter variant="accordion" />
-              <EquityObjectProblemsFilter variant="accordion" />
-              <EquityBuildingsFilter variant="accordion" />
-              <EquityObjectDocumentsFilter variant="accordion" />
-              <EquityClaimTransferFilter variant="accordion" />
-              <EquityOpinionUrgpFilter variant="accordion" />
-            </Accordion> */}
+            <Accordion type="multiple" defaultValue={['status', 'department']}>
+              <VksCaseStatusFilter variant="accordion" />
+              <VksDepartmentFilter variant="accordion" />
+              <VksServiceFilter variant="accordion" />
+            </Accordion>
           </div>
         </ScrollArea>
       </SidebarContent>

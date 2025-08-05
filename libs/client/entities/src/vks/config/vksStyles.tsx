@@ -24,7 +24,7 @@ const badgeStyle = cn(
   "bg-background border p-1 px-2 hover:bg-muted-foreground/5 before:content-[''] before:rounded-full before:size-3 before:mr-1",
 );
 
-export const departmentStyles = {
+export const vksDepartmentStyles = {
   0: {
     icon: Circle,
     iconStyle: cn('bg-gray-500 rounded-full text-gray-500'),

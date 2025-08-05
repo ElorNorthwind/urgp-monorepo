@@ -12,7 +12,7 @@ import { CardTab } from '@urgp/client/features';
 import {
   bookingSourceStyles,
   clientTypeStyles,
-  departmentStyles,
+  vksDepartmentStyles,
   gradeSourceStyles,
   propertyTypeStyles,
   vksCaseStatusStyles,
@@ -50,9 +50,9 @@ const VksCaseInfoTab = (props: VksCaseInfoTabProps): JSX.Element | null => {
   if (!entity) return null;
 
   const { icon: DepartmentIcon, iconStyle: departmentIconStyle } =
-    departmentStyles?.[
-      (entity?.departmentId || 0) as keyof typeof departmentStyles
-    ] || Object.values(departmentStyles)[0];
+    vksDepartmentStyles?.[
+      (entity?.departmentId || 0) as keyof typeof vksDepartmentStyles
+    ] || Object.values(vksDepartmentStyles)[0];
 
   const { icon: ClientIcon, iconStyle: clientIconStyle } =
     clientTypeStyles?.[

@@ -28,7 +28,7 @@ export function vksCasesGlobalFilterFn(
     return false;
   }
 
-  if (service && !service.includes(row.original?.serviceId || 0)) {
+  if (service && !service.includes(row.original?.serviceName || '')) {
     return false;
   }
 

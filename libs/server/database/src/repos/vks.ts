@@ -4,6 +4,7 @@ import {
   BookingRecord,
   ClientSurveyResponse,
   NestedClassificatorInfo,
+  NestedClassificatorInfoString,
   OperatorSurveyResponse,
   QmsQuery,
   VksCase,
@@ -307,7 +308,7 @@ SET (
     return this.db.one(query, [id]);
   }
 
-  getServiceTypeClassificator(): Promise<NestedClassificatorInfo[]> {
+  getServiceTypeClassificator(): Promise<NestedClassificatorInfoString[]> {
     return this.db.any(vks.readServiceTypesClassificator);
   }
 
@@ -315,7 +316,11 @@ SET (
     return this.db.any(vks.readDepartmentsClassificator);
   }
 
-  getStatusClassificator(): Promise<NestedClassificatorInfo[]> {
+  getStatusClassificator(): Promise<NestedClassificatorInfoString[]> {
     return this.db.any(vks.readStatusClassificator);
   }
+
+  // updateOperationsTriggerInfo(): Promise<null> {
+  //   return this.db.none(equityOperations.updateOperationsTriggerInfo);
+  // }
 }

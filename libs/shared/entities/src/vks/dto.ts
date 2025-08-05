@@ -78,7 +78,7 @@ export type VksCasesQuery = z.infer<typeof vksCasesQuerySchema>;
 export const vksCasesPageFilterSchema = z
   .object({
     query: z.string(),
-    service: queryNumberArray,
+    service: queryStringArray,
     department: queryNumberArray,
     status: queryStringArray,
   })

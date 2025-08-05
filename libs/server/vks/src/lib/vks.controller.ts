@@ -13,6 +13,7 @@ import { AccessTokenGuard } from '@urgp/server/auth';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
   NestedClassificatorInfo,
+  NestedClassificatorInfoString,
   QmsQuery,
   qmsQuerySchema,
   VksCase,
@@ -54,7 +55,7 @@ export class VksController {
   @CacheTTL(1000 * 60 * 5)
   @UseInterceptors(CacheInterceptor)
   @Get('classificators/service-types')
-  getVksServiceTypeClassificator(): Promise<NestedClassificatorInfo[]> {
+  getVksServiceTypeClassificator(): Promise<NestedClassificatorInfoString[]> {
     return this.vks.ReadVksServiceTypeClassificator();
   }
 
@@ -68,7 +69,7 @@ export class VksController {
   @CacheTTL(1000 * 60 * 5)
   @UseInterceptors(CacheInterceptor)
   @Get('classificators/statuses')
-  getVksStatusesClassificator(): Promise<NestedClassificatorInfo[]> {
+  getVksStatusesClassificator(): Promise<NestedClassificatorInfoString[]> {
     return this.vks.ReadVksStatusClassificator();
   }
 

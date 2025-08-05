@@ -205,7 +205,11 @@ export const equityOperations = {
   ),
 };
 export const vks = {
-  readDepartmentsClassificator: 'sql/vks/readVksDepartmentsClassificator.sql',
-  readServiceTypesClassificator: 'sql/vks/readVksServiceTypeClassificator.sql',
-  readStatusClassificator: 'sql/vks/readVksStatusClassificator.sql',
+  readDepartmentsClassificator: sql(
+    'sql/vks/readVksDepartmentsClassificator.sql',
+  ),
+  readServiceTypesClassificator: sql(
+    'sql/vks/readVksServiceTypeClassificator.sql',
+  ),
+  readStatusClassificator: sql('sql/vks/readVksStatusClassificator.sql'),
 };

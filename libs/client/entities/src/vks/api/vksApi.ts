@@ -1,6 +1,7 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
   NestedClassificatorInfo,
+  NestedClassificatorInfoString,
   VksCase,
   VksCaseDetails,
   VksCasesQuery,
@@ -27,7 +28,7 @@ export const vksApi = rtkApi.injectEndpoints({
       ],
     }),
     getVksServiceTypesClassificator: build.query<
-      NestedClassificatorInfo[],
+      NestedClassificatorInfoString[],
       void
     >({
       query: () => ({
@@ -45,7 +46,10 @@ export const vksApi = rtkApi.injectEndpoints({
         providesTags: ['vks-classificator'],
       },
     ),
-    getVksStatusClassificator: build.query<NestedClassificatorInfo[], void>({
+    getVksStatusClassificator: build.query<
+      NestedClassificatorInfoString[],
+      void
+    >({
       query: () => ({
         url: `/vks/classificators/statuses`,
         method: 'GET',

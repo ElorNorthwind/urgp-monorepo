@@ -8,7 +8,7 @@ import {
   TooltipTrigger,
 } from '@urgp/client/shared';
 import { VksCase } from '@urgp/shared/entities';
-import { departmentStyles } from '../../../config/vksStyles';
+import { vksDepartmentStyles } from '../../../config/vksStyles';
 
 function VksCaseConsultantCell(
   props: CellContext<VksCase, string>,
@@ -20,9 +20,9 @@ function VksCaseConsultantCell(
     // iconStyle: departmentIconStyle,
     badgeStyle: departmentBadgeStyle,
   } =
-    departmentStyles?.[
-      (rowData?.departmentId || 0) as keyof typeof departmentStyles
-    ] || Object.values(departmentStyles)[0];
+    vksDepartmentStyles?.[
+      (rowData?.departmentId || 0) as keyof typeof vksDepartmentStyles
+    ] || Object.values(vksDepartmentStyles)[0];
 
   return (
     <Tooltip>
