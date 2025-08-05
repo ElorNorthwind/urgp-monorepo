@@ -1,37 +1,56 @@
-import { EquityObject, VksCase } from '@urgp/shared/entities';
 import { createColumnHelper } from '@tanstack/react-table';
-import { Checkbox } from '@urgp/client/shared';
-import { EquityCheckboxCell } from './cells/EquityCheckboxCell';
-import { EquityBuildingCell } from './cells/EquityBuildingCell';
-import { EquityObjectNumberCell } from './cells/EquityObjectNumberCell';
-import { EquityObjectStatusCell } from './cells/EquityObjectStatusCell';
-import { EquityObjectProblemCell } from './cells/EquityObjectProblemCell';
-import { EquityCreditorCell } from './cells/EquityCreditorCell';
-import { EquityObjectProgressCell } from './cells/EquityObjectProgressCell';
+import { VksCase } from '@urgp/shared/entities';
+import { VksCaseClientCell } from './cells/VksCaseClientCell';
+import { VksCaseConsultantCell } from './cells/VksCaseConsultantCell';
+import { VksCaseDateCell } from './cells/VksCaseDateCell';
+import { VksCaseStatusCell } from './cells/VksCaseStatusCell';
+import { VksCaseGradeCell } from './cells/VksCaseGradeCell';
 
 const columnHelper = createColumnHelper<VksCase>();
 
 export const vksCasesColumns = [
   columnHelper.accessor(
     (row) => {
-      return row?.date || '';
+      return (
+        new Date(Date.parse(row?.date)).setHours(
+          parseInt(row?.time?.slice(0, 2)),
+          parseInt(row?.time?.slice(3, 5)),
+        ) || 0
+      );
     },
     {
       id: 'date',
       header: 'Дата',
-      size: 60,
-      enableHiding: true,
+      size: 40,
+      // enableHiding: true,
       enableSorting: true,
       sortDescFirst: true,
-      // cell: (props) => {
-      //   return <EquityBuildingCell {...props} />;
-      // },
+      cell: (props) => {
+        return <VksCaseDateCell {...props} />;
+      },
     },
   ),
 
   columnHelper.accessor(
     (row) => {
-      return row?.clientFio || '';
+      return row?.status || 'не указано';
+    },
+    {
+      id: 'status',
+      header: 'Статус',
+      size: 60,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      cell: (props) => {
+        return <VksCaseStatusCell {...props} />;
+      },
+    },
+  ),
+
+  columnHelper.accessor(
+    (row) => {
+      return row?.clientFio || 'ФИО не указано';
     },
     {
       id: 'client',
@@ -40,15 +59,15 @@ export const vksCasesColumns = [
       enableHiding: true,
       enableSorting: true,
       sortDescFirst: true,
-      // cell: (props) => {
-      //   return <EquityBuildingCell {...props} />;
-      // },
+      cell: (props) => {
+        return <VksCaseClientCell {...props} />;
+      },
     },
   ),
 
   columnHelper.accessor(
     (row) => {
-      return row?.operatorFio || '';
+      return row?.operatorFio || 'Анкета не заполнена';
     },
     {
       id: 'operator',
@@ -57,144 +76,26 @@ export const vksCasesColumns = [
       enableHiding: true,
       enableSorting: true,
       sortDescFirst: true,
-      // cell: (props) => {
-      //   return <EquityBuildingCell {...props} />;
-      // },
+      cell: (props) => {
+        return <VksCaseConsultantCell {...props} />;
+      },
     },
   ),
 
   columnHelper.accessor(
     (row) => {
-      return row?.grade || '';
+      return row?.grade || 0;
     },
     {
       id: 'grade',
       header: 'Оценка',
-      size: 20,
+      size: 40,
       enableHiding: true,
       enableSorting: true,
       sortDescFirst: true,
-      // cell: (props) => {
-      //   return <EquityBuildingCell {...props} />;
-      // },
+      cell: (props) => {
+        return <VksCaseGradeCell {...props} />;
+      },
     },
   ),
-
-  // columnHelper.display({
-  //   id: 'select',
-  //   size: 40,
-  //   enableHiding: false,
-  //   header: ({ table }) => (
-  //     <Checkbox
-  //       className="size-5"
-  //       checked={
-  //         table.getIsAllRowsSelected()
-  //           ? true
-  //           : table.getIsSomeRowsSelected()
-  //             ? 'indeterminate'
-  //             : false
-  //       }
-  //       onClick={table.getToggleAllRowsSelectedHandler()}
-  //     />
-  //   ),
-  //   cell: (props) => {
-  //     return <EquityCheckboxCell {...props} />;
-  //   },
-  // }),
-
-  // columnHelper.accessor(
-  //   (row) => {
-  //     return row?.addressShort || '';
-  //   },
-  //   {
-  //     id: 'address',
-  //     header: 'Адрес',
-  //     size: 120,
-  //     enableHiding: true,
-  //     enableSorting: true,
-  //     sortDescFirst: true,
-  //     cell: (props) => {
-  //       return <EquityBuildingCell {...props} />;
-  //     },
-  //   },
-  // ),
-
-  // columnHelper.accessor(
-  //   (row) => {
-  //     return row?.npp || 0;
-  //   },
-  //   {
-  //     id: 'number',
-  //     header: 'Помещение',
-  //     size: 160,
-  //     enableHiding: true,
-  //     enableSorting: true,
-  //     sortDescFirst: true,
-  //     cell: (props) => {
-  //       return <EquityObjectNumberCell {...props} />;
-  //     },
-  //   },
-  // ),
-
-  // columnHelper.accessor(
-  //   (row) => {
-  //     return row?.statusId || 0;
-  //   },
-  //   {
-  //     id: 'workStatus',
-  //     header: 'Статус работы',
-  //     size: 170,
-  //     enableHiding: true,
-  //     enableSorting: true,
-  //     sortDescFirst: true,
-  //     cell: (props) => {
-  //       return <EquityObjectStatusCell {...props} />;
-  //     },
-  //   },
-  // ),
-
-  // columnHelper.accessor(
-  //   (row) => {
-  //     return row?.statusId || 0;
-  //   },
-  //   {
-  //     id: 'rgProgress',
-  //     header: 'Заключения',
-  //     size: 120,
-  //     enableHiding: true,
-  //     enableSorting: true,
-  //     sortDescFirst: true,
-  //     cell: (props) => {
-  //       return <EquityObjectProgressCell {...props} />;
-  //     },
-  //   },
-  // ),
-
-  // columnHelper.accessor((row): string => row?.creditor || '', {
-  //   id: 'creditor',
-  //   header: 'ФИО кредитора',
-  //   size: 120,
-  //   enableSorting: true,
-  //   sortDescFirst: true,
-  //   cell: (props) => {
-  //     return <EquityCreditorCell {...props} />;
-  //   },
-  // }),
-
-  // columnHelper.accessor(
-  //   (row) => {
-  //     return row?.problems?.join(', ') || '';
-  //   },
-  //   {
-  //     id: 'problem',
-  //     header: 'Проблемы',
-  //     size: 100,
-  //     enableHiding: true,
-  //     enableSorting: true,
-  //     sortDescFirst: true,
-  //     cell: (props) => {
-  //       return <EquityObjectProblemCell {...props} />;
-  //     },
-  //   },
-  // ),
 ];

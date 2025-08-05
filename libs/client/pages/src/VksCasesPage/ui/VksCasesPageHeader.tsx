@@ -116,7 +116,7 @@ const VksCasesPageHeader = (props: VksCasesPageHeaderProps): JSX.Element => {
         <VksCasesQueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
       )}
 
-      {!isMobile && <VksCasesDateFilter />}
+      {!isMobile && !search?.selectedCase && <VksCasesDateFilter />}
 
       {!isMobile && exportedRows && (
         <ExportToExcelButton

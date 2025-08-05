@@ -291,7 +291,7 @@ export class VksService {
     return { found: totalCount, updated: udatedCount };
   }
 
-  @Cron('0 20 12,19 * * *')
+  @Cron('0 20 5,12,19 * * *')
   private async cronUpdateSurveyData() {
     const isDev = this.configService.get<string>('NODE_ENV') === 'development';
     if (isDev) return;

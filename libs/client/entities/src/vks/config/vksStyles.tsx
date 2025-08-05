@@ -45,8 +45,8 @@ export const departmentStyles = {
   // 3	"Управление правового обеспечения в жилищной сфере"	"УПОЖС"	"Спесивцева"
   3: {
     icon: Circle,
-    iconStyle: cn('bg-blue-500 rounded-full text-blue-500'),
-    badgeStyle: cn(badgeStyle, 'border-blue-500 before:bg-blue-500'),
+    iconStyle: cn('bg-zinc-500 rounded-full text-zinc-500'),
+    badgeStyle: cn(badgeStyle, 'border-zinc-500 before:bg-zinc-500'),
   },
   // 4	"Управление оформления вторичных имущественно-земельных отношений"	"УОВИЗО"	"Смирнова"
   4: {
@@ -87,8 +87,8 @@ export const departmentStyles = {
   // 10	"Управление экономики"	"УЭ"	"Мишин"
   10: {
     icon: Circle,
-    iconStyle: cn('bg-indigo-500 rounded-full text-indigo-500'),
-    badgeStyle: cn(badgeStyle, 'border-indigo-500 before:bg-indigo-500'),
+    iconStyle: cn('bg-amber-500 rounded-full text-amber-500'),
+    badgeStyle: cn(badgeStyle, 'border-amber-500 before:bg-amber-500'),
   },
   // 11	"Управление городским имуществом в Cеверо-Восточном административном округе"	"УГИ СВАО"	"Ильина"
   11: {
@@ -107,15 +107,15 @@ export const departmentStyles = {
 export const clientTypeStyles = {
   'Юридическое лицо': {
     icon: BriefcaseBusiness,
-    iconStyle: cn('text-purple-500'),
+    iconStyle: cn('text-indigo-500'),
   },
   'Индивидуальный предприниматель': {
     icon: UserLock,
-    iconStyle: cn('text-sky-500'),
+    iconStyle: cn('text-cyan-500'),
   },
   'Физическое лицо': {
     icon: User,
-    iconStyle: cn('text-emerald-500'),
+    iconStyle: cn('text-teal-500'),
   },
 };
 
