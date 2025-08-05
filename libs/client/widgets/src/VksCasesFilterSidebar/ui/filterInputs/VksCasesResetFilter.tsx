@@ -1,6 +1,7 @@
 import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import { Button, cn, VksRoutes } from '@urgp/client/shared';
 import { CasesPageSearchDto, VksCasesPageSearch } from '@urgp/shared/entities';
+import { format, subDays } from 'date-fns';
 import { X } from 'lucide-react';
 
 type ResetFilterProps = {
@@ -13,13 +14,10 @@ const VksCasesResetFilter = (props: ResetFilterProps): JSX.Element => {
   const pathname = useLocation().pathname as VksRoutes;
 
   const navigate = useNavigate({ from: pathname });
-  const search = getRouteApi(pathname).useSearch() as CasesPageSearchDto;
+  const search = getRouteApi(pathname).useSearch() as VksCasesPageSearch;
 
   const paramLength = Object.keys(search).filter(
-    (key) =>
-      !['selectedCase', 'dateFrom', 'dateTo', 'sortKey', 'sortDir'].includes(
-        key,
-      ),
+    (key) => !['selectedCase', 'sortKey', 'sortDir'].includes(key),
   ).length;
 
   return (
@@ -37,8 +35,6 @@ const VksCasesResetFilter = (props: ResetFilterProps): JSX.Element => {
         navigate({
           search: (prev: VksCasesPageSearch) => ({
             selectedCase: prev.selectedCase,
-            dateFrom: prev.dateFrom,
-            dateTo: prev.dateTo,
             sortKey: prev.sortKey,
             sortDir: prev.sortDir,
           }),

@@ -1,4 +1,4 @@
-import { getRouteApi, useLocation } from '@tanstack/react-router';
+import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import { Row } from '@tanstack/react-table';
 import {
   formatEquityObjectRowForExcel,
@@ -6,6 +6,7 @@ import {
 } from '@urgp/client/entities';
 import {
   ColumnVisibilitySelector,
+  DateRangeSelect,
   ExportToExcelButton,
 } from '@urgp/client/features';
 import {
@@ -25,7 +26,9 @@ import {
   EquityApartmentNumberFilter,
   EquityQueryFilter,
   EquityResetFilter,
+  VksCasesDateFilter,
   VksCasesQueryFilter,
+  VksCasesResetFilter,
 } from '@urgp/client/widgets';
 import {
   EquityObject,
@@ -33,6 +36,7 @@ import {
   VksCase,
   VksCasesPageSearch,
 } from '@urgp/shared/entities';
+import { format, toDate } from 'date-fns';
 import { useMemo } from 'react';
 type VksCasesPageHeaderProps = {
   total?: number;
@@ -46,6 +50,8 @@ const VksCasesPageHeader = (props: VksCasesPageHeaderProps): JSX.Element => {
   const isMobile = useIsMobile();
   const pathname = useLocation().pathname as EquityRoutes;
   const search = getRouteApi(pathname).useSearch() as VksCasesPageSearch;
+  const navigate = useNavigate({ from: pathname });
+
   const paramLength = Object.keys(search).filter(
     (key) =>
       !['selectedCase', 'dateFrom', 'dateTo', 'sortKey', 'sortDir'].includes(
@@ -73,7 +79,7 @@ const VksCasesPageHeader = (props: VksCasesPageHeaderProps): JSX.Element => {
         </div>
       )}
       {/* <UserFilter variant="mini" /> */}
-      <EquityResetFilter variant="mini" className="" />
+      <VksCasesResetFilter variant="mini" className="" />
       {!search?.selectedCase && (
         <>
           <Separator
@@ -109,6 +115,8 @@ const VksCasesPageHeader = (props: VksCasesPageHeaderProps): JSX.Element => {
       {!isMobile && (
         <VksCasesQueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
       )}
+
+      {!isMobile && <VksCasesDateFilter />}
 
       {!isMobile && exportedRows && (
         <ExportToExcelButton

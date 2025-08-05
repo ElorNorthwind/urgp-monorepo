@@ -17,6 +17,7 @@ type DateRangeSelectProps = {
   onSelect?: (range: DateRange | undefined) => void;
   className?: string;
   label?: ReactNode;
+  placeholder?: string;
 };
 
 const DateRangeSelect = ({
@@ -24,6 +25,7 @@ const DateRangeSelect = ({
   from,
   to,
   label = 'Старт',
+  placeholder = 'Выберите дату',
   onSelect,
 }: DateRangeSelectProps): JSX.Element => {
   return (
@@ -50,7 +52,7 @@ const DateRangeSelect = ({
                 format(from, 'dd.MM.yyyy')
               )
             ) : (
-              <span>Выберете дату</span>
+              <span>{placeholder}</span>
             )}
           </Button>
         </PopoverTrigger>

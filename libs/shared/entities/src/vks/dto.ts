@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { AnketologSurveyTypes } from './config';
+import { format, subDays } from 'date-fns';
 
 // Параметры поиска на странице
 const queryNumberArray = z
@@ -60,12 +61,14 @@ export const vksCasesQuerySchema = z
       .string()
       .datetime()
       .or(z.string().regex(/\d{2}.\d{2}.\d{4}/))
+      .or(z.string().regex(/\d{4}\-\d{2}\-\d{2}/))
       .or(z.literal('-infinity'))
       .default('-infinity'),
     dateTo: z
       .string()
       .datetime()
       .or(z.string().regex(/\d{2}.\d{2}.\d{4}/))
+      .or(z.string().regex(/\d{4}\-\d{2}\-\d{2}/))
       .or(z.literal('infinity'))
       .default('infinity'),
   })
@@ -91,4 +94,14 @@ export const vksCasesPageSearchSchema = vksCasesPageFilterSchema
     sortDir: z.enum(['asc', 'desc']),
   })
   .partial();
+// .extend({
+//   dateFrom: z
+//     .string()
+//     .or(z.string().regex(/\d{4}\-\d{2}\-\d{2}/))
+//     .default(format(subDays(new Date(), 30), 'yyyy-MM-dd')),
+//   dateTo: z
+//     .string()
+//     .or(z.string().regex(/\d{4}\-\d{2}\-\d{2}/))
+//     .default(format(new Date(), 'yyyy-MM-dd')),
+// });
 export type VksCasesPageSearch = z.infer<typeof vksCasesPageSearchSchema>;

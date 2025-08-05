@@ -14,6 +14,7 @@ import {
 import { ChevronLeft } from 'lucide-react';
 import { VksCasesQueryFilter } from './filterInputs/VksCasesQueryFilter';
 import { VksCasesResetFilter } from './filterInputs/VksCasesResetFilter';
+import { VksCasesDateFilter } from './filterInputs/VksCasesDateFilter';
 
 type VksCasesFilterSidebarProps = {
   side?: 'left' | 'right';
@@ -46,8 +47,9 @@ const VksCasesFilterSidebar = (
       </SidebarHeader>
       <SidebarContent>
         <ScrollArea className={cn('h-full')}>
-          <div className="m-3 flex h-full flex-col gap-2">
+          <div className="flex h-full flex-col gap-2 p-2">
             <VksCasesQueryFilter className="h-8 flex-shrink-0" />
+            <VksCasesDateFilter className="h-8 flex-shrink-0" />
             {/* <Accordion type="multiple" defaultValue={['status']}>
               <EquityObjectStatusFilter variant="accordion" />
               <EquityObjectTypeFilter variant="accordion" />

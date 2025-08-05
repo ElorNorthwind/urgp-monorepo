@@ -16,6 +16,7 @@ import {
   selectVksCasesTableColumns,
   SidebarInset,
   TooltipProvider,
+  useDebounce,
   VirtualDataTable,
 } from '@urgp/client/shared';
 import {
@@ -33,6 +34,8 @@ import {
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { VksCasesPageHeader } from './VksCasesPageHeader';
+import { date } from 'zod';
+import { format, subDays } from 'date-fns';
 
 const VksCasesPage = (): JSX.Element => {
   // const i = useUserAbility();
@@ -47,9 +50,15 @@ const VksCasesPage = (): JSX.Element => {
   const navigate = useNavigate({ from: '/vks/cases' });
   const search = getRouteApi('/vks/cases').useSearch() as VksCasesPageSearch;
 
+  const debouncedDates: { dateFrom: string; dateTo: string } = useDebounce(
+    { dateFrom: search?.dateFrom, dateTo: search?.dateTo },
+    300,
+  ) as { dateFrom: string; dateTo: string };
+
   const { data, isLoading, isFetching } = useVksCases({
-    dateFrom: search?.dateFrom || '01.07.2025',
-    dateTo: search?.dateTo || 'infinity',
+    dateFrom:
+      debouncedDates?.dateFrom || format(subDays(new Date(), 30), 'yyyy-MM-dd'),
+    dateTo: debouncedDates?.dateTo || format(new Date(), 'yyyy-MM-dd'),
   });
 
   // ID прошлого и текущего дела
