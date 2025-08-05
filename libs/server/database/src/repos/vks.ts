@@ -158,7 +158,7 @@ SET (
     EXCLUDED.contract_number,
     EXCLUDED.letter_number,
     EXCLUDED.fls_number
-) WHERE EXCLUDED.status <> status OR EXCLUDED.online_grade <> online_grade`;
+)`;
 
     const insert =
       this.pgp.helpers.insert(records, casesColumnSet) +

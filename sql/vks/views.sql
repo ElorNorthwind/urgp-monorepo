@@ -180,3 +180,57 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
 ----------------------------------------------------------------------
 ALTER TABLE vks.cases_detailed_view
     OWNER TO renovation_user;
+
+
+
+
+-- Консультации - legacy представление
+DROP VIEW IF EXISTS vks.consultations_legacy_view CASCADE;
+CREATE OR REPLACE VIEW vks.consultations_legacy_view  AS
+----------------------------------------------------------------------
+SELECT 
+	COALESCE(c.booking_code, 'нет') as booking_num,
+	c.date as cons_date,
+	COALESCE(c.online_grade::text, 'нет') as score_mos,
+	COALESCE(c.online_grade_comment, 'нет') as comment_mos,
+	c.online_grade IS NOT NULL AND c.online_grade <> 0 as comment_mos_true_false,
+	COALESCE(s.display_name, 'нет') as service_name,
+	c.status as status_suo,
+	CASE WHEN cl.type = 'Юридическое лицо' THEN 'нет' ElSE COALESCE(cl.full_name, 'нет') END as client_name,
+	COALESCE(c.phone, 'нет') as client_phone,
+	COALESCE(cl.type, 'нет') as client_type,
+	COALESCE(c.time, 'нет') as cons_time,
+	COALESCE(c.address, c.operator_survey_address, 'нет') as client_address,
+	CASE WHEN operator_survey_is_client THEN 'да' ELSE 'нет' END as client_true_false,
+	COALESCE(c.operator_survey_summary, c.problem_summary, 'нет') as description,
+	COALESCE(c.operator_survey_department, 'нет') as department,
+	COALESCE(c.operator_survey_info_source, 'нет') as info_source,
+	COALESCE(c.operator_survey_relation, 'нет') as moscow_relation,
+	CASE 
+		WHEN COALESCE(c.operator_survey_doc_date, '') = '' AND COALESCE(c.operator_survey_doc_num, '') = '' THEN 'нет'
+		ELSE ARRAY_TO_STRING(ARRAY[c.operator_survey_doc_date, c.operator_survey_doc_num], ' '::text, '') 
+	END as doc_info,
+	COALESCE(c.operator_survey_consultation_type, 'нет') as worksheet_status,
+	COALESCE(c.operator_survey_doc_type, 'нет') as question_type,
+	COALESCE(c.operator_survey_mood, 'нет') as question_tone,
+	COALESCE(INITCAP(REPLACE(REGEXP_REPLACE(c.operator_survey_fio, '(^[А-Яа-я\-]*)\s([А-Яа-я])(?:[А-Яа-я\-]*[\s\.]+([А-Яа-я]))?.*$', '\1 \2.\3.'), '..', '.')), 'нет') as operator_name,
+  	CASE
+		WHEN COALESCE(c.client_survey_comment_positive, '') = '' AND COALESCE(c.client_survey_comment_negative, '') = '' THEN 'нет'
+		ELSE ARRAY_TO_STRING(ARRAY[client_survey_comment_positive, client_survey_comment_negative], ' ', '')
+	END as comment_client,
+	COALESCE(c.client_survey_comment_positive, '') <> '' OR COALESCE(c.client_survey_comment_negative, '') <> '' as comment_client_true_false,
+	COALESCE(c.client_survey_grade::text, 'нет') as score_client,
+	c.client_survey_grade IS NOT NULL as score_client_true_false,
+	1 as rn -- :-)
+FROM vks.cases c 
+LEFT JOIN vks.services s ON c.service_id = s.id
+LEFT JOIN vks.clients cl ON c.client_id = cl.id;
+----------------------------------------------------------------------
+ALTER TABLE vks.consultations_legacy_view
+    OWNER TO consultation_legacy;
+GRANT USAGE ON SCHEMA vks TO consultation_legacy;
+GRANT SELECT ON TABLE vks.cases TO consultation_legacy;
+GRANT SELECT ON TABLE vks.clients TO consultation_legacy;
+GRANT SELECT ON TABLE vks.departments TO consultation_legacy;
+GRANT SELECT ON TABLE vks.services TO consultation_legacy;
+GRANT SELECT ON TABLE vks.zams TO consultation_legacy;
