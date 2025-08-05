@@ -175,14 +175,17 @@ export const bookingSourceStyles = {
 export const gradeSourceStyles = {
   none: {
     icon: SquareX,
+    label: 'Нет оценки',
     iconStyle: cn('text-muted-foreground/50'),
   },
   online: {
     icon: SquareCode,
+    label: 'Онлайн-форма на сайте',
     iconStyle: cn('text-foreground'),
   },
   survey: {
     icon: SquareMenu,
+    label: 'Опрос Anketolog',
     iconStyle: cn('text-foreground'),
   },
 };

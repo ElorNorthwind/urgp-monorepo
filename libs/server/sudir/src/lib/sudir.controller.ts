@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Logger, Param, Query } from '@nestjs/common';
 import { SudirService } from './sudir.service';
 
 @Controller('sudir')
@@ -17,6 +17,7 @@ export class SudirController {
     @Query('password')
     password: string,
   ) {
+    // Logger.debug(password);
     return this.sudir.loginEdo(login, password);
   }
 

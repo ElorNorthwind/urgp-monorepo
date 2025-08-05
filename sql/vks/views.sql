@@ -168,7 +168,8 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
 		d.full_name as "departmentFullName",
 		z.full_name as "zamFullName",
 		
-		COALESCE(COALESCE(c.client_survey_comment_positive, '') || COALESCE(c.client_survey_comment_negative, ''), c.online_grade_comment) as "gradeComment"
+        ARRAY_TO_STRING(ARRAY_REMOVE(ARRAY[c.client_survey_comment_positive, c.client_survey_comment_negative, c.online_grade_comment], null), '; ') as "gradeComment"
+		-- COALESCE(COALESCE(c.client_survey_comment_positive, '') || COALESCE(c.client_survey_comment_negative, ''), c.online_grade_comment) as "gradeComment"
 		
 
     FROM vks.cases c

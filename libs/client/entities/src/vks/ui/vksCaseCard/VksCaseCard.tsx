@@ -1,18 +1,9 @@
+import { Accordion, ScrollArea, useIsMobile } from '@urgp/client/shared';
 import {
-  Accordion,
-  EQUITY_SIDEBAR_WIDTH,
-  ScrollArea,
-  useIsMobile,
-} from '@urgp/client/shared';
-import {
-  EquityClaimsArchiveTab,
-  EquityClaimsTab,
-  EquityEgrnTab,
-  EquityObjectInfoTab,
-  EquityOperationsTab,
+  VksCaseClientInfoTab,
   VksCaseInfoTab,
+  VksCaseOperatorInfoTab,
 } from '@urgp/client/widgets';
-import { EquityObject, VksCase } from '@urgp/shared/entities';
 import { useVksCaseDetails } from '../../api/vksApi';
 import { VksCaseCardHeader } from './VksCaseCardHeader';
 
@@ -44,9 +35,16 @@ const VksCaseCard = (props: VksCaseCardProps): JSX.Element => {
         <Accordion
           type="multiple"
           className="w-full px-4 pb-4"
-          defaultValue={['operations', 'claims']}
+          defaultValue={['client-info', 'operator-info']}
         >
           <VksCaseInfoTab entity={data} />
+          <VksCaseClientInfoTab entity={data} accordionItemName="client-info" />
+          {data?.operatorSurveyId && (
+            <VksCaseOperatorInfoTab
+              entity={data}
+              accordionItemName="operator-info"
+            />
+          )}
           {/* <VksCaseInfoTab equityObject={equityObject} />
           <EquityEgrnTab equityObject={equityObject} accordionItemName="egrn" />
           <EquityClaimsTab

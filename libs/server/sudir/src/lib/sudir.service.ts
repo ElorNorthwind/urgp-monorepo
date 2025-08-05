@@ -90,6 +90,8 @@ export class SudirService {
           method: 'POST',
           data: {
             pow: await this.generateSudirPoW(powTask || ''),
+            // login: encodeURIComponent(login),
+            // password: encodeURIComponent(password),
             login,
             password,
           },
@@ -162,7 +164,7 @@ export class SudirService {
         `Логин и пароль пользователя c id ${userId} не внесены в БД`,
       );
     }
-    Logger.debug(credentials);
+    // Logger.debug(credentials);
     return this.loginEdo(credentials.login, credentials.password);
   }
 
