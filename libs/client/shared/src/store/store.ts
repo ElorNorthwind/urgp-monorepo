@@ -4,6 +4,7 @@ import { rtkApi } from './rtkApi';
 import authReducer from '../store/auth/authSlice';
 import controlReducer from '../store/control/controlSlice';
 import equityReducer from '../store/equity/equitySlice';
+import vksReducer from '../store/vks/vksSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     auth: authReducer,
     control: controlReducer,
     equity: equityReducer,
+    vks: vksReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(rtkApi.middleware),

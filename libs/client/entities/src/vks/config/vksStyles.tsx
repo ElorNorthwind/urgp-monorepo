@@ -6,6 +6,7 @@ import {
   CircleCheck,
   CircleDashed,
   CircleEllipsis,
+  CircleMinus,
   CircleSlash,
   CircleX,
   House,
@@ -132,7 +133,7 @@ export const clientTypeStyles = {
 export const propertyTypeStyles = {
   'Земельные и нежилые имущественные вопросы': {
     icon: MapPinHouse,
-    iconStyle: cn('text-amber-500'),
+    iconStyle: cn('text-slate-500'),
   },
   'Жилищные вопросы': {
     icon: House,
@@ -141,6 +142,10 @@ export const propertyTypeStyles = {
 };
 
 export const vksCaseStatusStyles = {
+  забронировано: {
+    icon: CircleEllipsis,
+    iconStyle: cn('text-sky-500'),
+  },
   обслужен: {
     icon: CircleCheck,
     iconStyle: cn('text-green-500'),
@@ -151,15 +156,15 @@ export const vksCaseStatusStyles = {
   },
   'талон не был взят': {
     icon: CircleDashed,
-    iconStyle: cn('text-orange-500'),
+    iconStyle: cn('text-zinc-500'),
   },
   'отменено пользователем': {
     icon: CircleX,
     iconStyle: cn('text-stone-500'),
   },
   'не явился по вызову': {
-    icon: CircleEllipsis,
-    iconStyle: cn('text-blue-500'),
+    icon: CircleMinus,
+    iconStyle: cn('text-orange-500'),
   },
 };
 

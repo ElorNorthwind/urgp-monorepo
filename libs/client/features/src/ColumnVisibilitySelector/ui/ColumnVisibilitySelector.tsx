@@ -15,6 +15,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  EquityRoutes,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -31,6 +32,7 @@ import {
   setPendingTableColumns,
   setProblemTableColumns,
   setVksCasesTableColumns,
+  VksRoutes,
 } from '@urgp/client/shared';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from '@tanstack/react-router';
@@ -117,7 +119,10 @@ function ColumnVisibilitySelector(
     },
   };
 
-  const pathname = useLocation().pathname as CaseRoutes;
+  const pathname = useLocation().pathname as
+    | CaseRoutes
+    | VksRoutes
+    | EquityRoutes;
   if (!(pathname in pathnameOptions)) return null;
 
   const { defaultVisibility, columnVisibility, setDispatch, clearDisparch } =
@@ -140,6 +145,11 @@ function ColumnVisibilitySelector(
     opType: 'Тип Операции',
     notes: 'Примечания',
     rgProgress: 'Заключения',
+    date: 'Дата',
+    client: 'Заявитель',
+    operator: 'Консультант',
+    grade: 'Оценка',
+    service: 'Услуга',
   };
 
   const isDefault = useMemo(() => {

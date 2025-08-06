@@ -3,16 +3,25 @@ import { CellContext } from '@tanstack/react-table';
 import {
   Badge,
   cn,
+  Separator,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@urgp/client/shared';
 import { VksCase } from '@urgp/shared/entities';
-import { vksDepartmentStyles } from '../../../config/vksStyles';
+import {
+  gradeSourceStyles,
+  vksDepartmentStyles,
+} from '../../../config/vksStyles';
 import { Star } from 'lucide-react';
 
 function VksCaseGradeCell(props: CellContext<VksCase, number>): JSX.Element {
   const rowData = props.row?.original;
+
+  const { label: gradeSourceLabel } =
+    gradeSourceStyles?.[
+      (rowData?.gradeSource || 'none') as keyof typeof gradeSourceStyles
+    ] || Object.values(gradeSourceStyles)[0];
 
   if (props.getValue() === 0)
     return (
@@ -24,25 +33,35 @@ function VksCaseGradeCell(props: CellContext<VksCase, number>): JSX.Element {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="flex flex-row items-center justify-start gap-1 truncate">
-          <span className="mr-1 text-lg">{rowData?.grade || '-'}</span>
-          {[...Array(5)].map((_, i) => (
-            <Star
-              id={'star_' + i}
-              className={cn(
-                'size-5 flex-shrink-0',
-                i > (props.getValue() || 0) - 1
-                  ? 'text-gray-300'
-                  : 'fill-amber-500 text-amber-500',
-              )}
-            />
-          ))}
+        <div className="flex flex-1 flex-shrink flex-col items-start justify-start truncate">
+          <div className="flex flex-row items-center justify-start gap-1 truncate">
+            <span className="mr-1 text-lg">{rowData?.grade || '-'}</span>
+            {[...Array(5)].map((_, i) => (
+              <Star
+                id={'star_' + i}
+                className={cn(
+                  'size-5 flex-shrink-0',
+                  i > (props.getValue() || 0) - 1
+                    ? 'text-gray-300'
+                    : 'fill-amber-500 text-amber-500',
+                )}
+              />
+            ))}
+          </div>
+          <div
+            className={cn(
+              'text-muted-foreground w-full truncate text-xs font-thin',
+              !rowData?.gradeComment && 'opacity-50',
+            )}
+          >
+            {rowData?.gradeComment || 'Комментарий не оставлен'}
+          </div>
         </div>
       </TooltipTrigger>
       <TooltipPortal>
         <TooltipContent side="bottom">
           <TooltipArrow />
-          <div className="flex max-w-[500px] flex-col gap-0">
+          <div className="flex max-w-[400px] flex-col gap-0">
             <div className="font-bold">Оценка</div>
             <div className="flex items-start justify-between">
               <span>Баллы:</span>
@@ -53,9 +72,20 @@ function VksCaseGradeCell(props: CellContext<VksCase, number>): JSX.Element {
             <div className="flex items-start justify-between">
               <span>Источник оценки:</span>
               <span className="text-muted-foreground ml-2 font-normal">
-                {rowData?.gradeSource || 'оценка не проставлена'}
+                {gradeSourceLabel || 'оценка не проставлена'}
               </span>
             </div>
+            {rowData?.gradeComment && (
+              <>
+                <Separator className="my-1" />
+                <p className="">
+                  <span>Комментарий:</span>
+                  <span className="text-muted-foreground ml-2 font-normal">
+                    {rowData?.gradeComment}
+                  </span>
+                </p>
+              </>
+            )}
           </div>
         </TooltipContent>
       </TooltipPortal>

@@ -16,24 +16,30 @@ function VksCaseConsultantCell(
   const rowData = props.row?.original;
 
   const {
-    // icon: DepartmentIcon,
-    // iconStyle: departmentIconStyle,
+    icon: DepartmentIcon,
+    iconStyle: departmentIconStyle,
     badgeStyle: departmentBadgeStyle,
-  } =
-    vksDepartmentStyles?.[
-      (rowData?.departmentId || 0) as keyof typeof vksDepartmentStyles
-    ] || Object.values(vksDepartmentStyles)[0];
+  } = vksDepartmentStyles?.[
+    (rowData?.departmentId || 0) as keyof typeof vksDepartmentStyles
+  ] || Object.values(vksDepartmentStyles)[0];
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="flex w-full flex-row gap-2">
-          <div className="flex w-[calc(100%-2.5rem)] flex-1 flex-shrink flex-col items-start justify-start">
+        <div className={cn('flex w-full flex-row gap-2')}>
+          <div className="flex flex-1 flex-shrink flex-col items-start justify-start truncate">
             <div className="flex w-full gap-1">
-              <span className="w-full truncate">{props.getValue()}</span>
+              <span
+                className={cn(
+                  'w-full truncate',
+                  rowData?.operatorFio ? '' : 'opacity-30',
+                )}
+              >
+                {props.getValue()}
+              </span>
             </div>
-            <div className="text-muted-foreground flex w-full flex-nowrap overflow-hidden text-xs">
-              <Badge
+            <div className="text-muted-foreground flex w-full flex-nowrap items-center overflow-hidden text-xs">
+              {/* <Badge
                 variant={'outline'}
                 className={cn(
                   departmentBadgeStyle,
@@ -41,7 +47,16 @@ function VksCaseConsultantCell(
                 )}
               >
                 {rowData?.departmentName}
-              </Badge>
+              </Badge> */}
+              {DepartmentIcon && (
+                <DepartmentIcon
+                  className={cn(
+                    departmentIconStyle,
+                    'mr-1 size-3 flex-shrink-0',
+                  )}
+                />
+              )}
+              <span className={'truncate'}>{rowData?.departmentName}</span>
             </div>
           </div>
         </div>

@@ -228,6 +228,7 @@ export const vksCaseSchema = z.object({
   isTechnical: z.boolean(),
   gradeSource: z.enum(['survey', 'online', 'none']),
   grade: z.number().nullable(),
+  gradeComment: z.string().nullable(),
   clientId: z.coerce.number().int().nonnegative(),
   clientFio: z.string().nullable(),
   clientType: z
@@ -295,7 +296,6 @@ export const VksCaseDetailsSchema = vksCaseSchema.extend({
   serviceFullName: z.string().nullable(),
   departmentFullName: z.string().nullable(),
   zamFullName: z.string().nullable(),
-  gradeComment: z.string().nullable(),
 });
 export type VksCaseDetails = z.infer<typeof VksCaseDetailsSchema>;
 

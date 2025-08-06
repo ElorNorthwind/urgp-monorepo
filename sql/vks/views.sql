@@ -29,7 +29,7 @@ CREATE OR REPLACE VIEW vks.cases_slim_view  AS
                 OR c.problem_video = '1' 
                 OR c.problem_connection = '1' 
                 OR c.problem_tech = '1'
-                OR array_length(array_remove(c.operator_survey_problems, 'Проблем не обнаружено!'), 1) > 0) 
+                OR c.operator_survey_problems && ARRAY['Ошибки с подключением к консультации у сотрудника/заявителя', 'Проблемы с видео/звуком у заявителя/сотрудника', 'Не пришла ссылка']) 
             THEN true 
             ELSE false 
         END as "hasTechnicalProblems",
@@ -40,13 +40,16 @@ CREATE OR REPLACE VIEW vks.cases_slim_view  AS
             ELSE 'none'
         END as "gradeSource",
         COALESCE(c.client_survey_grade, c.online_grade) as grade,
+        ARRAY_TO_STRING(ARRAY_REMOVE(ARRAY[c.client_survey_comment_positive, c.client_survey_comment_negative, c.online_grade_comment], null), '; ') as "gradeComment",
         -- COALESCE(COALESCE(c.client_survey_comment_positive, '') || COALESCE(c.client_survey_comment_negative, ''), c.online_grade_comment) as "gradeComment",
         c.client_id as "clientId",
-        COALESCE(c.participant_fio, CASE WHEN cl.short_name = 'Организация' THEN null ELSE cl.full_name END, c.deputy_fio ) as "clientFio",
-        cl.type as "clientType",
-        c.operator_survey_fio as "operatorFio",
 
+        INITCAP(REPLACE(REGEXP_REPLACE(COALESCE(c.participant_fio, CASE WHEN cl.short_name = 'Организация' THEN null ELSE cl.full_name END, c.deputy_fio), '(^[А-Яа-яёЁ\-]*)\s([А-Яа-яёЁ])(?:[А-Яа-яёЁ\-]*[\s\.]+([А-Яа-яёЁ]))?.*$', '\1 \2.\3.'), '..', '.')) as "clientFio",
+        -- COALESCE(c.participant_fio, CASE WHEN cl.short_name = 'Организация' THEN null ELSE cl.full_name END, c.deputy_fio) as "clientFio",
         
+        cl.type as "clientType",
+        INITCAP(REPLACE(REGEXP_REPLACE(c.operator_survey_fio, '(^[А-Яа-яёЁ\-]*)\s([А-Яа-яёЁ])(?:[А-Яа-яёЁ\-]*[\s\.]+([А-Яа-яёЁ]))?.*$', '\1 \2.\3.'), '..', '.')) as "operatorFio",
+
         c.operator_survey_date as "operatorSurveyDate",
         c.client_survey_date as "clientSurveyDate"
 
@@ -94,7 +97,7 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
                 OR c.problem_video = '1' 
                 OR c.problem_connection = '1' 
                 OR c.problem_tech = '1'
-                OR array_length(array_remove(c.operator_survey_problems, 'Проблем не обнаружено!'), 1) > 0) 
+                OR c.operator_survey_problems && ARRAY['Ошибки с подключением к консультации у сотрудника/заявителя', 'Проблемы с видео/звуком у заявителя/сотрудника', 'Не пришла ссылка'])  
             THEN true 
             ELSE false 
         END as "hasTechnicalProblems",
@@ -105,7 +108,7 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
             ELSE 'none'
         END as "gradeSource",
         COALESCE(c.client_survey_grade, c.online_grade) as grade,
-        -- COALESCE(COALESCE(c.client_survey_comment_positive, '') || COALESCE(c.client_survey_comment_negative, ''), c.online_grade_comment) as "gradeComment",
+        ARRAY_TO_STRING(ARRAY_REMOVE(ARRAY[c.client_survey_comment_positive, c.client_survey_comment_negative, c.online_grade_comment], null), '; ') as "gradeComment",
         c.client_id as "clientId",
         COALESCE(c.participant_fio, CASE WHEN cl.short_name = 'Организация' THEN null ELSE cl.full_name END, c.deputy_fio ) as "clientFio",
         cl.type as "clientType",
@@ -166,9 +169,9 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
 		
 		s.full_name as "serviceFullName",
 		d.full_name as "departmentFullName",
-		z.full_name as "zamFullName",
+		z.full_name as "zamFullName"
 		
-        ARRAY_TO_STRING(ARRAY_REMOVE(ARRAY[c.client_survey_comment_positive, c.client_survey_comment_negative, c.online_grade_comment], null), '; ') as "gradeComment"
+        
 		-- COALESCE(COALESCE(c.client_survey_comment_positive, '') || COALESCE(c.client_survey_comment_negative, ''), c.online_grade_comment) as "gradeComment"
 		
 
@@ -193,7 +196,7 @@ SELECT
 	c.date as cons_date,
 	COALESCE(c.online_grade::text, 'нет') as score_mos,
 	COALESCE(c.online_grade_comment, 'нет') as comment_mos,
-	c.online_grade IS NOT NULL AND c.online_grade <> 0 as comment_mos_true_false,
+	CASE WHEN c.online_grade IS NOT NULL AND c.online_grade <> 0 THEN 'да' ELSE 'нет' END as comment_mos_true_false,
 	COALESCE(s.display_name, 'нет') as service_name,
 	c.status as status_suo,
 	CASE WHEN cl.type = 'Юридическое лицо' THEN 'нет' ElSE COALESCE(cl.full_name, 'нет') END as client_name,
@@ -213,21 +216,23 @@ SELECT
 	COALESCE(c.operator_survey_consultation_type, 'нет') as worksheet_status,
 	COALESCE(c.operator_survey_doc_type, 'нет') as question_type,
 	COALESCE(c.operator_survey_mood, 'нет') as question_tone,
-	COALESCE(INITCAP(REPLACE(REGEXP_REPLACE(c.operator_survey_fio, '(^[А-Яа-я\-]*)\s([А-Яа-я])(?:[А-Яа-я\-]*[\s\.]+([А-Яа-я]))?.*$', '\1 \2.\3.'), '..', '.')), 'нет') as operator_name,
+	COALESCE(INITCAP(REPLACE(REGEXP_REPLACE(c.operator_survey_fio, '(^[А-Яа-яЁё\-]*)\s([А-Яа-яЁё])(?:[А-Яа-яЁё\-]*[\s\.]+([А-Яа-яЁё]))?.*$', '\1 \2.\3.'), '..', '.')), 'нет') as operator_name,
   	CASE
 		WHEN COALESCE(c.client_survey_comment_positive, '') = '' AND COALESCE(c.client_survey_comment_negative, '') = '' THEN 'нет'
 		ELSE ARRAY_TO_STRING(ARRAY[client_survey_comment_positive, client_survey_comment_negative], ' ', '')
 	END as comment_client,
-	COALESCE(c.client_survey_comment_positive, '') <> '' OR COALESCE(c.client_survey_comment_negative, '') <> '' as comment_client_true_false,
+	CASE WHEN COALESCE(c.client_survey_comment_positive, '') <> '' OR COALESCE(c.client_survey_comment_negative, '') <> '' THEN 'да' ELSE 'нет' END as comment_client_true_false,
 	COALESCE(c.client_survey_grade::text, 'нет') as score_client,
-	c.client_survey_grade IS NOT NULL as score_client_true_false,
+	CASE WHEN c.client_survey_grade IS NOT NULL THEN 'да' ELSE 'нет' END as score_client_true_false,
 	1 as rn -- :-)
 FROM vks.cases c 
 LEFT JOIN vks.services s ON c.service_id = s.id
-LEFT JOIN vks.clients cl ON c.client_id = cl.id;
+LEFT JOIN vks.clients cl ON c.client_id = cl.id
+ORDER BY c.date DESC, c.id DESC;
 ----------------------------------------------------------------------
 ALTER TABLE vks.consultations_legacy_view
     OWNER TO consultation_legacy;
+
 GRANT USAGE ON SCHEMA vks TO consultation_legacy;
 GRANT SELECT ON TABLE vks.cases TO consultation_legacy;
 GRANT SELECT ON TABLE vks.clients TO consultation_legacy;

@@ -40,6 +40,6 @@ const vksSlice = createSlice({
 export const { setVksCasesTableColumns, clearVksCasesTableColumns } =
   vksSlice.actions;
 export const selectVksCasesTableColumns = (state: RootState) =>
-  state.equity.objectTableColumns;
+  state.vks.casesTableColumns;
 
 export default vksSlice.reducer;

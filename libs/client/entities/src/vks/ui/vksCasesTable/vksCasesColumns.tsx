@@ -5,6 +5,7 @@ import { VksCaseConsultantCell } from './cells/VksCaseConsultantCell';
 import { VksCaseDateCell } from './cells/VksCaseDateCell';
 import { VksCaseStatusCell } from './cells/VksCaseStatusCell';
 import { VksCaseGradeCell } from './cells/VksCaseGradeCell';
+import { VksCaseServiceCell } from './cells/VksCaseServiceCell';
 
 const columnHelper = createColumnHelper<VksCase>();
 
@@ -21,7 +22,7 @@ export const vksCasesColumns = [
     {
       id: 'date',
       header: 'Дата',
-      size: 40,
+      size: 45,
       // enableHiding: true,
       enableSorting: true,
       sortDescFirst: true,
@@ -38,7 +39,7 @@ export const vksCasesColumns = [
     {
       id: 'status',
       header: 'Статус',
-      size: 60,
+      size: 80,
       enableHiding: true,
       enableSorting: true,
       sortDescFirst: true,
@@ -72,7 +73,7 @@ export const vksCasesColumns = [
     {
       id: 'operator',
       header: 'Консультант',
-      size: 80,
+      size: 60,
       enableHiding: true,
       enableSorting: true,
       sortDescFirst: true,
@@ -89,12 +90,29 @@ export const vksCasesColumns = [
     {
       id: 'grade',
       header: 'Оценка',
-      size: 40,
+      size: 60,
       enableHiding: true,
       enableSorting: true,
       sortDescFirst: true,
       cell: (props) => {
         return <VksCaseGradeCell {...props} />;
+      },
+    },
+  ),
+
+  columnHelper.accessor(
+    (row) => {
+      return row?.serviceName || '';
+    },
+    {
+      id: 'service',
+      header: 'Сервис',
+      size: 80,
+      enableHiding: true,
+      enableSorting: true,
+      sortDescFirst: true,
+      cell: (props) => {
+        return <VksCaseServiceCell {...props} />;
       },
     },
   ),

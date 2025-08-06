@@ -28,13 +28,13 @@ function VksCaseStatusCell(props: CellContext<VksCase, string>): JSX.Element {
           className={cn('size-8 flex-shrink-0', caseStatusIconStyle)}
         />
       )}
-      <div className="flex w-[calc(100%-2.5rem)] flex-1 flex-shrink flex-col items-start justify-start">
+      <div className="flex flex-1 flex-shrink flex-col items-start justify-start truncate">
         <div className="flex w-full gap-1">
           <span className="w-full truncate">{props?.getValue()}</span>
         </div>
         <div
           className={cn(
-            'text-muted-foreground w-[calc(100%-2.5rem)] truncate text-xs',
+            'text-muted-foreground truncate text-xs',
             rowData?.hasTechnicalProblems && 'text-red-500',
           )}
         >

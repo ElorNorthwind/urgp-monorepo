@@ -39,7 +39,7 @@ CREATE TABLE vks.departments
     boss_last_name VARCHAR(255),
     zam_id INTEGER REFERENCES vks.zams(id) ON DELETE SET NULL,
     display_name text GENERATED ALWAYS AS (
-       COALESCE(short_name || ' (', '') || COALESCE(boss_surname, '') || COALESCE(' ' || LEFT(boss_first_name, 1) || '.', '') || COALESCE( ' ' || LEFT(boss_last_name, 1) || '.', '') || ')'
+       COALESCE(short_name || ' (', '') || COALESCE(boss_surname, '') || COALESCE(' ' || LEFT(boss_first_name, 1) || '.', '') || COALESCE( LEFT(boss_last_name, 1) || '.', '') || ')'
     ) STORED,
 
     PRIMARY KEY (id)

@@ -28,16 +28,13 @@ function VksCaseClientCell(props: CellContext<VksCase, string>): JSX.Element {
               className={cn('size-8 flex-shrink-0', clientIconStyle)}
             />
           )}
-          <div className="flex w-[calc(100%-2.5rem)] flex-1 flex-shrink flex-col items-start justify-start">
+          <div className="flex flex-1 flex-shrink flex-col items-start justify-start truncate">
             <div className="flex w-full gap-1">
               <span className="w-full truncate">{props.getValue()}</span>
             </div>
             <div className="text-muted-foreground flex w-full flex-nowrap overflow-hidden text-xs">
-              <span className="flex-shrink-0 truncate rounded-sm border px-1 font-thin">
+              <span className="flex-shrink-0 truncate font-thin">
                 {rowData?.bookingCode}
-              </span>
-              <span className="ml-1 truncate font-thin">
-                {rowData?.bookingSource}
               </span>
             </div>
           </div>
