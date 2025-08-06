@@ -19,6 +19,8 @@ import { VksCasesDateFilter } from './filterInputs/VksCasesDateFilter';
 import { VksCaseStatusFilter } from './filterInputs/VksCaseStatusFilter';
 import { VksDepartmentFilter } from './filterInputs/VksDepartmentFilter';
 import { VksServiceFilter } from './filterInputs/VksServiceFilter';
+import { VksCaseGradeFilter } from './filterInputs/VksCaseGradeFilter';
+import { VksCasesOperatorFilter } from './filterInputs/VksCasesOperatorFilter';
 
 type VksCasesFilterSidebarProps = {
   side?: 'left' | 'right';
@@ -53,10 +55,12 @@ const VksCasesFilterSidebar = (
         <ScrollArea className={cn('h-full')}>
           <div className="flex h-full flex-col gap-2 p-2">
             <VksCasesQueryFilter className="h-8 flex-shrink-0" />
+            <VksCasesOperatorFilter className="h-8 flex-shrink-0" />
             <VksCasesDateFilter className="h-8 flex-shrink-0" />
             <Accordion type="multiple" defaultValue={['status', 'department']}>
               <VksCaseStatusFilter variant="accordion" />
               <VksDepartmentFilter variant="accordion" />
+              <VksCaseGradeFilter variant="accordion" />
               <VksServiceFilter variant="accordion" />
             </Accordion>
           </div>

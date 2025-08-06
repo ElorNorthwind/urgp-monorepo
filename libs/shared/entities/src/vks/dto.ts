@@ -78,8 +78,10 @@ export type VksCasesQuery = z.infer<typeof vksCasesQuerySchema>;
 export const vksCasesPageFilterSchema = z
   .object({
     query: z.string(),
+    operator: z.string(),
     service: queryStringArray,
     department: queryNumberArray,
+    grade: queryNumberArray,
     status: queryStringArray,
   })
   .partial();

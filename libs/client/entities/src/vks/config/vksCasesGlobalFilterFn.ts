@@ -6,13 +6,12 @@ export function vksCasesGlobalFilterFn(
   columnId: string,
   filterValue: VksCasesPageSearch,
 ): boolean {
-  const { query, status, service, department } = filterValue;
+  const { query, status, service, department, grade, operator } = filterValue;
 
   if (
     query &&
     !(
       (row.original?.clientFio || '') +
-      (row.original?.operatorFio || '') +
       (row.original?.bookingCode || '') +
       (row.original?.departmentName || '') +
       (row.original?.serviceName || '')
@@ -20,6 +19,17 @@ export function vksCasesGlobalFilterFn(
       ?.toLowerCase()
       .replace('ё', 'е')
       .includes(query.toLowerCase().replace('ё', 'е'))
+  ) {
+    return false;
+  }
+
+  if (
+    operator &&
+    !(row.original?.operatorFio || '')
+
+      ?.toLowerCase()
+      .replace('ё', 'е')
+      .includes(operator.toLowerCase().replace('ё', 'е'))
   ) {
     return false;
   }
@@ -33,6 +43,16 @@ export function vksCasesGlobalFilterFn(
   }
 
   if (department && !department.includes(row.original?.departmentId || 0)) {
+    return false;
+  }
+
+  if (
+    grade &&
+    !(
+      (grade.includes(0) && !row.original?.grade) ||
+      grade.includes(row.original?.grade || 0)
+    )
+  ) {
     return false;
   }
 

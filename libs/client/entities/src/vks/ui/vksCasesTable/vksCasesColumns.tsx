@@ -22,8 +22,8 @@ export const vksCasesColumns = [
     {
       id: 'date',
       header: 'Дата',
-      size: 45,
-      // enableHiding: true,
+      size: 32,
+      enableHiding: false,
       enableSorting: true,
       sortDescFirst: true,
       cell: (props) => {
@@ -39,7 +39,7 @@ export const vksCasesColumns = [
     {
       id: 'status',
       header: 'Статус',
-      size: 80,
+      size: 70,
       enableHiding: true,
       enableSorting: true,
       sortDescFirst: true,
@@ -56,7 +56,7 @@ export const vksCasesColumns = [
     {
       id: 'client',
       header: 'Заявитель',
-      size: 80,
+      size: 70,
       enableHiding: true,
       enableSorting: true,
       sortDescFirst: true,
