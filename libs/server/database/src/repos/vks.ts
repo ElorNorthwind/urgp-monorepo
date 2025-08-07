@@ -364,7 +364,7 @@ SET (
       q.department && q.department.length > 0
         ? `AND d.id IN (${q.department.join(',')})`
         : '';
-    return this.db.any(vks.readVksDepartmentStats, {
+    return this.db.any(vks.readVksServiceStats, {
       conditions,
       dateFrom: q?.dateFrom || '-infinity',
       dateTo: q?.dateTo || 'infinity',

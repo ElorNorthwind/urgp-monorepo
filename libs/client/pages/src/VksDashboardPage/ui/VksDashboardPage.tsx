@@ -6,8 +6,17 @@ import {
   VksCasesResetFilter,
   VksDepartmentFilter,
 } from '@urgp/client/widgets';
+import { VksDepartmentSurveyedChart } from './cards/VksDetartmentSurveyedChart';
+import { VksDepartmentGradeChart } from './cards/VksDetartmentGradeChart';
+import { VksServiceChart } from './cards/VksServiceChart';
+import { getRouteApi, useLocation } from '@tanstack/react-router';
+import { VksDashbordPageSearch } from '@urgp/shared/entities';
+import { VksStatusChart } from './cards/VksStatusChart';
 
 const VksDashboardPage = (): JSX.Element => {
+  const pathname = useLocation().pathname;
+  const search = getRouteApi(pathname).useSearch() as VksDashbordPageSearch;
+
   return (
     <ScrollArea className="bg-muted-foreground/5 h-screen w-full">
       <div className="relatve mx-auto max-w-7xl space-y-6 p-10">
@@ -32,6 +41,13 @@ const VksDashboardPage = (): JSX.Element => {
         <div className="flex flex-col space-y-6">
           {/* <Construction className="size-24" /> */}
           <VksTimelineChart />
+          <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-2">
+            <VksDepartmentSurveyedChart className="" />
+            <VksDepartmentGradeChart className="" />
+          </div>
+          {search?.department && search.department.length > 0 && (
+            <VksServiceChart className="" />
+          )}
         </div>
       </div>
     </ScrollArea>
