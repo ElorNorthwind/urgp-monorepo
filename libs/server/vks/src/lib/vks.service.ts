@@ -15,6 +15,7 @@ import {
   VksCaseDetails,
   NestedClassificatorInfo,
   NestedClassificatorInfoString,
+  VksTimelinePoint,
 } from '@urgp/shared/entities';
 import { AxiosRequestConfig } from 'axios';
 import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
@@ -355,5 +356,9 @@ export class VksService {
     NestedClassificatorInfoString[]
   > {
     return this.dbServise.db.vks.getStatusClassificator();
+  }
+
+  public async ReadVksTimeline(): Promise<VksTimelinePoint[]> {
+    return this.dbServise.db.vks.getVksTimeline();
   }
 }

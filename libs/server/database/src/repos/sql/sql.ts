@@ -212,4 +212,5 @@ export const vks = {
     'sql/vks/readVksServiceTypeClassificator.sql',
   ),
   readStatusClassificator: sql('sql/vks/readVksStatusClassificator.sql'),
+  readVksTimeline: sql('sql/vks/readVksTimeline.sql'),
 };

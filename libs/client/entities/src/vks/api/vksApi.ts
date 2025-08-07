@@ -5,6 +5,7 @@ import {
   VksCase,
   VksCaseDetails,
   VksCasesQuery,
+  VksTimelinePoint,
 } from '@urgp/shared/entities';
 
 export const vksApi = rtkApi.injectEndpoints({
@@ -56,6 +57,13 @@ export const vksApi = rtkApi.injectEndpoints({
       }),
       providesTags: ['vks-classificator'],
     }),
+    getVksTimeline: build.query<VksTimelinePoint[], void>({
+      query: () => ({
+        url: `/vks/charts/timeline`,
+        method: 'GET',
+      }),
+      providesTags: ['vks-classificator'],
+    }),
   }),
   overrideExisting: false,
 });
@@ -66,4 +74,5 @@ export const {
   useGetVksDepartmentClassificatorQuery: useVksDepartmentClassificator,
   useGetVksServiceTypesClassificatorQuery: useVksServiceTypesClassificator,
   useGetVksStatusClassificatorQuery: useVksStatusClassificator,
+  useGetVksTimelineQuery: useVksTimeline,
 } = vksApi;

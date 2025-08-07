@@ -20,6 +20,7 @@ import {
   VksCaseDetails,
   VksCasesQuery,
   vksCasesQuerySchema,
+  VksTimelinePoint,
   vksUpdateQueryReturnValue,
 } from '@urgp/shared/entities';
 import { VksService } from './vks.service';
@@ -71,6 +72,13 @@ export class VksController {
   @Get('classificators/statuses')
   getVksStatusesClassificator(): Promise<NestedClassificatorInfoString[]> {
     return this.vks.ReadVksStatusClassificator();
+  }
+
+  @CacheTTL(1000 * 60 * 30)
+  @UseInterceptors(CacheInterceptor)
+  @Get('charts/timeline')
+  getVksTimeline(): Promise<VksTimelinePoint[]> {
+    return this.vks.ReadVksTimeline();
   }
 
   // @Get('qms')

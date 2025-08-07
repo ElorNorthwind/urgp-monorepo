@@ -10,6 +10,7 @@ import {
   VksCase,
   VksCaseDetails,
   VksCasesQuery,
+  VksTimelinePoint,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { vks } from './sql/sql';
@@ -318,6 +319,10 @@ SET (
 
   getStatusClassificator(): Promise<NestedClassificatorInfoString[]> {
     return this.db.any(vks.readStatusClassificator);
+  }
+
+  getVksTimeline(): Promise<VksTimelinePoint[]> {
+    return this.db.any(vks.readVksTimeline);
   }
 
   // updateOperationsTriggerInfo(): Promise<null> {

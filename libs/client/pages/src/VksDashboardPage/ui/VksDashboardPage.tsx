@@ -1,5 +1,6 @@
 import { ScrollArea, Separator } from '@urgp/client/shared';
 import { Construction } from 'lucide-react';
+import { VksTimelineChart } from './cards/VksTImeline';
 
 const VksDashboardPage = (): JSX.Element => {
   return (
@@ -15,8 +16,8 @@ const VksDashboardPage = (): JSX.Element => {
         </div>
         <Separator className="my-6" />
         <div className="flex flex-col space-y-6">
-          <Construction className="size-24" />
-          <div>Тут будет дашборд</div>
+          {/* <Construction className="size-24" /> */}
+          <VksTimelineChart />
         </div>
       </div>
     </ScrollArea>

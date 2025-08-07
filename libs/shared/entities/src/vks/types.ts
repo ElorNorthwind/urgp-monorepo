@@ -304,3 +304,12 @@ export type vksUpdateQueryReturnValue = {
   operator: { found: number; updated: number };
   client: { found: number; updated: number };
 };
+
+export const vksTimelinePointSchema = z.object({
+  year: z.number().int().nonnegative(),
+  month: z.number().int().nonnegative(),
+  period: z.string(),
+  housing: z.number().int().nonnegative(),
+  nonHousing: z.number().int().nonnegative(),
+});
+export type VksTimelinePoint = z.infer<typeof vksTimelinePointSchema>;
