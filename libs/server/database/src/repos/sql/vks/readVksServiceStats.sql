@@ -1,5 +1,4 @@
 SELECT 
-	s.id,
 	s.short_name as service,
 	s.display_name as name,
 	COUNT(*)::integer as total,
@@ -21,5 +20,5 @@ LEFT JOIN vks.services s ON c.service_id = s.id
 LEFT JOIN vks.departments d ON s.department_id = d.id
 WHERE c.date BETWEEN ${dateFrom}::date AND ${dateTo}::date
 ${conditions:raw}
-GROUP BY s.id, s.short_name, s.display_name
+GROUP BY s.short_name, s.display_name
 ORDER BY COUNT(*) DESC;

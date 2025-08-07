@@ -321,7 +321,6 @@ export const vksStatusStatSchema = z.object({
 export type VksStatusStat = z.infer<typeof vksStatusStatSchema>;
 
 const vksStatSchema = z.object({
-  id: z.number().int().nonnegative(),
   total: z.number().int().nonnegative(),
   surveyed: z.number().int().nonnegative(),
   unsurveyed: z.number().int().nonnegative(),
@@ -333,6 +332,7 @@ const vksStatSchema = z.object({
 });
 
 export const vksDepartmentStatSchema = vksStatSchema.extend({
+  id: z.number().int().nonnegative(),
   department: z.string(),
 });
 export type VksDepartmentStat = z.infer<typeof vksDepartmentStatSchema>;

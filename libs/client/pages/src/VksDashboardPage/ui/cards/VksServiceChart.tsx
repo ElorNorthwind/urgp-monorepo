@@ -117,7 +117,7 @@ const VksServiceChart = ({ className }: ChartProps): JSX.Element => {
                   navigate({
                     to: './cases',
                     search: {
-                      service: [data.id],
+                      service: [data.service],
                       dateFrom: search.dateFrom,
                       dateTo: search.dateTo,
                     },

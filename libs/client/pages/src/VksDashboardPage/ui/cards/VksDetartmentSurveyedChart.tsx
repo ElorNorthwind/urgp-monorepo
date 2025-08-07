@@ -77,7 +77,7 @@ const VksDepartmentSurveyedChart = ({ className }: ChartProps): JSX.Element => {
       </CardHeader>
       <CardContent
         className=""
-        style={{ height: (data?.length || 0) * 3 + 2 + 'rem' }}
+        style={{ height: (data?.length || 0) * 2.5 + 2 + 'rem' }}
       >
         {isLoading ? (
           <div>

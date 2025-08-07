@@ -40,7 +40,10 @@ const VksDashboardPage = (): JSX.Element => {
         <Separator className="my-6" />
         <div className="flex flex-col space-y-6">
           {/* <Construction className="size-24" /> */}
-          <VksTimelineChart />
+          <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-[2fr_300px]">
+            <VksTimelineChart />
+            <VksStatusChart className="" />
+          </div>
           <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-2">
             <VksDepartmentSurveyedChart className="" />
             <VksDepartmentGradeChart className="" />

@@ -12,30 +12,52 @@ import {
   CardTitle,
   ChartConfig,
   ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
   cn,
   Skeleton,
 } from '@urgp/client/shared';
 import { VksDashbordPageSearch } from '@urgp/shared/entities';
-import { Shapes } from 'lucide-react';
+import { PieChartIcon, Shapes } from 'lucide-react';
 import {
   BarChart,
   CartesianGrid,
   Label,
+  Pie,
+  PieChart,
   PolarRadiusAxis,
   RadialBar,
   RadialBarChart,
+  Sector,
   XAxis,
   YAxis,
 } from 'recharts';
+import { PieSectorDataItem } from 'recharts/types/polar/Pie';
 
 const chartConfig = {
   обслужен: {
     label: 'обслужен',
-    color: 'hsl(var(--chart-2))',
+    color: '#0d9488',
+  },
+  забронировано: {
+    label: 'забронировано',
+    color: '#14b8a6',
   },
   'отменено ОИВ': {
     label: 'отменено ОИВ',
-    color: 'hsl(var(--chart-1))',
+    color: '#334155',
+  },
+  'отменено пользователем': {
+    label: 'отменено пользователем',
+    color: '#475569',
+  },
+  'талон не был взят': {
+    label: 'талон не был взят',
+    color: '#64748b',
+  },
+  'не явился по вызову': {
+    label: 'не явился по вызову',
+    color: '#94a3b8',
   },
 } satisfies ChartConfig;
 
@@ -50,58 +72,64 @@ const VksStatusChart = ({ className }: ChartProps): JSX.Element => {
 
   const { data, isLoading, isFetching } = useVksStatusStats(search);
 
+  const totalConsultations = data?.reduce((acc, item) => {
+    return acc + item.count;
+  }, 0);
+
+  const dataWithFill = data?.map((item) => ({
+    ...item,
+    fill: chartConfig[item.status as keyof typeof chartConfig].color,
+  }));
+
   return (
     <Card className={cn(className)}>
       <CardHeader className="relative flex flex-row items-start justify-start gap-2 space-y-0 pb-2">
-        <Shapes className="-mt-1.5 size-12 flex-shrink-0" />
+        <PieChartIcon className="-mt-1.5 size-12 flex-shrink-0" />
         <div className="flex-shrink-0">
           <CardTitle className="flex flex-row items-center justify-between">
             <span className="flex-shrink-0">Статус записей</span>
           </CardTitle>
-          <CardDescription className="">
-            Число записей в разрезе статуса
-          </CardDescription>
+          <CardDescription className="">Состояние консультаций</CardDescription>
         </div>
       </CardHeader>
-      <CardContent
-        className=""
-        style={{ height: (data?.length || 0) * 3 + 2 + 'rem' }}
-      >
-        {/* cy: 140,
-      numberY: 0,
-      textY: 16,
-      endAngle: 180,
-      startAngle: 540,
-      marginStyle: '-mb-10 -mt-2', */}
-
+      <CardContent className="">
         {isLoading ? (
           <div>
             <Skeleton className="mb-2 h-[calc(100%-2rem)] w-full" />
             <Skeleton className="mx-auto h-4 w-44" />
           </div>
         ) : (
-          <ChartContainer config={chartConfig} className="h-full w-full pt-0">
-            <RadialBarChart
-              data={data}
-              endAngle={180}
-              startAngle={540}
-              innerRadius={100}
-              outerRadius={180}
-              cy={140}
-            >
-              {renderRechartsTooltip({
-                config: chartConfig,
-                // cursor: true,
-                labelWidth: '16rem',
-                // labelFormatter: () => {
-                //   return <div className="text-lg font-bold">Всего заявок</div>;
-                // },
-              })}
-              {/* <ChartTooltip
-                      cursor={false}
-                      content={<ChartTooltipContent hideLabel />}
-                    /> */}
-              <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
+          <ChartContainer
+            config={chartConfig}
+            className="pt-0 lg:aspect-square"
+          >
+            <PieChart>
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel />}
+              />
+              <Pie
+                data={dataWithFill}
+                dataKey="count"
+                nameKey="status"
+                innerRadius={80}
+                outerRadius={110}
+                strokeWidth={5}
+                className="cursor-pointer"
+                onClick={(data) => {
+                  if (data) {
+                    navigate({
+                      to: './cases',
+                      search: {
+                        status: data.status,
+                        dateFrom: search.dateFrom,
+                        dateTo: search.dateTo,
+                        department: search.department,
+                      },
+                    });
+                  }
+                }}
+              >
                 <Label
                   content={({ viewBox }) => {
                     if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
@@ -110,64 +138,29 @@ const VksStatusChart = ({ className }: ChartProps): JSX.Element => {
                           x={viewBox.cx}
                           y={viewBox.cy}
                           textAnchor="middle"
-                          // className="cursor-pointer"
-                          // onClick={(data) =>
-                          //   navigate({
-                          //     to: './cases',
-                          //     search: {
-                          //       status: data?.status,
-                          //     },
-                          //   })
-                          // }
+                          dominantBaseline="middle"
                         >
                           <tspan
                             x={viewBox.cx}
-                            y={viewBox.cy || 0}
+                            y={viewBox.cy}
                             className="fill-foreground text-4xl font-bold"
                           >
-                            {isLoading || !data
-                              ? '...'
-                              : (1000).toLocaleString('ru-RU')}
+                            {totalConsultations?.toLocaleString('ru-RU') || '0'}
                           </tspan>
                           <tspan
                             x={viewBox.cx}
-                            y={viewBox.cy || 0}
+                            y={(viewBox.cy || 0) + 24}
                             className="fill-muted-foreground"
                           >
-                            Всего заявок
+                            Консультаций
                           </tspan>
                         </text>
                       );
-                    } else {
-                      return null;
                     }
                   }}
                 />
-              </PolarRadiusAxis>
-              {Object.keys(chartConfig).map((key) => {
-                return (
-                  <RadialBar
-                    key={key}
-                    dataKey={key}
-                    stackId="a"
-                    fill={`var(--color-${key})`}
-                    className="cursor-pointer stroke-transparent stroke-2"
-                    // onClick={() =>
-                    //   navigate({
-                    //     to: './objects',
-                    //     search: {
-                    //       status:
-                    //         action === 'give'
-                    //           ? giveStatuses[key as keyof typeof giveStatuses]
-                    //           : takeStatuses[key as keyof typeof takeStatuses],
-                    //       type: [1],
-                    //     },
-                    //   })
-                    // }
-                  />
-                );
-              })}
-            </RadialBarChart>
+              </Pie>
+            </PieChart>
           </ChartContainer>
         )}
       </CardContent>
