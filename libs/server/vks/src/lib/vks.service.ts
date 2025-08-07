@@ -16,6 +16,10 @@ import {
   NestedClassificatorInfo,
   NestedClassificatorInfoString,
   VksTimelinePoint,
+  VksDashbordPageSearch,
+  VksDepartmentStat,
+  VksServiceStat,
+  VksStatusStat,
 } from '@urgp/shared/entities';
 import { AxiosRequestConfig } from 'axios';
 import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
@@ -352,5 +356,23 @@ export class VksService {
     departmentIds?: number[],
   ): Promise<VksTimelinePoint[]> {
     return this.dbServise.db.vks.getVksTimeline(departmentIds);
+  }
+
+  public async ReadVksStatusStats(
+    q: VksDashbordPageSearch,
+  ): Promise<VksStatusStat[]> {
+    return this.dbServise.db.vks.getVksStatusStats(q);
+  }
+
+  public async ReadVksDepartmentStats(
+    q: VksDashbordPageSearch,
+  ): Promise<VksDepartmentStat[]> {
+    return this.dbServise.db.vks.getVksDepartmentStats(q);
+  }
+
+  public async ReadVksServiceStats(
+    q: VksDashbordPageSearch,
+  ): Promise<VksServiceStat[]> {
+    return this.dbServise.db.vks.getVksServiceStats(q);
   }
 }

@@ -313,3 +313,32 @@ export const vksTimelinePointSchema = z.object({
   nonHousing: z.number().int().nonnegative(),
 });
 export type VksTimelinePoint = z.infer<typeof vksTimelinePointSchema>;
+
+export const vksStatusStatSchema = z.object({
+  status: z.string(),
+  count: z.number().int().nonnegative(),
+});
+export type VksStatusStat = z.infer<typeof vksStatusStatSchema>;
+
+const vksStatSchema = z.object({
+  id: z.number().int().nonnegative(),
+  total: z.number().int().nonnegative(),
+  surveyed: z.number().int().nonnegative(),
+  unsurveyed: z.number().int().nonnegative(),
+  surveyPercent: z.number().nonnegative(),
+  graded: z.number().int().nonnegative(),
+  ungraded: z.number().int().nonnegative(),
+  grade: z.number().nonnegative(),
+  gradedPercent: z.number().nonnegative(),
+});
+
+export const vksDepartmentStatSchema = vksStatSchema.extend({
+  department: z.string(),
+});
+export type VksDepartmentStat = z.infer<typeof vksDepartmentStatSchema>;
+
+export const vksServiceStatSchema = vksStatSchema.extend({
+  service: z.string(),
+  name: z.string(),
+});
+export type VksServiceStat = z.infer<typeof vksServiceStatSchema>;

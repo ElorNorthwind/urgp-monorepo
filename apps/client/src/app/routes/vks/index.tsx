@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { EquityDashboardPage, VksDashboardPage } from '@urgp/client/pages';
+import { VksDashboardPage } from '@urgp/client/pages';
+import { vksDashbordPageSearchSchema } from '@urgp/shared/entities';
 
 export const Route = createFileRoute('/vks/')({
   // beforeLoad: () => {
@@ -7,7 +8,8 @@ export const Route = createFileRoute('/vks/')({
   // },
   // component: () => <ExcelFileInput />,
   component: () => <VksDashboardPage />,
-  // validateSearch: (search) => {
-  //   return addressUploadPageSearchSchema.parse(search);
-  // },
+
+  validateSearch: (search) => {
+    return vksDashbordPageSearchSchema.partial().parse(search);
+  },
 });

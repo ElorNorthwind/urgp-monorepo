@@ -213,4 +213,7 @@ export const vks = {
   ),
   readStatusClassificator: sql('sql/vks/readVksStatusClassificator.sql'),
   readVksTimeline: sql('sql/vks/readVksTimeline.sql'),
+  readVksStatusStats: sql('sql/vks/readVksStatusStats.sql'),
+  readVksDepartmentStats: sql('sql/vks/readVksDepartmentStats.sql'),
+  readVksServiceStats: sql('sql/vks/readVksServiceStats.sql'),
 };

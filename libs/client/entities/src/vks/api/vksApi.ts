@@ -5,6 +5,10 @@ import {
   VksCase,
   VksCaseDetails,
   VksCasesQuery,
+  VksDashbordPageSearch,
+  VksDepartmentStat,
+  VksServiceStat,
+  VksStatusStat,
   VksTimelinePoint,
 } from '@urgp/shared/entities';
 
@@ -65,6 +69,48 @@ export const vksApi = rtkApi.injectEndpoints({
       }),
       providesTags: ['vks-classificator'],
     }),
+
+    getVksStatusStats: build.query<
+      VksStatusStat[],
+      VksDashbordPageSearch | void
+    >({
+      query: (q) => ({
+        url: `/vks/charts/status`,
+        method: 'GET',
+        params: {
+          ...q,
+        },
+      }),
+      providesTags: ['vks-classificator'],
+    }),
+
+    getVksDepartmentStats: build.query<
+      VksDepartmentStat[],
+      VksDashbordPageSearch | void
+    >({
+      query: (q) => ({
+        url: `/vks/charts/department`,
+        method: 'GET',
+        params: {
+          ...q,
+        },
+      }),
+      providesTags: ['vks-classificator'],
+    }),
+
+    getVksServiceStats: build.query<
+      VksServiceStat[],
+      VksDashbordPageSearch | void
+    >({
+      query: (q) => ({
+        url: `/vks/charts/service`,
+        method: 'GET',
+        params: {
+          ...q,
+        },
+      }),
+      providesTags: ['vks-classificator'],
+    }),
   }),
   overrideExisting: false,
 });
@@ -76,4 +122,7 @@ export const {
   useGetVksServiceTypesClassificatorQuery: useVksServiceTypesClassificator,
   useGetVksStatusClassificatorQuery: useVksStatusClassificator,
   useGetVksTimelineQuery: useVksTimeline,
+  useGetVksStatusStatsQuery: useVksStatusStats,
+  useGetVksDepartmentStatsQuery: useVksDepartmentStats,
+  useGetVksServiceStatsQuery: useVksServiceStats,
 } = vksApi;

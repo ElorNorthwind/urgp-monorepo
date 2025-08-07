@@ -6,7 +6,6 @@ export const Route = createFileRoute('/vks/cases')({
   // beforeLoad: () => {
   //   throw redirect({ to: '/control/cases' });
   // },
-  // component: () => <ExcelFileInput />,
   component: () => <VksCasesPage />,
   validateSearch: (search) => {
     return vksCasesPageSearchSchema.parse(search);

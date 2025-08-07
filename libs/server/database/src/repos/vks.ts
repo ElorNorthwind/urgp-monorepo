@@ -10,6 +10,10 @@ import {
   VksCase,
   VksCaseDetails,
   VksCasesQuery,
+  VksDashbordPageSearch,
+  VksDepartmentStat,
+  VksServiceStat,
+  VksStatusStat,
   VksTimelinePoint,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
@@ -322,11 +326,49 @@ SET (
   }
 
   getVksTimeline(departmentIds?: number[]): Promise<VksTimelinePoint[]> {
-    const clause =
+    const conditions =
       departmentIds && departmentIds.length > 0
         ? `AND dep.id IN (${departmentIds.join(',')})`
         : '';
-    return this.db.any(vks.readVksTimeline, [clause]);
+    return this.db.any(vks.readVksTimeline, [conditions]);
+  }
+
+  getVksStatusStats(q: VksDashbordPageSearch): Promise<VksStatusStat[]> {
+    const conditions =
+      q.department && q.department.length > 0
+        ? `AND d.id IN (${q.department.join(',')})`
+        : '';
+    return this.db.any(vks.readVksStatusStats, {
+      conditions,
+      dateFrom: q.dateFrom || '-infinity',
+      dateTo: q.dateTo || 'infinity',
+    });
+  }
+
+  getVksDepartmentStats(
+    q: VksDashbordPageSearch,
+  ): Promise<VksDepartmentStat[]> {
+    const conditions =
+      q.department && q.department.length > 0
+        ? `AND d.id IN (${q.department.join(',')})`
+        : '';
+    return this.db.any(vks.readVksDepartmentStats, {
+      conditions,
+      dateFrom: q?.dateFrom || '-infinity',
+      dateTo: q?.dateTo || 'infinity',
+    });
+  }
+
+  getVksServiceStats(q: VksDashbordPageSearch): Promise<VksServiceStat[]> {
+    const conditions =
+      q.department && q.department.length > 0
+        ? `AND d.id IN (${q.department.join(',')})`
+        : '';
+    return this.db.any(vks.readVksDepartmentStats, {
+      conditions,
+      dateFrom: q?.dateFrom || '-infinity',
+      dateTo: q?.dateTo || 'infinity',
+    });
   }
 
   // updateOperationsTriggerInfo(): Promise<null> {

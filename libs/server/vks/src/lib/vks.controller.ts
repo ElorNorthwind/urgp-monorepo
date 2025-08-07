@@ -1,7 +1,9 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
+  Logger,
   Param,
   ParseArrayPipe,
   ParseIntPipe,
@@ -9,6 +11,7 @@ import {
   Query,
   UseGuards,
   UseInterceptors,
+  UsePipes,
 } from '@nestjs/common';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ZodValidationPipe } from '@urgp/server/pipes';
@@ -21,6 +24,11 @@ import {
   VksCaseDetails,
   VksCasesQuery,
   vksCasesQuerySchema,
+  VksDashbordPageSearch,
+  vksDashbordPageSearchSchema,
+  VksDepartmentStat,
+  VksServiceStat,
+  VksStatusStat,
   VksTimelinePoint,
   vksUpdateQueryReturnValue,
 } from '@urgp/shared/entities';
@@ -86,6 +94,42 @@ export class VksController {
     departmentIds?: number[],
   ): Promise<VksTimelinePoint[]> {
     return this.vks.ReadVksTimeline(departmentIds);
+  }
+
+  @CacheTTL(1000 * 60 * 30)
+  @UseInterceptors(CacheInterceptor)
+  @UsePipes(new ZodValidationPipe(vksDashbordPageSearchSchema))
+  @Get('charts/status')
+  getVksStatusStats(
+    @Query()
+    q?: VksDashbordPageSearch,
+  ): Promise<VksStatusStat[]> {
+    if (!q) throw new BadRequestException('Не указаны данные запроса');
+    return this.vks.ReadVksStatusStats(q);
+  }
+
+  @CacheTTL(1000 * 60 * 30)
+  @UseInterceptors(CacheInterceptor)
+  @UsePipes(new ZodValidationPipe(vksDashbordPageSearchSchema))
+  @Get('charts/department')
+  getVksDepartmentStats(
+    @Query()
+    q?: VksDashbordPageSearch,
+  ): Promise<VksDepartmentStat[]> {
+    if (!q) throw new BadRequestException('Не указаны данные запроса');
+    return this.vks.ReadVksDepartmentStats(q);
+  }
+
+  @CacheTTL(1000 * 60 * 30)
+  @UseInterceptors(CacheInterceptor)
+  @UsePipes(new ZodValidationPipe(vksDashbordPageSearchSchema))
+  @Get('charts/service')
+  getVksServiceStats(
+    @Query()
+    q?: VksDashbordPageSearch,
+  ): Promise<VksServiceStat[]> {
+    if (!q) throw new BadRequestException('Не указаны данные запроса');
+    return this.vks.ReadVksServiceStats(q);
   }
 
   // @Get('qms')

@@ -1,10 +1,11 @@
 import { getRouteApi, useLocation } from '@tanstack/react-router';
 import {
-  useEquityTimeline,
-  useVksDepartmentClassificator,
+  useVksServiceStats,
+  useVksDepartmentStats,
+  useVksStatusStats,
   useVksTimeline,
 } from '@urgp/client/entities';
-import { MultiSelect, renderRechartsTooltip } from '@urgp/client/features';
+import { renderRechartsTooltip } from '@urgp/client/features';
 import {
   Card,
   CardContent,
@@ -19,10 +20,9 @@ import {
   Skeleton,
 } from '@urgp/client/shared';
 import { VksDepartmentFilter } from '@urgp/client/widgets';
-import { VksCasesPageSearch } from '@urgp/shared/entities';
-import { differenceInDays, format, startOfMonth } from 'date-fns';
+import { VksDashbordPageSearch } from '@urgp/shared/entities';
+import { format } from 'date-fns';
 import { CalendarCheck } from 'lucide-react';
-import { useState } from 'react';
 import { Area, AreaChart, CartesianGrid, ReferenceLine, XAxis } from 'recharts';
 
 const chartConfig = {
@@ -44,7 +44,7 @@ const VksTimelineChart = ({
   className,
 }: MonthlyProgressTimelineChartProps): JSX.Element => {
   const pathname = useLocation().pathname;
-  const search = getRouteApi(pathname).useSearch() as VksCasesPageSearch;
+  const search = getRouteApi(pathname).useSearch() as VksDashbordPageSearch;
 
   const { data, isLoading, isFetching } = useVksTimeline(search?.department);
 
@@ -53,7 +53,7 @@ const VksTimelineChart = ({
 
   return (
     <Card className={cn(className)}>
-      <CardHeader className="relative flex flex-row items-center justify-start gap-2 space-y-0 pb-2">
+      <CardHeader className="relative flex flex-row items-start justify-start gap-2 space-y-0 pb-2">
         <CalendarCheck className="-mt-1.5 size-12 flex-shrink-0" />
         <div className="flex-shrink-0">
           <CardTitle className="flex flex-row items-center justify-between">
@@ -64,12 +64,6 @@ const VksTimelineChart = ({
             Количество онлайн-консультаций по месяцам
           </CardDescription>
         </div>
-        <VksDepartmentFilter
-          className="ml-auto flex-shrink flex-grow-0"
-          overrideDefaultWidth
-          fullBadge
-          variant={'popover'}
-        />
       </CardHeader>
       <CardContent className="h-[280px]">
         {isLoading ? (

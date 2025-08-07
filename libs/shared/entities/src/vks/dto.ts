@@ -107,3 +107,27 @@ export const vksCasesPageSearchSchema = vksCasesPageFilterSchema
 //     .default(format(new Date(), 'yyyy-MM-dd')),
 // });
 export type VksCasesPageSearch = z.infer<typeof vksCasesPageSearchSchema>;
+
+// export const vksDashbordPageSearchSchema = vksCasesPageSearchSchema.pick({
+//   department: true,
+//   dateFrom: true,
+//   dateTo: true,
+// });
+export const vksDashbordPageSearchSchema = z.object({
+  department: queryNumberArray.optional(),
+  dateFrom: z
+    .string()
+    .datetime()
+    .or(z.string().regex(/\d{2}.\d{2}.\d{4}/))
+    .or(z.string().regex(/\d{4}\-\d{2}\-\d{2}/))
+    .or(z.literal('-infinity'))
+    .default(format(subDays(new Date(), 30), 'yyyy-MM-dd')),
+  dateTo: z
+    .string()
+    .datetime()
+    .or(z.string().regex(/\d{2}.\d{2}.\d{4}/))
+    .or(z.string().regex(/\d{4}\-\d{2}\-\d{2}/))
+    .or(z.literal('-infinity'))
+    .default(format(new Date(), 'yyyy-MM-dd')),
+});
+export type VksDashbordPageSearch = z.infer<typeof vksDashbordPageSearchSchema>;
