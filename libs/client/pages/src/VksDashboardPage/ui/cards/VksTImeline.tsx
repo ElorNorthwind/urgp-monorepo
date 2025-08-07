@@ -1,5 +1,10 @@
-import { useEquityTimeline, useVksTimeline } from '@urgp/client/entities';
-import { renderRechartsTooltip } from '@urgp/client/features';
+import { getRouteApi, useLocation } from '@tanstack/react-router';
+import {
+  useEquityTimeline,
+  useVksDepartmentClassificator,
+  useVksTimeline,
+} from '@urgp/client/entities';
+import { MultiSelect, renderRechartsTooltip } from '@urgp/client/features';
 import {
   Card,
   CardContent,
@@ -13,8 +18,11 @@ import {
   cn,
   Skeleton,
 } from '@urgp/client/shared';
+import { VksDepartmentFilter } from '@urgp/client/widgets';
+import { VksCasesPageSearch } from '@urgp/shared/entities';
 import { differenceInDays, format, startOfMonth } from 'date-fns';
 import { CalendarCheck } from 'lucide-react';
+import { useState } from 'react';
 import { Area, AreaChart, CartesianGrid, ReferenceLine, XAxis } from 'recharts';
 
 const chartConfig = {
@@ -35,41 +43,36 @@ type MonthlyProgressTimelineChartProps = {
 const VksTimelineChart = ({
   className,
 }: MonthlyProgressTimelineChartProps): JSX.Element => {
-  const { data, isLoading, isFetching } = useVksTimeline();
+  const pathname = useLocation().pathname;
+  const search = getRouteApi(pathname).useSearch() as VksCasesPageSearch;
+
+  const { data, isLoading, isFetching } = useVksTimeline(search?.department);
 
   // const monthPercenage =
   //   differenceInDays(new Date(), startOfMonth(new Date())) / 30;
 
   return (
     <Card className={cn(className)}>
-      <CardHeader className="flex flex-row items-center gap-2 space-y-0 pb-2">
-        {isLoading || isFetching ? (
-          <Skeleton className="size-12 flex-shrink-0 rounded-md" />
-        ) : (
-          <CalendarCheck className="-mt-1.5 size-12 flex-shrink-0" />
-        )}
-        <div>
-          {isLoading || isFetching ? (
-            <div>
-              <Skeleton className="mb-1 h-6 w-32" />
-              <Skeleton className="mb-1 h-4 w-44" />
-            </div>
-          ) : (
-            <CardTitle className="flex flex-row items-center justify-between">
-              <span>Динамика записей</span>
-            </CardTitle>
-          )}
-          {isLoading || isFetching ? (
-            <Skeleton className="h-4 w-60" />
-          ) : (
-            <CardDescription className="">
-              Количество онлайн-консультаций по месяцам
-            </CardDescription>
-          )}
+      <CardHeader className="relative flex flex-row items-center justify-start gap-2 space-y-0 pb-2">
+        <CalendarCheck className="-mt-1.5 size-12 flex-shrink-0" />
+        <div className="flex-shrink-0">
+          <CardTitle className="flex flex-row items-center justify-between">
+            <span className="flex-shrink-0">Динамика записей</span>
+          </CardTitle>
+
+          <CardDescription className="">
+            Количество онлайн-консультаций по месяцам
+          </CardDescription>
         </div>
+        <VksDepartmentFilter
+          className="ml-auto flex-shrink flex-grow-0"
+          overrideDefaultWidth
+          fullBadge
+          variant={'popover'}
+        />
       </CardHeader>
       <CardContent className="h-[280px]">
-        {isLoading || isFetching ? (
+        {isLoading ? (
           <div>
             <Skeleton className="mb-2 h-[calc(100%-2rem)] w-full" />
             <Skeleton className="mx-auto h-4 w-44" />

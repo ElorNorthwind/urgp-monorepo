@@ -57,10 +57,11 @@ export const vksApi = rtkApi.injectEndpoints({
       }),
       providesTags: ['vks-classificator'],
     }),
-    getVksTimeline: build.query<VksTimelinePoint[], void>({
-      query: () => ({
+    getVksTimeline: build.query<VksTimelinePoint[], number[] | void>({
+      query: (departmentIds) => ({
         url: `/vks/charts/timeline`,
         method: 'GET',
+        params: { departmentIds },
       }),
       providesTags: ['vks-classificator'],
     }),

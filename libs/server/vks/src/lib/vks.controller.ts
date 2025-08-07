@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseArrayPipe,
   ParseIntPipe,
   Post,
   Query,
@@ -77,8 +78,14 @@ export class VksController {
   @CacheTTL(1000 * 60 * 30)
   @UseInterceptors(CacheInterceptor)
   @Get('charts/timeline')
-  getVksTimeline(): Promise<VksTimelinePoint[]> {
-    return this.vks.ReadVksTimeline();
+  getVksTimeline(
+    @Query(
+      'departmentIds',
+      new ParseArrayPipe({ items: Number, separator: ',', optional: true }),
+    )
+    departmentIds?: number[],
+  ): Promise<VksTimelinePoint[]> {
+    return this.vks.ReadVksTimeline(departmentIds);
   }
 
   // @Get('qms')

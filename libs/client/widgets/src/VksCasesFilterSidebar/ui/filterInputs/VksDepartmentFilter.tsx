@@ -11,6 +11,8 @@ type VksDepartmentFilterProps = {
   variant?: 'popover' | 'checkbox' | 'accordion';
   className?: string;
   accordionItemValue?: string;
+  overrideDefaultWidth?: boolean;
+  fullBadge?: boolean;
 };
 
 const VksDepartmentFilter = (props: VksDepartmentFilterProps): JSX.Element => {
@@ -18,6 +20,8 @@ const VksDepartmentFilter = (props: VksDepartmentFilterProps): JSX.Element => {
     className,
     variant = 'accordion',
     accordionItemValue = 'department',
+    overrideDefaultWidth = false,
+    fullBadge = false,
   } = props;
   const pathname = useLocation().pathname as EquityRoutes;
 
@@ -29,14 +33,14 @@ const VksDepartmentFilter = (props: VksDepartmentFilterProps): JSX.Element => {
     <ClassificatorFilter<number>
       accordionItemValue={accordionItemValue}
       label="Подразделения"
-      className={cn('w-full', className)}
+      className={cn(overrideDefaultWidth ? '' : 'w-full', className)}
       variant={variant}
       isLoading={isLoading || isFetching}
       options={data || []}
       valueStyles={vksDepartmentStyles}
       selectedValues={search.department}
       iconClassName="size-4"
-      shortBadge
+      shortBadge={!fullBadge}
       setSelectedValues={(values) =>
         navigate({
           search: {

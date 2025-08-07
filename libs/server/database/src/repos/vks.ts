@@ -321,8 +321,12 @@ SET (
     return this.db.any(vks.readStatusClassificator);
   }
 
-  getVksTimeline(): Promise<VksTimelinePoint[]> {
-    return this.db.any(vks.readVksTimeline);
+  getVksTimeline(departmentIds?: number[]): Promise<VksTimelinePoint[]> {
+    const clause =
+      departmentIds && departmentIds.length > 0
+        ? `AND dep.id IN (${departmentIds.join(',')})`
+        : '';
+    return this.db.any(vks.readVksTimeline, [clause]);
   }
 
   // updateOperationsTriggerInfo(): Promise<null> {

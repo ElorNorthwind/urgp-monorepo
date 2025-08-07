@@ -145,7 +145,7 @@ function ClassificatorFilter<TValue extends string | number>(
           )}
         >
           <PlusCircleIcon className="mr-2 h-4 w-4 flex-shrink-0" />
-          {label}
+          <p className="mr-2">{label}</p>
           {selectedValues?.length > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 ml-auto h-4" />
@@ -160,8 +160,13 @@ function ClassificatorFilter<TValue extends string | number>(
                   <Badge
                     variant="secondary"
                     className="rounded-sm px-1 font-normal"
+                    // onClick={(e) => {
+                    //   e.stopPropagation();
+                    //   setSelectedValues([]);
+                    // }}
                   >
-                    {selectedValues.length} выбрано
+                    <p>{selectedValues.length} выбрано</p>
+                    {/* <X className="size-3" /> */}
                   </Badge>
                 ) : (
                   flatOptions
@@ -176,6 +181,16 @@ function ClassificatorFilter<TValue extends string | number>(
                       </Badge>
                     ))
                 )}
+                <Badge
+                  variant="secondary"
+                  className=" hover:bg-muted-foreground/30 rounded-sm px-0.5"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedValues([]);
+                  }}
+                >
+                  <X className="size-4" />
+                </Badge>
               </div>
             </>
           )}

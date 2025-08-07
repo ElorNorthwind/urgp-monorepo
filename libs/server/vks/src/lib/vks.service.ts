@@ -294,28 +294,6 @@ export class VksService {
     return { found: totalCount, updated: udatedCount };
   }
 
-  @Cron('0 20 5,12,19 * * *')
-  private async cronUpdateSurveyData() {
-    const isDev = this.configService.get<string>('NODE_ENV') === 'development';
-    if (isDev) return;
-
-    await this.GetQmsReport({
-      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
-      dateTo: format(new Date(), 'dd.MM.yyyy'),
-    });
-    await this.GetAnketologSurvey({
-      surveyId: AnketologSurveyTypes.operator,
-      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
-      dateTo: format(new Date(), 'dd.MM.yyyy'),
-    });
-    await this.GetAnketologSurvey({
-      surveyId: AnketologSurveyTypes.client,
-      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
-      dateTo: format(new Date(), 'dd.MM.yyyy'),
-    });
-    Logger.log('Survey data updated');
-  }
-
   public async updateSurveyData(
     q: QmsQuery,
   ): Promise<vksUpdateQueryReturnValue> {
@@ -340,6 +318,18 @@ export class VksService {
     };
   }
 
+  @Cron('0 20 5,12,19 * * *')
+  private async cronUpdateSurveyData() {
+    const isDev = this.configService.get<string>('NODE_ENV') === 'development';
+    if (isDev) return;
+    this.updateSurveyData({
+      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
+      dateTo: format(new Date(), 'dd.MM.yyyy'),
+    }).then(() => {
+      Logger.log('Survey data updated');
+    });
+  }
+
   public async ReadVksServiceTypeClassificator(): Promise<
     NestedClassificatorInfoString[]
   > {
@@ -358,7 +348,9 @@ export class VksService {
     return this.dbServise.db.vks.getStatusClassificator();
   }
 
-  public async ReadVksTimeline(): Promise<VksTimelinePoint[]> {
-    return this.dbServise.db.vks.getVksTimeline();
+  public async ReadVksTimeline(
+    departmentIds?: number[],
+  ): Promise<VksTimelinePoint[]> {
+    return this.dbServise.db.vks.getVksTimeline(departmentIds);
   }
 }
