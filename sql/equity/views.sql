@@ -239,7 +239,7 @@ CREATE OR REPLACE VIEW equity.operations_full_view AS
     -- WHERE o.object_id = 35436
     -- ORDER BY op.date::date DESC, (op.type->>'priority')::integer DESC, op."createdAt" DESC;
     -- ORDER BY o.object_id, o.date NULLS LAST, o.created_at NULLS LAST, o.id DESC;
-    ORDER BY o.object_id, o.date::date NULLS LAST, t.priority, o.created_at NULLS LAST, o.id DESC;
+    ORDER BY o.object_id, o.date::date DESC NULLS LAST, t.priority DESC, o.created_at DESC NULLS LAST, o.id;
     ---------------------------------------------------------------------
 ALTER TABLE equity.operations_full_view
     OWNER TO renovation_user;
