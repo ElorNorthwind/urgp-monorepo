@@ -34,6 +34,8 @@ import {
 } from '@urgp/shared/entities';
 import { VksService } from './vks.service';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import { format, startOfYesterday } from 'date-fns';
+import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
 
 @Controller('vks')
 export class VksController {
@@ -132,35 +134,35 @@ export class VksController {
     return this.vks.ReadVksServiceStats(q);
   }
 
-  // @Get('qms')
-  // getQmsBookingReport(): Promise<{
-  //   clients: number;
-  //   records: number;
-  // }> {
-  //   return this.vks.GetQmsReport({
-  //     // dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
-  //     dateFrom: '01.01.2024',
-  //     dateTo: format(new Date(), 'dd.MM.yyyy'),
-  //   });
-  // }
+  @Get('qms')
+  getQmsBookingReport(): Promise<{
+    clients: number;
+    records: number;
+  }> {
+    return this.vks.GetQmsReport({
+      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
+      // dateFrom: '01.01.2024',
+      dateTo: format(new Date(), 'dd.MM.yyyy'),
+    });
+  }
 
-  // @Get('anketolog/operator')
-  // getAnketologOperatorSurvey(): Promise<{ found: number; updated: number }> {
-  //   return this.vks.GetAnketologSurvey({
-  //     surveyId: AnketologSurveyTypes.operator,
-  //     // dateFrom: '01.01.2024',
-  //     dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
-  //     dateTo: format(new Date(), 'dd.MM.yyyy'),
-  //   });
-  // }
+  @Get('anketolog/operator')
+  getAnketologOperatorSurvey(): Promise<{ found: number; updated: number }> {
+    return this.vks.GetAnketologSurvey({
+      surveyId: AnketologSurveyTypes.operator,
+      // dateFrom: '01.01.2024',
+      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
+      dateTo: format(new Date(), 'dd.MM.yyyy'),
+    });
+  }
 
-  // @Get('anketolog/client')
-  // getAnketologClientSurvey(): Promise<{ found: number; updated: number }> {
-  //   return this.vks.GetAnketologSurvey({
-  //     surveyId: AnketologSurveyTypes.client,
-  //     // dateFrom: '01.01.2024',
-  //     dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
-  //     dateTo: format(new Date(), 'dd.MM.yyyy'),
-  //   });
-  // }
+  @Get('anketolog/client')
+  getAnketologClientSurvey(): Promise<{ found: number; updated: number }> {
+    return this.vks.GetAnketologSurvey({
+      surveyId: AnketologSurveyTypes.client,
+      // dateFrom: '01.01.2024',
+      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
+      dateTo: format(new Date(), 'dd.MM.yyyy'),
+    });
+  }
 }
