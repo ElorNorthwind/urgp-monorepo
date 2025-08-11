@@ -3,6 +3,7 @@ import {
   Button,
   Calendar,
   cn,
+  Input,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -58,7 +59,7 @@ const DateRangeSelect = ({
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar
-            initialFocus
+            captionLayout={'dropdown'}
             mode="range"
             defaultMonth={from}
             selected={{
