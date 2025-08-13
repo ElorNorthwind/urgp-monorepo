@@ -7,6 +7,7 @@ import {
 import {
   ColumnVisibilitySelector,
   DateRangeSelect,
+  DateRangeSelectAdvanced,
   ExportToExcelButton,
 } from '@urgp/client/features';
 import {
@@ -112,11 +113,12 @@ const VksCasesPageHeader = (props: VksCasesPageHeaderProps): JSX.Element => {
         </>
       )}
 
+      <DateRangeSelectAdvanced />
       {!isMobile && (
         <VksCasesQueryFilter className="ml-auto h-8 w-48 transition-all duration-200 ease-linear focus-within:w-full" />
       )}
 
-      {!isMobile && <VksCasesDateFilter />}
+      {!isMobile && <VksCasesDateFilter align="end" />}
 
       {!isMobile && exportedRows && (
         <ExportToExcelButton

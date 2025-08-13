@@ -19,6 +19,7 @@ type DateRangeSelectProps = {
   className?: string;
   label?: ReactNode;
   placeholder?: string;
+  align?: 'center' | 'end' | 'start';
 };
 
 const DateRangeSelect = ({
@@ -28,6 +29,7 @@ const DateRangeSelect = ({
   label = 'Старт',
   placeholder = 'Выберите дату',
   onSelect,
+  align = 'start',
 }: DateRangeSelectProps): JSX.Element => {
   return (
     <div className={cn('grid gap-2')}>
@@ -57,7 +59,7 @@ const DateRangeSelect = ({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent className="w-auto p-1" align={align}>
           <Calendar
             captionLayout={'dropdown'}
             mode="range"

@@ -30,7 +30,7 @@ const VksDashboardPage = (): JSX.Element => {
               fullBadge
               variant={'popover'}
             />
-            <VksCasesDateFilter />
+            <VksCasesDateFilter align="end" />
             <VksCasesResetFilter variant="mini" className="" />
           </div>
           <p className="text-muted-foreground">

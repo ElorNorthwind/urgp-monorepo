@@ -6,10 +6,11 @@ import { format, subDays, toDate } from 'date-fns';
 
 type VksCasesDateFilterProps = {
   className?: string;
+  align?: 'center' | 'end' | 'start';
 };
 
 const VksCasesDateFilter = (props: VksCasesDateFilterProps): JSX.Element => {
-  const { className } = props;
+  const { className, align } = props;
   const pathname = useLocation().pathname as VksRoutes;
   const navigate = useNavigate({ from: pathname });
   const search = getRouteApi(pathname).useSearch() as VksCasesPageSearch;
@@ -17,6 +18,7 @@ const VksCasesDateFilter = (props: VksCasesDateFilterProps): JSX.Element => {
   return (
     <DateRangeSelect
       label="Период"
+      align={align}
       placeholder={`${format(subDays(new Date(), 30), 'dd.MM.yyyy')} - ${format(new Date(), 'dd.MM.yyyy')}`}
       className={className}
       from={search.dateFrom ? toDate(search.dateFrom) : undefined}

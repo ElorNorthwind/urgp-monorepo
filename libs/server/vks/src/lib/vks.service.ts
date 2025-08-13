@@ -322,7 +322,7 @@ export class VksService {
     };
   }
 
-  @Cron('0 20 5,12,19 * * *')
+  @Cron('0 20 6,12,19 * * *')
   private async cronUpdateSurveyData() {
     const isDev = this.configService.get<string>('NODE_ENV') === 'development';
     if (isDev) return;

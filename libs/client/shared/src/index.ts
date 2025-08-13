@@ -38,6 +38,8 @@ export * from './ui/components/map';
 export * from './ui/components/sidebar';
 export * from './ui/components/breadcrumb';
 export * from './ui/components/alert-dialog';
+export * from './ui/components/date-input';
+
 // export layouts
 export * from './ui/layouts/main';
 
