@@ -182,8 +182,8 @@ const DateInput: React.FC<DateInputProps> = ({ value, onChange }) => {
             e.currentTarget.selectionEnd === e.currentTarget.value.length)
         ) {
           e.preventDefault();
-          if (field === 'month') dayRef.current?.focus();
-          if (field === 'day') yearRef.current?.focus();
+          if (field === 'day') monthRef.current?.focus();
+          if (field === 'month') yearRef.current?.focus();
         }
       } else if (e.key === 'ArrowLeft') {
         if (
@@ -192,32 +192,14 @@ const DateInput: React.FC<DateInputProps> = ({ value, onChange }) => {
             e.currentTarget.selectionEnd === e.currentTarget.value.length)
         ) {
           e.preventDefault();
-          if (field === 'day') monthRef.current?.focus();
-          if (field === 'year') dayRef.current?.focus();
+          if (field === 'month') dayRef.current?.focus();
+          if (field === 'year') monthRef.current?.focus();
         }
       }
     };
 
   return (
     <div className="flex items-center rounded-lg border px-1 text-sm">
-      <input
-        type="text"
-        ref={monthRef}
-        max={12}
-        maxLength={2}
-        value={date.month.toString()}
-        onChange={handleInputChange('month')}
-        onKeyDown={handleKeyDown('month')}
-        onFocus={(e) => {
-          if (window.innerWidth > 1024) {
-            e.target.select();
-          }
-        }}
-        onBlur={handleBlur('month')}
-        className="w-6 border-none p-0 text-center outline-none"
-        placeholder="M"
-      />
-      <span className="-mx-px opacity-20">/</span>
       <input
         type="text"
         ref={dayRef}
@@ -235,7 +217,25 @@ const DateInput: React.FC<DateInputProps> = ({ value, onChange }) => {
         className="w-7 border-none p-0 text-center outline-none"
         placeholder="D"
       />
-      <span className="-mx-px opacity-20">/</span>
+      <span className="-mx-px opacity-20">.</span>
+      <input
+        type="text"
+        ref={monthRef}
+        max={12}
+        maxLength={2}
+        value={date.month.toString()}
+        onChange={handleInputChange('month')}
+        onKeyDown={handleKeyDown('month')}
+        onFocus={(e) => {
+          if (window.innerWidth > 1024) {
+            e.target.select();
+          }
+        }}
+        onBlur={handleBlur('month')}
+        className="w-6 border-none p-0 text-center outline-none"
+        placeholder="M"
+      />
+      <span className="-mx-px opacity-20">.</span>
       <input
         type="text"
         ref={yearRef}

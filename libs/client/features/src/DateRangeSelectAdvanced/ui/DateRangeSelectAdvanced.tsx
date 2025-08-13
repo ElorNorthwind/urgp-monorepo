@@ -16,8 +16,13 @@ import {
   SelectValue,
   useIsMobile,
 } from '@urgp/client/shared';
-import { subDays, toDate } from 'date-fns';
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { startOfWeek, subDays, toDate } from 'date-fns';
+import {
+  CalendarIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+} from 'lucide-react';
 import React, { type FC, useState, useEffect, useRef } from 'react';
 
 type DateRangeSelectAdvancedProps = {
@@ -31,7 +36,36 @@ type DateRangeSelectAdvancedProps = {
   align?: 'start' | 'center' | 'end';
   /** Option for locale */
   locale?: string;
+  /** Trigger classname */
+  className?: string;
 };
+
+const PresetButton = ({
+  preset,
+  label,
+  isSelected,
+  setPreset,
+}: {
+  preset: string;
+  label: string;
+  isSelected: boolean;
+  setPreset: (preset: string) => void;
+}): JSX.Element => (
+  <Button
+    className={cn(isSelected && 'pointer-events-none border')}
+    variant="ghost"
+    onClick={() => {
+      setPreset(preset);
+    }}
+  >
+    <>
+      <span className={cn('pr-2 opacity-0', isSelected && 'opacity-70')}>
+        <CheckIcon width={18} height={18} />
+      </span>
+      {label}
+    </>
+  </Button>
+);
 
 const formatDate = (date: Date, locale: string = 'ru-RU'): string => {
   return date.toLocaleDateString(locale, {
@@ -74,10 +108,11 @@ const PRESETS: Preset[] = [
 /** The DateRangePicker component allows a user to select a range of dates */
 export const DateRangeSelectAdvanced: FC<DateRangeSelectAdvancedProps> = ({
   initialDateFrom = new Date(subDays(new Date(), 30).setHours(0, 0, 0, 0)),
-  initialDateTo,
+  initialDateTo = new Date(new Date().setHours(0, 0, 0, 0)),
   onUpdate,
   align = 'end',
   locale = 'ru-Ru',
+  className,
 }): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -116,18 +151,18 @@ export const DateRangeSelectAdvanced: FC<DateRangeSelectAdvancedProps> = ({
         to.setHours(23, 59, 59, 999);
         break;
       case 'last30':
-        from.setDate(from.getDate() - 29);
+        from.setDate(from.getDate() - 30);
         from.setHours(0, 0, 0, 0);
         to.setHours(23, 59, 59, 999);
         break;
       case 'thisWeek':
-        from.setDate(first);
+        from.setDate(startOfWeek(new Date()).getDate() + 1);
         from.setHours(0, 0, 0, 0);
         to.setHours(23, 59, 59, 999);
         break;
       case 'lastWeek':
-        from.setDate(from.getDate() - 7 - from.getDay());
-        to.setDate(to.getDate() - to.getDay() - 1);
+        from.setDate(startOfWeek(new Date()).getDate() - 6);
+        to.setDate(startOfWeek(new Date()).getDate());
         from.setHours(0, 0, 0, 0);
         to.setHours(23, 59, 59, 999);
         break;
@@ -137,14 +172,14 @@ export const DateRangeSelectAdvanced: FC<DateRangeSelectAdvancedProps> = ({
         to.setHours(23, 59, 59, 999);
         break;
       case 'thisQuarter':
-        from.setMonth((from.getMonth() - 1) / 3 + 1);
+        from.setMonth(from.getMonth() / 3 + 1);
         from.setDate(1);
         from.setHours(0, 0, 0, 0);
         to.setDate(0);
         to.setHours(23, 59, 59, 999);
         break;
       case 'thisYear':
-        from.setMonth(1);
+        from.setMonth(0);
         from.setDate(1);
         from.setHours(0, 0, 0, 0);
         to.setDate(0);
@@ -207,31 +242,6 @@ export const DateRangeSelectAdvanced: FC<DateRangeSelectAdvancedProps> = ({
     checkPreset();
   }, [range]);
 
-  const PresetButton = ({
-    preset,
-    label,
-    isSelected,
-  }: {
-    preset: string;
-    label: string;
-    isSelected: boolean;
-  }): JSX.Element => (
-    <Button
-      className={cn(isSelected && 'pointer-events-none')}
-      variant="ghost"
-      onClick={() => {
-        setPreset(preset);
-      }}
-    >
-      <>
-        <span className={cn('pr-2 opacity-0', isSelected && 'opacity-70')}>
-          <CheckIcon width={18} height={18} />
-        </span>
-        {label}
-      </>
-    </Button>
-  );
-
   // Helper function to check if two date ranges are equal
   const areRangesEqual = (a?: DateRange, b?: DateRange): boolean => {
     if (!a || !b) return a === b; // If either is undefined, return true if both are undefined
@@ -259,7 +269,12 @@ export const DateRangeSelectAdvanced: FC<DateRangeSelectAdvancedProps> = ({
       }}
     >
       <PopoverTrigger asChild>
-        <Button size={'lg'} variant="outline">
+        <Button
+          size={'sm'}
+          variant="outline"
+          className={cn('flex h-8 flex-row items-center gap-1 px-2', className)}
+        >
+          <CalendarIcon className="text-muted-foreground size-4 flex-shrink-0" />
           <div className="text-right">
             <div className="py-1">
               <div>{`${formatDate(range.from, locale)}${
@@ -267,14 +282,13 @@ export const DateRangeSelectAdvanced: FC<DateRangeSelectAdvancedProps> = ({
               }`}</div>
             </div>
           </div>
-          <div
+
+          <ChevronUpIcon
             className={cn(
-              '-mr-2 scale-125 pl-1 opacity-60 transition-transform',
-              isOpen && 'rotate-180',
+              'text-muted-foreground size-5 flex-shrink-0 transition-transform',
+              isOpen ? 'rotate-0' : 'rotate-180',
             )}
-          >
-            <ChevronUpIcon width={24} />
-          </div>
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent align={align} className="w-auto">
@@ -353,13 +367,14 @@ export const DateRangeSelectAdvanced: FC<DateRangeSelectAdvancedProps> = ({
           </div>
           {!isMobile && (
             <div className="flex flex-col items-end gap-1 pb-6 pl-6 pr-2">
-              <div className="flex w-full flex-col items-end gap-1 pb-6 pl-6 pr-2">
+              <div className="flex w-full flex-col items-end gap-1  pb-6 pl-6 pr-2">
                 {PRESETS.map((preset) => (
                   <PresetButton
                     key={preset.name}
                     preset={preset.name}
                     label={preset.label}
                     isSelected={selectedPreset === preset.name}
+                    setPreset={setPreset}
                   />
                 ))}
               </div>
