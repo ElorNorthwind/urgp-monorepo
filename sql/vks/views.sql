@@ -199,14 +199,14 @@ SELECT
 	CASE WHEN c.online_grade IS NOT NULL AND c.online_grade <> 0 THEN 'да' ELSE 'нет' END as comment_mos_true_false,
 	COALESCE(s.display_name, 'нет') as service_name,
 	c.status as status_suo,
-	-- CASE WHEN cl.type = 'Юридическое лицо' THEN 'нет' ElSE COALESCE(cl.full_name, 'нет') END as client_name,
-    'Скрыто' as client_name,
-	-- COALESCE(c.phone, 'нет') as client_phone,
-    'Скрыто' as client_phone,
+	CASE WHEN cl.type = 'Юридическое лицо' THEN 'нет' ElSE COALESCE(cl.full_name, 'нет') END as client_name,
+    -- 'Скрыто' as client_name,
+	COALESCE(c.phone, 'нет') as client_phone,
+    -- 'Скрыто' as client_phone,
 	COALESCE(cl.type, 'нет') as client_type,
 	COALESCE(c.time, 'нет') as cons_time,
-	-- COALESCE(c.address, c.operator_survey_address, 'нет') as client_address,
-    'Скрыто' as client_address,
+	COALESCE(c.address, c.operator_survey_address, 'нет') as client_address,
+    -- 'Скрыто' as client_address,
 	CASE WHEN operator_survey_is_client THEN 'да' ELSE 'нет' END as client_true_false,
 	COALESCE(c.operator_survey_summary, c.problem_summary, 'нет') as description,
 	COALESCE(c.operator_survey_department, 'нет') as department,
@@ -227,10 +227,22 @@ SELECT
 	CASE WHEN COALESCE(c.client_survey_comment_positive, '') <> '' OR COALESCE(c.client_survey_comment_negative, '') <> '' THEN 'да' ELSE 'нет' END as comment_client_true_false,
 	COALESCE(c.client_survey_grade::text, 'нет') as score_client,
 	CASE WHEN c.client_survey_grade IS NOT NULL THEN 'да' ELSE 'нет' END as score_client_true_false,
-	1 as rn -- :-)
+	1 as rn, -- :-)
+    s.property_type,
+    CASE 
+        WHEN c.status = 'талон не был взят' THEN 'СТАТУС НЕ ОПРЕДЕЛЕН'
+        WHEN c.status = ANY(ARRAY['не явился по вызову', 'отменено ОИВ', 'отменено пользователем']) THEN 'НЕ СОСТОЯЛОСЬ'
+        WHEN c.status = 'обслужен' THEN 'СОСТОЯЛОСЬ'
+        ELSE  'ЗАБРОНИРОВАНО'
+    END as status_calculate, 
+    d.full_name as spr_department_full,
+    d.boss_surname || ' ' || d.boss_first_name || ' ' || d.boss_last_name as spr_manager,
+    z.surname || ' ' || z.first_name || ' ' || z.last_name as spr_zamestitel
 FROM vks.cases c 
 LEFT JOIN vks.services s ON c.service_id = s.id
 LEFT JOIN vks.clients cl ON c.client_id = cl.id
+LEFT JOIN vks.departments d ON s.department_id = d.id
+LEFT JOIN vks.zams z ON d.zam_id = z.id
 ORDER BY c.date DESC, c.id DESC;
 ----------------------------------------------------------------------
 ALTER TABLE vks.consultations_legacy_view
