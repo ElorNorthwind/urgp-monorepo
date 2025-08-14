@@ -129,7 +129,7 @@ const VksCasesPageHeader = (props: VksCasesPageHeaderProps): JSX.Element => {
       )}
 
       <ColumnVisibilitySelector />
-      <DateRangeSelectAdvanced />
+      {/* <DateRangeSelectAdvanced /> */}
     </header>
   );
 };
