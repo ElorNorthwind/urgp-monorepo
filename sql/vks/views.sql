@@ -192,6 +192,7 @@ DROP VIEW IF EXISTS vks.consultations_legacy_view CASCADE;
 CREATE OR REPLACE VIEW vks.consultations_legacy_view  AS
 ----------------------------------------------------------------------
 SELECT 
+    c.id,
 	COALESCE(c.booking_code, 'нет') as booking_num,
 	c.date as cons_date,
 	COALESCE(c.online_grade::text, 'нет') as score_mos,
