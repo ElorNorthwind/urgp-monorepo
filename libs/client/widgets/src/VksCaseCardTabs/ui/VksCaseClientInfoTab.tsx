@@ -304,7 +304,7 @@ const VksCaseClientInfoTab = (
                     <p className="flex flex-row items-center justify-start gap-1">
                       {[...Array(5)].map((_, i) => (
                         <Star
-                          id={'star_' + i}
+                          key={'star_' + i}
                           className={cn(
                             'size-5',
                             i > (entity?.grade || 0) - 1
@@ -372,7 +372,7 @@ const VksCaseClientInfoTab = (
                 <p className="flex flex-row items-center justify-start gap-1">
                   {[...Array(5)].map((_, i) => (
                     <Snail
-                      id={'speed_' + i}
+                      key={'speed_' + i}
                       className={cn(
                         'size-5',
                         i > vksSearchSpeed - 1

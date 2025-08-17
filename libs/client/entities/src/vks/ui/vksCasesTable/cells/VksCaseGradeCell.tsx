@@ -48,7 +48,7 @@ function VksCaseGradeCell(props: CellContext<VksCase, number>): JSX.Element {
                 <span className="mr-1 text-lg">{rowData?.grade || '-'}</span>
                 {[...Array(5)].map((_, i) => (
                   <Star
-                    id={'star_' + i}
+                    key={'star_' + i}
                     className={cn(
                       'size-5 flex-shrink-0',
                       i > (props.getValue() || 0) - 1
