@@ -7,6 +7,7 @@ import {
   NestedClassificatorInfoString,
   OperatorSurveyResponse,
   QmsQuery,
+  VkaSetIsTechnical,
   VksCase,
   VksCaseDetails,
   VksCasesQuery,
@@ -308,6 +309,11 @@ SET (
     ]);
   }
 
+  getVksCaseById(caseId: number): Promise<VksCase | null> {
+    const query = 'SELECT * FROM vks.cases_slim_view WHERE id = $1 LIMIT 1;';
+    return this.db.oneOrNone(query, [caseId]);
+  }
+
   getVksCaseDetailes(id: number): Promise<VksCaseDetails> {
     const query = 'SELECT * FROM vks.cases_detailed_view WHERE id = $1;';
     return this.db.one(query, [id]);
@@ -371,7 +377,8 @@ SET (
     });
   }
 
-  // updateOperationsTriggerInfo(): Promise<null> {
-  //   return this.db.none(equityOperations.updateOperationsTriggerInfo);
-  // }
+  setIsTechnical(q: VkaSetIsTechnical): Promise<boolean | null> {
+    const sql = `UPDATE vks.cases SET is_technical = $1 WHERE id = $2 RETURNING is_technical;`;
+    return this.db.oneOrNone(sql, [q.value, q.caseId]);
+  }
 }

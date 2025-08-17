@@ -2,6 +2,7 @@ import { rtkApi } from '@urgp/client/shared';
 import {
   NestedClassificatorInfo,
   NestedClassificatorInfoString,
+  VkaSetIsTechnical,
   VksCase,
   VksCaseDetails,
   VksCasesQuery,
@@ -21,6 +22,16 @@ export const vksApi = rtkApi.injectEndpoints({
         params: q,
       }),
       providesTags: ['vks-case'],
+    }),
+    getVksCaseById: build.query<VksCase | null, number>({
+      query: (id) => ({
+        url: `/vks/cases/${id.toString()}`,
+        method: 'GET',
+      }),
+      providesTags: (result, error, arg) => [
+        'vks-case',
+        { type: 'vks-case', id: arg },
+      ],
     }),
     getVksCaseDetails: build.query<VksCaseDetails, number>({
       query: (id) => ({
@@ -111,12 +122,26 @@ export const vksApi = rtkApi.injectEndpoints({
       }),
       providesTags: ['vks-classificator'],
     }),
+
+    updateIsTechnical: build.mutation<boolean | null, VkaSetIsTechnical>({
+      query: (dto) => ({
+        url: '/vks/cases/is-technical',
+        method: 'POST',
+        body: dto,
+      }),
+      invalidatesTags: (result, error, arg) => [
+        'vks-case',
+        { type: 'vks-case', id: arg.caseId },
+      ],
+    }),
   }),
+
   overrideExisting: false,
 });
 
 export const {
   useGetVksCasesQuery: useVksCases,
+  useGetVksCaseByIdQuery: useVksCaseById,
   useGetVksCaseDetailsQuery: useVksCaseDetails,
   useGetVksDepartmentClassificatorQuery: useVksDepartmentClassificator,
   useGetVksServiceTypesClassificatorQuery: useVksServiceTypesClassificator,
@@ -125,4 +150,6 @@ export const {
   useGetVksStatusStatsQuery: useVksStatusStats,
   useGetVksDepartmentStatsQuery: useVksDepartmentStats,
   useGetVksServiceStatsQuery: useVksServiceStats,
+
+  useUpdateIsTechnicalMutation: useUpdateIsTechnical,
 } = vksApi;

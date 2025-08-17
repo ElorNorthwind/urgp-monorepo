@@ -29,6 +29,7 @@ export * from './operations/config';
 
 export * from './users/ability';
 export * from './users/equityAbility';
+export * from './users/vksAbility';
 
 // Разбиралка адресов
 export * from './addressSessions/config';

@@ -20,3 +20,4 @@ export * from './DeleteAddressSessionButton';
 export * from './XMLFormFileInput';
 export * from './ExportToExcelButton';
 export * from './DateRangeSelectAdvanced';
+export * from './VksGradeDisqualifyToggle';

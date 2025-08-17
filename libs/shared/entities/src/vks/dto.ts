@@ -131,3 +131,9 @@ export const vksDashbordPageSearchSchema = z.object({
     .default(format(new Date(), 'yyyy-MM-dd')),
 });
 export type VksDashbordPageSearch = z.infer<typeof vksDashbordPageSearchSchema>;
+
+export const vkaSetIsTechnicalSchema = z.object({
+  caseId: z.number().int().nonnegative(),
+  value: z.boolean().nullable(),
+});
+export type VkaSetIsTechnical = z.infer<typeof vkaSetIsTechnicalSchema>;

@@ -39,6 +39,8 @@ export * from './ui/components/sidebar';
 export * from './ui/components/breadcrumb';
 export * from './ui/components/alert-dialog';
 export * from './ui/components/date-input';
+export * from './ui/components/toggle';
+export * from './ui/components/toggle-group';
 
 // export layouts
 export * from './ui/layouts/main';
@@ -76,3 +78,4 @@ export * from './hooks/useUserAbility';
 export * from './hooks/useEquityAbility';
 export * from './hooks/useAvaliableCaseActions';
 export * from './hooks/useAuth';
+export * from './hooks/useVksAbility';

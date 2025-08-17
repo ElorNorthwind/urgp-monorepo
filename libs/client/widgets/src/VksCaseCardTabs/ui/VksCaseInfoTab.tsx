@@ -4,6 +4,7 @@ import {
   TooltipContent,
   TooltipTrigger,
   useUserAbility,
+  useVksAbility,
 } from '@urgp/client/shared';
 import { VksCaseDetails } from '@urgp/shared/entities';
 
@@ -45,7 +46,6 @@ const VksCaseInfoTab = (props: VksCaseInfoTabProps): JSX.Element | null => {
     contentClassName,
     accordionItemName,
   } = props;
-  const i = useUserAbility();
 
   if (!entity) return null;
 

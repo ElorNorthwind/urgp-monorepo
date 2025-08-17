@@ -20,6 +20,7 @@ import {
   VksDepartmentStat,
   VksServiceStat,
   VksStatusStat,
+  VkaSetIsTechnical,
 } from '@urgp/shared/entities';
 import { AxiosRequestConfig } from 'axios';
 import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
@@ -51,12 +52,20 @@ export class VksService {
     return this.dbServise.db.vks.getVksCases(q);
   }
 
+  public async getVksCaseById(caseId: number): Promise<VksCase | null> {
+    return this.dbServise.db.vks.getVksCaseById(caseId);
+  }
+
   public async getVksCaseDetails(id: number): Promise<VksCaseDetails> {
     return this.dbServise.db.vks.getVksCaseDetailes(id);
   }
 
   private async getKnownServiceIds(): Promise<number[]> {
     return this.dbServise.db.vks.getKnownServiceIds();
+  }
+
+  public async setIsTechnical(q: VkaSetIsTechnical): Promise<boolean | null> {
+    return this.dbServise.db.vks.setIsTechnical(q);
   }
 
   private async insertNewService(id: number, fullName: string): Promise<null> {

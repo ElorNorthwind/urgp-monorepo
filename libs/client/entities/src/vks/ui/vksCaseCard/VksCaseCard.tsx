@@ -1,4 +1,9 @@
-import { Accordion, ScrollArea, useIsMobile } from '@urgp/client/shared';
+import {
+  Accordion,
+  ScrollArea,
+  useIsMobile,
+  useVksAbility,
+} from '@urgp/client/shared';
 import {
   VksCaseClientInfoTab,
   VksCaseInfoTab,
@@ -6,6 +11,7 @@ import {
 } from '@urgp/client/widgets';
 import { useVksCaseDetails } from '../../api/vksApi';
 import { VksCaseCardHeader } from './VksCaseCardHeader';
+import { VksGradeDisqualifyToggle } from '@urgp/client/features';
 
 type VksCaseCardProps = {
   caseId: number;
@@ -38,6 +44,10 @@ const VksCaseCard = (props: VksCaseCardProps): JSX.Element => {
           defaultValue={['client-info', 'operator-info']}
         >
           <VksCaseInfoTab entity={data} />
+          <VksGradeDisqualifyToggle
+            className="bg-background mt-4 w-full"
+            caseId={caseId}
+          />
           <VksCaseClientInfoTab entity={data} accordionItemName="client-info" />
           {data?.operatorSurveyId && (
             <VksCaseOperatorInfoTab
@@ -45,20 +55,6 @@ const VksCaseCard = (props: VksCaseCardProps): JSX.Element => {
               accordionItemName="operator-info"
             />
           )}
-          {/* <VksCaseInfoTab equityObject={equityObject} />
-          <EquityEgrnTab equityObject={equityObject} accordionItemName="egrn" />
-          <EquityClaimsTab
-            equityObject={equityObject}
-            accordionItemName="claims"
-          />
-          <EquityClaimsArchiveTab
-            equityObject={equityObject}
-            accordionItemName="claims-archive"
-          />
-          <EquityOperationsTab
-            equityObject={equityObject}
-            accordionItemName="operations"
-          /> */}
         </Accordion>
       </ScrollArea>
     </>

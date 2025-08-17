@@ -244,16 +244,35 @@ export const DateRangeSelectAdvanced: FC<DateRangeSelectAdvancedProps> = ({
                       value={range?.from}
                       onChange={(date) => {
                         const toDate =
-                          !range?.to || date > range.to ? date : range.to;
-                        onRangeSelected({ from: date, to: toDate });
+                          !range?.to || (date && date > range.to)
+                            ? date
+                            : range.to;
+                        onRangeSelected(
+                          clearRange([{ from: date, to: toDate }]),
+                        );
                       }}
                     />
+                    {/* <DateInput2
+                      value={range?.from}
+                      onChange={(date) => {
+                        const toDate =
+                          !range?.to || (date && date > range.to)
+                            ? date
+                            : range.to;
+                        onRangeSelected(
+                          clearRange([{ from: date, to: toDate }]),
+                        );
+                      }}
+                    /> */}
                     <div className="py-1">-</div>
                     <DateInput
                       value={range?.to}
                       onChange={(date) => {
-                        const fromDate = date < range.from ? date : range.from;
-                        onRangeSelected({ from: fromDate, to: date });
+                        const fromDate =
+                          date && date < range.from ? date : range.from;
+                        onRangeSelected(
+                          clearRange([{ from: fromDate, to: date }]),
+                        );
                       }}
                     />
                   </div>

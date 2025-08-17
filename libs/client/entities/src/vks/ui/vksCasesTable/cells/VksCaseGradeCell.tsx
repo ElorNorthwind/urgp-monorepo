@@ -34,28 +34,40 @@ function VksCaseGradeCell(props: CellContext<VksCase, number>): JSX.Element {
     <Tooltip>
       <TooltipTrigger asChild>
         <div className="flex flex-1 flex-shrink flex-col items-start justify-start truncate">
-          <div className="flex flex-row items-center justify-start gap-1 truncate">
-            <span className="mr-1 text-lg">{rowData?.grade || '-'}</span>
-            {[...Array(5)].map((_, i) => (
-              <Star
-                id={'star_' + i}
+          {rowData?.isTechnical ? (
+            <div className="text-muted-foreground text-nowrap text-lg font-bold">
+              не учитывается
+            </div>
+          ) : (
+            <>
+              <div
                 className={cn(
-                  'size-5 flex-shrink-0',
-                  i > (props.getValue() || 0) - 1
-                    ? 'text-gray-300'
-                    : 'fill-amber-500 text-amber-500',
+                  'flex flex-row items-center justify-start gap-1 truncate',
                 )}
-              />
-            ))}
-          </div>
-          <div
-            className={cn(
-              'text-muted-foreground w-full truncate text-xs font-thin',
-              !rowData?.gradeComment && 'opacity-50',
-            )}
-          >
-            {rowData?.gradeComment || 'Комментарий не оставлен'}
-          </div>
+              >
+                <span className="mr-1 text-lg">{rowData?.grade || '-'}</span>
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    id={'star_' + i}
+                    className={cn(
+                      'size-5 flex-shrink-0',
+                      i > (props.getValue() || 0) - 1
+                        ? 'text-gray-300'
+                        : 'fill-amber-500 text-amber-500',
+                    )}
+                  />
+                ))}
+              </div>
+              <div
+                className={cn(
+                  'text-muted-foreground -my-1 w-full truncate text-xs font-thin',
+                  !rowData?.gradeComment && 'opacity-50',
+                )}
+              >
+                {rowData?.gradeComment || 'Комментарий не оставлен'}
+              </div>
+            </>
+          )}
         </div>
       </TooltipTrigger>
       <TooltipPortal>

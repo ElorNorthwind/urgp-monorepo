@@ -20,6 +20,8 @@ import {
   NestedClassificatorInfoString,
   QmsQuery,
   qmsQuerySchema,
+  VkaSetIsTechnical,
+  vkaSetIsTechnicalSchema,
   VksCase,
   VksCaseDetails,
   VksCasesQuery,
@@ -55,6 +57,20 @@ export class VksController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<VksCaseDetails> {
     return this.vks.getVksCaseDetails(id);
+  }
+
+  @Get('cases/:id')
+  getVksCaseById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<VksCase | null> {
+    return this.vks.getVksCaseById(id);
+  }
+
+  @Post('cases/is-technical')
+  setVksCaseIsTechnical(
+    @Body(new ZodValidationPipe(vkaSetIsTechnicalSchema)) q: VkaSetIsTechnical,
+  ): Promise<boolean | null> {
+    return this.vks.setIsTechnical(q);
   }
 
   @Get('cases')
