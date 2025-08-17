@@ -10,7 +10,7 @@ SELECT
 	END as "surveyedPercent",
 	COALESCE(COUNT(*) FILTER(WHERE COALESCE(client_survey_grade, online_grade) IS NOT NULL), 0)::integer as graded,
 	COALESCE(COUNT(*) FILTER(WHERE COALESCE(client_survey_grade, online_grade) IS NULL), 0)::integer as ungraded,
-	ROUND(COALESCE(AVG(COALESCE(client_survey_grade, online_grade)), 0), 2) as grade,
+	ROUND(COALESCE(AVG(COALESCE(client_survey_grade, online_grade)) FILTER (WHERE is_technical <> true), 0), 2) as grade,
 	CASE 
 		WHEN COUNT(*) > 0 THEN ROUND((COALESCE(COUNT(*) FILTER(WHERE COALESCE(client_survey_grade, online_grade) IS NOT NULL), 0)::numeric / COUNT(*)::numeric) * 100, 2) 
 		ELSE 0 	

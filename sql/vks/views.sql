@@ -195,7 +195,7 @@ SELECT
     c.id,
 	COALESCE(c.booking_code, 'нет') as booking_num,
 	c.date as cons_date,
-	COALESCE(c.online_grade::text, 'нет') as score_mos,
+	CASE WHEN c.is_technical THEN 'нет'  ELSE COALESCE(c.online_grade::text, 'нет') END as score_mos,
 	COALESCE(c.online_grade_comment, 'нет') as comment_mos,
 	CASE WHEN c.online_grade_comment IS NOT NULL AND c.online_grade_comment <> '' THEN 'да' ELSE 'нет' END as comment_mos_true_false,
 	-- CASE WHEN c.online_grade IS NOT NULL AND c.online_grade <> 0 THEN 'да' ELSE 'нет' END as comment_mos_true_false,
@@ -227,7 +227,7 @@ SELECT
 		ELSE ARRAY_TO_STRING(ARRAY[client_survey_comment_positive, client_survey_comment_negative], ' ', '')
 	END as comment_client,
 	CASE WHEN COALESCE(c.client_survey_comment_positive, '') <> '' OR COALESCE(c.client_survey_comment_negative, '') <> '' THEN 'да' ELSE 'нет' END as comment_client_true_false,
-	COALESCE(c.client_survey_grade::text, 'нет') as score_client,
+	CASE WHEN c.is_technical THEN 'нет' ELSE COALESCE(c.client_survey_grade::text, 'нет') END as score_client,
 	CASE WHEN c.client_survey_grade IS NOT NULL THEN 'да' ELSE 'нет' END as score_client_true_false,
 	1 as rn, -- :-)
     s.property_type,
