@@ -316,7 +316,10 @@ AS $$
             CASE WHEN MAX(date) FILTER (WHERE type_id = ANY(ARRAY[10])) > MAX(date) FILTER (WHERE type_id = ANY(ARRAY[9])) THEN null ELSE MAX(date) FILTER (WHERE type_id = ANY(ARRAY[9])) END as identification_date,
             CASE WHEN MAX(date) FILTER (WHERE type_id = ANY(ARRAY[10])) > MAX(date) FILTER (WHERE type_id = ANY(ARRAY[9])) THEN null ELSE MAX(notes) FILTER (WHERE type_id = ANY(ARRAY[9])) END as identification_notes
 
-        FROM last_ops
+        FROM (SELECT * 
+                FROM last_ops
+                UNION ALL VALUES (NULL::integer, _object_id, NULL::timestamp with time zone, NULL::integer, NULL::integer, NULL::text, NULL::text, NULL::text, NULL::text)
+             ) o
         WHERE object_id = _object_id
         GROUP BY object_id
     ), op_totals AS (
