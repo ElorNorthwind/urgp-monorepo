@@ -6,10 +6,12 @@ import { VksController } from './vks.controller';
 import { HttpModule } from '@nestjs/axios';
 import { VksService } from './vks.service';
 import * as https from 'https'; // Import https module
+import { DgiAnalyticseModule } from '@urgp/server/dgi-analytics';
 
 @Module({
   imports: [
     DatabaseModule,
+    DgiAnalyticseModule,
     HttpModule.register({
       httpsAgent: new https.Agent({
         rejectUnauthorized: false,

@@ -78,9 +78,15 @@ module.exports = {
             '../../dist/apps/server/sql/equity/classificators',
           ),
         },
+        //old vks
         {
           from: '../../libs/server/database/src/repos/sql/vks',
           to: join(__dirname, '../../dist/apps/server/sql/vks'),
+        },
+        // new vks
+        {
+          from: '../../libs/server/dgi-analytics/src/repos/sql/vks',
+          to: join(__dirname, '../../dist/apps/dgi-analytics/sql/vks'),
         },
       ],
     }),

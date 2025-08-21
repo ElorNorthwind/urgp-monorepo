@@ -39,37 +39,39 @@ import { formatBookingRecord } from './util/formatBookingRecord';
 import { formatSurvey } from './util/fotmatSurvey';
 import { Cron } from '@nestjs/schedule';
 import { format, startOfYesterday } from 'date-fns';
+import { DgiAnalyticsService } from '@urgp/server/dgi-analytics';
 
 @Injectable()
 export class VksService {
   constructor(
     private readonly dbServise: DatabaseService,
+    private readonly dgiAnalytics: DgiAnalyticsService,
     private readonly axios: HttpService,
     private configService: ConfigService,
   ) {}
 
   public async getVksCases(q: VksCasesQuery): Promise<VksCase[]> {
-    return this.dbServise.db.vks.getVksCases(q);
+    return this.dgiAnalytics.db.vks.getVksCases(q);
   }
 
   public async getVksCaseById(caseId: number): Promise<VksCase | null> {
-    return this.dbServise.db.vks.getVksCaseById(caseId);
+    return this.dgiAnalytics.db.vks.getVksCaseById(caseId);
   }
 
   public async getVksCaseDetails(id: number): Promise<VksCaseDetails> {
-    return this.dbServise.db.vks.getVksCaseDetailes(id);
+    return this.dgiAnalytics.db.vks.getVksCaseDetailes(id);
   }
 
   private async getKnownServiceIds(): Promise<number[]> {
-    return this.dbServise.db.vks.getKnownServiceIds();
+    return this.dgiAnalytics.db.vks.getKnownServiceIds();
   }
 
   public async setIsTechnical(q: VkaSetIsTechnical): Promise<boolean | null> {
-    return this.dbServise.db.vks.setIsTechnical(q);
+    return this.dgiAnalytics.db.vks.setIsTechnical(q);
   }
 
   private async insertNewService(id: number, fullName: string): Promise<null> {
-    return this.dbServise.db.vks.insertNewService(id, fullName);
+    return this.dgiAnalytics.db.vks.insertNewService(id, fullName);
   }
 
   public async GetQmsReport(
@@ -213,14 +215,14 @@ export class VksService {
 
     const clientsCount =
       Clients.size > 0
-        ? await this.dbServise.db.vks.insertClients(
+        ? await this.dgiAnalytics.db.vks.insertClients(
             Array.from(Clients.values()),
           )
         : 0;
 
     const recordCount =
       records?.length > 0
-        ? await this.dbServise.db.vks.insertCases(await Promise.all(records))
+        ? await this.dgiAnalytics.db.vks.insertCases(await Promise.all(records))
         : 0;
 
     return { clients: clientsCount, records: recordCount };
@@ -282,10 +284,10 @@ export class VksService {
       collectedCount += data?.answers?.length || 0;
       udatedCount +=
         q.surveyId === AnketologSurveyTypes.operator
-          ? (await this.dbServise.db.vks.updateOperatorSurveys(
+          ? (await this.dgiAnalytics.db.vks.updateOperatorSurveys(
               surveys as OperatorSurveyResponse[],
             )) || 0
-          : (await this.dbServise.db.vks.updateClientSurveys(
+          : (await this.dgiAnalytics.db.vks.updateClientSurveys(
               surveys as ClientSurveyResponse[],
             )) || 0;
       surveys = await firstValueFrom(
@@ -346,42 +348,42 @@ export class VksService {
   public async ReadVksServiceTypeClassificator(): Promise<
     NestedClassificatorInfoString[]
   > {
-    return this.dbServise.db.vks.getServiceTypeClassificator();
+    return this.dgiAnalytics.db.vks.getServiceTypeClassificator();
   }
 
   public async ReadVksDepartmentClassificator(): Promise<
     NestedClassificatorInfo[]
   > {
-    return this.dbServise.db.vks.getDepartmentsClassificator();
+    return this.dgiAnalytics.db.vks.getDepartmentsClassificator();
   }
 
   public async ReadVksStatusClassificator(): Promise<
     NestedClassificatorInfoString[]
   > {
-    return this.dbServise.db.vks.getStatusClassificator();
+    return this.dgiAnalytics.db.vks.getStatusClassificator();
   }
 
   public async ReadVksTimeline(
     departmentIds?: number[],
   ): Promise<VksTimelinePoint[]> {
-    return this.dbServise.db.vks.getVksTimeline(departmentIds);
+    return this.dgiAnalytics.db.vks.getVksTimeline(departmentIds);
   }
 
   public async ReadVksStatusStats(
     q: VksDashbordPageSearch,
   ): Promise<VksStatusStat[]> {
-    return this.dbServise.db.vks.getVksStatusStats(q);
+    return this.dgiAnalytics.db.vks.getVksStatusStats(q);
   }
 
   public async ReadVksDepartmentStats(
     q: VksDashbordPageSearch,
   ): Promise<VksDepartmentStat[]> {
-    return this.dbServise.db.vks.getVksDepartmentStats(q);
+    return this.dgiAnalytics.db.vks.getVksDepartmentStats(q);
   }
 
   public async ReadVksServiceStats(
     q: VksDashbordPageSearch,
   ): Promise<VksServiceStat[]> {
-    return this.dbServise.db.vks.getVksServiceStats(q);
+    return this.dgiAnalytics.db.vks.getVksServiceStats(q);
   }
 }

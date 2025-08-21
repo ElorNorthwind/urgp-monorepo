@@ -16,8 +16,8 @@ CREATE TABLE vks.zams
 
     PRIMARY KEY (id)
 );
-ALTER TABLE vks.zams
-    OWNER to renovation_user;
+-- ALTER TABLE vks.zams
+--     OWNER to renovation_user;
 
 INSERT INTO vks.zams (id, title, surname, first_name, last_name) VALUES
     (1, 'Заместитель руководителя', 'Биктимиров', 'Руслан', 'Гумерович'),
@@ -44,8 +44,8 @@ CREATE TABLE vks.departments
 
     PRIMARY KEY (id)
 );
-ALTER TABLE vks.departments
-    OWNER to renovation_user;
+-- ALTER TABLE vks.departments
+--     OWNER to renovation_user;
 
 INSERT INTO vks.departments (id, full_name, short_name, boss_surname, boss_first_name, boss_last_name, zam_id) VALUES
     (1, 'Управление реализации жилищных программ', 'УРЖП', 'Лукьянов', 'Михаил', 'Георгиевич',1),
@@ -78,8 +78,8 @@ CREATE TABLE vks.services
 
     PRIMARY KEY (id)
 );
-ALTER TABLE vks.services
-    OWNER to renovation_user;
+-- ALTER TABLE vks.services
+--     OWNER to renovation_user;
 
 INSERT INTO vks.services (id, full_name, short_name, property_type, mailbox, responsible_email, responsible_name, department_id) VALUES
     (416, 'Онлайн-консультация по жилищным вопросам: Договоры социального найма (безвозмездного пользования) - заключение, внесение изменений.', 'ГУ ДСН', 'Жилищные вопросы', 'dgi-consult12@mos.ru', 'NaumovOV1@mos.ru', 'Наумов О.В.',1),
@@ -170,8 +170,8 @@ CREATE TABLE vks.clients
 
     PRIMARY KEY (id),
 );
-ALTER TABLE vks.clients
-    OWNER to renovation_user;
+-- ALTER TABLE vks.clients
+--     OWNER to renovation_user;
 
 -- Консультации
 DROP TABLE IF EXISTS vks.cases CASCADE;
@@ -261,7 +261,14 @@ CREATE TABLE vks.cases
     PRIMARY KEY (id),
     CONSTRAINT unique_booking_code_date UNIQUE (booking_code, date)
 );
-ALTER TABLE vks.cases
-    OWNER to renovation_user;
+-- ALTER TABLE vks.cases
+--     OWNER to renovation_user;
 
 CREATE INDEX new_first_order ON vks.cases (date DESC NULLS LAST, time DESC NULLS LAST, id DESC NULLS LAST);
+
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA vks TO online_cons_writer;
+ALTER DEFAULT PRIVILEGES IN SCHEMA vks GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO online_cons_writer;
+
+GRANT SELECT ON ALL TABLES IN SCHEMA vks TO consultation_legacy;
+ALTER DEFAULT PRIVILEGES IN SCHEMA vks GRANT SELECT ON TABLES TO consultation_legacy;
