@@ -23,6 +23,7 @@ export const slimCasesUnauthorizedColumns = `
 "operatorFio",
 "operatorLink",
 "operatorSurveyConsultationType",
+"serviceFullName",
 "operatorSurveyDate",
 "clientSurveyDate"
 `;

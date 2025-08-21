@@ -241,6 +241,8 @@ export const vksCaseSchema = z.object({
   operatorFio: z.string().nullable(),
   operatorLink: z.string().nullable(),
   operatorSurveyConsultationType: z.string(),
+  serviceFullName: z.string().nullable(),
+
   operatorSurveyDate: z.string().datetime().nullable(), // ISO 8601 date string
   clientSurveyDate: z.string().datetime().nullable(), // ISO 8601 date string
 });

@@ -16,7 +16,7 @@ export const formatVksCaseRowForExcel = (row: Row<VksCase>) => {
     Дата: new Date(toDate(data?.date).setHours(0, 0, 0, 0)), //data?.date,
     Время: data?.time,
     'Код бронирования': data?.bookingCode,
-    Услуга: data?.serviceName,
+    Услуга: data?.serviceFullName,
     Заявитель: data?.clientFio,
     Управление: data?.departmentName,
     Оператор: data?.operatorFio,
