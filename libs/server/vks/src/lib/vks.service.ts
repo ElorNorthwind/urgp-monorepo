@@ -50,16 +50,25 @@ export class VksService {
     private configService: ConfigService,
   ) {}
 
-  public async getVksCases(q: VksCasesQuery): Promise<VksCase[]> {
-    return this.dgiAnalytics.db.vks.getVksCases(q);
+  public async getVksCases(
+    q: VksCasesQuery,
+    isAuthorized: boolean = false,
+  ): Promise<VksCase[]> {
+    return this.dgiAnalytics.db.vks.getVksCases(q, isAuthorized);
   }
 
-  public async getVksCaseById(caseId: number): Promise<VksCase | null> {
-    return this.dgiAnalytics.db.vks.getVksCaseById(caseId);
+  public async getVksCaseById(
+    caseId: number,
+    isAuthorized: boolean = false,
+  ): Promise<VksCase | null> {
+    return this.dgiAnalytics.db.vks.getVksCaseById(caseId, isAuthorized);
   }
 
-  public async getVksCaseDetails(id: number): Promise<VksCaseDetails> {
-    return this.dgiAnalytics.db.vks.getVksCaseDetailes(id);
+  public async getVksCaseDetails(
+    id: number,
+    isAuthorized: boolean = false,
+  ): Promise<VksCaseDetails> {
+    return this.dgiAnalytics.db.vks.getVksCaseDetailes(id, isAuthorized);
   }
 
   private async getKnownServiceIds(): Promise<number[]> {

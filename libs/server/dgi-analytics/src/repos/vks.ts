@@ -19,6 +19,10 @@ import {
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { vks } from './sql/sql';
+import {
+  detailedCasesUnauthorizedColumns,
+  slimCasesUnauthorizedColumns,
+} from '../config';
 
 // @Injectable()
 export class VksRepository {
@@ -300,22 +304,36 @@ SET (
     return this.db.none(query, [id, fullName]);
   }
 
-  getVksCases(q: VksCasesQuery): Promise<VksCase[]> {
-    const query =
-      'SELECT * FROM vks.cases_slim_view WHERE date BETWEEN $1::date AND $2::date;';
+  getVksCases(
+    q: VksCasesQuery,
+    isAuthorized: boolean = false,
+  ): Promise<VksCase[]> {
+    const query = isAuthorized
+      ? 'SELECT * FROM vks.cases_slim_view WHERE date BETWEEN $1::date AND $2::date;'
+      : `SELECT ${slimCasesUnauthorizedColumns} FROM vks.cases_slim_view WHERE date BETWEEN $1::date AND $2::date;`;
     return this.db.any(query, [
       q?.dateFrom || '-infinity',
       q?.dateTo || 'infinity',
     ]);
   }
 
-  getVksCaseById(caseId: number): Promise<VksCase | null> {
-    const query = 'SELECT * FROM vks.cases_slim_view WHERE id = $1 LIMIT 1;';
+  getVksCaseById(
+    caseId: number,
+    isAuthorized: boolean = false,
+  ): Promise<VksCase | null> {
+    const query = isAuthorized
+      ? 'SELECT * FROM vks.cases_slim_view WHERE id = $1 LIMIT 1;'
+      : `SELECT ${slimCasesUnauthorizedColumns} FROM vks.cases_slim_view WHERE id = $1 LIMIT 1;`;
     return this.db.oneOrNone(query, [caseId]);
   }
 
-  getVksCaseDetailes(id: number): Promise<VksCaseDetails> {
-    const query = 'SELECT * FROM vks.cases_detailed_view WHERE id = $1;';
+  getVksCaseDetailes(
+    id: number,
+    isAuthorized: boolean = false,
+  ): Promise<VksCaseDetails> {
+    const query = isAuthorized
+      ? 'SELECT * FROM vks.cases_detailed_view WHERE id = $1;'
+      : `SELECT ${detailedCasesUnauthorizedColumns} FROM vks.cases_detailed_view WHERE id = $1;`;
     return this.db.one(query, [id]);
   }
 

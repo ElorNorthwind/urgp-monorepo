@@ -2,10 +2,8 @@ import { Row } from '@tanstack/react-table';
 
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
-  EquityObjectCard,
-  equityObjectsColumns,
-  equityObjectsGlobalFilterFn,
   useVksCases,
+  useVksCasesPublic,
   VksCaseCard,
   vksCasesColumns,
   vksCasesGlobalFilterFn,
@@ -16,27 +14,20 @@ import {
   selectVksCasesTableColumns,
   SidebarInset,
   TooltipProvider,
+  useAuth,
   useDebounce,
   VirtualDataTable,
 } from '@urgp/client/shared';
-import {
-  EquityObjectsFilterSidebar,
-  EquityObjectSidePanel,
-  SelectedEquityObjectsActionBar,
-  VksCasesFilterSidebar,
-  VksCasesSidePanel,
-} from '@urgp/client/widgets';
+import { VksCasesFilterSidebar, VksCasesSidePanel } from '@urgp/client/widgets';
 import {
   EquityObjectsPageSearch,
   VksCase,
   VksCasesPageSearch,
 } from '@urgp/shared/entities';
+import { format, subDays } from 'date-fns';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { VksCasesPageHeader } from './VksCasesPageHeader';
-import { date } from 'zod';
-import { format, subDays } from 'date-fns';
-import { DateRangeSelectAdvanced } from '@urgp/client/features';
 
 const VksCasesPage = (): JSX.Element => {
   // const i = useUserAbility();
@@ -50,17 +41,45 @@ const VksCasesPage = (): JSX.Element => {
   // const isMobile = useIsMobile();
   const navigate = useNavigate({ from: '/vks/cases' });
   const search = getRouteApi('/vks/cases').useSearch() as VksCasesPageSearch;
+  const user = useAuth();
+  const isAuthorized = user?.id && user?.id !== 0 ? true : false;
 
   const debouncedDates: { dateFrom: string; dateTo: string } = useDebounce(
     { dateFrom: search?.dateFrom, dateTo: search?.dateTo },
     300,
   ) as { dateFrom: string; dateTo: string };
 
-  const { data, isLoading, isFetching } = useVksCases({
-    dateFrom:
-      debouncedDates?.dateFrom || format(subDays(new Date(), 30), 'yyyy-MM-dd'),
-    dateTo: debouncedDates?.dateTo || format(new Date(), 'yyyy-MM-dd'),
-  });
+  const {
+    data: dataAuthorized,
+    isLoading: isLoadingAuthorized,
+    isFetching: isFetchingAuthorized,
+  } = useVksCases(
+    {
+      dateFrom:
+        debouncedDates?.dateFrom ||
+        format(subDays(new Date(), 30), 'yyyy-MM-dd'),
+      dateTo: debouncedDates?.dateTo || format(new Date(), 'yyyy-MM-dd'),
+    },
+    { skip: !isAuthorized },
+  );
+
+  const {
+    data: dataPublic,
+    isLoading: isLoadingPublic,
+    isFetching: isFetchingPublic,
+  } = useVksCasesPublic(
+    {
+      dateFrom:
+        debouncedDates?.dateFrom ||
+        format(subDays(new Date(), 30), 'yyyy-MM-dd'),
+      dateTo: debouncedDates?.dateTo || format(new Date(), 'yyyy-MM-dd'),
+    },
+    { skip: isAuthorized },
+  );
+
+  const data = isAuthorized ? dataAuthorized : dataPublic;
+  const isLoading = isAuthorized ? isLoadingAuthorized : isLoadingPublic;
+  const isFetching = isAuthorized ? isFetchingAuthorized : isFetchingPublic;
 
   // ID прошлого и текущего дела
   const currentIndex = filtered?.findIndex(

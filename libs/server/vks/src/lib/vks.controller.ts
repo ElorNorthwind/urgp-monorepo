@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  Req,
   UseGuards,
   UseInterceptors,
   UsePipes,
@@ -20,6 +21,7 @@ import {
   NestedClassificatorInfoString,
   QmsQuery,
   qmsQuerySchema,
+  RequestWithUserData,
   VkaSetIsTechnical,
   vkaSetIsTechnicalSchema,
   VksCase,
@@ -52,18 +54,35 @@ export class VksController {
     return this.vks.updateSurveyData(q);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Get('cases/:id/details')
   getVksCaseDetails(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<VksCaseDetails> {
-    return this.vks.getVksCaseDetails(id);
+    return this.vks.getVksCaseDetails(id, true);
   }
 
+  @Get('public/cases/:id/details')
+  getPublicVksCaseDetails(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<VksCaseDetails> {
+    return this.vks.getVksCaseDetails(id, false);
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Get('cases/:id')
   getVksCaseById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<VksCase | null> {
-    return this.vks.getVksCaseById(id);
+    return this.vks.getVksCaseById(id, true);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('public/cases/:id')
+  getPublicVksCaseById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<VksCase | null> {
+    return this.vks.getVksCaseById(id, false);
   }
 
   @Post('cases/is-technical')
@@ -73,11 +92,21 @@ export class VksController {
     return this.vks.setIsTechnical(q);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Get('cases')
   getVksCases(
+    @Req() req: RequestWithUserData,
     @Query(new ZodValidationPipe(vksCasesQuerySchema)) q: VksCasesQuery,
   ): Promise<VksCase[]> {
-    return this.vks.getVksCases(q);
+    return this.vks.getVksCases(q, true);
+  }
+
+  @Get('public/cases')
+  getPublicVksCases(
+    @Req() req: RequestWithUserData,
+    @Query(new ZodValidationPipe(vksCasesQuerySchema)) q: VksCasesQuery,
+  ): Promise<VksCase[]> {
+    return this.vks.getVksCases(q, false);
   }
 
   @CacheTTL(1000 * 60 * 5)

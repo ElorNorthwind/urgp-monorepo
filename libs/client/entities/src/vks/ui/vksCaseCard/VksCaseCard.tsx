@@ -1,6 +1,7 @@
 import {
   Accordion,
   ScrollArea,
+  useAuth,
   useIsMobile,
   useVksAbility,
 } from '@urgp/client/shared';
@@ -9,7 +10,7 @@ import {
   VksCaseInfoTab,
   VksCaseOperatorInfoTab,
 } from '@urgp/client/widgets';
-import { useVksCaseDetails } from '../../api/vksApi';
+import { useVksCaseDetails, useVksCaseDetailsPublic } from '../../api/vksApi';
 import { VksCaseCardHeader } from './VksCaseCardHeader';
 import { VksGradeDisqualifyToggle } from '@urgp/client/features';
 
@@ -22,12 +23,18 @@ type VksCaseCardProps = {
 
 const VksCaseCard = (props: VksCaseCardProps): JSX.Element => {
   const { caseId, onNextRow, onPrevRow } = props;
+  const user = useAuth();
+  const isAuthorized = user?.id && user?.id !== 0 ? true : false;
 
-  const { data, isLoading, isFetching } = useVksCaseDetails(caseId, {
-    skip: !caseId || caseId === 0,
+  const { data: dataAuthorized } = useVksCaseDetails(caseId, {
+    skip: !caseId || caseId === 0 || !isAuthorized,
   });
 
-  const isMobile = useIsMobile();
+  const { data: dataPublic } = useVksCaseDetailsPublic(caseId, {
+    skip: !caseId || caseId === 0 || isAuthorized,
+  });
+
+  const data = isAuthorized ? dataAuthorized : dataPublic;
 
   return (
     <>

@@ -23,6 +23,14 @@ export const vksApi = rtkApi.injectEndpoints({
       }),
       providesTags: ['vks-case'],
     }),
+    getVksCasesPublic: build.query<VksCase[], VksCasesQuery>({
+      query: (q) => ({
+        url: '/vks/public/cases/',
+        method: 'GET',
+        params: q,
+      }),
+      providesTags: ['vks-case'],
+    }),
     getVksCaseById: build.query<VksCase | null, number>({
       query: (id) => ({
         url: `/vks/cases/${id.toString()}`,
@@ -33,9 +41,29 @@ export const vksApi = rtkApi.injectEndpoints({
         { type: 'vks-case', id: arg },
       ],
     }),
+    getVksCaseByIdPublic: build.query<VksCase | null, number>({
+      query: (id) => ({
+        url: `/vks/public/cases/${id.toString()}`,
+        method: 'GET',
+      }),
+      providesTags: (result, error, arg) => [
+        'vks-case',
+        { type: 'vks-case', id: arg },
+      ],
+    }),
     getVksCaseDetails: build.query<VksCaseDetails, number>({
       query: (id) => ({
         url: `/vks/cases/${id.toString()}/details`,
+        method: 'GET',
+      }),
+      providesTags: (result, error, arg) => [
+        'vks-case',
+        { type: 'vks-case', id: arg },
+      ],
+    }),
+    getVksCaseDetailsPublic: build.query<VksCaseDetails, number>({
+      query: (id) => ({
+        url: `/vks/public/cases/${id.toString()}/details`,
         method: 'GET',
       }),
       providesTags: (result, error, arg) => [
@@ -141,8 +169,14 @@ export const vksApi = rtkApi.injectEndpoints({
 
 export const {
   useGetVksCasesQuery: useVksCases,
+  useGetVksCasesPublicQuery: useVksCasesPublic,
+
   useGetVksCaseByIdQuery: useVksCaseById,
+  useGetVksCaseByIdPublicQuery: useVksCaseByIdPublic,
+
   useGetVksCaseDetailsQuery: useVksCaseDetails,
+  useGetVksCaseDetailsPublicQuery: useVksCaseDetailsPublic,
+
   useGetVksDepartmentClassificatorQuery: useVksDepartmentClassificator,
   useGetVksServiceTypesClassificatorQuery: useVksServiceTypesClassificator,
   useGetVksStatusClassificatorQuery: useVksStatusClassificator,

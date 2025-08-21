@@ -7,6 +7,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  useAuth,
 } from '@urgp/client/shared';
 import { VksCaseDetails } from '@urgp/shared/entities';
 import { format } from 'date-fns';
@@ -33,6 +34,8 @@ const VksCaseCardHeader = (props: VksCaseCardHeaderProps): JSX.Element => {
   } = props;
   const pathname = useLocation().pathname;
   const navigate = useNavigate({ from: pathname });
+  const user = useAuth();
+  const isAuthorized = user?.id && user?.id !== 0 ? true : false;
 
   const { icon: StatusIcon, iconStyle } =
     vksCaseStatusStyles?.[
@@ -73,26 +76,13 @@ const VksCaseCardHeader = (props: VksCaseCardHeaderProps): JSX.Element => {
       )}
 
       {entity && (
-        <h1
-          className="truncate font-bold"
-          // TBD: Отдельная страница с объектом
-          // onClick={() =>
-          //   navigate({
-          //     to: `/control/case`,
-          //     search: { id: controlCase?.id },
-          //     // params: { caseId: controlCase?.id },
-          //   })
-          // }
-        >
-          {entity?.clientFio || ''}
+        <h1 className="truncate font-bold">
+          {isAuthorized
+            ? entity?.clientFio || ''
+            : 'Данные скрыты до авторизации'}
         </h1>
       )}
 
-      {/* {entity && (
-        <p className="border-foreground/20 text-muted-foreground h-full flex-shrink truncate border-l pl-2">
-          {entity?.serviceName || ''}
-        </p>
-      )} */}
       {onClose && (
         <>
           {(onPrevCase || onNextCase) && (
