@@ -195,7 +195,7 @@ export const gradeSourceStyles = {
   },
   online: {
     icon: SquareCode,
-    label: 'Онлайн-форма на сайте',
+    label: 'Онлайн-форма на сайте (SUO)',
     iconStyle: cn('text-foreground'),
   },
   survey: {

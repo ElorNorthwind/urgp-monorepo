@@ -25,8 +25,13 @@ function VksCaseGradeCell(props: CellContext<VksCase, number>): JSX.Element {
 
   if (props.getValue() === 0)
     return (
-      <div className="text-muted-foreground w-full truncate font-thin">
-        Оценка не оставлена
+      <div className="text-muted-foreground flex w-full flex-col truncate font-thin">
+        <span>Оценка не оставлена</span>
+        {rowData?.gradeComment && (
+          <span className="text-xs font-thin opacity-60">
+            {rowData?.gradeComment}
+          </span>
+        )}
       </div>
     );
 

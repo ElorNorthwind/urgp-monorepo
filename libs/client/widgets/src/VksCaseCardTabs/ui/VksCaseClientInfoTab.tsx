@@ -280,7 +280,7 @@ const VksCaseClientInfoTab = (
             </>
           )}
 
-          {entity?.grade && (
+          {(entity?.grade || entity?.gradeComment) && (
             <>
               <div className="bg-muted-foreground/5 border-r border-t px-2 py-1 text-right font-bold">
                 Оценка:
@@ -358,7 +358,7 @@ const VksCaseClientInfoTab = (
               <div
                 className={cn(
                   'bg-muted-foreground/5 border-r border-t px-2 py-1 text-right font-bold',
-                  entity?.grade ? 'border-l' : '',
+                  entity?.grade || entity?.gradeComment ? 'border-l' : '',
                 )}
               >
                 Скор. поиска:
@@ -366,7 +366,9 @@ const VksCaseClientInfoTab = (
               <div
                 className={cn(
                   'text-muted-foreground flex items-start justify-start gap-2 border-t px-2 font-light',
-                  entity?.grade ? 'col-span-1' : 'col-span-3',
+                  entity?.grade || entity?.gradeComment
+                    ? 'col-span-1'
+                    : 'col-span-3',
                 )}
               >
                 <p className="flex flex-row items-center justify-start gap-1">

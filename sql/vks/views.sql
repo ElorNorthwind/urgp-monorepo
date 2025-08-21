@@ -35,11 +35,12 @@ CREATE OR REPLACE VIEW vks.cases_slim_view  AS
         END as "hasTechnicalProblems",
         c.is_technical as "isTechnical",
         CASE 
-            WHEN c.client_survey_grade IS NOT NULL THEN 'survey'
             WHEN c.online_grade IS NOT NULL THEN 'online'
+            WHEN c.client_survey_grade IS NOT NULL THEN 'survey'
+            WHEN c.online_grade_comment IS NOT NULL THEN 'online'
             ELSE 'none'
         END as "gradeSource",
-        COALESCE(c.client_survey_grade, c.online_grade) as grade,
+        COALESCE(c.online_grade, c.client_survey_grade) as grade,
         ARRAY_TO_STRING(ARRAY_REMOVE(ARRAY[c.client_survey_comment_positive, c.client_survey_comment_negative, c.online_grade_comment], null), '; ') as "gradeComment",
         -- COALESCE(COALESCE(c.client_survey_comment_positive, '') || COALESCE(c.client_survey_comment_negative, ''), c.online_grade_comment) as "gradeComment",
         c.client_id as "clientId",
@@ -60,8 +61,8 @@ CREATE OR REPLACE VIEW vks.cases_slim_view  AS
     LEFT JOIN vks.zams z ON d.zam_id = z.id
     ORDER BY c.date DESC NULLS LAST, c.time DESC NULLS LAST, c.id DESC NULLS LAST;
 ----------------------------------------------------------------------
-ALTER TABLE vks.cases_slim_view
-    OWNER TO renovation_user;
+-- ALTER TABLE vks.cases_slim_view
+--     OWNER TO renovation_user;
 
 
 
@@ -103,11 +104,12 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
         END as "hasTechnicalProblems",
         c.is_technical as "isTechnical",
         CASE 
-            WHEN c.client_survey_grade IS NOT NULL THEN 'survey'
             WHEN c.online_grade IS NOT NULL THEN 'online'
+            WHEN c.client_survey_grade IS NOT NULL THEN 'survey'
+            WHEN c.online_grade_comment IS NOT NULL THEN 'online'
             ELSE 'none'
         END as "gradeSource",
-        COALESCE(c.client_survey_grade, c.online_grade) as grade,
+        COALESCE(c.online_grade, c.client_survey_grade) as grade,
         ARRAY_TO_STRING(ARRAY_REMOVE(ARRAY[c.client_survey_comment_positive, c.client_survey_comment_negative, c.online_grade_comment], null), '; ') as "gradeComment",
         c.client_id as "clientId",
         COALESCE(c.participant_fio, CASE WHEN cl.short_name = 'Организация' THEN null ELSE cl.full_name END, c.deputy_fio ) as "clientFio",
@@ -181,8 +183,8 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
     LEFT JOIN vks.departments d ON s.department_id = d.id
     LEFT JOIN vks.zams z ON d.zam_id = z.id;
 ----------------------------------------------------------------------
-ALTER TABLE vks.cases_detailed_view
-    OWNER TO renovation_user;
+-- ALTER TABLE vks.cases_detailed_view
+--     OWNER TO renovation_user;
 
 
 
@@ -247,12 +249,12 @@ LEFT JOIN vks.departments d ON s.department_id = d.id
 LEFT JOIN vks.zams z ON d.zam_id = z.id
 ORDER BY c.date DESC, c.id DESC;
 ----------------------------------------------------------------------
-ALTER TABLE vks.consultations_legacy_view
-    OWNER TO consultation_legacy;
+-- ALTER TABLE vks.consultations_legacy_view
+--     OWNER TO consultation_legacy;
 
-GRANT USAGE ON SCHEMA vks TO consultation_legacy;
-GRANT SELECT ON TABLE vks.cases TO consultation_legacy;
-GRANT SELECT ON TABLE vks.clients TO consultation_legacy;
-GRANT SELECT ON TABLE vks.departments TO consultation_legacy;
-GRANT SELECT ON TABLE vks.services TO consultation_legacy;
-GRANT SELECT ON TABLE vks.zams TO consultation_legacy;
+-- GRANT USAGE ON SCHEMA vks TO consultation_legacy;
+-- GRANT SELECT ON TABLE vks.cases TO consultation_legacy;
+-- GRANT SELECT ON TABLE vks.clients TO consultation_legacy;
+-- GRANT SELECT ON TABLE vks.departments TO consultation_legacy;
+-- GRANT SELECT ON TABLE vks.services TO consultation_legacy;
+-- GRANT SELECT ON TABLE vks.zams TO consultation_legacy;
