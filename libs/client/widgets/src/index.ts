@@ -56,3 +56,4 @@ export * from './VksNavbar';
 export * from './VksCasesSidePanel';
 export * from './VksCasesFilterSidebar';
 export * from './VksCaseCardTabs';
+export * from './EquityUserMenu';

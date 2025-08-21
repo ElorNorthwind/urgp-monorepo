@@ -18,6 +18,7 @@ import {
 } from '@urgp/client/shared';
 import { MapPinned, Menu } from 'lucide-react';
 import { ControlUserMenu } from '../../ControlUserMenu';
+import { EquityUserMenu } from '../../EquityUserMenu';
 import { items } from '../config/items';
 
 const EquityNavbar = (): JSX.Element => {
@@ -109,7 +110,7 @@ const EquityNavbar = (): JSX.Element => {
             </TooltipPortal>
           </Tooltip>
         ))}
-        <ControlUserMenu className="mt-auto" />
+        <EquityUserMenu className="mt-auto" />
       </nav>
     </TooltipProvider>
   );

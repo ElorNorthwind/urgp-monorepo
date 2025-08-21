@@ -40,7 +40,9 @@ const LoginForm = ({ className }: LoginMenuProps): JSX.Element => {
       .unwrap()
       .then((fulfilled) => {
         dispatch(setUser(fulfilled));
-        navigate({ to: redirect ? redirect : '/renovation' });
+        navigate({
+          to: redirect ? redirect : '/renovation',
+        });
       })
       .catch((rejected) =>
         toast.error('Не удалось войти', {

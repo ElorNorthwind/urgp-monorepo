@@ -24,3 +24,4 @@ export * from './EquityDashboardPage';
 export * from './EquityOperationLogPage';
 export * from './VksDashboardPage';
 export * from './VksCasesPage';
+export * from './EquitySettingsPage';

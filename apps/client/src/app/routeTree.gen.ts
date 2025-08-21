@@ -42,10 +42,13 @@ import { Route as ControlCasesImport } from './routes/control/cases'
 import { Route as ControlCaseImport } from './routes/control/case'
 import { Route as AddressSessionsImport } from './routes/address/sessions'
 import { Route as RenovationSettingsRouteImport } from './routes/renovation/settings/route'
+import { Route as EquitySettingsRouteImport } from './routes/equity/settings/route'
 import { Route as ControlSettingsRouteImport } from './routes/control/settings/route'
 import { Route as RenovationSettingsIndexImport } from './routes/renovation/settings/index'
+import { Route as EquitySettingsIndexImport } from './routes/equity/settings/index'
 import { Route as ControlSettingsIndexImport } from './routes/control/settings/index'
 import { Route as RenovationSettingsChangePasswordImport } from './routes/renovation/settings/change-password'
+import { Route as EquitySettingsChangePasswordImport } from './routes/equity/settings/change-password'
 import { Route as ControlSettingsNotificationsImport } from './routes/control/settings/notifications'
 import { Route as ControlSettingsFilterImport } from './routes/control/settings/filter'
 import { Route as ControlSettingsChangePasswordImport } from './routes/control/settings/change-password'
@@ -266,6 +269,12 @@ const RenovationSettingsRouteRoute = RenovationSettingsRouteImport.update({
   getParentRoute: () => RenovationRouteRoute,
 } as any)
 
+const EquitySettingsRouteRoute = EquitySettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => EquityRouteRoute,
+} as any)
+
 const ControlSettingsRouteRoute = ControlSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -276,6 +285,12 @@ const RenovationSettingsIndexRoute = RenovationSettingsIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => RenovationSettingsRouteRoute,
+} as any)
+
+const EquitySettingsIndexRoute = EquitySettingsIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EquitySettingsRouteRoute,
 } as any)
 
 const ControlSettingsIndexRoute = ControlSettingsIndexImport.update({
@@ -289,6 +304,13 @@ const RenovationSettingsChangePasswordRoute =
     id: '/change-password',
     path: '/change-password',
     getParentRoute: () => RenovationSettingsRouteRoute,
+  } as any)
+
+const EquitySettingsChangePasswordRoute =
+  EquitySettingsChangePasswordImport.update({
+    id: '/change-password',
+    path: '/change-password',
+    getParentRoute: () => EquitySettingsRouteRoute,
   } as any)
 
 const ControlSettingsNotificationsRoute =
@@ -412,6 +434,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/control/settings'
       preLoaderRoute: typeof ControlSettingsRouteImport
       parentRoute: typeof ControlRouteImport
+    }
+    '/equity/settings': {
+      id: '/equity/settings'
+      path: '/settings'
+      fullPath: '/equity/settings'
+      preLoaderRoute: typeof EquitySettingsRouteImport
+      parentRoute: typeof EquityRouteImport
     }
     '/renovation/settings': {
       id: '/renovation/settings'
@@ -588,6 +617,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ControlSettingsNotificationsImport
       parentRoute: typeof ControlSettingsRouteImport
     }
+    '/equity/settings/change-password': {
+      id: '/equity/settings/change-password'
+      path: '/change-password'
+      fullPath: '/equity/settings/change-password'
+      preLoaderRoute: typeof EquitySettingsChangePasswordImport
+      parentRoute: typeof EquitySettingsRouteImport
+    }
     '/renovation/settings/change-password': {
       id: '/renovation/settings/change-password'
       path: '/change-password'
@@ -601,6 +637,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/control/settings/'
       preLoaderRoute: typeof ControlSettingsIndexImport
       parentRoute: typeof ControlSettingsRouteImport
+    }
+    '/equity/settings/': {
+      id: '/equity/settings/'
+      path: '/'
+      fullPath: '/equity/settings/'
+      preLoaderRoute: typeof EquitySettingsIndexImport
+      parentRoute: typeof EquitySettingsRouteImport
     }
     '/renovation/settings/': {
       id: '/renovation/settings/'
@@ -669,13 +712,28 @@ const ControlRouteRouteWithChildren = ControlRouteRoute._addFileChildren(
   ControlRouteRouteChildren,
 )
 
+interface EquitySettingsRouteRouteChildren {
+  EquitySettingsChangePasswordRoute: typeof EquitySettingsChangePasswordRoute
+  EquitySettingsIndexRoute: typeof EquitySettingsIndexRoute
+}
+
+const EquitySettingsRouteRouteChildren: EquitySettingsRouteRouteChildren = {
+  EquitySettingsChangePasswordRoute: EquitySettingsChangePasswordRoute,
+  EquitySettingsIndexRoute: EquitySettingsIndexRoute,
+}
+
+const EquitySettingsRouteRouteWithChildren =
+  EquitySettingsRouteRoute._addFileChildren(EquitySettingsRouteRouteChildren)
+
 interface EquityRouteRouteChildren {
+  EquitySettingsRouteRoute: typeof EquitySettingsRouteRouteWithChildren
   EquityObjectsRoute: typeof EquityObjectsRoute
   EquityOperationsRoute: typeof EquityOperationsRoute
   EquityIndexRoute: typeof EquityIndexRoute
 }
 
 const EquityRouteRouteChildren: EquityRouteRouteChildren = {
+  EquitySettingsRouteRoute: EquitySettingsRouteRouteWithChildren,
   EquityObjectsRoute: EquityObjectsRoute,
   EquityOperationsRoute: EquityOperationsRoute,
   EquityIndexRoute: EquityIndexRoute,
@@ -768,6 +826,7 @@ export interface FileRoutesByFullPath {
   '/bticalc': typeof BticalcLazyRoute
   '/map': typeof MapLazyRoute
   '/control/settings': typeof ControlSettingsRouteRouteWithChildren
+  '/equity/settings': typeof EquitySettingsRouteRouteWithChildren
   '/renovation/settings': typeof RenovationSettingsRouteRouteWithChildren
   '/address/sessions': typeof AddressSessionsRoute
   '/control/case': typeof ControlCaseRoute
@@ -793,8 +852,10 @@ export interface FileRoutesByFullPath {
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
   '/control/settings/notifications': typeof ControlSettingsNotificationsRoute
+  '/equity/settings/change-password': typeof EquitySettingsChangePasswordRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
   '/control/settings/': typeof ControlSettingsIndexRoute
+  '/equity/settings/': typeof EquitySettingsIndexRoute
   '/renovation/settings/': typeof RenovationSettingsIndexRoute
 }
 
@@ -829,8 +890,10 @@ export interface FileRoutesByTo {
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
   '/control/settings/notifications': typeof ControlSettingsNotificationsRoute
+  '/equity/settings/change-password': typeof EquitySettingsChangePasswordRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
   '/control/settings': typeof ControlSettingsIndexRoute
+  '/equity/settings': typeof EquitySettingsIndexRoute
   '/renovation/settings': typeof RenovationSettingsIndexRoute
 }
 
@@ -849,6 +912,7 @@ export interface FileRoutesById {
   '/bticalc': typeof BticalcLazyRoute
   '/map': typeof MapLazyRoute
   '/control/settings': typeof ControlSettingsRouteRouteWithChildren
+  '/equity/settings': typeof EquitySettingsRouteRouteWithChildren
   '/renovation/settings': typeof RenovationSettingsRouteRouteWithChildren
   '/address/sessions': typeof AddressSessionsRoute
   '/control/case': typeof ControlCaseRoute
@@ -874,8 +938,10 @@ export interface FileRoutesById {
   '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
   '/control/settings/filter': typeof ControlSettingsFilterRoute
   '/control/settings/notifications': typeof ControlSettingsNotificationsRoute
+  '/equity/settings/change-password': typeof EquitySettingsChangePasswordRoute
   '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
   '/control/settings/': typeof ControlSettingsIndexRoute
+  '/equity/settings/': typeof EquitySettingsIndexRoute
   '/renovation/settings/': typeof RenovationSettingsIndexRoute
 }
 
@@ -895,6 +961,7 @@ export interface FileRouteTypes {
     | '/bticalc'
     | '/map'
     | '/control/settings'
+    | '/equity/settings'
     | '/renovation/settings'
     | '/address/sessions'
     | '/control/case'
@@ -920,8 +987,10 @@ export interface FileRouteTypes {
     | '/control/settings/change-password'
     | '/control/settings/filter'
     | '/control/settings/notifications'
+    | '/equity/settings/change-password'
     | '/renovation/settings/change-password'
     | '/control/settings/'
+    | '/equity/settings/'
     | '/renovation/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -955,8 +1024,10 @@ export interface FileRouteTypes {
     | '/control/settings/change-password'
     | '/control/settings/filter'
     | '/control/settings/notifications'
+    | '/equity/settings/change-password'
     | '/renovation/settings/change-password'
     | '/control/settings'
+    | '/equity/settings'
     | '/renovation/settings'
   id:
     | '__root__'
@@ -973,6 +1044,7 @@ export interface FileRouteTypes {
     | '/bticalc'
     | '/map'
     | '/control/settings'
+    | '/equity/settings'
     | '/renovation/settings'
     | '/address/sessions'
     | '/control/case'
@@ -998,8 +1070,10 @@ export interface FileRouteTypes {
     | '/control/settings/change-password'
     | '/control/settings/filter'
     | '/control/settings/notifications'
+    | '/equity/settings/change-password'
     | '/renovation/settings/change-password'
     | '/control/settings/'
+    | '/equity/settings/'
     | '/renovation/settings/'
   fileRoutesById: FileRoutesById
 }
@@ -1082,6 +1156,7 @@ export const routeTree = rootRoute
     "/equity": {
       "filePath": "equity/route.tsx",
       "children": [
+        "/equity/settings",
         "/equity/objects",
         "/equity/operations",
         "/equity/"
@@ -1137,6 +1212,14 @@ export const routeTree = rootRoute
         "/control/settings/filter",
         "/control/settings/notifications",
         "/control/settings/"
+      ]
+    },
+    "/equity/settings": {
+      "filePath": "equity/settings/route.tsx",
+      "parent": "/equity",
+      "children": [
+        "/equity/settings/change-password",
+        "/equity/settings/"
       ]
     },
     "/renovation/settings": {
@@ -1243,6 +1326,10 @@ export const routeTree = rootRoute
       "filePath": "control/settings/notifications.tsx",
       "parent": "/control/settings"
     },
+    "/equity/settings/change-password": {
+      "filePath": "equity/settings/change-password.tsx",
+      "parent": "/equity/settings"
+    },
     "/renovation/settings/change-password": {
       "filePath": "renovation/settings/change-password.tsx",
       "parent": "/renovation/settings"
@@ -1250,6 +1337,10 @@ export const routeTree = rootRoute
     "/control/settings/": {
       "filePath": "control/settings/index.tsx",
       "parent": "/control/settings"
+    },
+    "/equity/settings/": {
+      "filePath": "equity/settings/index.tsx",
+      "parent": "/equity/settings"
     },
     "/renovation/settings/": {
       "filePath": "renovation/settings/index.tsx",
