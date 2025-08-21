@@ -239,6 +239,8 @@ export const vksCaseSchema = z.object({
     ])
     .nullable(),
   operatorFio: z.string().nullable(),
+  operatorLink: z.string().nullable(),
+  operatorSurveyConsultationType: z.string(),
   operatorSurveyDate: z.string().datetime().nullable(), // ISO 8601 date string
   clientSurveyDate: z.string().datetime().nullable(), // ISO 8601 date string
 });
@@ -271,7 +273,7 @@ export const VksCaseDetailsSchema = vksCaseSchema.extend({
   operatorSurveyExtralinkId: z.coerce.number().int().nonnegative().nullable(),
   operatorSurveyExtralinkUrl: z.string().url().nullable(),
 
-  operatorSurveyConsultationType: z.string().nullable(),
+  operatorSurveyConsultationType: z.string(),
   operatorSurveyIsHousing: z.coerce.boolean().nullable(),
   operatorSurveyIsClient: z.coerce.boolean().nullable(),
   operatorSurveyAddress: z.string().nullable(),

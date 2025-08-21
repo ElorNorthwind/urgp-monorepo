@@ -83,6 +83,7 @@ export const vksCasesPageFilterSchema = z
     department: queryNumberArray,
     grade: queryNumberArray,
     status: queryStringArray,
+    type: queryStringArray,
   })
   .partial();
 export type VksCasesPageFilter = z.infer<typeof vksCasesPageFilterSchema>;

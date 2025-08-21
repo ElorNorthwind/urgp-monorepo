@@ -21,6 +21,7 @@ import { VksDepartmentFilter } from './filterInputs/VksDepartmentFilter';
 import { VksServiceFilter } from './filterInputs/VksServiceFilter';
 import { VksCaseGradeFilter } from './filterInputs/VksCaseGradeFilter';
 import { VksCasesOperatorFilter } from './filterInputs/VksCasesOperatorFilter';
+import { VksConsultationTypeFilter } from './filterInputs/VksConsultationTypeFilter';
 
 type VksCasesFilterSidebarProps = {
   side?: 'left' | 'right';
@@ -60,6 +61,7 @@ const VksCasesFilterSidebar = (
             <Accordion type="multiple" defaultValue={['status', 'department']}>
               <VksCaseStatusFilter variant="accordion" />
               <VksDepartmentFilter variant="accordion" />
+              <VksConsultationTypeFilter variant="accordion" />
               <VksCaseGradeFilter variant="accordion" />
               <VksServiceFilter variant="accordion" />
             </Accordion>

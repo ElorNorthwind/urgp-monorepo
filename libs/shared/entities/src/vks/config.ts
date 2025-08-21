@@ -10,3 +10,14 @@ export const AnketologSurveyTypes = {
 export type AnketologReportTypes =
   (typeof AnketologSurveyTypes)[keyof typeof AnketologSurveyTypes];
 export const anketologSurveyTypesValues = getValues(AnketologSurveyTypes);
+
+export const VksConsultationTypes = {
+  'Нет данных': 'Нет данных',
+  'По телефону': 'По телефону',
+  'Вопрос заявителя не в компетенции': 'Вопрос заявителя не в компетенции',
+  'Заявитель не явился по вызову': 'Заявитель не явился по вызову',
+  'По ВКС': 'По ВКС',
+} as const;
+export type VksConsultationTypes =
+  (typeof VksConsultationTypes)[keyof typeof VksConsultationTypes];
+export const vksConsultationTypesValues = getValues(VksConsultationTypes);

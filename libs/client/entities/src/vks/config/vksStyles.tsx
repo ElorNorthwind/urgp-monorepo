@@ -1,4 +1,5 @@
 import { cn } from '@urgp/client/shared';
+import { VksConsultationTypes } from '@urgp/shared/entities';
 import {
   BriefcaseBusiness,
   Calendar1,
@@ -12,7 +13,10 @@ import {
   House,
   LaptopMinimalCheck,
   MapPinHouse,
+  MessageCircleOff,
   MessageCircleQuestionMark,
+  MessageCircleX,
+  PhoneCall,
   Server,
   SquareCode,
   SquareMenu,
@@ -202,5 +206,33 @@ export const gradeSourceStyles = {
     icon: SquareMenu,
     label: 'Опрос Anketolog',
     iconStyle: cn('text-foreground'),
+  },
+};
+
+export const consultationTypesStyles = {
+  [VksConsultationTypes['Нет данных']]: {
+    icon: MessageCircleQuestionMark,
+    label: 'Нет данных',
+    iconStyle: cn('text-gray-500'),
+  },
+  [VksConsultationTypes['По телефону']]: {
+    icon: PhoneCall,
+    label: 'По телефону',
+    iconStyle: cn('text-blue-500'),
+  },
+  [VksConsultationTypes['Вопрос заявителя не в компетенции']]: {
+    icon: MessageCircleX,
+    label: 'Вопрос вне компетенции',
+    iconStyle: cn('text-rose-500'),
+  },
+  [VksConsultationTypes['Заявитель не явился по вызову']]: {
+    icon: MessageCircleOff,
+    label: 'Заявитель не явился',
+    iconStyle: cn('text-stone-500'),
+  },
+  [VksConsultationTypes['По ВКС']]: {
+    icon: LaptopMinimalCheck,
+    label: 'По ВКС',
+    iconStyle: cn('text-green-500'),
   },
 };

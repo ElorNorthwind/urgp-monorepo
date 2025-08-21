@@ -20,9 +20,11 @@ export const formatVksCaseRowForExcel = (row: Row<VksCase>) => {
     Заявитель: data?.clientFio,
     Управление: data?.departmentName,
     Оператор: data?.operatorFio,
+    'Тип консультации': data?.operatorSurveyConsultationType,
     'Технические трудности': data?.hasTechnicalProblems ? 'да' : 'нет',
     Оценка: data?.grade,
     'Комментарий к оценке': data?.gradeComment,
     'Источник оценки': gradeSourceLabel,
+    'Ссылка оператора': data?.operatorLink,
   };
 };

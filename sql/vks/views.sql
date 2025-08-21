@@ -51,6 +51,9 @@ CREATE OR REPLACE VIEW vks.cases_slim_view  AS
         cl.type as "clientType",
         INITCAP(REPLACE(REGEXP_REPLACE(c.operator_survey_fio, '(^[А-Яа-яёЁ\-]*)\s([А-Яа-яёЁ])(?:[А-Яа-яёЁ\-]*[\s\.]+([А-Яа-яёЁ]))?.*$', '\1 \2.\3.'), '..', '.')) as "operatorFio",
 
+		c.operator_link as "operatorLink",
+        COALESCE(c.operator_survey_consultation_type, 'Нет данных') as "operatorSurveyConsultationType",
+        s.display_name as "serviceFullName",
         c.operator_survey_date as "operatorSurveyDate",
         c.client_survey_date as "clientSurveyDate"
 
@@ -147,7 +150,7 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
 		c.operator_survey_extralink_id as "operatorSurveyExtralinkId",
 		c.operator_survey_extralink_url as "operatorSurveyExtralinkUrl",
 		
-		c.operator_survey_consultation_type as "operatorSurveyConsultationType",
+		COALESCE(c.operator_survey_consultation_type, 'Нет данных') as "operatorSurveyConsultationType",
 		c.operator_survey_is_housing as "operatorSurveyIsHousing",
 		c.operator_survey_is_client as "operatorSurveyIsClient",
 		c.operator_survey_address as "operatorSurveyAddress",
@@ -169,7 +172,7 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
 		c.client_survey_joined as "clientSurveyJoined",
 		c.client_survey_consultation_received as "clientSurveyConsultationReceived",
 		
-		s.full_name as "serviceFullName",
+		s.display_name as "serviceFullName",
 		d.full_name as "departmentFullName",
 		z.full_name as "zamFullName"
 		

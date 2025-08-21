@@ -6,3 +6,4 @@ export * from './ui/filterInputs/VksCasesDateFilter';
 export * from './ui/filterInputs/VksCaseStatusFilter';
 export * from './ui/filterInputs/VksDepartmentFilter';
 export * from './ui/filterInputs/VksServiceFilter';
+export * from './ui/filterInputs/VksConsultationTypeFilter';

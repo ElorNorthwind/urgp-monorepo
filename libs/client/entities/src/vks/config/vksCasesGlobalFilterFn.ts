@@ -6,7 +6,8 @@ export function vksCasesGlobalFilterFn(
   columnId: string,
   filterValue: VksCasesPageSearch,
 ): boolean {
-  const { query, status, service, department, grade, operator } = filterValue;
+  const { query, status, service, department, grade, operator, type } =
+    filterValue;
 
   if (
     query &&
@@ -43,6 +44,13 @@ export function vksCasesGlobalFilterFn(
   }
 
   if (department && !department.includes(row.original?.departmentId || 0)) {
+    return false;
+  }
+
+  if (
+    type &&
+    !type.includes(row.original?.operatorSurveyConsultationType || '')
+  ) {
     return false;
   }
 

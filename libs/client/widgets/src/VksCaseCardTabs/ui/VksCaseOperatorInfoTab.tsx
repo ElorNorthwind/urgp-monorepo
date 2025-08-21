@@ -22,7 +22,10 @@ import {
   UserX,
 } from 'lucide-react';
 import { ZodNullable } from 'zod';
-import { gradeSourceStyles } from '@urgp/client/entities';
+import {
+  consultationTypesStyles,
+  gradeSourceStyles,
+} from '@urgp/client/entities';
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { format } from 'date-fns';
 
@@ -46,6 +49,12 @@ const VksCaseOperatorInfoTab = (
     contentClassName,
     accordionItemName,
   } = props;
+
+  const { icon: ConsultationTypeIcon, iconStyle: consultationTypeIconStyle } =
+    consultationTypesStyles?.[
+      (entity?.operatorSurveyConsultationType ||
+        'Нет данных') as keyof typeof consultationTypesStyles
+    ] || Object.values(consultationTypesStyles)[0];
 
   return (
     <CardTab
@@ -95,6 +104,14 @@ const VksCaseOperatorInfoTab = (
                   entity?.operatorSurveyDepartment ? '' : 'col-span-3',
                 )}
               >
+                {ConsultationTypeIcon && (
+                  <ConsultationTypeIcon
+                    className={cn(
+                      'size-5 flex-shrink-0',
+                      consultationTypeIconStyle,
+                    )}
+                  />
+                )}
                 <p className="my-auto w-full truncate font-light">
                   {entity?.operatorSurveyConsultationType}
                 </p>
