@@ -176,7 +176,11 @@ AS $$
     claim_creditors = c.creditors,
     claim_basis = c.basis,
     claim_apartment_number = c.apartment_number
-  FROM claim_info c
+  FROM (SELECT * 
+        FROM claim_info
+        UNION ALL VALUES (_object_id, 0::integer, null::date, null::date, null::numeric, null::text, null::text, null::text)
+        ) c
+--   claim_info c
   WHERE o.id = _object_id
   RETURNING o.*;
 $$;
