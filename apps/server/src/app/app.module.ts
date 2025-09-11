@@ -24,6 +24,7 @@ import { SudirModule } from '@urgp/server/sudir';
 import { TelegramModule } from '@urgp/server/telegram';
 import { ClsModule } from 'nestjs-cls';
 import { DgiAnalyticseModule } from '@urgp/server/dgi-analytics';
+import { DmModule } from '@urgp/server/dm';
 
 @Module({
   // dot env files
@@ -66,6 +67,7 @@ import { DgiAnalyticseModule } from '@urgp/server/dgi-analytics';
     SudirModule,
     VksModule,
     DgiAnalyticseModule,
+    DmModule,
   ],
 })
 export class AppModule {}

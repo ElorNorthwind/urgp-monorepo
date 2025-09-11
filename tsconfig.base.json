@@ -43,7 +43,8 @@
       "@urgp/server/equity": ["libs/server/equity/src/index.ts"],
       "@urgp/server/sudir": ["libs/server/sudir/src/index.ts"],
       "@urgp/server/vks": ["libs/server/vks/src/index.ts"],
-      "@urgp/server/dgi-analytics": ["libs/server/dgi-analytics/src/index.ts"]
+      "@urgp/server/dgi-analytics": ["libs/server/dgi-analytics/src/index.ts"],
+      "@urgp/server/dm": ["libs/server/dm/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
