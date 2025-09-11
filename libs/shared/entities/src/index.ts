@@ -59,3 +59,7 @@ export * from './equityOperations/config';
 export * from './vks/types';
 export * from './vks/dto';
 export * from './vks/config';
+
+export * from './dm/dto';
+export * from './dm/types';
+export * from './dm/config';

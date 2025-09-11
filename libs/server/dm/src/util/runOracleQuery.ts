@@ -2,10 +2,18 @@ import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as oracledb from 'oracledb';
 
-export async function runOracleCallback(
+type SuccessefulResult = {
+  isError: false;
+  rows: oracledb.Result<unknown>['rows'];
+  err: null;
+};
+type ErrorResult = { isError: true; rows: null; err: any };
+export type OracleQueryResult = SuccessefulResult | ErrorResult;
+
+export async function runOracleQuery(
   configService: ConfigService,
-  callback: (connection: oracledb.Connection) => Promise<void>,
-): Promise<void> {
+  query: string,
+): Promise<OracleQueryResult> {
   let connection;
   try {
     setOracleClient(configService.get('ORACLE_INSTANT_CLIENT_DIR'));
@@ -18,9 +26,11 @@ export async function runOracleCallback(
         'localhost:1521/xe',
     });
     Logger.log('Successfully connected to Oracle');
-    await callback(connection);
+    const result = await connection.execute(query);
+    return { isError: false, rows: result?.rows || [], err: null };
   } catch (err) {
     Logger.error('Error connecting to Oracle:', err);
+    return { isError: true, rows: null, err };
   } finally {
     if (connection) {
       try {

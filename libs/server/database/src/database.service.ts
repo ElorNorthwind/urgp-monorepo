@@ -6,6 +6,7 @@ import {
   CasesRepository,
   ControlCasesRepository,
   DbExtensions,
+  DmRepository,
   EquityRepository,
   QuestionsRepository,
   RenovationRepository,
@@ -55,6 +56,7 @@ export class DatabaseService {
         obj.equity = new EquityRepository(obj, pgPromise());
         obj.vks = new VksRepository(obj, pgPromise());
         obj.sudir = new SudirRepository(obj, pgPromise());
+        obj.dm = new DmRepository(obj, pgPromise());
       },
     };
 

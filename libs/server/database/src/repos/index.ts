@@ -11,6 +11,7 @@ import { AddressRepository } from './address';
 import { EquityRepository } from './equity';
 import { VksRepository } from './vks';
 import { SudirRepository } from './sudir';
+import { DmRepository } from './dm';
 
 // Database Interface Extensions:
 interface DbExtensions {
@@ -27,6 +28,7 @@ interface DbExtensions {
   equity: EquityRepository;
   vks: VksRepository;
   sudir: SudirRepository;
+  dm: DmRepository;
 }
 
 export {
@@ -44,4 +46,5 @@ export {
   EquityRepository,
   VksRepository,
   SudirRepository,
+  DmRepository,
 };
