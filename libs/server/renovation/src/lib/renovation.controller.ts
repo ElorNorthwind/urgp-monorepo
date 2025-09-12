@@ -64,6 +64,7 @@ import {
   NestedClassificatorInfo,
   createManualDateSchema,
   CreateManualDateDto,
+  ApartmentCapstone,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
@@ -583,5 +584,10 @@ export class RenovationController {
   @Get('current-year-apartments-sankey')
   getCurrentYearApartmentsSankey(): Promise<SankeyData> {
     return this.renovation.getCurrentYearApartmentsSankey();
+  }
+
+  @Get('capstones/:id')
+  getApartmentCapstones(@Param('id') id: number): Promise<ApartmentCapstone[]> {
+    return this.renovation.getApartmentCapstones(id);
   }
 }

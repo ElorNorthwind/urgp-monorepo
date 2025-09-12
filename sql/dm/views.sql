@@ -3,6 +3,7 @@ DROP VIEW IF EXISTS dm.documents_view CASCADE;
 CREATE OR REPLACE VIEW dm.documents_view  AS
 ----------------------------------------------------------------------
     SELECT DISTINCT ON (r.control_date, r.document_id)
+        r.id,
         r.document_id as "id_documents",
         d.reg_num,
         r.control_date as "kontr_data",

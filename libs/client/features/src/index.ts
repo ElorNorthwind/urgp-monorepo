@@ -21,3 +21,5 @@ export * from './XMLFormFileInput';
 export * from './ExportToExcelButton';
 export * from './DateRangeSelectAdvanced';
 export * from './VksGradeDisqualifyToggle';
+export * from './ApartmentTimelineTab';
+export * from './ApartmentCapstonesTab';

@@ -108,3 +108,10 @@ export type ProblematicApartmentInfo = {
   apartNum: string;
   messages: Message[] | null;
 };
+
+export type ApartmentCapstone = {
+  id: number;
+  status: string;
+  planDate: Date;
+  doneDate: Date | null;
+};

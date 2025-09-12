@@ -46,6 +46,7 @@ import {
   Classificator,
   NestedClassificatorInfo,
   CreateManualDateDto,
+  ApartmentCapstone,
 } from '@urgp/shared/entities';
 
 import { renovation } from './sql/sql';
@@ -456,5 +457,9 @@ export class RenovationRepository {
   deleteManualDate(id: number): Promise<null> {
     const sql = 'DELETE FROM renovation.dates_buildings_old WHERE id = $1';
     return this.db.none(sql, [id]);
+  }
+
+  getApartmentCapstones(id: number): Promise<ApartmentCapstone[]> {
+    return this.db.any(renovation.apartmentCapstones, { id });
   }
 }

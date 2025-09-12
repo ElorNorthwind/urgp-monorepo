@@ -1,5 +1,6 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
+  ApartmentCapstone,
   GetOldAppartmentsDto,
   OldApartmentDetails,
   OldApartmentTimeline,
@@ -35,6 +36,13 @@ const oldApartmentsApi = rtkApi.injectEndpoints({
       }),
     }),
 
+    getOldApartmentCapstones: build.query<ApartmentCapstone[], number>({
+      query: (query) => ({
+        url: '/renovation/capstones/' + query.toString(),
+        methor: 'GET',
+      }),
+    }),
+
     getOldApartmentTimeline: build.query<OldApartmentTimeline[], number>({
       query: (query) => ({
         url: '/renovation/old-apartment-timeline/' + query.toString(),
@@ -64,4 +72,5 @@ export const {
   useGetOldApartmentTimelineQuery: useOldApartmentTimeline,
   useGetOldApartmentDetailsQuery: useOldApartmentDetails,
   useGetProblematicApartmentsQuery: useProblematicApartments,
+  useGetOldApartmentCapstonesQuery: useOldApartmentCapstones,
 } = oldApartmentsApi;
