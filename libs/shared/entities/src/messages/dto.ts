@@ -51,6 +51,7 @@ export const messagesUnanswered = z.coerce
 
 export const messagesPageSearch = z.object({
   tab: z.literal('my').or(z.literal('boss')).or(z.literal('all')).optional(),
+  author: z.coerce.string().optional(),
   message: z.coerce.number().nullable().optional(),
 });
 

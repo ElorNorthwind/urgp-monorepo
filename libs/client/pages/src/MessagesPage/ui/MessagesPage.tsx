@@ -1,6 +1,7 @@
 import {
   unansweredMessagesColumns,
   useUnansweredMessages,
+  vksCasesGlobalFilterFn,
 } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import {
@@ -15,9 +16,13 @@ import {
 import { useSelector } from 'react-redux';
 import { MessagesPageSearch } from '@urgp/shared/entities';
 import { OldApartmentDetailsSheet } from '@urgp/client/widgets';
+import { renovationMessagesFilterFn } from '../lib/messagesPageFilterFn';
+import { AuthorFilter } from './AuthorFilter';
 
 const MessagesPage = (): JSX.Element => {
-  const { tab, message } = getRouteApi('/renovation/messages').useSearch();
+  const { tab, message, author } = getRouteApi(
+    '/renovation/messages',
+  ).useSearch();
   const user = useSelector(selectCurrentUser);
 
   const query = tab === 'boss' ? 'boss' : tab === 'all' ? 'all' : user?.id || 0;
@@ -50,6 +55,7 @@ const MessagesPage = (): JSX.Element => {
             }}
           >
             <TabsList className={cn('grid w-full grid-flow-col')}>
+              <AuthorFilter className="ml-auto mr-2 h-8 w-60" />
               <TabsTrigger value="my">Мои вопросы</TabsTrigger>
               {user && !user.roles.includes('boss') && (
                 <TabsTrigger value="boss">Вопросы руководителя</TabsTrigger>
@@ -63,8 +69,10 @@ const MessagesPage = (): JSX.Element => {
             </TabsList>
           </Tabs>
         </div>
-        <p className="text-muted-foreground">
-          Список сообщений, требующих ответа
+        <p className="text-muted-foreground flex flex-row">
+          <span className="flex-shrink-0">
+            Список сообщений, требующих ответа
+          </span>
         </p>
       </div>
 
@@ -85,6 +93,9 @@ const MessagesPage = (): JSX.Element => {
           data={messages || []}
           isFetching={isLoading || isFetching}
           totalCount={messages?.length ?? 0}
+          clientSide
+          globalFilter={{ author }}
+          globalFilterFn={renovationMessagesFilterFn}
           enableMultiRowSelection={false}
           onRowClick={(row) => {
             row.toggleSelected();
