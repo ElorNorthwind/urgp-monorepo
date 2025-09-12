@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-// import * as pgPromise from 'pg-promise';
 import pgPromise from 'pg-promise';
-import { DbExtensions, VksRepository } from './repos';
+import { DbExtensions, DmRepository, VksRepository } from './repos';
 
 type ExtendedProtocol = pgPromise.IDatabase<DbExtensions> & DbExtensions;
 
@@ -22,6 +21,7 @@ export class DgiAnalyticsService {
     const initOptions = {
       extend(obj: ExtendedProtocol, dc: any) {
         obj.vks = new VksRepository(obj, pgPromise());
+        obj.dm = new DmRepository(obj, pgPromise());
       },
     };
 

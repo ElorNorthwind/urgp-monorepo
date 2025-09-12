@@ -1,53 +1,96 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DatabaseService } from '@urgp/server/database';
 import { getDmShortTermQuery } from './util/getDmShortTermQuery';
 import { formatDmRows } from './util/formatDmRows';
-import { runOracleQuery } from './util/runOracleQuery';
 import {
   DmDateRangeQuery,
   dmDateRangeQuerySchema,
 } from '@urgp/shared/entities';
 import { getDmLongTermQuery } from './util/getDmLongTermQuery';
 import { getDmIdsQuery } from './util/getDmIdsQuery';
-import { runOracleCallback } from './util/runOracleCallback';
 import { generateDateRanges } from './util/generateDateRanges';
-import { toDate } from 'date-fns';
+import * as oracledb from 'oracledb';
+import { DgiAnalyticsService } from '@urgp/server/dgi-analytics';
+import { getDmAllUndoneQuery } from './util/getDmAllUndoneQuery';
 
 @Injectable()
 export class DmService {
   constructor(
-    private readonly dbServise: DatabaseService,
+    private readonly analytics: DgiAnalyticsService,
     private configService: ConfigService,
+    @Inject('ORACLE_DB_POOL') private readonly pool: oracledb.Pool,
   ) {}
+
+  private async executeQuery(
+    sql: string,
+    binds: any = {},
+    options: oracledb.ExecuteOptions = {
+      // outFormat: oracledb.OUT_FORMAT_OBJECT,
+    },
+  ): Promise<oracledb.Result<any>> {
+    let connection: oracledb.Connection | undefined;
+    try {
+      connection = await this.pool.getConnection();
+      return connection.execute(sql, binds, options);
+    } finally {
+      if (connection) {
+        await connection.close();
+      }
+    }
+  }
+  private async executeCallback(
+    callback: (connection: oracledb.Connection) => Promise<void>,
+  ): Promise<void> {
+    let connection: oracledb.Connection | undefined;
+    try {
+      connection = await this.pool.getConnection();
+      await callback(connection);
+    } finally {
+      if (connection) {
+        await connection.close();
+      }
+    }
+  }
 
   public async addDmShortTermRecords(q?: DmDateRangeQuery): Promise<number> {
     const query = getDmShortTermQuery(q);
-    const result = await runOracleQuery(this.configService, query);
-    if (result?.isError) return result?.err;
+    const result = await this.executeQuery(query);
     const formatedRows = formatDmRows(result?.rows as unknown[][]);
-    await this.dbServise.db.dm.insertDmData(formatedRows);
+    await this.analytics.db.dm.insertDmData(formatedRows);
     return formatedRows?.length || 0;
   }
 
   public async addDmLongTermRecords(q: DmDateRangeQuery): Promise<number> {
     const range = dmDateRangeQuerySchema.required().parse(q);
     let count = 0;
-    await runOracleCallback(this.configService, async (connection) => {
+    await this.executeCallback(async (connection) => {
       const chunks = generateDateRanges(range.from, range.to, 10);
 
       for (const chunk of chunks) {
+        this.configService.get<string>('NODE_ENV') === 'development' &&
+          Logger.log(`${chunk.from} - ${chunk.to}`);
         const found = await connection.execute(getDmLongTermQuery(chunk));
+        await this.analytics.db.dm.insertDmData(
+          formatDmRows(found?.rows as unknown[][]),
+        );
         count += found?.rows?.length || 0;
       }
     });
     return count;
   }
 
-  public async updateActiveResolutions(): Promise<number> {
-    const resolutions = await this.dbServise.db.dm.getActiveResolutions();
+  public async addDmAllUndoneResolutions(): Promise<number> {
+    const query = getDmAllUndoneQuery();
+    const result = await this.executeQuery(query);
+    const formatedRows = formatDmRows(result?.rows as unknown[][]);
+    await this.analytics.db.dm.insertDmData(formatedRows);
+    return formatedRows?.length || 0;
+  }
 
-    await runOracleCallback(this.configService, async (connection) => {
+  public async updateActiveResolutions(): Promise<number> {
+    const resolutions = await this.analytics.db.dm.getActiveResolutions();
+
+    await this.executeCallback(async (connection) => {
       const chunkSize = 900;
       let i = 0;
       while (i < resolutions.length) {

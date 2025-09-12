@@ -23,7 +23,7 @@ import { RsmModule } from '@urgp/server/rsm';
 import { SudirModule } from '@urgp/server/sudir';
 import { TelegramModule } from '@urgp/server/telegram';
 import { ClsModule } from 'nestjs-cls';
-import { DgiAnalyticseModule } from '@urgp/server/dgi-analytics';
+import { DgiAnalyticsModule } from '@urgp/server/dgi-analytics';
 import { DmModule } from '@urgp/server/dm';
 
 @Module({
@@ -66,7 +66,7 @@ import { DmModule } from '@urgp/server/dm';
 
     SudirModule,
     VksModule,
-    DgiAnalyticseModule,
+    DgiAnalyticsModule,
     DmModule,
   ],
 })

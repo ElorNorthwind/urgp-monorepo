@@ -20,6 +20,11 @@ export class DmController {
   UpdateActiveResolutions(): Promise<number> {
     return this.dm.updateActiveResolutions();
   }
+
+  @Get('all-undone')
+  GetAllUndoneResolutions(): Promise<number> {
+    return this.dm.addDmAllUndoneResolutions();
+  }
 }
 
 // @Get('/users')

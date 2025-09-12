@@ -6,7 +6,7 @@ import { DgiAnalyticsService } from './dgi-analytics.service';
   providers: [DgiAnalyticsService],
   exports: [DgiAnalyticsService],
 })
-export class DgiAnalyticseModule {}
+export class DgiAnalyticsModule {}
 
 // @Module({
 //     imports: [EdoApiModule],
