@@ -21,7 +21,7 @@ import { DgiAnalyticsModule } from '@urgp/server/dgi-analytics';
           clientOpts = {
             libDir:
               configService.get('ORACLE_INSTANT_CLIENT_DIR') ||
-              'C:\\oracle\\instantclient_23_5',
+              'C:\\oracle\\instantclient_23_9',
           };
         } else if (process.platform === 'darwin' && process.arch === 'arm64') {
           // macOS ARM64
@@ -57,7 +57,7 @@ import { DgiAnalyticsModule } from '@urgp/server/dgi-analytics';
 })
 export class DmModule implements OnModuleDestroy {
   async onModuleDestroy() {
-    await oracledb.getPool().close();
+    await oracledb.getPool().close(10);
     Logger.log('Oracle connection pool closed.');
   }
 }

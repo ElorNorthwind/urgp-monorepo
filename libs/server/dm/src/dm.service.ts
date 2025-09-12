@@ -12,6 +12,7 @@ import { generateDateRanges } from './util/generateDateRanges';
 import * as oracledb from 'oracledb';
 import { DgiAnalyticsService } from '@urgp/server/dgi-analytics';
 import { getDmAllUndoneQuery } from './util/getDmAllUndoneQuery';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class DmService {
@@ -54,6 +55,7 @@ export class DmService {
 
   public async addDmShortTermRecords(q?: DmDateRangeQuery): Promise<number> {
     const query = getDmShortTermQuery(q);
+    Logger.log('Executing DM short-term Records query');
     const result = await this.executeQuery(query);
     const formatedRows = formatDmRows(result?.rows as unknown[][]);
     await this.analytics.db.dm.insertDmData(formatedRows);
@@ -94,6 +96,7 @@ export class DmService {
       const chunkSize = 900;
       let i = 0;
       while (i < resolutions.length) {
+        Logger.log('Executing DM update for active resolutions, count: ' + i);
         const chunk = resolutions.slice(i, i + chunkSize);
         await connection.execute(getDmIdsQuery(chunk));
         i += chunkSize;
@@ -101,5 +104,14 @@ export class DmService {
     });
 
     return resolutions?.length || 0;
+  }
+  @Cron('0 0 5 * * *')
+  public async updateDailyRecords(): Promise<number> {
+    Logger.log('DM daily update started');
+    let count = 0;
+    count += (await this.addDmShortTermRecords()) || 0;
+    count += (await this.addDmAllUndoneResolutions()) || 0;
+    Logger.log('DM daily update finished');
+    return count;
   }
 }
