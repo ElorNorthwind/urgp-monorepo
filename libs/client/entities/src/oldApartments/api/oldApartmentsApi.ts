@@ -2,6 +2,7 @@ import { rtkApi } from '@urgp/client/shared';
 import {
   ApartmentCapstone,
   GetOldAppartmentsDto,
+  NestedClassificatorInfo,
   OldApartmentDetails,
   OldApartmentTimeline,
   OldAppartment,
@@ -61,6 +62,15 @@ const oldApartmentsApi = rtkApi.injectEndpoints({
         methor: 'GET',
       }),
     }),
+    getApartmentStageClassificator: build.query<
+      NestedClassificatorInfo[],
+      void
+    >({
+      query: () => ({
+        url: '/renovation/old-apartment/stage-classificator/',
+        methor: 'GET',
+      }),
+    }),
   }),
 
   overrideExisting: false,
@@ -73,4 +83,5 @@ export const {
   useGetOldApartmentDetailsQuery: useOldApartmentDetails,
   useGetProblematicApartmentsQuery: useProblematicApartments,
   useGetOldApartmentCapstonesQuery: useOldApartmentCapstones,
+  useGetApartmentStageClassificatorQuery: useApartmentStageClassificator,
 } = oldApartmentsApi;

@@ -18,6 +18,7 @@ import {
 import { useMemo } from 'react';
 import { areas } from '../../OldBuildingsFilter/config/areas';
 import { useOldBuildingList } from '@urgp/client/entities';
+import { OldApartmentStageFilter } from './StageFilter';
 
 export const relocationDeviations = [
   {
@@ -159,10 +160,15 @@ const OldApartmentFilter = ({
           })
         }
       />
+
+      <OldApartmentStageFilter filters={filters} setFilters={setFilters} />
+
       {(filters?.okrugs ||
         filters?.districts ||
         filters?.buildingIds ||
-        filters?.fio) && (
+        filters?.fio ||
+        filters?.deviation ||
+        filters?.stage) && (
         <Button
           variant="ghost"
           onClick={() =>
@@ -171,6 +177,8 @@ const OldApartmentFilter = ({
               districts: undefined,
               buildingIds: undefined,
               fio: undefined,
+              deviation: undefined,
+              stage: undefined,
             })
           }
           className="h-8 px-2 lg:px-3"

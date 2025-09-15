@@ -590,4 +590,9 @@ export class RenovationController {
   getApartmentCapstones(@Param('id') id: number): Promise<ApartmentCapstone[]> {
     return this.renovation.getApartmentCapstones(id);
   }
+
+  @Get('old-apartment/stage-classificator')
+  getOldApartmentStageClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.renovation.getApartmentStageClassificator();
+  }
 }

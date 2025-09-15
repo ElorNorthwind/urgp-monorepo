@@ -1,6 +1,25 @@
 import { z } from 'zod';
 import { getOldBuldings } from '../oldBuildings/dto';
 
+const queryNumberArray = z
+  .string()
+  .transform((value) => value.split(','))
+  .pipe(
+    z.array(
+      z
+        .string()
+        .transform((value) => Number(value))
+        .pipe(z.number()),
+    ),
+  )
+  .or(z.number().array());
+
+const queryStringArray = z
+  .string()
+  .transform((value) => value.split(','))
+  .pipe(z.string().array())
+  .or(z.string().array());
+
 export const getOldApartments = getOldBuldings
   .pick({
     limit: true,
@@ -16,6 +35,7 @@ export const getOldApartments = getOldBuldings
       .transform((value) => value.split(','))
       .pipe(z.coerce.number().array())
       .or(z.coerce.number().array()),
+    stage: queryNumberArray.optional(),
   })
   .partial();
 
@@ -23,6 +43,7 @@ export const oldApartmetsSearch = getOldApartments
   .omit({ offset: true })
   .extend({
     apartment: z.coerce.number().nullable().optional(),
+    stage: queryNumberArray.optional(),
   });
 
 export type GetOldAppartmentsDto = z.infer<typeof getOldApartments>;

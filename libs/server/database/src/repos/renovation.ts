@@ -149,6 +149,7 @@ export class RenovationRepository {
       buildingIds,
       fio,
       deviation,
+      stage,
     } = dto;
     const where = [];
     if (okrugs) {
@@ -163,6 +164,11 @@ export class RenovationRepository {
     if (deviation) {
       where.push(
         `classificator->>'deviation' = ANY(ARRAY['${deviation.join("','")}'])`,
+      );
+    }
+    if (stage) {
+      where.push(
+        `classificator->>'stageId' = ANY(ARRAY['${stage.join("','")}'])`,
       );
     }
     if (fio && fio.length > 0) {
@@ -461,5 +467,9 @@ export class RenovationRepository {
 
   getApartmentCapstones(id: number): Promise<ApartmentCapstone[]> {
     return this.db.any(renovation.apartmentCapstones, { id });
+  }
+
+  getApartmentStageClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.db.any(renovation.apartmentStageClassificator);
   }
 }

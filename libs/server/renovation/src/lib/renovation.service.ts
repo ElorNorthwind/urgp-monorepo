@@ -271,4 +271,10 @@ export class RenovationService {
   public async getApartmentCapstones(id: number): Promise<ApartmentCapstone[]> {
     return this.dbServise.db.renovation.getApartmentCapstones(id);
   }
+
+  public async getApartmentStageClassificator(): Promise<
+    NestedClassificatorInfo[]
+  > {
+    return this.dbServise.db.renovation.getApartmentStageClassificator();
+  }
 }

@@ -59,6 +59,9 @@ export const renovation = {
   ),
   manualDatesByBuildingId: sql('sql/renovation/manualDatesByBuildingId.sql'),
   apartmentCapstones: sql('sql/renovation/apartmentCapstones.sql'),
+  apartmentStageClassificator: sql(
+    'sql/renovation/apartmentStageClassificator.sql',
+  ),
 };
 
 export const users = {
