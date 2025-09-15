@@ -150,6 +150,8 @@ export class RenovationRepository {
       fio,
       deviation,
       stage,
+      relocationStatus,
+      relocationType,
     } = dto;
     const where = [];
     if (okrugs) {
@@ -169,6 +171,22 @@ export class RenovationRepository {
     if (stage) {
       where.push(
         `classificator->>'stageId' = ANY(ARRAY['${stage.join("','")}'])`,
+      );
+    }
+    if (relocationStatus) {
+      where.push(
+        `CASE
+            WHEN (b.terms->'actual'->>'demolitionEnd')::date IS NOT NULL THEN 'Завершено'
+            WHEN (b.terms->'actual'->>'secontResetlementEnd')::date IS NOT NULL THEN 'Снос'
+            WHEN (b.terms->'actual'->>'firstResetlementEnd')::date IS NOT NULL THEN 'Отселение'
+            WHEN (b.terms->'actual'->>'firstResetlementStart')::date IS NULL THEN 'Не начато'
+            ELSE 'Переселение'
+	      END = ANY(ARRAY['${relocationStatus.join("','")}'])`,
+      );
+    }
+    if (relocationType) {
+      where.push(
+        `COALESCE(b.manual_relocation_type, b.relocation_type) = ANY(ARRAY[${relocationType.join(',')}])`,
       );
     }
     if (fio && fio.length > 0) {

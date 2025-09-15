@@ -6,7 +6,11 @@ import {
   NestedFacetFilter,
   Skeleton,
 } from '@urgp/client/shared';
-import { GetOldBuldingsDto, OldApartmentSearch } from '@urgp/shared/entities';
+import {
+  GetOldBuldingsDto,
+  OldApartmentSearch,
+  OldAppartment,
+} from '@urgp/shared/entities';
 import {
   CircleAlert,
   CircleCheck,
@@ -17,7 +21,11 @@ import {
 } from 'lucide-react';
 import { useMemo } from 'react';
 import { areas } from '../../OldBuildingsFilter/config/areas';
-import { useOldBuildingList } from '@urgp/client/entities';
+import {
+  relocationStatus,
+  relocationTypes,
+  useOldBuildingList,
+} from '@urgp/client/entities';
 import { OldApartmentStageFilter } from './StageFilter';
 
 export const relocationDeviations = [
@@ -56,11 +64,13 @@ export const relocationDeviations = [
 type OldApartmentFilterProps = {
   filters: OldApartmentSearch;
   setFilters: (value: Partial<OldApartmentSearch>) => void;
+  apartments: OldAppartment[] | undefined;
 };
 
 const OldApartmentFilter = ({
   filters,
   setFilters,
+  apartments,
 }: OldApartmentFilterProps): JSX.Element => {
   const filteredAreas = useMemo(() => {
     return areas.filter((area) =>
@@ -135,6 +145,30 @@ const OldApartmentFilter = ({
           })
         }
       />
+
+      <FacetFilter
+        options={relocationTypes}
+        title={'Тип переселения'}
+        noSearch
+        selectedValues={filters.relocationType}
+        setSelectedValues={(value) =>
+          setFilters({
+            relocationType: value && value.length > 0 ? value : undefined,
+          })
+        }
+      />
+
+      <FacetFilter
+        options={relocationStatus}
+        title={'Статус дома'}
+        selectedValues={filters.relocationStatus}
+        setSelectedValues={(value) =>
+          setFilters({
+            relocationStatus: value && value.length > 0 ? value : undefined,
+          })
+        }
+      />
+
       {isAdressListLoading ? (
         <Skeleton className="h-8 w-28" />
       ) : (
@@ -161,14 +195,20 @@ const OldApartmentFilter = ({
         }
       />
 
-      <OldApartmentStageFilter filters={filters} setFilters={setFilters} />
+      <OldApartmentStageFilter
+        filters={filters}
+        setFilters={setFilters}
+        apartments={apartments}
+      />
 
       {(filters?.okrugs ||
         filters?.districts ||
         filters?.buildingIds ||
         filters?.fio ||
         filters?.deviation ||
-        filters?.stage) && (
+        filters?.stage ||
+        filters?.relocationStatus ||
+        filters?.relocationType) && (
         <Button
           variant="ghost"
           onClick={() =>
@@ -179,6 +219,8 @@ const OldApartmentFilter = ({
               fio: undefined,
               deviation: undefined,
               stage: undefined,
+              relocationStatus: undefined,
+              relocationType: undefined,
             })
           }
           className="h-8 px-2 lg:px-3"

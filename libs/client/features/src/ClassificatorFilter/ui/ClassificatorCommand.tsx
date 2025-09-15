@@ -32,6 +32,7 @@ const ClassificatorCommand = forwardRef<
         category?: string;
         fullname?: string;
         tags?: string[];
+        count?: number;
       }[];
     }
 >((props, ref) => {
@@ -183,6 +184,14 @@ const ClassificatorCommand = forwardRef<
                       <ValueIcon
                         className={cn('ml-auto', iconClassName, iconStyle)}
                       />
+                    )}
+                    {option.count !== undefined && option.count > 0 && (
+                      <Badge
+                        variant="secondary"
+                        className="border-muted-foreground/10 ml-2 rounded-sm px-1 font-normal"
+                      >
+                        {option.count}
+                      </Badge>
                     )}
                   </CommandItem>
                 );

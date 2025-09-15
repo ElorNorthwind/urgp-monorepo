@@ -55,7 +55,11 @@ const OldApartmentsPage = (): JSX.Element => {
   return (
     <>
       <div className="flex w-full flex-row justify-start pr-2">
-        <OldApartmentFilter filters={filters} setFilters={setFilters} />
+        <OldApartmentFilter
+          filters={filters}
+          setFilters={setFilters}
+          apartments={apartments}
+        />
         <LoadedResultCounter
           currentCount={apartments?.length}
           totalCount={apartments?.[0]?.totalCount}

@@ -16,6 +16,8 @@ export type OldAppartment = {
   classificator: OldApartmentClassificator;
   messagesCount: number;
   totalCount: number;
+  // buildingDeviation: string;
+  // buildingRelocationStatus: string;
 };
 
 export type OldApartmentTimeline = {

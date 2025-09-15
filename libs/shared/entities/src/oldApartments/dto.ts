@@ -27,6 +27,8 @@ export const getOldApartments = getOldBuldings
     okrugs: true,
     districts: true,
     deviation: true,
+    relocationType: true,
+    relocationStatus: true,
   })
   .extend({
     fio: z.string().optional(),

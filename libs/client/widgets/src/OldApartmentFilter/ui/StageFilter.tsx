@@ -6,9 +6,14 @@ import {
 } from '@urgp/client/entities';
 import { ClassificatorFilter } from '@urgp/client/features';
 import { CaseRoutes, cn } from '@urgp/client/shared';
-import { CasesPageSearchDto, OldApartmentSearch } from '@urgp/shared/entities';
+import {
+  CasesPageSearchDto,
+  OldApartmentSearch,
+  OldAppartment,
+} from '@urgp/shared/entities';
 
 type OldApartmentStageFilterProps = {
+  apartments: OldAppartment[] | undefined;
   variant?: 'popover' | 'checkbox' | 'accordion';
   className?: string;
   accordionItemValue?: string;
@@ -20,6 +25,7 @@ const OldApartmentStageFilter = (
   props: OldApartmentStageFilterProps,
 ): JSX.Element => {
   const {
+    apartments,
     className,
     variant = 'popover',
     accordionItemValue = 'stage',
@@ -32,10 +38,14 @@ const OldApartmentStageFilter = (
     <ClassificatorFilter
       label="Этапы работы"
       className={cn('', className)}
-      popoverClassName="max-h-96 w-96"
+      popoverClassName="w-96"
       variant={variant}
       isLoading={isLoading || isFetching}
       options={data || []}
+      // countValue={(value) =>
+      //   apartments?.filter((a) => a?.classificator?.stageId === value).length ||
+      //   0
+      // }
       // valueStyles={caseStatusStyles}
       selectedValues={filters.stage}
       iconClassName="size-5"
