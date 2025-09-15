@@ -29,6 +29,7 @@ export const getOldApartments = getOldBuldings
     deviation: true,
     relocationType: true,
     relocationStatus: true,
+    relocationAge: true,
   })
   .extend({
     fio: z.string().optional(),

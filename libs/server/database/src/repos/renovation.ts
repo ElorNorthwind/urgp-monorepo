@@ -152,6 +152,7 @@ export class RenovationRepository {
       stage,
       relocationStatus,
       relocationType,
+      relocationAge,
     } = dto;
     const where = [];
     if (okrugs) {
@@ -187,6 +188,19 @@ export class RenovationRepository {
     if (relocationType) {
       where.push(
         `COALESCE(b.manual_relocation_type, b.relocation_type) = ANY(ARRAY[${relocationType.join(',')}])`,
+      );
+    }
+
+    if (relocationAge) {
+      where.push(
+        `CASE
+            WHEN (b.terms->'actual'->>'firstResetlementStart')::date IS NULL THEN 'Не начато'
+            WHEN COALESCE((b.terms->>'doneDate')::date, NOW()) - (b.terms->'actual'->>'firstResetlementStart')::date < '1 month' THEN 'Менее месяца'
+            WHEN COALESCE((b.terms->>'doneDate')::date, NOW()) - (b.terms->'actual'->>'firstResetlementStart')::date < '2 month' THEN 'От 1 до 2 месяцев'
+            WHEN COALESCE((b.terms->>'doneDate')::date, NOW()) - (b.terms->'actual'->>'firstResetlementStart')::date < '5 month' THEN 'От 2 до 5 месяцев'
+            WHEN COALESCE((b.terms->>'doneDate')::date, NOW()) - (b.terms->'actual'->>'firstResetlementStart')::date < '8 month' THEN 'От 5 до 8 месяцев'
+            ELSE 'Более 8 месяцев'
+        END = ANY(ARRAY['${relocationAge.join("','")}'])`,
       );
     }
     if (fio && fio.length > 0) {

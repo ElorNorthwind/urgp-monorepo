@@ -22,6 +22,7 @@ import {
 import { useMemo } from 'react';
 import { areas } from '../../OldBuildingsFilter/config/areas';
 import {
+  relocationAge,
   relocationStatus,
   relocationTypes,
   useOldBuildingList,
@@ -169,6 +170,17 @@ const OldApartmentFilter = ({
         }
       />
 
+      <FacetFilter
+        options={relocationAge}
+        title={'Срок переселения дома'}
+        selectedValues={filters.relocationAge}
+        setSelectedValues={(value) =>
+          setFilters({
+            relocationAge: value && value.length > 0 ? value : undefined,
+          })
+        }
+      />
+
       {isAdressListLoading ? (
         <Skeleton className="h-8 w-28" />
       ) : (
@@ -208,7 +220,8 @@ const OldApartmentFilter = ({
         filters?.deviation ||
         filters?.stage ||
         filters?.relocationStatus ||
-        filters?.relocationType) && (
+        filters?.relocationType ||
+        filters?.relocationAge) && (
         <Button
           variant="ghost"
           onClick={() =>
@@ -221,6 +234,7 @@ const OldApartmentFilter = ({
               stage: undefined,
               relocationStatus: undefined,
               relocationType: undefined,
+              relocationAge: undefined,
             })
           }
           className="h-8 px-2 lg:px-3"
