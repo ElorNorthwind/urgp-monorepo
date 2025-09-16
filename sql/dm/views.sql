@@ -19,6 +19,6 @@ CREATE OR REPLACE VIEW dm.documents_view  AS
     LEFT JOIN dm.categories c ON d.category_id = c.id
     LEFT JOIN dm.departments dep ON c.department_id = dep.id
     LEFT JOIN dm.zams z ON dep.zam_id = z.id
-    WHERE NOT(r.done_date IS NULL AND r.control_date < '01.01.2019'::timestamp with time zone)
+    WHERE r.control_date >= '01.01.2025'::timestamp with time zone
     ORDER BY control_date DESC;
   ----------------------------------------------------------------------
