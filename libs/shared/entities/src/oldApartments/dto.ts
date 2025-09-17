@@ -38,6 +38,11 @@ export const getOldApartments = getOldBuldings
       .transform((value) => value.split(','))
       .pipe(z.coerce.number().array())
       .or(z.coerce.number().array()),
+    buildingDeviation: z
+      .string()
+      .transform((value) => value.split(','))
+      .pipe(z.string().array())
+      .or(z.string().array()),
     stage: queryNumberArray.optional(),
   })
   .partial();

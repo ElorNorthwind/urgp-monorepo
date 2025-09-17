@@ -1,15 +1,15 @@
-WITH apartment_totals AS (
-    SELECT 
-        building_id,
-        COUNT(*) as total,
-        COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Работа завершена'::varchar) as done,
-        COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'В работе у МФР'::varchar) as mfr,
-        COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Без отклонений'::varchar) as none,
-        COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Риск'::varchar) as risk,
-        COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Требует внимания'::varchar) as attention
-        FROM renovation.apartments_old_temp
-    GROUP BY building_id
-)
+-- WITH apartment_totals AS (
+--     SELECT 
+--         building_id,
+--         COUNT(*) as total,
+--         COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Работа завершена'::varchar) as done,
+--         COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'В работе у МФР'::varchar) as mfr,
+--         COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Без отклонений'::varchar) as none,
+--         COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Риск'::varchar) as risk,
+--         COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Требует внимания'::varchar) as attention
+--         FROM renovation.apartments_old_temp
+--     GROUP BY building_id
+-- )
 SELECT 
 	a.id as "apartmentId", 
 	a.id as "buildingId",
@@ -50,6 +50,7 @@ FROM (SELECT
     FROM renovation.apartments_old_temp) a
     LEFT JOIN renovation.buildings_old b ON a.building_id = b.id
     LEFT JOIN (SELECT apartment_id, COUNT(*) as messages_count FROM renovation.messages WHERE (message_payload->-1->>'deleted')::boolean IS DISTINCT FROM true AND apartment_id IS NOT NULL GROUP BY apartment_id) m ON a.id = m.apartment_id
+    -- LEFT JOIN apartment_totals at ON a.building_id = at.building_id
 ${conditions:raw}
 ORDER BY adress, apart_npp
 LIMIT ${limit} OFFSET ${offset};

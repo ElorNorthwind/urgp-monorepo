@@ -31,6 +31,7 @@ import {
   CircleMinus,
   CirclePlay,
   CirclePlus,
+  CircleQuestionMark,
   CircleUser,
   CircleUserRound,
   Construction,
@@ -162,6 +163,11 @@ export const equityObjectStatusStyles = {
     icon: ShieldCheck,
     iconStyle: cn('text-blue-500'),
     chartColor: '#3b82f6',
+  },
+  6: {
+    icon: CircleQuestionMark,
+    iconStyle: cn('text-stone-500'),
+    chartColor: '#78716c',
   },
 } as Record<number, StyleData>;
 

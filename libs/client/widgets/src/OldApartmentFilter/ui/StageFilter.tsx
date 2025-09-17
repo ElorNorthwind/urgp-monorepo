@@ -49,7 +49,6 @@ const OldApartmentStageFilter = (
       // valueStyles={caseStatusStyles}
       selectedValues={filters.stage}
       iconClassName="size-5"
-      shortBadge
       setSelectedValues={(values) =>
         setFilters({
           stage: values.length > 0 ? values : undefined,

@@ -181,6 +181,17 @@ const OldApartmentFilter = ({
         }
       />
 
+      {/* <FacetFilter
+        options={relocationDeviations}
+        title={'Отклонение по дому'}
+        selectedValues={filters.buildingDeviation}
+        setSelectedValues={(value) =>
+          setFilters({
+            buildingDeviation: value && value.length > 0 ? value : undefined,
+          })
+        }
+      /> */}
+
       {isAdressListLoading ? (
         <Skeleton className="h-8 w-28" />
       ) : (
@@ -221,7 +232,8 @@ const OldApartmentFilter = ({
         filters?.stage ||
         filters?.relocationStatus ||
         filters?.relocationType ||
-        filters?.relocationAge) && (
+        filters?.relocationAge ||
+        filters?.buildingDeviation) && (
         <Button
           variant="ghost"
           onClick={() =>
@@ -235,6 +247,7 @@ const OldApartmentFilter = ({
               relocationStatus: undefined,
               relocationType: undefined,
               relocationAge: undefined,
+              buildingDeviation: undefined,
             })
           }
           className="h-8 px-2 lg:px-3"

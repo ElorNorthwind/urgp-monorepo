@@ -92,7 +92,7 @@ function ClassificatorFilter<TValue extends string | number>(
   const [open, setOpen] = useState(false);
 
   if (isLoading) {
-    return <Skeleton className={cn('h-10 w-full', className)} />;
+    return <Skeleton className={cn('h-10 w-24', className)} />;
   }
 
   if (variant === 'checkbox') {
