@@ -45,6 +45,10 @@ const chartConfig = {
     label: 'Анкета не заполнена',
     color: 'hsl(var(--chart-1))',
   },
+  notneeded: {
+    label: 'Заполнение не требуется',
+    color: '#9ca3af',
+  },
 } satisfies ChartConfig;
 
 type ChartProps = {
@@ -114,19 +118,63 @@ const VksDepartmentSurveyedChart = ({ className }: ChartProps): JSX.Element => {
               {renderRechartsTooltip({
                 config: chartConfig,
                 cursor: true,
+                labelWidth: '14rem',
               })}
               {renderRechartsStackedBar({
                 config: chartConfig,
                 data,
-                onClick: (data) => {
-                  navigate({
-                    to: './cases',
-                    search: {
-                      department: [data.id],
-                      dateFrom: search.dateFrom,
-                      dateTo: search.dateTo,
-                    },
-                  });
+                onClick: (data, index, status) => {
+                  switch (status) {
+                    case 'surveyed':
+                      navigate({
+                        to: './cases',
+                        search: {
+                          department: [data.id],
+                          operatorSurvey: [1],
+                          dateFrom: search.dateFrom,
+                          dateTo: search.dateTo,
+                        },
+                      });
+                      break;
+                    case 'unsurveyed':
+                      navigate({
+                        to: './cases',
+                        search: {
+                          department: [data.id],
+                          operatorSurvey: [0],
+                          status: ['обслужен'],
+                          dateFrom: search.dateFrom,
+                          dateTo: search.dateTo,
+                        },
+                      });
+                      break;
+                    case 'notneeded':
+                      navigate({
+                        to: './cases',
+                        search: {
+                          department: [data.id],
+                          operatorSurvey: [0],
+                          status: [
+                            'отменено ОИВ',
+                            'талон не был взят',
+                            'отменено пользователем',
+                            'забронировано',
+                            'не явился по вызову',
+                          ],
+                          dateFrom: search.dateFrom,
+                          dateTo: search.dateTo,
+                        },
+                      });
+                      break;
+                  }
+                  // navigate({
+                  //   to: './cases',
+                  //   search: {
+                  //     department: [data.id],
+                  //     dateFrom: search.dateFrom,
+                  //     dateTo: search.dateTo,
+                  //   },
+                  // });
                 },
               })}
             </BarChart>

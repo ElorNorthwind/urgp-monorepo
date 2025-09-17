@@ -1,17 +1,16 @@
+import { getRouteApi, useLocation } from '@tanstack/react-router';
 import { ScrollArea, Separator } from '@urgp/client/shared';
-import { Construction } from 'lucide-react';
-import { VksTimelineChart } from './cards/VksTImeline';
 import {
   VksCasesDateFilter,
   VksCasesResetFilter,
   VksDepartmentFilter,
 } from '@urgp/client/widgets';
-import { VksDepartmentSurveyedChart } from './cards/VksDetartmentSurveyedChart';
-import { VksDepartmentGradeChart } from './cards/VksDetartmentGradeChart';
-import { VksServiceChart } from './cards/VksServiceChart';
-import { getRouteApi, useLocation } from '@tanstack/react-router';
 import { VksDashbordPageSearch } from '@urgp/shared/entities';
+import { VksDepartmentGradeChart } from './cards/VksDetartmentGradeChart';
+import { VksDepartmentSurveyedChart } from './cards/VksDetartmentSurveyedChart';
+import { VksServiceChart } from './cards/VksServiceChart';
 import { VksStatusChart } from './cards/VksStatusChart';
+import { VksTimelineChart } from './cards/VksTImeline';
 
 const VksDashboardPage = (): JSX.Element => {
   const pathname = useLocation().pathname;

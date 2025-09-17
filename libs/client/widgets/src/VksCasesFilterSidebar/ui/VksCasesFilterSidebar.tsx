@@ -22,6 +22,7 @@ import { VksServiceFilter } from './filterInputs/VksServiceFilter';
 import { VksCaseGradeFilter } from './filterInputs/VksCaseGradeFilter';
 import { VksCasesOperatorFilter } from './filterInputs/VksCasesOperatorFilter';
 import { VksConsultationTypeFilter } from './filterInputs/VksConsultationTypeFilter';
+import { VksOperatorSurveyFilter } from './filterInputs/VksOperatorSurveyFilter';
 
 type VksCasesFilterSidebarProps = {
   side?: 'left' | 'right';
@@ -64,6 +65,7 @@ const VksCasesFilterSidebar = (
               <VksConsultationTypeFilter variant="accordion" />
               <VksCaseGradeFilter variant="accordion" />
               <VksServiceFilter variant="accordion" />
+              <VksOperatorSurveyFilter variant="accordion" />
             </Accordion>
           </div>
         </ScrollArea>

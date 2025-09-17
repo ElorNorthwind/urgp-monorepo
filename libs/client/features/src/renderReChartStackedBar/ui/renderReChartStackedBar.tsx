@@ -5,9 +5,8 @@ type ReChartTooltip = {
   config: ChartConfig;
   data: any[] | undefined;
   orientation?: 'vertical' | 'horizontal';
-  onClick?: (data: any, index: number) => void;
+  onClick?: (data: any, index: number, status?: string) => void;
 };
-
 const renderRechartsStackedBar = ({
   config,
   data,
@@ -27,7 +26,7 @@ const renderRechartsStackedBar = ({
             fill={`var(--color-${status})`}
             stackId="a"
             radius={radius}
-            onClick={onClick}
+            onClick={(data, index) => onClick && onClick(data, index, status)}
             className={cn(onClick ? 'cursor-pointer' : '')}
             label={(props) => {
               const { x, y, width, height, index } = props;
