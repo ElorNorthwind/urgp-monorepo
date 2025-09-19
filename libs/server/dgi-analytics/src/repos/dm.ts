@@ -56,4 +56,8 @@ WHERE (dm.resolutions.document_id, dm.resolutions.resolution_text, dm.resolution
     const query = `SELECT id FROM dm.resolutions WHERE control_date IS NOT NULL AND done_date IS NULL;`;
     return this.db.manyOrNone(query)?.then((res) => res.map((r) => r.id));
   }
+  getAllResolutions(): Promise<number[]> {
+    const query = `SELECT id FROM dm.resolutions WHERE control_date >= '01.01.2019'::date;`;
+    return this.db.manyOrNone(query)?.then((res) => res.map((r) => r.id));
+  }
 }

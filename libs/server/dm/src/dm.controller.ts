@@ -16,4 +16,9 @@ export class DmController {
   GetAllUndoneResolutions(): Promise<number> {
     return this.dm.addDmAllUndoneResolutions();
   }
+
+  @Get('update/all')
+  GetAllResolutions(): Promise<number> {
+    return this.dm.updateAllResolutions();
+  }
 }

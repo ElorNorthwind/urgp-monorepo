@@ -98,7 +98,28 @@ export class DmService {
       while (i < resolutions.length) {
         Logger.log('Executing DM update for active resolutions, count: ' + i);
         const chunk = resolutions.slice(i, i + chunkSize);
-        await connection.execute(getDmIdsQuery(chunk));
+        const resultChunk = await connection.execute(getDmIdsQuery(chunk));
+        const formatedRows = formatDmRows(resultChunk?.rows as unknown[][]);
+        await this.analytics.db.dm.insertDmData(formatedRows);
+        i += chunkSize;
+      }
+    });
+
+    return resolutions?.length || 0;
+  }
+
+  public async updateAllResolutions(): Promise<number> {
+    const resolutions = await this.analytics.db.dm.getAllResolutions();
+
+    await this.executeCallback(async (connection) => {
+      const chunkSize = 900;
+      let i = 0;
+      while (i < resolutions.length) {
+        Logger.log('Executing DM update for all resolutions, count: ' + i);
+        const chunk = resolutions.slice(i, i + chunkSize);
+        const resultChunk = await connection.execute(getDmIdsQuery(chunk));
+        const formatedRows = formatDmRows(resultChunk?.rows as unknown[][]);
+        await this.analytics.db.dm.insertDmData(formatedRows);
         i += chunkSize;
       }
     });
