@@ -1,4 +1,8 @@
-import { oldApartmentColumns, useOldApartments } from '@urgp/client/entities';
+import {
+  oldApartmentColumns,
+  oldApartmentsFilterFn,
+  useOldApartments,
+} from '@urgp/client/entities';
 import {
   getRouteApi,
   useElementScrollRestoration,
@@ -11,41 +15,20 @@ import {
   OldApartmentFilter,
 } from '@urgp/client/widgets';
 import { useCallback, useState } from 'react';
-import { GetOldBuldingsDto, OldApartmentSearch } from '@urgp/shared/entities';
+import {
+  GetOldBuldingsDto,
+  OldApartmentSearch,
+  OldAppartment,
+} from '@urgp/shared/entities';
+import { Row } from '@tanstack/react-table';
 
 const OldApartmentsPage = (): JSX.Element => {
   const filters = getRouteApi(
     '/renovation/oldapartments',
   ).useSearch() as OldApartmentSearch;
-  const debouncedFilters = useDebounce(
-    { ...filters, apartment: undefined },
-    200,
-  );
-
   const navigate = useNavigate({ from: '/renovation/oldapartments' });
-  const [offset, setOffset] = useState(0);
-
-  const {
-    currentData: apartments,
-    isLoading,
-    isFetching,
-  } = useOldApartments({
-    ...(debouncedFilters as Partial<OldApartmentSearch>),
-    offset,
-  });
-
-  const setFilters = useCallback(
-    (value: Partial<OldApartmentSearch>) => {
-      // setCurrentAddress(null);
-      navigate({
-        search: (prev: GetOldBuldingsDto) => ({
-          ...prev,
-          ...value,
-        }),
-      });
-    },
-    [navigate],
-  );
+  const { data: apartments, isLoading, isFetching } = useOldApartments();
+  const [filtered, setFiltered] = useState<Row<OldAppartment>[]>([]);
 
   const scrollRestorationId = 'oldApartmentsScrollRestorationId';
   const scrollEntry = useElementScrollRestoration({
@@ -55,14 +38,10 @@ const OldApartmentsPage = (): JSX.Element => {
   return (
     <>
       <div className="flex w-full flex-row justify-start pr-2">
-        <OldApartmentFilter
-          filters={filters}
-          setFilters={setFilters}
-          apartments={apartments}
-        />
+        <OldApartmentFilter apartments={filtered} />
         <LoadedResultCounter
-          currentCount={apartments?.length}
-          totalCount={apartments?.[0]?.totalCount}
+          currentCount={filtered?.length}
+          totalCount={apartments?.length}
           isFetching={isFetching}
           className="ml-auto"
         />
@@ -71,6 +50,7 @@ const OldApartmentsPage = (): JSX.Element => {
         <VirtualDataTable
           initialOffset={scrollEntry?.scrollY}
           data-scroll-restoration-id={scrollRestorationId}
+          clientSide
           onRowClick={(row) => {
             navigate({
               search: (prev: OldApartmentSearch) => ({
@@ -91,9 +71,10 @@ const OldApartmentsPage = (): JSX.Element => {
           columns={oldApartmentColumns}
           data={apartments || []}
           isFetching={isLoading || isFetching}
-          totalCount={apartments?.[0]?.totalCount ?? 0}
-          callbackFn={() => setOffset(apartments?.length || 0)}
-          callbackMargin={3000}
+          totalCount={apartments?.length ?? 0}
+          globalFilter={filters}
+          setFilteredRows={setFiltered}
+          globalFilterFn={oldApartmentsFilterFn}
           enableMultiRowSelection={false}
         />
         {filters.apartment && (

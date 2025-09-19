@@ -108,11 +108,8 @@ export class RenovationController {
   @CacheTTL(1000 * 60)
   @UseInterceptors(CacheInterceptor)
   @Get('old-apartments')
-  @UsePipes(new ZodValidationPipe(getOldApartments))
-  getOldAppartments(
-    @Query() getOldAppartmentsDto: GetOldAppartmentsDto,
-  ): Promise<OldAppartment[]> {
-    return this.renovation.getOldAppartments(getOldAppartmentsDto);
+  getOldAppartments(): Promise<OldAppartment[]> {
+    return this.renovation.getOldAppartments();
   }
 
   @Get('special-apartments')

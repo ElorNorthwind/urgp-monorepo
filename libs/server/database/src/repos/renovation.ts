@@ -132,101 +132,14 @@ export class RenovationRepository {
     });
   }
 
-  // Returns old houses for renovation;
   getNewBuildingById(id: number): Promise<NewBuilding | null> {
     return this.db.oneOrNone(renovation.newBuildings, {
       id: id,
     });
   }
 
-  // Returns old houses for renovation;
-  getOldAppartments(dto: GetOldAppartmentsDto): Promise<OldAppartment[]> {
-    const {
-      limit = 500,
-      offset = 0,
-      okrugs,
-      districts,
-      buildingIds,
-      fio,
-      deviation,
-      stage,
-      relocationStatus,
-      relocationType,
-      relocationAge,
-      buildingDeviation,
-    } = dto;
-    const where = [];
-    if (okrugs) {
-      where.push(`okrug = ANY(ARRAY['${okrugs.join("','")}'])`);
-    }
-    if (districts && districts.length > 0) {
-      where.push(`district = ANY(ARRAY['${districts.join("','")}'])`);
-    }
-    if (buildingIds) {
-      where.push(`building_id = ANY(ARRAY[${buildingIds.join(',')}])`);
-    }
-    if (deviation) {
-      where.push(
-        `classificator->>'deviation' = ANY(ARRAY['${deviation.join("','")}'])`,
-      );
-    }
-    if (stage) {
-      where.push(
-        `classificator->>'stageId' = ANY(ARRAY['${stage.join("','")}'])`,
-      );
-    }
-    if (relocationStatus) {
-      where.push(
-        `CASE
-            WHEN (b.terms->'actual'->>'demolitionEnd')::date IS NOT NULL THEN 'Завершено'
-            WHEN (b.terms->'actual'->>'secontResetlementEnd')::date IS NOT NULL THEN 'Снос'
-            WHEN (b.terms->'actual'->>'firstResetlementEnd')::date IS NOT NULL THEN 'Отселение'
-            WHEN (b.terms->'actual'->>'firstResetlementStart')::date IS NULL THEN 'Не начато'
-            ELSE 'Переселение'
-	      END = ANY(ARRAY['${relocationStatus.join("','")}'])`,
-      );
-    }
-    if (relocationType) {
-      where.push(
-        `COALESCE(b.manual_relocation_type, b.relocation_type) = ANY(ARRAY[${relocationType.join(',')}])`,
-      );
-    }
-
-    // if (buildingDeviation) {
-    //   where.push(
-    //     `CASE
-    //         WHEN (b.terms->>'doneDate')::date IS NOT NULL THEN 'Работа завершена'::text
-    //         WHEN ((COALESCE(b.manual_relocation_type, b.relocation_type) = ANY(ARRAY[2,3]) OR b.terms->>'partialStart' IS NOT NULL) AND b.terms->>'partialEnd' IS NULL) OR b.moves_outside_district = true THEN 'Без отклонений'::text
-    //         WHEN at.risk > 0 THEN 'Наступили риски'::text
-    //         WHEN at.attention > 0 THEN 'Требует внимания'::text
-    //         ELSE 'Без отклонений'::text
-    //     END = ANY(ARRAY['${buildingDeviation.join("','")}']::text[])`,
-    //   );
-    // }
-
-    if (relocationAge) {
-      where.push(
-        `CASE
-            WHEN (b.terms->'actual'->>'firstResetlementStart')::date IS NULL THEN 'Не начато'
-            WHEN COALESCE((b.terms->>'doneDate')::date, NOW()) - (b.terms->'actual'->>'firstResetlementStart')::date < '1 month' THEN 'Менее месяца'
-            WHEN COALESCE((b.terms->>'doneDate')::date, NOW()) - (b.terms->'actual'->>'firstResetlementStart')::date < '2 month' THEN 'От 1 до 2 месяцев'
-            WHEN COALESCE((b.terms->>'doneDate')::date, NOW()) - (b.terms->'actual'->>'firstResetlementStart')::date < '5 month' THEN 'От 2 до 5 месяцев'
-            WHEN COALESCE((b.terms->>'doneDate')::date, NOW()) - (b.terms->'actual'->>'firstResetlementStart')::date < '8 month' THEN 'От 5 до 8 месяцев'
-            ELSE 'Более 8 месяцев'
-        END = ANY(ARRAY['${relocationAge.join("','")}'])`,
-      );
-    }
-    if (fio && fio.length > 0) {
-      where.push(`LOWER(fio) LIKE LOWER('%${fio}%')`);
-    }
-
-    const conditions = where.length > 0 ? ` WHERE ${where.join(' AND ')}` : '';
-
-    return this.db.any(renovation.oldApartments, {
-      limit,
-      offset,
-      conditions,
-    });
+  getOldAppartments(): Promise<OldAppartment[]> {
+    return this.db.any(renovation.oldApartments);
   }
   getSpecialAppartments(): Promise<OldAppartment[]> {
     return this.db.any(renovation.specialApartments);

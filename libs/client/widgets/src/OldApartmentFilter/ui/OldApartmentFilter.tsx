@@ -28,6 +28,8 @@ import {
   useOldBuildingList,
 } from '@urgp/client/entities';
 import { OldApartmentStageFilter } from './StageFilter';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import { Row } from '@tanstack/react-table';
 
 export const relocationDeviations = [
   {
@@ -62,17 +64,55 @@ export const relocationDeviations = [
   },
 ];
 
+export const relocationBuildingDeviations = [
+  {
+    value: 'Работа завершена',
+    label: 'Работа завершена',
+    icon: CircleCheck,
+    className: 'text-emerald-500',
+  },
+  // {
+  //   value: 'В работе у МФР',
+  //   label: 'В работе у МФР',
+  //   icon: CircleDollarSign,
+  //   className: 'text-violet-500',
+  // },
+  {
+    value: 'Без отклонений',
+    label: 'Без отклонений',
+    icon: CircleEllipsis,
+    className: 'text-blue-500',
+  },
+  {
+    value: 'Требует внимания',
+    label: 'Требует внимания',
+    icon: CircleAlert,
+    className: 'text-yellow-500',
+  },
+  {
+    value: 'Наступили риски',
+    label: 'Наступили риски',
+    icon: CircleX,
+    className: 'text-red-500',
+  },
+];
+
 type OldApartmentFilterProps = {
-  filters: OldApartmentSearch;
-  setFilters: (value: Partial<OldApartmentSearch>) => void;
-  apartments: OldAppartment[] | undefined;
+  // filters: OldApartmentSearch;
+  // setFilters: (value: Partial<OldApartmentSearch>) => void;
+  apartments: Row<OldAppartment>[] | undefined;
 };
 
 const OldApartmentFilter = ({
-  filters,
-  setFilters,
+  // filters,
+  // setFilters,
   apartments,
 }: OldApartmentFilterProps): JSX.Element => {
+  const filters = getRouteApi(
+    '/renovation/oldapartments',
+  ).useSearch() as OldApartmentSearch;
+  const navigate = useNavigate({ from: '/renovation/oldapartments' });
+
   const filteredAreas = useMemo(() => {
     return areas.filter((area) =>
       filters.okrugs?.some((okrug) => okrug === area.value),
@@ -91,11 +131,14 @@ const OldApartmentFilter = ({
         className="h-8 w-40"
         value={filters.fio || ''}
         onChange={(event) =>
-          setFilters({
-            fio:
-              event.target.value && event.target.value.length > 0
-                ? event.target.value
-                : undefined,
+          navigate({
+            search: (prev: OldApartmentSearch) => ({
+              ...prev,
+              fio:
+                event.target.value && event.target.value.length > 0
+                  ? event.target.value
+                  : undefined,
+            }),
           })
         }
       />
@@ -103,37 +146,40 @@ const OldApartmentFilter = ({
         options={areas}
         title="АО"
         selectedValues={filters.okrugs}
-        setSelectedValues={
-          (value) => {
-            const isValueSet = value && value.length > 0;
+        setSelectedValues={(value) => {
+          const isValueSet = value && value.length > 0;
 
-            const allowedDistricts = areas
-              .filter((area) => value.some((okrug) => okrug === area.value))
-              .reduce((accumulator, current) => {
-                return [
-                  ...accumulator,
-                  ...current.items.map((item) => item.value),
-                ];
-              }, [] as string[]);
+          const allowedDistricts = areas
+            .filter((area) => value.some((okrug) => okrug === area.value))
+            .reduce((accumulator, current) => {
+              return [
+                ...accumulator,
+                ...current.items.map((item) => item.value),
+              ];
+            }, [] as string[]);
 
-            const filteredDistricts = filters.districts?.filter((district) => {
-              return allowedDistricts.some((allowed) => allowed === district);
-            });
+          const filteredDistricts = filters.districts?.filter((district) => {
+            return allowedDistricts.some((allowed) => allowed === district);
+          });
 
-            const filterObject = {
-              okrugs: isValueSet ? value : undefined,
-            } as Partial<GetOldBuldingsDto>;
+          const filterObject = {
+            okrugs: isValueSet ? value : undefined,
+          } as Partial<GetOldBuldingsDto>;
 
-            filterObject.districts = isValueSet
-              ? filteredDistricts && filteredDistricts.length > 0
-                ? filteredDistricts
-                : undefined
-              : filters?.districts;
+          filterObject.districts = isValueSet
+            ? filteredDistricts && filteredDistricts.length > 0
+              ? filteredDistricts
+              : undefined
+            : filters?.districts;
 
-            setFilters(filterObject);
-          }
+          navigate({
+            search: (prev: OldApartmentSearch) => ({
+              ...prev,
+              ...filterObject,
+            }),
+          });
           //
-        }
+        }}
       />
       <NestedFacetFilter
         groups={filters.okrugs ? filteredAreas : areas}
@@ -141,8 +187,11 @@ const OldApartmentFilter = ({
         selectAllToggle
         selectedValues={filters.districts}
         setSelectedValues={(value) =>
-          setFilters({
-            districts: value && value.length > 0 ? value : undefined,
+          navigate({
+            search: (prev: OldApartmentSearch) => ({
+              ...prev,
+              districts: value && value.length > 0 ? value : undefined,
+            }),
           })
         }
       />
@@ -153,8 +202,11 @@ const OldApartmentFilter = ({
         noSearch
         selectedValues={filters.relocationType}
         setSelectedValues={(value) =>
-          setFilters({
-            relocationType: value && value.length > 0 ? value : undefined,
+          navigate({
+            search: (prev: OldApartmentSearch) => ({
+              ...prev,
+              relocationType: value && value.length > 0 ? value : undefined,
+            }),
           })
         }
       />
@@ -164,8 +216,11 @@ const OldApartmentFilter = ({
         title={'Статус дома'}
         selectedValues={filters.relocationStatus}
         setSelectedValues={(value) =>
-          setFilters({
-            relocationStatus: value && value.length > 0 ? value : undefined,
+          navigate({
+            search: (prev: OldApartmentSearch) => ({
+              ...prev,
+              relocationStatus: value && value.length > 0 ? value : undefined,
+            }),
           })
         }
       />
@@ -175,22 +230,28 @@ const OldApartmentFilter = ({
         title={'Срок переселения дома'}
         selectedValues={filters.relocationAge}
         setSelectedValues={(value) =>
-          setFilters({
-            relocationAge: value && value.length > 0 ? value : undefined,
+          navigate({
+            search: (prev: OldApartmentSearch) => ({
+              ...prev,
+              relocationAge: value && value.length > 0 ? value : undefined,
+            }),
           })
         }
       />
 
-      {/* <FacetFilter
-        options={relocationDeviations}
+      <FacetFilter
+        options={relocationBuildingDeviations}
         title={'Отклонение по дому'}
         selectedValues={filters.buildingDeviation}
         setSelectedValues={(value) =>
-          setFilters({
-            buildingDeviation: value && value.length > 0 ? value : undefined,
+          navigate({
+            search: (prev: OldApartmentSearch) => ({
+              ...prev,
+              buildingDeviation: value && value.length > 0 ? value : undefined,
+            }),
           })
         }
-      /> */}
+      />
 
       {isAdressListLoading ? (
         <Skeleton className="h-8 w-28" />
@@ -200,8 +261,11 @@ const OldApartmentFilter = ({
           title={'Здание'}
           selectedValues={filters.buildingIds}
           setSelectedValues={(value) =>
-            setFilters({
-              buildingIds: value && value.length > 0 ? value : undefined,
+            navigate({
+              search: (prev: OldApartmentSearch) => ({
+                ...prev,
+                buildingIds: value && value.length > 0 ? value : undefined,
+              }),
             })
           }
         />
@@ -212,15 +276,22 @@ const OldApartmentFilter = ({
         title={'Отклонения'}
         selectedValues={filters.deviation}
         setSelectedValues={(value) =>
-          setFilters({
-            deviation: value && value.length > 0 ? value : undefined,
+          navigate({
+            search: (prev: OldApartmentSearch) => ({
+              ...prev,
+              deviation: value && value.length > 0 ? value : undefined,
+            }),
           })
         }
       />
 
       <OldApartmentStageFilter
         filters={filters}
-        setFilters={setFilters}
+        setFilters={(value) =>
+          navigate({
+            search: (prev: OldApartmentSearch) => ({ ...prev, ...value }),
+          })
+        }
         apartments={apartments}
       />
 
@@ -237,17 +308,20 @@ const OldApartmentFilter = ({
         <Button
           variant="ghost"
           onClick={() =>
-            setFilters({
-              okrugs: undefined,
-              districts: undefined,
-              buildingIds: undefined,
-              fio: undefined,
-              deviation: undefined,
-              stage: undefined,
-              relocationStatus: undefined,
-              relocationType: undefined,
-              relocationAge: undefined,
-              buildingDeviation: undefined,
+            navigate({
+              search: (prev: OldApartmentSearch) => ({
+                ...prev,
+                okrugs: undefined,
+                districts: undefined,
+                buildingIds: undefined,
+                fio: undefined,
+                deviation: undefined,
+                stage: undefined,
+                relocationStatus: undefined,
+                relocationType: undefined,
+                relocationAge: undefined,
+                buildingDeviation: undefined,
+              }),
             })
           }
           className="h-8 px-2 lg:px-3"

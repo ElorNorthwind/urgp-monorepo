@@ -15,11 +15,11 @@ export type OldAppartment = {
   newApartments: NewApartmentDetails[];
   classificator: OldApartmentClassificator;
   messagesCount: number;
-  totalCount: number;
-  // buildingDeviation: string;
-  // buildingRelocationStatus: string;
+  relocationAge: string;
+  relocationTypeId: number;
+  buildingDeviation: string;
+  buildingRelocationStatus: string;
 };
-
 export type OldApartmentTimeline = {
   npp: number;
   source: string;

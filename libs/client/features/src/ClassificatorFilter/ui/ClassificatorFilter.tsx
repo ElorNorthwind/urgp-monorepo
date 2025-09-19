@@ -48,7 +48,7 @@ export interface ClassificatorFilterProps<TValue extends string | number>
   popoverClassName?: string;
   iconClassName?: string;
   shortBadge?: boolean;
-  // countValue?: (value: TValue) => number;
+  countValue?: (value: TValue) => number;
 }
 
 function ClassificatorFilter<TValue extends string | number>(
@@ -66,27 +66,27 @@ function ClassificatorFilter<TValue extends string | number>(
     shortBadge = false,
     setSelectedValues,
     accordionItemValue,
-    // countValue,
+    countValue,
     // categoryStyles,
     // valueStyles,
     // placeholder = 'Поиск значения',
     // iconClassName,
   } = props;
 
-  // const countedOptions = useMemo(() => {
-  //   if (!countValue) return options;
-  //   return options.map((option) => ({
-  //     ...option,
-  //     items: option.items.map((item) => ({
-  //       ...item,
-  //       count: countValue(item.value as TValue),
-  //     })),
-  //   }));
-  // }, [options, countValue]);
+  const countedOptions = useMemo(() => {
+    if (!countValue) return options;
+    return options.map((option) => ({
+      ...option,
+      items: option.items.map((item) => ({
+        ...item,
+        count: countValue(item.value as TValue),
+      })),
+    }));
+  }, [options, countValue]);
 
   const flatOptions = useMemo(
-    () => options.flatMap((option) => option.items),
-    [options],
+    () => countedOptions.flatMap((option) => option.items),
+    [countedOptions],
   );
 
   const [open, setOpen] = useState(false);
@@ -214,7 +214,7 @@ function ClassificatorFilter<TValue extends string | number>(
         <ClassificatorCommand
           {...(props as any)}
           flatOptions={flatOptions}
-          // options={countedOptions}
+          options={countedOptions}
         />
       </PopoverContent>
     </Popover>

@@ -11,24 +11,22 @@ import {
 
 const oldApartmentsApi = rtkApi.injectEndpoints({
   endpoints: (build) => ({
-    getOldApartments: build.query<OldAppartment[], GetOldAppartmentsDto>({
-      query: (query) => ({
+    getOldApartments: build.query<OldAppartment[], void>({
+      query: () => ({
         url: '/renovation/old-apartments',
-        params: { ...query },
       }),
-
-      // Only have one cache entry because the arg always maps to one string
-      serializeQueryArgs: ({ queryArgs, endpointDefinition, endpointName }) => {
-        return { ...queryArgs, offset: undefined };
-      },
-      // Always merge incoming data to the cache entry
-      merge: (currentCache, newItems) => {
-        currentCache.push(...newItems);
-      },
-      // Refetch when the page arg changes
-      forceRefetch({ currentArg, previousArg }) {
-        return currentArg?.offset !== previousArg?.offset;
-      },
+      // // Only have one cache entry because the arg always maps to one string
+      // serializeQueryArgs: ({ queryArgs, endpointDefinition, endpointName }) => {
+      //   return { ...queryArgs, offset: undefined };
+      // },
+      // // Always merge incoming data to the cache entry
+      // merge: (currentCache, newItems) => {
+      //   currentCache.push(...newItems);
+      // },
+      // // Refetch when the page arg changes
+      // forceRefetch({ currentArg, previousArg }) {
+      //   return currentArg?.offset !== previousArg?.offset;
+      // },
     }),
 
     getSpecialApartments: build.query<OldAppartment[], void>({

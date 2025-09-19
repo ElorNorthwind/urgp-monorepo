@@ -66,8 +66,8 @@ export class RenovationService {
     return this.dbServise.db.renovation.getNewBuildingById(id);
   }
 
-  public async getOldAppartments(dto: GetOldAppartmentsDto) {
-    return this.dbServise.db.renovation.getOldAppartments(dto);
+  public async getOldAppartments() {
+    return this.dbServise.db.renovation.getOldAppartments();
   }
 
   public async getSpecialAppartments() {

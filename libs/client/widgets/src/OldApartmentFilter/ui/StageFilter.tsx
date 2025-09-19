@@ -11,9 +11,10 @@ import {
   OldApartmentSearch,
   OldAppartment,
 } from '@urgp/shared/entities';
+import { Row } from '@tanstack/react-table';
 
 type OldApartmentStageFilterProps = {
-  apartments: OldAppartment[] | undefined;
+  apartments: Row<OldAppartment>[] | undefined;
   variant?: 'popover' | 'checkbox' | 'accordion';
   className?: string;
   accordionItemValue?: string;
@@ -43,8 +44,8 @@ const OldApartmentStageFilter = (
       isLoading={isLoading || isFetching}
       options={data || []}
       // countValue={(value) =>
-      //   apartments?.filter((a) => a?.classificator?.stageId === value).length ||
-      //   0
+      //   apartments?.filter((a) => a?.original?.classificator?.stageId === value)
+      //     .length || 0
       // }
       // valueStyles={caseStatusStyles}
       selectedValues={filters.stage}

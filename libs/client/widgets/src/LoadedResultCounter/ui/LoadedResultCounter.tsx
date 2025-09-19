@@ -9,6 +9,7 @@ type LoadedResultCounterProps = {
 };
 
 const LoadedResultCounter = ({
+  currentCount,
   totalCount,
   isFetching,
   className,
@@ -19,6 +20,7 @@ const LoadedResultCounter = ({
         <LoaderCircle className="stroke-muted-foreground animate-spin" />
       )}
       <div className="text-muted-foreground">
+        {currentCount && currentCount !== totalCount && currentCount + ' из '}
         {totalCount || (isFetching ? '' : 0)}
       </div>
     </HStack>
