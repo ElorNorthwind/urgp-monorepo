@@ -60,12 +60,7 @@ const MessagesPage = (): JSX.Element => {
               {user && !user.roles.includes('boss') && (
                 <TabsTrigger value="boss">Вопросы руководителя</TabsTrigger>
               )}
-              {user &&
-                ['admin', 'editor', 'boss'].filter((role) =>
-                  user.roles.includes(role),
-                ).length > 0 && (
-                  <TabsTrigger value="all">Все вопросы</TabsTrigger>
-                )}
+              <TabsTrigger value="all">Все вопросы</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
