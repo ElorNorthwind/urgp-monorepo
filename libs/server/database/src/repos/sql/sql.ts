@@ -62,6 +62,8 @@ export const renovation = {
   apartmentStageClassificator: sql(
     'sql/renovation/apartmentStageClassificator.sql',
   ),
+  insertApartmentDefects: sql('sql/renovation/insertApartmentDefects.sql'),
+  apartmentDefects: sql('sql/renovation/apartmentDefects.sql'),
 };
 
 export const users = {

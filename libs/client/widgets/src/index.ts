@@ -57,3 +57,4 @@ export * from './VksCasesSidePanel';
 export * from './VksCasesFilterSidebar';
 export * from './VksCaseCardTabs';
 export * from './EquityUserMenu';
+export * from './RenovationDefectsFileUploadForm';

@@ -19,6 +19,7 @@ import {
   MonthlyProgressTimelineChart,
   OkrugTotalDeviationsChart,
   OkrugTotalsChart,
+  RenovationDefectsFileUploadForm,
   StartAndFinishTimelineChart,
   StartTimelineChart,
 } from '@urgp/client/widgets';
@@ -205,6 +206,7 @@ const RenovationDashboardPage = (): JSX.Element => {
           )}
         </div>
       </div>
+      <RenovationDefectsFileUploadForm />
     </div>
   );
 };

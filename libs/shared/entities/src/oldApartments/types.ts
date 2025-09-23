@@ -117,3 +117,29 @@ export type ApartmentCapstone = {
   planDate: Date;
   doneDate: Date | null;
 };
+
+export type ApartmentDefect = {
+  oldApartId: number;
+  newApartId: number;
+  adress: string;
+  apartNum: string;
+  conplaintDate: Date | null;
+  entryDate: Date | null;
+  changedDoneDate: Date | null;
+  actualDoneDate: Date | null;
+  isDone: boolean | null;
+  description: string | null;
+  url: string | null;
+};
+
+// c.old_apart_id as "oldApartId",
+// a.id as "newApartId",
+// a.adress,
+// a.apart_num as "apartNum",
+// a.defect_complaint_date as "conplaintDate",
+// a.defect_entry_date as "entryDate",
+// a.defect_changed_done_date as "changedDoneDate",
+// a.defect_actual_done_date as "actualDoneDate",
+// a.defect_is_done as "isDone",
+// a.defect_description as "description",
+// a.defect_url as "url"

@@ -2,97 +2,54 @@ import { IDatabase, IMain } from 'pg-promise';
 // import path = require('path');
 // import pgPromise = require('pg-promise');
 import {
+  ApartmentCapstone,
+  ApartmentDefect,
+  ApartmentDefectData,
+  ApproveStageDto,
+  BuildingRelocationMapElement,
+  BuildingsGeoJSON,
+  CityTotalAgeInfo,
+  CityTotalDeviations,
+  ConnectedPlots,
+  CreateManualDateDto,
   CreateMessageDto,
+  CreateStageDto,
   DeleteMessageDto,
+  DoneByYearInfo,
   DoneTimelinePoint,
   ExtendedMessage,
-  GetOldAppartmentsDto,
-  GetOldBuldingsDto,
+  ExtendedStage,
+  ManualDate,
   Message,
+  MessagesUnansweredDto,
+  MonthlyDoneInfo,
+  MonthlyProgressInfo,
+  NestedClassificatorInfo,
+  NewBuilding,
+  OkrugTotalDeviations,
   OkrugTotals,
   OldApartmentDetails,
   OldApartmentTimeline,
   OldAppartment,
   OldBuilding,
-  ReadMessageByIdDto,
-  ReadApartmentMessageDto,
-  UpdateMessageDto,
-  ConnectedPlots,
-  CityTotalDeviations,
-  MessagesUnansweredDto,
-  UnansweredMessage,
-  BuildingRelocationMapElement,
-  BuildingsGeoJSON,
-  NewBuilding,
-  CityTotalAgeInfo,
-  StartTimelineInfo,
-  DoneByYearInfo,
-  OkrugTotalDeviations,
-  ProblematicApartmentInfo,
   OldBuildingConnectionsInfo,
-  CreateStageDto,
-  Stage,
-  ExtendedStage,
-  UpdateStageDto,
-  StageGroup,
-  StageApproveStatusData,
-  ApproveStageDto,
-  PendingStage,
   OldBuildingsStartAndFinish,
-  MonthlyProgressInfo,
-  MonthlyDoneInfo,
+  PendingStage,
+  ProblematicApartmentInfo,
+  ReadApartmentMessageDto,
+  ReadMessageByIdDto,
   SankeyData,
-  ManualDate,
-  Classificator,
-  NestedClassificatorInfo,
-  CreateManualDateDto,
-  ApartmentCapstone,
+  Stage,
+  StageApproveStatusData,
+  StageGroup,
+  StartTimelineInfo,
+  UnansweredMessage,
+  UpdateMessageDto,
+  UpdateStageDto,
 } from '@urgp/shared/entities';
 
-import { renovation } from './sql/sql';
-import { toDate } from 'date-fns';
-import { Logger } from '@nestjs/common';
 import { camelToSnakeCase } from '../lib/to-snake-case';
-
-// import { Logger } from '@nestjs/common';
-
-// // Helper for linking to external query files:
-// function sql(file: string) {
-//   const fullPath = path.join(__dirname, file);
-//   return new pgPromise.QueryFile(fullPath, { minify: true });
-// }
-
-// const oldBuildingsSorting: Record<string, Record<string, string>> = {
-//   district: {
-//     asc: 'o.rank, district, adress',
-//     desc: 'o.rank DESC, district DESC, adress DESC',
-//   },
-//   adress: { asc: 'adress', desc: 'adress DESC' },
-//   age: {
-//     asc: `a.rank, terms->'actual'->>'firstResetlementStart', adress`,
-//     desc: `a.rank DESC, terms->'actual'->>'firstResetlementStart' DESC, adress`,
-//   },
-//   status: {
-//     asc: 's.rank, o.rank, district, adress',
-//     desc: 's.rank DESC, o.rank, district, adress',
-//   },
-//   date: {
-//     asc: `COALESCE(terms->'actual'->>'firstResetlementStart', terms->'plan'->>'firstResetlementStart') NULLS LAST, adress`,
-//     desc: `COALESCE(terms->'actual'->>'firstResetlementStart', terms->'plan'->>'firstResetlementStart') DESC NULLS LAST, adress`,
-//   },
-//   total: {
-//     asc: 'total_apartments, adress',
-//     desc: 'total_apartments DESC, adress',
-//   },
-//   risk: {
-//     asc: `CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'risk' as decimal) / total_apartments END NULLS LAST,
-//           CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'attention' as decimal) / total_apartments END NULLS LAST,
-//           adress`,
-//     desc: `CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'risk' as decimal) / total_apartments END DESC NULLS LAST,
-//            CASE WHEN total_apartments = 0 THEN null ELSE CAST(apartments->'deviationMFR'->>'attention' as decimal) / total_apartments END DESC NULLS LAST,
-//            adress`,
-//   },
-// };
+import { renovation } from './sql/sql';
 
 // @Injectable()
 export class RenovationRepository {
@@ -429,5 +386,33 @@ export class RenovationRepository {
 
   getApartmentStageClassificator(): Promise<NestedClassificatorInfo[]> {
     return this.db.any(renovation.apartmentStageClassificator);
+  }
+
+  insertApartmentDefects(records: ApartmentDefectData[]): Promise<null> {
+    const defectColumns = [
+      { name: 'unom' },
+      { name: 'apart_num', prop: 'apartmentNum' },
+      { name: 'complaint_date', prop: 'complaintDate', cast: 'date' },
+      { name: 'entry_date', prop: 'entryDate', cast: 'date' },
+      { name: 'changed_done_date', prop: 'changedDoneDate', cast: 'date' },
+      { name: 'actual_done_date', prop: 'actualDoneDate', cast: 'date' },
+      { name: 'is_done', prop: 'isDone' },
+      { name: 'description' },
+      { name: 'url' },
+    ];
+
+    // const q = this.pgp.as.format(
+    //   renovation.insertApartmentDefects,
+    //   this.pgp.helpers.values(records, defectColumns),
+    // );
+
+    return this.db.none(
+      renovation.insertApartmentDefects,
+      this.pgp.helpers.values(records, defectColumns),
+    );
+  }
+
+  getApartmentDefects(id: number): Promise<ApartmentDefect[]> {
+    return this.db.any(renovation.apartmentDefects, { id });
   }
 }

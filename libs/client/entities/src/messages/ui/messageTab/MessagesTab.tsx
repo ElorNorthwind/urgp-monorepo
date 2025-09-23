@@ -17,6 +17,8 @@ import { useState } from 'react';
 import { CreateStageForm } from './CreateStageForm';
 import { StageList } from './StageList';
 import { useApartmentStages } from '../../api/stagesApi';
+import { useApartmentDefects } from '../../../oldApartments';
+import { DefectElement } from './DefectElement';
 
 type MessageTabProps = {
   apartmentId: number;
@@ -35,6 +37,11 @@ const MessageTab = ({
   const { data: stages, refetch: refetchStages } = useApartmentStages({
     apartmentIds: [apartmentId],
   });
+
+  const { data: defects } = useApartmentDefects(apartmentId, {
+    skip: !apartmentId || apartmentId <= 0,
+  });
+
   const [editMessage, setEditMessage] = useState<ExtendedMessage | null>(null);
   const [editStage, setEditStage] = useState<ExtendedStage | null>(null);
 
@@ -42,9 +49,17 @@ const MessageTab = ({
     <Tabs defaultValue="comments" className={cn('h-full', className)} asChild>
       <Card className="h-full">
         <CardHeader className="border-b p-2">
-          <TabsList className="grid w-full grid-cols-2 ">
+          <TabsList
+            className={cn(
+              'grid w-full',
+              defects && defects?.length > 0 ? 'grid-cols-3' : 'grid-cols-2',
+            )}
+          >
             <TabsTrigger value="comments">Сообщения</TabsTrigger>
             <TabsTrigger value="stages">Этапы</TabsTrigger>
+            {defects && defects?.length > 0 && (
+              <TabsTrigger value="defects">Дефекты</TabsTrigger>
+            )}
           </TabsList>
         </CardHeader>
         <TabsContent
@@ -102,6 +117,23 @@ const MessageTab = ({
             setEditStage={setEditStage}
             className="pointer-events-auto"
           />
+        </TabsContent>
+
+        <TabsContent
+          value="defects"
+          className="m-0 grid grid-rows-[1fr_max-content] flex-col bg-slate-100 data-[state=active]:h-[calc(100%-4rem)]"
+        >
+          <ScrollArea className="w-full overflow-auto p-2">
+            {defects && defects?.length > 0 ? (
+              defects?.map((defect) => (
+                <DefectElement defect={defect} key={defect?.newApartId} />
+              ))
+            ) : (
+              <div className="w-full text-center text-lg">
+                Дефектов не выявлено
+              </div>
+            )}
+          </ScrollArea>
         </TabsContent>
       </Card>
     </Tabs>

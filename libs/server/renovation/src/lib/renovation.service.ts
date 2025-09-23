@@ -36,6 +36,8 @@ import {
   NestedClassificatorInfo,
   CreateManualDateDto,
   ApartmentCapstone,
+  ApartmentDefectData,
+  ApartmentDefect,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -276,5 +278,12 @@ export class RenovationService {
     NestedClassificatorInfo[]
   > {
     return this.dbServise.db.renovation.getApartmentStageClassificator();
+  }
+
+  public async insertApartmentDefects(records: ApartmentDefectData[]) {
+    return this.dbServise.db.renovation.insertApartmentDefects(records);
+  }
+  public async getApartmentDefects(id: number): Promise<ApartmentDefect[]> {
+    return this.dbServise.db.renovation.getApartmentDefects(id);
   }
 }

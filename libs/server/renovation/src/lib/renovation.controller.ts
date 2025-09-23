@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   ParseArrayPipe,
   Patch,
@@ -65,6 +66,9 @@ import {
   createManualDateSchema,
   CreateManualDateDto,
   ApartmentCapstone,
+  addDefectDataSchema,
+  AddDefectDataDto,
+  ApartmentDefect,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
@@ -591,5 +595,30 @@ export class RenovationController {
   @Get('old-apartment/stage-classificator')
   getOldApartmentStageClassificator(): Promise<NestedClassificatorInfo[]> {
     return this.renovation.getApartmentStageClassificator();
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Post('old-apartment/defects')
+  async insertApartmentDefects(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(addDefectDataSchema)) dto: AddDefectDataDto,
+  ) {
+    // Это надо вывести в отдельный гвард через библиотеку CASL
+    if (
+      !req.user.roles.includes('admin') &&
+      !req.user.roles.includes('editor')
+    ) {
+      throw new UnauthorizedException(
+        'Операция не разрешена. Только редактор может добавлять дефекты!',
+      );
+    }
+    return this.renovation.insertApartmentDefects(dto?.defects);
+  }
+
+  @Get('old-apartment/defects/:id')
+  async getApartmentDefects(
+    @Param('id') id: number,
+  ): Promise<ApartmentDefect[]> {
+    return this.renovation.getApartmentDefects(id);
   }
 }

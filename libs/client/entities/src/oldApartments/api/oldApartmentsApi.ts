@@ -1,6 +1,8 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
+  AddDefectDataDto,
   ApartmentCapstone,
+  ApartmentDefect,
   GetOldAppartmentsDto,
   NestedClassificatorInfo,
   OldApartmentDetails,
@@ -69,8 +71,22 @@ const oldApartmentsApi = rtkApi.injectEndpoints({
         methor: 'GET',
       }),
     }),
-  }),
 
+    postDefects: build.mutation<void, AddDefectDataDto>({
+      query: (dto) => ({
+        url: '/renovation/old-apartment/defects',
+        method: 'POST',
+        body: dto,
+      }),
+    }),
+
+    getDefects: build.query<ApartmentDefect[], number>({
+      query: (query) => ({
+        url: '/renovation/old-apartment/defects/' + query.toString(),
+        methor: 'GET',
+      }),
+    }),
+  }),
   overrideExisting: false,
 });
 
@@ -82,4 +98,6 @@ export const {
   useGetProblematicApartmentsQuery: useProblematicApartments,
   useGetOldApartmentCapstonesQuery: useOldApartmentCapstones,
   useGetApartmentStageClassificatorQuery: useApartmentStageClassificator,
+  useGetDefectsQuery: useApartmentDefects,
+  usePostDefectsMutation: usePostApartmentDefects,
 } = oldApartmentsApi;
