@@ -126,6 +126,18 @@ export class DmService {
 
     return resolutions?.length || 0;
   }
+
+  public async updateSingleResolution(id: number): Promise<any> {
+    let result: any;
+    await this.executeCallback(async (connection) => {
+      const resultChunk = await connection.execute(getDmIdsQuery([id]));
+      const formatedRows = formatDmRows(resultChunk?.rows as unknown[][]);
+      await this.analytics.db.dm.insertDmData(formatedRows);
+      result = formatedRows?.[0];
+    });
+
+    return result;
+  }
   @Cron('0 0 5 * * *')
   public async updateDailyRecords(): Promise<number> {
     Logger.log('DM daily update started');

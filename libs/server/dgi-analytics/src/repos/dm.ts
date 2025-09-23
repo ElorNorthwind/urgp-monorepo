@@ -44,9 +44,9 @@ ON CONFLICT (id) DO UPDATE SET
 	document_id = excluded.document_id,
 	resolution_text = excluded.resolution_text,
 	control_date = excluded.control_date,
-	done_date = excluded.done_date
-WHERE (dm.resolutions.document_id, dm.resolutions.resolution_text, dm.resolutions.control_date, dm.resolutions.done_date) <> (excluded.document_id, excluded.resolution_text, excluded.control_date, excluded.done_date);
-`;
+	done_date = excluded.done_date`;
+    // WHERE (dm.resolutions.document_id, dm.resolutions.resolution_text, dm.resolutions.control_date, dm.resolutions.done_date) <> (excluded.document_id, excluded.resolution_text, excluded.control_date, excluded.done_date);
+    // `;
     return this.db.none(
       query,
       this.pgp.helpers.values(records, dmResultColumngs),

@@ -21,4 +21,9 @@ export class DmController {
   GetAllResolutions(): Promise<number> {
     return this.dm.updateAllResolutions();
   }
+
+  @Get('test')
+  Test(): Promise<number> {
+    return this.dm.updateSingleResolution(104399763);
+  }
 }

@@ -249,6 +249,18 @@ CREATE INDEX idx_dm_resolutions_control_date ON dm.resolutions (control_date DES
 
 
 
+
+-- Производственный календарь
+DROP TABLE IF EXISTS dm.calendar CASCADE;
+
+CREATE TABLE dm.calendar
+(
+    date DATE,
+    is_workday BOOLEAN NOT NULL DEFAULT TRUE,
+    PRIMARY KEY (date)
+);
+
+
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA dm TO dgi_bi_writer;
 ALTER DEFAULT PRIVILEGES IN SCHEMA dm GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO dgi_bi_writer;
 
