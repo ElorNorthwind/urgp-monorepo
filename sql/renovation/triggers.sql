@@ -114,7 +114,8 @@ BEGIN
             max(c.contract_creation_date) as contract_project_date,
             max(c.contract_notification_date) as contract_notification_date,
             max(c.contract_prelimenary_signing_date) as contract_prelimenary_signing_date,
-            max(c.contract_date) FILTER (WHERE LOWER(c.contract_status) <> 'проект договора') as contract_date
+            max(c.contract_date) FILTER (WHERE LOWER(c.contract_status) <> 'проект договора') as contract_date,
+            bool_or(a.new_aparts @> '[{"defects": true}]') as has_defects
         FROM renovation.apartments_old_temp a
         LEFT JOIN renovation.apartment_litigation_connections co ON co.old_apart_id = a.id
         LEFT JOIN renovation.apartment_litigations_temp l ON l.id = co.litigation_id
@@ -154,6 +155,7 @@ BEGIN
             da.contract_notification_date,
             da.contract_prelimenary_signing_date,
             da.contract_date,
+            da.has_defects,
             CASE WHEN da.reject_date IS NULL OR da.reject_date >= da.first_inspection_date THEN da.first_inspection_date ELSE Null END as inspection_date,
             CASE WHEN da.reject_date < da.inspection_date THEN da.inspection_date ELSE Null END as reinspection_date,
             CASE WHEN da.last_act_lost < da.inspection_date THEN da.inspection_date ELSE Null END as lost_inspection_date,
@@ -220,6 +222,7 @@ BEGIN
                     CASE WHEN LOWER(d.old_apart_status) LIKE ANY (ARRAY['%аренда%', '%федеральная%', '%служебн%', '%общежит%']) THEN 'Проблемная' ELSE null END,
                     CASE WHEN d.litigation_start_date IS NOT NULL THEN 'Суды' ELSE null END,
                     CASE WHEN d.litigation_people_claim = true THEN 'Иск граждан' ELSE null END,
+                    CASE WHEN d.has_defects = true THEN 'Дефекты' ELSE null END,
                     CASE WHEN d.reject_date IS NOT NULL THEN 'Отказ' ELSE null END
             ], NULL)::varchar[] as problems,
             CASE 
@@ -623,6 +626,7 @@ BEGIN
 			'areaObsh', an.area_obsh,
 			'areaZhp', an.area_zhp,
 			'roomCount', an.room_count,
+            'defects', CASE WHEN an.defect_complaint_date IS NOT NULL THEN TRUE ELSE FALSE END,
 			'status', CASE 
                          WHEN COALESCE(c.rd_date, c.contract_date) IS NOT NULL THEN 'Предоставление'
                          WHEN LOWER(c.inspection_response) LIKE '%соглас%' THEN 'Согласие'

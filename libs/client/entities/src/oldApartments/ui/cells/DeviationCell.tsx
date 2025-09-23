@@ -16,6 +16,7 @@ function DeviationCell(props: CellContext<OldAppartment, string>): JSX.Element {
     () => ({
       МФР: cn('bg-violet-100 border-violet-200'),
       Отказ: cn('bg-amber-100 border-amber-200'),
+      Дефекты: cn('bg-stone-100 border-stone-200'),
       Суды: cn('bg-rose-100 border-rose-200'),
       Проблемная: cn('bg-slate-100 border-slate-200'),
     }),
@@ -39,7 +40,7 @@ function DeviationCell(props: CellContext<OldAppartment, string>): JSX.Element {
   return (
     <div className="relative flex w-full flex-row items-center justify-start gap-2">
       {apartment.messagesCount > 0 && (
-        <Badge className="border-background pointer-events-none absolute -top-1 -left-1 flex h-5 w-5 select-none place-content-center truncate px-1 text-xs font-light">
+        <Badge className="border-background pointer-events-none absolute -left-1 -top-1 flex h-5 w-5 select-none place-content-center truncate px-1 text-xs font-light">
           {apartment.messagesCount}
         </Badge>
       )}

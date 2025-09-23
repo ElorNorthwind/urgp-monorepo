@@ -12,6 +12,7 @@ import { useMemo } from 'react';
 const problemBadgeStyles = {
   МФР: cn('bg-violet-100 border-violet-200'),
   Отказ: cn('bg-amber-100 border-amber-200'),
+  Дефекты: cn('bg-stone-100 border-stone-200'),
   Суды: cn('bg-rose-100 border-rose-200'),
   Проблемная: cn('bg-slate-100 border-slate-200'),
 };

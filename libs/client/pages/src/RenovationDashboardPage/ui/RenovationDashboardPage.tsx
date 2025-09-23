@@ -206,7 +206,10 @@ const RenovationDashboardPage = (): JSX.Element => {
           )}
         </div>
       </div>
-      <RenovationDefectsFileUploadForm />
+      {user &&
+        (user.roles.includes('admin') || user.roles.includes('editor')) && (
+          <RenovationDefectsFileUploadForm />
+        )}
     </div>
   );
 };

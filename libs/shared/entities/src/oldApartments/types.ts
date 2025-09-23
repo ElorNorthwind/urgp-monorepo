@@ -38,6 +38,7 @@ export type NewApartmentDetails = {
   areaObsh: number | null;
   areaZhil: number | null;
   roomCount: number | null;
+  defects: boolean | null;
 };
 
 export type OldApartmentClassificator = {

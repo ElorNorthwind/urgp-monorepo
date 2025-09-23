@@ -55,6 +55,7 @@ const problemBadgeStyles = {
   МФР: cn('bg-violet-100 border-violet-200'),
   Отказ: cn('bg-amber-100 border-amber-200'),
   Суды: cn('bg-rose-100 border-rose-200'),
+  Дефекты: cn('bg-stone-100 border-stone-200'),
   Проблемная: cn('bg-slate-100 border-slate-200'),
 };
 const ProblematicApartsTable = ({
@@ -77,7 +78,7 @@ const ProblematicApartsTable = ({
         {!!totalApartments && totalApartments > 0 && (
           <Button
             variant="ghost"
-            className="absolute top-2 right-2 space-x-2 px-2"
+            className="absolute right-2 top-2 space-x-2 px-2"
             onClick={() =>
               navigate({
                 to: '/renovation/oldapartments',
@@ -231,7 +232,7 @@ const ProblematicApartsTable = ({
                     </HStack>
                   </AccordionTrigger>
                   {apart?.messages && apart.messages.length > 0 && (
-                    <Badge className="border-background pointer-events-none absolute top-1 left-2 flex h-5 w-5 select-none place-content-center truncate px-1 text-xs font-light">
+                    <Badge className="border-background pointer-events-none absolute left-2 top-1 flex h-5 w-5 select-none place-content-center truncate px-1 text-xs font-light">
                       {apart.messages.length}
                     </Badge>
                   )}
