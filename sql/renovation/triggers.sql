@@ -626,7 +626,7 @@ BEGIN
 			'areaObsh', an.area_obsh,
 			'areaZhp', an.area_zhp,
 			'roomCount', an.room_count,
-            'defects', CASE WHEN an.defect_complaint_date IS NOT NULL THEN TRUE ELSE FALSE END,
+            'defects', CASE WHEN an.defect_complaint_date IS NOT NULL AND c.status_prio = c.max_status THEN TRUE ELSE FALSE END,
 			'status', CASE 
                          WHEN COALESCE(c.rd_date, c.contract_date) IS NOT NULL THEN 'Предоставление'
                          WHEN LOWER(c.inspection_response) LIKE '%соглас%' THEN 'Согласие'
@@ -635,7 +635,7 @@ BEGIN
 				      END
 		)) as new_aparts
         FROM renovation.apartments_new an
-        LEFT JOIN renovation.apartment_connections c ON c.new_apart_id = an.id
+        LEFT JOIN (SELECT *, MAX(status_prio) OVER (PARTITION BY old_apart_id) as max_status FROM renovation.apartment_connections) c ON c.new_apart_id = an.id
         LEFT JOIN affected_old_aparts aa ON aa.old_apart_id = c.old_apart_id
         WHERE aa.old_apart_id IS NOT NULL
         GROUP BY c.old_apart_id
