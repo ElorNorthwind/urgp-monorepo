@@ -1,2 +1,1 @@
-import { lazy } from 'react';
-export const OldBuildingsCard = lazy(() => import('./ui/OldBuildingCard'));
+export * from './ui/OldBuildingCard';

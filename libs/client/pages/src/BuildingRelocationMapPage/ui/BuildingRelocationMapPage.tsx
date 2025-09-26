@@ -8,7 +8,7 @@ import {
 } from '@urgp/client/entities';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { cn, MapComponent } from '@urgp/client/shared';
-import { NewBuildingsCard, OldBuildingsCard } from '@urgp/client/widgets';
+import { NewBuildingsCard, OldBuildingCard } from '@urgp/client/widgets';
 import { useCallback, useEffect, useState } from 'react';
 import { GeoJSON, Pane } from 'react-leaflet';
 import {
@@ -147,7 +147,7 @@ const BuildingRelocationMapPage = (): JSX.Element => {
         {isBuildingLoading ||
         isBuildingFetching ||
         !selectedBuildingId ? null : (
-          <OldBuildingsCard
+          <OldBuildingCard
             building={oldBuilding || null}
             mode="map"
             onClose={() =>
@@ -157,7 +157,7 @@ const BuildingRelocationMapPage = (): JSX.Element => {
               'w-renovationsidebar h-full transition-all ease-in-out',
             )}
             expanded={expanded}
-            setExpanded={(value) =>
+            setExpanded={(value: any) =>
               navigate({
                 search: (prev: RelocationMapPageSerch) => ({
                   ...prev,

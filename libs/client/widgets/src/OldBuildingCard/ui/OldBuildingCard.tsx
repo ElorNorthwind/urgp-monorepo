@@ -333,4 +333,4 @@ const OldBuildingCard = ({
   );
 };
 
-export default OldBuildingCard;
+export { OldBuildingCard };

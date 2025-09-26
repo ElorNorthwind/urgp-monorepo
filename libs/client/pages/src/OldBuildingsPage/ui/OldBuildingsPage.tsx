@@ -9,7 +9,7 @@ import {
   useNavigate,
 } from '@tanstack/react-router';
 import { cn, VirtualDataTable } from '@urgp/client/shared';
-import { OldBuildingsCard, OldBuildingsFilter } from '@urgp/client/widgets';
+import { OldBuildingCard, OldBuildingsFilter } from '@urgp/client/widgets';
 import { useCallback, useRef, useState } from 'react';
 import { Row } from '@tanstack/react-table';
 import {
@@ -133,7 +133,7 @@ const OldBuildingsPage = (): JSX.Element => {
           }}
         />
         {buildings && (
-          <OldBuildingsCard
+          <OldBuildingCard
             building={
               buildings?.find((b) => b.id === filters.selectedBuildingId) ||
               null
