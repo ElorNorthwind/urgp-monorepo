@@ -11,6 +11,7 @@ import {
 } from '@urgp/client/shared';
 import {
   ConnectedPlots,
+  NewBuilding,
   OldBuilding,
   OldBuildingsPageSearch,
 } from '@urgp/shared/entities';
@@ -21,7 +22,7 @@ import { Fragment } from 'react';
 import { DeviationChart } from '@urgp/client/entities';
 
 type NewBuildingsTableProps = {
-  buildings: OldBuilding['newBuildingConstructions'] | null;
+  buildings: NewBuilding[] | null;
   className?: string;
   heading?: string;
   emptyText?: string;
@@ -77,15 +78,15 @@ const NewBuildingsTable = ({
                     <div>{building.adress}</div>
                   </TableCell>
                   <TableCell compact className="w-[60px] text-center text-xs">
-                    {building.terms.actual.commissioning
-                      ? dayjs(building.terms.actual.commissioning).format(
+                    {building?.terms?.actual?.commissioning
+                      ? dayjs(building?.terms?.actual?.commissioning).format(
                           'DD.MM.YYYY',
                         )
                       : ' '}
                   </TableCell>
                   <TableCell compact className="w-[60px] text-center text-xs">
-                    {building.terms.actual.settlement
-                      ? dayjs(building.terms.actual.settlement).format(
+                    {building?.terms?.actual?.settlement
+                      ? dayjs(building?.terms?.actual?.settlement).format(
                           'DD.MM.YYYY',
                         )
                       : ' '}
@@ -138,13 +139,13 @@ const NewBuildingsTable = ({
                             className="h-6 w-full"
                             chartClassName="h-5"
                             building={{
-                              adress: plot.adress,
+                              adress: plot?.adress || '-',
                               total:
-                                plot.aparts.attention +
-                                plot.aparts.done +
-                                plot.aparts.mfr +
-                                plot.aparts.none +
-                                plot.aparts.risk,
+                                (plot?.aparts?.attention ?? 0) +
+                                (plot?.aparts?.done ?? 0) +
+                                (plot?.aparts?.mfr ?? 0) +
+                                (plot?.aparts?.none ?? 0) +
+                                (plot?.aparts?.risk ?? 0),
                               apartments: plot.aparts,
                             }}
                           />

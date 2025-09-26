@@ -10,7 +10,7 @@ const OldBuildingTermsChart = ({
   terms,
   className,
 }: OldBuildingTermsChartProps): JSX.Element => {
-  const minDate = terms.actual.firstResetlementStart
+  const minDate = terms?.actual?.firstResetlementStart
     ? dayjs(terms.plan.firstResetlementStart).isBefore(
         dayjs(terms.actual.firstResetlementStart),
       )

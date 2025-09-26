@@ -89,7 +89,7 @@ export const oldBuildingsColumns = [
   }),
 
   columnHelper.accessor(
-    (row) => (row.terms.actual.firstResetlementStart || '-').toString(),
+    (row) => (row?.terms?.actual?.firstResetlementStart || '-').toString(),
     {
       // terms.actual.firstResetlementStart'
       id: 'date',
@@ -103,18 +103,18 @@ export const oldBuildingsColumns = [
         cellClass: 'justify-center text-center',
       },
       sortingFn: (rowA, rowB) => {
-        return (rowA.original.terms.actual.firstResetlementStart ??
-          rowA.original.terms.plan.firstResetlementStart ??
+        return (rowA?.original?.terms?.actual?.firstResetlementStart ??
+          rowA?.original?.terms?.plan?.firstResetlementStart ??
           0) >
-          (rowB.original.terms.actual.firstResetlementStart ??
-            rowB.original.terms.plan.firstResetlementStart ??
+          (rowB?.original?.terms?.actual?.firstResetlementStart ??
+            rowB?.original?.terms?.plan?.firstResetlementStart ??
             0)
           ? 1
-          : (rowA.original.terms.actual.firstResetlementStart ??
-                rowA.original.terms.plan.firstResetlementStart ??
+          : (rowA?.original?.terms?.actual?.firstResetlementStart ??
+                rowA?.original?.terms?.plan?.firstResetlementStart ??
                 0) <
-              (rowB.original.terms.actual.firstResetlementStart ??
-                rowB.original.terms.plan.firstResetlementStart ??
+              (rowB?.original?.terms?.actual?.firstResetlementStart ??
+                rowB?.original?.terms?.plan?.firstResetlementStart ??
                 0)
             ? -1
             : 0;

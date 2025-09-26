@@ -26,7 +26,7 @@ function TermsCell(
             {formatDate(props.row.original.terms.plan.firstResetlementStart)}
           </div>
           <div className="flex w-full place-content-center text-xs">
-            {formatDate(props.row.original.terms.actual.firstResetlementStart)}
+            {formatDate(props.row.original.terms?.actual.firstResetlementStart)}
           </div>
         </VStack>
       </TooltipTrigger>

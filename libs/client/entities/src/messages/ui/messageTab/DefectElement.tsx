@@ -94,7 +94,7 @@ const DefectElement = ({
                 Дата завершения работ (фактическая):
               </span>
               <span className="ml-auto  text-right">
-                {format(defect.actualDoneDate, 'dd.MM.yyyy')}
+                {format(defect?.actualDoneDate, 'dd.MM.yyyy')}
               </span>
             </p>
           )}
