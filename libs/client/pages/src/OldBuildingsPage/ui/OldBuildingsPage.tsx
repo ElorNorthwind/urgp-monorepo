@@ -1,22 +1,22 @@
 import {
-  oldBuildingsColumns,
-  oldBuildingsGlobalFilterFn,
-  useOldBuldings,
-} from '@urgp/client/entities';
-import {
   getRouteApi,
   useElementScrollRestoration,
   useNavigate,
 } from '@tanstack/react-router';
+import { Row } from '@tanstack/react-table';
+import {
+  oldBuildingsColumns,
+  oldBuildingsGlobalFilterFn,
+  useOldBuldings,
+} from '@urgp/client/entities';
 import { cn, VirtualDataTable } from '@urgp/client/shared';
 import { OldBuildingCard, OldBuildingsFilter } from '@urgp/client/widgets';
-import { useCallback, useRef, useState } from 'react';
-import { Row } from '@tanstack/react-table';
 import {
   GetOldBuldingsDto,
   OldBuilding,
   OldBuildingsPageSearch,
 } from '@urgp/shared/entities';
+import { useCallback, useState } from 'react';
 
 const OldBuildingsPage = (): JSX.Element => {
   const filters = getRouteApi(
