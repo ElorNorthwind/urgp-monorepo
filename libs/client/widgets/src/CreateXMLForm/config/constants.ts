@@ -25,4 +25,5 @@ export const RdTypeOptions = [
     label: 'Перевод помещения в нежилье (ГУ)',
   },
   { value: RdType.BuildingToNonResidential, label: 'Перевод здания в нежилое' },
+  { value: RdType.BuildingToResidential, label: 'Перевод здания в жилое' },
 ];
