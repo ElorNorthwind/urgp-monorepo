@@ -143,7 +143,7 @@ export class DmService {
     Logger.log('DM daily update started');
     let count = 0;
     count += (await this.addDmShortTermRecords()) || 0;
-    count += (await this.addDmAllUndoneResolutions()) || 0;
+    count += (await this.updateAllResolutions()) || 0;
     Logger.log('DM daily update finished');
     return count;
   }
