@@ -263,12 +263,12 @@ const BuildingToNonResidential = `<?xml version="1.0" encoding="UTF-8"?>
 </KAISToGKN>`;
 
 const BuildingToResidential = `<?xml version="1.0" encoding="UTF-8"?>
-<KAISToGKN xmlns="urn://x-artefacts-rosreestr-ru/incoming/kais-to-gkn/5.0.4" xmlns:ns6="urn://x-artefacts-rosreestr-ru/commons/complex-types/person/5.0.2" xmlns:ns5="urn://x-artefacts-rosreestr-ru/commons/complex-types/governance/5.0.1" xmlns:ns7="urn://x-artefacts-rosreestr-ru/commons/complex-types/assignation-flat/1.0.1" xmlns:ns0="urn://x-artefacts-smev-gov-ru/supplementary/commons/1.0.1" xmlns:ns2="urn://x-artefacts-rosreestr-ru/commons/complex-types/sender/5.0.1" xmlns:ns1="urn://x-artefacts-rosreestr-ru/commons/complex-types/document-info/5.0.1" xmlns:ns4="urn://x-artefacts-rosreestr-ru/commons/complex-types/address-input/6.0.1" xmlns:ns3="urn://x-artefacts-rosreestr-ru/commons/complex-types/organization/4.0.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GUID="gkt0424i-b795-1553-y32u-w17feu77he27" NameSoftware="КАИС &quot;МЖР&quot;" VersionSoftware="05">
+<KAISToGKN xmlns="urn://x-artefacts-rosreestr-ru/incoming/kais-to-gkn/5.0.4" xmlns:ns6="urn://x-artefacts-rosreestr-ru/commons/complex-types/person/5.0.2" xmlns:ns5="urn://x-artefacts-rosreestr-ru/commons/complex-types/governance/5.0.1" xmlns:ns7="urn://x-artefacts-rosreestr-ru/commons/complex-types/assignation-flat/1.0.1" xmlns:ns0="urn://x-artefacts-smev-gov-ru/supplementary/commons/1.0.1" xmlns:ns2="urn://x-artefacts-rosreestr-ru/commons/complex-types/sender/5.0.1" xmlns:ns1="urn://x-artefacts-rosreestr-ru/commons/complex-types/document-info/5.0.1" xmlns:ns4="urn://x-artefacts-rosreestr-ru/commons/complex-types/address-input/6.0.1" xmlns:ns3="urn://x-artefacts-rosreestr-ru/commons/complex-types/organization/4.0.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GUID="{{guid}}" NameSoftware="КАИС &quot;МЖР&quot;" VersionSoftware="05">
    <Title>
       <ns1:CodeDocument>558216000000</ns1:CodeDocument>
       <ns1:Name>Распоряжение Департамента о переводе нежилого здания в жилищный фонд</ns1:Name>
-      <ns1:Number>115099</ns1:Number>
-      <ns1:Date>2023-12-13+03:00</ns1:Date>
+      <ns1:Number>{{rdNum}}</ns1:Number>
+      <ns1:Date>{{rdDate}}</ns1:Date>
       <ns1:IssueOrgan>Департамент городского имущества города Москвы</ns1:IssueOrgan>
    </Title>
    <Declarant>
@@ -296,18 +296,20 @@ const BuildingToResidential = `<?xml version="1.0" encoding="UTF-8"?>
    <Document>
       <ns1:CodeDocument>558216000000</ns1:CodeDocument>
       <ns1:Name>Распоряжение Департамента о переводе нежилого здания в жилищный фонд</ns1:Name>
-      <ns1:Number>115099</ns1:Number>
-      <ns1:Date>2023-12-13+03:00</ns1:Date>
+      <ns1:Number>{{rdNum}}</ns1:Number>
+      <ns1:Date>{{rdDate}}</ns1:Date>
       <ns1:IssueOrgan>Департамент городского имущества города Москвы</ns1:IssueOrgan>
-      <ns1:AppliedFile Kind="01" Name="115099_от_13.12.2023.pdf"/>
+      <ns1:AppliedFile Kind="01" Name="{{fileName}}"/>
    </Document>
    <Objects>
       <Object>
-         <CadastralNumber>77:07:0012011:1109</CadastralNumber>
+         <CadastralNumber>{{cadNum}}</CadastralNumber>
          <FlatAssignation>
             <ns7:AssignationCode>204002000000</ns7:AssignationCode>
          </FlatAssignation>
-      </Object>`;
+      </Object>
+   </Objects>
+</KAISToGKN>`;
 
 export const rdTemplates = {
   [RdType.PremiseToResidential]: PremiseToResidential,
