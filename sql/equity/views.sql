@@ -146,6 +146,7 @@ CREATE OR REPLACE VIEW equity.objects_full_view AS
         o.num,
         o.npp,
         o.claim_apartment_number as "numProject",
+        o.claim_s as "sProject",
         o.claim_count as "claimsCount",
         o.claim_creditors as creditor,
         

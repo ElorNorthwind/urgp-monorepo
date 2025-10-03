@@ -1,4 +1,9 @@
-import { Logger, Module, OnModuleDestroy } from '@nestjs/common';
+import {
+  BeforeApplicationShutdown,
+  Logger,
+  Module,
+  OnModuleDestroy,
+} from '@nestjs/common';
 import { DmController } from './dm.controller';
 import { DmService } from './dm.service';
 import { ConfigService } from '@nestjs/config';
@@ -55,9 +60,34 @@ import { DgiAnalyticsModule } from '@urgp/server/dgi-analytics';
     },
   ],
 })
-export class DmModule implements OnModuleDestroy {
+// export class DmModule implements OnModuleDestroy {
+//   async onModuleDestroy() {
+//     await oracledb.getPool().close(10);
+//     Logger.log('Oracle connection pool closed.');
+//   }
+// }
+export class DmModule implements OnModuleDestroy, BeforeApplicationShutdown {
+  private readonly logger = new Logger(DmModule.name);
+
   async onModuleDestroy() {
-    await oracledb.getPool().close(10);
-    Logger.log('Oracle connection pool closed.');
+    try {
+      // Close the connection pool with a reasonable timeout
+      await oracledb.getPool().close(10);
+      this.logger.log('Oracle connection pool closed successfully.');
+    } catch (error) {
+      this.logger.error('Error closing Oracle connection pool:', error);
+    }
+  }
+
+  async beforeApplicationShutdown(signal: string) {
+    this.logger.log(`Application shutdown signal received: ${signal}`);
+
+    try {
+      // Close the connection pool with a reasonable timeout
+      await oracledb.getPool().close(10);
+      this.logger.log('Oracle connection pool closed successfully.');
+    } catch (error) {
+      this.logger.error('Error closing Oracle connection pool:', error);
+    }
   }
 }

@@ -16,6 +16,8 @@ export const formatEquityOperationLogRowForExcel = (
     Адрес: data?.addressShort || '',
     Квартира: data?.num,
     'Проектный номер': data?.numProject?.split('; ')?.[0] || '',
+    'Проектнная площадь': data?.sProject || null,
+
     'Кадастровый номер': data?.cadNum,
 
     Заявитель: data?.operation?.fio ?? data?.creditor,

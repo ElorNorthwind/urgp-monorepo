@@ -227,6 +227,7 @@ CREATE TABLE equity.objects
     claim_creditors text,
     claim_basis text,
     claim_apartment_number text,
+    claim_s numeric,
 
     -- Денормализация операций
     op_all_notes text,

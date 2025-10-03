@@ -10,9 +10,10 @@ export const formatEquityObjectRowForExcel = (row: Row<EquityObject>) => {
     ЖК: data?.complexName,
     Адрес: data?.addressShort || '',
     Квартира: data?.num,
-    'Проектный номер': data?.numProject?.split('; ')?.[0] || '',
     Этаж: data?.floor,
     Площадь: data?.s,
+    'Проектный номер': data?.numProject?.split('; ')?.[0] || '',
+    'Проектнная площадь': data?.sProject || null,
     'Кадастровый номер': data?.cadNum,
     Кредитор: data?.creditor,
     'Дата договора о передаче ЖК': data?.transferDate

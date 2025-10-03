@@ -144,7 +144,8 @@ AS $$
         SUM(sum_unpaid) as sum_unpaid,
         TRANSLATE(STRING_AGG(DISTINCT creditor_name, '; '), ',', ';') as creditors,
         STRING_AGG(DISTINCT num_project, '; ') FILTER (WHERE num_project IS NOT NULL AND num_project <> '') as apartment_number,
-        STRING_AGG(DISTINCT basis, '; ') as basis
+        STRING_AGG(DISTINCT basis, '; ') as basis,
+        MAX(s) as s
     FROM (
         SELECT
             c.id,
@@ -159,7 +160,8 @@ AS $$
             MIN(c.claim_registry_date) OVER (PARTITION BY c.object_id, c.creditor_registry_num) as first_registry_date,
             c.sum_unpaid,
             c.creditor_name,
-            c.basis
+            c.basis,
+            c.s
         FROM equity.claims c
         LEFT JOIN equity.claim_source_types t ON c.claim_source_type_id = t.id
         WHERE c.object_id = _object_id
@@ -175,10 +177,11 @@ AS $$
     claim_sum_unpaid = COALESCE(c.sum_unpaid, 0),
     claim_creditors = c.creditors,
     claim_basis = c.basis,
-    claim_apartment_number = c.apartment_number
+    claim_apartment_number = c.apartment_number,
+    claim_s = c.s
   FROM (SELECT * 
         FROM claim_info
-        UNION ALL VALUES (_object_id, 0::integer, null::date, null::date, null::numeric, null::text, null::text, null::text)
+        UNION ALL VALUES (_object_id, 0::integer, null::date, null::date, null::numeric, null::text, null::text, null::text, null::numeric)
         ) c
 --   claim_info c
   WHERE o.id = _object_id
