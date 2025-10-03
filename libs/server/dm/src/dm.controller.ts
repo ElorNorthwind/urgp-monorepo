@@ -24,6 +24,6 @@ export class DmController {
 
   @Get('test')
   Test(): Promise<number> {
-    return this.dm.updateSingleResolution(104399763);
+    return this.dm.updateSingleResolution(-784831733);
   }
 }

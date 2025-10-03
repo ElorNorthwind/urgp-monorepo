@@ -13,6 +13,7 @@ import * as oracledb from 'oracledb';
 import { DgiAnalyticsService } from '@urgp/server/dgi-analytics';
 import { getDmAllUndoneQuery } from './util/getDmAllUndoneQuery';
 import { Cron } from '@nestjs/schedule';
+import { getDmDocIdsQuery } from './util/getDmDocIdsQuery';
 
 @Injectable()
 export class DmService {
@@ -109,28 +110,28 @@ export class DmService {
   }
 
   public async updateAllResolutions(): Promise<number> {
-    const resolutions = await this.analytics.db.dm.getAllResolutions();
+    const documents = await this.analytics.db.dm.getAllDocuments();
 
     await this.executeCallback(async (connection) => {
-      const chunkSize = 900;
+      const chunkSize = 600;
       let i = 0;
-      while (i < resolutions.length) {
+      while (i < documents.length) {
         Logger.log('Executing DM update for all resolutions, count: ' + i);
-        const chunk = resolutions.slice(i, i + chunkSize);
-        const resultChunk = await connection.execute(getDmIdsQuery(chunk));
+        const chunk = documents.slice(i, i + chunkSize);
+        const resultChunk = await connection.execute(getDmDocIdsQuery(chunk));
         const formatedRows = formatDmRows(resultChunk?.rows as unknown[][]);
         await this.analytics.db.dm.insertDmData(formatedRows);
         i += chunkSize;
       }
     });
 
-    return resolutions?.length || 0;
+    return documents?.length || 0;
   }
 
   public async updateSingleResolution(id: number): Promise<any> {
     let result: any;
     await this.executeCallback(async (connection) => {
-      const resultChunk = await connection.execute(getDmIdsQuery([id]));
+      const resultChunk = await connection.execute(getDmDocIdsQuery([id]));
       const formatedRows = formatDmRows(resultChunk?.rows as unknown[][]);
       await this.analytics.db.dm.insertDmData(formatedRows);
       result = formatedRows?.[0];
