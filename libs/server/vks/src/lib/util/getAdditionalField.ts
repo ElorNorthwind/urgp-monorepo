@@ -21,8 +21,28 @@ export function getAdditionalField(
   field: keyof typeof booringReportAdditionalFields,
 ): string {
   const re = new RegExp(
-    String.raw`${booringReportAdditionalFields[field]} : (.*?)(?:\n(?:ВКС\.|Онлайн\-консультация\.|Ссылка\sоператора|ФИО\sучастника|Краткое\sсодержание|Суть\sвопроса|Номер\s(?:договора|обращения|финансового\-лицевого)|Адрес\sобъекта)|$)`,
+    String.raw`${booringReportAdditionalFields[field]} : (.*?)(?:\n(?=ВКС\.|Онлайн\-консультация\.|Ссылка\sоператора|ФИО\sучастника|Краткое\sсодержание|Суть\sвопроса|Номер\s(?:договора|обращения|финансового\-лицевого)|Адрес\sобъекта|СНИЛС\sзаявителя)|$)`,
     'g',
   );
+
+  // Специальная логика для оценки онлайн консультации (если их несколько, берем максимальную)
+  if (field === 'onlineGrade') {
+    const matches = [];
+    let match;
+
+    do {
+      match = re.exec(rawText);
+      if (match) {
+        matches.push(match?.[1]);
+      }
+    } while (match);
+
+    if (!matches || matches?.length < 1) {
+      return '-';
+    }
+
+    return matches?.reduce((a, b) => (parseInt(a) > parseInt(b) ? a : b));
+  }
+
   return re.exec(rawText)?.[1] ?? '-';
 }

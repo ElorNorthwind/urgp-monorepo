@@ -7,6 +7,15 @@ import { transformEmptyToNull } from './transformEmptyToNull';
 import { Logger } from '@nestjs/common';
 
 export function formatBookingRecord(r: RawBookingRecord): BookingRecord {
+  // if (r?.['Код бронирования'] === '0539-6792352') {
+  //   Logger.debug(r?.['Дополнительные поля']);
+  //   Logger.debug(
+  //     getAdditionalField(
+  //       r?.['Дополнительные поля'],
+  //       booringReportAdditionalFields.onlineGrade as keyof typeof booringReportAdditionalFields,
+  //     ),
+  //   );
+  // }
   return transformEmptyToNull({
     org: r?.['Отделение'],
     date: r?.['Дата записи'],

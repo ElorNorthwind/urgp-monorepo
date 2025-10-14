@@ -179,6 +179,17 @@ export class VksController {
     return this.vks.ReadVksServiceStats(q);
   }
 
+  @Get('qms/test')
+  getQmsBookingReportTest(): Promise<{
+    clients: number;
+    records: number;
+  }> {
+    return this.vks.GetQmsReport({
+      dateFrom: '15.07.2025',
+      dateTo: '15.07.2025',
+    });
+  }
+
   @Get('qms')
   getQmsBookingReport(): Promise<{
     clients: number;
