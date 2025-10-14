@@ -24,6 +24,10 @@ export class DmController {
 
   @Get('test')
   Test(): Promise<number> {
-    return this.dm.updateSingleResolution(-784831733);
+    // return this.dm.updateSingleResolution(-784831733);
+    return this.dm.addDmLongTermRecords({
+      from: '01.01.2019',
+      to: '13.10.2025',
+    });
   }
 }
