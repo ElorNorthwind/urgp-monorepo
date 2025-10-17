@@ -75,13 +75,17 @@ function ClassificatorFilter<TValue extends string | number>(
 
   const countedOptions = useMemo(() => {
     if (!countValue) return options;
-    return options.map((option) => ({
-      ...option,
-      items: option.items.map((item) => ({
-        ...item,
-        count: countValue(item.value as TValue),
-      })),
-    }));
+    return options
+      .map((option) => ({
+        ...option,
+        items: option.items
+          .map((item) => ({
+            ...item,
+            count: countValue(item.value as TValue),
+          }))
+          .filter((item) => (item.count || 0) > 0),
+      }))
+      .filter((option) => option.items.some((item) => (item.count || 0) > 0));
   }, [options, countValue]);
 
   const flatOptions = useMemo(
