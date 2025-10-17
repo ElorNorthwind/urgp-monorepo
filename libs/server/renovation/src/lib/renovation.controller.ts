@@ -302,15 +302,14 @@ export class RenovationController {
     @Req() req: RequestWithUserData,
     @Param('user') user: MessagesUnansweredDto,
   ): Promise<UnansweredMessage[]> {
-    if (
-      user === 'all' &&
-      ['admin', 'editor', 'boss'].filter((role) =>
-        req.user.roles.includes(role),
-      ).length === 0
-    ) {
-      throw new UnauthorizedException('Нет прав на просмотр всех сообщений');
-    }
-
+    // if (
+    //   user === 'all' &&
+    //   ['admin', 'editor', 'boss'].filter((role) =>
+    //     req.user.roles.includes(role),
+    //   ).length === 0
+    // ) {
+    //   throw new UnauthorizedException('Нет прав на просмотр всех сообщений');
+    // }
     return this.renovation.getUnansweredMessages(user);
   }
 
