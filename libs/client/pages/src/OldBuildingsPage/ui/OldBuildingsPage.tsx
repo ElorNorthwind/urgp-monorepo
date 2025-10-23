@@ -9,7 +9,12 @@ import {
   oldBuildingsGlobalFilterFn,
   useOldBuldings,
 } from '@urgp/client/entities';
-import { cn, VirtualDataTable } from '@urgp/client/shared';
+import {
+  cn,
+  ScrollArea,
+  ScrollBar,
+  VirtualDataTable,
+} from '@urgp/client/shared';
 import { OldBuildingCard, OldBuildingsFilter } from '@urgp/client/widgets';
 import {
   GetOldBuldingsDto,
@@ -57,7 +62,6 @@ const OldBuildingsPage = (): JSX.Element => {
         filteredCount={filtered?.length}
         isFetching={isFetching}
       />
-
       <div className={'relative flex h-[calc(100vh-3.5rem)] w-full'}>
         <VirtualDataTable<OldBuilding, string | number | undefined>
           initialOffset={scrollEntry?.scrollY}

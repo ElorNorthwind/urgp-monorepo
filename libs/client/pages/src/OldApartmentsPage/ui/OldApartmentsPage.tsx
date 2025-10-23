@@ -37,15 +37,11 @@ const OldApartmentsPage = (): JSX.Element => {
 
   return (
     <>
-      <div className="flex w-full flex-row justify-start pr-2">
-        <OldApartmentFilter apartments={filtered} />
-        <LoadedResultCounter
-          currentCount={filtered?.length}
-          totalCount={apartments?.length}
-          isFetching={isFetching}
-          className="ml-auto"
-        />
-      </div>
+      <OldApartmentFilter
+        apartments={filtered}
+        totalCount={apartments?.length}
+        isFetching={isFetching}
+      />
       <div className="relative w-full">
         <VirtualDataTable
           initialOffset={scrollEntry?.scrollY}

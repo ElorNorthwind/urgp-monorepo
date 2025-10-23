@@ -4,6 +4,7 @@ import {
   HStack,
   Input,
   NestedFacetFilter,
+  ScrollArea,
   ScrollBar,
 } from '@urgp/client/shared';
 import { GetOldBuldingsDto } from '@urgp/shared/entities';
@@ -41,14 +42,14 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
 
     return (
       <div
-        className="flex w-full flex-wrap items-center justify-start gap-2"
+        className="flex flex-nowrap items-center justify-start gap-2"
         ref={ref}
       >
         <Input
           type="search"
           placeholder="Поиск по адресу"
           inputClassName="px-2 lg:px-3"
-          className="h-8 w-40"
+          className="h-8 w-40 flex-shrink-0"
           value={filters.adress || ''}
           onChange={(event) =>
             setFilters({
@@ -59,114 +60,123 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
             })
           }
         />
-        <FacetFilter
-          options={areas}
-          title="АО"
-          selectedValues={filters.okrugs}
-          setSelectedValues={
-            (value) => {
-              const isValueSet = value && value.length > 0;
+        <ScrollArea className="-mb-2 w-full overflow-x-auto">
+          <ScrollBar orientation="horizontal" />
+          <div className="flex flex-nowrap items-center justify-start gap-2 pb-2">
+            <FacetFilter
+              options={areas}
+              title="АО"
+              selectedValues={filters.okrugs}
+              setSelectedValues={
+                (value) => {
+                  const isValueSet = value && value.length > 0;
 
-              const allowedDistricts = areas
-                .filter((area) => value.some((okrug) => okrug === area.value))
-                .reduce((accumulator, current) => {
-                  return [
-                    ...accumulator,
-                    ...current.items.map((item) => item.value),
-                  ];
-                }, [] as string[]);
+                  const allowedDistricts = areas
+                    .filter((area) =>
+                      value.some((okrug) => okrug === area.value),
+                    )
+                    .reduce((accumulator, current) => {
+                      return [
+                        ...accumulator,
+                        ...current.items.map((item) => item.value),
+                      ];
+                    }, [] as string[]);
 
-              const filteredDistricts = filters.districts?.filter(
-                (district) => {
-                  return allowedDistricts.some(
-                    (allowed) => allowed === district,
+                  const filteredDistricts = filters.districts?.filter(
+                    (district) => {
+                      return allowedDistricts.some(
+                        (allowed) => allowed === district,
+                      );
+                    },
                   );
-                },
-              );
 
-              const filterObject = {
-                okrugs: isValueSet ? value : undefined,
-              } as Partial<GetOldBuldingsDto>;
+                  const filterObject = {
+                    okrugs: isValueSet ? value : undefined,
+                  } as Partial<GetOldBuldingsDto>;
 
-              filterObject.districts = isValueSet
-                ? filteredDistricts && filteredDistricts.length > 0
-                  ? filteredDistricts
-                  : undefined
-                : filters?.districts;
+                  filterObject.districts = isValueSet
+                    ? filteredDistricts && filteredDistricts.length > 0
+                      ? filteredDistricts
+                      : undefined
+                    : filters?.districts;
 
-              setFilters(filterObject);
-            }
-            //
-          }
-        />
-        <NestedFacetFilter
-          groups={filters.okrugs ? filteredAreas : areas}
-          title="Район"
-          selectAllToggle
-          selectedValues={filters.districts}
-          setSelectedValues={(value) =>
-            setFilters({
-              districts: value && value.length > 0 ? value : undefined,
-            })
-          }
-        />
-        <FacetFilter
-          options={relocationTypes}
-          title={'Тип'}
-          noSearch
-          selectedValues={filters.relocationType}
-          setSelectedValues={(value) =>
-            setFilters({
-              relocationType: value && value.length > 0 ? value : undefined,
-            })
-          }
-        />
+                  setFilters(filterObject);
+                }
+                //
+              }
+            />
+            <NestedFacetFilter
+              groups={filters.okrugs ? filteredAreas : areas}
+              title="Район"
+              selectAllToggle
+              selectedValues={filters.districts}
+              setSelectedValues={(value) =>
+                setFilters({
+                  districts: value && value.length > 0 ? value : undefined,
+                })
+              }
+            />
+            <FacetFilter
+              options={relocationTypes}
+              title={'Тип'}
+              noSearch
+              selectedValues={filters.relocationType}
+              setSelectedValues={(value) =>
+                setFilters({
+                  relocationType: value && value.length > 0 ? value : undefined,
+                })
+              }
+            />
 
-        <FacetFilter
-          options={relocationAge}
-          title={'Срок'}
-          selectedValues={filters.relocationAge}
-          setSelectedValues={(value) =>
-            setFilters({
-              relocationAge: value && value.length > 0 ? value : undefined,
-            })
-          }
-        />
+            <FacetFilter
+              options={relocationAge}
+              title={'Срок'}
+              selectedValues={filters.relocationAge}
+              setSelectedValues={(value) =>
+                setFilters({
+                  relocationAge: value && value.length > 0 ? value : undefined,
+                })
+              }
+            />
 
-        <FacetFilter
-          options={relocationStatus}
-          title={'Статус'}
-          selectedValues={filters.relocationStatus}
-          setSelectedValues={(value) =>
-            setFilters({
-              relocationStatus: value && value.length > 0 ? value : undefined,
-            })
-          }
-        />
+            <FacetFilter
+              options={relocationStatus}
+              title={'Статус'}
+              selectedValues={filters.relocationStatus}
+              setSelectedValues={(value) =>
+                setFilters({
+                  relocationStatus:
+                    value && value.length > 0 ? value : undefined,
+                })
+              }
+            />
 
-        <FacetFilter
-          options={relocationDeviations}
-          title={'Отклонения'}
-          selectedValues={filters.deviation}
-          setSelectedValues={(value) =>
-            setFilters({
-              deviation: value && value.length > 0 ? value : undefined,
-            })
-          }
-        />
-        <DateRangeSelect
-          from={filters.startFrom ? toDate(filters.startFrom) : undefined}
-          to={filters.startTo ? toDate(filters.startTo) : undefined}
-          onSelect={(range) =>
-            setFilters({
-              startFrom: range?.from
-                ? format(range.from, 'yyyy-MM-dd')
-                : undefined,
-              startTo: range?.to ? format(range.to, 'yyyy-MM-dd') : undefined,
-            })
-          }
-        />
-
+            <FacetFilter
+              options={relocationDeviations}
+              title={'Отклонения'}
+              selectedValues={filters.deviation}
+              setSelectedValues={(value) =>
+                setFilters({
+                  deviation: value && value.length > 0 ? value : undefined,
+                })
+              }
+            />
+            <DateRangeSelect
+              from={filters.startFrom ? toDate(filters.startFrom) : undefined}
+              to={filters.startTo ? toDate(filters.startTo) : undefined}
+              onSelect={(range) =>
+                setFilters({
+                  startFrom: range?.from
+                    ? format(range.from, 'yyyy-MM-dd')
+                    : undefined,
+                  startTo: range?.to
+                    ? format(range.to, 'yyyy-MM-dd')
+                    : undefined,
+                })
+              }
+            />
+          </div>
+        </ScrollArea>
         <Button
           variant={'secondary'}
           onClick={() =>
@@ -226,7 +236,7 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
             <X className="ml-2 h-4 w-4" />
           </Button>
         )}
-        <div className="text-muted-foreground ml-auto">
+        <div className="text-muted-foreground ml-auto text-nowrap">
           {(filteredCount || '') +
             ' из ' +
             (totalCount || (isFetching ? '' : 0))}

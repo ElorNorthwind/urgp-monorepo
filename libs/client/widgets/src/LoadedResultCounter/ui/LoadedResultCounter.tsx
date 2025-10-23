@@ -19,7 +19,7 @@ const LoadedResultCounter = ({
       {isFetching && (
         <LoaderCircle className="stroke-muted-foreground animate-spin" />
       )}
-      <div className="text-muted-foreground">
+      <div className="text-muted-foreground text-nowrap">
         {currentCount && currentCount !== totalCount && currentCount + ' из '}
         {totalCount || (isFetching ? '' : 0)}
       </div>
