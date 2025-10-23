@@ -15,6 +15,7 @@ import {
   relocationDeviations,
   relocationStatus,
   relocationTypes,
+  renovationBossControllStatus,
 } from '@urgp/client/entities';
 import { forwardRef, useMemo, useRef } from 'react';
 import { areas } from '../config/areas';
@@ -158,6 +159,16 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
               setSelectedValues={(value) =>
                 setFilters({
                   deviation: value && value.length > 0 ? value : undefined,
+                })
+              }
+            />
+            <FacetFilter
+              options={renovationBossControllStatus}
+              title={'Контроль'}
+              selectedValues={filters.control}
+              setSelectedValues={(value) =>
+                setFilters({
+                  control: value && value.length > 0 ? value : undefined,
                 })
               }
             />

@@ -56,6 +56,11 @@ export const getOldBuldings = z
       .date()
       .transform((value) => format(value, 'yyyy-MM-dd')),
     startTo: z.coerce.date().transform((value) => format(value, 'yyyy-MM-dd')),
+    control: z
+      .string()
+      .transform((value) => value.split(','))
+      .pipe(z.string().array())
+      .or(z.string().array()),
   })
   .partial();
 

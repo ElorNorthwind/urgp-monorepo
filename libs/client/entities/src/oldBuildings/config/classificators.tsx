@@ -14,10 +14,13 @@ import {
   CircleEllipsis,
   CircleX,
   Construction,
+  Eye,
+  EyeOff,
   House,
   RefreshCcw,
   RotateCcw,
   Scan,
+  ScanEye,
 } from 'lucide-react';
 
 export const relocationTypes = [
@@ -147,4 +150,25 @@ export const relocationDeviations = [
 export const MFRInvolvmentTypes = [
   { value: 'С МФР', label: 'С МФР', icon: Bot },
   { value: 'Без МФР', label: 'Без МФР', icon: BotOff },
+];
+
+export const renovationBossControllStatus = [
+  {
+    value: 'Контроль не ставился',
+    label: 'Контроль не ставился',
+    icon: EyeOff,
+    className: 'text-stone-500',
+  },
+  {
+    value: 'Срок контроля не наступил',
+    label: 'Срок контроля не наступил',
+    icon: Eye,
+    className: 'text-blue-500',
+  },
+  {
+    value: 'Срок контроля наступил',
+    label: 'Срок контроля наступил',
+    icon: ScanEye,
+    className: 'text-rose-500',
+  },
 ];

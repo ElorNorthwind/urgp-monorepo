@@ -34,7 +34,10 @@ export type NewBuilding = {
   adress: string;
   okrug: string;
   district: string;
-  terms: { plan: NewBuildingTerms; actual: NewBuildingTerms };
+  terms: {
+    plan: NewBuildingTerms;
+    actual: NewBuildingTerms;
+  };
   type: string;
   priority: number;
   connections: NewBuildingConnection[];
@@ -120,7 +123,11 @@ export type OldBuilding = {
   buildingRelocationStartAge: string;
   buildingRelocationStatus: string;
   termsReason: string | null;
-  terms: { plan: OldBuildingTerms; actual: OldBuildingTerms };
+  terms: {
+    plan: OldBuildingTerms;
+    actual: OldBuildingTerms;
+    bossControl?: string | null;
+  };
   statusOrder: number;
   okrugOrder: number;
   apartments: ApartmentCounts;

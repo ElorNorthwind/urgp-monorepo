@@ -693,7 +693,8 @@ BEGIN
             min(control_date) FILTER (WHERE date_type = 4) AS actual_demolition_end,
 			-- дополнительные даты
 			min(control_date) FILTER (WHERE date_type = 7) AS partial_start,
-			min(control_date) FILTER (WHERE date_type = 6) AS partial_end
+			min(control_date) FILTER (WHERE date_type = 6) AS partial_end,
+			max(control_date) FILTER (WHERE date_type = 8) AS boss_control
         FROM ( 
             SELECT 
                 od.building_id,
@@ -723,7 +724,8 @@ BEGIN
 					'demolitionEnd', bd.actual_demolition_end),
             'doneDate', COALESCE(bd.actual_first_resettlement_end, bd.actual_second_resettlement_end, bd.actual_demolition_end),
             'partialStart', bd.partial_start,
-            'partialEnd', bd.partial_end
+            'partialEnd', bd.partial_end,
+            'bossControl', bd.boss_control
 	)
     FROM building_dates bd
     WHERE bd.building_id = b.id;

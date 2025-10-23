@@ -1,6 +1,7 @@
 import { GetOldBuldingsDto, OldBuilding } from '@urgp/shared/entities';
 import { Row } from '@tanstack/react-table';
 import { toDate } from 'date-fns';
+import { renovationBossControllStatus } from '../config/classificators';
 
 export function oldBuildingsGlobalFilterFn(
   row: Row<OldBuilding>,
@@ -17,6 +18,7 @@ export function oldBuildingsGlobalFilterFn(
     relocationStatus,
     startFrom,
     startTo,
+    control,
   } = filterValue;
   let allowed = true;
   if (okrugs && !okrugs.includes(row.original.okrug)) allowed = false;
@@ -63,6 +65,23 @@ export function oldBuildingsGlobalFilterFn(
           row?.original?.terms?.plan?.firstResetlementStart ??
           0,
       ) <= toDate(startTo)
+    )
+  )
+    allowed = false;
+
+  if (
+    control &&
+    !(
+      (control.includes('Контроль не ставился') &&
+        !row?.original?.terms?.bossControl) ||
+      (control.includes('Срок контроля не наступил') &&
+        row?.original?.terms?.bossControl &&
+        toDate(row?.original?.terms?.bossControl) >
+          toDate(new Date().setHours(0, 0, 0, 0))) ||
+      (control.includes('Срок контроля наступил') &&
+        row?.original?.terms?.bossControl &&
+        toDate(row?.original?.terms?.bossControl) <=
+          toDate(new Date().setHours(0, 0, 0, 0)))
     )
   )
     allowed = false;
