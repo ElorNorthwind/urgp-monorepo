@@ -313,6 +313,36 @@ const OldApartmentFilter = ({
         </div>
       </ScrollArea>
 
+      <Button
+        variant={'secondary'}
+        onClick={() =>
+          navigate({
+            search: (prev: OldApartmentSearch) => ({
+              ...prev,
+              relocationType: [1],
+              relocationAge: [
+                'Менее месяца',
+                'От 1 до 2 месяцев',
+                'От 2 до 5 месяцев',
+                'От 5 до 8 месяцев',
+                'Более 8 месяцев',
+              ],
+              relocationStatus: ['Переселение'],
+              buildingDeviation: [
+                'Наступили риски',
+                'Требует внимания',
+                'Без отклонений',
+              ],
+              // adress: undefined,
+              // MFRInvolvment: ['Без МФР'],
+            }),
+          })
+        }
+        className="h-8 bg-amber-100 px-2 hover:bg-amber-200 lg:px-3"
+      >
+        В работе
+      </Button>
+
       {(filters?.okrugs ||
         filters?.districts ||
         filters?.buildingIds ||
