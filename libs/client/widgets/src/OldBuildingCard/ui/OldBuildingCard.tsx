@@ -34,6 +34,7 @@ import { NewBuildingsTable } from './components/NewBuildingsTable';
 import { OldApartmentDetailsSheet } from '../../OldApartmentDetailsSheet';
 import { OldBuildingRelocationMap } from '../../OldBuildingRelocationMap';
 import { ManualDatesCard } from '../../ManualDatesCard';
+import { format, toDate } from 'date-fns';
 
 type OldBuildingCardProps = {
   building: OldBuilding | null;
@@ -61,6 +62,11 @@ const OldBuildingCard = ({
       ? '/renovation/building-relocation-map'
       : '/renovation/oldbuildings',
   ).useSearch() as OldBuildingsPageSearch;
+
+  const isLate = building?.terms?.bossControl
+    ? toDate(building?.terms?.bossControl) <=
+      toDate(new Date().setHours(0, 0, 0, 0))
+    : false;
 
   useEffect(() => {
     const timer1 = setTimeout(() => {
@@ -198,6 +204,22 @@ const OldBuildingCard = ({
                     terms={building.terms}
                     className="w-full"
                   />
+                  {building?.terms?.bossControl && (
+                    <div
+                      className={cn(
+                        'text-muted-foreground mt-2 w-full truncate rounded-sm border py-1 text-center text-sm',
+                        isLate && 'text-red-500',
+                      )}
+                    >
+                      <span className={cn('w-full truncate')}>
+                        {'Контроль ЗНУ: '}
+                      </span>
+                      <span className={cn('w-full truncate font-semibold')}>
+                        {format(building.terms?.bossControl, 'dd.MM.yyyy')}
+                      </span>
+                    </div>
+                  )}
+
                   {isFetchingProblematicAparts || isLoadingProblematicAparts ? (
                     <Skeleton className="mt-8 h-12 w-full" />
                   ) : (

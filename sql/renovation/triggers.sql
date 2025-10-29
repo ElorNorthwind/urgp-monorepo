@@ -674,10 +674,12 @@ RETURNS TRIGGER AS $$
 BEGIN
 
     WITH affected_buildings AS (
-        SELECT b.building_id
-        FROM renovation.dates_buildings_old b
-        LEFT JOIN updated_table u ON u.id = b.id
-        WHERE u.id IS NOT NULL
+        -- SELECT b.building_id
+        -- FROM renovation.dates_buildings_old b
+        -- LEFT JOIN updated_table u ON u.id = b.id
+        -- WHERE u.id IS NOT NULL
+        SELECT DISTINCT building_id
+        FROM updated_table
     ), building_dates AS ( 
         SELECT 
             building_id,
@@ -763,10 +765,12 @@ RETURNS TRIGGER AS $$
 BEGIN
 
     WITH affected_buildings AS (
-        SELECT b.building_id
-        FROM renovation.dates_buildings_new b
-        LEFT JOIN updated_table u ON u.id = b.id
-        WHERE u.id IS NOT NULL
+        -- SELECT b.building_id
+        -- FROM renovation.dates_buildings_new b
+        -- LEFT JOIN updated_table u ON u.id = b.id
+        -- WHERE u.id IS NOT NULL
+        SELECT DISTINCT building_id
+        FROM updated_table
     ), building_dates AS ( 
         SELECT building_id,
                 json_build_object(
