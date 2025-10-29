@@ -53,6 +53,7 @@ export const oldApartmetsSearch = getOldApartments
     apartment: z.coerce.number().nullable().optional(),
     stage: queryNumberArray.optional(),
     defect: queryStringArray.optional(),
+    problem: queryStringArray.optional(),
   });
 
 export type GetOldAppartmentsDto = z.infer<typeof getOldApartments>;

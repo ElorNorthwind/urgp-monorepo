@@ -115,7 +115,8 @@ BEGIN
             max(c.contract_notification_date) as contract_notification_date,
             max(c.contract_prelimenary_signing_date) as contract_prelimenary_signing_date,
             max(c.contract_date) FILTER (WHERE LOWER(c.contract_status) <> 'проект договора') as contract_date,
-            bool_or(a.new_aparts @> '[{"defects": true}]') as has_defects
+            bool_or(a.new_aparts @> '[{"defects": true}]') as has_defects,
+            bool_or(a.new_aparts @> '[{"activeDefect": true}]') as has_active_defects
         FROM renovation.apartments_old_temp a
         LEFT JOIN renovation.apartment_litigation_connections co ON co.old_apart_id = a.id
         LEFT JOIN renovation.apartment_litigations_temp l ON l.id = co.litigation_id
@@ -156,6 +157,7 @@ BEGIN
             da.contract_prelimenary_signing_date,
             da.contract_date,
             da.has_defects,
+            da.has_active_defects,
             CASE WHEN da.reject_date IS NULL OR da.reject_date >= da.first_inspection_date THEN da.first_inspection_date ELSE Null END as inspection_date,
             CASE WHEN da.reject_date < da.inspection_date THEN da.inspection_date ELSE Null END as reinspection_date,
             CASE WHEN da.last_act_lost < da.inspection_date THEN da.inspection_date ELSE Null END as lost_inspection_date,
@@ -220,9 +222,11 @@ BEGIN
             array_remove(array[
                     CASE WHEN d.is_mfr = true THEN 'МФР' ELSE null END,
                     CASE WHEN LOWER(d.old_apart_status) LIKE ANY (ARRAY['%аренда%', '%федеральная%', '%служебн%', '%общежит%']) THEN 'Проблемная' ELSE null END,
-                    CASE WHEN d.litigation_start_date IS NOT NULL THEN 'Суды' ELSE null END,
+                    CASE WHEN CURRENT_TIMESTAMP::date - d.litigation_start_date::date > 90 THEN 'Долгие суды' WHEN d.litigation_start_date IS NOT NULL THEN 'Суды' ELSE null END,
+                    CASE WHEN CURRENT_TIMESTAMP::date - d.contract_notification_date::date > 30 THEN 'Просрочен иск' ELSE null END,
+                    CASE WHEN s.id = 9 THEN 'Нет ЗУ' ELSE NULL END,
                     CASE WHEN d.litigation_people_claim = true THEN 'Иск граждан' ELSE null END,
-                    CASE WHEN d.has_defects = true THEN 'Дефекты' ELSE null END,
+                    CASE WHEN d.has_active_defects = true THEN 'Неустраненные дефекты' WHEN d.has_defects = true THEN 'Устраненные дефекты' ELSE null END,
                     CASE WHEN d.reject_date IS NOT NULL THEN 'Отказ' ELSE null END
             ], NULL)::varchar[] as problems,
             CASE 

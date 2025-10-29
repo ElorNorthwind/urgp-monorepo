@@ -18,6 +18,7 @@ export function oldApartmentsFilterFn(
     stage,
     fio,
     defect,
+    problem,
   } = filterValue;
 
   if (okrugs && !okrugs.includes(row.original?.okrug || '')) {
@@ -67,6 +68,18 @@ export function oldApartmentsFilterFn(
   if (
     relocationAge &&
     !relocationAge.includes(row.original?.relocationAge || '')
+  ) {
+    return false;
+  }
+
+  if (
+    problem &&
+    row.original?.classificator?.problems?.filter((p) => problem.includes(p))
+      .length === 0 &&
+    !(
+      problem.includes('Без трудностей') &&
+      row.original?.classificator?.problems?.length === 0
+    )
   ) {
     return false;
   }

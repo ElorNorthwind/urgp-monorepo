@@ -28,6 +28,7 @@ import {
   relocationStatus,
   relocationTypes,
   renovationDefectStatus,
+  renovationProblems,
   useOldBuildingList,
 } from '@urgp/client/entities';
 import { OldApartmentStageFilter } from './StageFilter';
@@ -313,6 +314,20 @@ const OldApartmentFilter = ({
                 search: (prev: OldApartmentSearch) => ({
                   ...prev,
                   defect: value && value.length > 0 ? value : undefined,
+                }),
+              })
+            }
+          />
+
+          <FacetFilter
+            options={renovationProblems}
+            title={'Трудности'}
+            selectedValues={filters.problem}
+            setSelectedValues={(value) =>
+              navigate({
+                search: (prev: OldApartmentSearch) => ({
+                  ...prev,
+                  problem: value && value.length > 0 ? value : undefined,
                 }),
               })
             }
