@@ -1,6 +1,7 @@
 import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import {
   caseStatusStyles,
+  oldApartmentsFilterFn,
   useApartmentStageClassificator,
   useCaseStatusTypes,
 } from '@urgp/client/entities';
@@ -44,7 +45,11 @@ const OldApartmentStageFilter = (
       isLoading={isLoading || isFetching}
       options={data || []}
       countValue={(value) =>
-        apartments?.filter((a) => a?.original?.classificator?.stageId === value)
+        apartments
+          ?.filter((row) =>
+            oldApartmentsFilterFn(row, '', { ...filters, stage: undefined }),
+          )
+          .filter((a) => a?.original?.classificator?.stageId === value)
           .length || 0
       }
       // valueStyles={caseStatusStyles}

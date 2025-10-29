@@ -29,6 +29,7 @@ const OldApartmentsPage = (): JSX.Element => {
   const navigate = useNavigate({ from: '/renovation/oldapartments' });
   const { data: apartments, isLoading, isFetching } = useOldApartments();
   const [filtered, setFiltered] = useState<Row<OldAppartment>[]>([]);
+  const [allRows, setAllRows] = useState<Row<OldAppartment>[]>([]);
 
   const scrollRestorationId = 'oldApartmentsScrollRestorationId';
   const scrollEntry = useElementScrollRestoration({
@@ -38,12 +39,14 @@ const OldApartmentsPage = (): JSX.Element => {
   return (
     <>
       <OldApartmentFilter
-        apartments={filtered}
+        apartments={allRows}
+        currentCount={filtered.length}
         totalCount={apartments?.length}
         isFetching={isFetching}
       />
       <div className="relative w-full">
         <VirtualDataTable
+          setAllRows={setAllRows}
           initialOffset={scrollEntry?.scrollY}
           data-scroll-restoration-id={scrollRestorationId}
           clientSide

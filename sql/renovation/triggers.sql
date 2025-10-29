@@ -627,6 +627,7 @@ BEGIN
 			'areaZhp', an.area_zhp,
 			'roomCount', an.room_count,
             'defects', CASE WHEN an.defect_complaint_date IS NOT NULL AND c.status_prio = c.max_status THEN TRUE ELSE FALSE END,
+            'activeDefect', CASE WHEN an.defect_complaint_date IS NOT NULL AND an.defect_is_done IS DISTINCT FROM TRUE AND c.status_prio = c.max_status THEN TRUE ELSE FALSE END,
 			'status', CASE 
                          WHEN COALESCE(c.rd_date, c.contract_date) IS NOT NULL THEN 'Предоставление'
                          WHEN LOWER(c.inspection_response) LIKE '%соглас%' THEN 'Согласие'

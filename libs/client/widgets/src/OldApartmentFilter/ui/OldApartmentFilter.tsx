@@ -27,6 +27,7 @@ import {
   relocationAge,
   relocationStatus,
   relocationTypes,
+  renovationDefectStatus,
   useOldBuildingList,
 } from '@urgp/client/entities';
 import { OldApartmentStageFilter } from './StageFilter';
@@ -103,6 +104,7 @@ export const relocationBuildingDeviations = [
 type OldApartmentFilterProps = {
   // filters: OldApartmentSearch;
   // setFilters: (value: Partial<OldApartmentSearch>) => void;
+  currentCount?: number;
   totalCount?: number;
   isFetching?: boolean;
   apartments: Row<OldAppartment>[] | undefined;
@@ -111,6 +113,7 @@ type OldApartmentFilterProps = {
 const OldApartmentFilter = ({
   // filters,
   // setFilters,
+  currentCount,
   totalCount,
   isFetching,
   apartments,
@@ -149,9 +152,9 @@ const OldApartmentFilter = ({
           })
         }
       />
-      <ScrollArea className="-mb-2 overflow-x-auto">
-        <ScrollBar orientation="horizontal" className="w-full" />
-        <div className="flex w-max flex-nowrap items-center justify-start gap-2 pb-2">
+      <ScrollArea className="-mb-2 overflow-auto">
+        <ScrollBar orientation="horizontal" className="" />
+        <div className="flex flex-nowrap items-center justify-start gap-2 pb-2">
           <FacetFilter
             options={areas}
             title="АО"
@@ -301,6 +304,20 @@ const OldApartmentFilter = ({
             }
           />
 
+          <FacetFilter
+            options={renovationDefectStatus}
+            title={'Дефекты'}
+            selectedValues={filters.defect}
+            setSelectedValues={(value) =>
+              navigate({
+                search: (prev: OldApartmentSearch) => ({
+                  ...prev,
+                  defect: value && value.length > 0 ? value : undefined,
+                }),
+              })
+            }
+          />
+
           <OldApartmentStageFilter
             filters={filters}
             setFilters={(value) =>
@@ -379,10 +396,10 @@ const OldApartmentFilter = ({
         </Button>
       )}
       <LoadedResultCounter
-        currentCount={apartments?.length}
+        currentCount={currentCount}
         totalCount={totalCount}
         isFetching={isFetching}
-        className="ml-auto h-8 flex-nowrap"
+        className="ml-auto h-8 flex-shrink-0 flex-nowrap"
       />
     </div>
   );

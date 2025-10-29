@@ -3,6 +3,8 @@ import {
   Blocks,
   Bot,
   BotOff,
+  BrickWall,
+  BrickWallFire,
   Building2,
   CalendarCheck,
   CalendarRange,
@@ -14,8 +16,10 @@ import {
   CircleEllipsis,
   CircleX,
   Construction,
+  Container,
   Eye,
   EyeOff,
+  HardHat,
   House,
   RefreshCcw,
   RotateCcw,
@@ -169,6 +173,27 @@ export const renovationBossControllStatus = [
     value: 'Срок контроля наступил',
     label: 'Срок контроля наступил',
     icon: ScanEye,
+    className: 'text-rose-500',
+  },
+];
+
+export const renovationDefectStatus = [
+  {
+    value: 'Дефектов не выявлено',
+    label: 'Дефектов не выявлено',
+    icon: Container,
+    className: 'text-gray-500',
+  },
+  {
+    value: 'Дефекты устранены',
+    label: 'Дефекты устранены',
+    icon: HardHat,
+    className: 'text-emerald-500',
+  },
+  {
+    value: 'Дефекты не устранены',
+    label: 'Дефекты не устранены',
+    icon: BrickWallFire,
     className: 'text-rose-500',
   },
 ];

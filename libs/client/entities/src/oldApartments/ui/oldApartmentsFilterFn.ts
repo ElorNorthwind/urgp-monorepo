@@ -17,6 +17,7 @@ export function oldApartmentsFilterFn(
     buildingDeviation,
     stage,
     fio,
+    defect,
   } = filterValue;
 
   if (okrugs && !okrugs.includes(row.original?.okrug || '')) {
@@ -66,6 +67,33 @@ export function oldApartmentsFilterFn(
   if (
     relocationAge &&
     !relocationAge.includes(row.original?.relocationAge || '')
+  ) {
+    return false;
+  }
+
+  if (
+    defect &&
+    !(
+      (defect.includes('Дефектов не выявлено') &&
+        !row?.original?.newApartments?.some(
+          (apartment) =>
+            apartment.defects && apartment.status === 'Предоставление',
+        )) ||
+      (defect.includes('Дефекты устранены') &&
+        row?.original?.newApartments?.some(
+          (apartment) =>
+            apartment.defects &&
+            !apartment.activeDefect &&
+            apartment.status === 'Предоставление',
+        )) ||
+      (defect.includes('Дефекты не устранены') &&
+        row?.original?.newApartments?.some(
+          (apartment) =>
+            apartment.defects &&
+            apartment.activeDefect &&
+            apartment.status === 'Предоставление',
+        ))
+    )
   ) {
     return false;
   }

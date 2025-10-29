@@ -54,6 +54,7 @@ interface VirtualDataTableProps<TData, TValue> {
   setFilteredRows?: Dispatch<Row<TData>[]> | undefined;
   setSelectedRows?: Dispatch<Row<TData>[]> | undefined;
   setNeighborRows?: Dispatch<Row<TData>[]> | undefined;
+  setAllRows?: Dispatch<Row<TData>[]> | undefined;
   columnVisibility?: VisibilityState;
   autofocus?: boolean;
   // onColumnVisibilityChange?: Dispatch<VisibilityState> | undefined;
@@ -81,6 +82,7 @@ export function VirtualDataTable<TData, TValue>({
   variant = 'default',
   setFilteredRows,
   setSelectedRows,
+  setAllRows,
   columnVisibility,
   autofocus = false,
   // onColumnVisibilityChange,
@@ -127,6 +129,10 @@ export function VirtualDataTable<TData, TValue>({
 
   useEffect(() => {
     setSelectedRows && setSelectedRows(table.getSelectedRowModel().flatRows);
+  }, [data, rowSelection]);
+
+  useEffect(() => {
+    setAllRows && setAllRows(table.getCoreRowModel().flatRows);
   }, [data, rowSelection]);
 
   const { rows } = table.getRowModel();
