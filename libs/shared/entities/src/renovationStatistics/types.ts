@@ -42,6 +42,14 @@ export type CityTotalAgeInfo = {
   full: number;
 };
 
+export type CityAgeDiffuculty = {
+  age: string;
+  noNotification: number;
+  activeDefects: number;
+  overdueLitigation: number;
+  longLitigation: number;
+};
+
 export type StartTimelineInfo = {
   year: number;
   month: number;

@@ -8,6 +8,7 @@ import {
   ApproveStageDto,
   BuildingRelocationMapElement,
   BuildingsGeoJSON,
+  CityAgeDiffuculty,
   CityTotalAgeInfo,
   CityTotalDeviations,
   ConnectedPlots,
@@ -125,6 +126,10 @@ export class RenovationRepository {
 
   getCityTotalAges(): Promise<CityTotalAgeInfo[]> {
     return this.db.any(renovation.cityTotalAges);
+  }
+
+  getCityAgeDifficulties(): Promise<CityAgeDiffuculty[]> {
+    return this.db.any(renovation.cityAgeDifficulties);
   }
 
   getCityTotalDoneByYear(): Promise<DoneByYearInfo[]> {

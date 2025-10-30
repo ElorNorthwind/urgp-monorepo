@@ -223,7 +223,7 @@ BEGIN
                     CASE WHEN d.is_mfr = true THEN 'МФР' ELSE null END,
                     CASE WHEN LOWER(d.old_apart_status) LIKE ANY (ARRAY['%аренда%', '%федеральная%', '%служебн%', '%общежит%']) THEN 'Проблемная' ELSE null END,
                     CASE WHEN CURRENT_TIMESTAMP::date - d.litigation_start_date::date > 90 THEN 'Долгие суды' WHEN d.litigation_start_date IS NOT NULL THEN 'Суды' ELSE null END,
-                    CASE WHEN CURRENT_TIMESTAMP::date - d.contract_notification_date::date > 30 THEN 'Просрочен иск' ELSE null END,
+                    CASE WHEN CURRENT_TIMESTAMP::date - d.contract_notification_date::date > 30 AND s.id = 10 THEN 'Просрочен иск' ELSE null END,
                     CASE WHEN s.id = 9 THEN 'Нет ЗУ' ELSE NULL END,
                     CASE WHEN d.litigation_people_claim = true THEN 'Иск граждан' ELSE null END,
                     CASE WHEN d.has_active_defects = true THEN 'Неустраненные дефекты' WHEN d.has_defects = true THEN 'Устраненные дефекты' ELSE null END,

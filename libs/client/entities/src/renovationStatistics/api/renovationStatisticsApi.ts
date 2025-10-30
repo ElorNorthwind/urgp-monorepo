@@ -1,5 +1,6 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
+  CityAgeDiffuculty,
   CityTotalAgeInfo,
   CityTotalDeviations,
   DoneByYearInfo,
@@ -39,6 +40,12 @@ export const renovationStatisticsApi = rtkApi.injectEndpoints({
     getTotalAges: build.query<CityTotalAgeInfo[], void>({
       query: () => ({
         url: '/renovation/total-ages',
+        method: 'GET',
+      }),
+    }),
+    getAgeDifficulties: build.query<CityAgeDiffuculty[], void>({
+      query: () => ({
+        url: '/renovation/age-difficulties',
         method: 'GET',
       }),
     }),
@@ -120,6 +127,7 @@ export const {
   useGetDoneTimelineQuery: useDoneTimeline,
   useGetTotalDeviationsQuery: useTotalDeviations,
   useGetTotalAgesQuery: useTotalAges,
+  useGetAgeDifficultiesQuery: useAgeDifficulties,
   useGetDoneByYearQuery: useDoneByYear,
   useGetStartTimelineQuery: useStartTimeline,
   useGetLastUpdatedDateQuery: useLastUpdatedDate,

@@ -38,6 +38,7 @@ import {
   ApartmentCapstone,
   ApartmentDefectData,
   ApartmentDefect,
+  CityAgeDiffuculty,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -130,6 +131,10 @@ export class RenovationService {
 
   public async getCityTotalAges(): Promise<CityTotalAgeInfo[]> {
     return this.dbServise.db.renovation.getCityTotalAges();
+  }
+
+  public async getCityAgeDifficulties(): Promise<CityAgeDiffuculty[]> {
+    return this.dbServise.db.renovation.getCityAgeDifficulties();
   }
 
   public async getCityTotalDoneByYear(): Promise<DoneByYearInfo[]> {

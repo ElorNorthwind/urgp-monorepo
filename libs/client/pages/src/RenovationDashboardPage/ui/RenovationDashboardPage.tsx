@@ -11,6 +11,7 @@ import {
   Separator,
 } from '@urgp/client/shared';
 import {
+  AgeProblemsChartChart,
   CurrentYearApartmentsSankeyChart,
   CurrentYearSankeyChart,
   DoneByYearChart,
@@ -76,15 +77,15 @@ const RenovationDashboardPage = (): JSX.Element => {
         </p>
       </div>
       <Separator className="my-6" />
-      <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-        <div className="grid w-full grid-cols-3 gap-6 lg:grid-cols-5">
+      <div className="flex flex-col space-y-8 md:flex-row md:space-x-12 md:space-y-0">
+        <div className="grid w-full grid-cols-3 gap-6 md:grid-cols-5">
           <DashboardNumberCard
             label="Работа завершена"
             value={deviations?.done || 0}
             Icon={CircleCheck}
             description={numericHouses(deviations?.done || 0)}
             accentClassName={cn('text-emerald-600')}
-            className={'col-span-3 sm:col-span-2 lg:col-span-1'}
+            className={'col-span-3 sm:col-span-2 md:col-span-1'}
             isLoading={isDeviationsLoading || isDeviationsFetching}
             onClick={() =>
               navigate({
@@ -169,12 +170,13 @@ const RenovationDashboardPage = (): JSX.Element => {
               })
             }
           />
-          <OkrugTotalsChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
-          <OkrugTotalDeviationsChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
+          <OkrugTotalsChart className="col-span-3 md:col-span-5 xl:col-span-3" />
+          <OkrugTotalDeviationsChart className="col-span-3 md:col-span-5 xl:col-span-2" />
 
-          <StartAndFinishTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-2" />
-          <InProgressAgesChart className="col-span-3 lg:col-span-5 xl:col-span-3" />
+          <StartAndFinishTimelineChart className="col-span-3 md:col-span-5 xl:col-span-2" />
+          <InProgressAgesChart className="col-span-3 md:col-span-5 xl:col-span-3" />
 
+          <AgeProblemsChartChart className="col-span-5" />
           <StartTimelineChart className="col-span-full" />
 
           {user && user.id !== 0 && (
@@ -186,7 +188,7 @@ const RenovationDashboardPage = (): JSX.Element => {
                     <span>Дополнительные графики</span>
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="grid w-full grid-cols-3 gap-6 lg:grid-cols-5">
+                <AccordionContent className="grid w-full grid-cols-3 gap-6 md:grid-cols-5">
                   {/* <DoneByYearChart className="col-span-full" /> */}
 
                   {user &&
@@ -194,10 +196,10 @@ const RenovationDashboardPage = (): JSX.Element => {
                       user.roles.includes('editor') ||
                       user.roles.includes('boss')) && (
                       <>
-                        <MonthlyProgressTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
-                        <MonthlyDoneTimelineChart className="col-span-3 lg:col-span-5 xl:col-span-5" />
-                        {/* <CurrentYearSankeyChart className="col-span-3 lg:col-span-5 xl:col-span-5" /> */}
-                        {/* <CurrentYearApartmentsSankeyChart className="col-span-3 lg:col-span-5 xl:col-span-3" /> */}
+                        <MonthlyProgressTimelineChart className="col-span-3 md:col-span-5 xl:col-span-5" />
+                        <MonthlyDoneTimelineChart className="col-span-3 md:col-span-5 xl:col-span-5" />
+                        {/* <CurrentYearSankeyChart className="col-span-3 md:col-span-5 xl:col-span-5" /> */}
+                        {/* <CurrentYearApartmentsSankeyChart className="col-span-3 md:col-span-5 xl:col-span-3" /> */}
                       </>
                     )}
                 </AccordionContent>

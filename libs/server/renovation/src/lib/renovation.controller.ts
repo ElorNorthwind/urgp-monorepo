@@ -69,6 +69,7 @@ import {
   addDefectDataSchema,
   AddDefectDataDto,
   ApartmentDefect,
+  CityAgeDiffuculty,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
@@ -266,6 +267,13 @@ export class RenovationController {
   @Get('total-ages')
   async getCityTotalAges(): Promise<CityTotalAgeInfo[]> {
     return this.renovation.getCityTotalAges();
+  }
+
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
+  @Get('age-difficulties')
+  async getCityAgeDifficulties(): Promise<CityAgeDiffuculty[]> {
+    return this.renovation.getCityAgeDifficulties();
   }
 
   @CacheTTL(1000 * 60 * 60)
