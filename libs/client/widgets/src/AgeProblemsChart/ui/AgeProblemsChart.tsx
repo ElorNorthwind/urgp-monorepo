@@ -125,6 +125,10 @@ const AgeProblemsChartChart = ({
                           search: {
                             relocationStatus: ['Переселение'],
                             relocationType: [1],
+                            buildingDeviation: [
+                              'Требует внимания',
+                              'Наступили риски',
+                            ],
                             deviation: ['Требует внимания', 'Риск'],
                             relocationAge: [age.age],
                             problem: [

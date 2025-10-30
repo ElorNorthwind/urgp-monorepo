@@ -177,6 +177,7 @@ const RenovationDashboardPage = (): JSX.Element => {
           <InProgressAgesChart className="col-span-3 md:col-span-5 xl:col-span-3" />
 
           <AgeProblemsChartChart className="col-span-5" />
+
           <StartTimelineChart className="col-span-full" />
 
           {user && user.id !== 0 && (
