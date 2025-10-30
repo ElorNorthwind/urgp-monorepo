@@ -124,6 +124,10 @@ const OldApartmentFilter = ({
   ).useSearch() as OldApartmentSearch;
   const navigate = useNavigate({ from: '/renovation/oldapartments' });
 
+  const validFilters = useMemo(() => {
+    return { ...filters, apartment: undefined, stage: undefined };
+  }, [filters]);
+
   const filteredAreas = useMemo(() => {
     return areas.filter((area) =>
       filters.okrugs?.some((okrug) => okrug === area.value),
@@ -335,12 +339,8 @@ const OldApartmentFilter = ({
 
           <OldApartmentStageFilter
             filters={filters}
-            setFilters={(value) =>
-              navigate({
-                search: (prev: OldApartmentSearch) => ({ ...prev, ...value }),
-              })
-            }
             apartments={apartments}
+            validFilters={validFilters}
           />
         </div>
       </ScrollArea>
@@ -381,6 +381,8 @@ const OldApartmentFilter = ({
         filters?.fio ||
         filters?.deviation ||
         filters?.stage ||
+        filters?.defect ||
+        filters?.problem ||
         filters?.relocationStatus ||
         filters?.relocationType ||
         filters?.relocationAge ||
@@ -396,6 +398,8 @@ const OldApartmentFilter = ({
                 buildingIds: undefined,
                 fio: undefined,
                 deviation: undefined,
+                problem: undefined,
+                defect: undefined,
                 stage: undefined,
                 relocationStatus: undefined,
                 relocationType: undefined,

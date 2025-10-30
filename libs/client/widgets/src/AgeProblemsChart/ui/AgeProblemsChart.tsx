@@ -79,7 +79,7 @@ const AgeProblemsChartChart = ({
           </div>
         ) : (
           <CardTitle className="flex flex-row items-center justify-between">
-            <span>Отклонения в проблемных домах</span>
+            <span>Отклонения в рисковых домах</span>
           </CardTitle>
         )}
         {isLoading || isFetching ? (

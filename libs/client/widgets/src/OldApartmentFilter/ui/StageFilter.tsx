@@ -13,6 +13,7 @@ import {
   OldAppartment,
 } from '@urgp/shared/entities';
 import { Row } from '@tanstack/react-table';
+import { useCallback, useMemo } from 'react';
 
 type OldApartmentStageFilterProps = {
   apartments: Row<OldAppartment>[] | undefined;
@@ -20,7 +21,7 @@ type OldApartmentStageFilterProps = {
   className?: string;
   accordionItemValue?: string;
   filters: OldApartmentSearch;
-  setFilters: (value: Partial<OldApartmentSearch>) => void;
+  validFilters: OldApartmentSearch;
 };
 
 const OldApartmentStageFilter = (
@@ -32,9 +33,35 @@ const OldApartmentStageFilter = (
     variant = 'popover',
     accordionItemValue = 'stage',
     filters,
-    setFilters,
+    validFilters,
   } = props;
   const { data, isLoading, isFetching } = useApartmentStageClassificator();
+  const navigate = useNavigate({ from: '/renovation/oldapartments' });
+
+  const countValues = (value: number, rows: Row<OldAppartment>[]) =>
+    rows?.filter((a) => a?.original?.classificator?.stageId === value).length ||
+    0;
+
+  const countedData = useMemo(() => {
+    if (!data) return null;
+    const filteredRows =
+      apartments?.filter((row) =>
+        oldApartmentsFilterFn(row, '', validFilters),
+      ) || [];
+
+    // console.log('recalc!');
+    return data
+      .map((option) => ({
+        ...option,
+        items: option.items
+          .map((item) => ({
+            ...item,
+            count: countValues(item.value, filteredRows),
+          }))
+          .filter((item) => (item.count || 0) > 0),
+      }))
+      .filter((option) => option.items.some((item) => (item.count || 0) > 0));
+  }, [validFilters]);
 
   return (
     <ClassificatorFilter
@@ -43,21 +70,17 @@ const OldApartmentStageFilter = (
       popoverClassName="w-96"
       variant={variant}
       isLoading={isLoading || isFetching}
-      options={data || []}
-      countValue={(value) =>
-        apartments
-          ?.filter((row) =>
-            oldApartmentsFilterFn(row, '', { ...filters, stage: undefined }),
-          )
-          .filter((a) => a?.original?.classificator?.stageId === value)
-          .length || 0
-      }
+      options={countedData || []}
+      // countValue={countValues}
       // valueStyles={caseStatusStyles}
       selectedValues={filters.stage}
       iconClassName="size-5"
       setSelectedValues={(values) =>
-        setFilters({
-          stage: values.length > 0 ? values : undefined,
+        navigate({
+          search: (prev: OldApartmentSearch) => ({
+            ...prev,
+            stage: values.length > 0 ? values : undefined,
+          }),
         })
       }
     />
