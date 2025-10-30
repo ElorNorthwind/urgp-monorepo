@@ -28,25 +28,25 @@ const AgeProblemsChartChart = ({
     noNotification: {
       label: 'Не направлено ЗУ',
       filterValue: 'Нет ЗУ',
-      style: 'bg-red-200',
+      style: 'bg-rose-200 group-hover:bg-rose-300',
       icon: MailX,
     },
     activeDefects: {
       label: 'Дефекты',
       filterValue: 'Неустраненные дефекты',
-      style: 'bg-yellow-200',
+      style: 'bg-amber-200 group-hover:bg-amber-300',
       icon: BrickWallFire,
     },
     overdueLitigation: {
       label: 'Просрочен иск',
       filterValue: 'Просрочен иск',
-      style: 'bg-blue-200',
+      style: 'bg-teal-200 group-hover:bg-teal-300',
       icon: CalendarX,
     },
     longLitigation: {
       label: 'Долгий суд',
       filterValue: 'Долгие суды',
-      style: 'bg-emerald-200',
+      style: 'bg-indigo-200 group-hover:bg-indigo-300',
       icon: Scale,
     },
   };

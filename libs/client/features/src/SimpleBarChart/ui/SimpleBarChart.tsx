@@ -117,7 +117,7 @@ const SimpleBarChart = forwardRef<
                         </>
                       }
                       labelFit={labelFit}
-                      className={cn('h-8', barRowClassName)}
+                      className={cn('group h-8', barRowClassName)}
                       barClassName={cn(
                         barClassName,
                         entry.style,
