@@ -1,41 +1,18 @@
 import { useNavigate } from '@tanstack/react-router';
-import { useAgeDifficulties, useTotalAges } from '@urgp/client/entities';
-import {
-  renderRechartsStackedBar,
-  renderRechartsTooltip,
-} from '@urgp/client/features';
+import { useAgeDifficulties } from '@urgp/client/entities';
+import { SimpleBarChart } from '@urgp/client/features';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  ChartConfig,
-  ChartContainer,
   cn,
   Skeleton,
 } from '@urgp/client/shared';
-import { useState } from 'react';
-import { BarChart, XAxis, YAxis } from 'recharts';
-
-const inProgressAgeChartConfig = {
-  noNotification: {
-    label: 'Не направлено ЗУ',
-    color: 'hsl(var(--chart-1))', // '#f43f5e',
-  },
-  activeDefects: {
-    label: 'Дефекты',
-    color: 'hsl(var(--chart-4))', // '#f59e0b',
-  },
-  overdueLitigation: {
-    label: 'Просрочен иск',
-    color: 'hsl(var(--chart-3))', // '#06b6d4',
-  },
-  longLitigation: {
-    label: 'Суды дольше 3 мес.',
-    color: 'hsl(var(--chart-2))', // '#06b6d4',
-  },
-} satisfies ChartConfig;
+import { BrickWallFire, CalendarX, MailX, Scale } from 'lucide-react';
+import { useMemo } from 'react';
+import { Fragment } from 'react/jsx-runtime';
 
 type AgeProblemsChartProps = {
   className?: string;
@@ -44,12 +21,57 @@ type AgeProblemsChartProps = {
 const AgeProblemsChartChart = ({
   className,
 }: AgeProblemsChartProps): JSX.Element => {
-  const { data, isLoading, isFetching } = useAgeDifficulties();
+  const { data, isLoading, isFetching, isError } = useAgeDifficulties();
   const navigate = useNavigate();
+
+  const barStyles = {
+    noNotification: {
+      label: 'Не направлено ЗУ',
+      filterValue: 'Нет ЗУ',
+      style: 'bg-red-200',
+      icon: MailX,
+    },
+    activeDefects: {
+      label: 'Дефекты',
+      filterValue: 'Неустраненные дефекты',
+      style: 'bg-yellow-200',
+      icon: BrickWallFire,
+    },
+    overdueLitigation: {
+      label: 'Просрочен иск',
+      filterValue: 'Просрочен иск',
+      style: 'bg-blue-200',
+      icon: CalendarX,
+    },
+    longLitigation: {
+      label: 'Долгий суд',
+      filterValue: 'Долгие суды',
+      style: 'bg-emerald-200',
+      icon: Scale,
+    },
+  };
+
+  const chartData = useMemo(() => {
+    if (!data) return null;
+    const result: Record<string, any> = {};
+    const keys = Object.keys(barStyles);
+    for (const age of data) {
+      result[age.age] = [];
+      for (const key of keys) {
+        result[age.age].push({
+          key: key,
+          label: barStyles?.[key as keyof typeof barStyles]?.label,
+          value: age[key as keyof typeof age],
+          icon: barStyles?.[key as keyof typeof barStyles]?.icon,
+        });
+      }
+    }
+    return result;
+  }, [data, isLoading]);
 
   return (
     <Card className={cn('relative', cn(className))}>
-      <CardHeader className="space-y-0 pb-2">
+      <CardHeader className="space-y-0">
         {isLoading || isFetching ? (
           <div>
             <Skeleton className="mb-1 h-6 w-32" />
@@ -63,7 +85,7 @@ const AgeProblemsChartChart = ({
         {isLoading || isFetching ? (
           <Skeleton className="h-4 w-60" />
         ) : (
-          <CardDescription className="h-16">
+          <CardDescription className="h-4">
             Трудности в работе с проблемными семьями
           </CardDescription>
         )}
@@ -75,54 +97,48 @@ const AgeProblemsChartChart = ({
             <Skeleton className="mx-auto h-4 w-44" />
           </div>
         ) : (
-          <ChartContainer
-            config={inProgressAgeChartConfig}
-            className="mt-[-35px] h-full w-full lg:h-[240px]"
-          >
-            <BarChart
-              accessibilityLayer
-              data={data || []}
-              layout="vertical"
-              margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
-            >
-              <YAxis
-                dataKey="age"
-                type="category"
-                tickLine={false}
-                axisLine={false}
-                tick={{ fontSize: 10 }}
-                tickMargin={5}
-                width={72}
-                interval={0}
-              />
-              <XAxis
-                type="number"
-                domain={[0, 'dataMax']}
-                allowDataOverflow={false}
-                hide
-                tickLine={false}
-                axisLine={false}
-              />
-              {renderRechartsTooltip({
-                config: inProgressAgeChartConfig,
-                cursor: true,
+          <div className="flex flex-row gap-4">
+            {data &&
+              data.map((age) => {
+                return (
+                  <div
+                    key={age?.age}
+                    className="max-w-full flex-grow rounded border p-2"
+                  >
+                    <h3 className="bg-muted-foreground/10 -m-2 mb-2 py-1 text-center">
+                      {age?.age}
+                    </h3>
+                    <SimpleBarChart
+                      values={chartData?.[age?.age] || []}
+                      isLoading={isLoading}
+                      isError={isError}
+                      skeletonCount={4}
+                      extraBarClass={(val) => {
+                        return barStyles?.[val?.key as keyof typeof barStyles]
+                          ?.style;
+                      }}
+                      labelFit="full"
+                      className="w-full max-w-full"
+                      onBarClick={(key) => {
+                        navigate({
+                          to: './oldapartments',
+                          search: {
+                            relocationStatus: ['Переселение'],
+                            relocationType: [1],
+                            deviation: ['Требует внимания', 'Риск'],
+                            relocationAge: [age.age],
+                            problem: [
+                              barStyles?.[key as keyof typeof barStyles]
+                                ?.filterValue,
+                            ],
+                          },
+                        });
+                      }}
+                    />
+                  </div>
+                );
               })}
-              {renderRechartsStackedBar({
-                config: inProgressAgeChartConfig,
-                data: data || [],
-                onClick: (data) => {
-                  navigate({
-                    to: './oldbuildings',
-                    search: {
-                      relocationAge: [data.age],
-                      deviation: 'Наступили риски',
-                    },
-                  });
-                },
-              })}
-              {/* <ChartLegend content={<ChartLegendContent />} /> */}
-            </BarChart>
-          </ChartContainer>
+          </div>
         )}
       </CardContent>
     </Card>
