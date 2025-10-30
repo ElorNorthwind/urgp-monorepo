@@ -65,6 +65,8 @@ export const renovation = {
   insertApartmentDefects: sql('sql/renovation/insertApartmentDefects.sql'),
   apartmentDefects: sql('sql/renovation/apartmentDefects.sql'),
   cityAgeDifficulties: sql('sql/renovation/cityAgeDifficulties.sql'),
+  yearlyDoneTimeline: sql('sql/renovation/yearlyDoneTimeline.sql'),
+  yearlyProgressTimeline: sql('sql/renovation/yearlyProgressTimeline.sql'),
 };
 
 export const users = {

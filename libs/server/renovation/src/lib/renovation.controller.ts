@@ -70,6 +70,8 @@ import {
   AddDefectDataDto,
   ApartmentDefect,
   CityAgeDiffuculty,
+  YearlyProgressInfo,
+  YearlyDoneInfo,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
@@ -578,6 +580,20 @@ export class RenovationController {
   @Get('monthly-done-timeline')
   getMonthlyDoneTimeline(): Promise<MonthlyDoneInfo[]> {
     return this.renovation.getMonthlyDoneTimelime();
+  }
+
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
+  @Get('yearly-progress-timeline')
+  getYearlyProgressTimeline(): Promise<YearlyProgressInfo[]> {
+    return this.renovation.getYearlyProgressTimeline();
+  }
+
+  @CacheTTL(1000 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
+  @Get('yearly-done-timeline')
+  getYearlyDoneTimeline(): Promise<YearlyDoneInfo[]> {
+    return this.renovation.getYearlyDoneTimelime();
   }
 
   @CacheTTL(1000 * 60 * 60)

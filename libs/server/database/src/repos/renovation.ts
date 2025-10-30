@@ -47,6 +47,8 @@ import {
   UnansweredMessage,
   UpdateMessageDto,
   UpdateStageDto,
+  YearlyDoneInfo,
+  YearlyProgressInfo,
 } from '@urgp/shared/entities';
 
 import { camelToSnakeCase } from '../lib/to-snake-case';
@@ -324,6 +326,13 @@ export class RenovationRepository {
 
   getMonthlyDoneTimelime(): Promise<MonthlyDoneInfo[]> {
     return this.db.any(renovation.monthlyDoneTimeline);
+  }
+  getYearlyProgressTimeline(): Promise<YearlyProgressInfo[]> {
+    return this.db.any(renovation.yearlyProgressTimeline);
+  }
+
+  getYearlyDoneTimelime(): Promise<YearlyDoneInfo[]> {
+    return this.db.any(renovation.yearlyDoneTimeline);
   }
 
   getCurrentYearSankey(): Promise<SankeyData> {

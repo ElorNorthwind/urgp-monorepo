@@ -84,6 +84,8 @@ export type MonthlyDoneInfo = {
   '8f': number;
 };
 
+export type YearlyDoneInfo = Omit<MonthlyDoneInfo, 'period' | 'month'>;
+
 export type OldBuildingsStartAndFinish = {
   period: string;
   starts: number;
@@ -104,6 +106,7 @@ export type MonthlyProgressInfo = {
   '5t8f': number;
   gt8f: number;
 };
+export type YearlyProgressInfo = Omit<MonthlyProgressInfo, 'period' | 'month'>;
 
 export type SankeyData = {
   nodes: Array<{ name: 'string' }>;

@@ -39,6 +39,8 @@ import {
   ApartmentDefectData,
   ApartmentDefect,
   CityAgeDiffuculty,
+  YearlyProgressInfo,
+  YearlyDoneInfo,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -250,7 +252,12 @@ export class RenovationService {
   public async getMonthlyDoneTimelime(): Promise<MonthlyDoneInfo[]> {
     return this.dbServise.db.renovation.getMonthlyDoneTimelime();
   }
-
+  public async getYearlyProgressTimeline(): Promise<YearlyProgressInfo[]> {
+    return this.dbServise.db.renovation.getYearlyProgressTimeline();
+  }
+  public async getYearlyDoneTimelime(): Promise<YearlyDoneInfo[]> {
+    return this.dbServise.db.renovation.getYearlyDoneTimelime();
+  }
   public async getCurrentYearSankey(): Promise<SankeyData> {
     return this.dbServise.db.renovation.getCurrentYearSankey();
   }

@@ -12,6 +12,8 @@ import {
   OldBuildingsStartAndFinish,
   SankeyData,
   StartTimelineInfo,
+  YearlyDoneInfo,
+  YearlyProgressInfo,
 } from '@urgp/shared/entities';
 
 export const renovationStatisticsApi = rtkApi.injectEndpoints({
@@ -97,6 +99,18 @@ export const renovationStatisticsApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getYearlyProgress: build.query<YearlyProgressInfo[], void>({
+      query: () => ({
+        url: '/renovation/yearly-progress-timeline',
+        method: 'GET',
+      }),
+    }),
+    getYearlyDone: build.query<YearlyDoneInfo[], void>({
+      query: () => ({
+        url: '/renovation/yearly-done-timeline',
+        method: 'GET',
+      }),
+    }),
     getCurrentYearSankey: build.query<SankeyData, void>({
       query: () => ({
         url: '/renovation/current-year-sankey',
@@ -138,6 +152,8 @@ export const {
     useOldBuildingsStartAndFinishYearly,
   useGetMonthlyProgressQuery: useMonthlyProgress,
   useGetMonthlyDoneQuery: useMonthlyDone,
+  useGetYearlyProgressQuery: useYearlyProgress,
+  useGetYearlyDoneQuery: useYearlyDone,
   useGetCurrentYearSankeyQuery: useCurrentYearSankey,
   useGetCurrentYearApartmentsSankeyQuery: useCurrentYearApartmentsSankey,
 } = renovationStatisticsApi;
