@@ -16,7 +16,7 @@ export class DataMosController {
     for (const type of ['rail', 'mcd', 'metro'] as const) {
       total +=
         (await this.dataMos
-          .updateMetroStations(type)
+          .updateTransportStations(type)
           ?.then((res) => res.count)) || 0;
     }
     return total;

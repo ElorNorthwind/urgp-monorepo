@@ -1,23 +1,13 @@
 import { HttpService } from '@nestjs/axios';
-import {
-  Injectable,
-  Logger,
-  NotFoundException,
-  UseGuards,
-} from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Cron } from '@nestjs/schedule';
 import { DatabaseService } from '@urgp/server/database';
 import { AxiosRequestConfig } from 'axios';
 import { firstValueFrom } from 'rxjs';
-import {
-  AdressRegistryRowSlim,
-  DataMosAdress,
-  TransportStationRow,
-} from '../config/types';
-import { convertDataMosAdress } from './helper/convertDataMosAdress';
-import { AccessTokenGuard } from '@urgp/server/auth';
-import { splitAddress } from './helper/splitAddress';
+import { DataMosAdress, TransportStationRow } from '../config/types';
 import { calculateStreetFromDB } from './helper/calculateStreetFromDB';
+import { convertDataMosAdress } from './helper/convertDataMosAdress';
 import { convertDataMosTransportStation } from './helper/convertDataMosTransportStation';
 
 @Injectable()
@@ -113,7 +103,7 @@ export class DataMosService {
     return { count: total, error: undefined };
   }
 
-  public async updateMetroStations(
+  public async updateTransportStations(
     type: TransportStationRow['station_type'],
   ): Promise<any> {
     const apiKey = this.configService.get<string>('OPEN_MOS_KEY');
@@ -179,5 +169,14 @@ export class DataMosService {
       Logger.error(error);
       return { count: 0, error };
     }
+  }
+
+  @Cron('0 0 1 * * *')
+  public async updateTransportStationsAll(): Promise<any> {
+    return Promise.all([
+      this.updateTransportStations('rail'),
+      this.updateTransportStations('metro'),
+      this.updateTransportStations('mcd'),
+    ]);
   }
 }
