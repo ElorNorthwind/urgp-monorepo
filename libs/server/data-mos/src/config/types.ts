@@ -123,3 +123,62 @@ export type AdressRegistryRowCalcStreetData = Pick<
   AdressRegistryRow,
   'global_id' | 'street_calc'
 >;
+
+// Проверял только с метром
+export type DataMosTransportStation = {
+  global_id: string; //bigint?
+  Cells: {
+    ID: number;
+    Name: string;
+    OnTerritoryOfMoscow: string;
+    AdmArea: string;
+    District: string;
+    Longitude_WGS84: string;
+    Latitude_WGS84: string;
+    VestibuleType: string;
+    NameOfStation: string;
+    Line: string;
+    CulturalHeritageSiteStatus: string;
+    ModeOnEvenDays: string;
+    ModeOnOddDays: string;
+    FullFeaturedBPAAmount: number | null;
+    LittleFunctionalBPAAmount: number | null;
+    BPAAmount: number | null;
+    RepairOfEscalators: any[];
+    ObjectStatus: string;
+    global_id: number;
+    geoData: {
+      coordinates: number[];
+      type: string;
+    };
+    Station?: string;
+    RailwayLine?: string;
+    TypeExit?: string;
+    Diameter?: Array<{
+      StationName?: string;
+      DiameterName?: string;
+      RouteName?: string;
+    }>;
+  };
+};
+
+export type TransportStationRow = {
+  id: string;
+  name: string;
+  on_territory_of_moscow: boolean;
+  adm_area: string;
+  district: string;
+  vestibule_type: string;
+  name_of_station: string;
+  line: string;
+  cultural_heritage_site_status: string;
+  // mode_on_even_days: string;
+  // mode_on_odd_days: string;
+  // full_featured_bpa_amount: number | null;
+  // little_functional_bpa_amount: number | null;
+  // bpa_amount: number | null;
+  // repair_of_escalators: any[];
+  object_status: string;
+  geo_data: any;
+  station_type: 'metro' | 'rail' | 'mcd';
+};

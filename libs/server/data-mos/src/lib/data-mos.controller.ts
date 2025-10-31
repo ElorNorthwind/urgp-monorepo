@@ -10,6 +10,18 @@ export class DataMosController {
   updateAdresses(): Promise<any> {
     return this.dataMos.updateAdresses();
   }
+  @Get('update-transport-stations')
+  async updateTransportStations(): Promise<any> {
+    let total = 0;
+    for (const type of ['rail', 'mcd', 'metro'] as const) {
+      total +=
+        (await this.dataMos
+          .updateMetroStations(type)
+          ?.then((res) => res.count)) || 0;
+    }
+    return total;
+  }
+
   @Get('calculate-streets')
   calculateStreets(): Promise<any> {
     return this.dataMos.calculateStreets(5000);

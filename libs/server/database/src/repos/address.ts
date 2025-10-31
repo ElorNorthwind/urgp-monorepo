@@ -10,10 +10,13 @@ import {
 import {
   AdressRegistryRowCalcStreetData,
   AdressRegistryRowSlim,
+  DataMosTransportStation,
+  TransportStationRow,
 } from 'libs/server/data-mos/src/config/types';
-import { IDatabase, IMain } from 'pg-promise';
+import pgPromise, { IDatabase, IMain } from 'pg-promise';
 import { camelToSnakeCase } from '../lib/to-snake-case';
 import { dataMos, rates, results, sessions } from './sql/sql';
+import { Logger } from '@nestjs/common';
 
 // const pgp = require('pg-promise')();
 // const { ColumnSet } = pgp.helpers;
@@ -65,6 +68,32 @@ const adressRegistryColumns = [
   { name: 'street_calc' },
 ];
 
+const transportStationsColumns = [
+  { name: 'id' },
+  { name: 'name' },
+  { name: 'on_territory_of_moscow' },
+  { name: 'adm_area' },
+  { name: 'district' },
+  { name: 'vestibule_type' },
+  { name: 'name_of_station' },
+  { name: 'line' },
+  { name: 'cultural_heritage_site_status' },
+  { name: 'object_status' },
+  {
+    name: 'geo_data',
+    mod: ':raw',
+    init: (d: any) =>
+      pgPromise.as.format(
+        `ST_GeomFromGeoJSON('${JSON.stringify(d.source.geo_data)}')`,
+      ),
+    // init: (d: any) =>
+    //   pgPromise.as.format(
+    //     `ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(d.source.geo_data)}'), 4326)`,
+    //   ),
+  },
+  { name: 'station_type' },
+];
+
 // @Injectable()
 export class AddressRepository {
   constructor(
@@ -85,6 +114,28 @@ export class AddressRepository {
 
     const insert = this.pgp.helpers.insert(addresses, addressRegistryColumnSet);
     const q = this.pgp.as.format(dataMos.upsertAddresses, {
+      insert,
+    });
+    // Logger.warn(q);
+    return this.db.none(q);
+  }
+
+  upsertTransportStations(stations: TransportStationRow[]): Promise<null> {
+    const transportStationsColumnSet = new this.pgp.helpers.ColumnSet(
+      transportStationsColumns,
+      {
+        table: {
+          table: 'transport_stations',
+          schema: 'address',
+        },
+      },
+    );
+
+    const insert = this.pgp.helpers.insert(
+      stations,
+      transportStationsColumnSet,
+    );
+    const q = this.pgp.as.format(dataMos.upsertTransportStations, {
       insert,
     });
     // Logger.warn(q);

@@ -143,6 +143,9 @@ export const dataMos = {
   countUpdated: sql('sql/address/data-mos/countUpdated.sql'),
   countTotal: sql('sql/address/data-mos/countTotal.sql'),
   clearUpdated: sql('sql/address/data-mos/clearUpdated.sql'),
+  upsertTransportStations: sql(
+    'sql/address/data-mos/upsertTransportStations.sql',
+  ),
 };
 
 export const sessions = {
