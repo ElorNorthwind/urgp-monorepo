@@ -644,4 +644,10 @@ export class RenovationController {
   ): Promise<ApartmentDefect[]> {
     return this.renovation.getApartmentDefects(id);
   }
+
+  @CacheTTL(1000 * 60 * 60)
+  @Get('transport-stations')
+  async getTransportStations() {
+    return this.renovation.getTransportStations();
+  }
 }

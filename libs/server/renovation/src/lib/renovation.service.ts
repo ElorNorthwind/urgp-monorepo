@@ -298,4 +298,7 @@ export class RenovationService {
   public async getApartmentDefects(id: number): Promise<ApartmentDefect[]> {
     return this.dbServise.db.renovation.getApartmentDefects(id);
   }
+  public async getTransportStations() {
+    return this.dbServise.db.address.getTransportStations();
+  }
 }

@@ -142,6 +142,10 @@ export class AddressRepository {
     return this.db.none(q);
   }
 
+  getTransportStations(): Promise<TransportStationRow[]> {
+    return this.db.any(dataMos.getTransportStations);
+  }
+
   countUpdated(): Promise<number> {
     return this.db
       .one(dataMos.countUpdated)

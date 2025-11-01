@@ -146,6 +146,7 @@ export const dataMos = {
   upsertTransportStations: sql(
     'sql/address/data-mos/upsertTransportStations.sql',
   ),
+  getTransportStations: sql('sql/address/data-mos/getTransportStations.sql'),
 };
 
 export const sessions = {
