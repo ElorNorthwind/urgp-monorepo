@@ -1,20 +1,19 @@
+import { HttpService } from '@nestjs/axios';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import {
   BadRequestException,
   HttpException,
   HttpStatus,
   Inject,
   Injectable,
-  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '@urgp/server/database';
-import { generateSudirPoW } from './util/generateSudirPoW';
-import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, map } from 'rxjs';
-import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
+import { generateSudirPoW } from './util/generateSudirPoW';
 
-import { parse, valid, type HTMLElement } from 'node-html-parser';
+import { parse, valid } from 'node-html-parser';
 
 @Injectable()
 export class SudirService {
@@ -81,25 +80,31 @@ export class SudirService {
 
     const powTask = body?.getElementById('pow')?.getAttribute('value');
 
+    const formData = new URLSearchParams();
+    formData.append('proofOfWork', await this.generateSudirPoW(powTask || ''));
+    formData.append('isDelayed', 'false');
+    formData.append('login', login);
+    formData.append('password', password);
+    formData.append('bfp', 'bd011dddb4109fbc788a59def5283fd8');
+
     const thirdLocation = await firstValueFrom(
       this.axios
         .request({
           baseURL: 'https://sudir.mos.ru',
-          url: secondLocation,
-          headers: { cookie: cookies },
+          url: '/blitz/login/methods/password',
           method: 'POST',
-          data: {
-            pow: await this.generateSudirPoW(powTask || ''),
-            // login: encodeURIComponent(login),
-            // password: encodeURIComponent(password),
-            login,
-            password,
+          data: formData,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            cookie: cookies,
           },
           maxRedirects: 0,
           validateStatus: (status: number) => [200, 302, 303].includes(status),
         })
         .pipe(map((response) => response?.headers?.['location'])),
     );
+
+    // Logger.debug(thirdLocation);
 
     if (!thirdLocation)
       throw new UnauthorizedException(
