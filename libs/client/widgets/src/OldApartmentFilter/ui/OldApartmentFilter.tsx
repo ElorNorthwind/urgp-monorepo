@@ -157,10 +157,11 @@ const OldApartmentFilter = ({
           })
         }
       />
-      <ScrollArea className="-mb-2 overflow-auto">
-        <ScrollBar orientation="horizontal" className="" />
-        <div className="flex flex-nowrap items-center justify-start gap-2 pb-2">
+      <div className="group relative -mt-2 h-10 w-full flex-grow overflow-hidden p-0 hover:overflow-visible">
+        <div className="group-hover:bg-muted absolute top-0 z-50 flex h-8 w-full flex-wrap items-center justify-start gap-2 p-2  group-hover:h-max group-hover:rounded-b group-hover:border-b group-hover:shadow-sm">
           <FacetFilter
+            className="flex-grow"
+            triggerClassName="flex-grow"
             options={areas}
             title="АО"
             selectedValues={filters.okrugs}
@@ -343,8 +344,7 @@ const OldApartmentFilter = ({
             validFilters={validFilters}
           />
         </div>
-      </ScrollArea>
-
+      </div>
       <Button
         variant={'secondary'}
         onClick={() =>

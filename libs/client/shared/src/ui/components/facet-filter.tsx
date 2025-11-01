@@ -30,6 +30,7 @@ interface FacetFilterProps<TValue extends string | number>
   title?: string;
   optionsWidth?: number;
   noSearch?: boolean;
+  triggerClassName?: string;
 }
 
 function FacetFilter<TValue extends string | number>(
@@ -39,6 +40,7 @@ function FacetFilter<TValue extends string | number>(
     options,
     selectedValues = [],
     className,
+    triggerClassName,
     title,
     setSelectedValues,
     optionsWidth = 200,
@@ -49,7 +51,11 @@ function FacetFilter<TValue extends string | number>(
     <div className={cn('flex items-center space-x-2', className)}>
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" size="sm" className="h-8 border-dashed">
+          <Button
+            variant="outline"
+            size="sm"
+            className={cn('h-8 border-dashed', triggerClassName)}
+          >
             <PlusCircleIcon className="mr-2 h-4 w-4" />
             {title}
             {selectedValues?.length > 0 && (
