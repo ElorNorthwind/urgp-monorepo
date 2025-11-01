@@ -171,12 +171,15 @@ export class DataMosService {
     }
   }
 
-  @Cron('0 0 1 * * *')
-  public async updateTransportStationsAll(): Promise<any> {
-    return Promise.all([
-      this.updateTransportStations('rail'),
-      this.updateTransportStations('metro'),
-      this.updateTransportStations('mcd'),
-    ]);
+  @Cron('0 0 1 * * 6')
+  public async updateTransportStationsAll(): Promise<void> {
+    for (const type of ['rail', 'mcd', 'metro'] as const) {
+      await this.updateTransportStations(type);
+    }
+    // return Promise.all([
+    //   this.updateTransportStations('rail'),
+    //   this.updateTransportStations('metro'),
+    //   this.updateTransportStations('mcd'),
+    // ]);
   }
 }
