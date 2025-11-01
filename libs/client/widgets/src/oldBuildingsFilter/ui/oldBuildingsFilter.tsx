@@ -250,10 +250,12 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
             <X className="ml-2 h-4 w-4" />
           </Button>
         )}
-        <div className="text-muted-foreground ml-auto text-nowrap">
-          {(filteredCount || '') +
-            ' из ' +
-            (totalCount || (isFetching ? '' : 0))}
+        <div className="text-muted-foreground ml-auto flex h-8 w-max flex-shrink-0 items-center justify-center overflow-hidden text-nowrap">
+          <span className="flex-shrink-0">
+            {(filteredCount || '') +
+              ' из ' +
+              (totalCount || (isFetching ? '' : 0))}
+          </span>
         </div>
       </div>
     );
