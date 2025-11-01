@@ -2,12 +2,14 @@ import { cn } from '@urgp/client/shared';
 import {
   EquityClaimTransferStatuses,
   EquityObjectDocuments,
+  EquityObjectExistanceTypes,
   EquityObjectOpinions,
   EquityObjectProblems,
 } from '@urgp/shared/entities';
 import {
   Badge,
   BadgeAlert,
+  BadgeCheck,
   BadgeInfo,
   BadgePercent,
   BadgePlus,
@@ -363,6 +365,21 @@ export const equityClaimTransferStyles = {
       'bg-background border p-1 px-2 hover:bg-muted-foreground/5 border-zinc-500',
       "before:content-[''] before:rounded-full before:size-3 before:bg-zinc-500 before:mr-1 before:flex-shrink-0",
     ),
+  },
+} as Record<string, StyleData>;
+
+export const equityObjectExistanceStyles = {
+  [EquityObjectExistanceTypes['real']]: {
+    icon: BadgeCheck,
+    iconStyle: cn('text-sky-500'),
+    label: 'Реальный объект',
+    fullLabel: 'Объект фактически существует',
+  },
+  [EquityObjectExistanceTypes['nonexist']]: {
+    icon: BadgeX,
+    iconStyle: cn('text-gray-500'),
+    label: 'Неидент. требование',
+    fullLabel: 'Предмет требования не соответствует реальным',
   },
 } as Record<string, StyleData>;
 

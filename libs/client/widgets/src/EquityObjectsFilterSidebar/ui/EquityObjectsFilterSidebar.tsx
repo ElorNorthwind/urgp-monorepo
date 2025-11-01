@@ -23,6 +23,7 @@ import { EquityObjectDocumentsFilter } from './filterInputs/EquityObjectDocument
 import { EquityOpinionUrgpFilter } from './filterInputs/EquityOpinionUrgpFilter';
 import { EquityClaimTransferFilter } from './filterInputs/EquityClaimTransferFilter';
 import { EquityApartmentNumberFilter } from './filterInputs/EquityApartmentNumberFilter';
+import { EquityObjectExistanceFilter } from './filterInputs/EquityObjectExistanceFilter';
 
 type EquityObjectsFilterSidebarProps = {
   side?: 'left' | 'right';
@@ -70,6 +71,7 @@ const EquityObjectsFilterSidebar = (
               <EquityObjectDocumentsFilter variant="accordion" />
               <EquityClaimTransferFilter variant="accordion" />
               <EquityOpinionUrgpFilter variant="accordion" />
+              <EquityObjectExistanceFilter variant="accordion" />
             </Accordion>
           </div>
         </ScrollArea>

@@ -36,6 +36,7 @@ export const equityObjectsPageFilterSchema = z
     opinionUpozi: queryStringArray,
 
     claimTransfer: queryStringArray,
+    exists: queryStringArray,
   })
   .partial();
 export type EquityObjectsPageFilter = z.infer<

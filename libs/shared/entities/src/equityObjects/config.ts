@@ -55,3 +55,13 @@ export const EquityRgStatuses = {
 export type EquityRgStatuses =
   (typeof EquityRgStatuses)[keyof typeof EquityRgStatuses];
 export const equityRgStatusesValues = getValues(EquityRgStatuses);
+
+export const EquityObjectExistanceTypes = {
+  real: 'real',
+  nonexist: 'nonexist',
+} as const;
+export type EquityObjectExistanceTypes =
+  (typeof EquityObjectExistanceTypes)[keyof typeof EquityObjectExistanceTypes];
+export const equityObjectExistanceTypesValues = getValues(
+  EquityObjectExistanceTypes,
+);

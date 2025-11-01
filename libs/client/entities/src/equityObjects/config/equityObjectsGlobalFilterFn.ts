@@ -1,5 +1,9 @@
 import { Row } from '@tanstack/react-table';
-import { EquityObject, EquityObjectsPageSearch } from '@urgp/shared/entities';
+import {
+  EquityObject,
+  EquityObjectExistanceTypes,
+  EquityObjectsPageSearch,
+} from '@urgp/shared/entities';
 
 export function equityObjectsGlobalFilterFn(
   row: Row<EquityObject>,
@@ -16,6 +20,7 @@ export function equityObjectsGlobalFilterFn(
     documents,
     claimTransfer,
     opinionUrgp,
+    exists,
   } = filterValue;
 
   if (
@@ -88,6 +93,18 @@ export function equityObjectsGlobalFilterFn(
   if (
     opinionUrgp &&
     !opinionUrgp.includes(row.original?.opinionUrgp || 'нет')
+  ) {
+    return false;
+  }
+
+  if (
+    exists &&
+    !(
+      (exists.includes(EquityObjectExistanceTypes.real) &&
+        row.original?.isIdentified === true) ||
+      (exists.includes(EquityObjectExistanceTypes.nonexist) &&
+        row.original?.isIdentified !== true)
+    )
   ) {
     return false;
   }
