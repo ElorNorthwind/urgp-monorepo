@@ -95,4 +95,4 @@ const OldApartmentsPage = (): JSX.Element => {
   );
 };
 
-export default OldApartmentsPage;
+export { OldApartmentsPage };

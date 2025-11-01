@@ -8,58 +8,58 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as OldbuildingsImport } from './routes/oldbuildings'
-import { Route as LoginImport } from './routes/login'
-import { Route as XmlRouteImport } from './routes/xml/route'
-import { Route as VksRouteImport } from './routes/vks/route'
-import { Route as RenovationRouteImport } from './routes/renovation/route'
-import { Route as EquityRouteImport } from './routes/equity/route'
-import { Route as ControlRouteImport } from './routes/control/route'
-import { Route as AddressRouteImport } from './routes/address/route'
-import { Route as XmlIndexImport } from './routes/xml/index'
-import { Route as VksIndexImport } from './routes/vks/index'
-import { Route as RenovationIndexImport } from './routes/renovation/index'
-import { Route as EquityIndexImport } from './routes/equity/index'
-import { Route as ControlIndexImport } from './routes/control/index'
-import { Route as AddressIndexImport } from './routes/address/index'
-import { Route as VksCasesImport } from './routes/vks/cases'
-import { Route as RenovationStagesImport } from './routes/renovation/stages'
-import { Route as RenovationSpecialapartmentsImport } from './routes/renovation/specialapartments'
-import { Route as RenovationOldbuildingsImport } from './routes/renovation/oldbuildings'
-import { Route as RenovationOldapartmentsImport } from './routes/renovation/oldapartments'
-import { Route as RenovationMessagesImport } from './routes/renovation/messages'
-import { Route as RenovationBuildingRelocationMapImport } from './routes/renovation/building-relocation-map'
-import { Route as EquityOperationsImport } from './routes/equity/operations'
-import { Route as EquityObjectsImport } from './routes/equity/objects'
-import { Route as ControlProblemsImport } from './routes/control/problems'
-import { Route as ControlPendingImport } from './routes/control/pending'
-import { Route as ControlCasesImport } from './routes/control/cases'
-import { Route as ControlCaseImport } from './routes/control/case'
-import { Route as AddressSessionsImport } from './routes/address/sessions'
-import { Route as RenovationSettingsRouteImport } from './routes/renovation/settings/route'
-import { Route as EquitySettingsRouteImport } from './routes/equity/settings/route'
-import { Route as ControlSettingsRouteImport } from './routes/control/settings/route'
-import { Route as RenovationSettingsIndexImport } from './routes/renovation/settings/index'
-import { Route as EquitySettingsIndexImport } from './routes/equity/settings/index'
-import { Route as ControlSettingsIndexImport } from './routes/control/settings/index'
-import { Route as RenovationSettingsChangePasswordImport } from './routes/renovation/settings/change-password'
-import { Route as EquitySettingsChangePasswordImport } from './routes/equity/settings/change-password'
-import { Route as ControlSettingsNotificationsImport } from './routes/control/settings/notifications'
-import { Route as ControlSettingsFilterImport } from './routes/control/settings/filter'
-import { Route as ControlSettingsChangePasswordImport } from './routes/control/settings/change-password'
-import { Route as ControlSettingsApproveChainImport } from './routes/control/settings/approve-chain'
+import { Route as rootRoute } from './routes/__root';
+import { Route as OldbuildingsImport } from './routes/oldbuildings';
+import { Route as LoginImport } from './routes/login';
+import { Route as XmlRouteImport } from './routes/xml/route';
+import { Route as VksRouteImport } from './routes/vks/route';
+import { Route as RenovationRouteImport } from './routes/renovation/route';
+import { Route as EquityRouteImport } from './routes/equity/route';
+import { Route as ControlRouteImport } from './routes/control/route';
+import { Route as AddressRouteImport } from './routes/address/route';
+import { Route as XmlIndexImport } from './routes/xml/index';
+import { Route as VksIndexImport } from './routes/vks/index';
+import { Route as RenovationIndexImport } from './routes/renovation/index';
+import { Route as EquityIndexImport } from './routes/equity/index';
+import { Route as ControlIndexImport } from './routes/control/index';
+import { Route as AddressIndexImport } from './routes/address/index';
+import { Route as VksCasesImport } from './routes/vks/cases';
+import { Route as RenovationStagesImport } from './routes/renovation/stages';
+import { Route as RenovationSpecialapartmentsImport } from './routes/renovation/specialapartments';
+import { Route as RenovationOldbuildingsImport } from './routes/renovation/oldbuildings';
+import { Route as RenovationOldapartmentsImport } from './routes/renovation/oldapartments';
+import { Route as RenovationMessagesImport } from './routes/renovation/messages';
+import { Route as RenovationBuildingRelocationMapImport } from './routes/renovation/building-relocation-map';
+import { Route as EquityOperationsImport } from './routes/equity/operations';
+import { Route as EquityObjectsImport } from './routes/equity/objects';
+import { Route as ControlProblemsImport } from './routes/control/problems';
+import { Route as ControlPendingImport } from './routes/control/pending';
+import { Route as ControlCasesImport } from './routes/control/cases';
+import { Route as ControlCaseImport } from './routes/control/case';
+import { Route as AddressSessionsImport } from './routes/address/sessions';
+import { Route as RenovationSettingsRouteImport } from './routes/renovation/settings/route';
+import { Route as EquitySettingsRouteImport } from './routes/equity/settings/route';
+import { Route as ControlSettingsRouteImport } from './routes/control/settings/route';
+import { Route as RenovationSettingsIndexImport } from './routes/renovation/settings/index';
+import { Route as EquitySettingsIndexImport } from './routes/equity/settings/index';
+import { Route as ControlSettingsIndexImport } from './routes/control/settings/index';
+import { Route as RenovationSettingsChangePasswordImport } from './routes/renovation/settings/change-password';
+import { Route as EquitySettingsChangePasswordImport } from './routes/equity/settings/change-password';
+import { Route as ControlSettingsNotificationsImport } from './routes/control/settings/notifications';
+import { Route as ControlSettingsFilterImport } from './routes/control/settings/filter';
+import { Route as ControlSettingsChangePasswordImport } from './routes/control/settings/change-password';
+import { Route as ControlSettingsApproveChainImport } from './routes/control/settings/approve-chain';
 
 // Create Virtual Routes
 
-const MapLazyImport = createFileRoute('/map')()
-const BticalcLazyImport = createFileRoute('/bticalc')()
-const AboutLazyImport = createFileRoute('/about')()
-const IndexLazyImport = createFileRoute('/')()
+const MapLazyImport = createFileRoute('/map')();
+const BticalcLazyImport = createFileRoute('/bticalc')();
+const AboutLazyImport = createFileRoute('/about')();
+const IndexLazyImport = createFileRoute('/')();
 
 // Create/Update Routes
 
@@ -67,128 +67,128 @@ const MapLazyRoute = MapLazyImport.update({
   id: '/map',
   path: '/map',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/map.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/map.lazy').then((d) => d.Route));
 
 const BticalcLazyRoute = BticalcLazyImport.update({
   id: '/bticalc',
   path: '/bticalc',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/bticalc.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/bticalc.lazy').then((d) => d.Route));
 
 const AboutLazyRoute = AboutLazyImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route));
 
 const OldbuildingsRoute = OldbuildingsImport.update({
   id: '/oldbuildings',
   path: '/oldbuildings',
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const XmlRouteRoute = XmlRouteImport.update({
   id: '/xml',
   path: '/xml',
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const VksRouteRoute = VksRouteImport.update({
   id: '/vks',
   path: '/vks',
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const RenovationRouteRoute = RenovationRouteImport.update({
   id: '/renovation',
   path: '/renovation',
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const EquityRouteRoute = EquityRouteImport.update({
   id: '/equity',
   path: '/equity',
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const ControlRouteRoute = ControlRouteImport.update({
   id: '/control',
   path: '/control',
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const AddressRouteRoute = AddressRouteImport.update({
   id: '/address',
   path: '/address',
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const IndexLazyRoute = IndexLazyImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route));
 
 const XmlIndexRoute = XmlIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => XmlRouteRoute,
-} as any)
+} as any);
 
 const VksIndexRoute = VksIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => VksRouteRoute,
-} as any)
+} as any);
 
 const RenovationIndexRoute = RenovationIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => RenovationRouteRoute,
-} as any)
+} as any);
 
 const EquityIndexRoute = EquityIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => EquityRouteRoute,
-} as any)
+} as any);
 
 const ControlIndexRoute = ControlIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ControlRouteRoute,
-} as any)
+} as any);
 
 const AddressIndexRoute = AddressIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AddressRouteRoute,
-} as any)
+} as any);
 
 const VksCasesRoute = VksCasesImport.update({
   id: '/cases',
   path: '/cases',
   getParentRoute: () => VksRouteRoute,
-} as any)
+} as any);
 
 const RenovationStagesRoute = RenovationStagesImport.update({
   id: '/stages',
   path: '/stages',
   getParentRoute: () => RenovationRouteRoute,
-} as any)
+} as any);
 
 const RenovationSpecialapartmentsRoute =
   RenovationSpecialapartmentsImport.update({
     id: '/specialapartments',
     path: '/specialapartments',
     getParentRoute: () => RenovationRouteRoute,
-  } as any)
+  } as any);
 
 const RenovationOldbuildingsRoute = RenovationOldbuildingsImport.update({
   id: '/oldbuildings',
@@ -196,19 +196,19 @@ const RenovationOldbuildingsRoute = RenovationOldbuildingsImport.update({
   getParentRoute: () => RenovationRouteRoute,
 } as any).lazy(() =>
   import('./routes/renovation/oldbuildings.lazy').then((d) => d.Route),
-)
+);
 
 const RenovationOldapartmentsRoute = RenovationOldapartmentsImport.update({
   id: '/oldapartments',
   path: '/oldapartments',
   getParentRoute: () => RenovationRouteRoute,
-} as any)
+} as any);
 
 const RenovationMessagesRoute = RenovationMessagesImport.update({
   id: '/messages',
   path: '/messages',
   getParentRoute: () => RenovationRouteRoute,
-} as any)
+} as any);
 
 const RenovationBuildingRelocationMapRoute =
   RenovationBuildingRelocationMapImport.update({
@@ -219,464 +219,464 @@ const RenovationBuildingRelocationMapRoute =
     import('./routes/renovation/building-relocation-map.lazy').then(
       (d) => d.Route,
     ),
-  )
+  );
 
 const EquityOperationsRoute = EquityOperationsImport.update({
   id: '/operations',
   path: '/operations',
   getParentRoute: () => EquityRouteRoute,
-} as any)
+} as any);
 
 const EquityObjectsRoute = EquityObjectsImport.update({
   id: '/objects',
   path: '/objects',
   getParentRoute: () => EquityRouteRoute,
-} as any)
+} as any);
 
 const ControlProblemsRoute = ControlProblemsImport.update({
   id: '/problems',
   path: '/problems',
   getParentRoute: () => ControlRouteRoute,
-} as any)
+} as any);
 
 const ControlPendingRoute = ControlPendingImport.update({
   id: '/pending',
   path: '/pending',
   getParentRoute: () => ControlRouteRoute,
-} as any)
+} as any);
 
 const ControlCasesRoute = ControlCasesImport.update({
   id: '/cases',
   path: '/cases',
   getParentRoute: () => ControlRouteRoute,
-} as any)
+} as any);
 
 const ControlCaseRoute = ControlCaseImport.update({
   id: '/case',
   path: '/case',
   getParentRoute: () => ControlRouteRoute,
-} as any)
+} as any);
 
 const AddressSessionsRoute = AddressSessionsImport.update({
   id: '/sessions',
   path: '/sessions',
   getParentRoute: () => AddressRouteRoute,
-} as any)
+} as any);
 
 const RenovationSettingsRouteRoute = RenovationSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => RenovationRouteRoute,
-} as any)
+} as any);
 
 const EquitySettingsRouteRoute = EquitySettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => EquityRouteRoute,
-} as any)
+} as any);
 
 const ControlSettingsRouteRoute = ControlSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => ControlRouteRoute,
-} as any)
+} as any);
 
 const RenovationSettingsIndexRoute = RenovationSettingsIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => RenovationSettingsRouteRoute,
-} as any)
+} as any);
 
 const EquitySettingsIndexRoute = EquitySettingsIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => EquitySettingsRouteRoute,
-} as any)
+} as any);
 
 const ControlSettingsIndexRoute = ControlSettingsIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ControlSettingsRouteRoute,
-} as any)
+} as any);
 
 const RenovationSettingsChangePasswordRoute =
   RenovationSettingsChangePasswordImport.update({
     id: '/change-password',
     path: '/change-password',
     getParentRoute: () => RenovationSettingsRouteRoute,
-  } as any)
+  } as any);
 
 const EquitySettingsChangePasswordRoute =
   EquitySettingsChangePasswordImport.update({
     id: '/change-password',
     path: '/change-password',
     getParentRoute: () => EquitySettingsRouteRoute,
-  } as any)
+  } as any);
 
 const ControlSettingsNotificationsRoute =
   ControlSettingsNotificationsImport.update({
     id: '/notifications',
     path: '/notifications',
     getParentRoute: () => ControlSettingsRouteRoute,
-  } as any)
+  } as any);
 
 const ControlSettingsFilterRoute = ControlSettingsFilterImport.update({
   id: '/filter',
   path: '/filter',
   getParentRoute: () => ControlSettingsRouteRoute,
-} as any)
+} as any);
 
 const ControlSettingsChangePasswordRoute =
   ControlSettingsChangePasswordImport.update({
     id: '/change-password',
     path: '/change-password',
     getParentRoute: () => ControlSettingsRouteRoute,
-  } as any)
+  } as any);
 
 const ControlSettingsApproveChainRoute =
   ControlSettingsApproveChainImport.update({
     id: '/approve-chain',
     path: '/approve-chain',
     getParentRoute: () => ControlSettingsRouteRoute,
-  } as any)
+  } as any);
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/';
+      path: '/';
+      fullPath: '/';
+      preLoaderRoute: typeof IndexLazyImport;
+      parentRoute: typeof rootRoute;
+    };
     '/address': {
-      id: '/address'
-      path: '/address'
-      fullPath: '/address'
-      preLoaderRoute: typeof AddressRouteImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/address';
+      path: '/address';
+      fullPath: '/address';
+      preLoaderRoute: typeof AddressRouteImport;
+      parentRoute: typeof rootRoute;
+    };
     '/control': {
-      id: '/control'
-      path: '/control'
-      fullPath: '/control'
-      preLoaderRoute: typeof ControlRouteImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/control';
+      path: '/control';
+      fullPath: '/control';
+      preLoaderRoute: typeof ControlRouteImport;
+      parentRoute: typeof rootRoute;
+    };
     '/equity': {
-      id: '/equity'
-      path: '/equity'
-      fullPath: '/equity'
-      preLoaderRoute: typeof EquityRouteImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/equity';
+      path: '/equity';
+      fullPath: '/equity';
+      preLoaderRoute: typeof EquityRouteImport;
+      parentRoute: typeof rootRoute;
+    };
     '/renovation': {
-      id: '/renovation'
-      path: '/renovation'
-      fullPath: '/renovation'
-      preLoaderRoute: typeof RenovationRouteImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/renovation';
+      path: '/renovation';
+      fullPath: '/renovation';
+      preLoaderRoute: typeof RenovationRouteImport;
+      parentRoute: typeof rootRoute;
+    };
     '/vks': {
-      id: '/vks'
-      path: '/vks'
-      fullPath: '/vks'
-      preLoaderRoute: typeof VksRouteImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/vks';
+      path: '/vks';
+      fullPath: '/vks';
+      preLoaderRoute: typeof VksRouteImport;
+      parentRoute: typeof rootRoute;
+    };
     '/xml': {
-      id: '/xml'
-      path: '/xml'
-      fullPath: '/xml'
-      preLoaderRoute: typeof XmlRouteImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/xml';
+      path: '/xml';
+      fullPath: '/xml';
+      preLoaderRoute: typeof XmlRouteImport;
+      parentRoute: typeof rootRoute;
+    };
     '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/login';
+      path: '/login';
+      fullPath: '/login';
+      preLoaderRoute: typeof LoginImport;
+      parentRoute: typeof rootRoute;
+    };
     '/oldbuildings': {
-      id: '/oldbuildings'
-      path: '/oldbuildings'
-      fullPath: '/oldbuildings'
-      preLoaderRoute: typeof OldbuildingsImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/oldbuildings';
+      path: '/oldbuildings';
+      fullPath: '/oldbuildings';
+      preLoaderRoute: typeof OldbuildingsImport;
+      parentRoute: typeof rootRoute;
+    };
     '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutLazyImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/about';
+      path: '/about';
+      fullPath: '/about';
+      preLoaderRoute: typeof AboutLazyImport;
+      parentRoute: typeof rootRoute;
+    };
     '/bticalc': {
-      id: '/bticalc'
-      path: '/bticalc'
-      fullPath: '/bticalc'
-      preLoaderRoute: typeof BticalcLazyImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/bticalc';
+      path: '/bticalc';
+      fullPath: '/bticalc';
+      preLoaderRoute: typeof BticalcLazyImport;
+      parentRoute: typeof rootRoute;
+    };
     '/map': {
-      id: '/map'
-      path: '/map'
-      fullPath: '/map'
-      preLoaderRoute: typeof MapLazyImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/map';
+      path: '/map';
+      fullPath: '/map';
+      preLoaderRoute: typeof MapLazyImport;
+      parentRoute: typeof rootRoute;
+    };
     '/control/settings': {
-      id: '/control/settings'
-      path: '/settings'
-      fullPath: '/control/settings'
-      preLoaderRoute: typeof ControlSettingsRouteImport
-      parentRoute: typeof ControlRouteImport
-    }
+      id: '/control/settings';
+      path: '/settings';
+      fullPath: '/control/settings';
+      preLoaderRoute: typeof ControlSettingsRouteImport;
+      parentRoute: typeof ControlRouteImport;
+    };
     '/equity/settings': {
-      id: '/equity/settings'
-      path: '/settings'
-      fullPath: '/equity/settings'
-      preLoaderRoute: typeof EquitySettingsRouteImport
-      parentRoute: typeof EquityRouteImport
-    }
+      id: '/equity/settings';
+      path: '/settings';
+      fullPath: '/equity/settings';
+      preLoaderRoute: typeof EquitySettingsRouteImport;
+      parentRoute: typeof EquityRouteImport;
+    };
     '/renovation/settings': {
-      id: '/renovation/settings'
-      path: '/settings'
-      fullPath: '/renovation/settings'
-      preLoaderRoute: typeof RenovationSettingsRouteImport
-      parentRoute: typeof RenovationRouteImport
-    }
+      id: '/renovation/settings';
+      path: '/settings';
+      fullPath: '/renovation/settings';
+      preLoaderRoute: typeof RenovationSettingsRouteImport;
+      parentRoute: typeof RenovationRouteImport;
+    };
     '/address/sessions': {
-      id: '/address/sessions'
-      path: '/sessions'
-      fullPath: '/address/sessions'
-      preLoaderRoute: typeof AddressSessionsImport
-      parentRoute: typeof AddressRouteImport
-    }
+      id: '/address/sessions';
+      path: '/sessions';
+      fullPath: '/address/sessions';
+      preLoaderRoute: typeof AddressSessionsImport;
+      parentRoute: typeof AddressRouteImport;
+    };
     '/control/case': {
-      id: '/control/case'
-      path: '/case'
-      fullPath: '/control/case'
-      preLoaderRoute: typeof ControlCaseImport
-      parentRoute: typeof ControlRouteImport
-    }
+      id: '/control/case';
+      path: '/case';
+      fullPath: '/control/case';
+      preLoaderRoute: typeof ControlCaseImport;
+      parentRoute: typeof ControlRouteImport;
+    };
     '/control/cases': {
-      id: '/control/cases'
-      path: '/cases'
-      fullPath: '/control/cases'
-      preLoaderRoute: typeof ControlCasesImport
-      parentRoute: typeof ControlRouteImport
-    }
+      id: '/control/cases';
+      path: '/cases';
+      fullPath: '/control/cases';
+      preLoaderRoute: typeof ControlCasesImport;
+      parentRoute: typeof ControlRouteImport;
+    };
     '/control/pending': {
-      id: '/control/pending'
-      path: '/pending'
-      fullPath: '/control/pending'
-      preLoaderRoute: typeof ControlPendingImport
-      parentRoute: typeof ControlRouteImport
-    }
+      id: '/control/pending';
+      path: '/pending';
+      fullPath: '/control/pending';
+      preLoaderRoute: typeof ControlPendingImport;
+      parentRoute: typeof ControlRouteImport;
+    };
     '/control/problems': {
-      id: '/control/problems'
-      path: '/problems'
-      fullPath: '/control/problems'
-      preLoaderRoute: typeof ControlProblemsImport
-      parentRoute: typeof ControlRouteImport
-    }
+      id: '/control/problems';
+      path: '/problems';
+      fullPath: '/control/problems';
+      preLoaderRoute: typeof ControlProblemsImport;
+      parentRoute: typeof ControlRouteImport;
+    };
     '/equity/objects': {
-      id: '/equity/objects'
-      path: '/objects'
-      fullPath: '/equity/objects'
-      preLoaderRoute: typeof EquityObjectsImport
-      parentRoute: typeof EquityRouteImport
-    }
+      id: '/equity/objects';
+      path: '/objects';
+      fullPath: '/equity/objects';
+      preLoaderRoute: typeof EquityObjectsImport;
+      parentRoute: typeof EquityRouteImport;
+    };
     '/equity/operations': {
-      id: '/equity/operations'
-      path: '/operations'
-      fullPath: '/equity/operations'
-      preLoaderRoute: typeof EquityOperationsImport
-      parentRoute: typeof EquityRouteImport
-    }
+      id: '/equity/operations';
+      path: '/operations';
+      fullPath: '/equity/operations';
+      preLoaderRoute: typeof EquityOperationsImport;
+      parentRoute: typeof EquityRouteImport;
+    };
     '/renovation/building-relocation-map': {
-      id: '/renovation/building-relocation-map'
-      path: '/building-relocation-map'
-      fullPath: '/renovation/building-relocation-map'
-      preLoaderRoute: typeof RenovationBuildingRelocationMapImport
-      parentRoute: typeof RenovationRouteImport
-    }
+      id: '/renovation/building-relocation-map';
+      path: '/building-relocation-map';
+      fullPath: '/renovation/building-relocation-map';
+      preLoaderRoute: typeof RenovationBuildingRelocationMapImport;
+      parentRoute: typeof RenovationRouteImport;
+    };
     '/renovation/messages': {
-      id: '/renovation/messages'
-      path: '/messages'
-      fullPath: '/renovation/messages'
-      preLoaderRoute: typeof RenovationMessagesImport
-      parentRoute: typeof RenovationRouteImport
-    }
+      id: '/renovation/messages';
+      path: '/messages';
+      fullPath: '/renovation/messages';
+      preLoaderRoute: typeof RenovationMessagesImport;
+      parentRoute: typeof RenovationRouteImport;
+    };
     '/renovation/oldapartments': {
-      id: '/renovation/oldapartments'
-      path: '/oldapartments'
-      fullPath: '/renovation/oldapartments'
-      preLoaderRoute: typeof RenovationOldapartmentsImport
-      parentRoute: typeof RenovationRouteImport
-    }
+      id: '/renovation/oldapartments';
+      path: '/oldapartments';
+      fullPath: '/renovation/oldapartments';
+      preLoaderRoute: typeof RenovationOldapartmentsImport;
+      parentRoute: typeof RenovationRouteImport;
+    };
     '/renovation/oldbuildings': {
-      id: '/renovation/oldbuildings'
-      path: '/oldbuildings'
-      fullPath: '/renovation/oldbuildings'
-      preLoaderRoute: typeof RenovationOldbuildingsImport
-      parentRoute: typeof RenovationRouteImport
-    }
+      id: '/renovation/oldbuildings';
+      path: '/oldbuildings';
+      fullPath: '/renovation/oldbuildings';
+      preLoaderRoute: typeof RenovationOldbuildingsImport;
+      parentRoute: typeof RenovationRouteImport;
+    };
     '/renovation/specialapartments': {
-      id: '/renovation/specialapartments'
-      path: '/specialapartments'
-      fullPath: '/renovation/specialapartments'
-      preLoaderRoute: typeof RenovationSpecialapartmentsImport
-      parentRoute: typeof RenovationRouteImport
-    }
+      id: '/renovation/specialapartments';
+      path: '/specialapartments';
+      fullPath: '/renovation/specialapartments';
+      preLoaderRoute: typeof RenovationSpecialapartmentsImport;
+      parentRoute: typeof RenovationRouteImport;
+    };
     '/renovation/stages': {
-      id: '/renovation/stages'
-      path: '/stages'
-      fullPath: '/renovation/stages'
-      preLoaderRoute: typeof RenovationStagesImport
-      parentRoute: typeof RenovationRouteImport
-    }
+      id: '/renovation/stages';
+      path: '/stages';
+      fullPath: '/renovation/stages';
+      preLoaderRoute: typeof RenovationStagesImport;
+      parentRoute: typeof RenovationRouteImport;
+    };
     '/vks/cases': {
-      id: '/vks/cases'
-      path: '/cases'
-      fullPath: '/vks/cases'
-      preLoaderRoute: typeof VksCasesImport
-      parentRoute: typeof VksRouteImport
-    }
+      id: '/vks/cases';
+      path: '/cases';
+      fullPath: '/vks/cases';
+      preLoaderRoute: typeof VksCasesImport;
+      parentRoute: typeof VksRouteImport;
+    };
     '/address/': {
-      id: '/address/'
-      path: '/'
-      fullPath: '/address/'
-      preLoaderRoute: typeof AddressIndexImport
-      parentRoute: typeof AddressRouteImport
-    }
+      id: '/address/';
+      path: '/';
+      fullPath: '/address/';
+      preLoaderRoute: typeof AddressIndexImport;
+      parentRoute: typeof AddressRouteImport;
+    };
     '/control/': {
-      id: '/control/'
-      path: '/'
-      fullPath: '/control/'
-      preLoaderRoute: typeof ControlIndexImport
-      parentRoute: typeof ControlRouteImport
-    }
+      id: '/control/';
+      path: '/';
+      fullPath: '/control/';
+      preLoaderRoute: typeof ControlIndexImport;
+      parentRoute: typeof ControlRouteImport;
+    };
     '/equity/': {
-      id: '/equity/'
-      path: '/'
-      fullPath: '/equity/'
-      preLoaderRoute: typeof EquityIndexImport
-      parentRoute: typeof EquityRouteImport
-    }
+      id: '/equity/';
+      path: '/';
+      fullPath: '/equity/';
+      preLoaderRoute: typeof EquityIndexImport;
+      parentRoute: typeof EquityRouteImport;
+    };
     '/renovation/': {
-      id: '/renovation/'
-      path: '/'
-      fullPath: '/renovation/'
-      preLoaderRoute: typeof RenovationIndexImport
-      parentRoute: typeof RenovationRouteImport
-    }
+      id: '/renovation/';
+      path: '/';
+      fullPath: '/renovation/';
+      preLoaderRoute: typeof RenovationIndexImport;
+      parentRoute: typeof RenovationRouteImport;
+    };
     '/vks/': {
-      id: '/vks/'
-      path: '/'
-      fullPath: '/vks/'
-      preLoaderRoute: typeof VksIndexImport
-      parentRoute: typeof VksRouteImport
-    }
+      id: '/vks/';
+      path: '/';
+      fullPath: '/vks/';
+      preLoaderRoute: typeof VksIndexImport;
+      parentRoute: typeof VksRouteImport;
+    };
     '/xml/': {
-      id: '/xml/'
-      path: '/'
-      fullPath: '/xml/'
-      preLoaderRoute: typeof XmlIndexImport
-      parentRoute: typeof XmlRouteImport
-    }
+      id: '/xml/';
+      path: '/';
+      fullPath: '/xml/';
+      preLoaderRoute: typeof XmlIndexImport;
+      parentRoute: typeof XmlRouteImport;
+    };
     '/control/settings/approve-chain': {
-      id: '/control/settings/approve-chain'
-      path: '/approve-chain'
-      fullPath: '/control/settings/approve-chain'
-      preLoaderRoute: typeof ControlSettingsApproveChainImport
-      parentRoute: typeof ControlSettingsRouteImport
-    }
+      id: '/control/settings/approve-chain';
+      path: '/approve-chain';
+      fullPath: '/control/settings/approve-chain';
+      preLoaderRoute: typeof ControlSettingsApproveChainImport;
+      parentRoute: typeof ControlSettingsRouteImport;
+    };
     '/control/settings/change-password': {
-      id: '/control/settings/change-password'
-      path: '/change-password'
-      fullPath: '/control/settings/change-password'
-      preLoaderRoute: typeof ControlSettingsChangePasswordImport
-      parentRoute: typeof ControlSettingsRouteImport
-    }
+      id: '/control/settings/change-password';
+      path: '/change-password';
+      fullPath: '/control/settings/change-password';
+      preLoaderRoute: typeof ControlSettingsChangePasswordImport;
+      parentRoute: typeof ControlSettingsRouteImport;
+    };
     '/control/settings/filter': {
-      id: '/control/settings/filter'
-      path: '/filter'
-      fullPath: '/control/settings/filter'
-      preLoaderRoute: typeof ControlSettingsFilterImport
-      parentRoute: typeof ControlSettingsRouteImport
-    }
+      id: '/control/settings/filter';
+      path: '/filter';
+      fullPath: '/control/settings/filter';
+      preLoaderRoute: typeof ControlSettingsFilterImport;
+      parentRoute: typeof ControlSettingsRouteImport;
+    };
     '/control/settings/notifications': {
-      id: '/control/settings/notifications'
-      path: '/notifications'
-      fullPath: '/control/settings/notifications'
-      preLoaderRoute: typeof ControlSettingsNotificationsImport
-      parentRoute: typeof ControlSettingsRouteImport
-    }
+      id: '/control/settings/notifications';
+      path: '/notifications';
+      fullPath: '/control/settings/notifications';
+      preLoaderRoute: typeof ControlSettingsNotificationsImport;
+      parentRoute: typeof ControlSettingsRouteImport;
+    };
     '/equity/settings/change-password': {
-      id: '/equity/settings/change-password'
-      path: '/change-password'
-      fullPath: '/equity/settings/change-password'
-      preLoaderRoute: typeof EquitySettingsChangePasswordImport
-      parentRoute: typeof EquitySettingsRouteImport
-    }
+      id: '/equity/settings/change-password';
+      path: '/change-password';
+      fullPath: '/equity/settings/change-password';
+      preLoaderRoute: typeof EquitySettingsChangePasswordImport;
+      parentRoute: typeof EquitySettingsRouteImport;
+    };
     '/renovation/settings/change-password': {
-      id: '/renovation/settings/change-password'
-      path: '/change-password'
-      fullPath: '/renovation/settings/change-password'
-      preLoaderRoute: typeof RenovationSettingsChangePasswordImport
-      parentRoute: typeof RenovationSettingsRouteImport
-    }
+      id: '/renovation/settings/change-password';
+      path: '/change-password';
+      fullPath: '/renovation/settings/change-password';
+      preLoaderRoute: typeof RenovationSettingsChangePasswordImport;
+      parentRoute: typeof RenovationSettingsRouteImport;
+    };
     '/control/settings/': {
-      id: '/control/settings/'
-      path: '/'
-      fullPath: '/control/settings/'
-      preLoaderRoute: typeof ControlSettingsIndexImport
-      parentRoute: typeof ControlSettingsRouteImport
-    }
+      id: '/control/settings/';
+      path: '/';
+      fullPath: '/control/settings/';
+      preLoaderRoute: typeof ControlSettingsIndexImport;
+      parentRoute: typeof ControlSettingsRouteImport;
+    };
     '/equity/settings/': {
-      id: '/equity/settings/'
-      path: '/'
-      fullPath: '/equity/settings/'
-      preLoaderRoute: typeof EquitySettingsIndexImport
-      parentRoute: typeof EquitySettingsRouteImport
-    }
+      id: '/equity/settings/';
+      path: '/';
+      fullPath: '/equity/settings/';
+      preLoaderRoute: typeof EquitySettingsIndexImport;
+      parentRoute: typeof EquitySettingsRouteImport;
+    };
     '/renovation/settings/': {
-      id: '/renovation/settings/'
-      path: '/'
-      fullPath: '/renovation/settings/'
-      preLoaderRoute: typeof RenovationSettingsIndexImport
-      parentRoute: typeof RenovationSettingsRouteImport
-    }
+      id: '/renovation/settings/';
+      path: '/';
+      fullPath: '/renovation/settings/';
+      preLoaderRoute: typeof RenovationSettingsIndexImport;
+      parentRoute: typeof RenovationSettingsRouteImport;
+    };
   }
 }
 
 // Create and export the route tree
 
 interface AddressRouteRouteChildren {
-  AddressSessionsRoute: typeof AddressSessionsRoute
-  AddressIndexRoute: typeof AddressIndexRoute
+  AddressSessionsRoute: typeof AddressSessionsRoute;
+  AddressIndexRoute: typeof AddressIndexRoute;
 }
 
 const AddressRouteRouteChildren: AddressRouteRouteChildren = {
   AddressSessionsRoute: AddressSessionsRoute,
   AddressIndexRoute: AddressIndexRoute,
-}
+};
 
 const AddressRouteRouteWithChildren = AddressRouteRoute._addFileChildren(
   AddressRouteRouteChildren,
-)
+);
 
 interface ControlSettingsRouteRouteChildren {
-  ControlSettingsApproveChainRoute: typeof ControlSettingsApproveChainRoute
-  ControlSettingsChangePasswordRoute: typeof ControlSettingsChangePasswordRoute
-  ControlSettingsFilterRoute: typeof ControlSettingsFilterRoute
-  ControlSettingsNotificationsRoute: typeof ControlSettingsNotificationsRoute
-  ControlSettingsIndexRoute: typeof ControlSettingsIndexRoute
+  ControlSettingsApproveChainRoute: typeof ControlSettingsApproveChainRoute;
+  ControlSettingsChangePasswordRoute: typeof ControlSettingsChangePasswordRoute;
+  ControlSettingsFilterRoute: typeof ControlSettingsFilterRoute;
+  ControlSettingsNotificationsRoute: typeof ControlSettingsNotificationsRoute;
+  ControlSettingsIndexRoute: typeof ControlSettingsIndexRoute;
 }
 
 const ControlSettingsRouteRouteChildren: ControlSettingsRouteRouteChildren = {
@@ -685,18 +685,18 @@ const ControlSettingsRouteRouteChildren: ControlSettingsRouteRouteChildren = {
   ControlSettingsFilterRoute: ControlSettingsFilterRoute,
   ControlSettingsNotificationsRoute: ControlSettingsNotificationsRoute,
   ControlSettingsIndexRoute: ControlSettingsIndexRoute,
-}
+};
 
 const ControlSettingsRouteRouteWithChildren =
-  ControlSettingsRouteRoute._addFileChildren(ControlSettingsRouteRouteChildren)
+  ControlSettingsRouteRoute._addFileChildren(ControlSettingsRouteRouteChildren);
 
 interface ControlRouteRouteChildren {
-  ControlSettingsRouteRoute: typeof ControlSettingsRouteRouteWithChildren
-  ControlCaseRoute: typeof ControlCaseRoute
-  ControlCasesRoute: typeof ControlCasesRoute
-  ControlPendingRoute: typeof ControlPendingRoute
-  ControlProblemsRoute: typeof ControlProblemsRoute
-  ControlIndexRoute: typeof ControlIndexRoute
+  ControlSettingsRouteRoute: typeof ControlSettingsRouteRouteWithChildren;
+  ControlCaseRoute: typeof ControlCaseRoute;
+  ControlCasesRoute: typeof ControlCasesRoute;
+  ControlPendingRoute: typeof ControlPendingRoute;
+  ControlProblemsRoute: typeof ControlProblemsRoute;
+  ControlIndexRoute: typeof ControlIndexRoute;
 }
 
 const ControlRouteRouteChildren: ControlRouteRouteChildren = {
@@ -706,30 +706,30 @@ const ControlRouteRouteChildren: ControlRouteRouteChildren = {
   ControlPendingRoute: ControlPendingRoute,
   ControlProblemsRoute: ControlProblemsRoute,
   ControlIndexRoute: ControlIndexRoute,
-}
+};
 
 const ControlRouteRouteWithChildren = ControlRouteRoute._addFileChildren(
   ControlRouteRouteChildren,
-)
+);
 
 interface EquitySettingsRouteRouteChildren {
-  EquitySettingsChangePasswordRoute: typeof EquitySettingsChangePasswordRoute
-  EquitySettingsIndexRoute: typeof EquitySettingsIndexRoute
+  EquitySettingsChangePasswordRoute: typeof EquitySettingsChangePasswordRoute;
+  EquitySettingsIndexRoute: typeof EquitySettingsIndexRoute;
 }
 
 const EquitySettingsRouteRouteChildren: EquitySettingsRouteRouteChildren = {
   EquitySettingsChangePasswordRoute: EquitySettingsChangePasswordRoute,
   EquitySettingsIndexRoute: EquitySettingsIndexRoute,
-}
+};
 
 const EquitySettingsRouteRouteWithChildren =
-  EquitySettingsRouteRoute._addFileChildren(EquitySettingsRouteRouteChildren)
+  EquitySettingsRouteRoute._addFileChildren(EquitySettingsRouteRouteChildren);
 
 interface EquityRouteRouteChildren {
-  EquitySettingsRouteRoute: typeof EquitySettingsRouteRouteWithChildren
-  EquityObjectsRoute: typeof EquityObjectsRoute
-  EquityOperationsRoute: typeof EquityOperationsRoute
-  EquityIndexRoute: typeof EquityIndexRoute
+  EquitySettingsRouteRoute: typeof EquitySettingsRouteRouteWithChildren;
+  EquityObjectsRoute: typeof EquityObjectsRoute;
+  EquityOperationsRoute: typeof EquityOperationsRoute;
+  EquityIndexRoute: typeof EquityIndexRoute;
 }
 
 const EquityRouteRouteChildren: EquityRouteRouteChildren = {
@@ -737,15 +737,15 @@ const EquityRouteRouteChildren: EquityRouteRouteChildren = {
   EquityObjectsRoute: EquityObjectsRoute,
   EquityOperationsRoute: EquityOperationsRoute,
   EquityIndexRoute: EquityIndexRoute,
-}
+};
 
 const EquityRouteRouteWithChildren = EquityRouteRoute._addFileChildren(
   EquityRouteRouteChildren,
-)
+);
 
 interface RenovationSettingsRouteRouteChildren {
-  RenovationSettingsChangePasswordRoute: typeof RenovationSettingsChangePasswordRoute
-  RenovationSettingsIndexRoute: typeof RenovationSettingsIndexRoute
+  RenovationSettingsChangePasswordRoute: typeof RenovationSettingsChangePasswordRoute;
+  RenovationSettingsIndexRoute: typeof RenovationSettingsIndexRoute;
 }
 
 const RenovationSettingsRouteRouteChildren: RenovationSettingsRouteRouteChildren =
@@ -753,22 +753,22 @@ const RenovationSettingsRouteRouteChildren: RenovationSettingsRouteRouteChildren
     RenovationSettingsChangePasswordRoute:
       RenovationSettingsChangePasswordRoute,
     RenovationSettingsIndexRoute: RenovationSettingsIndexRoute,
-  }
+  };
 
 const RenovationSettingsRouteRouteWithChildren =
   RenovationSettingsRouteRoute._addFileChildren(
     RenovationSettingsRouteRouteChildren,
-  )
+  );
 
 interface RenovationRouteRouteChildren {
-  RenovationSettingsRouteRoute: typeof RenovationSettingsRouteRouteWithChildren
-  RenovationBuildingRelocationMapRoute: typeof RenovationBuildingRelocationMapRoute
-  RenovationMessagesRoute: typeof RenovationMessagesRoute
-  RenovationOldapartmentsRoute: typeof RenovationOldapartmentsRoute
-  RenovationOldbuildingsRoute: typeof RenovationOldbuildingsRoute
-  RenovationSpecialapartmentsRoute: typeof RenovationSpecialapartmentsRoute
-  RenovationStagesRoute: typeof RenovationStagesRoute
-  RenovationIndexRoute: typeof RenovationIndexRoute
+  RenovationSettingsRouteRoute: typeof RenovationSettingsRouteRouteWithChildren;
+  RenovationBuildingRelocationMapRoute: typeof RenovationBuildingRelocationMapRoute;
+  RenovationMessagesRoute: typeof RenovationMessagesRoute;
+  RenovationOldapartmentsRoute: typeof RenovationOldapartmentsRoute;
+  RenovationOldbuildingsRoute: typeof RenovationOldbuildingsRoute;
+  RenovationSpecialapartmentsRoute: typeof RenovationSpecialapartmentsRoute;
+  RenovationStagesRoute: typeof RenovationStagesRoute;
+  RenovationIndexRoute: typeof RenovationIndexRoute;
 }
 
 const RenovationRouteRouteChildren: RenovationRouteRouteChildren = {
@@ -780,173 +780,173 @@ const RenovationRouteRouteChildren: RenovationRouteRouteChildren = {
   RenovationSpecialapartmentsRoute: RenovationSpecialapartmentsRoute,
   RenovationStagesRoute: RenovationStagesRoute,
   RenovationIndexRoute: RenovationIndexRoute,
-}
+};
 
 const RenovationRouteRouteWithChildren = RenovationRouteRoute._addFileChildren(
   RenovationRouteRouteChildren,
-)
+);
 
 interface VksRouteRouteChildren {
-  VksCasesRoute: typeof VksCasesRoute
-  VksIndexRoute: typeof VksIndexRoute
+  VksCasesRoute: typeof VksCasesRoute;
+  VksIndexRoute: typeof VksIndexRoute;
 }
 
 const VksRouteRouteChildren: VksRouteRouteChildren = {
   VksCasesRoute: VksCasesRoute,
   VksIndexRoute: VksIndexRoute,
-}
+};
 
 const VksRouteRouteWithChildren = VksRouteRoute._addFileChildren(
   VksRouteRouteChildren,
-)
+);
 
 interface XmlRouteRouteChildren {
-  XmlIndexRoute: typeof XmlIndexRoute
+  XmlIndexRoute: typeof XmlIndexRoute;
 }
 
 const XmlRouteRouteChildren: XmlRouteRouteChildren = {
   XmlIndexRoute: XmlIndexRoute,
-}
+};
 
 const XmlRouteRouteWithChildren = XmlRouteRoute._addFileChildren(
   XmlRouteRouteChildren,
-)
+);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexLazyRoute
-  '/address': typeof AddressRouteRouteWithChildren
-  '/control': typeof ControlRouteRouteWithChildren
-  '/equity': typeof EquityRouteRouteWithChildren
-  '/renovation': typeof RenovationRouteRouteWithChildren
-  '/vks': typeof VksRouteRouteWithChildren
-  '/xml': typeof XmlRouteRouteWithChildren
-  '/login': typeof LoginRoute
-  '/oldbuildings': typeof OldbuildingsRoute
-  '/about': typeof AboutLazyRoute
-  '/bticalc': typeof BticalcLazyRoute
-  '/map': typeof MapLazyRoute
-  '/control/settings': typeof ControlSettingsRouteRouteWithChildren
-  '/equity/settings': typeof EquitySettingsRouteRouteWithChildren
-  '/renovation/settings': typeof RenovationSettingsRouteRouteWithChildren
-  '/address/sessions': typeof AddressSessionsRoute
-  '/control/case': typeof ControlCaseRoute
-  '/control/cases': typeof ControlCasesRoute
-  '/control/pending': typeof ControlPendingRoute
-  '/control/problems': typeof ControlProblemsRoute
-  '/equity/objects': typeof EquityObjectsRoute
-  '/equity/operations': typeof EquityOperationsRoute
-  '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
-  '/renovation/messages': typeof RenovationMessagesRoute
-  '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
-  '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
-  '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute
-  '/renovation/stages': typeof RenovationStagesRoute
-  '/vks/cases': typeof VksCasesRoute
-  '/address/': typeof AddressIndexRoute
-  '/control/': typeof ControlIndexRoute
-  '/equity/': typeof EquityIndexRoute
-  '/renovation/': typeof RenovationIndexRoute
-  '/vks/': typeof VksIndexRoute
-  '/xml/': typeof XmlIndexRoute
-  '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
-  '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
-  '/control/settings/filter': typeof ControlSettingsFilterRoute
-  '/control/settings/notifications': typeof ControlSettingsNotificationsRoute
-  '/equity/settings/change-password': typeof EquitySettingsChangePasswordRoute
-  '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
-  '/control/settings/': typeof ControlSettingsIndexRoute
-  '/equity/settings/': typeof EquitySettingsIndexRoute
-  '/renovation/settings/': typeof RenovationSettingsIndexRoute
+  '/': typeof IndexLazyRoute;
+  '/address': typeof AddressRouteRouteWithChildren;
+  '/control': typeof ControlRouteRouteWithChildren;
+  '/equity': typeof EquityRouteRouteWithChildren;
+  '/renovation': typeof RenovationRouteRouteWithChildren;
+  '/vks': typeof VksRouteRouteWithChildren;
+  '/xml': typeof XmlRouteRouteWithChildren;
+  '/login': typeof LoginRoute;
+  '/oldbuildings': typeof OldbuildingsRoute;
+  '/about': typeof AboutLazyRoute;
+  '/bticalc': typeof BticalcLazyRoute;
+  '/map': typeof MapLazyRoute;
+  '/control/settings': typeof ControlSettingsRouteRouteWithChildren;
+  '/equity/settings': typeof EquitySettingsRouteRouteWithChildren;
+  '/renovation/settings': typeof RenovationSettingsRouteRouteWithChildren;
+  '/address/sessions': typeof AddressSessionsRoute;
+  '/control/case': typeof ControlCaseRoute;
+  '/control/cases': typeof ControlCasesRoute;
+  '/control/pending': typeof ControlPendingRoute;
+  '/control/problems': typeof ControlProblemsRoute;
+  '/equity/objects': typeof EquityObjectsRoute;
+  '/equity/operations': typeof EquityOperationsRoute;
+  '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute;
+  '/renovation/messages': typeof RenovationMessagesRoute;
+  '/renovation/oldapartments': typeof RenovationOldapartmentsRoute;
+  '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute;
+  '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute;
+  '/renovation/stages': typeof RenovationStagesRoute;
+  '/vks/cases': typeof VksCasesRoute;
+  '/address/': typeof AddressIndexRoute;
+  '/control/': typeof ControlIndexRoute;
+  '/equity/': typeof EquityIndexRoute;
+  '/renovation/': typeof RenovationIndexRoute;
+  '/vks/': typeof VksIndexRoute;
+  '/xml/': typeof XmlIndexRoute;
+  '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute;
+  '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute;
+  '/control/settings/filter': typeof ControlSettingsFilterRoute;
+  '/control/settings/notifications': typeof ControlSettingsNotificationsRoute;
+  '/equity/settings/change-password': typeof EquitySettingsChangePasswordRoute;
+  '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute;
+  '/control/settings/': typeof ControlSettingsIndexRoute;
+  '/equity/settings/': typeof EquitySettingsIndexRoute;
+  '/renovation/settings/': typeof RenovationSettingsIndexRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexLazyRoute
-  '/login': typeof LoginRoute
-  '/oldbuildings': typeof OldbuildingsRoute
-  '/about': typeof AboutLazyRoute
-  '/bticalc': typeof BticalcLazyRoute
-  '/map': typeof MapLazyRoute
-  '/address/sessions': typeof AddressSessionsRoute
-  '/control/case': typeof ControlCaseRoute
-  '/control/cases': typeof ControlCasesRoute
-  '/control/pending': typeof ControlPendingRoute
-  '/control/problems': typeof ControlProblemsRoute
-  '/equity/objects': typeof EquityObjectsRoute
-  '/equity/operations': typeof EquityOperationsRoute
-  '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
-  '/renovation/messages': typeof RenovationMessagesRoute
-  '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
-  '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
-  '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute
-  '/renovation/stages': typeof RenovationStagesRoute
-  '/vks/cases': typeof VksCasesRoute
-  '/address': typeof AddressIndexRoute
-  '/control': typeof ControlIndexRoute
-  '/equity': typeof EquityIndexRoute
-  '/renovation': typeof RenovationIndexRoute
-  '/vks': typeof VksIndexRoute
-  '/xml': typeof XmlIndexRoute
-  '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
-  '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
-  '/control/settings/filter': typeof ControlSettingsFilterRoute
-  '/control/settings/notifications': typeof ControlSettingsNotificationsRoute
-  '/equity/settings/change-password': typeof EquitySettingsChangePasswordRoute
-  '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
-  '/control/settings': typeof ControlSettingsIndexRoute
-  '/equity/settings': typeof EquitySettingsIndexRoute
-  '/renovation/settings': typeof RenovationSettingsIndexRoute
+  '/': typeof IndexLazyRoute;
+  '/login': typeof LoginRoute;
+  '/oldbuildings': typeof OldbuildingsRoute;
+  '/about': typeof AboutLazyRoute;
+  '/bticalc': typeof BticalcLazyRoute;
+  '/map': typeof MapLazyRoute;
+  '/address/sessions': typeof AddressSessionsRoute;
+  '/control/case': typeof ControlCaseRoute;
+  '/control/cases': typeof ControlCasesRoute;
+  '/control/pending': typeof ControlPendingRoute;
+  '/control/problems': typeof ControlProblemsRoute;
+  '/equity/objects': typeof EquityObjectsRoute;
+  '/equity/operations': typeof EquityOperationsRoute;
+  '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute;
+  '/renovation/messages': typeof RenovationMessagesRoute;
+  '/renovation/oldapartments': typeof RenovationOldapartmentsRoute;
+  '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute;
+  '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute;
+  '/renovation/stages': typeof RenovationStagesRoute;
+  '/vks/cases': typeof VksCasesRoute;
+  '/address': typeof AddressIndexRoute;
+  '/control': typeof ControlIndexRoute;
+  '/equity': typeof EquityIndexRoute;
+  '/renovation': typeof RenovationIndexRoute;
+  '/vks': typeof VksIndexRoute;
+  '/xml': typeof XmlIndexRoute;
+  '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute;
+  '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute;
+  '/control/settings/filter': typeof ControlSettingsFilterRoute;
+  '/control/settings/notifications': typeof ControlSettingsNotificationsRoute;
+  '/equity/settings/change-password': typeof EquitySettingsChangePasswordRoute;
+  '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute;
+  '/control/settings': typeof ControlSettingsIndexRoute;
+  '/equity/settings': typeof EquitySettingsIndexRoute;
+  '/renovation/settings': typeof RenovationSettingsIndexRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexLazyRoute
-  '/address': typeof AddressRouteRouteWithChildren
-  '/control': typeof ControlRouteRouteWithChildren
-  '/equity': typeof EquityRouteRouteWithChildren
-  '/renovation': typeof RenovationRouteRouteWithChildren
-  '/vks': typeof VksRouteRouteWithChildren
-  '/xml': typeof XmlRouteRouteWithChildren
-  '/login': typeof LoginRoute
-  '/oldbuildings': typeof OldbuildingsRoute
-  '/about': typeof AboutLazyRoute
-  '/bticalc': typeof BticalcLazyRoute
-  '/map': typeof MapLazyRoute
-  '/control/settings': typeof ControlSettingsRouteRouteWithChildren
-  '/equity/settings': typeof EquitySettingsRouteRouteWithChildren
-  '/renovation/settings': typeof RenovationSettingsRouteRouteWithChildren
-  '/address/sessions': typeof AddressSessionsRoute
-  '/control/case': typeof ControlCaseRoute
-  '/control/cases': typeof ControlCasesRoute
-  '/control/pending': typeof ControlPendingRoute
-  '/control/problems': typeof ControlProblemsRoute
-  '/equity/objects': typeof EquityObjectsRoute
-  '/equity/operations': typeof EquityOperationsRoute
-  '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute
-  '/renovation/messages': typeof RenovationMessagesRoute
-  '/renovation/oldapartments': typeof RenovationOldapartmentsRoute
-  '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute
-  '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute
-  '/renovation/stages': typeof RenovationStagesRoute
-  '/vks/cases': typeof VksCasesRoute
-  '/address/': typeof AddressIndexRoute
-  '/control/': typeof ControlIndexRoute
-  '/equity/': typeof EquityIndexRoute
-  '/renovation/': typeof RenovationIndexRoute
-  '/vks/': typeof VksIndexRoute
-  '/xml/': typeof XmlIndexRoute
-  '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute
-  '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute
-  '/control/settings/filter': typeof ControlSettingsFilterRoute
-  '/control/settings/notifications': typeof ControlSettingsNotificationsRoute
-  '/equity/settings/change-password': typeof EquitySettingsChangePasswordRoute
-  '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute
-  '/control/settings/': typeof ControlSettingsIndexRoute
-  '/equity/settings/': typeof EquitySettingsIndexRoute
-  '/renovation/settings/': typeof RenovationSettingsIndexRoute
+  __root__: typeof rootRoute;
+  '/': typeof IndexLazyRoute;
+  '/address': typeof AddressRouteRouteWithChildren;
+  '/control': typeof ControlRouteRouteWithChildren;
+  '/equity': typeof EquityRouteRouteWithChildren;
+  '/renovation': typeof RenovationRouteRouteWithChildren;
+  '/vks': typeof VksRouteRouteWithChildren;
+  '/xml': typeof XmlRouteRouteWithChildren;
+  '/login': typeof LoginRoute;
+  '/oldbuildings': typeof OldbuildingsRoute;
+  '/about': typeof AboutLazyRoute;
+  '/bticalc': typeof BticalcLazyRoute;
+  '/map': typeof MapLazyRoute;
+  '/control/settings': typeof ControlSettingsRouteRouteWithChildren;
+  '/equity/settings': typeof EquitySettingsRouteRouteWithChildren;
+  '/renovation/settings': typeof RenovationSettingsRouteRouteWithChildren;
+  '/address/sessions': typeof AddressSessionsRoute;
+  '/control/case': typeof ControlCaseRoute;
+  '/control/cases': typeof ControlCasesRoute;
+  '/control/pending': typeof ControlPendingRoute;
+  '/control/problems': typeof ControlProblemsRoute;
+  '/equity/objects': typeof EquityObjectsRoute;
+  '/equity/operations': typeof EquityOperationsRoute;
+  '/renovation/building-relocation-map': typeof RenovationBuildingRelocationMapRoute;
+  '/renovation/messages': typeof RenovationMessagesRoute;
+  '/renovation/oldapartments': typeof RenovationOldapartmentsRoute;
+  '/renovation/oldbuildings': typeof RenovationOldbuildingsRoute;
+  '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute;
+  '/renovation/stages': typeof RenovationStagesRoute;
+  '/vks/cases': typeof VksCasesRoute;
+  '/address/': typeof AddressIndexRoute;
+  '/control/': typeof ControlIndexRoute;
+  '/equity/': typeof EquityIndexRoute;
+  '/renovation/': typeof RenovationIndexRoute;
+  '/vks/': typeof VksIndexRoute;
+  '/xml/': typeof XmlIndexRoute;
+  '/control/settings/approve-chain': typeof ControlSettingsApproveChainRoute;
+  '/control/settings/change-password': typeof ControlSettingsChangePasswordRoute;
+  '/control/settings/filter': typeof ControlSettingsFilterRoute;
+  '/control/settings/notifications': typeof ControlSettingsNotificationsRoute;
+  '/equity/settings/change-password': typeof EquitySettingsChangePasswordRoute;
+  '/renovation/settings/change-password': typeof RenovationSettingsChangePasswordRoute;
+  '/control/settings/': typeof ControlSettingsIndexRoute;
+  '/equity/settings/': typeof EquitySettingsIndexRoute;
+  '/renovation/settings/': typeof RenovationSettingsIndexRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
     | '/'
     | '/address'
@@ -991,8 +991,8 @@ export interface FileRouteTypes {
     | '/renovation/settings/change-password'
     | '/control/settings/'
     | '/equity/settings/'
-    | '/renovation/settings/'
-  fileRoutesByTo: FileRoutesByTo
+    | '/renovation/settings/';
+  fileRoutesByTo: FileRoutesByTo;
   to:
     | '/'
     | '/login'
@@ -1028,7 +1028,7 @@ export interface FileRouteTypes {
     | '/renovation/settings/change-password'
     | '/control/settings'
     | '/equity/settings'
-    | '/renovation/settings'
+    | '/renovation/settings';
   id:
     | '__root__'
     | '/'
@@ -1074,23 +1074,23 @@ export interface FileRouteTypes {
     | '/renovation/settings/change-password'
     | '/control/settings/'
     | '/equity/settings/'
-    | '/renovation/settings/'
-  fileRoutesById: FileRoutesById
+    | '/renovation/settings/';
+  fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute
-  AddressRouteRoute: typeof AddressRouteRouteWithChildren
-  ControlRouteRoute: typeof ControlRouteRouteWithChildren
-  EquityRouteRoute: typeof EquityRouteRouteWithChildren
-  RenovationRouteRoute: typeof RenovationRouteRouteWithChildren
-  VksRouteRoute: typeof VksRouteRouteWithChildren
-  XmlRouteRoute: typeof XmlRouteRouteWithChildren
-  LoginRoute: typeof LoginRoute
-  OldbuildingsRoute: typeof OldbuildingsRoute
-  AboutLazyRoute: typeof AboutLazyRoute
-  BticalcLazyRoute: typeof BticalcLazyRoute
-  MapLazyRoute: typeof MapLazyRoute
+  IndexLazyRoute: typeof IndexLazyRoute;
+  AddressRouteRoute: typeof AddressRouteRouteWithChildren;
+  ControlRouteRoute: typeof ControlRouteRouteWithChildren;
+  EquityRouteRoute: typeof EquityRouteRouteWithChildren;
+  RenovationRouteRoute: typeof RenovationRouteRouteWithChildren;
+  VksRouteRoute: typeof VksRouteRouteWithChildren;
+  XmlRouteRoute: typeof XmlRouteRouteWithChildren;
+  LoginRoute: typeof LoginRoute;
+  OldbuildingsRoute: typeof OldbuildingsRoute;
+  AboutLazyRoute: typeof AboutLazyRoute;
+  BticalcLazyRoute: typeof BticalcLazyRoute;
+  MapLazyRoute: typeof MapLazyRoute;
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -1106,11 +1106,11 @@ const rootRouteChildren: RootRouteChildren = {
   AboutLazyRoute: AboutLazyRoute,
   BticalcLazyRoute: BticalcLazyRoute,
   MapLazyRoute: MapLazyRoute,
-}
+};
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {

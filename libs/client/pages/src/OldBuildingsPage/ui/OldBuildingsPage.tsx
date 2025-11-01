@@ -9,12 +9,7 @@ import {
   oldBuildingsGlobalFilterFn,
   useOldBuldings,
 } from '@urgp/client/entities';
-import {
-  cn,
-  ScrollArea,
-  ScrollBar,
-  VirtualDataTable,
-} from '@urgp/client/shared';
+import { cn, VirtualDataTable } from '@urgp/client/shared';
 import { OldBuildingCard, OldBuildingsFilter } from '@urgp/client/widgets';
 import {
   GetOldBuldingsDto,
@@ -163,4 +158,4 @@ const OldBuildingsPage = (): JSX.Element => {
   );
 };
 
-export default OldBuildingsPage;
+export { OldBuildingsPage };
