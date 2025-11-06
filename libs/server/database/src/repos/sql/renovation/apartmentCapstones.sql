@@ -25,7 +25,8 @@ FROM (
         sd.start_date + s.plan_date AS "planDate",
         d.date as "doneDate"
     FROM expected_stages s
-    LEFT JOIN apartment_dates d ON d.id = s.needed_stage_id OR (s.needed_stage_id = 26 AND d.id = ANY(ARRAY[27, 28, 67, 68, 42, 69, 70, 71])) 
+    -- LEFT JOIN apartment_dates d ON d.id = s.needed_stage_id OR (s.needed_stage_id = 26 AND d.id = ANY(ARRAY[27, 28, 67, 68, 42, 69, 70, 71])) 
+    LEFT JOIN apartment_dates d ON (d.id = s.needed_stage_id OR (s.needed_stage_id = 26 AND d.id = ANY(ARRAY[27, 28, 67, 68, 42, 69, 70, 71]))) AND d.date IS NOT NULL
     LEFT JOIN start_date sd ON true
     WHERE s.plan_date IS NOT NULL
 
