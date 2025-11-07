@@ -93,7 +93,7 @@ BEGIN
             MAX(h.act_date) FILTER (WHERE h.subject_of_proceedings = 'Основное дело' AND h.hearing_result_class = 'В пользу ДГИ' AND LOWER(l.case_result) NOT LIKE '%слушается в%') AS last_act_won, 
             MAX(h.act_date) FILTER (WHERE h.subject_of_proceedings = 'Основное дело' AND h.hearing_result_class = 'Не в пользу ДГИ' AND LOWER(l.case_result) NOT LIKE '%слушается в%') AS last_act_lost, 
             BOOL_OR(l.fssp_status = ANY(ARRAY['ИСПОЛНЕНО', 'ОТМЕНЕНО']) AND l.fssp_execution_status = 'Окончено' AND (LOWER(l.case_result) LIKE '%удовлетворены требования%дги%' OR LOWER(l.fssp_subject_of_proceedings) = ANY(ARRAY['переселение', 'выселение']))) as is_executed, -- хотя бы одно ИП закрыто
-            BOOL_OR(ca.need_no_execution) as need_no_execution,  -- хотя бы одно дело не требует исполнения
+            BOOL_OR(ca.need_no_execution AND LOWER(l.case_result) LIKE '%удовлетворены требования%дги%') as need_no_execution,  -- хотя бы одно дело не требует исполнения
             MAX(l.fssp_institute_date) AS last_fssp_institute_date,
             COALESCE(MIN(LEAST(l.claim_date, l.claim_submission_date, h.hearing_date, e.errant_date)),
                     MIN(c.contract_creation_date) FILTER (WHERE (LOWER(c.inspection_response) LIKE '%судебное дело%'::text OR LOWER(c.order_reason) LIKE '%по суду%') AND c.status_prio > 0)

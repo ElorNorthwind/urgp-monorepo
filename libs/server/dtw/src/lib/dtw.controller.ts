@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Header,
+  Logger,
   Param,
   ParseIntPipe,
   Res,
@@ -9,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { DtwService } from './dtw.service';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 
 @Controller('dtw')
 // @UseGuards(AccessTokenGuard)
@@ -32,13 +33,24 @@ export class DtwController {
     });
 
     return tileStream$.pipe(
+      catchError((error) => {
+        return of(error);
+      }),
       map((response) => {
-        res.set({
-          'Content-Type': 'image/jpeg',
-          'Content-Length': response.headers['content-length'],
-          'Cache-Control': 'public, max-age=3600',
-        });
-        res.send(response.data);
+        if (response?.status !== 200) {
+          res.set({
+            'Content-Type': 'image/jpeg',
+            'Cache-Control': 'public, max-age=3600',
+          });
+          res.send(this.dtw.blackImageBuffer);
+        } else {
+          res.set({
+            'Content-Type': 'image/jpeg',
+            'Content-Length': response?.headers?.['content-length'],
+            'Cache-Control': 'public, max-age=3600',
+          });
+          res.send(response.data);
+        }
       }),
     );
   }

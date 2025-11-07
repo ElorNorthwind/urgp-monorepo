@@ -1,23 +1,31 @@
 import { HttpService } from '@nestjs/axios';
 import {
+  BadRequestException,
   Inject,
   Injectable,
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { firstValueFrom, map, retry } from 'rxjs';
+import { catchError, firstValueFrom, map, of, retry } from 'rxjs';
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import fs from 'fs';
 // import FormData from 'form-data';
 
 @Injectable()
 export class DtwService {
+  readonly blackImageBuffer: Buffer;
   constructor(
     private readonly axios: HttpService,
     private configService: ConfigService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
-  ) {}
+  ) {
+    // Base64 encoded 1x1 black JPEG
+    this.blackImageBuffer = Buffer.from(
+      '/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA8U/9k=',
+      'base64',
+    );
+  }
 
   public async getDtwMapTileStream(coords: {
     z: number;
@@ -43,10 +51,18 @@ export class DtwService {
         })
         .pipe(
           retry(1), // Вывести в переменную?
+          catchError((error) => {
+            // return this.blackImageBuffer;
+            if (error.response.status === 403) {
+              throw new BadRequestException('Неверные координаты');
+            }
+            return error;
+          }),
         );
     } catch (error) {
-      Logger.error(error);
-      return error;
+      // Logger.error(error);
+      // return error;
+      return this.blackImageBuffer;
     }
   }
 

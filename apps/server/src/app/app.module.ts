@@ -68,7 +68,7 @@ import { DtwModule } from '@urgp/server/dtw';
     SudirModule,
     VksModule,
     DgiAnalyticsModule,
-    DmModule,
+    // DmModule,
 
     DtwModule,
   ],
