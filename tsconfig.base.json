@@ -45,7 +45,8 @@
       "@urgp/server/vks": ["libs/server/vks/src/index.ts"],
       "@urgp/server/dgi-analytics": ["libs/server/dgi-analytics/src/index.ts"],
       "@urgp/server/dm": ["libs/server/dm/src/index.ts"],
-      "@urgp/server/dtw": ["libs/server/dtw/src/index.ts"]
+      "@urgp/server/dtw": ["libs/server/dtw/src/index.ts"],
+      "@urgp/dm-api/*": ["apps/dm-api/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

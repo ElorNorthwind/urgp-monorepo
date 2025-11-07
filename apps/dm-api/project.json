@@ -1,0 +1,24 @@
+{
+  "name": "dm-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/dm-api/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "dm-api:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "dm-api:build:development"
+        },
+        "production": {
+          "buildTarget": "dm-api:build:production"
+        }
+      }
+    }
+  }
+}

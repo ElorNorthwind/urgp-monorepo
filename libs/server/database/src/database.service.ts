@@ -6,7 +6,6 @@ import {
   CasesRepository,
   ControlCasesRepository,
   DbExtensions,
-  DmRepository,
   EquityRepository,
   QuestionsRepository,
   RenovationRepository,
@@ -14,7 +13,6 @@ import {
   StreetsRepository,
   SudirRepository,
   UsersRepository,
-  VksRepository,
 } from './repos';
 import { ControlOperationsRepository } from './repos/control-operations';
 import { ControlClassificatorsRepository } from './repos/control-classificators';
@@ -54,9 +52,7 @@ export class DatabaseService {
         );
         obj.address = new AddressRepository(obj, pgPromise());
         obj.equity = new EquityRepository(obj, pgPromise());
-        obj.vks = new VksRepository(obj, pgPromise());
         obj.sudir = new SudirRepository(obj, pgPromise());
-        obj.dm = new DmRepository(obj, pgPromise());
       },
     };
 

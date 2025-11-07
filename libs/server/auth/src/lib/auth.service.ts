@@ -20,7 +20,7 @@ const cookieOptions = {
   httpOnly: true,
   sameSite: 'lax',
   secure: false, // we don't have https :(
-  maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+  // maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
   domain: process.env['DOMAIN'] || '',
 } as const;
 

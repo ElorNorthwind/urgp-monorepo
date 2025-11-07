@@ -217,16 +217,3 @@ export const equityOperations = {
     'sql/equity/operations/updateOperationsTriggerInfo.sql',
   ),
 };
-export const vks = {
-  readDepartmentsClassificator: sql(
-    'sql/vks/readVksDepartmentsClassificator.sql',
-  ),
-  readServiceTypesClassificator: sql(
-    'sql/vks/readVksServiceTypeClassificator.sql',
-  ),
-  readStatusClassificator: sql('sql/vks/readVksStatusClassificator.sql'),
-  readVksTimeline: sql('sql/vks/readVksTimeline.sql'),
-  readVksStatusStats: sql('sql/vks/readVksStatusStats.sql'),
-  readVksDepartmentStats: sql('sql/vks/readVksDepartmentStats.sql'),
-  readVksServiceStats: sql('sql/vks/readVksServiceStats.sql'),
-};
