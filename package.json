@@ -4,9 +4,8 @@
   "license": "MIT",
   "scripts": {
     "start": "nx run-many --parallel --target=serve --projects=server,client",
-    "build": "nx run-many --parallel --target=build --projects=server,client",
     "start:dm": "nx run dm-api:serve",
-    "build:dm": "nx run dm-api:build"
+    "build": "nx run-many --parallel --target=build --projects=server,client,dm-api"
   },
   "private": true,
   "dependencies": {
