@@ -17,7 +17,7 @@ import { lettersNotifyUnchangedResolutions } from './helpers/notifyLettersUnchan
 
 @Injectable()
 export class TelegramService implements OnModuleDestroy {
-  private readonly logger = new Logger(TelegramService.name);
+  readonly logger = new Logger(TelegramService.name);
   public bot: Bot;
 
   constructor(
@@ -38,6 +38,8 @@ export class TelegramService implements OnModuleDestroy {
       { command: 'help', description: 'Список команд' },
       { command: 'status', description: 'Статус поручений' },
     ]);
+
+    await this.bot.catch((e) => this.logger.error(e));
   }
 
   async onModuleDestroy() {
@@ -58,6 +60,7 @@ export class TelegramService implements OnModuleDestroy {
     if (!chatId) {
       throw new Error('Пользователь не привязан к боту!');
     }
+
     return await this.bot.api
       .sendMessage(chatId, text, other)
       .then((m) => m.message_id);
@@ -88,7 +91,10 @@ export class TelegramService implements OnModuleDestroy {
   }
 
   public async sendLettersUnchangedResolutions() {
-    const chatId = 1001751756256;
+    const chatId = parseInt(
+      this.configService.get<string>('TELEGRAM_LETTERS_CHAT_ID') ||
+        '-1234567890000',
+    );
     return lettersNotifyUnchangedResolutions(chatId, this);
   }
 

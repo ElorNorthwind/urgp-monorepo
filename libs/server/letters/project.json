@@ -1,0 +1,9 @@
+{
+  "name": "server/letters",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/server/letters/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project server/letters --web",
+  "targets": {}
+}

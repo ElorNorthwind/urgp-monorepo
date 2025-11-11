@@ -26,6 +26,7 @@ import { ClsModule } from 'nestjs-cls';
 import { DgiAnalyticsModule } from '@urgp/server/dgi-analytics';
 import { DmModule } from '@urgp/server/dm';
 import { DtwModule } from '@urgp/server/dtw';
+import { LettersModule } from '@urgp/server/letters';
 
 @Module({
   // dot env files
@@ -71,6 +72,7 @@ import { DtwModule } from '@urgp/server/dtw';
     // DmModule,
 
     DtwModule,
+    LettersModule,
   ],
 })
 export class AppModule {}

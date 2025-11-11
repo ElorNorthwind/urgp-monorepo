@@ -5,5 +5,6 @@ export type UnchangedResolution = {
   dueDate: string | Date;
   expert: string;
   markedAt: string | Date;
+  notifiedAt: string | Date | null;
   edoId: number;
 };
