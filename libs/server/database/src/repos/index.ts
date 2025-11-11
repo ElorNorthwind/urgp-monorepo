@@ -10,6 +10,7 @@ import { ControlClassificatorsRepository } from './control-classificators';
 import { AddressRepository } from './address';
 import { EquityRepository } from './equity';
 import { SudirRepository } from './sudir';
+import { LettersRepository } from './letters';
 
 // Database Interface Extensions:
 interface DbExtensions {
@@ -25,6 +26,7 @@ interface DbExtensions {
   address: AddressRepository;
   equity: EquityRepository;
   sudir: SudirRepository;
+  letters: LettersRepository;
 }
 
 export {
@@ -41,4 +43,5 @@ export {
   AddressRepository,
   EquityRepository,
   SudirRepository,
+  LettersRepository,
 };

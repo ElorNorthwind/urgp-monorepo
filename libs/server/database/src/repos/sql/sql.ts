@@ -217,3 +217,6 @@ export const equityOperations = {
     'sql/equity/operations/updateOperationsTriggerInfo.sql',
   ),
 };
+export const letters = {
+  getUnchangedResolutions: sql('sql/letters/getUnchangedResolutions.sql'),
+};

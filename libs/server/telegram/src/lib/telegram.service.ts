@@ -13,6 +13,7 @@ import { notifyResolution } from './helpers/notifyResolution';
 import { notifyStage } from './helpers/notifyStage';
 import { escapeMarkdownCharacters } from './helpers/escapeMarkdownCharacters';
 import { notifyCaseProject } from './helpers/notifyCaseProject';
+import { lettersNotifyUnchangedResolutions } from './helpers/notifyLettersUnchangedResolutions';
 
 @Injectable()
 export class TelegramService implements OnModuleDestroy {
@@ -84,6 +85,11 @@ export class TelegramService implements OnModuleDestroy {
     mode: 'pending' | 'reject' = 'pending',
   ) {
     return notifyCaseProject(userId, controlCase, this, mode);
+  }
+
+  public async sendLettersUnchangedResolutions() {
+    const chatId = 1001751756256;
+    return lettersNotifyUnchangedResolutions(chatId, this);
   }
 
   public async sendUserStatus(userId: number) {

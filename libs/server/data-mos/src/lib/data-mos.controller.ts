@@ -7,11 +7,12 @@ import { AccessTokenGuard } from '@urgp/server/auth';
 export class DataMosController {
   constructor(private readonly dataMos: DataMosService) {}
   @Get('update-address')
-  updateAdresses(): Promise<any> {
-    return this.dataMos.updateAdresses();
+  updateAdresses(): Promise<number> {
+    return this.dataMos.updateAdresses(471000).then((res) => res.count);
   }
+
   @Get('update-transport-stations')
-  async updateTransportStations(): Promise<any> {
+  async updateTransportStations(): Promise<number> {
     let total = 0;
     for (const type of ['rail', 'mcd', 'metro'] as const) {
       total +=
@@ -22,8 +23,8 @@ export class DataMosController {
     return total;
   }
 
-  @Get('calculate-streets')
-  calculateStreets(): Promise<any> {
-    return this.dataMos.calculateStreets(5000);
-  }
+  // @Get('calculate-streets')
+  // calculateStreets(): Promise<any> {
+  //   return this.dataMos.calculateStreets(5000);
+  // }
 }

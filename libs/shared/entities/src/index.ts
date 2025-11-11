@@ -63,3 +63,5 @@ export * from './vks/config';
 export * from './dm/dto';
 export * from './dm/types';
 export * from './dm/config';
+
+export * from './letters/types';

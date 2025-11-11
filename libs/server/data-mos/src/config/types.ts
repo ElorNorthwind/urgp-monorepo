@@ -90,6 +90,7 @@ export type AdressRegistryRow = {
   status: string;
   kad_n: string[];
   kad_zu: string[];
+  geo_data: string;
   // outline: any;
   p0: string | null;
   p1: string | null;

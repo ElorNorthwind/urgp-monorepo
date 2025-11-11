@@ -49,7 +49,7 @@ import { DtwModule } from '@urgp/server/dtw';
 
     EdoModule,
     DatabaseModule,
-    GptModule,
+    // GptModule,
     RsmModule,
     ExternalAuthModule,
     EdoApiModule,

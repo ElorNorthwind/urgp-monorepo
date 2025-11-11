@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     abortOnError: false,
   });
-  const globalPrefix = 'dm-api';
+  const globalPrefix = 'geo-api';
   app.setGlobalPrefix(globalPrefix);
   app.use(cookieParser());
   app.useBodyParser('json', { limit: '20mb' });
@@ -20,10 +20,10 @@ async function bootstrap() {
     optionsSuccessStatus: 204,
     credentials: true,
   });
-  const port = process.env.DM_API_PORT || 3001;
+  const port = process.env.DM_API_PORT || 3002;
   await app.listen(port);
   Logger.log(
-    `🚀 DM-API application is running on: http://localhost:${port}/${globalPrefix}`,
+    `🚀 GEO-API application is running on: http://localhost:${port}/${globalPrefix}`,
   );
 }
 

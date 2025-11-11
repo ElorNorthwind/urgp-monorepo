@@ -13,6 +13,7 @@ import {
   StreetsRepository,
   SudirRepository,
   UsersRepository,
+  LettersRepository,
 } from './repos';
 import { ControlOperationsRepository } from './repos/control-operations';
 import { ControlClassificatorsRepository } from './repos/control-classificators';
@@ -53,6 +54,7 @@ export class DatabaseService {
         obj.address = new AddressRepository(obj, pgPromise());
         obj.equity = new EquityRepository(obj, pgPromise());
         obj.sudir = new SudirRepository(obj, pgPromise());
+        obj.letters = new LettersRepository(obj, pgPromise());
       },
     };
 

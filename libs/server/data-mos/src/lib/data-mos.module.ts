@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from '@urgp/server/database';
 
 import { DataMosController } from './data-mos.controller';
 
-import { DataMosService } from './data-mos.service';
-import { HttpModule, HttpService } from '@nestjs/axios';
+import { HttpModule } from '@nestjs/axios';
+import { GeoDbModule } from '@urgp/server/geo-db';
 import { DATA_MOS_HTTP_OPTIONS } from '../config/constants';
+import { DataMosService } from './data-mos.service';
 
 @Module({
-  imports: [DatabaseModule, HttpModule.register(DATA_MOS_HTTP_OPTIONS)],
+  imports: [GeoDbModule, HttpModule.register(DATA_MOS_HTTP_OPTIONS)],
   providers: [DataMosService],
   controllers: [DataMosController],
 })

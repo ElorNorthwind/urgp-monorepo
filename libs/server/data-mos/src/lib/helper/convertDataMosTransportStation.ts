@@ -47,7 +47,7 @@ export const convertDataMosTransportStation = (
       cultural_heritage_site_status: st.Cells.CulturalHeritageSiteStatus,
       repair_of_escalators: st.Cells.RepairOfEscalators,
       object_status: st.Cells.ObjectStatus,
-      geo_data: st.Cells.geoData,
+      geo_data: st?.Cells?.geoData ? JSON.stringify(st.Cells.geoData) : 'null',
       station_type: type,
     };
   });

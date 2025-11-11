@@ -42,7 +42,7 @@ export class DtwController {
             'Content-Type': 'image/jpeg',
             'Cache-Control': 'public, max-age=3600',
           });
-          res.send(this.dtw.blackImageBuffer);
+          res.send(null);
         } else {
           res.set({
             'Content-Type': 'image/jpeg',

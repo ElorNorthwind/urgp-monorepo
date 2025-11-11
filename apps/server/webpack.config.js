@@ -83,6 +83,11 @@ module.exports = {
           from: '../../libs/server/database/src/repos/sql/vks',
           to: join(__dirname, '../../dist/apps/server/sql/vks'),
         },
+        //letters
+        {
+          from: '../../libs/server/database/src/repos/sql/letters',
+          to: join(__dirname, '../../dist/apps/server/sql/letters'),
+        },
         // new vks
         {
           from: '../../libs/server/dgi-analytics/src/repos/sql/vks',

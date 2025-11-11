@@ -27,7 +27,7 @@ export const convertDataMosAdress = (
     status: obj.Cells.STATUS,
     kad_n: obj.Cells.KAD_N.map((n) => n.KAD_N),
     kad_zu: obj.Cells.KAD_ZU.map((z) => z.KAD_ZU),
-    // outline: `ST_GeomFromGeoJSON('${JSON.stringify(obj.Cells.geoData)}')`,
+    geo_data: obj?.Cells?.geoData ? JSON.stringify(obj.Cells.geoData) : 'null',
     p0: obj.Cells.P0,
     p1: obj.Cells.P1,
     p2: obj.Cells.P2,

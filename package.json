@@ -5,7 +5,8 @@
   "scripts": {
     "start": "nx run-many --parallel --target=serve --projects=server,client",
     "start:dm": "nx run dm-api:serve",
-    "build": "nx run-many --parallel --target=build --projects=server,client,dm-api"
+    "start:geo": "nx run-many --parallel --target=serve --projects=server,geo-api",
+    "build": "nx run-many --parallel --target=build --projects=server,client,dm-api,geo-api"
   },
   "private": true,
   "dependencies": {
