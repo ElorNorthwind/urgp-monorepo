@@ -1,7 +1,7 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '@urgp/server/database';
-import { Bot, RawApi } from 'grammy';
+import { Bot, CallbackQueryContext, Context, RawApi } from 'grammy';
 import { Other } from 'grammy/out/core/api';
 import { formatStatusMessage } from './helpers/formatStatusMessage';
 import { handleError } from './helpers/handleError';
@@ -14,6 +14,7 @@ import { notifyStage } from './helpers/notifyStage';
 import { escapeMarkdownCharacters } from './helpers/escapeMarkdownCharacters';
 import { notifyCaseProject } from './helpers/notifyCaseProject';
 import { lettersNotifyUnchangedResolutions } from './helpers/notifyLettersUnchangedResolutions';
+import { handleTakeUnchangedResolution } from './helpers/handleTakeUnchangedResolution';
 
 @Injectable()
 export class TelegramService implements OnModuleDestroy {
@@ -38,8 +39,6 @@ export class TelegramService implements OnModuleDestroy {
       { command: 'help', description: 'Список команд' },
       { command: 'status', description: 'Статус поручений' },
     ]);
-
-    await this.bot.catch((e) => this.logger.error(e));
   }
 
   async onModuleDestroy() {
@@ -139,6 +138,23 @@ export class TelegramService implements OnModuleDestroy {
     this.bot.command('start', async (ctx) => connectAccount(ctx, this));
     this.bot.command('help', replyHelpInfo);
     this.bot.command('status', async (ctx) => replyUserStatus(ctx, this));
+
+    this.bot.on('callback_query:data', async (ctx) => {
+      try {
+        const data = ctx?.callbackQuery?.data;
+
+        if (!data) return;
+
+        if (/^take_unchanged_resolution_(.+)/.test(data)) {
+          handleTakeUnchangedResolution(
+            ctx as CallbackQueryContext<Context>,
+            this,
+          );
+        }
+      } catch (e) {
+        Logger.error(e);
+      }
+    });
 
     // Error handling
     this.bot.catch(handleError);

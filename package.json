@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nx run-many --parallel --target=serve --projects=server,client",
-    "start:dm": "nx run dm-api:serve",
+    "start:dm": "nx run-many --parallel --target=serve --projects=server,dm-api",
     "start:geo": "nx run-many --parallel --target=serve --projects=server,geo-api",
     "build": "nx run-many --parallel --target=build --projects=server,client,dm-api,geo-api"
   },

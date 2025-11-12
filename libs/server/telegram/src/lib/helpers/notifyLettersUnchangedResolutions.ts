@@ -1,30 +1,40 @@
 import { UnchangedResolution } from '@urgp/shared/entities';
 import { format } from 'date-fns';
 import { TelegramService } from '../telegram.service';
+import { InlineKeyboard } from 'grammy';
 
 export const lettersNotifyUnchangedResolutions = async (
   chatId: number,
   parentThis: TelegramService,
 ): Promise<number[]> => {
-  const resolutions: UnchangedResolution[] =
-    await parentThis.dbService.db.letters.getUnchangedResolutions();
-  if (!resolutions || !resolutions.length) return [];
-
-  // Уведомления о новом поручении поручении
-  const esc = parentThis.escapeCharacters;
-  const message = [
-    `Перепись ожидается больше часа:`,
-    ...resolutions.map(
-      (r) =>
-        `📁 [${esc(r?.caseNum || 'б/н')}](https://mosedo.mos.ru/document.card.php?id=${r?.edoId || 0}) \\- \\(${esc(r?.dueDate ? 'срок: ' + format(r?.dueDate, 'dd.MM.yyyy') : 'без срока')}\\) \\[${esc(r?.expert || 'нет эксперта')}\\]`,
-    ),
-  ].join('\n');
   try {
-    await parentThis.bot.api.sendMessage(chatId, message, {
-      parse_mode: 'MarkdownV2',
+    const resolutions: UnchangedResolution[] =
+      await parentThis.dbService.db.letters.getUnchangedResolutions();
+    if (!resolutions || !resolutions.length) return [];
+
+    // Уведомления о новом поручении поручении
+    const esc = parentThis.escapeCharacters;
+    const headderMessage = `*Перепись ожидается больше часа:*`;
+
+    // await parentThis.bot.api.sendMessage(chatId, headderMessage, {
+    //   parse_mode: 'MarkdownV2',
+    // });
+    resolutions.map(async (r, i) => {
+      setTimeout(async () => {
+        const keyboard = new InlineKeyboard().text(
+          'Беру в работу',
+          'take_unchanged_resolution_' + r.id,
+        );
+
+        const replyMessage = `${r?.notifiedAt ? '📂' : '📁'} [${esc(r?.caseNum || 'б/н')}${r?.notifiedAt ? '' : ' 🆕'}](https://mosedo.mos.ru/document.card.php?id=${r?.edoId || 0}) \\- *\\(${esc(r?.dueDate ? 'срок: ' + format(r?.dueDate, 'dd.MM.yyyy') : 'без срока')}\\)* \nПросит переписать: *${esc(r?.expert || 'Эксперт-аноним')}*`;
+        await parentThis.bot.api.sendMessage(chatId, replyMessage, {
+          parse_mode: 'MarkdownV2',
+          reply_markup: keyboard,
+        });
+      }, i * 1000);
     });
+
     return resolutions.map((r) => r.id);
-    // .then((m) => m.message_id);
   } catch (e) {
     parentThis.logger.error(e);
     return [];

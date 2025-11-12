@@ -28,4 +28,8 @@ export class LettersService {
     const messateIds = await this.telegram.sendLettersUnchangedResolutions();
     this.dbServise.db.letters.updateCaseNotificationDate(messateIds);
   }
+  public async notifyUnchangedResolutionsManual() {
+    const messateIds = await this.telegram.sendLettersUnchangedResolutions();
+    this.dbServise.db.letters.updateCaseNotificationDate(messateIds);
+  }
 }

@@ -7,6 +7,6 @@ export class LettersController {
 
   @Get('notify-unchanged-resolutions')
   async notifyUnchangedResolutions() {
-    return this.letters.notifyUnchangedResolutions();
+    return this.letters.notifyUnchangedResolutionsManual();
   }
 }
