@@ -219,4 +219,6 @@ export const equityOperations = {
 };
 export const letters = {
   getUnchangedResolutions: sql('sql/letters/getUnchangedResolutions.sql'),
+  getUrgentNewLetters: sql('sql/letters/getUrgentNewLetters.sql'),
+  getUrgentUndoneLetters: sql('sql/letters/getUrgentUndoneLetters.sql'),
 };

@@ -26,9 +26,9 @@ export const lettersNotifyUnchangedResolutions = async (
           'take_unchanged_resolution_' + r.id,
         );
         const isUrgent =
-          r?.dueDate && differenceInDays(r.dueDate, new Date()) < 30;
+          r?.dueDate && differenceInDays(r.dueDate, new Date()) < 3;
 
-        const replyMessage = `${r?.notifiedAt ? '📂' : '📁'} [${esc(r?.caseNum || 'б/н')}](https://mosedo.mos.ru/document.card.php?id=${r?.edoId || 0}) \\- *\\(${esc(r?.dueDate ? 'срок: ' + format(r?.dueDate, 'dd.MM.yyyy') : 'без срока')}${isUrgent ? ' ⚠️' : ''}\\)* \nПросит переписать: *${esc(r?.expert || 'Эксперт-аноним')}*${r?.notes ? '\n>' + esc(r.notes) : ''}`;
+        const replyMessage = `${r?.notifiedAt ? '📂' : '📁'} [${esc(r?.caseNum || 'б/н')}](https://mosedo.mos.ru/document.card.php?id=${r?.edoId || 0}) \\- *\\(${esc(r?.dueDate ? 'срок: ' + (isUrgent ? '❗' : '') + format(r?.dueDate, 'dd.MM.yyyy') : 'без срока')}${isUrgent ? '❗' : ''}\\)* \nПросит переписать: *${esc(r?.expert || 'Эксперт-аноним')}*${r?.notes ? '\n>' + esc(r.notes) : ''}`;
         await parentThis.bot.api.sendMessage(chatId, replyMessage, {
           parse_mode: 'MarkdownV2',
           reply_markup: keyboard,

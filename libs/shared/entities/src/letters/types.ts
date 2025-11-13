@@ -12,6 +12,17 @@ export type UnchangedResolution = {
   edoId: number;
 };
 
+export type UrgentLetter = {
+  id: number;
+  caseNum: string;
+  caseDate: string | Date;
+  dueDate: string | Date;
+  notes: string | null;
+  expert: string;
+  user: string;
+  edoId: number;
+};
+
 export const telegramMessageRecordSchema = z.object({
   id: z.number(),
   chatId: z.number().nullable(),

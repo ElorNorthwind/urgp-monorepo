@@ -2,6 +2,7 @@ import {
   TelegramMessageRecord,
   TelegramMessageRecordUpsert,
   UnchangedResolution,
+  UrgentLetter,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { letters } from './sql/sql';
@@ -75,5 +76,30 @@ WHERE c."CaseID" = ANY(ARRAY[$1:list]::bigint[]);`,
       .none(sql)
       .then(() => 1)
       .catch(() => 0);
+  }
+
+  getUrgentNewLetters(): Promise<UrgentLetter[]> {
+    return this.db.any(letters.getUrgentNewLetters);
+  }
+
+  updateCaseUrgentNewNotificationDate(ids: number[]): Promise<number> {
+    if (!ids || !ids.length) {
+      return Promise.resolve(0);
+    }
+
+    const sql = this.pgp.as.format(
+      `UPDATE public.cases c
+SET new_urgent_notification_date = (CURRENT_TIMESTAMP)::timestamp(0) without time zone
+WHERE c."CaseID" = ANY(ARRAY[$1:list]::bigint[]);`,
+      [ids],
+    );
+    return this.db
+      .none(sql)
+      .then(() => 1)
+      .catch(() => 0);
+  }
+
+  getUrgentUndoneLetters(): Promise<UrgentLetter[]> {
+    return this.db.any(letters.getUrgentUndoneLetters);
   }
 }

@@ -15,6 +15,8 @@ import { escapeMarkdownCharacters } from './helpers/escapeMarkdownCharacters';
 import { notifyCaseProject } from './helpers/notifyCaseProject';
 import { lettersNotifyUnchangedResolutions } from './helpers/notifyLettersUnchangedResolutions';
 import { handleTakeUnchangedResolution } from './helpers/handleTakeUnchangedResolution';
+import { lettersNotifyUrgentNewResolutions } from './helpers/notifyUrgentNewResolutions';
+import { lettersNotifyUrgentUndoneResolutions } from './helpers/notifyUrgentUndoneResolutions';
 
 @Injectable()
 export class TelegramService implements OnModuleDestroy {
@@ -95,6 +97,22 @@ export class TelegramService implements OnModuleDestroy {
         '-1234567890000',
     );
     return lettersNotifyUnchangedResolutions(chatId, this);
+  }
+
+  public async sendLettersNewUrgent() {
+    const chatId = parseInt(
+      this.configService.get<string>('TELEGRAM_LETTERS_CHAT_ID') ||
+        '-1234567890000',
+    );
+    return lettersNotifyUrgentNewResolutions(chatId, this);
+  }
+
+  public async sendLettersUndoneUrgent() {
+    const chatId = parseInt(
+      this.configService.get<string>('TELEGRAM_LETTERS_CHAT_ID') ||
+        '-1234567890000',
+    );
+    return lettersNotifyUrgentUndoneResolutions(chatId, this);
   }
 
   public async sendUserStatus(userId: number) {

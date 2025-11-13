@@ -9,4 +9,14 @@ export class LettersController {
   async notifyUnchangedResolutions() {
     return this.letters.notifyUnchangedResolutionsManual();
   }
+
+  @Get('notify-new-urgent')
+  async notifyNewUrgentLetters() {
+    return this.letters.notifyNewUrgentLettersManual();
+  }
+
+  @Get('notify-undone-urgent')
+  async notifyUndoneUrgentLetters() {
+    return this.letters.notifyUndoneUrgentLettersManual();
+  }
 }
