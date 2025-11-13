@@ -1,5 +1,5 @@
 import { UnchangedResolution } from '@urgp/shared/entities';
-import { format } from 'date-fns';
+import { differenceInDays, format } from 'date-fns';
 import { TelegramService } from '../telegram.service';
 import { InlineKeyboard } from 'grammy';
 
@@ -25,8 +25,10 @@ export const lettersNotifyUnchangedResolutions = async (
           'Беру в работу',
           'take_unchanged_resolution_' + r.id,
         );
+        const isUrgent =
+          r?.dueDate && differenceInDays(r.dueDate, new Date()) < 30;
 
-        const replyMessage = `${r?.notifiedAt ? '📂' : '📁'} [${esc(r?.caseNum || 'б/н')}${r?.notifiedAt ? '' : ' 🆕'}](https://mosedo.mos.ru/document.card.php?id=${r?.edoId || 0}) \\- *\\(${esc(r?.dueDate ? 'срок: ' + format(r?.dueDate, 'dd.MM.yyyy') : 'без срока')}\\)* \nПросит переписать: *${esc(r?.expert || 'Эксперт-аноним')}*`;
+        const replyMessage = `${r?.notifiedAt ? '📂' : '📁'} [${esc(r?.caseNum || 'б/н')}](https://mosedo.mos.ru/document.card.php?id=${r?.edoId || 0}) \\- *\\(${esc(r?.dueDate ? 'срок: ' + format(r?.dueDate, 'dd.MM.yyyy') : 'без срока')}${isUrgent ? ' ⚠️' : ''}\\)* \nПросит переписать: *${esc(r?.expert || 'Эксперт-аноним')}*${r?.notes ? '\n>' + esc(r.notes) : ''}`;
         await parentThis.bot.api.sendMessage(chatId, replyMessage, {
           parse_mode: 'MarkdownV2',
           reply_markup: keyboard,

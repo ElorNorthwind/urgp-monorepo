@@ -3,6 +3,7 @@ SELECT
     c."CaseNum" as "caseNum",
     c."CaseDate"::date as "caseDate",
     c."ZamDueDate"::date as "dueDate",
+	ARRAY_TO_STRING(ARRAY_REMOVE(ARRAY[c."FIO", c."UserNotes"], null), '; ') as "notes",
     exp."UserFIO" as "expert",
     c.need_resolution_change_date::timestamp with time zone as "markedAt",
  c.need_resolution_change_notification_date::timestamp with time zone as "notifiedAt",
@@ -14,6 +15,8 @@ WHERE c."ZamDoneDate" IS NULL -- Не закрыто
       AND (CURRENT_TIMESTAMP - c.need_resolution_change_date) > '1 hour'::interval -- Галочка "требуется прееписать" стоит дольше часа
       AND (c.need_resolution_change_notification_date IS NULL OR (CURRENT_TIMESTAMP - c.need_resolution_change_notification_date) > '4 hours'::interval) -- С момента прошлого уведомления прошло больше 4 часов
       AND tm.reply_user_id IS NULL
+      AND c."NeedResolutionChange" = TRUE
+      AND c."ZamDueDate" IS NOT NULL -- Есть срок
    AND c."UprBossID" = 16 -- Осталось на Лукьянове
 ORDER BY c."ZamDueDate"::date ASC, c.need_resolution_change_date
-LIMIT 19;
+LIMIT 20;

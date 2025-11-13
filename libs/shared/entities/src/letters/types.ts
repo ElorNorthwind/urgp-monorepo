@@ -5,6 +5,7 @@ export type UnchangedResolution = {
   caseNum: string;
   caseDate: string | Date;
   dueDate: string | Date;
+  notes: string | null;
   expert: string;
   markedAt: string | Date;
   notifiedAt: string | Date | null;

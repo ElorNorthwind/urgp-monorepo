@@ -1,19 +1,6 @@
-import { HttpService } from '@nestjs/axios';
-import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { DatabaseService } from '@urgp/server/database';
-import { firstValueFrom, map } from 'rxjs';
+import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { parse, valid } from 'node-html-parser';
+import { DatabaseService } from '@urgp/server/database';
 import { TelegramService } from '@urgp/server/telegram';
 
 @Injectable()
@@ -23,7 +10,7 @@ export class LettersService {
     private readonly telegram: TelegramService,
   ) {}
 
-  @Cron('0 */10 8-17 * * 1-5')
+  @Cron('0 */10 8-16 * * 1-5')
   public async notifyUnchangedResolutions() {
     const messateIds = await this.telegram.sendLettersUnchangedResolutions();
     this.dbServise.db.letters.updateCaseNotificationDate(messateIds);
