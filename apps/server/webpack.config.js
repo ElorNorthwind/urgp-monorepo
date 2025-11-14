@@ -47,6 +47,10 @@ module.exports = {
           to: join(__dirname, '../../dist/apps/server/sql/address/data-mos'),
         },
         {
+          from: '../../libs/server/database/src/repos/sql/geo',
+          to: join(__dirname, '../../dist/apps/server/sql/geo'),
+        },
+        {
           from: '../../libs/server/database/src/repos/sql/address/sessions',
           to: join(__dirname, '../../dist/apps/server/sql/address/sessions'),
         },

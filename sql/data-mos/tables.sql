@@ -44,7 +44,7 @@ CREATE TABLE data_mos.address_registry (
     l5_type VARCHAR(255),
     l5_value VARCHAR(255),
     center_point GEOMETRY GENERATED ALWAYS AS (ST_PointOnSurface(geo_data)) STORED,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT (now())::timestamp(0) with time zone
+    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (now())::timestamp(0) with time zone
 );
 
 DROP TABLE IF EXISTS data_mos.transport_stations CASCADE;
@@ -61,5 +61,5 @@ CREATE TABLE data_mos.transport_stations (
     object_status VARCHAR(255),
     geo_data GEOMETRY,
     station_type VARCHAR(50) NOT NULL DEFAULT 'metro',
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT (now())::timestamp(0) with time zone
+    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (now())::timestamp(0) with time zone
 );
