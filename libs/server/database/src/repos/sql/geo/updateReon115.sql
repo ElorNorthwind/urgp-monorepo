@@ -25,7 +25,7 @@ ON CONFLICT (id) DO UPDATE SET
     vid = EXCLUDED.vid,
     geo_data = EXCLUDED.geo_data,
     moddate = EXCLUDED.moddate
-WHERE moddate <> EXCLUDED.moddate; -- чтобы не переписывать точно не обновленные записи
+WHERE layer155.moddate <> EXCLUDED.moddate; -- чтобы не переписывать точно не обновленные записи
 
 -- Запрос на добавление вырезорв и мультиполигонов (быстрый)
 UPDATE reon_local.layer155 l
