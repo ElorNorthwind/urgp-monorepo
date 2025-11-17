@@ -190,8 +190,6 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
 --     OWNER TO renovation_user;
 
 
-
-
 -- Консультации - legacy представление
 DROP VIEW IF EXISTS vks.consultations_legacy_view CASCADE;
 CREATE OR REPLACE VIEW vks.consultations_legacy_view  AS
@@ -244,7 +242,12 @@ SELECT
     END as status_calculate, 
     d.full_name as spr_department_full,
     d.boss_surname || ' ' || d.boss_first_name || ' ' || d.boss_last_name as spr_manager,
-    z.surname || ' ' || z.first_name || ' ' || z.last_name as spr_zamestitel
+    z.surname || ' ' || z.first_name || ' ' || z.last_name as spr_zamestitel,
+
+    COALESCE(c.online_grade, c.client_survey_grade) as grade,
+    s.display_name as service_full_name,
+    z.full_name as zam_full_name,
+    s.slot_group_id as slot_group_id
 FROM vks.cases c 
 LEFT JOIN vks.services s ON c.service_id = s.id
 LEFT JOIN vks.clients cl ON c.client_id = cl.id
@@ -261,3 +264,48 @@ ORDER BY c.date DESC, c.id DESC;
 -- GRANT SELECT ON TABLE vks.departments TO consultation_legacy;
 -- GRANT SELECT ON TABLE vks.services TO consultation_legacy;
 -- GRANT SELECT ON TABLE vks.zams TO consultation_legacy;
+
+
+
+-- Консультации - свод по слотам и кварталам
+DROP VIEW IF EXISTS vks.quarter_totals CASCADE;
+CREATE OR REPLACE VIEW vks.quarter_totals  AS
+----------------------------------------------------------------------
+WITH totals AS (
+    SELECT 
+        DATE_PART('year', booking_date)::integer as year,
+        DATE_PART('quarter', booking_date)::integer as quarter,
+        s.slot_group_id,
+        COUNT(*)::integer as total,
+        COUNT(*) FILTER(WHERE status = 'обслужен')::integer as served,
+        COUNT(*) FILTER(WHERE status = 'отменено ОИВ')::integer as canceled_by_us,
+        COUNT(*) FILTER(WHERE status = 'отменено пользователем')::integer as canceled_by_client,
+        COUNT(*) FILTER(WHERE status = 'талон не был взят')::integer as missed,
+        COUNT(*) FILTER(WHERE status = 'забронировано')::integer as reserved,
+        COUNT(*) FILTER(WHERE status = 'не явился по вызову')::integer as not_arrived
+    FROM vks.cases c
+    LEFT JOIN vks.services s ON c.service_id = s.id
+    GROUP BY 
+        DATE_PART('year', booking_date),
+        DATE_PART('quarter', booking_date),
+        s.slot_group_id
+)
+SELECT 
+	g.id as slot_group_id,
+	g.full_name,
+	g.short_name,
+	q.year,
+	q.quarter,
+	q.year::text || ' год ' || to_char(q.quarter, 'FMRN') || '-й квартал' as period,
+	q.slots as slots_avaliable,
+	t.total,
+	t.served,
+	t.canceled_by_us,
+	t.canceled_by_client,
+	t.missed,
+	t.reserved,
+	t.not_arrived
+FROM vks.quarter_slots q
+LEFT JOIN vks.slot_groups g ON g.id = q.slot_group_id
+LEFT JOIN totals t ON g.id = t.slot_group_id AND q.year = t.year AND q.quarter = t.quarter
+ORDER BY q.year ASC, q.quarter ASC, g.id;
