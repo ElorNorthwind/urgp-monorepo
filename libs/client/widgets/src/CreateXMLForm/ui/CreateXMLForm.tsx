@@ -14,6 +14,7 @@ import {
   DateFormField,
   InputFormField,
   SelectFormField,
+  TextAreaFormField,
 } from '@urgp/client/widgets';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -80,6 +81,9 @@ const CreateXMLForm = ({
     values: emptyFormValues,
   });
 
+  const multiLineCadNum =
+    form.watch('rdType') === RdType.PremisesToNonResidentialExclusion;
+
   async function onReset() {
     if (fileInputRef?.current) fileInputRef.current.value = '';
     setFileData({
@@ -144,13 +148,23 @@ const CreateXMLForm = ({
             placeholder="Тип документа"
             className="min-w-[19rem] flex-grow-0"
           />
-          <InputFormField
-            form={form}
-            fieldName={'cadNum'}
-            label="Кадастровый номер объекта"
-            placeholder="77:00:0000000:0000"
-            className="flex-grow"
-          />
+          {multiLineCadNum ? (
+            <TextAreaFormField
+              form={form}
+              fieldName={'cadNum'}
+              label="Кадастровые номера помещений в объекте"
+              placeholder="77:00:0000000:0000;  77:00:0000000:0000;  ..."
+              className="flex-grow"
+            />
+          ) : (
+            <InputFormField
+              form={form}
+              fieldName={'cadNum'}
+              label="Кадастровый номер объекта"
+              placeholder="77:00:0000000:0000"
+              className="flex-grow"
+            />
+          )}
         </div>
         <div
           className={cn(

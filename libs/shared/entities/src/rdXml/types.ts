@@ -17,6 +17,10 @@ export const RdType = {
     'Несуществующее распоряжение Департамента о переводе в жилье но здания (таких не бывает)',
   BuildingToNonResidential:
     'Распоряжение Департамента о переводе жилого дома в нежилой фонд',
+  PremisesToNonResidentialExclusion:
+    'Распоряжение Департамента об исключении из жилищного фонда города Москвы жилых объектов недвижимости и переводе их в нежилой фонд (помещения)',
+  BuildingToNonResidentialExclusion:
+    'Распоряжение Департамента об исключении из жилищного фонда города Москвы жилых объектов недвижимости и переводе их в нежилой фонд (здание)',
 } as const;
 export type RdType = (typeof RdType)[keyof typeof RdType];
 export const rdTypes = getValues(RdType);
@@ -26,9 +30,16 @@ export const RdXMLFormSchema = z.object({
   rdNum: z.string().regex(/\d+/, { message: 'Некорректный номер РД' }),
   rdDate: z.string().datetime({ message: 'Некорректная дата РД' }),
   fileName: z.string().regex(/\.pdf$/, { message: 'Некорректное имя файла' }),
-  cadNum: z.string().regex(/\d{2}:\d{2}:\d{6,7}:\d*/, {
-    message: 'Некорректный номер кадастра',
-  }),
+  cadNum: z
+    .string()
+    .regex(/\d{2}:\d{2}:\d{6,7}:\d*/, {
+      message: 'Некорректный номер кадастра',
+    })
+    .or(
+      z.string().regex(/^(?:\d{2}:\d{2}:\d{6,7}:\d*(\s?[\s\n\,\;]\s?))+$/, {
+        message: 'Некорректные кадастровые номера',
+      }),
+    ),
   rdType: z.enum(rdTypes, { message: 'Некорректный тип РД' }),
 });
 export type RdXMLFormValues = z.infer<typeof RdXMLFormSchema>;

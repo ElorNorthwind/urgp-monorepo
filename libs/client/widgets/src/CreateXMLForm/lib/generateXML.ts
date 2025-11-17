@@ -2,7 +2,8 @@ import { format } from 'date-fns';
 import { rdTemplates } from '../config/templates';
 import { escapeXml } from './excapeText';
 import { toast } from 'sonner';
-import { RdXMLFormValues } from '@urgp/shared/entities';
+import { RdType, RdXMLFormValues } from '@urgp/shared/entities';
+import { formatObjectsList } from './formatObjectsList';
 
 // Component with download functionality
 export const generateXml = (data: RdXMLFormValues) => {
@@ -10,6 +11,9 @@ export const generateXml = (data: RdXMLFormValues) => {
   if (!template) {
     toast.error('Не найден шаблон XML файла!');
     return;
+  }
+
+  if (data?.rdType === RdType.PremisesToNonResidentialExclusion) {
   }
 
   // Replace placeholders with escaped values
@@ -26,7 +30,18 @@ export const generateXml = (data: RdXMLFormValues) => {
       escapeXml(format(data?.rdDate || '', 'yyyy-MM-dd') + '+3:00'),
     )
     .replace('{{fileName}}', escapeXml(data?.fileName || ''))
-    .replace('{{cadNum}}', escapeXml(data?.cadNum || ''));
+    .replace(
+      '{{cadNum}}',
+      data?.rdType === RdType.PremisesToNonResidentialExclusion
+        ? formatObjectsList(
+            data?.cadNum
+              ?.replace(/\s{2,}/g, ' ')
+              .replace(/[\n\s\,\;]/g, '\n')
+              .split('\n'),
+            '206001000000',
+          ).join('\n')
+        : escapeXml(data?.cadNum || ''),
+    );
 
   // Create Blob and download
   const blob = new Blob([xmlContent], { type: 'application/xml' });
