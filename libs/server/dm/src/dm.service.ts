@@ -55,7 +55,8 @@ export class DmService {
   }
 
   public async addDmShortTermRecords(q?: DmDateRangeQuery): Promise<number> {
-    const query = getDmShortTermQuery(q);
+    const categoryIds = await this.analytics.db.dm.getCategoryIds();
+    const query = getDmShortTermQuery(categoryIds, q);
     Logger.log('Executing DM short-term Records query');
     const result = await this.executeQuery(query);
     const formatedRows = formatDmRows(result?.rows as unknown[][]);
@@ -63,7 +64,11 @@ export class DmService {
     return formatedRows?.length || 0;
   }
 
-  public async addDmLongTermRecords(q: DmDateRangeQuery): Promise<number> {
+  public async addDmLongTermRecords(
+    q: DmDateRangeQuery,
+    group?: string,
+  ): Promise<number> {
+    const categoryIds = await this.analytics.db.dm.getCategoryIds(group);
     const range = dmDateRangeQuerySchema.required().parse(q);
     let count = 0;
     await this.executeCallback(async (connection) => {
@@ -72,7 +77,9 @@ export class DmService {
       for (const chunk of chunks) {
         this.configService.get<string>('NODE_ENV') === 'development' &&
           Logger.log(`${chunk.from} - ${chunk.to}`);
-        const found = await connection.execute(getDmLongTermQuery(chunk));
+        const found = await connection.execute(
+          getDmLongTermQuery(categoryIds, chunk),
+        );
         await this.analytics.db.dm.insertDmData(
           formatDmRows(found?.rows as unknown[][]),
         );
@@ -83,7 +90,8 @@ export class DmService {
   }
 
   public async addDmAllUndoneResolutions(): Promise<number> {
-    const query = getDmAllUndoneQuery();
+    const categoryIds = await this.analytics.db.dm.getCategoryIds();
+    const query = getDmAllUndoneQuery(categoryIds);
     const result = await this.executeQuery(query);
     const formatedRows = formatDmRows(result?.rows as unknown[][]);
     await this.analytics.db.dm.insertDmData(formatedRows);

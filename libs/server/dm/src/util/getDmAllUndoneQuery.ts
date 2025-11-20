@@ -1,6 +1,6 @@
-import { categoryIds } from '@urgp/shared/entities';
+// import { categoryIds } from '@urgp/shared/entities';
 
-export function getDmAllUndoneQuery(): string {
+export function getDmAllUndoneQuery(categoryIds: number[]): string {
   return `
 SELECT
   r.ID_RESOLUTIONS,

@@ -1,10 +1,13 @@
 import {
-  categoryIds,
+  // categoryIds,
   DmDateRangeQuery,
   dmDateRangeQuerySchema,
 } from '@urgp/shared/entities';
 
-export function getDmLongTermQuery(q?: DmDateRangeQuery): string {
+export function getDmLongTermQuery(
+  categoryIds: number[],
+  q?: DmDateRangeQuery,
+): string {
   const parsed = dmDateRangeQuerySchema.parse(q);
   const fromString = parsed.from
     ? `TO_DATE('${parsed.from}', 'DD.MM.YYYY')`

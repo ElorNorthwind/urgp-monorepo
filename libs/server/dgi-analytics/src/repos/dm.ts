@@ -60,6 +60,12 @@ ON CONFLICT (id) DO UPDATE SET
       this.pgp.helpers.values(records, dmResultColumngs),
     );
   }
+  getCategoryIds(group?: string): Promise<number[]> {
+    const condition = group ? `WHERE category_group = '${group}'` : '';
+    const query = `SELECT id FROM dm.categories ${condition};`;
+    return this.db.manyOrNone(query)?.then((res) => res.map((r) => r.id));
+  }
+
   getActiveResolutions(): Promise<number[]> {
     const query = `SELECT id FROM dm.resolutions WHERE control_date IS NOT NULL AND done_date IS NULL;`;
     return this.db.manyOrNone(query)?.then((res) => res.map((r) => r.id));

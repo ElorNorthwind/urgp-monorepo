@@ -107,6 +107,7 @@ CREATE TABLE dm.categories
     department_id INTEGER REFERENCES dm.departments(id) ON DELETE SET NULL,
     category_code VARCHAR(50), 
     category_name TEXT,
+    category_group VARCHAR(50),
 
     PRIMARY KEY (id)
 );
