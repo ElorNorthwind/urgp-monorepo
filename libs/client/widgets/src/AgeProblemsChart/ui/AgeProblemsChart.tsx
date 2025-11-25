@@ -26,7 +26,7 @@ const AgeProblemsChartChart = ({
 
   const barStyles = {
     noNotification: {
-      label: 'Не направлено ЗУ',
+      label: 'Требуется направ. ЗУ',
       filterValue: 'Нет ЗУ',
       style: 'bg-rose-200 group-hover:bg-rose-300',
       icon: MailX,
@@ -38,13 +38,13 @@ const AgeProblemsChartChart = ({
       icon: BrickWallFire,
     },
     overdueLitigation: {
-      label: 'Просрочен иск',
+      label: 'Требуется подать иск',
       filterValue: 'Просрочен иск',
       style: 'bg-teal-200 group-hover:bg-teal-300',
       icon: CalendarX,
     },
     longLitigation: {
-      label: 'Долгий суд',
+      label: 'Контроль дела в суде',
       filterValue: 'Долгие суды',
       style: 'bg-indigo-200 group-hover:bg-indigo-300',
       icon: Scale,
@@ -79,7 +79,7 @@ const AgeProblemsChartChart = ({
           </div>
         ) : (
           <CardTitle className="flex flex-row items-center justify-between">
-            <span>Отклонения в рисковых домах</span>
+            <span>Мониторинг этапов по семьям</span>
           </CardTitle>
         )}
         {isLoading || isFetching ? (
