@@ -12,6 +12,6 @@ SELECT
 	a.kpu_num as kpu, 
 	a.new_aparts as newAparts,
 	a.classificator
-FROM renovation.apartments_old_temp a
+FROM renovation.apartments_old a
 LEFT JOIN renovation.buildings_old b ON a.building_id = b.id
 WHERE a.id = ${id};

@@ -1,0 +1,9 @@
+{
+  "name": "server/dsa-dgi",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/server/dsa-dgi/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project dsa-dgi--web",
+  "targets": {}
+}

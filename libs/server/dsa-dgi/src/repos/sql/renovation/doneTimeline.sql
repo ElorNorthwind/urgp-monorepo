@@ -5,7 +5,7 @@ WITH contracts AS (
 		DATE_PART('month', (stages_dates->'contract'->>'date')::date) as month,
 		COUNT(*) FILTER (WHERE (stages_dates->'contract'->>'date')::date - (stages_dates->'resettlementStart'->>'date')::date <= 60) AS fast,
 	    COUNT(*) FILTER (WHERE (stages_dates->'contract'->>'date')::date - (stages_dates->'resettlementStart'->>'date')::date > 60) AS slow
-	FROM renovation.apartments_old_temp
+	FROM renovation.apartments_old
 	GROUP BY DATE_PART('year', (stages_dates->'contract'->>'date')::date),
              DATE_PART('month', (stages_dates->'contract'->>'date')::date)
 ), date_series AS (

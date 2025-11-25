@@ -27,7 +27,7 @@ SELECT
     (a.classificator->>'deviation')::varchar as deviation,
     (a.classificator->>'problems')::varchar as problems
 FROM renovation.messages m 
-LEFT JOIN renovation.apartments_old_temp a ON a.id = m.apartment_id
+LEFT JOIN renovation.apartments_old a ON a.id = m.apartment_id
 LEFT JOIN renovation.buildings_old b ON a.building_id = b.id
 LEFT JOIN renovation.users u ON m.author_id = u.id
 LEFT JOIN (

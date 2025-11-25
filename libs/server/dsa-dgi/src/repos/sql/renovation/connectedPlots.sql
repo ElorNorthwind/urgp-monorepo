@@ -6,7 +6,7 @@ WITH apartment_totals AS (
         COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Без отклонений'::varchar) as none,
         COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Риск'::varchar) as risk,
         COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Требует внимания'::varchar) as attention
-        FROM renovation.apartments_old_temp
+        FROM renovation.apartments_old
     GROUP BY building_id
 )
 SELECT DISTINCT c.new_building_id as "newBuildingId", 

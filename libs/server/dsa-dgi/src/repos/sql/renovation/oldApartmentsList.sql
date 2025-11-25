@@ -7,7 +7,7 @@ WITH apartment_totals AS (
         -- COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Без отклонений'::varchar) as none,
         COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Риск'::varchar) as risk,
         COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Требует внимания'::varchar) as attention
-        FROM renovation.apartments_old_temp
+        FROM renovation.apartments_old
     GROUP BY building_id
 )
 SELECT 
@@ -61,7 +61,7 @@ FROM (SELECT
         stages_dates, 
         classificator, 
         ROW_NUMBER() OVER (PARTITION BY building_id ORDER BY building_id, CAST(substring(apart_num, '\d+') AS integer), fio) as apart_npp 
-    FROM renovation.apartments_old_temp) a
+    FROM renovation.apartments_old) a
     LEFT JOIN renovation.buildings_old b ON a.building_id = b.id
     LEFT JOIN (SELECT apartment_id, COUNT(*) as messages_count FROM renovation.messages WHERE (message_payload->-1->>'deleted')::boolean IS DISTINCT FROM true AND apartment_id IS NOT NULL GROUP BY apartment_id) m ON a.id = m.apartment_id
     LEFT JOIN apartment_totals at ON a.building_id = at.building_id

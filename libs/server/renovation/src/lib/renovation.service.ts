@@ -1,6 +1,7 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
+import { DsaDgiService } from '@urgp/server/dsa-dgi';
 import {
   CreateMessageDto,
   DeleteMessageDto,
@@ -47,7 +48,8 @@ import { Cache } from 'cache-manager';
 @Injectable()
 export class RenovationService {
   constructor(
-    private readonly dbServise: DatabaseService,
+    private readonly dbServise: DsaDgiService,
+    private readonly urgpDb: DatabaseService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
@@ -299,6 +301,6 @@ export class RenovationService {
     return this.dbServise.db.renovation.getApartmentDefects(id);
   }
   public async getTransportStations() {
-    return this.dbServise.db.address.getTransportStations();
+    return this.urgpDb.db.address.getTransportStations();
   }
 }
