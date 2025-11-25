@@ -19,10 +19,10 @@ module.exports = {
     }),
     new CopyPlugin({
       patterns: [
-        {
-          from: '../../libs/server/database/src/repos/sql/renovation',
-          to: join(__dirname, '../../dist/apps/server/sql/renovation'),
-        },
+        // {
+        //   from: '../../libs/server/database/src/repos/sql/renovation',
+        //   to: join(__dirname, '../../dist/apps/server/sql/renovation'),
+        // },
         {
           from: '../../libs/server/database/src/repos/sql/users',
           to: join(__dirname, '../../dist/apps/server/sql/users'),
@@ -96,6 +96,11 @@ module.exports = {
         {
           from: '../../libs/server/dgi-analytics/src/repos/sql/vks',
           to: join(__dirname, '../../dist/apps/server/dgi-analytics/sql/vks'),
+        },
+        // new renovation
+        {
+          from: '../../libs/server/dsa-dgi/src/repos/sql/renovation',
+          to: join(__dirname, '../../dist/apps/server/sql/renovation'),
         },
       ],
     }),

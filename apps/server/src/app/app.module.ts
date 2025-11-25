@@ -27,6 +27,7 @@ import { DgiAnalyticsModule } from '@urgp/server/dgi-analytics';
 import { DmModule } from '@urgp/server/dm';
 import { DtwModule } from '@urgp/server/dtw';
 import { LettersModule } from '@urgp/server/letters';
+import { DsaDgiModule } from '@urgp/server/dsa-dgi';
 
 @Module({
   // dot env files
@@ -50,6 +51,7 @@ import { LettersModule } from '@urgp/server/letters';
 
     EdoModule,
     DatabaseModule,
+    DsaDgiModule,
     // GptModule,
     RsmModule,
     ExternalAuthModule,

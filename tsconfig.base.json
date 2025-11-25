@@ -48,6 +48,7 @@
       "@urgp/server/dtw": ["libs/server/dtw/src/index.ts"],
       "@urgp/server/geo-db": ["libs/server/geo-db/src/index.ts"],
       "@urgp/server/letters": ["libs/server/letters/src/index.ts"],
+      "@urgp/server/dsa-dgi": ["libs/server/dsa-dgi/src/index.ts"],
       "@urgp/dm-api/*": ["apps/dm-api/src/*"],
       "@urgp/geo-api/*": ["apps/geo-api/src/*"]
     }

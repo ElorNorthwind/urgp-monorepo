@@ -11,7 +11,7 @@ FROM (
     ORDER BY expected_done_days NULLS LAST
     ), apartment_dates AS (
     SELECT key, (value->>'id')::int as id, (value->>'date')::date as date
-    FROM renovation.apartments_old_temp r, jsonb_each(stages_dates)
+    FROM renovation.apartments_old r, jsonb_each(stages_dates)
     WHERE r.id = ${id}
     ), start_date AS (
     SELECT date as start_date

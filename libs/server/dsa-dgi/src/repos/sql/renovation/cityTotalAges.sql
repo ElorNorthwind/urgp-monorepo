@@ -3,7 +3,7 @@ WITH apartment_totals AS (
         building_id,
         COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Риск'::varchar) as risk,
         COUNT(*) FILTER (WHERE (classificator->>'deviation')::varchar = 'Требует внимания'::varchar) as attention
-        FROM renovation.apartments_old_temp
+        FROM renovation.apartments_old
     GROUP BY building_id
 ), building_ages AS (
     SELECT 

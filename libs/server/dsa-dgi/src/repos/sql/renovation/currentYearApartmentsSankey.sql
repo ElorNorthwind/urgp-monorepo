@@ -23,7 +23,7 @@ WITH apartments AS (
    WHEN AGE(COALESCE(a.stages_dates->'contract'->>'date', a.stages_dates->'contract'->>'execution', a.stages_dates->'contract'->>'free')::date, (a.stages_dates->'resettlementStart'->>'date')::date) < '8 month'::interval THEN 'От 5 до 8 месяцев' -- 11
    ELSE 'Дольше 8 месяцев' -- 10
   END as age_pull
- FROM renovation.apartments_old_temp a
+ FROM renovation.apartments_old a
 --  LEFT JOIN renovation.buildings_old b ON a.building_id = b.id WHERE b.id = 5873
  WHERE DATE_PART('year', (a.stages_dates->'resettlementStart'->>'date')::date) = DATE_PART('year', NOW())
 ), raw_data AS (

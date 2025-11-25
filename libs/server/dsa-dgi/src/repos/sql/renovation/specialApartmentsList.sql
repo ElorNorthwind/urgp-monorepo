@@ -27,7 +27,7 @@ FROM (SELECT
         stages_dates, 
         classificator, 
         ROW_NUMBER() OVER (PARTITION BY building_id ORDER BY building_id, CAST(substring(apart_num, '\d+') AS integer), fio) as apart_npp 
-    FROM renovation.apartments_old_temp) a
+    FROM renovation.apartments_old) a
     LEFT JOIN renovation.buildings_old b ON a.building_id = b.id
     LEFT JOIN (SELECT apartment_id, COUNT(*) as messages_count FROM renovation.messages WHERE (message_payload->-1->>'deleted')::boolean IS DISTINCT FROM true AND apartment_id IS NOT NULL GROUP BY apartment_id) m ON a.id = m.apartment_id
 WHERE b.id IS NOT NULL AND (old_apart_status LIKE ANY(ARRAY['%аренда%', '%служебн%', '%общежит%'])

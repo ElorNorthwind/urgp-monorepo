@@ -8,7 +8,6 @@ import {
   DbExtensions,
   EquityRepository,
   QuestionsRepository,
-  RenovationRepository,
   RenovationUsersRepository,
   StreetsRepository,
   SudirRepository,
@@ -40,7 +39,6 @@ export class DatabaseService {
         obj.cases = new CasesRepository(obj, pgPromise());
         obj.questions = new QuestionsRepository(obj, pgPromise());
         obj.streets = new StreetsRepository(obj, pgPromise());
-        obj.renovation = new RenovationRepository(obj, pgPromise());
         obj.renovationUsers = new RenovationUsersRepository(obj, pgPromise());
         obj.controlCases = new ControlCasesRepository(obj, pgPromise());
         obj.controlOperations = new ControlOperationsRepository(

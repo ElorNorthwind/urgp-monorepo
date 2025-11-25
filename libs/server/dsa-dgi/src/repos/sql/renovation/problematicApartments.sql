@@ -28,7 +28,7 @@ FROM (SELECT
         ap.classificator,
         m.messages,
         ROW_NUMBER() OVER (PARTITION BY ap.building_id ORDER BY ap.building_id, CAST(substring(ap.apart_num, '\d+') AS integer), ap.fio) as apart_npp 
-    FROM renovation.apartments_old_temp ap
+    FROM renovation.apartments_old ap
     LEFT JOIN (
         SELECT
             m.apartment_id,

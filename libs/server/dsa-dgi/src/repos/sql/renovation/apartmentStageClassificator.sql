@@ -12,7 +12,7 @@ SELECT
 FROM renovation.apartment_stages s
 LEFT JOIN (
 	SELECT (classificator->>'stageId')::integer as id, COUNT(*)::integer as count
-	FROM renovation.apartments_old_temp
+	FROM renovation.apartments_old
 	GROUP BY (classificator->>'stageId')::integer) c ON c.id = s.id
 WHERE c.count > 0
 GROUP BY s.group_name
