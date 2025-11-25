@@ -274,8 +274,8 @@ CREATE OR REPLACE VIEW vks.quarter_totals  AS
 ----------------------------------------------------------------------
 WITH totals AS (
     SELECT 
-        DATE_PART('year', booking_date)::integer as year,
-        DATE_PART('quarter', booking_date)::integer as quarter,
+        DATE_PART('year', date)::integer as year,
+        DATE_PART('quarter', date)::integer as quarter,
         s.slot_group_id,
         COUNT(*)::integer as total,
         COUNT(*) FILTER(WHERE status = 'обслужен')::integer as served,
@@ -287,8 +287,8 @@ WITH totals AS (
     FROM vks.cases c
     LEFT JOIN vks.services s ON c.service_id = s.id
     GROUP BY 
-        DATE_PART('year', booking_date),
-        DATE_PART('quarter', booking_date),
+        DATE_PART('year', date),
+        DATE_PART('quarter', date),
         s.slot_group_id
 )
 SELECT 
