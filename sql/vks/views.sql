@@ -247,7 +247,8 @@ SELECT
     COALESCE(c.online_grade, c.client_survey_grade) as grade,
     s.display_name as service_full_name,
     z.full_name as zam_full_name,
-    s.slot_group_id as slot_group_id
+    s.slot_group_id as slot_group_id,
+    COALESCE(c.operator_survey_consultation_type, 'нет') as consultation_type
 FROM vks.cases c 
 LEFT JOIN vks.services s ON c.service_id = s.id
 LEFT JOIN vks.clients cl ON c.client_id = cl.id

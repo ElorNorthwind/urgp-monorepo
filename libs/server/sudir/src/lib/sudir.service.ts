@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Inject,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -104,7 +105,7 @@ export class SudirService {
         .pipe(map((response) => response?.headers?.['location'])),
     );
 
-    // Logger.debug(thirdLocation);
+    // Logger.debug(formData);
 
     if (!thirdLocation)
       throw new UnauthorizedException(
