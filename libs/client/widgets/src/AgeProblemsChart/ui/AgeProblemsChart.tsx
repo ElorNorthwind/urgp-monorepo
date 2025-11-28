@@ -26,7 +26,7 @@ const AgeProblemsChartChart = ({
 
   const barStyles = {
     noNotification: {
-      label: 'Требуется направ. ЗУ',
+      label: 'Требуется направить ЗУ',
       filterValue: 'Нет ЗУ',
       style: 'bg-rose-200 group-hover:bg-rose-300',
       icon: MailX,
