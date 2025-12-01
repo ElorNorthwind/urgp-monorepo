@@ -185,8 +185,8 @@ export class VksController {
     records: number;
   }> {
     return this.vks.GetQmsReport({
-      dateFrom: '15.07.2025',
-      dateTo: '15.07.2025',
+      dateFrom: '01.09.2025',
+      dateTo: '01.12.2025',
     });
   }
 

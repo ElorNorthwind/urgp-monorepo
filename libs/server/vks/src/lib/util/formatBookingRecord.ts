@@ -16,6 +16,11 @@ export function formatBookingRecord(r: RawBookingRecord): BookingRecord {
   //     ),
   //   );
   // }
+
+  // if (r?.['Код бронирования'] === '0539-3608750') {
+  //   Logger.log(r?.['Дополнительные поля']);
+  // }
+
   return transformEmptyToNull({
     org: r?.['Отделение'],
     date: r?.['Дата записи'],
