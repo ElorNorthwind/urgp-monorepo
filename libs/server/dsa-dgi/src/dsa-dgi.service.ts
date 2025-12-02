@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 // import * as pgPromise from 'pg-promise';
 import pgPromise from 'pg-promise';
-import { DbExtensions, RenovationRepository } from './repos';
+import {
+  DbExtensions,
+  RenovationRepository,
+  RenovationSyncRepository,
+} from './repos';
 
 type ExtendedProtocol = pgPromise.IDatabase<DbExtensions> & DbExtensions;
 
@@ -22,6 +26,7 @@ export class DsaDgiService {
     const initOptions = {
       extend(obj: ExtendedProtocol, dc: any) {
         obj.renovation = new RenovationRepository(obj, pgPromise());
+        obj.renovationSync = new RenovationSyncRepository(obj, pgPromise());
       },
     };
 
