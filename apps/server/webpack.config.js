@@ -102,6 +102,10 @@ module.exports = {
           from: '../../libs/server/dsa-dgi/src/repos/sql/renovation',
           to: join(__dirname, '../../dist/apps/server/sql/renovation'),
         },
+        {
+          from: '../../libs/server/dsa-dgi/src/repos/sql/renovation-sync',
+          to: join(__dirname, '../../dist/apps/server/sql/renovation-sync'),
+        },
       ],
     }),
   ],

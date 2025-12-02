@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -75,10 +76,14 @@ import {
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
+import { RenovationSyncService } from './renovation-sync.service';
 
 @Controller('renovation')
 export class RenovationController {
-  constructor(private readonly renovation: RenovationService) {}
+  constructor(
+    private readonly renovation: RenovationService,
+    private readonly renovationSync: RenovationSyncService,
+  ) {}
 
   @CacheTTL(1000 * 60 * 60)
   @UseInterceptors(CacheInterceptor)
@@ -649,5 +654,39 @@ export class RenovationController {
   @Get('transport-stations')
   async getTransportStations() {
     return this.renovation.getTransportStations();
+  }
+
+  @Get('sync/all')
+  async syncAll(): Promise<string> {
+    if (this.renovationSync.updateRunning) {
+      throw new BadRequestException('Синхронизация данных уже запущена');
+    }
+    this.renovationSync.syncAll();
+    return 'Запускаю синхронизацию данных';
+  }
+
+  @Get('sync/old-apartments')
+  async syncOldApartments(): Promise<void> {
+    return this.renovationSync.syncOldApartmenst();
+  }
+
+  @Get('sync/new-apartments')
+  async syncNewApartments(): Promise<void> {
+    return this.renovationSync.syncNewApartmenst();
+  }
+
+  @Get('sync/offers')
+  async syncOffers(): Promise<void> {
+    return this.renovationSync.syncOffers();
+  }
+
+  @Get('sync/orders')
+  async syncOrders(): Promise<void> {
+    return this.renovationSync.syncOrders();
+  }
+
+  @Get('sync/contracts')
+  async syncContracts(): Promise<void> {
+    return this.renovationSync.syncContracts();
   }
 }
