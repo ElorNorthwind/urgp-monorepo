@@ -67,6 +67,9 @@ export const renovation = {
   cityAgeDifficulties: sql('sql/renovation/cityAgeDifficulties.sql'),
   yearlyDoneTimeline: sql('sql/renovation/yearlyDoneTimeline.sql'),
   yearlyProgressTimeline: sql('sql/renovation/yearlyProgressTimeline.sql'),
+  plots: sql('sql/renovation/plots.sql'),
+  plotsStatusTotals: sql('sql/renovation/plotsStatusTotals.sql'),
+  plotsDeviationTotals: sql('sql/renovation/plotsDeviationTotals.sql'),
 };
 
 export const users = {

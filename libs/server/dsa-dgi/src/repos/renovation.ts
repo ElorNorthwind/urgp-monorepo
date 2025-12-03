@@ -39,6 +39,9 @@ import {
   ProblematicApartmentInfo,
   ReadApartmentMessageDto,
   ReadMessageByIdDto,
+  RenovationNewBuilding,
+  RenovationNewBuildingDeviationTotals,
+  RenovationNewBuildingStatusTotals,
   SankeyData,
   Stage,
   StageApproveStatusData,
@@ -428,5 +431,17 @@ export class RenovationRepository {
 
   getApartmentDefects(id: number): Promise<ApartmentDefect[]> {
     return this.db.any(renovation.apartmentDefects, { id });
+  }
+
+  getPlots(): Promise<RenovationNewBuilding[]> {
+    return this.db.any(renovation.plots);
+  }
+
+  getPlotsStatusTotals(): Promise<RenovationNewBuildingStatusTotals> {
+    return this.db.one(renovation.plotsStatusTotals);
+  }
+
+  getPlostDeviationTotals(): Promise<RenovationNewBuildingDeviationTotals> {
+    return this.db.one(renovation.plotsDeviationTotals);
   }
 }
