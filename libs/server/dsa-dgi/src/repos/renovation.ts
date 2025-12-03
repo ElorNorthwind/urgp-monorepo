@@ -441,7 +441,7 @@ export class RenovationRepository {
     return this.db.one(renovation.plotsStatusTotals);
   }
 
-  getPlostDeviationTotals(): Promise<RenovationNewBuildingDeviationTotals> {
-    return this.db.one(renovation.plotsDeviationTotals);
+  getPlostDeviationTotals(): Promise<RenovationNewBuildingDeviationTotals[]> {
+    return this.db.any(renovation.plotsDeviationTotals);
   }
 }

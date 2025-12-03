@@ -42,6 +42,9 @@ import {
   CityAgeDiffuculty,
   YearlyProgressInfo,
   YearlyDoneInfo,
+  RenovationNewBuilding,
+  RenovationNewBuildingStatusTotals,
+  RenovationNewBuildingDeviationTotals,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 
@@ -302,5 +305,19 @@ export class RenovationService {
   }
   public async getTransportStations() {
     return this.urgpDb.db.address.getTransportStations();
+  }
+
+  public async getRenovationNewBuildings(): Promise<RenovationNewBuilding[]> {
+    return this.dbServise.db.renovation.getPlots();
+  }
+
+  public async getRenovationNewBuildingsStatusTotals(): Promise<RenovationNewBuildingStatusTotals> {
+    return this.dbServise.db.renovation.getPlotsStatusTotals();
+  }
+
+  public async getRenovationNewBuildingsDeviationTotals(): Promise<
+    RenovationNewBuildingDeviationTotals[]
+  > {
+    return this.dbServise.db.renovation.getPlostDeviationTotals();
   }
 }

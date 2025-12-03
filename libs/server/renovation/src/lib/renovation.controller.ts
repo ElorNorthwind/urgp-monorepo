@@ -73,6 +73,9 @@ import {
   CityAgeDiffuculty,
   YearlyProgressInfo,
   YearlyDoneInfo,
+  RenovationNewBuilding,
+  RenovationNewBuildingStatusTotals,
+  RenovationNewBuildingDeviationTotals,
 } from '@urgp/shared/entities';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
@@ -688,5 +691,25 @@ export class RenovationController {
   @Get('sync/contracts')
   async syncContracts(): Promise<void> {
     return this.renovationSync.syncContracts();
+  }
+
+  @CacheTTL(1000 * 60 * 60)
+  @Get('new-buildings/all')
+  async getNewBuildings(): Promise<RenovationNewBuilding[]> {
+    return this.renovation.getRenovationNewBuildings();
+  }
+
+  @CacheTTL(1000 * 60 * 60)
+  @Get('new-buildings/status-totals')
+  async getNewBuildingsStatusTotals(): Promise<RenovationNewBuildingStatusTotals> {
+    return this.renovation.getRenovationNewBuildingsStatusTotals();
+  }
+
+  @CacheTTL(1000 * 60 * 60)
+  @Get('new-buildings/deviation-totals')
+  async getNewBuildingsDeviationTotals(): Promise<
+    RenovationNewBuildingDeviationTotals[]
+  > {
+    return this.renovation.getRenovationNewBuildingsDeviationTotals();
   }
 }
