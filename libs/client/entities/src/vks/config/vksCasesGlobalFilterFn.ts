@@ -76,6 +76,7 @@ export function vksCasesGlobalFilterFn(
     grade &&
     !(
       (grade.includes(0) && !row.original?.grade) ||
+      (grade.includes(-1) && row.original?.isTechnical) ||
       grade.includes(row.original?.grade || 0)
     )
   ) {

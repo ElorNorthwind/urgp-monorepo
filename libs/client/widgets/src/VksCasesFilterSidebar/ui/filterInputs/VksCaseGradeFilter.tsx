@@ -77,6 +77,13 @@ const VksCaseGradeFilter = (props: VksCaseGradeFilterProps): JSX.Element => {
           fullname: '5',
           tags: [],
         },
+        {
+          value: -1,
+          label: 'по технике',
+          category: 'grades',
+          fullname: '-1',
+          tags: [],
+        },
       ],
     },
   ] as NestedClassificatorInfo[];

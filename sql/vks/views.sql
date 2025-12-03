@@ -244,11 +244,13 @@ SELECT
     d.boss_surname || ' ' || d.boss_first_name || ' ' || d.boss_last_name as spr_manager,
     z.surname || ' ' || z.first_name || ' ' || z.last_name as spr_zamestitel,
 
-    COALESCE(c.online_grade, c.client_survey_grade) as grade,
+    CASE WHEN c.is_technical THEN null ELSE COALESCE(c.online_grade, c.client_survey_grade) END as grade,
     s.display_name as service_full_name,
     z.full_name as zam_full_name,
     s.slot_group_id as slot_group_id,
-    COALESCE(c.operator_survey_consultation_type, 'нет') as consultation_type
+    COALESCE(c.operator_survey_consultation_type, 'нет') as consultation_type,
+    CASE WHEN c.is_technical THEN 'по технике' ELSE COALESCE(c.online_grade::text, c.client_survey_grade::text, 'нет') END as grade_text,
+    c.operator_link
 FROM vks.cases c 
 LEFT JOIN vks.services s ON c.service_id = s.id
 LEFT JOIN vks.clients cl ON c.client_id = cl.id
