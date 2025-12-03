@@ -6,17 +6,17 @@ DROP TRIGGER IF EXISTS litigation_errants_trigger ON renovation.apartment_litiga
 DROP TRIGGER IF EXISTS litigation_errants_trigger_insert ON renovation.apartment_litigation_errants;
 DROP TRIGGER IF EXISTS litigation_errants_trigger_delete ON renovation.apartment_litigation_errants;
 
-DROP TRIGGER IF EXISTS litigations_trigger ON renovation.apartment_litigations_temp;
-DROP TRIGGER IF EXISTS litigations_trigger_insert ON renovation.apartment_litigations_temp;
-DROP TRIGGER IF EXISTS litigations_trigger_delete ON renovation.apartment_litigations_temp;
+DROP TRIGGER IF EXISTS litigations_trigger ON renovation.apartment_litigations;
+DROP TRIGGER IF EXISTS litigations_trigger_insert ON renovation.apartment_litigations;
+DROP TRIGGER IF EXISTS litigations_trigger_delete ON renovation.apartment_litigations;
 
 DROP TRIGGER IF EXISTS apartment_connections_trigger ON renovation.apartment_connections;
 DROP TRIGGER IF EXISTS apartment_connections_trigger_insert ON renovation.apartment_connections;
 DROP TRIGGER IF EXISTS apartment_connections_trigger_delete ON renovation.apartment_connections;
 
-DROP TRIGGER IF EXISTS apartments_old_trigger ON renovation.apartments_old_temp;
-DROP TRIGGER IF EXISTS apartments_old_trigger_insert ON renovation.apartments_old_temp;
-DROP TRIGGER IF EXISTS apartments_old_trigger_delete ON renovation.apartments_old_temp;
+DROP TRIGGER IF EXISTS apartments_old_trigger ON renovation.apartments_old;
+DROP TRIGGER IF EXISTS apartments_old_trigger_insert ON renovation.apartments_old;
+DROP TRIGGER IF EXISTS apartments_old_trigger_delete ON renovation.apartments_old;
 
 DROP TRIGGER IF EXISTS new_aparts_trigger ON renovation.apartments_new;
 DROP TRIGGER IF EXISTS new_aparts_trigger_isert ON renovation.apartments_new;
@@ -117,9 +117,9 @@ BEGIN
             max(c.contract_date) FILTER (WHERE LOWER(c.contract_status) <> 'проект договора') as contract_date,
             bool_or(a.new_aparts @> '[{"defects": true}]') as has_defects,
             bool_or(a.new_aparts @> '[{"activeDefect": true}]') as has_active_defects
-        FROM renovation.apartments_old_temp a
+        FROM renovation.apartments_old a
         LEFT JOIN renovation.apartment_litigation_connections co ON co.old_apart_id = a.id
-        LEFT JOIN renovation.apartment_litigations_temp l ON l.id = co.litigation_id
+        LEFT JOIN renovation.apartment_litigations l ON l.id = co.litigation_id
         LEFT JOIN renovation.apartment_litigation_hearings h ON h.litigation_id = co.litigation_id
         LEFT JOIN renovation.apartment_litigation_errants e ON e.litigation_id = co.litigation_id
         LEFT JOIN renovation.apartment_connections c ON c.old_apart_id = a.id
@@ -290,7 +290,7 @@ BEGIN
     )
 
     -- =============== UPDATE QUERY ===============
-    UPDATE renovation.apartments_old_temp a
+    UPDATE renovation.apartments_old a
     SET stages_dates = f.stages_dates,
         classificator = f.classificator
     FROM final_apart f
@@ -341,7 +341,7 @@ OWNER to renovation_user;
 
 -- -- Команда на пересчёт всех данных
 -- SELECT renovation.update_classificator(ids.id_list)
--- FROM (SELECT ARRAY_AGG(id) as id_list FROM renovation.apartments_old_temp) ids;
+-- FROM (SELECT ARRAY_AGG(id) as id_list FROM renovation.apartments_old) ids;
 
 
 -- Триггер на таблицу судебных слушаний
@@ -353,7 +353,7 @@ BEGIN
     ids = (
         SELECT ARRAY_AGG(co.old_apart_id) as id_list 
         FROM renovation.apartment_litigation_hearings h
-        LEFT JOIN renovation.apartment_litigations_temp l ON h.litigation_id = l.id
+        LEFT JOIN renovation.apartment_litigations l ON h.litigation_id = l.id
         LEFT JOIN renovation.apartment_litigation_connections co ON l.id = co.litigation_id
         LEFT JOIN (
             SELECT id
@@ -397,7 +397,7 @@ BEGIN
     ids = (
         SELECT ARRAY_AGG(co.old_apart_id) as id_list
             FROM renovation.apartment_litigation_errants e
-            LEFT JOIN renovation.apartment_litigations_temp l ON e.litigation_id = l.id
+            LEFT JOIN renovation.apartment_litigations l ON e.litigation_id = l.id
             LEFT JOIN renovation.apartment_litigation_connections co ON l.id = co.litigation_id
             LEFT JOIN (
                 SELECT id
@@ -439,7 +439,7 @@ DECLARE
 BEGIN
     ids = (
         SELECT  ARRAY_AGG(co.old_apart_id) as id_list
-            FROM renovation.apartment_litigations_temp l
+            FROM renovation.apartment_litigations l
             LEFT JOIN renovation.apartment_litigation_connections co ON l.id = co.litigation_id
             LEFT JOIN (
                 SELECT id
@@ -455,19 +455,19 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER litigations_trigger
-AFTER UPDATE ON renovation.apartment_litigations_temp
+AFTER UPDATE ON renovation.apartment_litigations
 REFERENCING NEW TABLE AS updated_table
 FOR EACH STATEMENT
 EXECUTE FUNCTION renovation.litigations_function();
 
 CREATE TRIGGER litigations_trigger_insert
-AFTER INSERT ON renovation.apartment_litigations_temp
+AFTER INSERT ON renovation.apartment_litigations
 REFERENCING NEW TABLE AS updated_table
 FOR EACH STATEMENT
 EXECUTE FUNCTION renovation.litigations_function();
 
 CREATE TRIGGER litigations_trigger_delete
-AFTER DELETE ON renovation.apartment_litigations_temp
+AFTER DELETE ON renovation.apartment_litigations
 REFERENCING OLD TABLE AS updated_table 
 FOR EACH STATEMENT
 EXECUTE FUNCTION renovation.litigations_function();
@@ -523,7 +523,7 @@ DECLARE
 BEGIN
     ids = (
         SELECT ARRAY_AGG(a.id) as id_list
-        FROM renovation.apartments_old_temp a
+        FROM renovation.apartments_old a
         LEFT JOIN (
             SELECT id
             FROM updated_table
@@ -538,21 +538,21 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER apartments_old_trigger
-    AFTER UPDATE ON renovation.apartments_old_temp
+    AFTER UPDATE ON renovation.apartments_old
     REFERENCING NEW TABLE AS updated_table
     FOR EACH STATEMENT
     WHEN (pg_trigger_depth() < 1)
     EXECUTE FUNCTION renovation.apartments_old_function();
 
 CREATE TRIGGER apartments_old_trigger_insert
-    AFTER INSERT ON renovation.apartments_old_temp
+    AFTER INSERT ON renovation.apartments_old
     REFERENCING NEW TABLE AS updated_table
     FOR EACH STATEMENT
     WHEN (pg_trigger_depth() < 1)
     EXECUTE FUNCTION renovation.apartments_old_function();
 
 CREATE TRIGGER apartments_old_trigger_delete
-    AFTER DELETE ON renovation.apartments_old_temp
+    AFTER DELETE ON renovation.apartments_old
     REFERENCING OLD TABLE AS updated_table
     FOR EACH STATEMENT
     WHEN (pg_trigger_depth() < 1)
@@ -645,7 +645,7 @@ BEGIN
         WHERE aa.old_apart_id IS NOT NULL
         GROUP BY c.old_apart_id
     )
-    UPDATE renovation.apartments_old_temp a
+    UPDATE renovation.apartments_old a
     SET new_aparts = na.new_aparts
     FROM new_appartment_list na
     WHERE na.old_apart_id = a.id;
