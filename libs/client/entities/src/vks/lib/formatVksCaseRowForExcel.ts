@@ -22,7 +22,7 @@ export const formatVksCaseRowForExcel = (row: Row<VksCase>) => {
     Оператор: data?.operatorFio,
     'Тип консультации': data?.operatorSurveyConsultationType,
     'Технические трудности': data?.hasTechnicalProblems ? 'да' : 'нет',
-    Оценка: data?.grade,
+    Оценка: data?.isTechnical ? 'по технике' : data?.grade,
     'Комментарий к оценке': data?.gradeComment,
     'Источник оценки': gradeSourceLabel,
     'Ссылка оператора': data?.operatorLink,
