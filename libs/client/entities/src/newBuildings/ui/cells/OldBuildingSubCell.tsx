@@ -34,7 +34,7 @@ function OldBuildingSubCell(building: OldBuilding): JSX.Element {
     <div
       key={building.id}
       className={cn(
-        'grid w-full grid-cols-[3fr_2fr_2fr] items-center gap-2 truncate p-2',
+        'grid w-full grid-cols-[3fr_2fr_3fr] items-center gap-2 truncate p-2',
         'cursor-pointer rounded-sm border',
         selectedBuildingId === building.id
           ? 'bg-muted-foreground/10 hover:bg-muted-foreground/15 shadow-sm'

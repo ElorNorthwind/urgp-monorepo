@@ -62,27 +62,7 @@ const RenovationNavbar = (): JSX.Element => {
           </TooltipContent>
         </TooltipPortal>
       </Tooltip>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            className={cn(
-              'text-muted-foreground flex p-0',
-              router.location.pathname === '/renovation/newbuildings' &&
-                'bg-muted-foreground/10 text-primary',
-            )}
-            disabled={router.location.pathname === '/renovation/newbuildings'}
-            variant="ghost"
-            onClick={() => navigate({ to: '/renovation/newbuildings' })}
-          >
-            <LandPlot className="" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipPortal>
-          <TooltipContent side="right" className="">
-            Освобождаемые участки
-          </TooltipContent>
-        </TooltipPortal>
-      </Tooltip>
+
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
@@ -104,6 +84,29 @@ const RenovationNavbar = (): JSX.Element => {
           </TooltipContent>
         </TooltipPortal>
       </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            className={cn(
+              'text-muted-foreground flex p-0',
+              router.location.pathname === '/renovation/newbuildings' &&
+                'bg-muted-foreground/10 text-primary',
+            )}
+            disabled={router.location.pathname === '/renovation/newbuildings'}
+            variant="ghost"
+            onClick={() => navigate({ to: '/renovation/newbuildings' })}
+          >
+            <LandPlot className="" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent side="right" className="">
+            Освобождаемые участки
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
+
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
