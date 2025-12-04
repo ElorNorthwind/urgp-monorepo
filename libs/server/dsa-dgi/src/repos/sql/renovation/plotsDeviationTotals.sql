@@ -1,3 +1,4 @@
+
 WITH apartment_totals AS (
     SELECT 
         building_id,
@@ -41,7 +42,8 @@ WITH apartment_totals AS (
 			WHEN BOOL_AND(o.terms->>'doneDate' IS NOT NULL) THEN MAX( (o.terms->>'doneDate')::date ) 
 			ELSE null 
 		END as "actualPlotDone",
-		BOOL_OR(o."relocationTypeId" <> 1) AS "hasPartial",
+		BOOL_OR(o."relocationTypeId" <> 1) as "hasPartial",
+        BOOL_AND(o.terms->'actual'->>'firstResetlementStart' IS NOT NULL) as "fullStart",
 		CASE 
 			WHEN BOOL_AND(o.terms->>'doneDate' IS NOT NULL) THEN 'Работа завершена'::text
 			WHEN BOOL_OR(o."relocationTypeId" <> 1) OR BOOL_OR(o.terms->> 'partialStart' IS NOT NULL) THEN 'Без отклонений'::text
@@ -74,8 +76,10 @@ WITH apartment_totals AS (
 		CASE
 			WHEN b."actualPlotDone" IS NOT NULL THEN 'Освобождено'
 			WHEN b."actualPlotStart" IS NULL THEN 'Освобождение не начато'
-			WHEN b."hasPartial" THEN 'Идет частичное освобождение'
-			ELSE 'Идет полное освобождение'
+            WHEN b."fullStart" THEN 'Идет полное освобождение'
+            ELSE 'Идет частичное освобождение'
+			-- WHEN b."hasPartial" THEN 'Идет частичное освобождение'
+			-- ELSE 'Идет полное освобождение'
 		END as "plotStatus",
 		b."plotDeviation"
 	FROM old_building_totals b
@@ -84,7 +88,7 @@ WITH apartment_totals AS (
 SELECT 
 	"plotStartAge",
 	COUNT(*)::integer as total,
-	COUNT(*) FILTER(WHERE "plotDeviation" = 'Наступили риски')::integer as risk,
+	COUNT(*) FILTER(WHERE "plotDeviation" = ANY(ARRAY'Наступили риски')::integer as risk,
 	COUNT(*) FILTER(WHERE "plotDeviation" = 'Требует внимания')::integer as attention,
 	COUNT(*) FILTER(WHERE "plotDeviation" = 'Без отклонений')::integer as ok
 FROM plots

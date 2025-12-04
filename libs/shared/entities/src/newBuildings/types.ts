@@ -22,7 +22,9 @@ export type RenovationNewBuilding = {
 export type RenovationNewBuildingStatusTotals = {
   done: number;
   partial: number;
-  full: number;
+  ok: number;
+  risk: number;
+  // full: number;
   none: number;
 };
 

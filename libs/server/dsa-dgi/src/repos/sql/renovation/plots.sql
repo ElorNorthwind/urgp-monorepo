@@ -34,13 +34,6 @@ WITH apartment_totals AS (
             WHEN COALESCE((b.terms->>'doneDate')::date, NOW()) - (b.terms->'actual'->>'firstResetlementStart')::date < '8 month' THEN 'От 5 до 8 месяцев'
             ELSE 'Более 8 месяцев'
         END as "buildingRelocationStartAge",
-        CASE
-            WHEN (b.terms->'actual'->>'demolitionEnd')::date IS NOT NULL THEN 'Завершено'
-            WHEN (b.terms->'actual'->>'secontResetlementEnd')::date IS NOT NULL THEN 'Снос'
-            WHEN (b.terms->'actual'->>'firstResetlementEnd')::date IS NOT NULL THEN 'Отселение'
-            WHEN (b.terms->'actual'->>'firstResetlementStart')::date IS NULL THEN 'Не начато'
-            ELSE 'Переселение'
-        END as "buildingRelocationStatus",
         b.terms,
         -- COALESCE(at.total, 0)::integer as total, 
         jsonb_build_object('total', COALESCE(at.total, 0)::integer, 
@@ -65,6 +58,7 @@ WITH apartment_totals AS (
             ELSE null 
         END as "actualPlotDone",
         BOOL_OR(o."relocationTypeId" <> 1) AS "hasPartial",
+        BOOL_AND(o.terms->'actual'->>'firstResetlementStart' IS NOT NULL) as "fullStart",
         CASE 
             WHEN BOOL_AND(o.terms->>'doneDate' IS NOT NULL) THEN 'Работа завершена'::text
             WHEN BOOL_OR(o."relocationTypeId" <> 1) OR BOOL_OR(o.terms->> 'partialStart' IS NOT NULL) THEN 'Без отклонений'::text
@@ -98,8 +92,10 @@ SELECT
     CASE
         WHEN b."actualPlotDone" IS NOT NULL THEN 'Освобождено'
         WHEN b."actualPlotStart" IS NULL THEN 'Освобождение не начато'
-        WHEN b."hasPartial" THEN 'Идет частичное освобождение'
-        ELSE 'Идет полное освобождение'
+        WHEN b."fullStart" THEN 'Идет полное освобождение'
+        ELSE 'Идет частичное освобождение'
+        -- WHEN b."hasPartial" THEN 'Идет частичное освобождение'
+        -- ELSE 'Идет полное освобождение'
     END as "plotStatus",
     b."plotDeviation",
     b."buildingCount",
