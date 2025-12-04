@@ -20,6 +20,13 @@ WITH apartment_totals AS (
         COALESCE(b.manual_relocation_type, b.relocation_type) as "relocationTypeId",
         rt.type as "relocationType",
         CASE
+            WHEN (b.terms->'actual'->>'demolitionEnd')::date IS NOT NULL THEN 'Завершено'
+            WHEN (b.terms->'actual'->>'secontResetlementEnd')::date IS NOT NULL THEN 'Снос'
+            WHEN (b.terms->'actual'->>'firstResetlementEnd')::date IS NOT NULL THEN 'Отселение'
+            WHEN (b.terms->'actual'->>'firstResetlementStart')::date IS NULL THEN 'Не начато'
+            ELSE 'Переселение'
+        END as "buildingRelocationStatus",
+        CASE
             WHEN (b.terms->>'doneDate')::date IS NOT NULL THEN 'Работа завершена'::text
             WHEN ((COALESCE(b.manual_relocation_type, b.relocation_type) = ANY(ARRAY[2,3]) OR b.terms->>'partialStart' IS NOT NULL) AND b.terms->>'partialEnd' IS NULL) OR b.moves_outside_district = true THEN 'Без отклонений'::text
             WHEN at.risk > 0 THEN 'Наступили риски'::text

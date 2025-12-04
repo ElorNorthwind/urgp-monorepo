@@ -46,7 +46,7 @@ function NewBuildingStatusCell(
             // 'first:[&>*]:mr-1 first:[&>*]:border-r first:[&>*]:pr-1',
           )}
         >
-          <span className="w-full truncate font-thin">
+          <span className="w-full truncate font-light">
             {rowData?.plotDeviation || 'Без отклонений'}
           </span>
         </div>

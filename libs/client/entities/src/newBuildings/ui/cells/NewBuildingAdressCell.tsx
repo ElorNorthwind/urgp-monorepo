@@ -30,10 +30,8 @@ function NewBuildingAdressCell(
                 'first:[&>*]:mr-1 first:[&>*]:border-r first:[&>*]:pr-1',
               )}
             >
+              <span className="w-full truncate ">{rowData?.okrug || '-'}</span>
               <span className="w-full truncate font-light">
-                {rowData?.okrug || '-'}
-              </span>
-              <span className="w-full truncate font-thin">
                 {rowData?.district || '-'}
               </span>
             </div>
@@ -51,6 +49,9 @@ function NewBuildingAdressCell(
           </p>
           <p>
             <b>Адрес:</b> {rowData.adress}
+          </p>
+          <p>
+            <b>ID площалки:</b> {rowData.id}
           </p>
         </TooltipContent>
       </TooltipPortal>

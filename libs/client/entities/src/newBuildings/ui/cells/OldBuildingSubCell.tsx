@@ -53,7 +53,7 @@ function OldBuildingSubCell(building: OldBuilding): JSX.Element {
     >
       <div className="flex flex-col truncate">
         <span className="w-full truncate">{building.adress}</span>
-        <span className="text-muted-foreground w-full truncate text-xs">
+        <span className="text-muted-foreground w-full truncate text-xs font-light">
           {building.relocationType}
         </span>
       </div>
@@ -66,7 +66,11 @@ function OldBuildingSubCell(building: OldBuilding): JSX.Element {
           <div className="truncate">
             <span>{building?.buildingRelocationStatus || 'Не начато'}</span>
           </div>
-          <div className={cn('text-muted-foreground w-full truncate text-xs')}>
+          <div
+            className={cn(
+              'text-muted-foreground w-full truncate text-xs font-light',
+            )}
+          >
             <span>{building?.buildingDeviation || 'Без отклонений'}</span>
           </div>
         </div>

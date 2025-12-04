@@ -52,7 +52,7 @@ function NewBuildingAgeCell(
                 // 'first:[&>*]:mr-1 first:[&>*]:border-r first:[&>*]:pr-1',
               )}
             >
-              <span className="w-full truncate font-thin">
+              <span className="w-full truncate font-light">
                 {rowData?.plotStartAge || 'Не начато'}
               </span>
             </div>
