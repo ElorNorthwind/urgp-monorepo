@@ -59,3 +59,4 @@ export * from './VksCaseCardTabs';
 export * from './EquityUserMenu';
 export * from './RenovationDefectsFileUploadForm';
 export * from './AgeProblemsChart';
+export * from './PlotInProgressDeviationAgesChart';

@@ -86,9 +86,9 @@ WITH apartment_totals AS (
 )
 
 SELECT 
-	"plotStartAge",
+	"plotStartAge" as age,
 	COUNT(*)::integer as total,
-	COUNT(*) FILTER(WHERE "plotDeviation" = ANY(ARRAY'Наступили риски')::integer as risk,
+	COUNT(*) FILTER(WHERE "plotDeviation" = 'Наступили риски')::integer as risk,
 	COUNT(*) FILTER(WHERE "plotDeviation" = 'Требует внимания')::integer as attention,
 	COUNT(*) FILTER(WHERE "plotDeviation" = 'Без отклонений')::integer as ok
 FROM plots

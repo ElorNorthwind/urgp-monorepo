@@ -29,6 +29,7 @@ import {
   MonthlyProgressTimelineChart,
   OkrugTotalDeviationsChart,
   OkrugTotalsChart,
+  PlotInProgressDeviationAgesChart,
   RenovationDefectsFileUploadForm,
   StartAndFinishTimelineChart,
   StartTimelineChart,
@@ -313,7 +314,7 @@ const RenovationDashboardPage = (): JSX.Element => {
                   value={newBuildingsStatus?.none || 0}
                   Icon={CirclePause}
                   description={numericPlots(newBuildingsStatus?.none || 0)}
-                  accentClassName={cn('text-gray-600')}
+                  accentClassName={cn('text-neutral-500')}
                   isLoading={
                     isNewBuildingsStatusLoading || isNewBuildingsStatusFetching
                   }
@@ -328,6 +329,7 @@ const RenovationDashboardPage = (): JSX.Element => {
                   //   })
                   // }
                 />
+                <PlotInProgressDeviationAgesChart className="col-span-full" />
               </>
             </TabsContent>
 

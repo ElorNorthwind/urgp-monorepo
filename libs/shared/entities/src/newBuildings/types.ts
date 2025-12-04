@@ -29,7 +29,7 @@ export type RenovationNewBuildingStatusTotals = {
 };
 
 export type RenovationNewBuildingDeviationTotals = {
-  plotStartAge: string;
+  age: string;
   total: number;
   risk: number;
   attention: number;
