@@ -114,4 +114,5 @@ SELECT
     b."oldBuildings"
     
 FROM old_building_totals b
-LEFT JOIN renovation.buildings_new n ON n.id = b.new_building_id;
+LEFT JOIN renovation.buildings_new n ON n.id = b.new_building_id
+ORDER BY n.okrug_order, n.district, n.adress;
