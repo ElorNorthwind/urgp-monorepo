@@ -1,36 +1,31 @@
 import {
-  Button,
-  FacetFilter,
-  HStack,
-  Input,
-  NestedFacetFilter,
-  ScrollArea,
-  ScrollBar,
-} from '@urgp/client/shared';
-import { GetOldBuldingsDto } from '@urgp/shared/entities';
-import { X } from 'lucide-react';
-import {
-  // MFRInvolvmentTypes,
+  newBuildingRelocationStatus,
   relocationAge,
   relocationDeviations,
   relocationStatus,
-  relocationTypes,
-  renovationBossControllStatus,
 } from '@urgp/client/entities';
-import { forwardRef, useMemo, useRef } from 'react';
-import { areas } from '../config/areas';
-import { format, toDate } from 'date-fns';
 import { DateRangeSelect } from '@urgp/client/features';
+import {
+  Button,
+  FacetFilter,
+  Input,
+  NestedFacetFilter,
+} from '@urgp/client/shared';
+import { GetOldBuldingsDto, NewBuildingsSearch } from '@urgp/shared/entities';
+import { format, toDate } from 'date-fns';
+import { X } from 'lucide-react';
+import { forwardRef, useMemo } from 'react';
+import { areas } from '../../OldBuildingsFilter/config/areas';
 
-type OldBuildingsFilterProps = {
-  filters: GetOldBuldingsDto;
-  setFilters: (value: Partial<GetOldBuldingsDto>) => void;
+type NewBuildingsFilterProps = {
+  filters: NewBuildingsSearch;
+  setFilters: (value: Partial<NewBuildingsSearch>) => void;
   isFetching?: boolean;
   totalCount?: number;
   filteredCount?: number;
 };
 
-const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
+const NewBuildingsFilter = forwardRef<HTMLDivElement, NewBuildingsFilterProps>(
   (
     { filters, setFilters, isFetching, totalCount, filteredCount },
     ref,
@@ -109,9 +104,9 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
             />
             <NestedFacetFilter
               groups={filters.okrugs ? filteredAreas : areas}
+              title="Район"
               className="flex-grow"
               triggerClassName="flex-grow"
-              title="Район"
               selectAllToggle
               selectedValues={filters.districts}
               setSelectedValues={(value) =>
@@ -121,21 +116,9 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
               }
             />
             <FacetFilter
+              options={relocationAge}
               // className="flex-grow"
               // triggerClassName="flex-grow"
-              options={relocationTypes}
-              title={'Тип'}
-              noSearch
-              selectedValues={filters.relocationType}
-              setSelectedValues={(value) =>
-                setFilters({
-                  relocationType: value && value.length > 0 ? value : undefined,
-                })
-              }
-            />
-
-            <FacetFilter
-              options={relocationAge}
               title={'Срок'}
               selectedValues={filters.relocationAge}
               setSelectedValues={(value) =>
@@ -144,9 +127,10 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
                 })
               }
             />
-
             <FacetFilter
-              options={relocationStatus}
+              options={newBuildingRelocationStatus}
+              // className="flex-grow"
+              // triggerClassName="flex-grow"
               title={'Статус'}
               selectedValues={filters.relocationStatus}
               setSelectedValues={(value) =>
@@ -156,24 +140,15 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
                 })
               }
             />
-
             <FacetFilter
               options={relocationDeviations}
+              // className="flex-grow"
+              // triggerClassName="flex-grow"
               title={'Отклонения'}
               selectedValues={filters.deviation}
               setSelectedValues={(value) =>
                 setFilters({
                   deviation: value && value.length > 0 ? value : undefined,
-                })
-              }
-            />
-            <FacetFilter
-              options={renovationBossControllStatus}
-              title={'Контроль'}
-              selectedValues={filters.control}
-              setSelectedValues={(value) =>
-                setFilters({
-                  control: value && value.length > 0 ? value : undefined,
                 })
               }
             />
@@ -193,7 +168,7 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
             />
           </div>
         </div>
-        <Button
+        {/* <Button
           variant={'secondary'}
           onClick={() =>
             setFilters({
@@ -220,11 +195,10 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
           className="h-8 bg-amber-100 px-2 hover:bg-amber-200 lg:px-3"
         >
           В работе
-        </Button>
+        </Button> */}
 
         {(filters?.okrugs ||
           filters?.districts ||
-          filters?.relocationType ||
           filters?.relocationAge ||
           filters.relocationStatus ||
           filters?.deviation ||
@@ -237,7 +211,6 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
               setFilters({
                 okrugs: undefined,
                 districts: undefined,
-                relocationType: undefined,
                 relocationAge: undefined,
                 relocationStatus: undefined,
                 deviation: undefined,
@@ -264,4 +237,4 @@ const OldBuildingsFilter = forwardRef<HTMLDivElement, OldBuildingsFilterProps>(
   },
 );
 
-export { OldBuildingsFilter };
+export { NewBuildingsFilter };

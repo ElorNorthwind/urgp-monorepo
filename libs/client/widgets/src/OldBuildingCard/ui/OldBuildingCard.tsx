@@ -16,7 +16,11 @@ import {
   Tooltip,
   TooltipTrigger,
 } from '@urgp/client/shared';
-import { OldBuilding, OldBuildingsPageSearch } from '@urgp/shared/entities';
+import {
+  NewBuildingsSearch,
+  OldBuilding,
+  OldBuildingsPageSearch,
+} from '@urgp/shared/entities';
 import { CalendarPlus, Focus, Map, PencilRuler, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
@@ -39,7 +43,7 @@ import { format, toDate } from 'date-fns';
 type OldBuildingCardProps = {
   building: OldBuilding | null;
   className?: string;
-  mode?: 'table' | 'map';
+  mode?: 'table' | 'map' | 'plot';
   onClose?: () => void;
   expanded?: boolean;
   setExpanded?: (value: boolean) => void;
@@ -60,7 +64,9 @@ const OldBuildingCard = ({
   const { tab, selectedBuildingId, apartment } = getRouteApi(
     mode === 'map'
       ? '/renovation/building-relocation-map'
-      : '/renovation/oldbuildings',
+      : mode === 'plot'
+        ? '/renovation/newbuildings'
+        : '/renovation/oldbuildings',
   ).useSearch() as OldBuildingsPageSearch;
 
   const isLate = building?.terms?.bossControl
@@ -83,7 +89,14 @@ const OldBuildingCard = ({
     };
   }, [selectedBuildingId, mapItems]);
 
-  const navigate = useNavigate({ from: '/renovation/oldbuildings' });
+  const navigate = useNavigate({
+    from:
+      mode === 'map'
+        ? '/renovation/building-relocation-map'
+        : mode === 'plot'
+          ? '/renovation/newbuildings'
+          : '/renovation/oldbuildings',
+  });
 
   const {
     data: problematicAparts,
@@ -224,6 +237,7 @@ const OldBuildingCard = ({
                     <Skeleton className="mt-8 h-12 w-full" />
                   ) : (
                     <ProblematicApartsTable
+                      mode={mode}
                       problematicAparts={problematicAparts}
                       totalApartments={building.apartments.total}
                       buildingId={building.id}
@@ -231,7 +245,9 @@ const OldBuildingCard = ({
                       className="w-full flex-1"
                       setSelectedAppartmentId={(value) => {
                         navigate({
-                          search: (prev: OldBuildingsPageSearch) => ({
+                          search: (
+                            prev: OldBuildingsPageSearch | NewBuildingsSearch,
+                          ) => ({
                             ...prev,
                             apartment: value,
                           }),

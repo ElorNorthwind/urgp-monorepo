@@ -25,3 +25,4 @@ export * from './EquityOperationLogPage';
 export * from './VksDashboardPage';
 export * from './VksCasesPage';
 export * from './EquitySettingsPage';
+export * from './NewBuildingsPage';

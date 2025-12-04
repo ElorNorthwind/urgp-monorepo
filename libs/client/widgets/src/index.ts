@@ -60,3 +60,4 @@ export * from './EquityUserMenu';
 export * from './RenovationDefectsFileUploadForm';
 export * from './AgeProblemsChart';
 export * from './PlotInProgressDeviationAgesChart';
+export * from './NewBuildingsFilter';

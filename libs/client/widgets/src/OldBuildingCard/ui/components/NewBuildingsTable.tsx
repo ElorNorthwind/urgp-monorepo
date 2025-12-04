@@ -28,7 +28,7 @@ type NewBuildingsTableProps = {
   emptyText?: string;
   connectedPlots?: ConnectedPlots[];
   oldBuildingId?: number;
-  mode?: 'map' | 'table';
+  mode?: 'map' | 'table' | 'plot';
 };
 const NewBuildingsTable = ({
   buildings,
@@ -39,7 +39,14 @@ const NewBuildingsTable = ({
   oldBuildingId = 0,
   mode = 'table',
 }: NewBuildingsTableProps): JSX.Element => {
-  const navigate = useNavigate({ from: '/renovation/oldbuildings' });
+  const navigate = useNavigate({
+    from:
+      mode === 'map'
+        ? '/renovation/map'
+        : mode === 'plot'
+          ? '/renovation/newbuildings'
+          : '/renovation/oldbuildings',
+  });
 
   if (!buildings)
     return (

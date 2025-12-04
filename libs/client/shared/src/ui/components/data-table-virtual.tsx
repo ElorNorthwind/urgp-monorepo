@@ -40,6 +40,7 @@ interface VirtualDataTableProps<TData, TValue> {
   callbackMargin?: number;
   callbackFn?: () => void;
   className?: string;
+  rowClassName?: string;
   onRowClick?: (row: Row<TData>) => void;
   onRowDoubleClick?: (row: Row<TData>) => void;
   compact?: boolean;
@@ -69,6 +70,7 @@ export function VirtualDataTable<TData, TValue>({
   callbackMargin = 1000,
   callbackFn,
   className,
+  rowClassName,
   onRowClick,
   onRowDoubleClick,
   compact = false,
@@ -278,7 +280,7 @@ export function VirtualDataTable<TData, TValue>({
                 return (
                   <TableRow
                     key={'skeleton_' + virtualRow.index}
-                    className={cn('overflow-y-clip')}
+                    className={cn('overflow-y-clip', rowClassName)}
                     data-index={virtualRow.index} //needed for dynamic row height measurement
                     ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
                     style={{
@@ -315,6 +317,7 @@ export function VirtualDataTable<TData, TValue>({
                   className={cn(
                     'overflow-y-clip',
                     onRowClick && 'cursor-pointer',
+                    rowClassName,
                   )}
                   onClick={onRowClick ? () => onRowClick(row) : undefined}
                   onDoubleClick={

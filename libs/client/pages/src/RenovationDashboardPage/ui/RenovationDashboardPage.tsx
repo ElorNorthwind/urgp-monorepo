@@ -230,7 +230,7 @@ const RenovationDashboardPage = (): JSX.Element => {
             <TabsContent value="new" asChild>
               <>
                 <DashboardNumberCard
-                  label="Освобождено"
+                  label="Освобождение полностью завершено"
                   value={newBuildingsStatus?.done || 0}
                   Icon={CircleCheck}
                   description={numericPlots(newBuildingsStatus?.done || 0)}
@@ -239,15 +239,15 @@ const RenovationDashboardPage = (): JSX.Element => {
                     isNewBuildingsStatusLoading || isNewBuildingsStatusFetching
                   }
                   className={'col-span-3 sm:col-span-1'}
-                  // onClick={() =>
-                  //   navigate({
-                  //     to: './oldbuildings',
-                  //     search: {
-                  //       relocationStatus: ['Снос', 'Отселение', 'Переселение'],
-                  //       deviation: ['Требует внимания'],
-                  //     },
-                  //   })
-                  // }
+                  onClick={() =>
+                    navigate({
+                      to: './newbuildings',
+                      search: {
+                        relocationStatus: ['Освобождено'],
+                        // deviation: ['Требует внимания'],
+                      },
+                    })
+                  }
                 />
                 <DashboardNumberCard
                   label="Идет частичное освобождение"
@@ -259,15 +259,15 @@ const RenovationDashboardPage = (): JSX.Element => {
                     isNewBuildingsStatusLoading || isNewBuildingsStatusFetching
                   }
                   className={'col-span-3 sm:col-span-1'}
-                  // onClick={() =>
-                  //   navigate({
-                  //     to: './oldbuildings',
-                  //     search: {
-                  //       relocationStatus: ['Снос', 'Отселение', 'Переселение'],
-                  //       deviation: ['Требует внимания'],
-                  //     },
-                  //   })
-                  // }
+                  onClick={() =>
+                    navigate({
+                      to: './newbuildings',
+                      search: {
+                        relocationStatus: ['Идет частичное освобождение'],
+                        // deviation: ['Требует внимания'],
+                      },
+                    })
+                  }
                 />
                 <DashboardNumberCard
                   label="Полное освобождение идет по плану"
@@ -279,15 +279,15 @@ const RenovationDashboardPage = (): JSX.Element => {
                     isNewBuildingsStatusLoading || isNewBuildingsStatusFetching
                   }
                   className={'col-span-3 sm:col-span-1'}
-                  // onClick={() =>
-                  //   navigate({
-                  //     to: './oldbuildings',
-                  //     search: {
-                  //       relocationStatus: ['Снос', 'Отселение', 'Переселение'],
-                  //       deviation: ['Требует внимания'],
-                  //     },
-                  //   })
-                  // }
+                  onClick={() =>
+                    navigate({
+                      to: './newbuildings',
+                      search: {
+                        relocationStatus: ['Идет полное освобождение'],
+                        deviation: ['Без отклонений'],
+                      },
+                    })
+                  }
                 />
                 <DashboardNumberCard
                   label="Полное освобождение имеет риски"
@@ -299,15 +299,15 @@ const RenovationDashboardPage = (): JSX.Element => {
                     isNewBuildingsStatusLoading || isNewBuildingsStatusFetching
                   }
                   className={'col-span-3 sm:col-span-1'}
-                  // onClick={() =>
-                  //   navigate({
-                  //     to: './oldbuildings',
-                  //     search: {
-                  //       relocationStatus: ['Снос', 'Отселение', 'Переселение'],
-                  //       deviation: ['Требует внимания'],
-                  //     },
-                  //   })
-                  // }
+                  onClick={() =>
+                    navigate({
+                      to: './newbuildings',
+                      search: {
+                        relocationStatus: ['Идет полное освобождение'],
+                        deviation: ['Наступили риски', 'Требует внимания'],
+                      },
+                    })
+                  }
                 />
                 <DashboardNumberCard
                   label="Освобождение еще не начато"
@@ -319,15 +319,15 @@ const RenovationDashboardPage = (): JSX.Element => {
                     isNewBuildingsStatusLoading || isNewBuildingsStatusFetching
                   }
                   className={'col-span-3 sm:col-span-1'}
-                  // onClick={() =>
-                  //   navigate({
-                  //     to: './oldbuildings',
-                  //     search: {
-                  //       relocationStatus: ['Снос', 'Отселение', 'Переселение'],
-                  //       deviation: ['Требует внимания'],
-                  //     },
-                  //   })
-                  // }
+                  onClick={() =>
+                    navigate({
+                      to: './newbuildings',
+                      search: {
+                        relocationStatus: ['Освобождение не начато'],
+                        // deviation: ['Наступили риски', 'Требует внимания'],
+                      },
+                    })
+                  }
                 />
                 <PlotInProgressDeviationAgesChart className="col-span-full" />
               </>

@@ -12,6 +12,7 @@ import {
   Gauge,
   Ghost,
   House,
+  LandPlot,
   MailQuestion,
   Map,
   SquareGanttChart,
@@ -58,6 +59,27 @@ const RenovationNavbar = (): JSX.Element => {
         <TooltipPortal>
           <TooltipContent side="right" className="">
             Отселяемые дома
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            className={cn(
+              'text-muted-foreground flex p-0',
+              router.location.pathname === '/renovation/newbuildings' &&
+                'bg-muted-foreground/10 text-primary',
+            )}
+            disabled={router.location.pathname === '/renovation/newbuildings'}
+            variant="ghost"
+            onClick={() => navigate({ to: '/renovation/newbuildings' })}
+          >
+            <LandPlot className="" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent side="right" className="">
+            Освобождаемые участки
           </TooltipContent>
         </TooltipPortal>
       </Tooltip>

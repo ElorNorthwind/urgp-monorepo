@@ -49,6 +49,7 @@ type ProblematicApartsTableProps = {
   caption?: string;
   setSelectedAppartmentId?: (value: number | undefined) => void;
   selectedApartmentId?: number | null;
+  mode?: 'map' | 'table' | 'plot';
 };
 
 const problemBadgeStyles = {
@@ -64,11 +65,19 @@ const ProblematicApartsTable = ({
   buildingId,
   // messages,
   className,
+  mode = 'table',
   setSelectedAppartmentId,
   selectedApartmentId,
 }: ProblematicApartsTableProps): JSX.Element => {
   const [showMFR, setShowMFR] = useState<boolean>(true);
-  const navigate = useNavigate({ from: '/renovation/oldbuildings' });
+  const navigate = useNavigate({
+    from:
+      mode === 'map'
+        ? '/renovation/map'
+        : mode === 'plot'
+          ? '/renovation/newbuildings'
+          : '/renovation/oldbuildings',
+  });
 
   if (!problematicAparts || problematicAparts.length === 0) {
     return (

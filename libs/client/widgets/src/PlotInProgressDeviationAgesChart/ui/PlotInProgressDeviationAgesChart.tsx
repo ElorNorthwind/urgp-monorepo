@@ -1,5 +1,8 @@
 import { useNavigate } from '@tanstack/react-router';
-import { useNewBuildingsDeviationTotals } from '@urgp/client/entities';
+import {
+  relocationStatus,
+  useNewBuildingsDeviationTotals,
+} from '@urgp/client/entities';
 import {
   renderRechartsStackedBar,
   renderRechartsTooltip,
@@ -105,15 +108,15 @@ const PlotInProgressDeviationAgesChart = ({
               {renderRechartsStackedBar({
                 config: inProgressAgeChartConfig,
                 data: data || [],
-                // onClick: (data) => {
-                //   navigate({
-                //     to: './oldbuildings',
-                //     search: {
-                //       relocationAge: [data.age],
-                //       deviation: 'Наступили риски',
-                //     },
-                //   });
-                // },
+                onClick: (data) => {
+                  navigate({
+                    to: './newbuildings',
+                    search: {
+                      relocationAge: [data.age],
+                      relocationStatus: ['Идет полное освобождение'],
+                    },
+                  });
+                },
               })}
               {/* <ChartLegend content={<ChartLegendContent />} /> */}
             </BarChart>

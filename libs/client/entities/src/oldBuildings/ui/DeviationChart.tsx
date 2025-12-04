@@ -74,7 +74,7 @@ function DeviationChart(props: DeviationChartProps): JSX.Element {
     return (
       <p
         className={cn(
-          'text-muted-foreground h-10 text-center opacity-50',
+          'text-muted-foreground text-center opacity-50',
           chartClassName,
         )}
       >

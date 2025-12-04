@@ -31,6 +31,7 @@ interface NestedFacetFilterProps<TValue extends string | number>
   setSelectedValues: (value: TValue[]) => void;
   title?: string;
   selectAllToggle?: boolean;
+  triggerClassName?: string;
 }
 
 // function SelectAllToggle<TValue extends string | number>({
@@ -66,6 +67,7 @@ function NestedFacetFilter<TValue extends string | number>(
     title,
     setSelectedValues,
     selectAllToggle = false,
+    triggerClassName,
   } = props;
 
   const taggedGroups = useMemo(() => {
@@ -85,7 +87,11 @@ function NestedFacetFilter<TValue extends string | number>(
     <div className={cn('flex items-center space-x-2', className)}>
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" size="sm" className="h-8 border-dashed">
+          <Button
+            variant="outline"
+            size="sm"
+            className={cn('h-8 border-dashed', triggerClassName)}
+          >
             <PlusCircleIcon className="mr-2 h-4 w-4" />
             {title}
             {selectedValues?.length > 0 && (
