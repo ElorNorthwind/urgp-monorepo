@@ -76,10 +76,16 @@ import {
   RenovationNewBuilding,
   RenovationNewBuildingStatusTotals,
   RenovationNewBuildingDeviationTotals,
+  MessageServer,
+  messageServerCreateSchema,
+  MessageServerCreateDto,
+  messageServerUpdateSchema,
+  MessageServerUpdateDto,
 } from '@urgp/shared/entities';
-import { AccessTokenGuard } from '@urgp/server/auth';
+import { AccessTokenGuard, DsaStaticTokenGuard } from '@urgp/server/auth';
 import { CacheInterceptor, CacheTTL, CacheKey } from '@nestjs/cache-manager';
 import { RenovationSyncService } from './renovation-sync.service';
+import { Server } from 'http';
 
 @Controller('renovation')
 export class RenovationController {
@@ -711,5 +717,51 @@ export class RenovationController {
     RenovationNewBuildingDeviationTotals[]
   > {
     return this.renovation.getRenovationNewBuildingsDeviationTotals();
+  }
+
+  @UseGuards(DsaStaticTokenGuard)
+  @Get('dsa/messages/by-id/:id')
+  getServerMessageById(@Param('id') id: number): Promise<MessageServer | null> {
+    return this.renovationSync.messageServerReadById(id);
+  }
+
+  @UseGuards(DsaStaticTokenGuard)
+  @Get('dsa/messages/by-affair-id/:id')
+  getServerMessageByAffairId(
+    @Param('id') id: number,
+  ): Promise<MessageServer[]> {
+    return this.renovationSync.messageServerReadByAffairId(id);
+  }
+
+  @UseGuards(DsaStaticTokenGuard)
+  @Get('dsa/messages/by-user/:uuid')
+  getServerMessageByUserUuid(
+    @Param('uuid') uuid: string,
+  ): Promise<MessageServer[]> {
+    return this.renovationSync.messageServerReadByUserUuid(uuid);
+  }
+
+  @UseGuards(DsaStaticTokenGuard)
+  @Post('dsa/messages')
+  createServerMessage(
+    @Body(new ZodValidationPipe(messageServerCreateSchema))
+    dto: MessageServerCreateDto,
+  ): Promise<MessageServer> {
+    return this.renovationSync.messageServerCreate(dto);
+  }
+
+  @UseGuards(DsaStaticTokenGuard)
+  @Patch('dsa/messages')
+  updateServerMessage(
+    @Body(new ZodValidationPipe(messageServerUpdateSchema))
+    dto: MessageServerUpdateDto,
+  ): Promise<MessageServer> {
+    return this.renovationSync.messageServerUpdate(dto);
+  }
+
+  @UseGuards(DsaStaticTokenGuard)
+  @Delete('dsa/messages/:id')
+  deleteServerMessage(@Param('id') id: number): Promise<MessageServer> {
+    return this.renovationSync.messageServerDelete(id);
   }
 }

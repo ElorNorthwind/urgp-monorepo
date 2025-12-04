@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { DsaDgiService } from '@urgp/server/dsa-dgi';
+import {
+  MessageServer,
+  MessageServerCreateDto,
+  MessageServerUpdateDto,
+} from '@urgp/shared/entities';
 
 @Injectable()
 export class RenovationSyncService {
@@ -36,5 +41,39 @@ export class RenovationSyncService {
   }
   public async syncContracts(): Promise<void> {
     await this.dbServise.db.renovationSync.syncContracts();
+  }
+
+  public async messageServerReadById(
+    id: number,
+  ): Promise<MessageServer | null> {
+    return this.dbServise.db.renovationSync.messageServerReadById(id);
+  }
+
+  public async messageServerReadByAffairId(
+    id: number,
+  ): Promise<MessageServer[]> {
+    return this.dbServise.db.renovationSync.messageServerReadByAffairId(id);
+  }
+
+  public async messageServerReadByUserUuid(
+    uuid: string,
+  ): Promise<MessageServer[]> {
+    return this.dbServise.db.renovationSync.messageServerReadByUserUuid(uuid);
+  }
+
+  public async messageServerCreate(
+    dto: MessageServerCreateDto,
+  ): Promise<MessageServer> {
+    return this.dbServise.db.renovationSync.messageServerCreate(dto);
+  }
+
+  public async messageServerUpdate(
+    dto: MessageServerUpdateDto,
+  ): Promise<MessageServer> {
+    return this.dbServise.db.renovationSync.messageServerUpdate(dto);
+  }
+
+  public async messageServerDelete(id: number): Promise<MessageServer> {
+    return this.dbServise.db.renovationSync.messageServerDelete(id);
   }
 }

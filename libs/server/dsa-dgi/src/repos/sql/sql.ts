@@ -100,4 +100,14 @@ export const renovationSync = {
   offerSync: sql('sql/renovation-sync/offerSync.sql'),
   orderSync: sql('sql/renovation-sync/orderSync.sql'),
   contractSync: sql('sql/renovation-sync/contractSync.sql'),
+  messageServerReadById: sql('sql/renovation-sync/messageServerReadById.sql'),
+  messageServerReadByAppartId: sql(
+    'sql/renovation-sync/messageServerReadByAppartId.sql',
+  ),
+  messageServerReadByUserUuid: sql(
+    'sql/renovation-sync/messageServerReadByUserUuid.sql',
+  ),
+  messageServerCreate: sql('sql/renovation-sync/messageServerCreate.sql'),
+  messageServerUpdate: sql('sql/renovation-sync/messageServerUpdate.sql'),
+  messageServerDelete: sql('sql/renovation-sync/messageServerDelete.sql'),
 };

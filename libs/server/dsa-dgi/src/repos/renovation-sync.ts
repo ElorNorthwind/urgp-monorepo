@@ -6,6 +6,11 @@ import {
   RenovationSyncResult,
 } from '../model/types';
 import { Logger } from '@nestjs/common';
+import {
+  MessageServer,
+  MessageServerCreateDto,
+  MessageServerUpdateDto,
+} from '@urgp/shared/entities';
 
 // @Injectable()
 export class RenovationSyncRepository {
@@ -97,5 +102,28 @@ export class RenovationSyncRepository {
         errorDetails: JSON.stringify(e),
       });
     }
+  }
+
+  async messageServerReadById(id: number): Promise<MessageServer | null> {
+    return this.db.oneOrNone(renovationSync.messageServerReadById, { id });
+  }
+  async messageServerReadByAffairId(id: number): Promise<MessageServer[]> {
+    return this.db.any(renovationSync.messageServerReadByAppartId, { id });
+  }
+  async messageServerReadByUserUuid(uuid: string): Promise<MessageServer[]> {
+    return this.db.any(renovationSync.messageServerReadByUserUuid, { uuid });
+  }
+  async messageServerCreate(
+    dto: MessageServerCreateDto,
+  ): Promise<MessageServer> {
+    return this.db.one(renovationSync.messageServerCreate, dto);
+  }
+  async messageServerUpdate(
+    dto: MessageServerUpdateDto,
+  ): Promise<MessageServer> {
+    return this.db.one(renovationSync.messageServerUpdate, dto);
+  }
+  async messageServerDelete(id: number): Promise<MessageServer> {
+    return this.db.one(renovationSync.messageServerDelete, { id });
   }
 }

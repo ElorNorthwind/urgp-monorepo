@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export type Message = {
   id: number;
   createdAt: Date;
@@ -108,3 +110,37 @@ export type PendingStage = Pick<
   deviation: string;
   problems: string;
 };
+
+export type MessageServer = {
+  id: number;
+  affair_id: number;
+  created_at: Date | string;
+  updated_at: Date | string;
+  author_uuid?: string;
+  author_fio: string;
+  message_content: string;
+  is_deleted: boolean;
+};
+
+export const messageServerCreateSchema = z.object({
+  author_uuid: z.string().uuid({ message: 'Некорректный UUID пользователя' }),
+  affair_id: z
+    .number()
+    .int()
+    .nonnegative({ message: 'Некорректное Affair ID' }),
+  message_text: z
+    .string()
+    .min(1, { message: 'Сообщение не может быть пустым' }),
+});
+export type MessageServerCreateDto = z.infer<typeof messageServerCreateSchema>;
+
+export const messageServerUpdateSchema = z.object({
+  message_id: z
+    .number()
+    .int()
+    .nonnegative({ message: 'Некорректное ID сообщения' }),
+  message_text: z
+    .string()
+    .min(1, { message: 'Сообщение не может быть пустым' }),
+});
+export type MessageServerUpdateDto = z.infer<typeof messageServerUpdateSchema>;
