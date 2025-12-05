@@ -719,13 +719,11 @@ export class RenovationController {
     return this.renovation.getRenovationNewBuildingsDeviationTotals();
   }
 
-  @UseGuards(DsaStaticTokenGuard)
   @Get('dsa/messages/by-id/:id')
   getServerMessageById(@Param('id') id: number): Promise<MessageServer | null> {
     return this.renovationSync.messageServerReadById(id);
   }
 
-  @UseGuards(DsaStaticTokenGuard)
   @Get('dsa/messages/by-affair-id/:id')
   getServerMessageByAffairId(
     @Param('id') id: number,
@@ -733,7 +731,6 @@ export class RenovationController {
     return this.renovationSync.messageServerReadByAffairId(id);
   }
 
-  @UseGuards(DsaStaticTokenGuard)
   @Get('dsa/messages/by-user/:uuid')
   getServerMessageByUserUuid(
     @Param('uuid') uuid: string,
