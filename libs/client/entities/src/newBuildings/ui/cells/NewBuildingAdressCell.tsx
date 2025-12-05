@@ -7,19 +7,30 @@ import {
   TooltipTrigger,
 } from '@urgp/client/shared';
 import { RenovationNewBuilding } from '@urgp/shared/entities';
+import { newBuildingRelocationStatus } from '../../config/classificators';
 
 function NewBuildingAdressCell(
   props: CellContext<RenovationNewBuilding, string>,
 ): JSX.Element {
   const rowData = props.row?.original;
 
+  const statusIcon = newBuildingRelocationStatus.find(
+    (status) => status.value === rowData.plotStatus,
+  );
+
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="flex flex-row gap-2 truncate">
+        <div className="flex flex-row items-center gap-2 truncate">
           {/* {BuildingIcon && (
             <BuildingIcon className={cn('size-8 flex-shrink-0', iconStyle)} />
           )} */}
+
+          {statusIcon?.icon && (
+            <statusIcon.icon
+              className={cn('size-8 flex-shrink-0', statusIcon.className)}
+            />
+          )}
           <div className="flex w-full flex-1 flex-col items-start justify-start truncate">
             <div className="w-full truncate">
               <span className="w-full truncate">{rowData?.adress}</span>

@@ -42,20 +42,24 @@ export const newBuildingRelocationStatus = [
     value: 'Освобождено',
     label: 'Освобождено',
     icon: SquareCheck,
+    className: cn('text-emerald-600'),
   },
   {
     value: 'Идет полное освобождение',
     label: 'Идет полное освобождение',
     icon: Grid2X2,
+    className: cn('text-blue-600'),
   },
   {
     value: 'Идет частичное освобождение',
     label: 'Идет частичное освобождение',
     icon: Grid2X2X,
+    className: cn('text-amber-600'),
   },
   {
     value: 'Освобождение не начато',
     label: 'Освобождение не начато',
     icon: SquareDashed,
+    className: cn('text-slate-500'),
   },
 ];

@@ -29,7 +29,11 @@ function NewBuildingStatusCell(
 
   return (
     <div className="flex flex-row items-center gap-2 truncate">
-      {decoration?.icon && <decoration.icon className={decoration.className} />}
+      {decoration?.icon && (
+        <decoration.icon
+          className={cn('size-8 flex-shrink-0', decoration.className)}
+        />
+      )}
       <div className="flex flex-1 flex-col items-start justify-start truncate">
         <div className="truncate">
           <span

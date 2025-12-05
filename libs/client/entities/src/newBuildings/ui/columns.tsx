@@ -11,7 +11,7 @@ export const newBuildingsColumns = [
   columnHelper.accessor('adress', {
     id: 'adress',
     header: 'Адрес участка',
-    size: 180,
+    size: 210,
     cell: (props) => {
       return <NewBuildingAdressCell {...props} />;
     },
@@ -19,7 +19,7 @@ export const newBuildingsColumns = [
   columnHelper.accessor('plotStartAge', {
     id: 'age',
     header: 'Срок',
-    size: 150,
+    size: 140,
     cell: (props) => {
       return <NewBuildingAgeCell {...props} />;
     },

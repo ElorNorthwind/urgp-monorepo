@@ -38,16 +38,20 @@ export const relocationTypes = [
     value: 1,
     label: 'Полное переселение',
     icon: House,
+    className: cn('text-sky-500'),
+    gradientClass: cn('bg-gradient-to-bl from-white to-sky-100'),
   },
   {
     value: 2,
     label: 'Частичное отселение',
     icon: Blocks,
+    className: cn('text-amber-500'),
   },
   {
     value: 3,
     label: 'Многоэтапное отселение',
     icon: Building2,
+    className: cn('text-fuchsia-500'),
   },
 ];
 

@@ -16,8 +16,13 @@ import {
   RenovationNewBuilding,
 } from '@urgp/shared/entities';
 import { format } from 'date-fns';
-import { DeviationChart, relocationAge } from '../../../oldBuildings';
+import {
+  DeviationChart,
+  relocationAge,
+  relocationTypes,
+} from '../../../oldBuildings';
 import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import { de } from 'date-fns/locale';
 
 function OldBuildingSubCell(building: OldBuilding): JSX.Element {
   const navigate = useNavigate({ from: '/renovation/newbuildings' });
@@ -30,12 +35,17 @@ function OldBuildingSubCell(building: OldBuilding): JSX.Element {
       deviation.value === building.buildingDeviation ||
       deviation.label === building.buildingDeviation,
   );
+
+  const relocationTypeIcon = relocationTypes.find(
+    (type) => type.value === building.relocationTypeId,
+  );
+
   return (
     <div
       key={building.id}
       className={cn(
         'grid w-full grid-cols-[3fr_2fr_3fr] items-center gap-2 truncate p-2',
-        'cursor-pointer rounded-sm border',
+        'relative cursor-pointer overflow-hidden rounded-sm border',
         selectedBuildingId === building.id
           ? 'bg-muted-foreground/10 hover:bg-muted-foreground/15 shadow-sm'
           : 'border-muted-foreground/10 hover:bg-muted-foreground/5',
@@ -51,11 +61,19 @@ function OldBuildingSubCell(building: OldBuilding): JSX.Element {
         });
       }}
     >
-      <div className="flex flex-col truncate">
+      <div className={cn('flex flex-col truncate')}>
         <span className="w-full truncate">{building.adress}</span>
         <span className="text-muted-foreground w-full truncate text-xs font-light">
           {building.relocationType}
         </span>
+        {relocationTypeIcon && (
+          <relocationTypeIcon.icon
+            className={cn(
+              relocationTypeIcon.className,
+              'absolute -bottom-3 left-[24%] size-16 opacity-15',
+            )}
+          />
+        )}
       </div>
 
       <div className="flex flex-row items-center gap-2 truncate">
