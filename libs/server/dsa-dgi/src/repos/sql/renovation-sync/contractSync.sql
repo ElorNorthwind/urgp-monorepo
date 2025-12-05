@@ -23,24 +23,24 @@ SET
     contract_num = excluded.contract_num,
     contract_creation_date = excluded.contract_creation_date,
     contract_notification_date = excluded.contract_notification_date,
-    contract_notification_num = excluded.contract_notification_num
-WHERE (
-        renovation.apartment_connections.contract_status,
-        renovation.apartment_connections.contract_date,
-        renovation.apartment_connections.contract_num,
-        renovation.apartment_connections.contract_creation_date,
-        renovation.apartment_connections.contract_notification_date,
-        renovation.apartment_connections.contract_notification_num
-    )
-        <>
-    (
-        excluded.contract_status,
-        excluded.contract_date,
-        excluded.contract_num,
-        excluded.contract_creation_date,
-        excluded.contract_notification_date,
-        excluded.contract_notification_num
-    );
+    contract_notification_num = excluded.contract_notification_num;
+-- WHERE (
+--         renovation.apartment_connections.contract_status,
+--         renovation.apartment_connections.contract_date,
+--         renovation.apartment_connections.contract_num,
+--         renovation.apartment_connections.contract_creation_date,
+--         renovation.apartment_connections.contract_notification_date,
+--         renovation.apartment_connections.contract_notification_num
+--     )
+--         <>
+--     (
+--         excluded.contract_status,
+--         excluded.contract_date,
+--         excluded.contract_num,
+--         excluded.contract_creation_date,
+--         excluded.contract_notification_date,
+--         excluded.contract_notification_num
+--     );
 
 
 

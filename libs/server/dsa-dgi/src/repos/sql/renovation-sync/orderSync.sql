@@ -25,21 +25,21 @@ SET
     order_num = excluded.order_num,
     order_reason = excluded.order_reason,
     rd_num = excluded.rd_num,
-    rd_date = excluded.rd_date
-WHERE (
-        renovation.apartment_connections.order_date,
-        renovation.apartment_connections.order_series,
-        renovation.apartment_connections.order_num,
-        renovation.apartment_connections.order_reason,
-        renovation.apartment_connections.rd_num,
-        renovation.apartment_connections.rd_date
-    )
-        <>
-    (
-        excluded.order_date,
-        excluded.order_series,
-        excluded.order_num,
-        excluded.order_reason,
-        excluded.rd_num,
-        excluded.rd_date
-    );
+    rd_date = excluded.rd_date;
+-- WHERE (
+--         renovation.apartment_connections.order_date,
+--         renovation.apartment_connections.order_series,
+--         renovation.apartment_connections.order_num,
+--         renovation.apartment_connections.order_reason,
+--         renovation.apartment_connections.rd_num,
+--         renovation.apartment_connections.rd_date
+--     )
+--         <>
+--     (
+--         excluded.order_date,
+--         excluded.order_series,
+--         excluded.order_num,
+--         excluded.order_reason,
+--         excluded.rd_num,
+--         excluded.rd_date
+--     );

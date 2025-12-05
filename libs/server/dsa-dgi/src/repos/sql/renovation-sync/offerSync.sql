@@ -31,17 +31,17 @@ SET
     inspection_date = COALESCE(renovation.apartment_connections.inspection_date, excluded.inspection_date),
     inspection_response = excluded.inspection_response,
     inspection_response_date = COALESCE(renovation.apartment_connections.inspection_response_date, excluded.inspection_response_date), 
-    inspection_response_input_date = COALESCE(renovation.apartment_connections.inspection_response_input_date, excluded.inspection_response_input_date)
-WHERE (
-        renovation.apartment_connections.inspection_date,
-        renovation.apartment_connections.inspection_response,
-        renovation.apartment_connections.inspection_response_date,
-        renovation.apartment_connections.inspection_response_input_date
-    )
-        <>
-    (
-        excluded.inspection_date,
-        excluded.inspection_response,
-        excluded.inspection_response_date,
-        excluded.inspection_response_input_date
-    );
+    inspection_response_input_date = COALESCE(renovation.apartment_connections.inspection_response_input_date, excluded.inspection_response_input_date);
+-- WHERE (
+--         renovation.apartment_connections.inspection_date,
+--         renovation.apartment_connections.inspection_response,
+--         renovation.apartment_connections.inspection_response_date,
+--         renovation.apartment_connections.inspection_response_input_date
+--     )
+--         <>
+--     (
+--         excluded.inspection_date,
+--         excluded.inspection_response,
+--         excluded.inspection_response_date,
+--         excluded.inspection_response_input_date
+--     );

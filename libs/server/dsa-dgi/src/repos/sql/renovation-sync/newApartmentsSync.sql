@@ -44,34 +44,34 @@ SET
     notes = excluded.notes,
     area_zhil = excluded.area_zhil,
     area_zhp = excluded.area_zhp,
-    cad_num = excluded.cad_num
-WHERE 
-(
-	renovation.apartments_new.rsm_object_id,
-    renovation.apartments_new.building_id,
-    renovation.apartments_new.unom,
-    renovation.apartments_new.adress,
-    renovation.apartments_new.apart_num,
-    renovation.apartments_new.room_count,
-    renovation.apartments_new.area_obsh,
-    renovation.apartments_new.unkv,
-    renovation.apartments_new.notes,
-    renovation.apartments_new.area_zhil,
-    renovation.apartments_new.area_zhp,
-    renovation.apartments_new.cad_num
-)
-    <>
-(
-	excluded.rsm_object_id,
-    excluded.building_id,
-    excluded.unom,
-    excluded.adress,
-    excluded.apart_num,
-    excluded.room_count,
-    excluded.area_obsh,
-    excluded.unkv,
-    excluded.notes,
-    excluded.area_zhil,
-    excluded.area_zhp,
-    excluded.cad_num
-);
+    cad_num = excluded.cad_num;
+-- WHERE 
+-- (
+-- 	renovation.apartments_new.rsm_object_id,
+--     renovation.apartments_new.building_id,
+--     renovation.apartments_new.unom,
+--     renovation.apartments_new.adress,
+--     renovation.apartments_new.apart_num,
+--     renovation.apartments_new.room_count,
+--     renovation.apartments_new.area_obsh,
+--     renovation.apartments_new.unkv,
+--     renovation.apartments_new.notes,
+--     renovation.apartments_new.area_zhil,
+--     renovation.apartments_new.area_zhp,
+--     renovation.apartments_new.cad_num
+-- )
+--     <>
+-- (
+-- 	excluded.rsm_object_id,
+--     excluded.building_id,
+--     excluded.unom,
+--     excluded.adress,
+--     excluded.apart_num,
+--     excluded.room_count,
+--     excluded.area_obsh,
+--     excluded.unkv,
+--     excluded.notes,
+--     excluded.area_zhil,
+--     excluded.area_zhp,
+--     excluded.cad_num
+-- );

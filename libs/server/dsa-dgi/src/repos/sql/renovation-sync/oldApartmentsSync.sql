@@ -57,42 +57,42 @@ ON CONFLICT (id) DO UPDATE
     notes = excluded.notes,
     area_zhil = excluded.area_zhil,
     area_zhp = excluded.area_zhp,
-    kpu_close_reason = excluded.kpu_close_reason
-WHERE     
-(
-    renovation.apartments_old.building_id, 
-    renovation.apartments_old.affair_id, 
-    renovation.apartments_old.cad_num, 
-    renovation.apartments_old.apart_num,
-    renovation.apartments_old.apart_type,
-    renovation.apartments_old.floor,
-    renovation.apartments_old.area_obsh,
-    renovation.apartments_old.room_count,
-    renovation.apartments_old.fio,
-    renovation.apartments_old.people_count,
-    renovation.apartments_old.old_apart_status,
-    renovation.apartments_old.kpu_num,
-    renovation.apartments_old.notes,
-    renovation.apartments_old.area_zhil,
-    renovation.apartments_old.area_zhp,
-    renovation.apartments_old.kpu_close_reason
-) 
-    <> 
-(
-    excluded.building_id, 
-    excluded.affair_id, 
-    excluded.cad_num, 
-    excluded.apart_num,
-    excluded.apart_type,
-    excluded.floor,
-    excluded.area_obsh,
-    excluded.room_count,
-    excluded.fio,
-    excluded.people_count,
-    excluded.old_apart_status,
-    excluded.kpu_num,
-    excluded.notes,
-    excluded.area_zhil,
-    excluded.area_zhp,
-    excluded.kpu_close_reason
-) ;
+    kpu_close_reason = excluded.kpu_close_reason;
+-- WHERE     
+-- (
+--     renovation.apartments_old.building_id, 
+--     renovation.apartments_old.affair_id, 
+--     renovation.apartments_old.cad_num, 
+--     renovation.apartments_old.apart_num,
+--     renovation.apartments_old.apart_type,
+--     renovation.apartments_old.floor,
+--     renovation.apartments_old.area_obsh,
+--     renovation.apartments_old.room_count,
+--     renovation.apartments_old.fio,
+--     renovation.apartments_old.people_count,
+--     renovation.apartments_old.old_apart_status,
+--     renovation.apartments_old.kpu_num,
+--     renovation.apartments_old.notes,
+--     renovation.apartments_old.area_zhil,
+--     renovation.apartments_old.area_zhp,
+--     renovation.apartments_old.kpu_close_reason
+-- ) 
+--     <> 
+-- (
+--     excluded.building_id, 
+--     excluded.affair_id, 
+--     excluded.cad_num, 
+--     excluded.apart_num,
+--     excluded.apart_type,
+--     excluded.floor,
+--     excluded.area_obsh,
+--     excluded.room_count,
+--     excluded.fio,
+--     excluded.people_count,
+--     excluded.old_apart_status,
+--     excluded.kpu_num,
+--     excluded.notes,
+--     excluded.area_zhil,
+--     excluded.area_zhp,
+--     excluded.kpu_close_reason
+-- ) ;
