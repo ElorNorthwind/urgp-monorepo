@@ -25,7 +25,7 @@ export function generateDateRanges(
 
     chunks.push({
       from: format(currentStart, 'dd.MM.yyyy'),
-      to: format(chunkEnd, 'dd.MM.yyyy'),
+      to: format(addDays(chunkEnd, 1), 'dd.MM.yyyy'),
     });
 
     currentStart = addDays(chunkEnd, 1);

@@ -15,6 +15,7 @@ import { firstValueFrom, map } from 'rxjs';
 import { generateSudirPoW } from './util/generateSudirPoW';
 
 import { parse, valid } from 'node-html-parser';
+import { EdoAuthData } from './model/types';
 
 @Injectable()
 export class SudirService {
@@ -28,8 +29,8 @@ export class SudirService {
   public async generateSudirPoW(input: string): Promise<string> {
     return generateSudirPoW(input);
   }
-  public async loginEdo(login: string, password: string): Promise<any> {
-    const cachedData = await this.cacheManager.get(
+  public async loginEdo(login: string, password: string): Promise<EdoAuthData> {
+    const cachedData: EdoAuthData | undefined = await this.cacheManager.get(
       `edo-session-${login}-${password}`,
     );
     if (cachedData) {
@@ -142,6 +143,11 @@ export class SudirService {
     const authCookie = backToEdo2?.['set-cookie']?.[0];
     const authCode =
       authCookie?.match(/(auth_token_s_[a-zA-Z\d\%\=\-\_]*);/)?.[1] || null;
+
+    if (!authCode)
+      throw new UnauthorizedException(
+        'Не удалось войти в СЭДО (проверьте логин и пароль)',
+      );
 
     await this.cacheManager.set(
       `edo-session-${login}-${password}`,

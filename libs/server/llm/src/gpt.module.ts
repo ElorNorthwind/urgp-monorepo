@@ -6,17 +6,12 @@ import { HttpModule } from '@nestjs/axios';
 import * as https from 'https';
 import { GptService } from './gpt.service';
 import { DatabaseModule } from '@urgp/server/database';
-import { EdoModule } from '@urgp/server/edo';
 
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
 });
 @Module({
-  imports: [
-    HttpModule.register({ httpsAgent: httpsAgent }),
-    DatabaseModule,
-    EdoModule,
-  ],
+  imports: [HttpModule.register({ httpsAgent: httpsAgent }), DatabaseModule],
   providers: [YandexGptService, GigachatService, GptService],
   controllers: [GptController],
 })

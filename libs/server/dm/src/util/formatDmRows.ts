@@ -21,3 +21,14 @@ export function formatDmRows(records: unknown[][] | undefined): DmRecord[] {
     };
   });
 }
+
+// r.ID_RESOLUTIONS, 0
+// r.RESOLUTION, 1
+// r.KONTR_DATA, 2
+// r.ISPOL_DATA, 3
+
+// d.ID_DOCUMENTS, 4
+// d.RN, 5
+// d.FIOKTO, 6
+// d.REG_DATE, 7
+// gr.ID_RUBR 8

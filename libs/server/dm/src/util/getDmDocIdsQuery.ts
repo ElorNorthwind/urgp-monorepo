@@ -5,9 +5,8 @@ SELECT
   r.RESOLUTION,
   r.KONTR_DATA, 
   r.ISPOL_DATA, 
-
   r.ID_DOCUMENTS, 
-  d.REG_NUM, 
+  d.RN, 
   d.FIOKTO, 
   d.REG_DATE, 
   gr.ID_RUBR

@@ -8,7 +8,6 @@ import { ControlModule } from '@urgp/server/control';
 import { DaDataModule } from '@urgp/server/dadata';
 import { DataMosModule } from '@urgp/server/data-mos';
 import { DatabaseModule } from '@urgp/server/database';
-import { EdoModule } from '@urgp/server/edo';
 import { EquityModule } from '@urgp/server/equity';
 import {
   EdoApiModule,
@@ -16,7 +15,6 @@ import {
   RsmApiModule,
 } from '@urgp/server/external-auth';
 import { FiasModule } from '@urgp/server/fias';
-import { GptModule } from '@urgp/server/llm';
 import { VksModule } from '@urgp/server/vks';
 import { RenovationModule } from '@urgp/server/renovation';
 import { RsmModule } from '@urgp/server/rsm';
@@ -28,6 +26,7 @@ import { DmModule } from '@urgp/server/dm';
 import { DtwModule } from '@urgp/server/dtw';
 import { LettersModule } from '@urgp/server/letters';
 import { DsaDgiModule } from '@urgp/server/dsa-dgi';
+import { EdoModule } from '@urgp/server/edo';
 
 @Module({
   // dot env files
@@ -49,10 +48,8 @@ import { DsaDgiModule } from '@urgp/server/dsa-dgi';
     }),
     ScheduleModule.forRoot(),
 
-    EdoModule,
     DatabaseModule,
     DsaDgiModule,
-    // GptModule,
     RsmModule,
     ExternalAuthModule,
     EdoApiModule,
@@ -75,6 +72,7 @@ import { DsaDgiModule } from '@urgp/server/dsa-dgi';
 
     DtwModule,
     LettersModule,
+    EdoModule,
   ],
 })
 export class AppModule {}

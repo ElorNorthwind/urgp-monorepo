@@ -9,5 +9,6 @@ import { AxiosLoggingInterceptor } from './helper/axiosLoggerInterceptor';
   imports: [DatabaseModule, HttpModule],
   providers: [SudirService],
   controllers: [SudirController],
+  exports: [SudirService],
 })
 export class SudirModule {}

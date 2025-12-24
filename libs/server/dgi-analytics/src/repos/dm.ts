@@ -23,6 +23,7 @@ export class DmRepository {
 
   insertDmData(records: DmRecord[]): Promise<null> {
     if (!records || records?.length === 0) return Promise.resolve(null);
+    // console.log(records);
 
     const query = `
 WITH import_values(resolution_id, resolution_text, control_date, done_date, document_id, reg_num, from_fio, reg_date, category_id) AS (
@@ -36,8 +37,7 @@ WITH import_values(resolution_id, resolution_text, control_date, done_date, docu
 		category_id = excluded.category_id,
 		reg_num = excluded.reg_num,
 		reg_date = excluded.reg_date,
-		from_fio = excluded.reg_date
-	WHERE (dm.documents.category_id, dm.documents.reg_num, dm.documents.reg_date, dm.documents.from_fio) <> (excluded.category_id, excluded.reg_num, excluded.reg_date, excluded.from_fio)
+		from_fio = excluded.from_fio
 ), deleted_resolutions AS (
     DELETE
     FROM dm.resolutions r

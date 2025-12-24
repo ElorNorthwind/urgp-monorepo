@@ -36,9 +36,15 @@ export class DmController {
     return this.dm.addDmLongTermRecords(
       {
         from: '01.01.2025',
-        to: '20.11.2025',
+        to: '23.12.2025',
       },
-      'SPD',
+      'EDO',
     );
+    // return this.dm.addDmShortTermRecords({
+    //   from: '29.01.2025',
+    //   to: '01.02.2025',
+    // });
+
+    // return this.dm.updateSingleResolution(-787158072);
   }
 }
