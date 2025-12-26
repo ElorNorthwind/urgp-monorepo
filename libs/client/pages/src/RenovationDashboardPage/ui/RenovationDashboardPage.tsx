@@ -31,6 +31,7 @@ import {
   OkrugTotalsChart,
   PlotInProgressDeviationAgesChart,
   RenovationDefectsFileUploadForm,
+  RenovationNotificationsFileUploadForm,
   StartAndFinishTimelineChart,
   StartTimelineChart,
 } from '@urgp/client/widgets';
@@ -333,7 +334,7 @@ const RenovationDashboardPage = (): JSX.Element => {
               </>
             </TabsContent>
 
-            <AgeProblemsChartChart className="col-span-5" />
+            <AgeProblemsChartChart className="col-span-full" />
 
             <StartTimelineChart className="col-span-full" />
 
@@ -368,7 +369,10 @@ const RenovationDashboardPage = (): JSX.Element => {
         </div>
         {user &&
           (user.roles.includes('admin') || user.roles.includes('editor')) && (
-            <RenovationDefectsFileUploadForm />
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+              <RenovationDefectsFileUploadForm className="col-span-1" />
+              <RenovationNotificationsFileUploadForm className="col-span-1" />
+            </div>
           )}
       </div>
     </Tabs>

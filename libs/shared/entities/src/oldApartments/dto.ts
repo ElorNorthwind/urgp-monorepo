@@ -95,3 +95,10 @@ export const addDefectDataSchema = z.object({
   defects: z.array(apartmentDefectData),
 });
 export type AddDefectDataDto = z.infer<typeof addDefectDataSchema>;
+
+export const addNotificationsDataSchema = z.object({
+  file: z.any(),
+});
+export type AddNotoficationsDataDto = z.infer<
+  typeof addNotificationsDataSchema
+>;

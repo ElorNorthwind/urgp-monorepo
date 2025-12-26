@@ -1,6 +1,7 @@
 import { rtkApi } from '@urgp/client/shared';
 import {
   AddDefectDataDto,
+  AddNotoficationsDataDto,
   ApartmentCapstone,
   ApartmentDefect,
   GetOldAppartmentsDto,
@@ -86,6 +87,19 @@ const oldApartmentsApi = rtkApi.injectEndpoints({
         methor: 'GET',
       }),
     }),
+
+    postNotifications: build.mutation<void, Blob>({
+      query: (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        return {
+          url: '/rsm_monitoring_notifications/',
+          method: 'POST',
+          body: formData,
+        };
+      },
+    }),
   }),
   overrideExisting: false,
 });
@@ -100,4 +114,5 @@ export const {
   useGetApartmentStageClassificatorQuery: useApartmentStageClassificator,
   useGetDefectsQuery: useApartmentDefects,
   usePostDefectsMutation: usePostApartmentDefects,
+  usePostNotificationsMutation: usePostNotifications,
 } = oldApartmentsApi;
