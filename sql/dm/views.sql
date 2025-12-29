@@ -87,7 +87,9 @@ CREATE OR REPLACE VIEW dm.spd_view  AS
     LEFT JOIN dm.categories c ON d.category_id = c.id
     LEFT JOIN dm.departments dep ON c.department_id = dep.id
     LEFT JOIN dm.zams z ON dep.zam_id = z.id
-    WHERE r.control_date >= '01.01.2025'::timestamp with time zone AND c.id IS NOT NULL AND c.category_group = 'SPD'
+    WHERE COALESCE(r.control_date, d.reg_date, r.done_date) >= '01.01.2025'::timestamp with time zone
+      AND c.id IS NOT NULL 
+      AND c.category_group = 'SPD'
     ORDER BY d.reg_date DESC;
   ----------------------------------------------------------------------
 
@@ -123,7 +125,9 @@ CREATE OR REPLACE VIEW dm.spd_dated_view  AS
     LEFT JOIN dm.categories c ON d.category_id = c.id
     LEFT JOIN dm.departments dep ON c.department_id = dep.id
     LEFT JOIN dm.zams z ON dep.zam_id = z.id, date_limit
-    WHERE c.id IS NOT NULL AND r.control_date BETWEEN '01.01.2025'::timestamp AND date_limit.date AND c.category_group = 'SPD'
+    WHERE c.id IS NOT NULL 
+    AND COALESCE(r.control_date, d.reg_date, r.done_date) BETWEEN '01.01.2025'::timestamp AND date_limit.date 
+    AND c.category_group = 'SPD'
     ORDER BY d.reg_date;
 ----------------------------------------------------------------------
 
