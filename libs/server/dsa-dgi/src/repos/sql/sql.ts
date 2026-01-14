@@ -101,6 +101,7 @@ export const renovationSync = {
   orderSync: sql('sql/renovation-sync/orderSync.sql'),
   contractSync: sql('sql/renovation-sync/contractSync.sql'),
   messageServerReadById: sql('sql/renovation-sync/messageServerReadById.sql'),
+  notificationsSync: sql('sql/renovation-sync/notificationsSync.sql'),
   messageServerReadByAppartId: sql(
     'sql/renovation-sync/messageServerReadByAppartId.sql',
   ),

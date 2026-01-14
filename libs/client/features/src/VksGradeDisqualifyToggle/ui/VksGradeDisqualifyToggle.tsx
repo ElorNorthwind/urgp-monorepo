@@ -32,7 +32,7 @@ export const VksGradeDisqualifyToggle: FC<VksGradeDisqualifyToggleProps> = ({
     skip: !caseId || caseId === 0,
   });
 
-  if (i.cannot('create', 'VksCaseDecision') || !data?.grade) return null;
+  if (i.cannot('update', 'VksCaseRequest') || !data?.grade) return null;
 
   return (
     <ToggleGroup

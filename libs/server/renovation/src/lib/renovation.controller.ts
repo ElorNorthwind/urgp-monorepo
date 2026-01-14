@@ -699,6 +699,11 @@ export class RenovationController {
     return this.renovationSync.syncContracts();
   }
 
+  @Get('sync/notifications')
+  async syncNotifications(): Promise<void> {
+    return this.renovationSync.syncNotifications();
+  }
+
   @CacheTTL(1000 * 60 * 60)
   @Get('new-buildings/all')
   async getNewBuildings(): Promise<RenovationNewBuilding[]> {

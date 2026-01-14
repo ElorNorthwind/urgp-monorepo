@@ -144,7 +144,7 @@ export class SudirService {
     const authCode =
       authCookie?.match(/(auth_token_s_[a-zA-Z\d\%\=\-\_]*);/)?.[1] || null;
 
-    if (!authCode)
+    if (!authCode || !DNSID || DNSID === '')
       throw new UnauthorizedException(
         'Не удалось войти в СЭДО (проверьте логин и пароль)',
       );
@@ -180,10 +180,35 @@ export class SudirService {
     return this.loginEdo(credentials.login, credentials.password);
   }
 
+  async loginEdoByEdoId(edoUserId: number) {
+    const credentials =
+      await this.dbServise.db.sudir.getUserCredentialsByEdoId(edoUserId);
+    if (!credentials) {
+      throw new BadRequestException(
+        `Пользователь с edo_id ${edoUserId} не найден в БД`,
+      );
+    }
+    if (!credentials.login || !credentials.password) {
+      throw new BadRequestException(
+        `Логин и пароль пользователя c edo_id ${edoUserId} не внесены в БД`,
+      );
+    }
+    // Logger.debug(credentials);
+    return this.loginEdo(credentials.login, credentials.password);
+  }
+
   async loginMasterEdo() {
     const masterUserId =
       parseInt(this.configService.get<string>('EDO_MASTER_USER_ID') || '22') ||
       22;
     return this.loginUserEdo(masterUserId);
+  }
+
+  async loginEdoOrMasterUser(edoUserId?: number | null) {
+    if (edoUserId) {
+      return this.loginEdoByEdoId(edoUserId);
+    } else {
+      return this.loginMasterEdo();
+    }
   }
 }

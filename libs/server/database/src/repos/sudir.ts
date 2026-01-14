@@ -14,4 +14,11 @@ export class SudirRepository {
       'SELECT sudir_login as login, sudir_password as password FROM public.users WHERE "UserID" = $1;';
     return this.db.oneOrNone(query, userId);
   }
+  getUserCredentialsByEdoId(
+    edoUserId: number,
+  ): Promise<{ login: string; password: string } | null> {
+    const query =
+      'SELECT sudir_login as login, sudir_password as password FROM public.users WHERE "EDO_ID" = $1;';
+    return this.db.oneOrNone(query, edoUserId);
+  }
 }

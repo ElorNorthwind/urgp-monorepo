@@ -19,6 +19,7 @@ export class RenovationSyncService {
       await this.syncOffers();
       await this.syncOrders();
       await this.syncContracts();
+      await this.syncNotifications();
     } finally {
       this.updateRunning = false;
     }
@@ -41,6 +42,9 @@ export class RenovationSyncService {
   }
   public async syncContracts(): Promise<void> {
     await this.dbServise.db.renovationSync.syncContracts();
+  }
+  public async syncNotifications(): Promise<void> {
+    await this.dbServise.db.renovationSync.syncNotifications();
   }
 
   public async messageServerReadById(

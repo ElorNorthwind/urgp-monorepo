@@ -1,45 +1,16 @@
 import { HttpService } from '@nestjs/axios';
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  Logger,
-  LoggerService,
-} from '@nestjs/common';
-import { AxiosRequestConfig } from 'axios';
-import { SudirService } from 'libs/server/sudir/src/lib/sudir.service';
-import { catchError, map, Observable } from 'rxjs';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { catchError, map, Observable, retry } from 'rxjs';
+import { EdoAxiosRequestConfig } from '../model/types';
 
 @Injectable()
 export class EdoRequestsService {
   private readonly logger = new Logger(EdoRequestsService.name);
-  constructor(
-    private readonly axios: HttpService,
-    private readonly sudir: SudirService,
-  ) {}
+  constructor(private readonly axios: HttpService) {}
 
-  public async getDocumentHtml(
-    id: number,
-    user?: number,
-  ): Promise<Observable<string>> {
-    const authData = user
-      ? await this.sudir.loginUserEdo(user)
-      : await this.sudir.loginMasterEdo();
-
-    // Параметры запроса на подсказку адреса
-    const requestConfig: AxiosRequestConfig = {
-      method: 'get',
-      url: '/document.card.php',
-      headers: {
-        cookie: `auth_token_s_${authData.DNSID}=${authData.authCode};`,
-      },
-      params: {
-        id,
-        DNSID: authData.DNSID,
-      },
-    };
-
-    return this.axios.request<string>(requestConfig).pipe(
+  private request(config: EdoAxiosRequestConfig): Observable<string> {
+    return this.axios.request(config).pipe(
+      retry(1),
       catchError((error) => {
         throw new HttpException(
           error?.response?.data || 'Failed to load document',
@@ -48,5 +19,20 @@ export class EdoRequestsService {
       }),
       map((res) => res.data),
     );
+  }
+
+  public async getDocumentHtml(
+    id: number,
+    edoUserId?: number,
+  ): Promise<Observable<string>> {
+    const requestConfig: EdoAxiosRequestConfig = {
+      edoUserId: edoUserId || null,
+      method: 'get',
+      url: '/document.card.php',
+      params: {
+        id,
+      },
+    };
+    return this.request(requestConfig);
   }
 }

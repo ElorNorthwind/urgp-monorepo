@@ -103,6 +103,18 @@ export class RenovationSyncRepository {
       });
     }
   }
+  async syncNotifications(): Promise<void> {
+    try {
+      await this.db.none(renovationSync.notificationsSync);
+      this.postUpdateResult({ id: 17, success: true });
+    } catch (e) {
+      this.postUpdateResult({
+        id: 17,
+        success: false,
+        errorDetails: JSON.stringify(e),
+      });
+    }
+  }
 
   async messageServerReadById(id: number): Promise<MessageServer | null> {
     return this.db.oneOrNone(renovationSync.messageServerReadById, { id });

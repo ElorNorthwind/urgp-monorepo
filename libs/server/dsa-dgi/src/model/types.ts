@@ -16,6 +16,7 @@ export const RenovationSyncDatasets = {
   'Синхронизация - Предложения': 13,
   'Синхронизация - Ордера': 14,
   'Синхронизация - Договоры': 15,
+  'Синхронизация - Смотровые': 17,
 } as const;
 export type RenovationSyncDataset =
   (typeof RenovationSyncDatasets)[keyof typeof RenovationSyncDatasets];
