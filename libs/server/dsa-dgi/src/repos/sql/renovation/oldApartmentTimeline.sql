@@ -18,7 +18,7 @@ WITH timeline AS (
 		adress || ' кв. ' || apart_num as apart_or_case,
 		inspection_date as date,
         1 as prio,
-		'Направлен смотровой' as type,
+		'Смотровой подписан' as type,
 		null as notes
 	FROM renovation.apartment_connections c
 	LEFT JOIN renovation.apartments_new a ON a.id = c.new_apart_id

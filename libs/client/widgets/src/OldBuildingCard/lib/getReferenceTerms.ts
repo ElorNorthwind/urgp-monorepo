@@ -8,7 +8,7 @@ export function getReferenceTerms(apart: ProblematicApartmentInfo) {
     //   days: apart.stages.order.days,
     // },
     {
-      label: 'На осмотре',
+      label: 'Смотровой подписан',
       date: apart.stages.inspection.date,
       days: apart.stages.inspection.days,
     },
@@ -68,7 +68,7 @@ export function getReferenceTerms(apart: ProblematicApartmentInfo) {
       days: apart.stages.claimLost.days,
     },
     {
-      label: 'На осмотре (проиграный суд)',
+      label: 'Смотровой подписан (проиграный суд)',
       date: apart.stages.lostInspection.date,
       days: apart.stages.lostInspection.days,
     },
