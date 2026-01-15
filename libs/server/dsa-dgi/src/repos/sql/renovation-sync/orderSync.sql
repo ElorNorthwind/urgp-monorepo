@@ -2,12 +2,12 @@ INSERT INTO renovation.apartment_connections (old_apart_id, new_apart_id, order_
 SELECT DISTINCT ON (ao.id, an.id)
     ao.id as old_apart_id, 
     an.id as new_apart_id, 
-    o.order_date as order_date,
-    o.collateral_type as order_series,
-    substring(o.order_number_full, '^(\d+)') as order_num,
-    substring(o.accounting_article, '(?<=\s)(.*)') as order_reason,
-    o.decision_number as rd_num,
-    o.decision_date as rd_date
+    CASE WHEN o.is_cancelled THEN null::date ELSE o.order_date END as order_date,
+    CASE WHEN o.is_cancelled THEN null::varchar ELSE o.collateral_type END as order_series,
+    CASE WHEN o.is_cancelled THEN null::text ELSE substring(o.order_number_full, '^(\d+)') END as order_num,
+    CASE WHEN o.is_cancelled THEN null::text ELSE substring(o.accounting_article, '(?<=\s)(.*)') END as order_reason,
+    CASE WHEN o.is_cancelled THEN null::varchar ELSE o.decision_number END as rd_num,
+    CASE WHEN o.is_cancelled THEN null::date ELSE o.decision_date END as rd_date
 FROM
 (
     SELECT string_to_array(unnest(address_list), '_')::bigint[] as unom_unkv, *
