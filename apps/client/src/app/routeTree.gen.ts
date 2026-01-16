@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ResourceImport } from './routes/resource'
 import { Route as OldbuildingsImport } from './routes/oldbuildings'
 import { Route as LoginImport } from './routes/login'
 import { Route as XmlRouteImport } from './routes/xml/route'
@@ -81,6 +82,12 @@ const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
+
+const ResourceRoute = ResourceImport.update({
+  id: '/resource',
+  path: '/resource',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const OldbuildingsRoute = OldbuildingsImport.update({
   id: '/oldbuildings',
@@ -412,6 +419,13 @@ declare module '@tanstack/react-router' {
       path: '/oldbuildings'
       fullPath: '/oldbuildings'
       preLoaderRoute: typeof OldbuildingsImport
+      parentRoute: typeof rootRoute
+    }
+    '/resource': {
+      id: '/resource'
+      path: '/resource'
+      fullPath: '/resource'
+      preLoaderRoute: typeof ResourceImport
       parentRoute: typeof rootRoute
     }
     '/about': {
@@ -838,6 +852,7 @@ export interface FileRoutesByFullPath {
   '/xml': typeof XmlRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/oldbuildings': typeof OldbuildingsRoute
+  '/resource': typeof ResourceRoute
   '/about': typeof AboutLazyRoute
   '/bticalc': typeof BticalcLazyRoute
   '/map': typeof MapLazyRoute
@@ -880,6 +895,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/login': typeof LoginRoute
   '/oldbuildings': typeof OldbuildingsRoute
+  '/resource': typeof ResourceRoute
   '/about': typeof AboutLazyRoute
   '/bticalc': typeof BticalcLazyRoute
   '/map': typeof MapLazyRoute
@@ -926,6 +942,7 @@ export interface FileRoutesById {
   '/xml': typeof XmlRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/oldbuildings': typeof OldbuildingsRoute
+  '/resource': typeof ResourceRoute
   '/about': typeof AboutLazyRoute
   '/bticalc': typeof BticalcLazyRoute
   '/map': typeof MapLazyRoute
@@ -976,6 +993,7 @@ export interface FileRouteTypes {
     | '/xml'
     | '/login'
     | '/oldbuildings'
+    | '/resource'
     | '/about'
     | '/bticalc'
     | '/map'
@@ -1017,6 +1035,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/oldbuildings'
+    | '/resource'
     | '/about'
     | '/bticalc'
     | '/map'
@@ -1061,6 +1080,7 @@ export interface FileRouteTypes {
     | '/xml'
     | '/login'
     | '/oldbuildings'
+    | '/resource'
     | '/about'
     | '/bticalc'
     | '/map'
@@ -1110,6 +1130,7 @@ export interface RootRouteChildren {
   XmlRouteRoute: typeof XmlRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
   OldbuildingsRoute: typeof OldbuildingsRoute
+  ResourceRoute: typeof ResourceRoute
   AboutLazyRoute: typeof AboutLazyRoute
   BticalcLazyRoute: typeof BticalcLazyRoute
   MapLazyRoute: typeof MapLazyRoute
@@ -1125,6 +1146,7 @@ const rootRouteChildren: RootRouteChildren = {
   XmlRouteRoute: XmlRouteRouteWithChildren,
   LoginRoute: LoginRoute,
   OldbuildingsRoute: OldbuildingsRoute,
+  ResourceRoute: ResourceRoute,
   AboutLazyRoute: AboutLazyRoute,
   BticalcLazyRoute: BticalcLazyRoute,
   MapLazyRoute: MapLazyRoute,
@@ -1149,6 +1171,7 @@ export const routeTree = rootRoute
         "/xml",
         "/login",
         "/oldbuildings",
+        "/resource",
         "/about",
         "/bticalc",
         "/map"
@@ -1216,6 +1239,9 @@ export const routeTree = rootRoute
     },
     "/oldbuildings": {
       "filePath": "oldbuildings.tsx"
+    },
+    "/resource": {
+      "filePath": "resource.tsx"
     },
     "/about": {
       "filePath": "about.lazy.tsx"

@@ -62,3 +62,5 @@ export * from './AgeProblemsChart';
 export * from './PlotInProgressDeviationAgesChart';
 export * from './NewBuildingsFilter';
 export * from './RenovationNotificationFileUploadForm';
+
+export * from './ResourceDemoSankey';
