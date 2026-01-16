@@ -58,6 +58,7 @@ export class RenovationSyncRepository {
     try {
       await this.db.none(renovationSync.newApartmentsIdSync);
       await this.db.none(renovationSync.newApartmentsSync);
+      await this.db.none(renovationSync.newApartmentsUnknownSync);
       this.postUpdateResult({ id: 12, success: true });
     } catch (e) {
       this.postUpdateResult({

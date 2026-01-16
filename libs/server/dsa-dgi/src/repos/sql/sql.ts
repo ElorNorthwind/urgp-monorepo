@@ -97,6 +97,9 @@ export const renovationSync = {
   oldApartmentsSync: sql('sql/renovation-sync/oldApartmentsSync.sql'),
   newApartmentsIdSync: sql('sql/renovation-sync/newApartmentsIdSync.sql'),
   newApartmentsSync: sql('sql/renovation-sync/newApartmentsSync.sql'),
+  newApartmentsUnknownSync: sql(
+    'sql/renovation-sync/newApartmentsUnknownSync.sql',
+  ),
   offerSync: sql('sql/renovation-sync/offerSync.sql'),
   orderSync: sql('sql/renovation-sync/orderSync.sql'),
   contractSync: sql('sql/renovation-sync/contractSync.sql'),
