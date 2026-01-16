@@ -15,7 +15,7 @@ const SankeyLink = ({
 }: any) => {
   // const linkRef = useRef(null);
   const [mouseOn, setMouseOn] = useState(false);
-
+  if (payload?.dource?.hidden || payload?.target?.hidden) return null;
   return (
     <Layer key={`CustomLink${index}`}>
       <defs>

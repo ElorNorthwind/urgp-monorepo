@@ -17,7 +17,10 @@ const SankeyNode = ({
   const isOut = x + width + 6 > containerWidth;
   if (payload?.hidden) return null;
   return (
-    <Layer key={`CustomNode${index}`}>
+    <Layer
+      key={`CustomNode${index}`}
+      className={payload?.hidden ? 'opacity-0' : ''}
+    >
       <Rectangle
         x={x + (isOut ? 2 : -2)}
         y={y}
@@ -33,15 +36,15 @@ const SankeyNode = ({
         textAnchor={isOut ? 'end' : 'start'}
         x={isOut ? x - 6 : x + width + 6}
         y={y + height / 2 - 4}
-        fontSize="14"
+        fontSize="12"
       >
-        {payload.depth + '. ' + payload.name}
+        {payload.name}
       </text>
       <text
         textAnchor={isOut ? 'end' : 'start'}
         x={isOut ? x - 6 : x + width + 6}
         y={y + height / 2 + 18}
-        fontSize="24"
+        fontSize="22"
         // fill={config?.[payload.name]?.color || `hsl(var(--chart-${index}))`}
         // fill={`hsl(var(--chart-${index}))`}
         // fontStyle={'bold'}

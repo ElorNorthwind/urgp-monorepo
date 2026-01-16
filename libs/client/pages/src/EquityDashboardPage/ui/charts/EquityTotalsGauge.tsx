@@ -24,7 +24,7 @@ const EquityTotalsGauge = ({
   variant = 'full',
   action = 'give',
   innerRadius = 100,
-  outerRadius = 180,
+  outerRadius = 140,
   isLoading,
 }: EquityTotalsGaugeProps): JSX.Element => {
   const navigate = useNavigate({ from: '/equity' });
