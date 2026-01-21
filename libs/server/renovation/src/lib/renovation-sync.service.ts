@@ -25,6 +25,15 @@ export class RenovationSyncService {
     }
   }
 
+  public async syncContractsAsync(): Promise<void> {
+    this.updateRunning = true;
+    try {
+      await this.syncContracts();
+    } finally {
+      this.updateRunning = false;
+    }
+  }
+
   public async syncOldApartmenst(): Promise<void> {
     await this.dbServise.db.renovationSync.syncOldApartmenst();
   }

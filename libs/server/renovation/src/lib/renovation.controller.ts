@@ -674,6 +674,15 @@ export class RenovationController {
     return 'Запускаю синхронизацию данных';
   }
 
+  @Get('sync/contracts-async')
+  async syncContractsAsync(): Promise<string> {
+    if (this.renovationSync.updateRunning) {
+      throw new BadRequestException('Синхронизация данных уже запущена');
+    }
+    this.renovationSync.syncContractsAsync();
+    return 'Запускаю синхронизацию договоров с уведомлениями';
+  }
+
   @Get('sync/old-apartments')
   async syncOldApartments(): Promise<void> {
     return this.renovationSync.syncOldApartmenst();
