@@ -21,6 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   usePostApartmentDefects,
   usePostNotifications,
+  useSyncNotificationCommand,
 } from '@urgp/client/entities';
 import { ExcelFileInput } from '@urgp/client/features';
 import { LoaderCircle, Upload } from 'lucide-react';
@@ -37,6 +38,8 @@ const RenovationNotificationsFileUploadForm = ({
 }: RenovationNotificationsFileUploadFormProps): JSX.Element | null => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [postNotifications, { isLoading }] = usePostNotifications();
+  const [syncNotifications, { isLoading: isLoadingSync }] =
+    useSyncNotificationCommand();
 
   const isMobile = useIsMobile();
 
@@ -50,6 +53,9 @@ const RenovationNotificationsFileUploadForm = ({
 
     await postNotifications(file)
       .unwrap()
+      .then(() => {
+        useSyncNotificationCommand();
+      })
       .then(() => {
         toast.success('Данные по уведомлениям переданы!');
       })
