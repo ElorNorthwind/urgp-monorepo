@@ -94,6 +94,8 @@ export class RenovationSyncRepository {
   }
   async syncContracts(): Promise<void> {
     try {
+      await this.db.none(renovationSync.contractSyncUnom);
+      await this.db.none(renovationSync.contractSyncCadNum);
       await this.db.none(renovationSync.contractSync);
       this.postUpdateResult({ id: 15, success: true });
     } catch (e) {

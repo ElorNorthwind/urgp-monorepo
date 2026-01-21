@@ -103,6 +103,8 @@ export const renovationSync = {
   offerSync: sql('sql/renovation-sync/offerSync.sql'),
   orderSync: sql('sql/renovation-sync/orderSync.sql'),
   contractSync: sql('sql/renovation-sync/contractSync.sql'),
+  contractSyncUnom: sql('sql/renovation-sync/contractSyncUnom.sql'),
+  contractSyncCadNum: sql('sql/renovation-sync/contractSyncCadNum.sql'),
   messageServerReadById: sql('sql/renovation-sync/messageServerReadById.sql'),
   notificationsSync: sql('sql/renovation-sync/notificationsSync.sql'),
   messageServerReadByAppartId: sql(
