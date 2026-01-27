@@ -35,7 +35,7 @@ export class DmController {
     // return this.dm.updateSingleResolution(-784831733);
     return this.dm.addDmLongTermRecords(
       {
-        from: '01.06.2024',
+        from: '01.01.2025',
         to: '01.02.2025',
       },
       'SPD',

@@ -129,6 +129,7 @@ export class DmService {
         const resultChunk = await connection.execute(getDmDocIdsQuery(chunk));
         const formatedRows = formatDmRows(resultChunk?.rows as unknown[][]);
         await this.analytics.db.dm.insertDmData(formatedRows);
+        await this.analytics.db.dm.deleteMissingDocuments(formatedRows, chunk);
         i += chunkSize;
       }
     });

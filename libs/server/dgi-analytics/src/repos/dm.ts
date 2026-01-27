@@ -39,9 +39,9 @@ WITH import_values(resolution_id, resolution_text, control_date, done_date, docu
 		reg_date = excluded.reg_date,
 		from_fio = excluded.from_fio
 ), deleted_resolutions AS (
-    DELETE
-    FROM dm.resolutions r
-    USING import_values v
+    UPDATE dm.resolutions r
+    SET deleted_at = NOW()
+    FROM import_values v
     WHERE r.document_id = v.document_id 
       AND r.id <> v.resolution_id
 )
@@ -60,6 +60,38 @@ ON CONFLICT (id) DO UPDATE SET
       this.pgp.helpers.values(records, dmResultColumngs),
     );
   }
+
+  deleteMissingDocuments(
+    records: DmRecord[],
+    chunkIds: number[],
+  ): Promise<null> {
+    const dmDocIdColumn = [{ name: 'documentId' }];
+    const query = `WITH found_ids(id) AS (
+	VALUES
+	$1:raw
+  ), existing_ids(id) AS (
+  VALUES
+  $2:raw
+  ), to_delete AS (
+    SELECT e.id
+    FROM existing_ids e
+    LEFT JOIN found_ids f ON e.id = f.id
+    WHERE f.id IS NULL
+  )
+  UPDATE dm.documents d
+  SET deleted_at = NOW()
+  FROM to_delete t
+  WHERE d.id = t.id`;
+
+    return this.db.none(query, [
+      this.pgp.helpers.values(records, dmDocIdColumn),
+      this.pgp.helpers.values(
+        chunkIds.map((id) => ({ documentId: id })),
+        dmDocIdColumn,
+      ),
+    ]);
+  }
+
   getCategoryIds(group?: string): Promise<number[]> {
     const condition = group ? `WHERE category_group = '${group}'` : '';
     const query = `SELECT id FROM dm.categories ${condition};`;

@@ -224,6 +224,7 @@ CREATE TABLE dm.documents
     reg_num TEXT,
     reg_date TIMESTAMP WITH TIME ZONE,
     from_fio TEXT,
+    deleted_at TIMESTAMP WITH TIME ZONE,
 
     PRIMARY KEY (id)
 );
@@ -247,7 +248,7 @@ CREATE TABLE dm.resolutions
     is_original_given boolean GENERATED ALWAYS AS (
         LOWER(resolution_text) LIKE ANY(ARRAY['%оригинал передан%', '%передан оригинал%'])
     ) STORED,
-
+    deleted_at TIMESTAMP WITH TIME ZONE,
     PRIMARY KEY (id)
 );
 -- ALTER TABLE dm.resolutions
