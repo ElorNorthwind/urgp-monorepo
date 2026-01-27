@@ -266,6 +266,9 @@ CREATE TABLE dm.calendar
 (
     date DATE,
     is_workday BOOLEAN NOT NULL DEFAULT TRUE,
+    is_short BOOLEAN NOT NULL DEFAULT FALSE,
+    weekday_legal INTEGER,
+    week_number INTEGER GENERATED ALWAYS AS (CEILING( (DATE_PART( 'day', date ) - DATE_PART( 'dow', date )) / 7) + 1)::integer,
     PRIMARY KEY (date)
 );
 

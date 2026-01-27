@@ -326,6 +326,9 @@ export type VksStatusStat = z.infer<typeof vksStatusStatSchema>;
 
 const vksStatSchema = z.object({
   total: z.number().int().nonnegative(),
+  slotsUsed: z.number().int().nonnegative(),
+  slotsReserved: z.number().int().nonnegative(),
+  slotsAvailable: z.number().int().nonnegative(),
   surveyed: z.number().int().nonnegative(),
   unsurveyed: z.number().int().nonnegative(),
   surveyPercent: z.number().nonnegative(),

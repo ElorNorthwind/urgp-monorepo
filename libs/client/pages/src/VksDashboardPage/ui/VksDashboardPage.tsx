@@ -11,6 +11,7 @@ import { VksDepartmentSurveyedChart } from './cards/VksDetartmentSurveyedChart';
 import { VksServiceChart } from './cards/VksServiceChart';
 import { VksStatusChart } from './cards/VksStatusChart';
 import { VksTimelineChart } from './cards/VksTImeline';
+import { VksDepartmentSlotsChart } from './cards/VksDetartmentSlotsChart';
 
 const VksDashboardPage = (): JSX.Element => {
   const pathname = useLocation().pathname;
@@ -44,7 +45,8 @@ const VksDashboardPage = (): JSX.Element => {
             <VksStatusChart className="" />
           </div>
           <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-2">
-            <VksDepartmentSurveyedChart className="" />
+            {/* <VksDepartmentSurveyedChart className="" /> */}
+            <VksDepartmentSlotsChart className="" />
             <VksDepartmentGradeChart className="" />
           </div>
           {search?.department && search.department.length > 0 && (
