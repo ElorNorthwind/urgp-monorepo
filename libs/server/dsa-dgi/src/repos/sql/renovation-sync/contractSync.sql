@@ -19,7 +19,7 @@ SELECT DISTINCT ON (ao.id, an.id)
 FROM public.contracts c 
 LEFT JOIN public.new_apart a ON c.area_id = a.rsm_apart_id
                             --  OR (a.unom = c.new_apart_unom AND a.un_kv = c.new_apart_unkv)
-                            --  OR (a.cad_num = c.new_apart_cad_num)
+                             OR (a.cad_num = c.new_apart_cad_num)
 LEFT JOIN renovation.apartments_new an ON a.new_apart_id = an.rsm_new_id
 LEFT JOIN renovation.apartments_old ao ON ao.affair_id = c.affair_id
 WHERE ao.id IS NOT NULL AND an.id IS NOT NULL

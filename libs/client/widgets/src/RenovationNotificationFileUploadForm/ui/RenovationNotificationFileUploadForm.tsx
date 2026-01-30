@@ -54,7 +54,7 @@ const RenovationNotificationsFileUploadForm = ({
     await postNotifications(file)
       .unwrap()
       .then(() => {
-        useSyncNotificationCommand();
+        syncNotifications();
       })
       .then(() => {
         toast.success('Данные по уведомлениям переданы!');

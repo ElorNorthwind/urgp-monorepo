@@ -101,7 +101,7 @@ const oldApartmentsApi = rtkApi.injectEndpoints({
       },
     }),
 
-    syncNotificationCommand: build.mutation<string, null>({
+    syncNotificationCommand: build.mutation<string, void>({
       query: () => {
         return {
           url: '/renovation/sync/contracts-detached',
