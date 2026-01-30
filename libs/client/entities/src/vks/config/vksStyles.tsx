@@ -7,6 +7,7 @@ import {
   CircleCheck,
   CircleDashed,
   CircleEllipsis,
+  CircleFadingPlus,
   CircleMinus,
   CircleSlash,
   CircleX,
@@ -154,6 +155,10 @@ export const vksCaseStatusStyles = {
     icon: CircleCheck,
     iconStyle: cn('text-green-500'),
   },
+  'не явился по вызову': {
+    icon: CircleMinus,
+    iconStyle: cn('text-orange-500'),
+  },
   'отменено ОИВ': {
     icon: CircleSlash,
     iconStyle: cn('text-rose-500'),
@@ -166,9 +171,9 @@ export const vksCaseStatusStyles = {
     icon: CircleX,
     iconStyle: cn('text-stone-500'),
   },
-  'не явился по вызову': {
-    icon: CircleMinus,
-    iconStyle: cn('text-orange-500'),
+  'пустой слот': {
+    icon: CircleFadingPlus,
+    iconStyle: cn('text-gray-500'),
   },
 };
 

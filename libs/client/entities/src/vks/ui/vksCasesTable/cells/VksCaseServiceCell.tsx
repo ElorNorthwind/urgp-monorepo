@@ -5,6 +5,11 @@ import { propertyTypeStyles } from '../../../config/vksStyles';
 
 function VksCaseServiceCell(props: CellContext<VksCase, string>): JSX.Element {
   const rowData = props.row?.original;
+  const isTransitional = [
+    'отменено ОИВ',
+    'отменено пользователем',
+    'талон не был взят',
+  ].includes(rowData?.status || '');
 
   const { icon: PropertyTypeIcon, iconStyle: propertyTypeIconStyle } =
     propertyTypeStyles?.[
@@ -13,7 +18,12 @@ function VksCaseServiceCell(props: CellContext<VksCase, string>): JSX.Element {
     ] || Object.values(propertyTypeStyles)[0];
 
   return (
-    <div className="flex w-full flex-row items-center gap-2">
+    <div
+      className={cn(
+        'flex w-full flex-row items-center gap-2',
+        isTransitional && 'opacity-50',
+      )}
+    >
       {PropertyTypeIcon && (
         <PropertyTypeIcon
           className={cn('size-8 flex-shrink-0', propertyTypeIconStyle)}

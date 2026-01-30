@@ -12,6 +12,11 @@ import { clientTypeStyles } from '../../../config/vksStyles';
 
 function VksCaseClientCell(props: CellContext<VksCase, string>): JSX.Element {
   const rowData = props.row?.original;
+  const isTransitional = [
+    'отменено ОИВ',
+    'отменено пользователем',
+    'талон не был взят',
+  ].includes(rowData?.status || '');
 
   const { icon: ClientIcon, iconStyle: clientIconStyle } =
     clientTypeStyles?.[
@@ -22,7 +27,12 @@ function VksCaseClientCell(props: CellContext<VksCase, string>): JSX.Element {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="flex w-full flex-row gap-2">
+        <div
+          className={cn(
+            'flex w-full flex-row gap-2',
+            isTransitional && 'opacity-50',
+          )}
+        >
           {ClientIcon && (
             <ClientIcon
               className={cn('size-8 flex-shrink-0', clientIconStyle)}

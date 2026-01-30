@@ -41,7 +41,7 @@ const chartConfig = {
   },
   забронировано: {
     label: 'забронировано',
-    color: '#14b8a6',
+    color: 'hsl(var(--chart-3))',
   },
   'отменено ОИВ': {
     label: 'отменено ОИВ',
@@ -57,7 +57,11 @@ const chartConfig = {
   },
   'не явился по вызову': {
     label: 'не явился по вызову',
-    color: '#94a3b8',
+    color: 'hsl(var(--chart-1))',
+  },
+  'пустой слот': {
+    label: 'пустой слот',
+    color: '#adb3ba',
   },
 } satisfies ChartConfig;
 

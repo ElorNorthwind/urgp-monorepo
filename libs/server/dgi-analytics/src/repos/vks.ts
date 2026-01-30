@@ -399,4 +399,8 @@ SET (
     const sql = `UPDATE vks.cases SET is_technical = $1 WHERE id = $2 RETURNING is_technical;`;
     return this.db.oneOrNone(sql, [q.value, q.caseId]);
   }
+
+  setEmptySlots(q: QmsQuery): Promise<null> {
+    return this.db.none(vks.addVksEmptySlots, q);
+  }
 }

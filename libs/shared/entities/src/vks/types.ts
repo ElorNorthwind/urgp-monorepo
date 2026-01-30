@@ -245,6 +245,8 @@ export const vksCaseSchema = z.object({
 
   operatorSurveyDate: z.string().datetime().nullable(), // ISO 8601 date string
   clientSurveyDate: z.string().datetime().nullable(), // ISO 8601 date string
+
+  caseType: z.string(),
 });
 export type VksCase = z.infer<typeof vksCaseSchema>;
 
@@ -326,6 +328,7 @@ export type VksStatusStat = z.infer<typeof vksStatusStatSchema>;
 
 const vksStatSchema = z.object({
   total: z.number().int().nonnegative(),
+  slotsTotal: z.number().int().nonnegative(),
   slotsUsed: z.number().int().nonnegative(),
   slotsReserved: z.number().int().nonnegative(),
   slotsAvailable: z.number().int().nonnegative(),

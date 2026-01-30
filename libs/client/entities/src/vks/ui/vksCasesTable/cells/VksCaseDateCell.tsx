@@ -26,6 +26,11 @@ function VksCaseDateCell(props: CellContext<VksCase, number>): JSX.Element {
   const pathname = useLocation()?.pathname;
   const search = getRouteApi(pathname).useSearch() as VksCasesPageSearch;
   const rowData = props.row?.original;
+  const isTransitional = [
+    'отменено ОИВ',
+    'отменено пользователем',
+    'талон не был взят',
+  ].includes(rowData?.status || '');
 
   // const {
   //   icon: StatusIcon,
@@ -43,7 +48,12 @@ function VksCaseDateCell(props: CellContext<VksCase, number>): JSX.Element {
       {/* {StatusIcon && (
             <StatusIcon className={cn('size-8 flex-shrink-0', iconStyle)} />
           )} */}
-      <div className="flex flex-1 flex-col items-start justify-start truncate">
+      <div
+        className={cn(
+          'flex flex-1 flex-col items-start justify-start truncate',
+          isTransitional && 'opacity-50',
+        )}
+      >
         <div className="flex gap-1 truncate">
           <span className="text-bold">
             {format(rowData?.date, 'dd.MM.yyyy')}

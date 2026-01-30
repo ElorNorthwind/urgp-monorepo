@@ -38,7 +38,7 @@ import { formatBookingClient } from './util/formatBookingClient';
 import { formatBookingRecord } from './util/formatBookingRecord';
 import { formatSurvey } from './util/fotmatSurvey';
 import { Cron } from '@nestjs/schedule';
-import { format, startOfYesterday } from 'date-fns';
+import { format, min, parse, startOfYesterday } from 'date-fns';
 import { DgiAnalyticsService } from '@urgp/server/dgi-analytics';
 
 @Injectable()
@@ -342,15 +342,29 @@ export class VksService {
     };
   }
 
+  public async addEmptyVksSlots(q: QmsQuery): Promise<null> {
+    return this.dgiAnalytics.db.vks.setEmptySlots({
+      dateFrom: q.dateFrom,
+      dateTo: format(
+        min([parse(q.dateTo, 'dd.MM.yyyy', new Date()), new Date()]),
+        'dd.MM.yyyy',
+      ),
+    });
+  }
+
   @Cron('0 15 7,12,19 * * *')
   private async cronUpdateSurveyData() {
     const isDev = this.configService.get<string>('NODE_ENV') === 'development';
     if (isDev) return;
-    this.updateSurveyData({
+    await this.updateSurveyData({
       dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
       dateTo: format(new Date(), 'dd.MM.yyyy'),
     }).then(() => {
       Logger.log('Survey data updated');
+    });
+    this.addEmptyVksSlots({
+      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
+      dateTo: format(new Date(), 'dd.MM.yyyy'),
     });
   }
 

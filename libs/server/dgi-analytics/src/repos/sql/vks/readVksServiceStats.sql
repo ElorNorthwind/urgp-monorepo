@@ -2,6 +2,10 @@ SELECT
 	s.short_name as service,
 	s.display_name as name,
 	COUNT(*)::integer as total,
+	COALESCE(COUNT(*) FILTER(WHERE status = ANY(ARRAY['обслужен','не явился по вызову', 'забронировано', 'пустой слот'])), 0)::integer as "slotsTotal",
+	COALESCE(COUNT(*) FILTER(WHERE status = ANY(ARRAY['обслужен','не явился по вызову'])), 0)::integer as "slotsUsed",
+	COALESCE(COUNT(*) FILTER(WHERE status = ANY(ARRAY['забронировано'])), 0)::integer as "slotsReserved",
+	COALESCE(COUNT(*) FILTER(WHERE status = ANY(ARRAY['пустой слот'])), 0)::integer as "slotsAvailable",
 	COALESCE(COUNT(*) FILTER(WHERE operator_survey_id IS NOT NULL), 0)::integer as surveyed,
 	COALESCE(COUNT(*) FILTER(WHERE operator_survey_id IS NULL), 0)::integer as unsurveyed,
 	CASE 
@@ -21,4 +25,4 @@ LEFT JOIN vks.departments d ON s.department_id = d.id
 WHERE c.date BETWEEN ${dateFrom}::date AND ${dateTo}::date
 ${conditions:raw}
 GROUP BY s.short_name, s.display_name
-ORDER BY COUNT(*) DESC;
+ORDER BY COUNT(*) FILTER(WHERE status = ANY(ARRAY['обслужен','не явился по вызову', 'забронировано', 'пустой слот'])) DESC;

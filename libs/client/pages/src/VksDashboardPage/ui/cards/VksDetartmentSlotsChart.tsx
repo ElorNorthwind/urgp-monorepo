@@ -46,7 +46,7 @@ const chartConfig = {
     color: 'hsl(var(--chart-3))',
   },
   slotsAvailable: {
-    label: 'Слот доступен',
+    label: 'Слот не использован',
     color: '#9ca3af',
   },
 } satisfies ChartConfig;
@@ -152,13 +152,7 @@ const VksDepartmentSlotsChart = ({ className }: ChartProps): JSX.Element => {
                         to: './cases',
                         search: {
                           department: [data.id],
-                          // status: [
-                          //   'отменено ОИВ',
-                          //   'талон не был взят',
-                          //   'отменено пользователем',
-                          //   'забронировано',
-                          //   'не явился по вызову',
-                          // ],
+                          status: ['пустой слот'],
                           dateFrom: search.dateFrom,
                           dateTo: search.dateTo,
                         },

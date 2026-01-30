@@ -47,11 +47,13 @@ export class VksController {
 
   @UseGuards(AccessTokenGuard)
   @Post('update')
-  updateSurveyData(
+  async updateSurveyData(
     @Body(new ZodValidationPipe(qmsQuerySchema))
     q: QmsQuery,
   ): Promise<vksUpdateQueryReturnValue> {
-    return this.vks.updateSurveyData(q);
+    const returnValue = await this.vks.updateSurveyData(q);
+    await this.vks.addEmptyVksSlots(q);
+    return returnValue;
   }
 
   @UseGuards(AccessTokenGuard)
@@ -130,8 +132,8 @@ export class VksController {
     return this.vks.ReadVksStatusClassificator();
   }
 
-  @CacheTTL(1000 * 60 * 30)
-  @UseInterceptors(CacheInterceptor)
+  // @CacheTTL(1000 * 60 * 5)
+  // @UseInterceptors(CacheInterceptor)
   @Get('charts/timeline')
   getVksTimeline(
     @Query(
@@ -143,8 +145,8 @@ export class VksController {
     return this.vks.ReadVksTimeline(departmentIds);
   }
 
-  @CacheTTL(1000 * 60 * 30)
-  @UseInterceptors(CacheInterceptor)
+  // @CacheTTL(1000 * 60 * 5)
+  // @UseInterceptors(CacheInterceptor)
   @UsePipes(new ZodValidationPipe(vksDashbordPageSearchSchema))
   @Get('charts/status')
   getVksStatusStats(
@@ -155,8 +157,8 @@ export class VksController {
     return this.vks.ReadVksStatusStats(q);
   }
 
-  @CacheTTL(1000 * 60 * 30)
-  @UseInterceptors(CacheInterceptor)
+  // @CacheTTL(1000 * 60 * 5)
+  // @UseInterceptors(CacheInterceptor)
   @UsePipes(new ZodValidationPipe(vksDashbordPageSearchSchema))
   @Get('charts/department')
   getVksDepartmentStats(
@@ -167,8 +169,8 @@ export class VksController {
     return this.vks.ReadVksDepartmentStats(q);
   }
 
-  @CacheTTL(1000 * 60 * 30)
-  @UseInterceptors(CacheInterceptor)
+  // @CacheTTL(1000 * 60 * 5)
+  // @UseInterceptors(CacheInterceptor)
   @UsePipes(new ZodValidationPipe(vksDashbordPageSearchSchema))
   @Get('charts/service')
   getVksServiceStats(

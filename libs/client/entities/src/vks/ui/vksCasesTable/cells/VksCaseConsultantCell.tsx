@@ -14,6 +14,11 @@ function VksCaseConsultantCell(
   props: CellContext<VksCase, string>,
 ): JSX.Element {
   const rowData = props.row?.original;
+  const isTransitional = [
+    'отменено ОИВ',
+    'отменено пользователем',
+    'талон не был взят',
+  ].includes(rowData?.status || '');
 
   const {
     icon: DepartmentIcon,
@@ -26,7 +31,12 @@ function VksCaseConsultantCell(
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className={cn('flex w-full flex-row gap-2')}>
+        <div
+          className={cn(
+            'flex w-full flex-row gap-2',
+            isTransitional && 'opacity-50',
+          )}
+        >
           <div className="flex flex-1 flex-shrink flex-col items-start justify-start truncate">
             <div className="flex w-full gap-1">
               <span

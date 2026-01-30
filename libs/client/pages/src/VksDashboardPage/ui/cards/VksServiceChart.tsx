@@ -36,10 +36,25 @@ import {
   YAxis,
 } from 'recharts';
 
+// const chartConfig = {
+//   total: {
+//     label: 'Число консультаций',
+//     color: 'hsl(var(--chart-3))',
+//   },
+// } satisfies ChartConfig;
+
 const chartConfig = {
-  total: {
-    label: 'Число консультаций',
+  slotsUsed: {
+    label: 'Консультация оказана',
+    color: 'hsl(var(--chart-2))',
+  },
+  slotsReserved: {
+    label: 'Слот забронирован',
     color: 'hsl(var(--chart-3))',
+  },
+  slotsAvailable: {
+    label: 'Слот не использован',
+    color: '#9ca3af',
   },
 } satisfies ChartConfig;
 

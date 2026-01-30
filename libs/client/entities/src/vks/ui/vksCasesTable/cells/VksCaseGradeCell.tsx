@@ -17,6 +17,11 @@ import { Star } from 'lucide-react';
 
 function VksCaseGradeCell(props: CellContext<VksCase, number>): JSX.Element {
   const rowData = props.row?.original;
+  const isTransitional = [
+    'отменено ОИВ',
+    'отменено пользователем',
+    'талон не был взят',
+  ].includes(rowData?.status || '');
 
   const { label: gradeSourceLabel } =
     gradeSourceStyles?.[
@@ -25,7 +30,12 @@ function VksCaseGradeCell(props: CellContext<VksCase, number>): JSX.Element {
 
   if (props.getValue() === 0)
     return (
-      <div className="text-muted-foreground flex w-full flex-col truncate font-thin">
+      <div
+        className={cn(
+          'text-muted-foreground flex w-full flex-col truncate font-thin',
+          isTransitional && 'opacity-50',
+        )}
+      >
         <span>Оценка не оставлена</span>
         {rowData?.gradeComment && (
           <span className="text-xs font-thin opacity-60">
@@ -38,7 +48,12 @@ function VksCaseGradeCell(props: CellContext<VksCase, number>): JSX.Element {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="flex flex-1 flex-shrink flex-col items-start justify-start truncate">
+        <div
+          className={cn(
+            'flex flex-1 flex-shrink flex-col items-start justify-start truncate',
+            isTransitional && 'opacity-50',
+          )}
+        >
           {rowData?.isTechnical ? (
             <div className="text-muted-foreground text-nowrap text-lg font-bold">
               не учитывается

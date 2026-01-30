@@ -55,14 +55,15 @@ CREATE OR REPLACE VIEW vks.cases_slim_view  AS
         COALESCE(c.operator_survey_consultation_type, 'Нет данных') as "operatorSurveyConsultationType",
         s.display_name as "serviceFullName",
         c.operator_survey_date as "operatorSurveyDate",
-        c.client_survey_date as "clientSurveyDate"
+        c.client_survey_date as "clientSurveyDate",
+        c.case_type as "caseType"
 
     FROM vks.cases c
     LEFT JOIN vks.clients cl ON cl.id = c.client_id
     LEFT JOIN vks.services s ON c.service_id = s.id
     LEFT JOIN vks.departments d ON s.department_id = d.id
     LEFT JOIN vks.zams z ON d.zam_id = z.id
-    ORDER BY c.date DESC NULLS LAST, c.time DESC NULLS LAST, c.id DESC NULLS LAST;
+    ORDER BY c.date DESC NULLS LAST, c.time DESC NULLS LAST, c.service_id, c.id DESC NULLS LAST;
 ----------------------------------------------------------------------
 -- ALTER TABLE vks.cases_slim_view
 --     OWNER TO renovation_user;
@@ -174,8 +175,8 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
 		
 		s.display_name as "serviceFullName",
 		d.full_name as "departmentFullName",
-		z.full_name as "zamFullName"
-		
+		z.full_name as "zamFullName",
+        c.case_type as "caseType"
         
 		-- COALESCE(COALESCE(c.client_survey_comment_positive, '') || COALESCE(c.client_survey_comment_negative, ''), c.online_grade_comment) as "gradeComment"
 		
@@ -256,6 +257,7 @@ LEFT JOIN vks.services s ON c.service_id = s.id
 LEFT JOIN vks.clients cl ON c.client_id = cl.id
 LEFT JOIN vks.departments d ON s.department_id = d.id
 LEFT JOIN vks.zams z ON d.zam_id = z.id
+WHERE c.case_type = 'ВКС' AND c.status <> 'пустой слот'
 ORDER BY c.date DESC, c.id DESC;
 ----------------------------------------------------------------------
 -- ALTER TABLE vks.consultations_legacy_view

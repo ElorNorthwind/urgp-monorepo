@@ -15,6 +15,11 @@ import {
 
 function VksCaseStatusCell(props: CellContext<VksCase, string>): JSX.Element {
   const rowData = props.row?.original;
+  const isTransitional = [
+    'отменено ОИВ',
+    'отменено пользователем',
+    'талон не был взят',
+  ].includes(rowData?.status || '');
 
   const { icon: CaseStatusIcon, iconStyle: caseStatusIconStyle } =
     vksCaseStatusStyles?.[
@@ -22,13 +27,22 @@ function VksCaseStatusCell(props: CellContext<VksCase, string>): JSX.Element {
     ] || Object.values(vksCaseStatusStyles)[0];
 
   return (
-    <div className="flex w-full flex-row gap-2">
+    <div
+      className={cn(
+        'flex w-full flex-row gap-2',
+        isTransitional && 'opacity-50',
+      )}
+    >
       {CaseStatusIcon && (
         <CaseStatusIcon
           className={cn('size-8 flex-shrink-0', caseStatusIconStyle)}
         />
       )}
-      <div className="flex flex-1 flex-shrink flex-col items-start justify-start truncate">
+      <div
+        className={cn(
+          'flex flex-1 flex-shrink flex-col items-start justify-start truncate',
+        )}
+      >
         <div className="flex w-full gap-1">
           <span className="w-full truncate">{props?.getValue()}</span>
         </div>
