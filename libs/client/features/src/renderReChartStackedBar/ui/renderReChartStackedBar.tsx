@@ -24,12 +24,30 @@ const renderRechartsStackedBar = ({
             key={status}
             dataKey={status}
             fill={`var(--color-${status})`}
+            // tabIndex={-1}
             stackId="a"
             radius={radius}
             onClick={(data, index) => onClick && onClick(data, index, status)}
             className={cn(onClick ? 'cursor-pointer' : '')}
             label={(props) => {
               const { x, y, width, height, index } = props;
+
+              const textWidth =
+                typeof width === 'number'
+                  ? width
+                  : parseInt((width as string) || '0');
+
+              const textHeight =
+                typeof height === 'number'
+                  ? height
+                  : parseInt((height as string) || '0');
+
+              const textX =
+                typeof x === 'number' ? x : parseInt((x as string) || '0');
+
+              const textY =
+                typeof y === 'number' ? y : parseInt((y as string) || '0');
+
               if (!data) return <></>;
               const total = Object.keys(config).reduce((total, key) => {
                 return total + data[index as number][key];
@@ -38,15 +56,15 @@ const renderRechartsStackedBar = ({
                 data[index as number][status as keyof (typeof data)[0]];
               return (
                 <text
-                  x={x + width / 2}
-                  y={y + height / 2}
+                  x={textX + textWidth / 2}
+                  y={textY + textHeight / 2}
                   dy={5}
                   fill="rgba(255, 255, 255, 0.6)"
                   fontSize="12"
                   textAnchor="middle"
                   pointerEvents={'none'}
                 >
-                  {(orientation === 'horizontal' ? width : height) > 12
+                  {(orientation === 'horizontal' ? textWidth : textHeight) > 12
                     ? val
                     : ''}
                 </text>

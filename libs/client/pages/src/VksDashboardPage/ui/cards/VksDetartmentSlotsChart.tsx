@@ -147,7 +147,7 @@ const VksDepartmentSlotsChart = ({ className }: ChartProps): JSX.Element => {
                         },
                       });
                       break;
-                    case 'slotsAvaliable':
+                    case 'slotsAvailable':
                       navigate({
                         to: './cases',
                         search: {
@@ -159,14 +159,6 @@ const VksDepartmentSlotsChart = ({ className }: ChartProps): JSX.Element => {
                       });
                       break;
                   }
-                  // navigate({
-                  //   to: './cases',
-                  //   search: {
-                  //     department: [data.id],
-                  //     dateFrom: search.dateFrom,
-                  //     dateTo: search.dateTo,
-                  //   },
-                  // });
                 },
               })}
             </BarChart>
