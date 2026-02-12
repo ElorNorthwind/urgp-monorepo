@@ -36,7 +36,7 @@ export class DmController {
     return this.dm.addDmLongTermRecords(
       {
         from: '01.01.2025',
-        to: '01.02.2025',
+        to: '04.02.2026',
       },
       'SPD',
     );

@@ -57,6 +57,17 @@ export class VksController {
   }
 
   @UseGuards(AccessTokenGuard)
+  @Get('update')
+  async updateSurveyDataDaily(): Promise<string> {
+    try {
+      this.vks.cronUpdateSurveyData(true);
+      return 'Daily update started';
+    } catch (e) {
+      return 'Failed to start daily update';
+    }
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Get('cases/:id/details')
   getVksCaseDetails(
     @Param('id', ParseIntPipe) id: number,
@@ -132,8 +143,6 @@ export class VksController {
     return this.vks.ReadVksStatusClassificator();
   }
 
-  // @CacheTTL(1000 * 60 * 5)
-  // @UseInterceptors(CacheInterceptor)
   @Get('charts/timeline')
   getVksTimeline(
     @Query(
@@ -145,8 +154,6 @@ export class VksController {
     return this.vks.ReadVksTimeline(departmentIds);
   }
 
-  // @CacheTTL(1000 * 60 * 5)
-  // @UseInterceptors(CacheInterceptor)
   @UsePipes(new ZodValidationPipe(vksDashbordPageSearchSchema))
   @Get('charts/status')
   getVksStatusStats(
@@ -157,8 +164,6 @@ export class VksController {
     return this.vks.ReadVksStatusStats(q);
   }
 
-  // @CacheTTL(1000 * 60 * 5)
-  // @UseInterceptors(CacheInterceptor)
   @UsePipes(new ZodValidationPipe(vksDashbordPageSearchSchema))
   @Get('charts/department')
   getVksDepartmentStats(
@@ -169,8 +174,6 @@ export class VksController {
     return this.vks.ReadVksDepartmentStats(q);
   }
 
-  // @CacheTTL(1000 * 60 * 5)
-  // @UseInterceptors(CacheInterceptor)
   @UsePipes(new ZodValidationPipe(vksDashbordPageSearchSchema))
   @Get('charts/service')
   getVksServiceStats(
@@ -187,8 +190,8 @@ export class VksController {
     records: number;
   }> {
     return this.vks.GetQmsReport({
-      dateFrom: '01.09.2025',
-      dateTo: '01.12.2025',
+      dateFrom: '06.02.2026',
+      dateTo: '09.02.2026',
     });
   }
 

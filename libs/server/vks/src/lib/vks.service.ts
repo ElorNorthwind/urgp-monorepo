@@ -1,5 +1,11 @@
 import { HttpService } from '@nestjs/axios';
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '@urgp/server/database';
 import {
@@ -40,6 +46,7 @@ import { formatSurvey } from './util/fotmatSurvey';
 import { Cron } from '@nestjs/schedule';
 import { format, min, parse, startOfYesterday } from 'date-fns';
 import { DgiAnalyticsService } from '@urgp/server/dgi-analytics';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class VksService {
@@ -352,19 +359,25 @@ export class VksService {
     });
   }
 
-  @Cron('0 15 7,12,19 * * *')
-  private async cronUpdateSurveyData() {
+  @Cron('0 45 7,11,17,19 * * *')
+  public async cronUpdateSurveyData(forced: boolean = false) {
     const isDev = this.configService.get<string>('NODE_ENV') === 'development';
-    if (isDev) return;
+    if (isDev && !forced) return;
     await this.updateSurveyData({
       dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
       dateTo: format(new Date(), 'dd.MM.yyyy'),
     }).then(() => {
-      Logger.log('Survey data updated');
+      Logger.log(
+        `Survey data updated from ${format(startOfYesterday(), 'dd.MM.yyyy')} to ${format(new Date(), 'dd.MM.yyyy')}`,
+      );
     });
     this.addEmptyVksSlots({
       dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
       dateTo: format(new Date(), 'dd.MM.yyyy'),
+    }).then(() => {
+      Logger.log(
+        `Empty slots added from ${format(startOfYesterday(), 'dd.MM.yyyy')} to ${format(new Date(), 'dd.MM.yyyy')}`,
+      );
     });
   }
 
