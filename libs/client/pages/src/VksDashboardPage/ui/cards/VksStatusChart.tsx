@@ -114,10 +114,15 @@ const VksStatusChart = ({ className }: ChartProps): JSX.Element => {
             className="pt-0 lg:aspect-square"
           >
             <PieChart>
-              <ChartTooltip
+              {/* <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent hideLabel />}
-              />
+              /> */}
+              {renderRechartsTooltip({
+                config: chartConfig,
+                cursor: false,
+                labelWidth: '12rem',
+              })}
               <Pie
                 data={dataWithFill}
                 dataKey="count"

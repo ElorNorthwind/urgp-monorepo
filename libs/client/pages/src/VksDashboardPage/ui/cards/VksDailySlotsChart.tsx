@@ -90,7 +90,7 @@ const VksDailySlotsChart = ({ className }: ChartProps): JSX.Element => {
             <Skeleton className="mx-auto h-4 w-44" />
           </div>
         ) : (
-          <div className="grid h-full grid-cols-3">
+          <div className="grid h-full grid-cols-5">
             {weekDays.map((day) => (
               <div className="h-full p-2 even:bg-gray-50">
                 <div>{day}</div>
@@ -104,7 +104,7 @@ const VksDailySlotsChart = ({ className }: ChartProps): JSX.Element => {
                     accessibilityLayer
                     data={data?.filter((item) => item.weekday === day)}
                     layout="vertical"
-                    margin={{ top: 0, right: 0, left: -110, bottom: 0 }}
+                    margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
                     stackOffset="expand"
                   >
                     <CartesianGrid vertical={true} horizontal={false} />
@@ -115,7 +115,7 @@ const VksDailySlotsChart = ({ className }: ChartProps): JSX.Element => {
                       axisLine={false}
                       tick={{ fontSize: 14 }}
                       tickMargin={5}
-                      width={210}
+                      width={90}
                       interval={0}
                     />
                     <XAxis
@@ -129,7 +129,7 @@ const VksDailySlotsChart = ({ className }: ChartProps): JSX.Element => {
                     {renderRechartsTooltip({
                       config: chartConfig,
                       cursor: true,
-                      labelWidth: '5rem',
+                      labelWidth: '12rem',
                     })}
                     {renderRechartsStackedBar({
                       config: chartConfig,
