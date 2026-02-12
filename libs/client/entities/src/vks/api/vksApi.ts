@@ -6,6 +6,7 @@ import {
   VksCase,
   VksCaseDetails,
   VksCasesQuery,
+  VksDailySlotStats,
   VksDashbordPageSearch,
   VksDepartmentStat,
   VksServiceStat,
@@ -137,6 +138,20 @@ export const vksApi = rtkApi.injectEndpoints({
       providesTags: ['vks-classificator'],
     }),
 
+    getVksDailySlotStats: build.query<
+      VksDailySlotStats[],
+      VksDashbordPageSearch | void
+    >({
+      query: (q) => ({
+        url: `/vks/charts/daily-slots`,
+        method: 'GET',
+        params: {
+          ...q,
+        },
+      }),
+      providesTags: ['vks-classificator'],
+    }),
+
     getVksServiceStats: build.query<
       VksServiceStat[],
       VksDashbordPageSearch | void
@@ -184,6 +199,7 @@ export const {
   useGetVksStatusStatsQuery: useVksStatusStats,
   useGetVksDepartmentStatsQuery: useVksDepartmentStats,
   useGetVksServiceStatsQuery: useVksServiceStats,
+  useGetVksDailySlotStatsQuery: useVksDailySlotStats,
 
   useUpdateIsTechnicalMutation: useUpdateIsTechnical,
 } = vksApi;

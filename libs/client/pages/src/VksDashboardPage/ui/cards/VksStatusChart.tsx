@@ -96,7 +96,13 @@ const VksStatusChart = ({ className }: ChartProps): JSX.Element => {
           <CardDescription className="">Состояние консультаций</CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="">
+      <CardContent className="relative">
+        <div
+          className="pointer-events-none absolute bottom-5 left-0 z-20 w-full px-5 text-center text-xl font-extrabold leading-none text-red-500 opacity-40"
+          tabIndex={-1}
+        >
+          Информация о свободных слотах доступна в тестовом режиме
+        </div>
         {isLoading ? (
           <div>
             <Skeleton className="mb-2 h-[calc(100%-2rem)] w-full" />

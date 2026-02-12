@@ -347,6 +347,16 @@ export const vksDepartmentStatSchema = vksStatSchema.extend({
 });
 export type VksDepartmentStat = z.infer<typeof vksDepartmentStatSchema>;
 
+const vksDailySlotStatsSchema = z.object({
+  weekday: z.string(),
+  hour: z.string(),
+  slotsUsed: z.number().int().nonnegative(),
+  slotsReserved: z.number().int().nonnegative(),
+  slotsAvaliable: z.number().int().nonnegative(),
+  slotsTotal: z.number().int().nonnegative(),
+});
+export type VksDailySlotStats = z.infer<typeof vksDailySlotStatsSchema>;
+
 export const vksServiceStatSchema = vksStatSchema.extend({
   service: z.string(),
   name: z.string(),

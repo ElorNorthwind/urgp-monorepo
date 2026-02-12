@@ -12,6 +12,7 @@ import { VksServiceChart } from './cards/VksServiceChart';
 import { VksStatusChart } from './cards/VksStatusChart';
 import { VksTimelineChart } from './cards/VksTImeline';
 import { VksDepartmentSlotsChart } from './cards/VksDetartmentSlotsChart';
+import { VksDailySlotsChart } from './cards/VksDailySlotsChart';
 
 const VksDashboardPage = (): JSX.Element => {
   const pathname = useLocation().pathname;
@@ -52,6 +53,7 @@ const VksDashboardPage = (): JSX.Element => {
           {search?.department && search.department.length > 0 && (
             <VksServiceChart className="" />
           )}
+          <VksDailySlotsChart />
         </div>
       </div>
     </ScrollArea>

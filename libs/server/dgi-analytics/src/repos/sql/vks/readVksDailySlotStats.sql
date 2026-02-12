@@ -1,53 +1,4 @@
 WITH weekdays(wd, name) AS (
-VALUES
-	(1, 'пн'),
-    (2, 'вт'),
-    (3, 'ср'),
-    (4, 'чт'),
-    (5, 'пт'),
-    (6, 'сб'),
-    (7, 'вс')
-), departmens_and_days AS (
-	SELECT 
-		d.id as department_id, 
-		d.display_name, 
-		w.*
-	FROM vks.departments d
-	CROSS JOIN weekdays w
-	ORDER BY d.id, w.wd
-), values AS (
-    SELECT 
-        s.department_id,
-        COALESCE(cal.weekday_legal, DATE_PART('isodow', c.date)) as wd,
-        COALESCE(COUNT(*) FILTER(WHERE c.status = ANY(ARRAY['обслужен','не явился по вызову'])), 0)::integer as used,
-        COALESCE(COUNT(*) FILTER(WHERE c.status = ANY(ARRAY['забронировано'])), 0)::integer as reserved,
-        COALESCE(COUNT(*) FILTER(WHERE c.status = ANY(ARRAY['пустой слот'])), 0)::integer as avaliable,
-        COUNT(*)::int as total
-    FROM dm.calendar cal
-    LEFT JOIN vks.cases c ON c.date = cal.date
-    LEFT JOIN vks.services s ON c.service_id = s.id
-    GROUP BY 
-        s.department_id, 
-        COALESCE(cal.weekday_legal, DATE_PART('isodow', c.date))
-)
-
-
-SELECT  
-    d.display_name,
-	d.name as weekday,
-	COALESCE(v.used, 0) as "slotsUsed",
-	COALESCE(v.reserved, 0) as "slotsReserved",
-	COALESCE(v.avaliable, 0) as "slotsAvaliable",
-	COALESCE(v.total, 0) as "slotsTotal"
-FROM departmens_and_days d
-LEFT JOIN values v ON d.department_id = v.department_id AND d.wd = v.wd
-ORDER BY d.department_id, d.wd
-
-
-
-
-
-WITH weekdays(wd, name) AS (
 	VALUES
 	(1, 'пн'),
     (2, 'вт'),
@@ -83,22 +34,29 @@ WITH weekdays(wd, name) AS (
         LEFT(c.time, 2) as indicator,
         COALESCE(COUNT(*) FILTER(WHERE c.status = ANY(ARRAY['обслужен','не явился по вызову'])), 0)::integer as used,
         COALESCE(COUNT(*) FILTER(WHERE c.status = ANY(ARRAY['забронировано'])), 0)::integer as reserved,
-        COALESCE(COUNT(*) FILTER(WHERE c.status = ANY(ARRAY['пустой слот'])), 0)::integer as avaliable,
+        COALESCE(COUNT(*) FILTER(WHERE c.status = ANY(ARRAY['пустой слот'])), 0)::integer as available,
         COUNT(*)::int as total
     FROM vks.cases c
     LEFT JOIN vks.services s ON c.service_id = s.id
     LEFT JOIN dm.calendar ca ON c.date = ca.date
+	LEFT JOIN vks.departments d ON s.department_id = d.id
+	WHERE c.date BETWEEN ${dateFrom}::date AND ${dateTo}::date
+	${conditions:raw}
     GROUP BY 
         COALESCE(ca.weekday_legal, DATE_PART('isodow', c.date)),
         LEFT(c.time, 2)
 )
 SELECT 
-    w.wd_name,
-    w.wh_name,
+    w.wd_name as "weekday",
+    w.wh_name as "hour",
     COALESCE(s.used, 0) as "slotsUsed",
     COALESCE(s.reserved, 0) as "slotsReserved",
-    COALESCE(s.avaliable, 0) as "slotsAvaliable",
+    COALESCE(s.available, 0) as "slotsAvailable",
     COALESCE(s.total, 0) as "slotsTotal"
 FROM workdays_and_hours w 
 LEFT JOIN slot_data s ON w.wd = s.wd AND w.indicator = s.indicator
 ORDER BY w.wd, w.time;
+
+
+
+

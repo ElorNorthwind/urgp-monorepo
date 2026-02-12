@@ -28,6 +28,7 @@ import {
   VksCaseDetails,
   VksCasesQuery,
   vksCasesQuerySchema,
+  VksDailySlotStats,
   VksDashbordPageSearch,
   vksDashbordPageSearchSchema,
   VksDepartmentStat,
@@ -172,6 +173,16 @@ export class VksController {
   ): Promise<VksDepartmentStat[]> {
     if (!q) throw new BadRequestException('Не указаны данные запроса');
     return this.vks.ReadVksDepartmentStats(q);
+  }
+
+  @UsePipes(new ZodValidationPipe(vksDashbordPageSearchSchema))
+  @Get('charts/daily-slots')
+  getVksDailySlotStats(
+    @Query()
+    q?: VksDashbordPageSearch,
+  ): Promise<VksDailySlotStats[]> {
+    if (!q) throw new BadRequestException('Не указаны данные запроса');
+    return this.vks.ReadVksDailySlotStats(q);
   }
 
   @UsePipes(new ZodValidationPipe(vksDashbordPageSearchSchema))

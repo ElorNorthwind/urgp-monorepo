@@ -11,6 +11,7 @@ import {
   VksCase,
   VksCaseDetails,
   VksCasesQuery,
+  VksDailySlotStats,
   VksDashbordPageSearch,
   VksDepartmentStat,
   VksServiceStat,
@@ -402,5 +403,17 @@ SET (
 
   setEmptySlots(q: QmsQuery): Promise<null> {
     return this.db.none(vks.addVksEmptySlots, q);
+  }
+
+  getVksDailySlotStats(q: VksDashbordPageSearch): Promise<VksDailySlotStats[]> {
+    const conditions =
+      q.department && q.department.length > 0
+        ? `AND d.id IN (${q.department.join(',')})`
+        : '';
+    return this.db.any(vks.readVksDailySlotStats, {
+      conditions,
+      dateFrom: q?.dateFrom || '-infinity',
+      dateTo: q?.dateTo || 'infinity',
+    });
   }
 }

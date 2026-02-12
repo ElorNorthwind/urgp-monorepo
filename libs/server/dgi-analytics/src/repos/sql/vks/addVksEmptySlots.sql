@@ -50,7 +50,7 @@ WITH full_slots AS (
         slot_text,
         is_short
     FROM weekly_slots
-), avaliable_slots AS (
+), available_slots AS (
     SELECT 
         c.date, 
         s.group_id, 
@@ -75,7 +75,7 @@ WITH full_slots AS (
         CASE WHEN c.status IS NOT NULL THEN COALESCE(c.status, 'пустой слот') || COALESCE( ' (' || cl.short_name || ')', '') ELSE 'отсутствуют записи на это время' END as problem_summary,
         0::bigint AS client_id
         
-    FROM avaliable_slots t
+    FROM available_slots t
 
     LEFT JOIN (
         SELECT DISTINCT ON (se.slot_group_id, ca.date, ca.time) 
