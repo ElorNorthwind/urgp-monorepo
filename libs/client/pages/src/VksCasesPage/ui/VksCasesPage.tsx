@@ -16,6 +16,7 @@ import {
   TooltipProvider,
   useAuth,
   useDebounce,
+  useVksAbility,
   VirtualDataTable,
 } from '@urgp/client/shared';
 import { VksCasesFilterSidebar, VksCasesSidePanel } from '@urgp/client/widgets';
@@ -43,6 +44,7 @@ const VksCasesPage = (): JSX.Element => {
   const search = getRouteApi('/vks/cases').useSearch() as VksCasesPageSearch;
   const user = useAuth();
   const isAuthorized = user?.id && user?.id !== 0 ? true : false;
+  const i = useVksAbility();
 
   const debouncedDates: { dateFrom: string; dateTo: string } = useDebounce(
     { dateFrom: search?.dateFrom, dateTo: search?.dateTo },
@@ -77,7 +79,16 @@ const VksCasesPage = (): JSX.Element => {
     { skip: isAuthorized },
   );
 
-  const data = isAuthorized ? dataAuthorized : dataPublic;
+  const showEmpty = i.can('read', 'VksEmptySlots');
+
+  // const data = isAuthorized ? dataAuthorized : dataPublic;
+  const data = isAuthorized
+    ? showEmpty
+      ? dataAuthorized
+      : dataAuthorized?.filter((row) => row.status !== 'пустой слот') || []
+    : showEmpty
+      ? dataPublic
+      : dataPublic?.filter((row) => row.status !== 'пустой слот') || [];
   const isLoading = isAuthorized ? isLoadingAuthorized : isLoadingPublic;
   const isFetching = isAuthorized ? isFetchingAuthorized : isFetchingPublic;
 

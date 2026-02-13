@@ -21,6 +21,7 @@ import {
   ChartLegendContent,
   cn,
   Skeleton,
+  useVksAbility,
 } from '@urgp/client/shared';
 import { VksDepartmentFilter } from '@urgp/client/widgets';
 import { VksDashbordPageSearch } from '@urgp/shared/entities';
@@ -59,6 +60,11 @@ const VksDepartmentSlotsChart = ({ className }: ChartProps): JSX.Element => {
   const pathname = useLocation().pathname;
   const search = getRouteApi(pathname).useSearch() as VksDashbordPageSearch;
   const navigate = useNavigate({ from: pathname });
+  const i = useVksAbility();
+  const { slotsAvailable: undefined, ...limitedConfig } = chartConfig;
+  const filteredConfig = i.can('read', 'VksEmptySlots')
+    ? chartConfig
+    : limitedConfig;
 
   const { data, isLoading, isFetching } = useVksDepartmentStats(search);
 
@@ -89,7 +95,10 @@ const VksDepartmentSlotsChart = ({ className }: ChartProps): JSX.Element => {
             <Skeleton className="mx-auto h-4 w-44" />
           </div>
         ) : (
-          <ChartContainer config={chartConfig} className="h-full w-full pt-0">
+          <ChartContainer
+            config={filteredConfig}
+            className="h-full w-full pt-0"
+          >
             <BarChart
               accessibilityLayer
               data={data}
@@ -116,12 +125,12 @@ const VksDepartmentSlotsChart = ({ className }: ChartProps): JSX.Element => {
                 axisLine={false}
               />
               {renderRechartsTooltip({
-                config: chartConfig,
+                config: filteredConfig,
                 cursor: true,
                 labelWidth: '14rem',
               })}
               {renderRechartsStackedBar({
-                config: chartConfig,
+                config: filteredConfig,
                 data,
                 onClick: (data, index, status) => {
                   switch (status) {

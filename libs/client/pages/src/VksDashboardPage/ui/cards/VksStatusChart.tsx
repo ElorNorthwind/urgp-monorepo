@@ -16,6 +16,7 @@ import {
   ChartTooltipContent,
   cn,
   Skeleton,
+  useVksAbility,
 } from '@urgp/client/shared';
 import { VksDashbordPageSearch } from '@urgp/shared/entities';
 import { PieChartIcon, Shapes } from 'lucide-react';
@@ -73,6 +74,7 @@ const VksStatusChart = ({ className }: ChartProps): JSX.Element => {
   const pathname = useLocation().pathname;
   const search = getRouteApi(pathname).useSearch() as VksDashbordPageSearch;
   const navigate = useNavigate({ from: pathname });
+  const i = useVksAbility();
 
   const { data, isLoading, isFetching } = useVksStatusStats(search);
 
@@ -80,10 +82,16 @@ const VksStatusChart = ({ className }: ChartProps): JSX.Element => {
     return acc + item.count;
   }, 0);
 
-  const dataWithFill = data?.map((item) => ({
-    ...item,
-    fill: chartConfig[item.status as keyof typeof chartConfig].color,
-  }));
+  const dataWithFill =
+    data
+      ?.map((item) => ({
+        ...item,
+        fill: chartConfig[item.status as keyof typeof chartConfig].color,
+      }))
+      .filter(
+        (item) =>
+          i.can('read', 'VksEmptySlots') || item.status !== 'пустой слот',
+      ) || [];
 
   return (
     <Card className={cn(className)}>
@@ -97,12 +105,12 @@ const VksStatusChart = ({ className }: ChartProps): JSX.Element => {
         </div>
       </CardHeader>
       <CardContent className="relative">
-        <div
+        {/* <div
           className="pointer-events-none absolute bottom-5 left-0 z-20 w-full px-5 text-center text-xl font-extrabold leading-none text-red-500 opacity-40"
           tabIndex={-1}
         >
           Информация о свободных слотах доступна в тестовом режиме
-        </div>
+        </div> */}
         {isLoading ? (
           <div>
             <Skeleton className="mb-2 h-[calc(100%-2rem)] w-full" />

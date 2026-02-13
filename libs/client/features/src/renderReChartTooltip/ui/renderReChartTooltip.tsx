@@ -49,7 +49,7 @@ const renderRechartsTooltip = ({
                   <div
                     className="h-[.75rem] w-[.75rem] rounded"
                     style={{
-                      backgroundColor: item?.color || item?.payload?.fill,
+                      backgroundColor: item.payload?.fill ?? item.color,
                       opacity: value === 0 ? 0.2 : 1,
                     }}
                   />

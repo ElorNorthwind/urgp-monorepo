@@ -6,6 +6,7 @@ type Subject =
   | 'VksCase'
   | 'VksCaseRequest'
   | 'VksCaseDecision'
+  | 'VksEmptySlots'
   | 'unknown'
   | 'all';
 
@@ -36,6 +37,7 @@ export function defineVksAbilityFor(user: User) {
   }
 
   can(['read', 'create'], 'all'); // Все могут читать или создавать все
+  cannot(['read'], 'VksEmptySlots');
 
   return build();
 }

@@ -64,6 +64,13 @@ const VksDailySlotsChart = ({ className }: ChartProps): JSX.Element => {
 
   const { data, isLoading, isFetching } = useVksDailySlotStats(search);
   const weekDays = ['пн', 'вт', 'ср', 'чт', 'пт'];
+  const wdNames = {
+    пн: 'Понедельник',
+    вт: 'Вторник',
+    ср: 'Среда',
+    чт: 'Четверг',
+    пт: 'Пятница',
+  };
 
   return (
     <Card className={cn(className)}>
@@ -90,21 +97,33 @@ const VksDailySlotsChart = ({ className }: ChartProps): JSX.Element => {
             <Skeleton className="mx-auto h-4 w-44" />
           </div>
         ) : (
-          <div className="grid h-full grid-cols-5">
-            {weekDays.map((day) => (
-              <div className="h-full p-2 even:bg-gray-50">
-                <div>{day}</div>
+          <div className={cn('h-full ', 'flex flex-row')}>
+            {['пн', ...weekDays].map((day, i) => (
+              <div
+                className={cn(
+                  'h-full flex-shrink flex-grow-0 p-2 odd:bg-gray-50',
+                  i === 0 ? 'w-[100px]' : 'w-[calc(20%-20px)]',
+                )}
+              >
+                <div className="w-full text-center font-semibold">
+                  {i === 0 ? 'Время' : wdNames[day as keyof typeof wdNames]}
+                </div>
                 <ChartContainer
                   key={'chart-' + day}
                   config={chartConfig}
-                  className=" w-full"
+                  className="w-full"
                   style={{ height: (data?.length || 0) * 0.3 + 2 + 'rem' }}
                 >
                   <BarChart
                     accessibilityLayer
                     data={data?.filter((item) => item.weekday === day)}
                     layout="vertical"
-                    margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
+                    margin={{
+                      top: 0,
+                      right: 0,
+                      left: 0,
+                      bottom: 0,
+                    }}
                     stackOffset="expand"
                   >
                     <CartesianGrid vertical={true} horizontal={false} />
@@ -117,6 +136,7 @@ const VksDailySlotsChart = ({ className }: ChartProps): JSX.Element => {
                       tickMargin={5}
                       width={90}
                       interval={0}
+                      hide={i > 0}
                     />
                     <XAxis
                       type="number"
@@ -129,12 +149,13 @@ const VksDailySlotsChart = ({ className }: ChartProps): JSX.Element => {
                     {renderRechartsTooltip({
                       config: chartConfig,
                       cursor: true,
-                      labelWidth: '12rem',
+                      labelWidth: '11rem',
                     })}
-                    {renderRechartsStackedBar({
-                      config: chartConfig,
-                      data: data?.filter((item) => item.weekday === day),
-                    })}
+                    {i > 0 &&
+                      renderRechartsStackedBar({
+                        config: chartConfig,
+                        data: data?.filter((item) => item.weekday === day),
+                      })}
                   </BarChart>
                 </ChartContainer>
               </div>

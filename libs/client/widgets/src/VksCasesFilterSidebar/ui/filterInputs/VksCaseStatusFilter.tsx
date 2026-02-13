@@ -6,7 +6,7 @@ import {
   vksCaseStatusStyles,
 } from '@urgp/client/entities';
 import { ClassificatorFilter } from '@urgp/client/features';
-import { cn, EquityRoutes } from '@urgp/client/shared';
+import { cn, EquityRoutes, useVksAbility } from '@urgp/client/shared';
 import {
   EquityObjectsPageSearch,
   VksCasesPageSearch,
@@ -30,6 +30,14 @@ const VksCaseStatusFilter = (props: VksCaseStatusFilterProps): JSX.Element => {
   const search = getRouteApi(pathname).useSearch() as VksCasesPageSearch;
   const { data, isLoading, isFetching } = useVksStatusClassificator();
 
+  const i = useVksAbility();
+  const filteredData = i.can('read', 'VksEmptySlots')
+    ? data
+    : data?.map((g) => ({
+        ...g,
+        items: g.items.filter((i) => i.value !== 'пустой слот'),
+      }));
+
   return (
     <ClassificatorFilter<string>
       accordionItemValue={accordionItemValue}
@@ -37,7 +45,7 @@ const VksCaseStatusFilter = (props: VksCaseStatusFilterProps): JSX.Element => {
       className={cn('w-full', className)}
       variant={variant}
       isLoading={isLoading || isFetching}
-      options={data || []}
+      options={filteredData || []}
       valueStyles={vksCaseStatusStyles}
       selectedValues={search.status}
       iconClassName="size-5"

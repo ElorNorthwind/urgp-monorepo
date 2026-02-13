@@ -53,7 +53,7 @@ const LoginForm = ({ className }: LoginMenuProps): JSX.Element => {
 
   const onSetGuest = () => {
     dispatch(clearUser());
-    navigate({ to: '/renovation' });
+    navigate({ to: redirect ? redirect : '/renovation' });
   };
 
   return (

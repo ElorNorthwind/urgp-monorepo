@@ -1,5 +1,5 @@
 import { getRouteApi, useLocation } from '@tanstack/react-router';
-import { ScrollArea, Separator } from '@urgp/client/shared';
+import { ScrollArea, Separator, useVksAbility } from '@urgp/client/shared';
 import {
   VksCasesDateFilter,
   VksCasesResetFilter,
@@ -17,6 +17,7 @@ import { VksDailySlotsChart } from './cards/VksDailySlotsChart';
 const VksDashboardPage = (): JSX.Element => {
   const pathname = useLocation().pathname;
   const search = getRouteApi(pathname).useSearch() as VksDashbordPageSearch;
+  const i = useVksAbility();
 
   return (
     <ScrollArea className="bg-muted-foreground/5 h-screen w-full">
@@ -53,7 +54,7 @@ const VksDashboardPage = (): JSX.Element => {
           {search?.department && search.department.length > 0 && (
             <VksServiceChart className="" />
           )}
-          <VksDailySlotsChart />
+          {i.can('read', 'VksEmptySlots') && <VksDailySlotsChart />}
         </div>
       </div>
     </ScrollArea>
