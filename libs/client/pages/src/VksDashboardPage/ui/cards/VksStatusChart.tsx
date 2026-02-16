@@ -19,6 +19,7 @@ import {
   useVksAbility,
 } from '@urgp/client/shared';
 import { VksDashbordPageSearch } from '@urgp/shared/entities';
+import { format, subDays } from 'date-fns';
 import { PieChartIcon, Shapes } from 'lucide-react';
 import {
   BarChart,
@@ -75,8 +76,12 @@ const VksStatusChart = ({ className }: ChartProps): JSX.Element => {
   const search = getRouteApi(pathname).useSearch() as VksDashbordPageSearch;
   const navigate = useNavigate({ from: pathname });
   const i = useVksAbility();
-
-  const { data, isLoading, isFetching } = useVksStatusStats(search);
+  const datedSearch = {
+    dateFrom: search?.dateFrom || format(subDays(new Date(), 30), 'yyyy-MM-dd'),
+    dateTo: search?.dateTo || format(new Date(), 'yyyy-MM-dd'),
+    department: search?.department,
+  };
+  const { data, isLoading, isFetching } = useVksStatusStats(datedSearch);
 
   const totalConsultations = data?.reduce((acc, item) => {
     return acc + item.count;
@@ -179,6 +184,8 @@ const VksStatusChart = ({ className }: ChartProps): JSX.Element => {
                           </tspan>
                         </text>
                       );
+                    } else {
+                      return null;
                     }
                   }}
                 />

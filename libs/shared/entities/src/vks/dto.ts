@@ -131,6 +131,9 @@ export const vksDashbordPageSearchSchema = z.object({
     .or(z.string().regex(/\d{4}\-\d{2}\-\d{2}/))
     .or(z.literal('-infinity'))
     .default(format(new Date(), 'yyyy-MM-dd')),
+
+  // dateFrom: vksCasesQuerySchema.shape.dateFrom,
+  // dateTo: vksCasesQuerySchema.shape.dateTo,
 });
 export type VksDashbordPageSearch = z.infer<typeof vksDashbordPageSearchSchema>;
 

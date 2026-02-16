@@ -17,6 +17,7 @@ import {
   VksServiceStat,
   VksStatusStat,
   VksTimelinePoint,
+  VksUserStats,
 } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 import { vks } from './sql/sql';
@@ -408,9 +409,21 @@ SET (
   getVksDailySlotStats(q: VksDashbordPageSearch): Promise<VksDailySlotStats[]> {
     const conditions =
       q.department && q.department.length > 0
-        ? `AND d.id IN (${q.department.join(',')})`
+        ? `AND s.department_id IN (${q.department.join(',')})`
         : '';
     return this.db.any(vks.readVksDailySlotStats, {
+      conditions,
+      dateFrom: q?.dateFrom || '-infinity',
+      dateTo: q?.dateTo || 'infinity',
+    });
+  }
+
+  getVksUserStats(q: VksDashbordPageSearch): Promise<VksUserStats[]> {
+    const conditions =
+      q.department && q.department.length > 0
+        ? `AND s.department_id IN (${q.department.join(',')})`
+        : '';
+    return this.db.any(vks.readVksUserStats, {
       conditions,
       dateFrom: q?.dateFrom || '-infinity',
       dateTo: q?.dateTo || 'infinity',

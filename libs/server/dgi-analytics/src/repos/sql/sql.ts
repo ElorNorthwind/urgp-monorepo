@@ -20,4 +20,5 @@ export const vks = {
   readVksServiceStats: sql('sql/vks/readVksServiceStats.sql'),
   addVksEmptySlots: sql('sql/vks/addVksEmptySlots.sql'),
   readVksDailySlotStats: sql('sql/vks/readVksDailySlotStats.sql'),
+  readVksUserStats: sql('sql/vks/readVksUserStats.sql'),
 };

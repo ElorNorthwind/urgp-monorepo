@@ -16,6 +16,7 @@ type ExportToExcelButtonProps = {
   className?: string;
   fileName?: string;
   disabled?: boolean;
+  label?: string;
 } & VariantProps<typeof buttonVariants>;
 
 const ExportToExcelButton = forwardRef<
@@ -29,6 +30,7 @@ const ExportToExcelButton = forwardRef<
     variant = 'outline',
     disabled,
     fileName = 'Выгрузка',
+    label,
   } = props;
 
   const onClick = () => {
@@ -48,6 +50,7 @@ const ExportToExcelButton = forwardRef<
           className={cn('flex flex-shrink-0 flex-row gap-1', className)}
         >
           <FileSpreadsheet className="size-5 flex-shrink-0" />
+          {label && <span>{label}</span>}
         </Button>
       </TooltipTrigger>
       <TooltipContent>Экспортировать в Excel</TooltipContent>

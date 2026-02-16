@@ -4,6 +4,8 @@ import {
   FilterFn,
   flexRender,
   getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
   getFilteredRowModel,
   getSortedRowModel,
   InitialTableState,
@@ -58,6 +60,7 @@ interface VirtualDataTableProps<TData, TValue> {
   setAllRows?: Dispatch<Row<TData>[]> | undefined;
   columnVisibility?: VisibilityState;
   autofocus?: boolean;
+  faceted?: boolean;
   // onColumnVisibilityChange?: Dispatch<VisibilityState> | undefined;
 }
 
@@ -87,6 +90,8 @@ export function VirtualDataTable<TData, TValue>({
   setAllRows,
   columnVisibility,
   autofocus = false,
+  faceted = false,
+
   // onColumnVisibilityChange,
 }: VirtualDataTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
@@ -99,6 +104,9 @@ export function VirtualDataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: clientSide ? getSortedRowModel() : undefined,
     getFilteredRowModel: clientSide ? getFilteredRowModel() : undefined,
+    getFacetedRowModel: faceted ? getFacetedRowModel() : undefined,
+    getFacetedMinMaxValues: faceted ? getFacetedMinMaxValues() : undefined,
+
     // onColumnVisibilityChange: onColumnVisibilityChange
     //   ? onColumnVisibilityChange
     //   : undefined,
@@ -247,9 +255,9 @@ export function VirtualDataTable<TData, TValue>({
                           className={cn(
                             'text-primary/60 group-hover:text-primary mr-[-1.5rem] h-6 w-6 -translate-x-[80%] transition-transform',
                             header.column.getIsSorted() === 'asc'
-                              ? 'rotate-180 scale-100'
+                              ? 'scale-100'
                               : header.column.getIsSorted() === 'desc'
-                                ? 'scale-100'
+                                ? 'rotate-180 scale-100'
                                 : 'text-muted-foreground/40 scale-0',
                           )}
                         />

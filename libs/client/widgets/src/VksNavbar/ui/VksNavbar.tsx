@@ -1,5 +1,5 @@
 import { TooltipPortal, TooltipProvider } from '@radix-ui/react-tooltip';
-import { useRouterState } from '@tanstack/react-router';
+import { Link, useRouterState } from '@tanstack/react-router';
 import {
   Button,
   buttonVariants,
@@ -15,6 +15,7 @@ import {
   TooltipContent,
   TooltipTrigger,
   useIsMobile,
+  useVksAbility,
 } from '@urgp/client/shared';
 import { MapPinned, Menu } from 'lucide-react';
 import { ControlUserMenu } from '../../ControlUserMenu';
@@ -22,8 +23,8 @@ import { items } from '../config/items';
 
 const VksNavbar = (): JSX.Element => {
   const router = useRouterState();
-
   const isMobile = useIsMobile();
+  const i = useVksAbility();
 
   if (isMobile) {
     return (
@@ -89,26 +90,35 @@ const VksNavbar = (): JSX.Element => {
           } as React.CSSProperties
         }
       >
-        {items.map((item, index) => (
-          <Tooltip key={item.url + index}>
-            <TooltipTrigger asChild>
-              <a
-                className={cn(
-                  buttonVariants({ variant: 'ghost' }),
-                  'text-muted-foreground flex size-9 p-0',
-                  router.location.pathname === item.url &&
-                    'bg-muted-foreground/10 text-sidebar-foreground pointer-events-none cursor-auto',
-                )}
-                href={item.url}
-              >
-                <item.icon />
-              </a>
-            </TooltipTrigger>
-            <TooltipPortal>
-              <TooltipContent side="right">{item.title}</TooltipContent>
-            </TooltipPortal>
-          </Tooltip>
-        ))}
+        {items.map((item, index) => {
+          if (item?.departmentLocked && i.cannot('read', 'VksEmptySlots'))
+            return null;
+
+          return (
+            <Tooltip key={item.url + index}>
+              <TooltipTrigger asChild>
+                <Link
+                  className={cn(
+                    buttonVariants({ variant: 'ghost' }),
+                    'text-muted-foreground flex size-9 p-0',
+                    router.location.pathname === item.url &&
+                      'bg-muted-foreground/10 text-sidebar-foreground pointer-events-none cursor-auto',
+                  )}
+                  to={item.url}
+                  search={{
+                    ...item?.search,
+                    department: item?.departmentLocked ? [1] : undefined,
+                  }}
+                >
+                  <item.icon />
+                </Link>
+              </TooltipTrigger>
+              <TooltipPortal>
+                <TooltipContent side="right">{item.title}</TooltipContent>
+              </TooltipPortal>
+            </Tooltip>
+          );
+        })}
         <ControlUserMenu className="mt-auto" />
       </nav>
     </TooltipProvider>

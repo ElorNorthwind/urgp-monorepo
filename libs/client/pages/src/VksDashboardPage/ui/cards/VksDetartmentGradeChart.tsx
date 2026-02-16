@@ -24,7 +24,7 @@ import {
 } from '@urgp/client/shared';
 import { VksDepartmentFilter } from '@urgp/client/widgets';
 import { VksDashbordPageSearch } from '@urgp/shared/entities';
-import { format } from 'date-fns';
+import { format, subDays } from 'date-fns';
 import { CalendarCheck, ChartBarBig, Star } from 'lucide-react';
 import {
   Area,
@@ -52,8 +52,13 @@ const VksDepartmentGradeChart = ({ className }: ChartProps): JSX.Element => {
   const pathname = useLocation().pathname;
   const search = getRouteApi(pathname).useSearch() as VksDashbordPageSearch;
   const navigate = useNavigate({ from: pathname });
+  const datedSearch = {
+    dateFrom: search?.dateFrom || format(subDays(new Date(), 30), 'yyyy-MM-dd'),
+    dateTo: search?.dateTo || format(new Date(), 'yyyy-MM-dd'),
+    department: search?.department,
+  };
 
-  const { data, isLoading, isFetching } = useVksDepartmentStats(search);
+  const { data, isLoading, isFetching } = useVksDepartmentStats(datedSearch);
 
   // const monthPercenage =
   //   differenceInDays(new Date(), startOfMonth(new Date())) / 30;

@@ -357,6 +357,21 @@ const vksDailySlotStatsSchema = z.object({
 });
 export type VksDailySlotStats = z.infer<typeof vksDailySlotStatsSchema>;
 
+const vksUserStatsSchema = z.object({
+  operator: z.string(),
+  total: z.number().int().nonnegative(),
+  g1: z.number().int().nonnegative(),
+  g2: z.number().int().nonnegative(),
+  g3: z.number().int().nonnegative(),
+  g4: z.number().int().nonnegative(),
+  g5: z.number().int().nonnegative(),
+  graded: z.number().nonnegative(),
+  grade: z.number().nonnegative(),
+  wd: z.number().int().nonnegative(),
+  load: z.number().nonnegative(),
+});
+export type VksUserStats = z.infer<typeof vksUserStatsSchema>;
+
 export const vksServiceStatSchema = vksStatSchema.extend({
   service: z.string(),
   name: z.string(),

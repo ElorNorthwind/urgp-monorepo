@@ -41,6 +41,7 @@ export * from './ui/components/alert-dialog';
 export * from './ui/components/date-input';
 export * from './ui/components/toggle';
 export * from './ui/components/toggle-group';
+export * from './ui/components/progress-circle';
 
 // export layouts
 export * from './ui/layouts/main';

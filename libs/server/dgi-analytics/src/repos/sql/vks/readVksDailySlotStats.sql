@@ -39,7 +39,6 @@ WITH weekdays(wd, name) AS (
     FROM vks.cases c
     LEFT JOIN vks.services s ON c.service_id = s.id
     LEFT JOIN dm.calendar ca ON c.date = ca.date
-	LEFT JOIN vks.departments d ON s.department_id = d.id
 	WHERE c.date BETWEEN ${dateFrom}::date AND ${dateTo}::date
 	${conditions:raw}
     GROUP BY 

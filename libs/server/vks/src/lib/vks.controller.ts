@@ -36,6 +36,7 @@ import {
   VksStatusStat,
   VksTimelinePoint,
   vksUpdateQueryReturnValue,
+  VksUserStats,
 } from '@urgp/shared/entities';
 import { VksService } from './vks.service';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
@@ -183,6 +184,16 @@ export class VksController {
   ): Promise<VksDailySlotStats[]> {
     if (!q) throw new BadRequestException('Не указаны данные запроса');
     return this.vks.ReadVksDailySlotStats(q);
+  }
+
+  @UsePipes(new ZodValidationPipe(vksDashbordPageSearchSchema))
+  @Get('charts/user-stats')
+  getVksUserStats(
+    @Query()
+    q?: VksDashbordPageSearch,
+  ): Promise<VksUserStats[]> {
+    if (!q) throw new BadRequestException('Не указаны данные запроса');
+    return this.vks.ReadVksUserStats(q);
   }
 
   @UsePipes(new ZodValidationPipe(vksDashbordPageSearchSchema))

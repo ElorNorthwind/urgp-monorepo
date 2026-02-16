@@ -12,6 +12,7 @@ import {
   VksServiceStat,
   VksStatusStat,
   VksTimelinePoint,
+  VksUserStats,
 } from '@urgp/shared/entities';
 
 export const vksApi = rtkApi.injectEndpoints({
@@ -152,6 +153,17 @@ export const vksApi = rtkApi.injectEndpoints({
       providesTags: ['vks-classificator'],
     }),
 
+    getVksUserStats: build.query<VksUserStats[], VksDashbordPageSearch | void>({
+      query: (q) => ({
+        url: `/vks/charts/user-stats`,
+        method: 'GET',
+        params: {
+          ...q,
+        },
+      }),
+      providesTags: ['vks-classificator'],
+    }),
+
     getVksServiceStats: build.query<
       VksServiceStat[],
       VksDashbordPageSearch | void
@@ -200,6 +212,7 @@ export const {
   useGetVksDepartmentStatsQuery: useVksDepartmentStats,
   useGetVksServiceStatsQuery: useVksServiceStats,
   useGetVksDailySlotStatsQuery: useVksDailySlotStats,
+  useGetVksUserStatsQuery: useVksUserStats,
 
   useUpdateIsTechnicalMutation: useUpdateIsTechnical,
 } = vksApi;

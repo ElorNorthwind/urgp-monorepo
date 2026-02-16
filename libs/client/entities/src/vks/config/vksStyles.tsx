@@ -150,14 +150,17 @@ export const vksCaseStatusStyles = {
   забронировано: {
     icon: CircleEllipsis,
     iconStyle: cn('text-sky-500'),
+    badgeStyle: cn('bg-sky-300'),
   },
   обслужен: {
     icon: CircleCheck,
     iconStyle: cn('text-green-500'),
+    badgeStyle: cn('bg-green-300'),
   },
   'не явился по вызову': {
     icon: CircleMinus,
     iconStyle: cn('text-orange-500'),
+    badgeStyle: cn('bg-orange-300'),
   },
   'отменено ОИВ': {
     icon: CircleSlash,
@@ -174,6 +177,7 @@ export const vksCaseStatusStyles = {
   'пустой слот': {
     icon: CircleFadingPlus,
     iconStyle: cn('text-gray-500'),
+    badgeStyle: cn('bg-gray-300'),
   },
 };
 

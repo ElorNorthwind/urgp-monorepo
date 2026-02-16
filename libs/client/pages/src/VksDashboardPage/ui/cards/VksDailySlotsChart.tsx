@@ -25,7 +25,7 @@ import {
 } from '@urgp/client/shared';
 import { VksDepartmentFilter } from '@urgp/client/widgets';
 import { VksDashbordPageSearch } from '@urgp/shared/entities';
-import { format } from 'date-fns';
+import { format, subDays } from 'date-fns';
 import { CalendarCheck, CalendarRange, ChartBarBig } from 'lucide-react';
 import {
   Area,
@@ -62,7 +62,13 @@ const VksDailySlotsChart = ({ className }: ChartProps): JSX.Element => {
   const search = getRouteApi(pathname).useSearch() as VksDashbordPageSearch;
   // const navigate = useNavigate({ from: pathname });
 
-  const { data, isLoading, isFetching } = useVksDailySlotStats(search);
+  const datedSearch = {
+    dateFrom: search?.dateFrom || format(subDays(new Date(), 30), 'yyyy-MM-dd'),
+    dateTo: search?.dateTo || format(new Date(), 'yyyy-MM-dd'),
+    department: search?.department,
+  };
+  const { data, isLoading, isFetching } = useVksDailySlotStats(datedSearch);
+
   const weekDays = ['пн', 'вт', 'ср', 'чт', 'пт'];
   const wdNames = {
     пн: 'Понедельник',

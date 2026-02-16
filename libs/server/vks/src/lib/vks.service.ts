@@ -28,6 +28,7 @@ import {
   VksStatusStat,
   VkaSetIsTechnical,
   VksDailySlotStats,
+  VksUserStats,
 } from '@urgp/shared/entities';
 import { AxiosRequestConfig } from 'axios';
 import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
@@ -428,5 +429,11 @@ export class VksService {
     q: VksDashbordPageSearch,
   ): Promise<VksServiceStat[]> {
     return this.dgiAnalytics.db.vks.getVksServiceStats(q);
+  }
+
+  public async ReadVksUserStats(
+    q: VksDashbordPageSearch,
+  ): Promise<VksUserStats[]> {
+    return this.dgiAnalytics.db.vks.getVksUserStats(q);
   }
 }

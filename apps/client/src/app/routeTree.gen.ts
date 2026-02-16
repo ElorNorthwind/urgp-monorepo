@@ -28,6 +28,7 @@ import { Route as RenovationIndexImport } from './routes/renovation/index'
 import { Route as EquityIndexImport } from './routes/equity/index'
 import { Route as ControlIndexImport } from './routes/control/index'
 import { Route as AddressIndexImport } from './routes/address/index'
+import { Route as VksReportImport } from './routes/vks/report'
 import { Route as VksCasesImport } from './routes/vks/cases'
 import { Route as RenovationStagesImport } from './routes/renovation/stages'
 import { Route as RenovationSpecialapartmentsImport } from './routes/renovation/specialapartments'
@@ -177,6 +178,12 @@ const AddressIndexRoute = AddressIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AddressRouteRoute,
+} as any)
+
+const VksReportRoute = VksReportImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => VksRouteRoute,
 } as any)
 
 const VksCasesRoute = VksCasesImport.update({
@@ -575,6 +582,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VksCasesImport
       parentRoute: typeof VksRouteImport
     }
+    '/vks/report': {
+      id: '/vks/report'
+      path: '/report'
+      fullPath: '/vks/report'
+      preLoaderRoute: typeof VksReportImport
+      parentRoute: typeof VksRouteImport
+    }
     '/address/': {
       id: '/address/'
       path: '/'
@@ -818,11 +832,13 @@ const RenovationRouteRouteWithChildren = RenovationRouteRoute._addFileChildren(
 
 interface VksRouteRouteChildren {
   VksCasesRoute: typeof VksCasesRoute
+  VksReportRoute: typeof VksReportRoute
   VksIndexRoute: typeof VksIndexRoute
 }
 
 const VksRouteRouteChildren: VksRouteRouteChildren = {
   VksCasesRoute: VksCasesRoute,
+  VksReportRoute: VksReportRoute,
   VksIndexRoute: VksIndexRoute,
 }
 
@@ -874,6 +890,7 @@ export interface FileRoutesByFullPath {
   '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute
   '/renovation/stages': typeof RenovationStagesRoute
   '/vks/cases': typeof VksCasesRoute
+  '/vks/report': typeof VksReportRoute
   '/address/': typeof AddressIndexRoute
   '/control/': typeof ControlIndexRoute
   '/equity/': typeof EquityIndexRoute
@@ -914,6 +931,7 @@ export interface FileRoutesByTo {
   '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute
   '/renovation/stages': typeof RenovationStagesRoute
   '/vks/cases': typeof VksCasesRoute
+  '/vks/report': typeof VksReportRoute
   '/address': typeof AddressIndexRoute
   '/control': typeof ControlIndexRoute
   '/equity': typeof EquityIndexRoute
@@ -964,6 +982,7 @@ export interface FileRoutesById {
   '/renovation/specialapartments': typeof RenovationSpecialapartmentsRoute
   '/renovation/stages': typeof RenovationStagesRoute
   '/vks/cases': typeof VksCasesRoute
+  '/vks/report': typeof VksReportRoute
   '/address/': typeof AddressIndexRoute
   '/control/': typeof ControlIndexRoute
   '/equity/': typeof EquityIndexRoute
@@ -1015,6 +1034,7 @@ export interface FileRouteTypes {
     | '/renovation/specialapartments'
     | '/renovation/stages'
     | '/vks/cases'
+    | '/vks/report'
     | '/address/'
     | '/control/'
     | '/equity/'
@@ -1054,6 +1074,7 @@ export interface FileRouteTypes {
     | '/renovation/specialapartments'
     | '/renovation/stages'
     | '/vks/cases'
+    | '/vks/report'
     | '/address'
     | '/control'
     | '/equity'
@@ -1102,6 +1123,7 @@ export interface FileRouteTypes {
     | '/renovation/specialapartments'
     | '/renovation/stages'
     | '/vks/cases'
+    | '/vks/report'
     | '/address/'
     | '/control/'
     | '/equity/'
@@ -1225,6 +1247,7 @@ export const routeTree = rootRoute
       "filePath": "vks/route.tsx",
       "children": [
         "/vks/cases",
+        "/vks/report",
         "/vks/"
       ]
     },
@@ -1337,6 +1360,10 @@ export const routeTree = rootRoute
     },
     "/vks/cases": {
       "filePath": "vks/cases.tsx",
+      "parent": "/vks"
+    },
+    "/vks/report": {
+      "filePath": "vks/report.tsx",
       "parent": "/vks"
     },
     "/address/": {
