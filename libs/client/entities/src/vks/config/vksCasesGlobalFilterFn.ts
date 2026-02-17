@@ -17,8 +17,11 @@ export function vksCasesGlobalFilterFn(
     operatorSurvey,
   } = filterValue;
 
+  const clientId = query && query?.match(/^Клиент:\[(\d+)\]/)?.[1];
+
   if (
     query &&
+    !clientId &&
     !(
       (row.original?.clientFio || '') +
       (row.original?.bookingCode || '') +
@@ -29,6 +32,10 @@ export function vksCasesGlobalFilterFn(
       .replace('ё', 'е')
       .includes(query.toLowerCase().replace('ё', 'е'))
   ) {
+    return false;
+  }
+
+  if (clientId && !((row.original?.clientId || '0') === clientId)) {
     return false;
   }
 

@@ -3,7 +3,7 @@ import { VksCase, VksUserStats } from '@urgp/shared/entities';
 import { VksUserGradeCell } from './cells/VksUserGradeCell';
 import { VksUserConversionCell } from './cells/VksUserConversionCell';
 import { VksUserWorkloadCell } from './cells/VksUserWorkloadCell';
-import { VksUserLinkCell } from './cells/VksUserLink';
+import { VksUserLinkCell } from './cells/VksUserLinkCell';
 
 const columnHelper = createColumnHelper<VksUserStats>();
 

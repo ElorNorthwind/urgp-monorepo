@@ -85,6 +85,7 @@ export const vksCasesPageFilterSchema = z
     status: queryStringArray,
     type: queryStringArray,
     operatorSurvey: queryNumberArray,
+    // clientId: z.coerce.number().int().nonnegative(),
   })
   .partial();
 export type VksCasesPageFilter = z.infer<typeof vksCasesPageFilterSchema>;

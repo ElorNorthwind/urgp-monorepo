@@ -1,4 +1,6 @@
 import {
+  Badge,
+  Button,
   cn,
   Tooltip,
   TooltipContent,
@@ -6,7 +8,7 @@ import {
   useUserAbility,
   useVksAbility,
 } from '@urgp/client/shared';
-import { VksCaseDetails } from '@urgp/shared/entities';
+import { VksCaseDetails, VksCasesPageSearch } from '@urgp/shared/entities';
 
 import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 import { CardTab } from '@urgp/client/features';
@@ -19,6 +21,9 @@ import {
   vksCaseStatusStyles,
 } from '@urgp/client/entities';
 import { ExternalLink, Star } from 'lucide-react';
+import { useLocation, useNavigate } from '@tanstack/react-router';
+import { date } from 'zod';
+import { format } from 'date-fns';
 // import {
 //   bookingSourceStyles,
 //   clientTypeStyles,
@@ -46,6 +51,9 @@ const VksCaseInfoTab = (props: VksCaseInfoTabProps): JSX.Element | null => {
     contentClassName,
     accordionItemName,
   } = props;
+
+  const pathname = useLocation().pathname;
+  const navigate = useNavigate({ from: pathname });
 
   if (!entity) return null;
 
@@ -260,6 +268,26 @@ const VksCaseInfoTab = (props: VksCaseInfoTabProps): JSX.Element | null => {
             </TooltipContent>
           </TooltipPortal>
         </Tooltip>
+        {entity?.consultCount && entity?.consultCount > 1 ? (
+          <Button
+            variant={'default'}
+            className="h-6 rounded-full"
+            role="button"
+            onClick={() => {
+              navigate({
+                to: pathname,
+                search: (prev: VksCasesPageSearch) => ({
+                  // ...prev,
+                  query: 'Клиент:[' + entity.clientId + ']',
+                  dateFrom: format(entity.firstConsultAt, 'yyyy-MM-dd'),
+                  dateTo: format(new Date(), 'yyyy-MM-dd'),
+                }),
+              });
+            }}
+          >
+            {`Еще обращений: ${entity.consultCount - 1}`}
+          </Button>
+        ) : null}
       </div>
 
       <div className="bg-muted-foreground/5 border-b border-r px-2 py-1 text-right font-bold">

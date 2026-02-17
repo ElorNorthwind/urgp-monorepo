@@ -56,7 +56,9 @@ CREATE OR REPLACE VIEW vks.cases_slim_view  AS
         s.display_name as "serviceFullName",
         c.operator_survey_date as "operatorSurveyDate",
         c.client_survey_date as "clientSurveyDate",
-        c.case_type as "caseType"
+        c.case_type as "caseType",
+        cl.consult_count as "consultCount",
+        cl.first_consult_at as "firstConsultAt"
 
     FROM vks.cases c
     LEFT JOIN vks.clients cl ON cl.id = c.client_id
@@ -176,8 +178,9 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
 		s.display_name as "serviceFullName",
 		d.full_name as "departmentFullName",
 		z.full_name as "zamFullName",
-        c.case_type as "caseType"
-        
+        c.case_type as "caseType",
+        cl.consult_count as "consultCount",
+        cl.first_consult_at as "firstConsultAt"
 		-- COALESCE(COALESCE(c.client_survey_comment_positive, '') || COALESCE(c.client_survey_comment_negative, ''), c.online_grade_comment) as "gradeComment"
 		
 

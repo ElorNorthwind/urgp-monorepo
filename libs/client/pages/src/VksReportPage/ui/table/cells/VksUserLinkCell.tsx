@@ -19,11 +19,16 @@ function VksUserLinkCell(
       )}
       to={baseUrl}
       search={{
-        operator: rowData?.operator,
+        operator:
+          rowData?.operator && rowData?.operator !== 'Не заполнена анкета'
+            ? rowData?.operator
+            : undefined,
         status: ['обслужен', 'не явился по вызову'],
         dateFrom: search?.dateFrom,
         dateTo: search?.dateTo,
         department: search?.department,
+        operatorSurvey:
+          rowData?.operator === 'Не заполнена анкета' ? [0] : undefined,
       }}
     >
       <span>{rowData?.operator}</span>

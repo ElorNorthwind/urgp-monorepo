@@ -247,6 +247,8 @@ export const vksCaseSchema = z.object({
   clientSurveyDate: z.string().datetime().nullable(), // ISO 8601 date string
 
   caseType: z.string(),
+  consultCount: z.number().int().nonnegative(),
+  firstConsultAt: z.string().datetime(),
 });
 export type VksCase = z.infer<typeof vksCaseSchema>;
 

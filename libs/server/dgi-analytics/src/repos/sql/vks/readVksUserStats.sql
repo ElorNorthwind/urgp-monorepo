@@ -3,6 +3,7 @@ SELECT
  COUNT(*) as days
 FROM dm.calendar
  WHERE date BETWEEN ${dateFrom}::date AND ${dateTo}::date
+ AND is_workday
 )
 
 SELECT 

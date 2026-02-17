@@ -168,7 +168,8 @@ CREATE TABLE vks.clients
             ELSE INITCAP(surname || ' ' || COALESCE(first_name || ' ', '') || COALESCE(last_name || ' ', ''))
         END
     ) STORED,
-
+    consult_count INTEGER NOT NULL DEFAULT 1,
+    first_consult_at DATE NOT NULL DEFAULT CURRENT_DATE,
     PRIMARY KEY (id),
 );
 -- ALTER TABLE vks.clients
