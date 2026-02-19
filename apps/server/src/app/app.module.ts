@@ -22,11 +22,11 @@ import { SudirModule } from '@urgp/server/sudir';
 import { TelegramModule } from '@urgp/server/telegram';
 import { ClsModule } from 'nestjs-cls';
 import { DgiAnalyticsModule } from '@urgp/server/dgi-analytics';
-import { DmModule } from '@urgp/server/dm';
 import { DtwModule } from '@urgp/server/dtw';
 import { LettersModule } from '@urgp/server/letters';
 import { DsaDgiModule } from '@urgp/server/dsa-dgi';
 import { EdoModule } from '@urgp/server/edo';
+import { EmailModule } from '@urgp/server/email';
 
 @Module({
   // dot env files
@@ -73,6 +73,8 @@ import { EdoModule } from '@urgp/server/edo';
     DtwModule,
     LettersModule,
     EdoModule,
+
+    EmailModule,
   ],
 })
 export class AppModule {}
