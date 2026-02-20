@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { AnketologSurveyTypes } from './config';
 import { format, subDays } from 'date-fns';
+import { report } from 'process';
 
 // Параметры поиска на странице
 const queryNumberArray = z
@@ -143,3 +144,25 @@ export const vkaSetIsTechnicalSchema = z.object({
   value: z.boolean().nullable(),
 });
 export type VkaSetIsTechnical = z.infer<typeof vkaSetIsTechnicalSchema>;
+
+export const hotlineRequestSchema = z
+  .object({
+    dateFrom: z
+      .string()
+      .regex(/\d{2}.\d{2}.\d{4}/, {
+        message: 'Некорректная дата. Нужен формат дд.мм.гггг',
+      })
+      .default(format(subDays(new Date(), 1), 'dd.MM.yyyy')),
+    dateTo: z
+      .string()
+      .regex(/\d{2}.\d{2}.\d{4}/, {
+        message: 'Некорректная дата. Нужен формат дд.мм.гггг',
+      })
+      .default(format(new Date(), 'dd.MM.yyyy')),
+    page: z.number().int().nonnegative().default(1),
+    reportType: z
+      .enum(['hotline', 'hotline_score', 'outbound'])
+      .default('hotline'),
+  })
+  .default({});
+export type HotlineRequest = z.input<typeof hotlineRequestSchema>;

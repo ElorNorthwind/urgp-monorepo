@@ -507,6 +507,15 @@ export const OUTBOUND_REPORT_DATA = {
   // token: '8nf929vm29jb5thqls5gprtvsd',
 };
 
+export const reportFields: Record<
+  'hotline' | 'hotline_score' | 'outbound',
+  any
+> = {
+  hotline: HOTLINE_REPORT_DATA,
+  hotline_score: HOTLINE_SCORE_REPORT_DATA,
+  outbound: OUTBOUND_REPORT_DATA,
+};
+
 // curl 'https://reports.teletribe.ru/rs/backend/auth.php' \
 //   -H 'Accept: application/json, text/plain, */*' \
 //   -H 'Accept-Language: ru-RU,ru;q=0.9' \

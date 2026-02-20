@@ -5,8 +5,8 @@ import { TeletribeService } from './teletribe.service';
 export class TeletribeController {
   constructor(private readonly teletribe: TeletribeService) {}
 
-  @Get('first')
+  @Get('report')
   Connect(): Promise<any> {
-    return this.teletribe.testAuth();
+    return this.teletribe.getHotlineReport({ reportType: 'hotline_score' });
   }
 }
