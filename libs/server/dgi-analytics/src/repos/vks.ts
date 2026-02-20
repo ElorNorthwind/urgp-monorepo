@@ -80,7 +80,7 @@ export class VksRepository {
       { name: 'deputy_fio', prop: 'deputyFio' },
       { name: 'phone', prop: 'phone' },
       { name: 'email', prop: 'email' },
-      { name: 'tiken_num', prop: 'tikenNum' },
+      { name: 'tiken_num', prop: 'tiketNum' },
       {
         name: 'tiket_call_time',
         prop: 'tiketCallTime',

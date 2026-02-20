@@ -27,6 +27,7 @@ import { LettersModule } from '@urgp/server/letters';
 import { DsaDgiModule } from '@urgp/server/dsa-dgi';
 import { EdoModule } from '@urgp/server/edo';
 import { EmailModule } from '@urgp/server/email';
+import { TeletribeModule } from '@urgp/server/teletribe';
 
 @Module({
   // dot env files
@@ -75,6 +76,7 @@ import { EmailModule } from '@urgp/server/email';
     EdoModule,
 
     EmailModule,
+    TeletribeModule,
   ],
 })
 export class AppModule {}

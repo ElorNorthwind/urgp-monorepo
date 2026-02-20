@@ -4,23 +4,8 @@ import {
   getAdditionalField,
 } from './getAdditionalField';
 import { transformEmptyToNull } from './transformEmptyToNull';
-import { Logger } from '@nestjs/common';
 
 export function formatBookingRecord(r: RawBookingRecord): BookingRecord {
-  // if (r?.['Код бронирования'] === '0539-6792352') {
-  //   Logger.debug(r?.['Дополнительные поля']);
-  //   Logger.debug(
-  //     getAdditionalField(
-  //       r?.['Дополнительные поля'],
-  //       booringReportAdditionalFields.onlineGrade as keyof typeof booringReportAdditionalFields,
-  //     ),
-  //   );
-  // }
-
-  // if (r?.['Код бронирования'] === '0539-3608750') {
-  //   Logger.log(r?.['Дополнительные поля']);
-  // }
-
   return transformEmptyToNull({
     org: r?.['Отделение'],
     date: r?.['Дата записи'],
@@ -37,7 +22,7 @@ export function formatBookingRecord(r: RawBookingRecord): BookingRecord {
     bookingSource: r?.['Запись произведена'],
     bookingResource: r?.['Ресурс предварительной записи'],
 
-    tikenNum: r?.['Номер талона'],
+    tiketNum: r?.['Номер талона'],
     tiketCallTime: r?.['Время вызова талона'],
     tiketCancelUserTime: r?.['Время отмены записи пользователем'],
     tiketCancelOivTime: r?.['Время отмены записи ОИВ'],

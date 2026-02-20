@@ -141,7 +141,7 @@ const bookingRecordSchema = z.object({
   deputyFio: z.string().nullable(),
   phone: z.string().nullable(),
   email: z.string().nullable(),
-  tikenNum: z.string().nullable(),
+  tiketNum: z.string().nullable(),
   tiketCallTime: z.string().nullable(),
   tiketCancelUserTime: z.string().nullable(),
   tiketCancelOivTime: z.string().nullable(),
@@ -379,3 +379,39 @@ export const vksServiceStatSchema = vksStatSchema.extend({
   name: z.string(),
 });
 export type VksServiceStat = z.infer<typeof vksServiceStatSchema>;
+
+export type RawTeletribeRecord = {
+  SESSION_ID: string; // ID звонка
+  ABONENT: string; // АОН
+  DST: string; // Номер телефона
+  CALL_DATE: string; // Дата поступления звонка в КЦ
+  CALL_TIME: string; // Время поступления звонка в КЦ
+  SPEAKINGTIME_OP: string; // Длительность разговора, сек
+  WAITTIME: string; // Длительность ожидания в очереди, сек
+  CNT_HOLD_ALL: string; // Кол-во постановок на HOLD
+  HOLD_TIME: string; // Общее время HOLD, сек
+  OP_LOGIN: string; // Логин оператора
+  FIO_OP: string; // ФИО оператора
+  FIO: string; // Имя
+  TEMA_VOPROSA: string; // Тема вопроса
+  CLIENT_SKR: string; // Клиент
+  REG: string; // Адрес регистрации по м/ж
+  MSC: string; // Отношения с Москвой (№ учетного дела/договора
+  QUEST: string; // По содержанию какого документа вопрос
+  DATE_DOC: string; // Дата документа
+  NUM_DOC: string; // Номер документа
+  UPR: string; // Управление
+  Q_111: string; // Откуда узнали о Горячей Линии ДГИ
+  OP_VOP: string; // Описание вопроса
+  HAR_VOP: string; // Характер вопроса
+  PER_DAN: string; // Вопрос требует разглашения персональных данных
+  VNE_COMP: string; // Вопрос не в компетенции
+  YANDEX: string; // Отправлен на Яндекс
+  OBR_CALL: string; // Обратный звонок
+  PRICH: string; // Наличие причин для досрочного прекращения разговора
+  IF_DA: string; // Если ответ да
+  SVO: string; // Участник СВО
+  FAMILY_SVO: string; // Член семьи участника СВО
+  FLG_CALL_DISCONNECTION: string; // Инициатор разрыва звонка
+  SOUND: string; // Прослушать
+};

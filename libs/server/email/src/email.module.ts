@@ -7,5 +7,6 @@ import { EmailService } from './email.service';
   imports: [DgiAnalyticsModule],
   controllers: [EmailController],
   providers: [EmailService],
+  exports: [EmailService],
 })
 export class EmailModule {}
