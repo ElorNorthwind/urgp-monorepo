@@ -123,7 +123,7 @@ const bookingRecordSchema = z.object({
       /^\d{2}:\d{2}:\d{2}-\d{2}:\d{2}:\d{2}$/,
       'Неверный формат времени (HH:MM:SS-HH:MM:SS)',
     ),
-  serviceId: z.number().int().positive(),
+  serviceId: z.number().int(),
   serviceName: z.string(),
   status: z.string(),
   caseCount: z.number().int().nonnegative().default(0),
@@ -191,6 +191,7 @@ const operatorSurveyResponseSchema = surveyResponseSchema.extend({
   needsAnswer: z.coerce.boolean().nullable(),
   problems: z.array(z.string()),
   informationSource: z.string(),
+  sentToYandex: z.coerce.boolean().nullable(),
 });
 export type OperatorSurveyResponse = z.infer<
   typeof operatorSurveyResponseSchema
@@ -214,7 +215,7 @@ export const vksCaseSchema = z.object({
       /^\d{2}:\d{2}:\d{2}-\d{2}:\d{2}:\d{2}$/,
       'Неверный формат времени (HH:MM:SS-HH:MM:SS)',
     ),
-  serviceId: z.coerce.number().int().nonnegative(),
+  serviceId: z.coerce.number().int(),
   serviceName: z.string().nullable(),
   propertyType: z.string().nullable(),
   departmentId: z.coerce.number().int().nonnegative().nullable(),

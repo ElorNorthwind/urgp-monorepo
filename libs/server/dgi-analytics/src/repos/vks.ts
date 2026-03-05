@@ -231,6 +231,11 @@ SET (
         name: 'operator_survey_info_source',
         prop: 'informationSource',
       },
+      {
+        name: 'operator_survey_sent_to_yandex',
+        prop: 'sentToYandex',
+        cast: 'boolean',
+      },
     ];
 
     const operatorSurveyColumnSet = new this.pgp.helpers.ColumnSet(columns, {

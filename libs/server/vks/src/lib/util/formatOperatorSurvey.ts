@@ -19,6 +19,7 @@ export const operatorSurveyQuestions = {
   10502178: 'needsAnswer',
   10500170: 'problems',
   10502512: 'informationSource',
+  10508855: 'sentToYandex',
 };
 
 export function formatOperatorSurvey(s: AnketologSurveyResponse): any {
@@ -43,9 +44,12 @@ export function formatOperatorSurvey(s: AnketologSurveyResponse): any {
         const surveyAnswer = getSurveyAnswer(ans);
 
         if (
-          ['isHousingQuestion', 'isClient', 'needsAnswer'].includes(
-            questionName,
-          )
+          [
+            'isHousingQuestion',
+            'isClient',
+            'needsAnswer',
+            'sentToYandex',
+          ].includes(questionName)
         ) {
           return {
             ...obj,
@@ -79,6 +83,7 @@ export function formatOperatorSurvey(s: AnketologSurveyResponse): any {
         needsAnswer: '-',
         problems: [],
         informationSource: '-',
+        sentToYandex: '-',
       },
     ),
   });

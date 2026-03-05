@@ -293,6 +293,7 @@ export class VksService {
     if (!totalCount || data?.answers?.length === 0) {
       return { found: 0, updated: 0 };
     }
+    // Logger.debug(data?.answers?.[0]);
 
     let collectedCount = 0;
     let udatedCount = 0;
