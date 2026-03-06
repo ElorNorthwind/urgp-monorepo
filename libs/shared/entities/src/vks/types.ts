@@ -294,6 +294,7 @@ export const VksCaseDetailsSchema = vksCaseSchema.extend({
   operatorSurveyNeedsAnswer: z.coerce.boolean().nullable(),
   operatorSurveyProblems: z.array(z.string()).nullable(),
   operatorSurveyInfoSource: z.string().nullable(),
+  operatorSurveySentToYandex: z.coerce.boolean().nullable(),
 
   clientSurveyId: z.coerce.number().int().nonnegative().nullable(),
   clientSurveyStatus: z.string().nullable(),

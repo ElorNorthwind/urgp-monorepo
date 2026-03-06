@@ -9,6 +9,7 @@ import { VksCaseDetails } from '@urgp/shared/entities';
 
 import { CardTab } from '@urgp/client/features';
 import {
+  DramaIcon,
   Mail,
   MailCheck,
   MailX,
@@ -260,6 +261,14 @@ const VksCaseOperatorInfoTab = (
                     <MailX className="-mr-1 size-4 flex-shrink-0 text-stone-700" />
                     <p className="my-auto border-r pr-2 text-stone-700">
                       Ответ не требуется
+                    </p>
+                  </>
+                ) : null}
+                {entity?.operatorSurveySentToYandex === true ? (
+                  <>
+                    <DramaIcon className="-mr-1 size-4 flex-shrink-0 text-orange-500" />
+                    <p className="my-auto border-r pr-2 text-orange-500">
+                      Направлен на Яндекс
                     </p>
                   </>
                 ) : null}

@@ -167,6 +167,7 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
 		c.operator_survey_needs_answer as "operatorSurveyNeedsAnswer",
 		c.operator_survey_problems as "operatorSurveyProblems",
 		c.operator_survey_info_source as "operatorSurveyInfoSource",
+        c.operator_survey_sent_to_yandex as "operatorSurveySentToYandex",
 		
 		c.client_survey_id as "clientSurveyId",
 		c.client_survey_status as "clientSurveyStatus",
@@ -181,6 +182,7 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
         c.case_type as "caseType",
         cl.consult_count as "consultCount",
         cl.first_consult_at as "firstConsultAt"
+       
 		-- COALESCE(COALESCE(c.client_survey_comment_positive, '') || COALESCE(c.client_survey_comment_negative, ''), c.online_grade_comment) as "gradeComment"
 		
 

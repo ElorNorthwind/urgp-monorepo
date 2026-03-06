@@ -209,8 +209,9 @@ SET (
       {
         name: 'operator_survey_is_housing',
         prop: 'isHousingQuestion',
+        cast: 'boolean',
       },
-      { name: 'operator_survey_is_client', prop: 'isClient' },
+      { name: 'operator_survey_is_client', prop: 'isClient', cast: 'boolean' },
       { name: 'operator_survey_address', prop: 'registrationAddress' },
       { name: 'operator_survey_relation', prop: 'relationsToMoscow' },
       { name: 'operator_survey_doc_type', prop: 'documentType' },
