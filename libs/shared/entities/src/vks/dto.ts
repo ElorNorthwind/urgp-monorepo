@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { AnketologSurveyTypes } from './config';
-import { format, subDays } from 'date-fns';
+import { addDays, format, subDays } from 'date-fns';
 import { report } from 'process';
 
 // Параметры поиска на странице
@@ -158,11 +158,12 @@ export const hotlineRequestSchema = z
       .regex(/\d{2}.\d{2}.\d{4}/, {
         message: 'Некорректная дата. Нужен формат дд.мм.гггг',
       })
-      .default(format(new Date(), 'dd.MM.yyyy')),
+      .default(format(addDays(new Date(), 1), 'dd.MM.yyyy')),
     page: z.number().int().nonnegative().default(1),
     reportType: z
       .enum(['hotline', 'hotline_score', 'outbound'])
       .default('hotline'),
+    idReport: z.coerce.number().int().nonnegative().nullable().default(null),
   })
   .default({});
 export type HotlineRequest = z.input<typeof hotlineRequestSchema>;

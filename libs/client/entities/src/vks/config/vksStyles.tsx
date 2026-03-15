@@ -18,6 +18,7 @@ import {
   MessageCircleQuestionMark,
   MessageCircleX,
   PhoneCall,
+  PhoneCallIcon,
   Server,
   SquareCode,
   SquareMenu,
@@ -132,6 +133,10 @@ export const clientTypeStyles = {
   'Физическое лицо': {
     icon: User,
     iconStyle: cn('text-teal-500'),
+  },
+  'Телефонный звонок': {
+    icon: PhoneCallIcon,
+    iconStyle: cn('text-lime-500'),
   },
 };
 

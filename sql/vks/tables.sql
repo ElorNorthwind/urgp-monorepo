@@ -262,6 +262,18 @@ CREATE TABLE vks.cases
     is_technical BOOLEAN NOT NULL DEFAULT false,
     case_type VARCHAR(255) NOT NULL DEFAULT 'ВКС',
 
+    -- Новые поля для телетриба (горячая линия)
+    teletribe_dst TEXT,
+    consultation_duration INTEGER,
+    wait_duration INTEGER,
+    hold_count INTEGER,
+    hold_duration INTEGER,
+    teletribe_user_login TEXT,
+    operator_survey_question_type TEXT,
+    teletribe_disconnect_details TEXT,
+    teletribe_disconnect_initiator TEXT,
+    teletribe_sound_link TEXT,
+
     PRIMARY KEY (id),
     CONSTRAINT unique_booking_code_date UNIQUE (booking_code, date)
 );

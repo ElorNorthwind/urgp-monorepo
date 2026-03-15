@@ -108,7 +108,7 @@ const VksTimelineChart = ({
               })}
 
               <ReferenceLine
-                x={data && data[data.length - 1].period}
+                x={(data && data[data.length - 1]?.period) || 0}
                 orientation={'horizontal'}
                 stroke="hsl(var(--muted-foreground))"
                 strokeDasharray="3 3"

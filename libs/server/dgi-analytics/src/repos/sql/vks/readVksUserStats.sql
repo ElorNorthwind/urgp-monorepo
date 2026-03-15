@@ -21,6 +21,6 @@ SELECT
 FROM vks.cases c
 LEFT JOIN vks.services s ON s.id = c.service_id, wd
 WHERE c.status = ANY(ARRAY['обслужен', 'не явился по вызову'])
-AND c.date BETWEEN ${dateFrom}::date AND ${dateTo}::date
+AND c.date BETWEEN ${dateFrom}::date AND ${dateTo}::date AND c.case_type = 'ВКС' 
 ${conditions:raw}
 GROUP BY COALESCE(initcap(replace(replace(regexp_replace(c.operator_survey_fio, '(^[А-Яа-яёЁ\-]*)\s([А-Яа-яёЁ])(?:[А-Яа-яёЁ\-]*[\s\.]+([А-Яа-яёЁ]))?.*$'::text, '\1 \2.\3.'::text), '..'::text, '.'::text), '  '::text, ' '::text)), 'Не заполнена анкета');

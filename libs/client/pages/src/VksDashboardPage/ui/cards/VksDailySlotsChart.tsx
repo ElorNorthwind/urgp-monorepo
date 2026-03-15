@@ -106,6 +106,7 @@ const VksDailySlotsChart = ({ className }: ChartProps): JSX.Element => {
           <div className={cn('h-full ', 'flex flex-row')}>
             {['пн', ...weekDays].map((day, i) => (
               <div
+                key={day + i}
                 className={cn(
                   'h-full flex-shrink flex-grow-0 p-2 odd:bg-gray-50',
                   i === 0 ? 'w-[100px]' : 'w-[calc(20%-20px)]',

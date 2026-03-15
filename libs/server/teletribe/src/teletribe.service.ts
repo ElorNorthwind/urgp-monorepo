@@ -4,16 +4,19 @@ import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '@urgp/server/database';
 import { EmailService } from '@urgp/server/email';
 import { AxiosResponse } from 'axios';
-import { format, subDays } from 'date-fns';
 import { DgiAnalyticsService } from 'libs/server/dgi-analytics/src/dgi-analytics.service';
 import { firstValueFrom, map } from 'rxjs';
+import { reportFields } from './config/constants';
 import {
-  HOTLINE_REPORT_DATA,
-  HOTLINE_SCORE_REPORT_DATA,
-  OUTBOUND_REPORT_DATA,
-  reportFields,
-} from './config/constants';
-import { HotlineRequest, hotlineRequestSchema } from '@urgp/shared/entities';
+  HotlineRequest,
+  hotlineRequestSchema,
+  RawTeletribeHotlineRecord,
+  RawTeletribeReport,
+  RawTeletribeScoreRecord,
+} from '@urgp/shared/entities';
+import { formatTeletribeRecord } from './util/formatTeletribeRecord';
+import { formatTeletribeClient } from './util/formatTeletribeClient';
+import { formatTeletribeScore } from './util/formatTeletribeScore';
 
 @Injectable()
 export class TeletribeService {
@@ -205,12 +208,12 @@ export class TeletribeService {
   async getHotlineReport(
     query?: HotlineRequest,
     noAuthRetry: boolean = false,
-  ): Promise<any> {
+  ): Promise<RawTeletribeReport> {
     const result = hotlineRequestSchema.safeParse(query);
     if (!result.success) {
       throw new BadRequestException(result.error.message);
     }
-    const { dateFrom, dateTo, page, reportType } = result.data;
+    const { dateFrom, dateTo, page, reportType, idReport } = result.data;
 
     // Проверка на наличие сохраненных токенов
     const token = this.tokens.get('varwwwhtmlrsbackendconfig');
@@ -236,6 +239,7 @@ export class TeletribeService {
             'data[variables][0][value]': dateFrom,
             'data[variables][1][value]': dateTo,
             'data[page]': page,
+            'data[idReport]': idReport,
             token,
           },
         })
@@ -254,5 +258,124 @@ export class TeletribeService {
         ),
     );
     return reportData;
+  }
+
+  async insertHotlineReport(query?: HotlineRequest): Promise<any> {
+    const parsedQuery = hotlineRequestSchema.safeParse(query).data;
+
+    const dateFrom = parsedQuery?.dateFrom;
+    const dateTo = parsedQuery?.dateTo;
+    const isDev = this.configService.get<string>('NODE_ENV') === 'development';
+    let clientCount = 0;
+    let recordsCount = 0;
+    let scoreCount = 0;
+
+    try {
+      let recordsPage = 1;
+      let totalRecords = 0;
+      let records = new Map();
+      let recordsReportId: number | null = null;
+
+      while (recordsPage === 1 || records.size < totalRecords) {
+        const recordReport = await this.getHotlineReport({
+          reportType: 'hotline',
+          dateFrom,
+          dateTo,
+          page: recordsPage,
+          idReport: recordsReportId,
+        });
+
+        totalRecords = recordReport?.countAllRows + 1 || 0;
+        (recordReport?.rows || []).forEach((row) => {
+          records.set(row.SESSION_ID, row);
+        });
+        recordsReportId =
+          typeof recordReport?.idReport === 'string'
+            ? parseInt(recordReport?.idReport)
+            : recordReport?.idReport || null;
+
+        isDev &&
+          this.logger.log(
+            `HotlineReport returned. Date: ${dateFrom} - ${dateTo}. Page: ${recordsPage}. Count: ${records.size}/${totalRecords}.`,
+          );
+        // recordReport?.rows.length > 0 &&
+        //   this.logger.log(
+        //     `First: ${recordReport?.rows[0]?.SESSION_ID}. Last: ${recordReport?.rows[recordReport?.rows.length - 1]?.SESSION_ID}.`,
+        //   );
+        recordsPage++;
+      }
+
+      if (records.size > 0) {
+        const formatedClients = Array.from(records.values()).map((row) =>
+          formatTeletribeClient(row as RawTeletribeHotlineRecord),
+        );
+        clientCount =
+          await this.dgiAnalytics.db.vks.insertTeletribeClients(
+            formatedClients,
+          );
+
+        const formatedRecords = Array.from(records.values()).map((row) =>
+          formatTeletribeRecord(row as RawTeletribeHotlineRecord),
+        );
+        recordsCount =
+          await this.dgiAnalytics.db.vks.insertTeletribeCases(formatedRecords);
+      }
+
+      let scoresPage = 1;
+      let totalScores = 0;
+      let scores = new Map();
+      let scoresReportId: number | null = null;
+
+      while (scoresPage === 1 || scores.size < totalScores) {
+        const scoreReport = await this.getHotlineReport({
+          reportType: 'hotline_score',
+          dateFrom,
+          dateTo,
+          page: scoresPage,
+          idReport: scoresReportId,
+        });
+
+        totalScores = scoreReport?.countAllRows || 0;
+        (scoreReport?.rows || []).forEach((row) => {
+          scores.set(row?.SESSION_ID, row);
+        });
+        scoresReportId =
+          typeof scoreReport?.idReport === 'string'
+            ? parseInt(scoreReport?.idReport)
+            : scoreReport?.idReport || null;
+
+        isDev &&
+          this.logger.log(
+            `ScoreReport returned. Date: ${dateFrom} - ${dateTo}. Page: ${scoresPage}. Count: ${scores.size}/${totalScores}.`,
+          );
+        // scoreReport?.rows.length > 0 &&
+        //   this.logger.log(
+        //     `First: ${scoreReport?.rows[0]?.SESSION_ID}. Last: ${scoreReport?.rows[scoreReport?.rows.length - 1]?.SESSION_ID}.`,
+        //   );
+        scoresPage++;
+      }
+
+      if (scores.size > 0) {
+        const formatedScores = Array.from(scores.values()).map((row) =>
+          formatTeletribeScore(row as RawTeletribeScoreRecord),
+        );
+        scoreCount =
+          await this.dgiAnalytics.db.vks.updateTeletribeScore(formatedScores);
+      }
+
+      return {
+        clientCount,
+        recordsCount,
+        scoreCount,
+        error: null,
+      };
+    } catch (e) {
+      return {
+        clientCount: 0,
+        recordsCount: 0,
+        scoreCount: 0,
+        error: e,
+      };
+    }
   }
 }

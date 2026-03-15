@@ -7,8 +7,6 @@ export class TeletribeController {
 
   @Get('report')
   Connect(): Promise<any> {
-    return this.teletribe.getHotlineReport({
-      reportType: 'hotline_score',
-    });
+    return this.teletribe.insertHotlineReport({ dateFrom: '09.03.2026' });
   }
 }

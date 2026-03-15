@@ -159,7 +159,8 @@ CREATE OR REPLACE VIEW dm.documents_combined_dated_view  AS
         dep.display_name as "department",
         c.category_code as "id_rubr",
         z.full_name as "zam",
-        c.category_group as "category"
+        c.category_group as "category",
+        COALESCE(c.zapros, CASE WHEN c.category_group = 'EDO' THEN 'СЭДО ' || c.category_code || ' ' || c.category_name ELSE c.category_name END, c.category_name) as "zapros"
     FROM dm.resolutions r
     LEFT JOIN dm.documents d ON r.document_id = d.id
     LEFT JOIN dm.categories c ON d.category_id = c.id

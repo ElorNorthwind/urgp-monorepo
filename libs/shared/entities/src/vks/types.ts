@@ -382,7 +382,26 @@ export const vksServiceStatSchema = vksStatSchema.extend({
 });
 export type VksServiceStat = z.infer<typeof vksServiceStatSchema>;
 
-export type RawTeletribeRecord = {
+export type RawTeletribeReport = {
+  reportFile: string;
+  reportName: string;
+  columns: {
+    ID: string;
+    ENG_NAME: string;
+    RUS_NAME: string;
+    SORT_ORDER: string;
+    EXCEL_TYPE: string;
+    show: string;
+  }[];
+  rows: Array<
+    RawTeletribeHotlineRecord | RawTeletribeScoreRecord | Record<string, string>
+  >;
+  countAllRows: number;
+  debug: null | any;
+  idReport: number;
+};
+
+export type RawTeletribeHotlineRecord = {
   SESSION_ID: string; // ID звонка
   ABONENT: string; // АОН
   DST: string; // Номер телефона
@@ -417,3 +436,75 @@ export type RawTeletribeRecord = {
   FLG_CALL_DISCONNECTION: string; // Инициатор разрыва звонка
   SOUND: string; // Прослушать
 };
+
+export type RawTeletribeScoreRecord = {
+  CALL_DATE_TIME: string; // Дата и время звонка
+  OPERATOR_FIO: string; // ФИО оператора
+  USER_LOGIN: string; // Логин оператора
+  AON: string; // АОН
+  RATING_1_QUESTION: string; // Вопрос 1
+  TEXT_2_QUESTION: string; // Сообщение для контроля качества
+  SESSION_ID: string; // ID звонка
+  SOUND: string; // Прослушать
+};
+
+export const teletribeRecordSchema = z.object({
+  case_type: z.literal('ГЛ').default('ГЛ'),
+  booking_source: z.literal('Горячая линия').default('Горячая линия'),
+  booking_resource: z
+    .literal('Консультация по ГЛ (Teletribe)')
+    .default('Консультация по ГЛ (Teletribe)'),
+  status: z.string(),
+  service_id: z.number().int(),
+  operator_survey_consultation_type: z
+    .literal('По телефону')
+    .default('По телефону'),
+
+  booking_code: z.string(),
+  phone: z.string(),
+  teletribe_dst: z.string().nullable(),
+  date: z.string().nullable(),
+  time: z.string().nullable(),
+  consultation_duration: z.number().int().nonnegative().nullable(),
+  wait_duration: z.number().int().nonnegative().nullable(),
+  hold_count: z.number().int().nonnegative().nullable(),
+  hold_duration: z.number().int().nonnegative().nullable(),
+  teletribe_user_login: z.string().nullable(),
+  operator_survey_fio: z.string().nullable(),
+
+  problem_summary: z.string().nullable(),
+  operator_survey_is_client: z.boolean().nullable(),
+  operator_survey_address: z.string().nullable(),
+  operator_survey_relation: z.string().nullable(),
+  operator_survey_doc_type: z.string().nullable(),
+  operator_survey_doc_date: z.string().nullable(),
+  operator_survey_doc_num: z.string().nullable(),
+  operator_survey_department: z.string().nullable(),
+
+  operator_survey_info_source: z.string().nullable(),
+  operator_survey_summary: z.string().nullable(),
+  operator_survey_question_type: z.string().nullable(),
+  operator_survey_sent_to_yandex: z.boolean().nullable(),
+  teletribe_disconnect_details: z.string().nullable(),
+  teletribe_disconnect_initiator: z.string().nullable(),
+  teletribe_sound_link: z.string().nullable(),
+  operator_survey_problems: z.array(z.string()).nullable(),
+  client_id: z.number().int().nonnegative(),
+});
+
+export type TeletribeRecord = z.infer<typeof teletribeRecordSchema>;
+
+export const teletribeScoreSchema = z.object({
+  booking_code: z.string(),
+  date: z.string(),
+  online_grade: z.number().int().nonnegative().nullable(),
+  online_grade_comment: z.string().nullable(),
+});
+export type TeletribeScore = z.infer<typeof teletribeScoreSchema>;
+
+export const teletribeClientSchema = z.object({
+  id: z.number().int().nonnegative(),
+  surname: z.string(),
+  type: z.literal('Телефонный звонок').default('Телефонный звонок'),
+});
+export type TeletribeClient = z.infer<typeof teletribeClientSchema>;

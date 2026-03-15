@@ -18,6 +18,7 @@ FROM date_series d
 LEFT JOIN vks.cases c
     ON (DATE_PART('year', c.date)::integer = d.year::integer)  
     AND (DATE_PART('month', c.date)::integer = d.month::integer)  
+    AND c.case_type = 'ВКС' 
 LEFT JOIN vks.services s ON c.service_id = s.id
 LEFT JOIN vks.departments dep ON s.department_id = dep.id
 WHERE d.year IS NOT NULL 

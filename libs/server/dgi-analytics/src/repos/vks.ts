@@ -7,6 +7,9 @@ import {
   NestedClassificatorInfoString,
   OperatorSurveyResponse,
   QmsQuery,
+  TeletribeClient,
+  TeletribeRecord,
+  TeletribeScore,
   VkaSetIsTechnical,
   VksCase,
   VksCaseDetails,
@@ -19,12 +22,13 @@ import {
   VksTimelinePoint,
   VksUserStats,
 } from '@urgp/shared/entities';
-import { IDatabase, IMain } from 'pg-promise';
+import pgPromise, { IDatabase, IMain } from 'pg-promise';
 import { vks } from './sql/sql';
 import {
   detailedCasesUnauthorizedColumns,
   slimCasesUnauthorizedColumns,
 } from '../config';
+import { IResult } from 'pg-promise/typescript/pg-subset';
 
 // @Injectable()
 export class VksRepository {
@@ -434,5 +438,196 @@ SET (
       dateFrom: q?.dateFrom || '-infinity',
       dateTo: q?.dateTo || 'infinity',
     });
+  }
+
+  insertTeletribeClients(clients: TeletribeClient[]): Promise<number> {
+    const columns = [
+      { name: 'type' },
+
+      { name: 'id', cast: 'bigint' },
+      { name: 'surname', prop: 'surname' },
+    ];
+    const clientsColumnSet = new this.pgp.helpers.ColumnSet(columns, {
+      table: {
+        table: 'clients',
+        schema: 'vks',
+      },
+    });
+    const insert =
+      this.pgp.helpers.insert(clients, clientsColumnSet) +
+      ' ON CONFLICT (id) DO NOTHING RETURNING id;';
+    return this.db.any(insert).then((result: any) => result?.length || 0);
+  }
+
+  insertTeletribeCases(records: TeletribeRecord[]): Promise<number> {
+    const columns = [
+      { name: 'case_type' },
+      { name: 'booking_source' },
+      { name: 'booking_resource' },
+      { name: 'status' },
+      { name: 'service_id', cast: 'integer' },
+      { name: 'operator_survey_consultation_type' },
+
+      { name: 'booking_code' },
+      { name: 'phone' },
+      {
+        name: 'teletribe_dst',
+      },
+      {
+        name: 'date',
+        cast: 'date',
+      },
+      {
+        name: 'time',
+      },
+      {
+        name: 'consultation_duration',
+        cast: 'integer',
+      },
+      {
+        name: 'wait_duration',
+        cast: 'integer',
+      },
+      {
+        name: 'hold_count',
+        cast: 'integer',
+      },
+      {
+        name: 'hold_duration',
+        cast: 'integer',
+      },
+      { name: 'teletribe_user_login' },
+      { name: 'operator_survey_fio' },
+      { name: 'problem_summary' },
+      {
+        name: 'operator_survey_is_client',
+        cast: 'boolean',
+      },
+      { name: 'operator_survey_address' },
+      { name: 'operator_survey_relation' },
+      { name: 'operator_survey_doc_type' },
+      {
+        name: 'operator_survey_doc_date',
+      },
+      { name: 'operator_survey_doc_num' },
+      { name: 'operator_survey_department' },
+      { name: 'operator_survey_info_source' },
+      { name: 'operator_survey_summary' },
+      { name: 'operator_survey_question_type' },
+      {
+        name: 'operator_survey_sent_to_yandex',
+        cast: 'boolean',
+      },
+      { name: 'teletribe_disconnect_details' },
+      { name: 'teletribe_disconnect_initiator' },
+      { name: 'teletribe_sound_link' },
+      { name: 'operator_survey_problems', cast: 'text[]' },
+      {
+        name: 'client_id',
+        cast: 'bigint',
+      },
+    ];
+
+    const casesColumnSet = new this.pgp.helpers.ColumnSet(columns, {
+      table: {
+        table: 'cases',
+        schema: 'vks',
+      },
+    });
+
+    const onConflict = `
+DO UPDATE 
+SET (
+    status,
+    service_id,
+    phone,
+    teletribe_dst,
+    time,
+    consultation_duration,
+    wait_duration,
+    hold_count,
+    hold_duration,
+    teletribe_user_login,
+    operator_survey_fio,
+    problem_summary,
+    operator_survey_is_client,
+    operator_survey_address,
+    operator_survey_relation,
+    operator_survey_doc_type,
+    operator_survey_doc_date,
+    operator_survey_doc_num,
+    operator_survey_department,
+    operator_survey_info_source,
+    operator_survey_summary,
+    operator_survey_question_type,
+    operator_survey_sent_to_yandex,
+    teletribe_disconnect_details,
+    teletribe_disconnect_initiator,
+    teletribe_sound_link,
+    operator_survey_problems,
+    client_id
+) = (
+    EXCLUDED.status,
+    EXCLUDED.service_id,
+    EXCLUDED.phone,
+    EXCLUDED.teletribe_dst,
+    EXCLUDED.time,
+    EXCLUDED.consultation_duration,
+    EXCLUDED.wait_duration,
+    EXCLUDED.hold_count,
+    EXCLUDED.hold_duration,
+    EXCLUDED.teletribe_user_login,
+    EXCLUDED.operator_survey_fio,
+    EXCLUDED.problem_summary,
+    EXCLUDED.operator_survey_is_client,
+    EXCLUDED.operator_survey_address,
+    EXCLUDED.operator_survey_relation,
+    EXCLUDED.operator_survey_doc_type,
+    EXCLUDED.operator_survey_doc_date,
+    EXCLUDED.operator_survey_doc_num,
+    EXCLUDED.operator_survey_department,
+    EXCLUDED.operator_survey_info_source,
+    EXCLUDED.operator_survey_summary,
+    EXCLUDED.operator_survey_question_type,
+    EXCLUDED.operator_survey_sent_to_yandex,
+    EXCLUDED.teletribe_disconnect_details,
+    EXCLUDED.teletribe_disconnect_initiator,
+    EXCLUDED.teletribe_sound_link,
+    EXCLUDED.operator_survey_problems,
+    EXCLUDED.client_id
+)`;
+
+    const insert =
+      this.pgp.helpers.insert(records, casesColumnSet) +
+      ` ON CONFLICT (booking_code, date) ${onConflict || 'DO NOTHING'} RETURNING id;`;
+    return this.db
+      .result(insert)
+      .then((result: IResult) => result?.rowCount || 0);
+  }
+
+  updateTeletribeScore(scores: TeletribeScore[]): Promise<number> {
+    const columns = [
+      { name: 'booking_code' },
+      {
+        name: 'date',
+        cast: 'date',
+      },
+      { name: 'online_grade', cast: 'integer' },
+      { name: 'online_grade_comment' },
+    ];
+
+    const teletribeScoreColumnSet = new this.pgp.helpers.ColumnSet(columns, {
+      table: {
+        table: 'cases',
+        schema: 'vks',
+      },
+    });
+
+    const update =
+      this.pgp.helpers.update(scores, teletribeScoreColumnSet) +
+      ` WHERE t.booking_code = v.booking_code AND t.date = v.date AND (v.online_grade IS NOT NULL OR v.online_grade_comment IS NOT NULL) RETURNING id;`;
+    return this.db
+      .result(update)
+      .then((result: IResult) => result?.rowCount || 0);
   }
 }

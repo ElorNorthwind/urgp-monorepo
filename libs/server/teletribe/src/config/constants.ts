@@ -12,7 +12,7 @@ export const TELETRIBE_HTTP_OPTIONS = {
 export const HOTLINE_REPORT_DATA = {
   'data[id]': 1539,
   'data[db_alias]': 'STAT',
-  'data[idReport]': null,
+  // 'data[idReport]': null,
   // 'data[requestId]': 1771531962005, << Date.now() - UNIX timestamp?
   'data[variables][0][varName]': 'ipcursor_begin',
   'data[variables][0][label]': 'Начало+периода',
@@ -278,7 +278,7 @@ export const HOTLINE_REPORT_DATA = {
 export const HOTLINE_SCORE_REPORT_DATA = {
   'data[id]': 2975,
   'data[db_alias]': 'STAT',
-  'data[idReport]': null,
+  // 'data[idReport]': null,
   // 'data[requestId]': 1771583757291,
   'data[variables][0][varName]': 'ipcursor_begin',
   'data[variables][0][label]': 'Начало+периода',
@@ -366,7 +366,7 @@ export const HOTLINE_SCORE_REPORT_DATA = {
 export const OUTBOUND_REPORT_DATA = {
   'data[id]': 1696,
   'data[db_alias]': 'STAT',
-  'data[idReport]': null,
+  // 'data[idReport]': null,
   // 'data[requestId]': 1771584239812,
   'data[variables][0][varName]': 'begin',
   'data[variables][0][label]': 'Начало+периода',
