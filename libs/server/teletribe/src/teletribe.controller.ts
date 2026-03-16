@@ -7,6 +7,9 @@ export class TeletribeController {
 
   @Get('report')
   Connect(): Promise<any> {
-    return this.teletribe.insertHotlineReport({ dateFrom: '09.03.2026' });
+    return this.teletribe.insertLongTermHotlineReport({
+      dateFrom: '16.03.2026',
+      dateTo: '17.03.2026',
+    });
   }
 }

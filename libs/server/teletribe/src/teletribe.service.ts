@@ -17,6 +17,9 @@ import {
 import { formatTeletribeRecord } from './util/formatTeletribeRecord';
 import { formatTeletribeClient } from './util/formatTeletribeClient';
 import { formatTeletribeScore } from './util/formatTeletribeScore';
+import { generateDateRanges } from './util/generateDateRanges';
+import { endOfTomorrow, format } from 'date-fns';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class TeletribeService {
@@ -260,7 +263,10 @@ export class TeletribeService {
     return reportData;
   }
 
-  async insertHotlineReport(query?: HotlineRequest): Promise<any> {
+  async insertHotlineReport(
+    query?: HotlineRequest,
+    allowRetry: boolean = true,
+  ): Promise<any> {
     const parsedQuery = hotlineRequestSchema.safeParse(query).data;
 
     const dateFrom = parsedQuery?.dateFrom;
@@ -296,29 +302,33 @@ export class TeletribeService {
 
         isDev &&
           this.logger.log(
-            `HotlineReport returned. Date: ${dateFrom} - ${dateTo}. Page: ${recordsPage}. Count: ${records.size}/${totalRecords}.`,
+            `HotlineReport. Page: ${recordsPage}. Count: ${records.size}/${totalRecords}. First: ${recordReport?.rows?.[0]?.SESSION_ID}.`,
           );
-        // recordReport?.rows.length > 0 &&
-        //   this.logger.log(
-        //     `First: ${recordReport?.rows[0]?.SESSION_ID}. Last: ${recordReport?.rows[recordReport?.rows.length - 1]?.SESSION_ID}.`,
-        //   );
         recordsPage++;
       }
 
       if (records.size > 0) {
-        const formatedClients = Array.from(records.values()).map((row) =>
-          formatTeletribeClient(row as RawTeletribeHotlineRecord),
-        );
-        clientCount =
-          await this.dgiAnalytics.db.vks.insertTeletribeClients(
-            formatedClients,
-          );
+        const formatedClients = Array.from(records.values())
+          .map((row) => formatTeletribeClient(row as RawTeletribeHotlineRecord))
+          .filter((client) => client?.id && client?.id > 0);
 
-        const formatedRecords = Array.from(records.values()).map((row) =>
-          formatTeletribeRecord(row as RawTeletribeHotlineRecord),
-        );
+        clientCount =
+          formatedClients?.length > 0
+            ? await this.dgiAnalytics.db.vks.insertTeletribeClients(
+                formatedClients,
+              )
+            : 0;
+
+        const formatedRecords = Array.from(records.values())
+          .map((row) => formatTeletribeRecord(row as RawTeletribeHotlineRecord))
+          .filter((record) => record?.client_id && record?.client_id > 0);
+
         recordsCount =
-          await this.dgiAnalytics.db.vks.insertTeletribeCases(formatedRecords);
+          formatedRecords?.length > 0
+            ? await this.dgiAnalytics.db.vks.insertTeletribeCases(
+                formatedRecords,
+              )
+            : 0;
       }
 
       let scoresPage = 1;
@@ -346,12 +356,8 @@ export class TeletribeService {
 
         isDev &&
           this.logger.log(
-            `ScoreReport returned. Date: ${dateFrom} - ${dateTo}. Page: ${scoresPage}. Count: ${scores.size}/${totalScores}.`,
+            `ScoreReport. Page: ${scoresPage}. Count: ${scores.size}/${totalScores}. First: ${scoreReport?.rows?.[0]?.SESSION_ID}.`,
           );
-        // scoreReport?.rows.length > 0 &&
-        //   this.logger.log(
-        //     `First: ${scoreReport?.rows[0]?.SESSION_ID}. Last: ${scoreReport?.rows[scoreReport?.rows.length - 1]?.SESSION_ID}.`,
-        //   );
         scoresPage++;
       }
 
@@ -360,7 +366,11 @@ export class TeletribeService {
           formatTeletribeScore(row as RawTeletribeScoreRecord),
         );
         scoreCount =
-          await this.dgiAnalytics.db.vks.updateTeletribeScore(formatedScores);
+          formatedScores?.length > 0
+            ? await this.dgiAnalytics.db.vks.updateTeletribeScore(
+                formatedScores,
+              )
+            : 0;
       }
 
       return {
@@ -370,6 +380,11 @@ export class TeletribeService {
         error: null,
       };
     } catch (e) {
+      allowRetry
+        ? this.logger.error('Hotline report error! Attempting retry...')
+        : this.logger.error('Hotline report error! No retry this time.');
+      this.logger.error(e);
+      allowRetry && this.insertHotlineReport(query, false);
       return {
         clientCount: 0,
         recordsCount: 0,
@@ -377,5 +392,60 @@ export class TeletribeService {
         error: e,
       };
     }
+  }
+
+  async insertLongTermHotlineReport(query?: HotlineRequest): Promise<any> {
+    const parsedQuery = hotlineRequestSchema.safeParse(query).data;
+
+    const dateFrom = parsedQuery?.dateFrom;
+    const dateTo = parsedQuery?.dateTo;
+    const isDev = this.configService.get<string>('NODE_ENV') === 'development';
+
+    let clientCount = 0;
+    let recordsCount = 0;
+    let scoreCount = 0;
+
+    const chunks = generateDateRanges(
+      dateFrom || '01.01.2026',
+      dateTo || format(endOfTomorrow(), 'dd.MM.yyyy'),
+      5,
+    );
+
+    for (const chunk of chunks) {
+      isDev &&
+        this.logger.log(
+          `Getting hotline report: ${chunk.dateFrom} - ${chunk.dateTo}`,
+        );
+
+      try {
+        const result = await this.insertHotlineReport(chunk);
+        clientCount += result.clientCount;
+        recordsCount += result.recordsCount;
+        scoreCount += result.scoreCount;
+        isDev &&
+          this.logger.log(
+            `SoFar: clientCount: ${clientCount}, recordsCount: ${recordsCount}, scoreCount: ${scoreCount}`,
+          );
+      } catch {
+        this.logger.error(
+          `Failed to get hotline report: ${chunk.dateFrom} - ${chunk.dateTo}`,
+        );
+      }
+    }
+
+    return {
+      clientCount,
+      recordsCount,
+      scoreCount,
+    };
+  }
+
+  @Cron('0 5 6,17 * * *')
+  public async cronUpdateTeletribeData(forced: boolean = false) {
+    const isDev = this.configService.get<string>('NODE_ENV') === 'development';
+    if (isDev && !forced) return;
+    await this.insertHotlineReport().then(() => {
+      this.logger.log(`Teletribe data updated (yesterday + today)`);
+    });
   }
 }
