@@ -22,8 +22,8 @@ import {
   QmsQuery,
   qmsQuerySchema,
   RequestWithUserData,
-  VkaSetIsTechnical,
-  vkaSetIsTechnicalSchema,
+  VkaSetBooleanFlag,
+  vkaSetBooleanFlagSchema,
   VksCase,
   VksCaseDetails,
   VksCasesQuery,
@@ -102,7 +102,7 @@ export class VksController {
 
   @Post('cases/is-technical')
   setVksCaseIsTechnical(
-    @Body(new ZodValidationPipe(vkaSetIsTechnicalSchema)) q: VkaSetIsTechnical,
+    @Body(new ZodValidationPipe(vkaSetBooleanFlagSchema)) q: VkaSetBooleanFlag,
   ): Promise<boolean | null> {
     return this.vks.setIsTechnical(q);
   }

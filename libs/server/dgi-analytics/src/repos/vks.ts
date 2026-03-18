@@ -10,7 +10,7 @@ import {
   TeletribeClient,
   TeletribeRecord,
   TeletribeScore,
-  VkaSetIsTechnical,
+  VkaSetBooleanFlag,
   VksCase,
   VksCaseDetails,
   VksCasesQuery,
@@ -366,7 +366,8 @@ SET (
       departmentIds && departmentIds.length > 0
         ? `AND dep.id IN (${departmentIds.join(',')})`
         : '';
-    return this.db.any(vks.readVksTimeline, [conditions]);
+    // Logger.log(this.pgp.as.format(vks.readVksTimeline, ['ВКС', conditions]));
+    return this.db.any(vks.readVksTimeline, ['ВКС', conditions]);
   }
 
   getVksStatusStats(q: VksDashbordPageSearch): Promise<VksStatusStat[]> {
@@ -376,8 +377,9 @@ SET (
         : '';
     return this.db.any(vks.readVksStatusStats, {
       conditions,
-      dateFrom: q.dateFrom || '-infinity',
-      dateTo: q.dateTo || 'infinity',
+      dateFrom: q?.dateFrom || '-infinity',
+      dateTo: q?.dateTo || 'infinity',
+      caseType: q?.caseType || 'ВКС',
     });
   }
 
@@ -392,6 +394,7 @@ SET (
       conditions,
       dateFrom: q?.dateFrom || '-infinity',
       dateTo: q?.dateTo || 'infinity',
+      caseType: q?.caseType || 'ВКС',
     });
   }
 
@@ -404,11 +407,17 @@ SET (
       conditions,
       dateFrom: q?.dateFrom || '-infinity',
       dateTo: q?.dateTo || 'infinity',
+      caseType: q?.caseType || 'ВКС',
     });
   }
 
-  setIsTechnical(q: VkaSetIsTechnical): Promise<boolean | null> {
+  setIsTechnical(q: VkaSetBooleanFlag): Promise<boolean | null> {
     const sql = `UPDATE vks.cases SET is_technical = $1 WHERE id = $2 RETURNING is_technical;`;
+    return this.db.oneOrNone(sql, [q.value, q.caseId]);
+  }
+
+  setIsSentToYandex(q: VkaSetBooleanFlag): Promise<boolean | null> {
+    const sql = `UPDATE vks.cases SET manual_sent_to_yandex = $1 WHERE id = $2 RETURNING manual_sent_to_yandex;`;
     return this.db.oneOrNone(sql, [q.value, q.caseId]);
   }
 
@@ -425,6 +434,7 @@ SET (
       conditions,
       dateFrom: q?.dateFrom || '-infinity',
       dateTo: q?.dateTo || 'infinity',
+      caseType: q?.caseType || 'ВКС',
     });
   }
 
@@ -437,6 +447,7 @@ SET (
       conditions,
       dateFrom: q?.dateFrom || '-infinity',
       dateTo: q?.dateTo || 'infinity',
+      caseType: q?.caseType || 'ВКС',
     });
   }
 

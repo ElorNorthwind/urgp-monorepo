@@ -2,7 +2,7 @@ import { rtkApi } from '@urgp/client/shared';
 import {
   NestedClassificatorInfo,
   NestedClassificatorInfoString,
-  VkaSetIsTechnical,
+  VkaSetBooleanFlag,
   VksCase,
   VksCaseDetails,
   VksCasesQuery,
@@ -178,7 +178,7 @@ export const vksApi = rtkApi.injectEndpoints({
       providesTags: ['vks-classificator'],
     }),
 
-    updateIsTechnical: build.mutation<boolean | null, VkaSetIsTechnical>({
+    updateIsTechnical: build.mutation<boolean | null, VkaSetBooleanFlag>({
       query: (dto) => ({
         url: '/vks/cases/is-technical',
         method: 'POST',

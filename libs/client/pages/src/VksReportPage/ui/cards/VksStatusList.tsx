@@ -8,6 +8,7 @@ import { Circle } from 'lucide-react';
 
 type VksStatusListProps = {
   className?: string;
+  caseType?: 'ВКС' | 'ГЛ';
 };
 
 const VksStatusList = ({ className }: VksStatusListProps): JSX.Element => {
@@ -19,6 +20,7 @@ const VksStatusList = ({ className }: VksStatusListProps): JSX.Element => {
     dateFrom: search?.dateFrom || format(subDays(new Date(), 30), 'yyyy-MM-dd'),
     dateTo: search?.dateTo || format(new Date(), 'yyyy-MM-dd'),
     department: search?.department,
+    caseType: search?.caseType,
   };
   const { data, isLoading, isFetching } = useVksStatusStats(datedSearch);
 

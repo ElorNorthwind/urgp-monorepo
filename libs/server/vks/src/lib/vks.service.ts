@@ -26,7 +26,7 @@ import {
   VksDepartmentStat,
   VksServiceStat,
   VksStatusStat,
-  VkaSetIsTechnical,
+  VkaSetBooleanFlag,
   VksDailySlotStats,
   VksUserStats,
 } from '@urgp/shared/entities';
@@ -84,7 +84,7 @@ export class VksService {
     return this.dgiAnalytics.db.vks.getKnownServiceIds();
   }
 
-  public async setIsTechnical(q: VkaSetIsTechnical): Promise<boolean | null> {
+  public async setIsTechnical(q: VkaSetBooleanFlag): Promise<boolean | null> {
     return this.dgiAnalytics.db.vks.setIsTechnical(q);
   }
 

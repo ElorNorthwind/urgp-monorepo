@@ -1,8 +1,12 @@
-import { getRouteApi, useLocation } from '@tanstack/react-router';
+import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
 import {
+  Button,
   cn,
   ScrollArea,
   Separator,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
   useIsMobile,
   useVksAbility,
 } from '@urgp/client/shared';
@@ -21,9 +25,14 @@ import { formatVksUserStatRowForExcel } from '@urgp/client/entities';
 import { ExportToExcelButton } from '@urgp/client/features';
 import { use } from 'passport';
 import { VksStatusList } from './cards/VksStatusList';
+import { Monitor, PhoneCall } from 'lucide-react';
+import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
 
 const VksReportPage = (): JSX.Element => {
   const pathname = useLocation().pathname;
+  const search = getRouteApi(pathname).useSearch() as VksDashbordPageSearch;
+  const navigate = useNavigate({ from: pathname });
+
   const isMobile = useIsMobile();
   const [filtered, setFiltered] = useState<Row<VksUserStats>[]>([]);
 
@@ -33,27 +42,61 @@ const VksReportPage = (): JSX.Element => {
     } else return [];
   }, [filtered]);
 
+  const Icon = search.caseType === 'ГЛ' ? PhoneCall : Monitor;
+  const switchTooltip =
+    search.caseType === 'ГЛ' ? 'Переключить на ВКС' : 'Переключить на ГЛ';
+
   return (
     <ScrollArea className="bg-muted-foreground/5 h-screen w-full">
       <div className="relatve mx-auto max-w-7xl space-y-6 p-10">
-        <div className="space-y-0.5">
-          <div className="flex items-center justify-start gap-2">
-            <h2 className="text-2xl font-bold tracking-tight">
-              Отчёт по онлайн-консультациям ВКС
-            </h2>
+        <div className="flex flex-row items-center gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                role="button"
+                variant="outline"
+                className="size-14 flex-shrink-0 p-2"
+                onClick={() => {
+                  navigate({
+                    to: pathname,
+                    search: {
+                      ...search,
+                      caseType: search.caseType === 'ГЛ' ? undefined : 'ГЛ',
+                    },
+                  });
+                }}
+              >
+                <Icon className="size-8 flex-shrink-0" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipPortal>
+              <TooltipContent>
+                <TooltipArrow />
+                {switchTooltip}
+              </TooltipContent>
+            </TooltipPortal>
+          </Tooltip>
+          <div className="flex-grow space-y-0.5 ">
+            <div className="flex items-center justify-start gap-2">
+              <h2 className="text-2xl font-bold tracking-tight">
+                {search.caseType === 'ГЛ'
+                  ? 'Отчёт по консультациям горячей линии'
+                  : 'Отчёт по онлайн-консультациям ВКС'}
+              </h2>
 
-            <VksDepartmentFilter
-              className="ml-auto flex-grow-0 border-solid pl-2"
-              overrideDefaultWidth
-              fullBadge
-              variant={'popover'}
-            />
-            <VksCasesDateFilter align="end" />
-            <VksCasesResetFilter variant="mini" className="" />
+              <VksDepartmentFilter
+                className="ml-auto flex-grow-0 border-solid pl-2"
+                overrideDefaultWidth
+                fullBadge
+                variant={'popover'}
+              />
+              <VksCasesDateFilter align="end" />
+              <VksCasesResetFilter variant="mini" className="" />
+            </div>
+            <p className="text-muted-foreground">
+              Работа сотрудников, проводивших консультации
+            </p>
           </div>
-          <p className="text-muted-foreground">
-            Работа сотрудников, проводивших консультации
-          </p>
         </div>
         <Separator className="my-6" />
         <div className="flex flex-col space-y-6">
@@ -64,13 +107,13 @@ const VksReportPage = (): JSX.Element => {
               setFilteredRows={setFiltered}
             />
             <div className={cn('order-1 lg:order-2', 'flex flex-col gap-2')}>
-              <VksStatusChart />
-              {!isMobile && <VksStatusList />}
+              <VksStatusChart caseType={search.caseType} />
+              {!isMobile && <VksStatusList caseType={search.caseType} />}
               <ExportToExcelButton
                 data={exportedData}
                 size={'default'}
                 className="w-full rounded-lg shadow-sm"
-                fileName="Отчёт о работе сотрудников"
+                fileName={`Отчёт о работе сотруднриков ${search?.caseType ?? 'ВКС'}`}
                 label="Экспортировать в Excel"
               />
             </div>

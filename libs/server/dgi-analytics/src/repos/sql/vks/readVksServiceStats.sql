@@ -22,7 +22,7 @@ SELECT
 FROM vks.cases c
 LEFT JOIN vks.services s ON c.service_id = s.id
 LEFT JOIN vks.departments d ON s.department_id = d.id
-WHERE c.date BETWEEN ${dateFrom}::date AND ${dateTo}::date AND c.case_type = 'ВКС' 
+WHERE c.date BETWEEN ${dateFrom}::date AND ${dateTo}::date AND c.case_type = ${caseType} 
 ${conditions:raw}
 GROUP BY s.short_name, s.display_name
 ORDER BY COUNT(*) FILTER(WHERE status = ANY(ARRAY['обслужен','не явился по вызову', 'забронировано', 'пустой слот'])) DESC;

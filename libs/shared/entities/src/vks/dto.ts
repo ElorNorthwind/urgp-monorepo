@@ -135,17 +135,18 @@ export const vksDashbordPageSearchSchema = z.object({
     .or(z.string().regex(/\d{4}\-\d{2}\-\d{2}/))
     .or(z.literal('-infinity'))
     .default(format(new Date(), 'yyyy-MM-dd')),
+  caseType: z.literal('ВКС').or(z.literal('ГЛ')).optional(),
 
   // dateFrom: vksCasesQuerySchema.shape.dateFrom,
   // dateTo: vksCasesQuerySchema.shape.dateTo,
 });
 export type VksDashbordPageSearch = z.infer<typeof vksDashbordPageSearchSchema>;
 
-export const vkaSetIsTechnicalSchema = z.object({
+export const vkaSetBooleanFlagSchema = z.object({
   caseId: z.number().int().nonnegative(),
   value: z.boolean().nullable(),
 });
-export type VkaSetIsTechnical = z.infer<typeof vkaSetIsTechnicalSchema>;
+export type VkaSetBooleanFlag = z.infer<typeof vkaSetBooleanFlagSchema>;
 
 export const hotlineRequestSchema = z
   .object({

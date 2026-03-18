@@ -1,5 +1,5 @@
 import { getRouteApi, useLocation, useNavigate } from '@tanstack/react-router';
-import { useVksStatusStats } from '@urgp/client/entities';
+import { caseTypeStyles, useVksStatusStats } from '@urgp/client/entities';
 import {
   renderRechartsStackedBar,
   renderRechartsTooltip,
@@ -69,6 +69,7 @@ const chartConfig = {
 
 type ChartProps = {
   className?: string;
+  caseType?: 'ВКС' | 'ГЛ';
 };
 
 const VksStatusChart = ({ className }: ChartProps): JSX.Element => {
@@ -80,6 +81,7 @@ const VksStatusChart = ({ className }: ChartProps): JSX.Element => {
     dateFrom: search?.dateFrom || format(subDays(new Date(), 30), 'yyyy-MM-dd'),
     dateTo: search?.dateTo || format(new Date(), 'yyyy-MM-dd'),
     department: search?.department,
+    caseType: search?.caseType,
   };
   const { data, isLoading, isFetching } = useVksStatusStats(datedSearch);
 

@@ -91,7 +91,7 @@ const VksNavbar = (): JSX.Element => {
         }
       >
         {items.map((item, index) => {
-          if (item?.departmentLocked && i.cannot('read', 'VksEmptySlots'))
+          if (item?.departmentLocked && i.cannot('read', 'VksDepartmentReport'))
             return null;
 
           return (

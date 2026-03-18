@@ -247,6 +247,7 @@ CREATE TABLE vks.cases
     operator_survey_problems TEXT[],
     operator_survey_info_source TEXT,
     operator_survey_sent_to_yandex BOOLEAN,
+    manual_sent_to_yandex BOOLEAN,
 
     client_survey_id INTEGER,
     client_survey_date TIMESTAMP WITH TIME ZONE,

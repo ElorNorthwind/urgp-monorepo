@@ -39,7 +39,7 @@ WITH weekdays(wd, name) AS (
     FROM vks.cases c
     LEFT JOIN vks.services s ON c.service_id = s.id
     LEFT JOIN dm.calendar ca ON c.date = ca.date
-	WHERE c.date BETWEEN ${dateFrom}::date AND ${dateTo}::date AND c.case_type = 'ВКС' 
+	WHERE c.date BETWEEN ${dateFrom}::date AND ${dateTo}::date AND c.case_type = ${caseType} 
 	${conditions:raw}
     GROUP BY 
         COALESCE(ca.weekday_legal, DATE_PART('isodow', c.date)),
