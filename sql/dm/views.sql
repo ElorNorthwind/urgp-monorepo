@@ -19,7 +19,12 @@ CREATE OR REPLACE VIEW dm.documents_view  AS
     LEFT JOIN dm.categories c ON d.category_id = c.id
     LEFT JOIN dm.departments dep ON c.department_id = dep.id
     LEFT JOIN dm.zams z ON dep.zam_id = z.id
-    WHERE r.control_date >= '01.01.2025'::timestamp with time zone AND c.id IS NOT NULL AND c.category_group = 'EDO' AND r.deleted_at IS NULL AND d.deleted_at IS NULL
+    WHERE r.control_date >= '01.01.2025'::timestamp with time zone 
+       AND c.id IS NOT NULL 
+       AND c.category_group = 'EDO' 
+       AND r.deleted_at IS NULL 
+       AND d.deleted_at IS NULL
+       AND c.is_disabled IS DISTINCT FROM true
     ORDER BY control_date DESC;
   ----------------------------------------------------------------------
 
@@ -53,7 +58,13 @@ CREATE OR REPLACE VIEW dm.documents_dated_view  AS
     LEFT JOIN dm.categories c ON d.category_id = c.id
     LEFT JOIN dm.departments dep ON c.department_id = dep.id
     LEFT JOIN dm.zams z ON dep.zam_id = z.id, date_limit
-    WHERE c.id IS NOT NULL AND r.control_date BETWEEN '01.01.2025'::timestamp AND date_limit.date AND c.category_group = 'EDO' AND r.deleted_at IS NULL AND d.deleted_at IS NULL
+    WHERE c.id IS NOT NULL 
+      AND r.control_date BETWEEN '01.01.2025'::timestamp 
+      AND date_limit.date 
+      AND c.category_group = 'EDO' 
+      AND r.deleted_at IS NULL 
+      AND d.deleted_at IS NULL
+      AND c.is_disabled IS DISTINCT FROM true
     ORDER BY control_date;
 ----------------------------------------------------------------------
 
@@ -91,6 +102,7 @@ CREATE OR REPLACE VIEW dm.spd_view  AS
       AND c.id IS NOT NULL 
       AND c.category_group = 'SPD'
       AND r.deleted_at IS NULL AND d.deleted_at IS NULL
+      AND c.is_disabled IS DISTINCT FROM true
     ORDER BY d.reg_date DESC;
   ----------------------------------------------------------------------
 
@@ -129,7 +141,9 @@ CREATE OR REPLACE VIEW dm.spd_dated_view  AS
     WHERE c.id IS NOT NULL 
     AND COALESCE(r.control_date, d.reg_date, r.done_date) BETWEEN '01.01.2025'::timestamp AND date_limit.date 
     AND c.category_group = 'SPD'
-    AND r.deleted_at IS NULL AND d.deleted_at IS NULL
+    AND r.deleted_at IS NULL 
+    AND d.deleted_at IS NULL
+    AND c.is_disabled IS DISTINCT FROM true
     ORDER BY d.reg_date;
 ----------------------------------------------------------------------
 
@@ -171,6 +185,8 @@ CREATE OR REPLACE VIEW dm.documents_combined_dated_view  AS
         OR
         c.category_group = 'SPD' AND COALESCE(r.control_date, d.reg_date, r.done_date) BETWEEN '01.01.2025'::timestamp AND date_limit.date 
     )
-    AND r.deleted_at IS NULL AND d.deleted_at IS NULL
+    AND r.deleted_at IS NULL 
+    AND d.deleted_at IS NULL
+    AND c.is_disabled IS DISTINCT FROM true
     ORDER BY control_date;
 

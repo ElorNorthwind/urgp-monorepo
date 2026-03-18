@@ -109,6 +109,7 @@ CREATE TABLE dm.categories
     category_name TEXT,
     zapros TEXT,
     category_group VARCHAR(50),
+    is_disabled BOOLEAN,
 
     PRIMARY KEY (id)
 );
