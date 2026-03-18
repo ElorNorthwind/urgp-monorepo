@@ -34,6 +34,7 @@ export function defineVksAbilityFor(user: User) {
 
   if (user?.controlData?.roles?.includes('vks-manager')) {
     can(['create', 'update'], 'VksCaseRequest');
+    can(['read', 'update', 'delete'], 'VksCase');
     return build();
   }
 

@@ -12,7 +12,10 @@ import {
 } from '@urgp/client/widgets';
 import { useVksCaseDetails, useVksCaseDetailsPublic } from '../../api/vksApi';
 import { VksCaseCardHeader } from './VksCaseCardHeader';
-import { VksGradeDisqualifyToggle } from '@urgp/client/features';
+import {
+  VksGradeDisqualifyToggle,
+  VksSentToYandexToggle,
+} from '@urgp/client/features';
 
 type VksCaseCardProps = {
   caseId: number;
@@ -52,6 +55,10 @@ const VksCaseCard = (props: VksCaseCardProps): JSX.Element => {
         >
           <VksCaseInfoTab entity={data} />
           <VksGradeDisqualifyToggle
+            className="bg-background mt-4 w-full"
+            caseId={caseId}
+          />
+          <VksSentToYandexToggle
             className="bg-background mt-4 w-full"
             caseId={caseId}
           />

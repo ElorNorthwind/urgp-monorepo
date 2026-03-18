@@ -88,6 +88,12 @@ export class VksService {
     return this.dgiAnalytics.db.vks.setIsTechnical(q);
   }
 
+  public async setIsSentToYandex(
+    q: VkaSetBooleanFlag,
+  ): Promise<boolean | null> {
+    return this.dgiAnalytics.db.vks.setIsSentToYandex(q);
+  }
+
   private async insertNewService(id: number, fullName: string): Promise<null> {
     return this.dgiAnalytics.db.vks.insertNewService(id, fullName);
   }

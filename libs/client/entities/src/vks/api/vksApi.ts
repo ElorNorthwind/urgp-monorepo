@@ -189,6 +189,18 @@ export const vksApi = rtkApi.injectEndpoints({
         { type: 'vks-case', id: arg.caseId },
       ],
     }),
+
+    updateIsSentToYandex: build.mutation<boolean | null, VkaSetBooleanFlag>({
+      query: (dto) => ({
+        url: '/vks/cases/sent-to-yandex',
+        method: 'POST',
+        body: dto,
+      }),
+      invalidatesTags: (result, error, arg) => [
+        'vks-case',
+        { type: 'vks-case', id: arg.caseId },
+      ],
+    }),
   }),
 
   overrideExisting: false,
@@ -215,4 +227,5 @@ export const {
   useGetVksUserStatsQuery: useVksUserStats,
 
   useUpdateIsTechnicalMutation: useUpdateIsTechnical,
+  useUpdateIsSentToYandexMutation: useUpdateIsSentToYandex,
 } = vksApi;

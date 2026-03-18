@@ -1,7 +1,11 @@
 /* eslint-disable max-lines */
 'use client';
 
-import { useUpdateIsTechnical, useVksCaseDetails } from '@urgp/client/entities';
+import {
+  useUpdateIsSentToYandex,
+  useUpdateIsTechnical,
+  useVksCaseDetails,
+} from '@urgp/client/entities';
 import {
   cn,
   ToggleGroup,
@@ -10,29 +14,29 @@ import {
   useVksAbility,
 } from '@urgp/client/shared';
 import { VariantProps } from 'class-variance-authority';
-import { Meh, Star, StarOff } from 'lucide-react';
+import { Link, Meh, Star, StarOff, Unlink } from 'lucide-react';
 import { type FC } from 'react';
 
-type VksGradeDisqualifyToggleProps = {
+type VksSentToYandexToggleProps = {
   caseId: number;
   className?: string;
 } & VariantProps<typeof toggleVariants>;
 
 /** The DateRangePicker component allows a user to select a range of dates */
-export const VksGradeDisqualifyToggle: FC<VksGradeDisqualifyToggleProps> = ({
+export const VksSentToYandexToggle: FC<VksSentToYandexToggleProps> = ({
   caseId,
   className,
   size = 'default',
   variant = 'outline',
 }): JSX.Element | null => {
   const i = useVksAbility();
-  const [updateIsTechnical, { isLoading: isUpdateLoading }] =
-    useUpdateIsTechnical();
+  const [updateIsSentToYandex, { isLoading: isUpdateLoading }] =
+    useUpdateIsSentToYandex();
   const { data, isLoading, isFetching } = useVksCaseDetails(caseId, {
     skip: !caseId || caseId === 0,
   });
 
-  if (i.cannot('update', 'VksCase') || !data?.grade) return null;
+  if (i.cannot('update', 'VksCase') || data?.status !== 'обслужен') return null;
 
   return (
     <ToggleGroup
@@ -41,22 +45,18 @@ export const VksGradeDisqualifyToggle: FC<VksGradeDisqualifyToggleProps> = ({
       size={size}
       type="single"
       className={cn('', className)}
-      value={data?.isTechnical === true ? 'disqualify' : 'approve'}
+      value={data?.operatorSurveySentToYandex === true ? 'sent' : 'notSent'}
       onValueChange={(value) => {
-        updateIsTechnical({
+        updateIsSentToYandex({
           caseId,
-          value: value === 'disqualify' ? true : false,
+          value: value === 'sent' ? true : false,
         });
       }}
     >
-      <ToggleGroupItem
-        value="disqualify"
-        aria-label="Toggle disqualify"
-        className="group"
-      >
-        <StarOff className="h-4 w-4 opacity-35 group-data-[state=on]:text-rose-500 group-data-[state=on]:opacity-100" />
+      <ToggleGroupItem value="sent" aria-label="Toggle sent" className="group">
+        <Link className="h-4 w-4 opacity-35 group-data-[state=on]:text-orange-500 group-data-[state=on]:opacity-100" />
         <p className="opacity-50 group-data-[state=on]:opacity-100">
-          Оценка не учитывается
+          Направлен на Яндекс
         </p>
       </ToggleGroupItem>
       {/* <ToggleGroupItem value="undesided" aria-label="Toggle undesided">
@@ -64,21 +64,21 @@ export const VksGradeDisqualifyToggle: FC<VksGradeDisqualifyToggleProps> = ({
         <p>Без решения</p>
       </ToggleGroupItem> */}
       <ToggleGroupItem
-        value="approve"
-        aria-label="Toggle approve"
+        value="notSent"
+        aria-label="Toggle notSent"
         className="group"
       >
-        <Star
+        <Unlink
           className={
-            'h-4 w-4  opacity-35 group-data-[state=on]:text-yellow-500 group-data-[state=on]:opacity-100'
+            'h-4 w-4  opacity-35 group-data-[state=on]:text-rose-500 group-data-[state=on]:opacity-100'
           }
         />
         <p className="opacity-50 group-data-[state=on]:opacity-100">
-          Оценка учитывается
+          Не направлен на Яндекс
         </p>
       </ToggleGroupItem>
     </ToggleGroup>
   );
 };
 
-VksGradeDisqualifyToggle.displayName = 'VksGradeDisqualifyToggle';
+VksSentToYandexToggle.displayName = 'VksSentToYandexToggle';

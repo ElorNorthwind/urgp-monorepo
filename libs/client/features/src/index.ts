@@ -23,3 +23,4 @@ export * from './DateRangeSelectAdvanced';
 export * from './VksGradeDisqualifyToggle';
 export * from './ApartmentTimelineTab';
 export * from './ApartmentCapstonesTab';
+export * from './VksManualYandexToggle';

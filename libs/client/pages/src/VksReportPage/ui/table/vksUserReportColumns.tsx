@@ -39,6 +39,9 @@ export const vksUserReportColumns = [
     enableHiding: false,
     enableSorting: true,
     sortDescFirst: true,
+    sortingFn: (a, b) => {
+      return (a?.original?.load ?? 0.0) - (b?.original?.load ?? 0.0);
+    },
     cell: (props) => {
       return <VksUserWorkloadCell {...props} />;
     },

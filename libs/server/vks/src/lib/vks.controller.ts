@@ -17,6 +17,7 @@ import {
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { ZodValidationPipe } from '@urgp/server/pipes';
 import {
+  defineVksAbilityFor,
   NestedClassificatorInfo,
   NestedClassificatorInfoString,
   QmsQuery,
@@ -100,11 +101,28 @@ export class VksController {
     return this.vks.getVksCaseById(id, false);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Post('cases/is-technical')
   setVksCaseIsTechnical(
+    @Req() req: RequestWithUserData,
     @Body(new ZodValidationPipe(vkaSetBooleanFlagSchema)) q: VkaSetBooleanFlag,
   ): Promise<boolean | null> {
+    const i = defineVksAbilityFor(req.user);
+    if (i.cannot('update', 'VksCase'))
+      throw new BadRequestException('Нет прав на редактирование оценки');
     return this.vks.setIsTechnical(q);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Post('cases/sent-to-yandex')
+  setVksCaseIsSentToYandex(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(vkaSetBooleanFlagSchema)) q: VkaSetBooleanFlag,
+  ): Promise<boolean | null> {
+    const i = defineVksAbilityFor(req.user);
+    if (i.cannot('update', 'VksCase'))
+      throw new BadRequestException('Нет прав на редактирование статуса');
+    return this.vks.setIsSentToYandex(q);
   }
 
   @UseGuards(AccessTokenGuard)
