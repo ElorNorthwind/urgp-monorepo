@@ -1,5 +1,5 @@
 import { cn } from '@urgp/client/shared';
-import { VksConsultationTypes } from '@urgp/shared/entities';
+import { VksCaseTypes, VksConsultationTypes } from '@urgp/shared/entities';
 import {
   BriefcaseBusiness,
   Calendar1,
@@ -248,5 +248,18 @@ export const consultationTypesStyles = {
     icon: LaptopMinimalCheck,
     label: 'По ВКС',
     iconStyle: cn('text-green-500'),
+  },
+};
+
+export const caseTypesStyles = {
+  [VksCaseTypes['ВКС']]: {
+    icon: LaptopMinimalCheck,
+    label: 'Онлайн-прием',
+    iconStyle: cn('text-blue-500'),
+  },
+  [VksCaseTypes['ГЛ']]: {
+    icon: PhoneCall,
+    label: 'Горячая линия',
+    iconStyle: cn('text-lime-500'),
   },
 };

@@ -242,6 +242,7 @@ export const vksCaseSchema = z.object({
   operatorFio: z.string().nullable(),
   operatorLink: z.string().nullable(),
   operatorSurveyConsultationType: z.string(),
+  operatorSurveySentToYandex: z.coerce.boolean().nullable(),
   serviceFullName: z.string().nullable(),
 
   operatorSurveyDate: z.string().datetime().nullable(), // ISO 8601 date string
@@ -294,7 +295,6 @@ export const VksCaseDetailsSchema = vksCaseSchema.extend({
   operatorSurveyNeedsAnswer: z.coerce.boolean().nullable(),
   operatorSurveyProblems: z.array(z.string()).nullable(),
   operatorSurveyInfoSource: z.string().nullable(),
-  operatorSurveySentToYandex: z.coerce.boolean().nullable(),
 
   clientSurveyId: z.coerce.number().int().nonnegative().nullable(),
   clientSurveyStatus: z.string().nullable(),
@@ -306,6 +306,14 @@ export const VksCaseDetailsSchema = vksCaseSchema.extend({
   serviceFullName: z.string().nullable(),
   departmentFullName: z.string().nullable(),
   zamFullName: z.string().nullable(),
+
+  consultationDuration: z.number().int().nonnegative().nullable(),
+  waitDuration: z.number().int().nonnegative().nullable(),
+  holdDuration: z.number().int().nonnegative().nullable(),
+  operatorSurveyQuestionType: z.string().nullable(),
+  teletribeDisconnectDetails: z.string().nullable(),
+  teletribeDisconnectInitiator: z.string().nullable(),
+  teletribeSoundLink: z.string().nullable(),
 });
 export type VksCaseDetails = z.infer<typeof VksCaseDetailsSchema>;
 

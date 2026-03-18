@@ -233,7 +233,7 @@ export class VksController {
   getAnketologOperatorSurvey(): Promise<{ found: number; updated: number }> {
     return this.vks.GetAnketologSurvey({
       surveyId: AnketologSurveyTypes.operator,
-      // dateFrom: '01.01.2024',
+      // dateFrom: '01.01.2026',
       dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
       dateTo: format(new Date(), 'dd.MM.yyyy'),
     });

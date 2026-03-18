@@ -56,7 +56,7 @@ const VksCaseCard = (props: VksCaseCardProps): JSX.Element => {
             caseId={caseId}
           />
           <VksCaseClientInfoTab entity={data} accordionItemName="client-info" />
-          {data?.operatorSurveyId && (
+          {(data?.operatorSurveyId || data?.caseType === 'ГЛ') && (
             <VksCaseOperatorInfoTab
               entity={data}
               accordionItemName="operator-info"

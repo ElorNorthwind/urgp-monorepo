@@ -53,6 +53,7 @@ CREATE OR REPLACE VIEW vks.cases_slim_view  AS
 
 		c.operator_link as "operatorLink",
         COALESCE(c.operator_survey_consultation_type, 'Нет данных') as "operatorSurveyConsultationType",
+        c.operator_survey_sent_to_yandex as "operatorSurveySentToYandex",
         s.display_name as "serviceFullName",
         c.operator_survey_date as "operatorSurveyDate",
         c.client_survey_date as "clientSurveyDate",
@@ -181,10 +182,17 @@ CREATE OR REPLACE VIEW vks.cases_detailed_view  AS
 		z.full_name as "zamFullName",
         c.case_type as "caseType",
         cl.consult_count as "consultCount",
-        cl.first_consult_at as "firstConsultAt"
+        cl.first_consult_at as "firstConsultAt",
+
+        c.consultation_duration as "consultationDuration",
+        c.wait_duration as "waitDuration",
+        c.hold_duration as "holdDuration",
+        c.operator_survey_question_type as "operatorSurveyQuestionType",
+        c.teletribe_disconnect_details as "teletribeDisconnectDetails",
+        c.teletribe_disconnect_initiator as "teletribeDisconnectInitiator",
+        c.teletribe_sound_link as "teletribeSoundLink"
        
 		-- COALESCE(COALESCE(c.client_survey_comment_positive, '') || COALESCE(c.client_survey_comment_negative, ''), c.online_grade_comment) as "gradeComment"
-		
 
     FROM vks.cases c
     LEFT JOIN vks.clients cl ON cl.id = c.client_id

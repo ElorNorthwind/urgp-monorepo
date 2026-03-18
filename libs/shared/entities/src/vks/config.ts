@@ -21,3 +21,10 @@ export const VksConsultationTypes = {
 export type VksConsultationTypes =
   (typeof VksConsultationTypes)[keyof typeof VksConsultationTypes];
 export const vksConsultationTypesValues = getValues(VksConsultationTypes);
+
+export const VksCaseTypes = {
+  ВКС: 'ВКС',
+  ГЛ: 'ГЛ',
+} as const;
+export type VksCaseTypes = (typeof VksCaseTypes)[keyof typeof VksCaseTypes];
+export const vksCaseTypesValues = getValues(VksCaseTypes);

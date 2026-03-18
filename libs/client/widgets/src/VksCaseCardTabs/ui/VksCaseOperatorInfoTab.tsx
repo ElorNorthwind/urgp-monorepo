@@ -142,6 +142,55 @@ const VksCaseOperatorInfoTab = (
             </>
           )}
 
+          {entity?.operatorSurveyQuestionType && (
+            <>
+              <div className="bg-muted-foreground/5 border-r border-t px-2 py-1 text-right font-bold">
+                Характер вопроса:
+              </div>
+              <div
+                className={cn(
+                  'flex items-start justify-start gap-2 truncate border-t p-1',
+                  entity?.teletribeDisconnectInitiator ? '' : 'col-span-3',
+                )}
+              >
+                <p className="my-auto w-full truncate font-light">
+                  {entity?.operatorSurveyQuestionType}
+                </p>
+              </div>
+            </>
+          )}
+
+          {entity?.teletribeDisconnectInitiator && (
+            <>
+              <div
+                className={cn(
+                  'bg-muted-foreground/5 border-r border-t px-2 py-1 text-right font-bold',
+                  entity?.operatorSurveyQuestionType && 'border-l',
+                )}
+              >
+                Инициатор разрыва:
+              </div>
+              <div
+                className={cn(
+                  'flex items-start justify-start gap-2 truncate border-t p-1',
+                  entity?.operatorSurveyQuestionType ? '' : 'col-span-3',
+                )}
+              >
+                <p className="my-auto w-full truncate font-light">
+                  {entity?.teletribeDisconnectInitiator}
+                </p>
+              </div>
+            </>
+          )}
+
+          {entity?.teletribeDisconnectDetails && (
+            <div className="text-muted-foreground col-span-4 flex items-start justify-start gap-2 border-t px-2 font-light">
+              <span className="ml-1">
+                {entity?.teletribeDisconnectDetails || '-'}
+              </span>
+            </div>
+          )}
+
           {entity?.operatorSurveyMood && (
             <>
               <div className="bg-muted-foreground/5 border-r border-t px-2 py-1 text-right font-bold">
@@ -205,6 +254,7 @@ const VksCaseOperatorInfoTab = (
           )}
           {(entity?.operatorSurveyIsClient !== null ||
             entity?.operatorSurveyIsHousing !== null ||
+            entity?.operatorSurveySentToYandex !== null ||
             entity?.operatorSurveyNeedsAnswer !== null) && (
             <>
               <div
@@ -216,61 +266,55 @@ const VksCaseOperatorInfoTab = (
               </div>
               <div
                 className={cn(
-                  'col-span-3 flex items-start justify-start gap-2 truncate border-t p-1',
+                  'col-span-3 flex flex-wrap items-start justify-start gap-2 border-t p-1',
+                  '*:flex *:flex-nowrap *:items-start *:gap-2 *:border-r *:pr-2',
+                  '[&_*]:flex-shrink-0',
                 )}
               >
                 {entity?.operatorSurveyIsClient === true ? (
-                  <>
-                    <UserCheck className="-mr-1 size-4 flex-shrink-0 text-emerald-700" />
-                    <p className="my-auto border-r pr-2 text-emerald-700">
+                  <div>
+                    <UserCheck className="-mr-1 size-4 flex-shrink-0 text-emerald-700 " />
+                    <p className="my-auto flex-shrink-0 text-emerald-700">
                       Клиент ДГИ
                     </p>
-                  </>
+                  </div>
                 ) : entity?.operatorSurveyIsClient === false ? (
-                  <>
+                  <div>
                     <UserX className="-mr-1 size-4 flex-shrink-0 text-red-700" />
-                    <p className="my-auto border-r pr-2 text-red-700">
+                    <p className="my-auto flex-shrink-0 text-red-700">
                       Не клиент
                     </p>
-                  </>
+                  </div>
                 ) : null}
                 {entity?.operatorSurveyIsHousing === true ? (
-                  <>
+                  <div>
                     <SquareCheck className="-mr-1 size-4 flex-shrink-0 text-sky-700" />
-                    <p className="my-auto border-r pr-2 text-sky-700">
-                      Жил. вопрос
-                    </p>
-                  </>
+                    <p className="my-auto text-sky-700">Жил. вопрос</p>
+                  </div>
                 ) : entity?.operatorSurveyIsHousing === false ? (
-                  <>
+                  <div>
                     <SquareX className="-mr-1 size-4 flex-shrink-0 text-amber-700" />
-                    <p className="my-auto border-r pr-2 text-amber-700">
-                      Не жил. вопрос
-                    </p>
-                  </>
+                    <p className="my-auto text-amber-700">Не жил. вопрос</p>
+                  </div>
                 ) : null}
                 {entity?.operatorSurveyNeedsAnswer === true ? (
-                  <>
+                  <div>
                     <MailCheck className="-mr-1 size-4 flex-shrink-0 text-violet-700" />
-                    <p className="my-auto border-r pr-2 text-violet-700">
-                      Нужен ответ
-                    </p>
-                  </>
+                    <p className="my-auto text-violet-700">Нужен ответ</p>
+                  </div>
                 ) : entity?.operatorSurveyNeedsAnswer === false ? (
-                  <>
+                  <div>
                     <MailX className="-mr-1 size-4 flex-shrink-0 text-stone-700" />
-                    <p className="my-auto border-r pr-2 text-stone-700">
-                      Ответ не требуется
-                    </p>
-                  </>
+                    <p className="my-auto text-stone-700">Ответ не требуется</p>
+                  </div>
                 ) : null}
                 {entity?.operatorSurveySentToYandex === true ? (
-                  <>
+                  <div>
                     <DramaIcon className="-mr-1 size-4 flex-shrink-0 text-orange-500" />
-                    <p className="my-auto border-r pr-2 text-orange-500">
+                    <p className="my-auto text-orange-500">
                       Направлен на Яндекс
                     </p>
-                  </>
+                  </div>
                 ) : null}
               </div>
             </>

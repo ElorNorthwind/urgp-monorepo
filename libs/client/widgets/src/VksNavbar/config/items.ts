@@ -14,7 +14,7 @@ export const items = [
     icon: Headset,
   },
   {
-    title: 'Отчёт управления',
+    title: 'Отчёт управления по ВКС',
     url: '/vks/report',
     icon: Table2,
     departmentLocked: true,

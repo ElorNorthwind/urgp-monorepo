@@ -38,7 +38,9 @@ const VksReportPage = (): JSX.Element => {
       <div className="relatve mx-auto max-w-7xl space-y-6 p-10">
         <div className="space-y-0.5">
           <div className="flex items-center justify-start gap-2">
-            <h2 className="text-2xl font-bold tracking-tight">Отчёт</h2>
+            <h2 className="text-2xl font-bold tracking-tight">
+              Отчёт по онлайн-консультациям ВКС
+            </h2>
 
             <VksDepartmentFilter
               className="ml-auto flex-grow-0 border-solid pl-2"

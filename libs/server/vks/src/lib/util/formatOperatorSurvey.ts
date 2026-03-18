@@ -43,6 +43,8 @@ export function formatOperatorSurvey(s: AnketologSurveyResponse): any {
         if (!questionName) return obj;
         const surveyAnswer = getSurveyAnswer(ans);
 
+        // if (ans?.question_id === 10508855) Logger.debug(surveyAnswer);
+
         if (
           [
             'isHousingQuestion',

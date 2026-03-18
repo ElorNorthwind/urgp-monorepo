@@ -86,6 +86,8 @@ export const vksCasesPageFilterSchema = z
     status: queryStringArray,
     type: queryStringArray,
     operatorSurvey: queryNumberArray,
+    caseType: queryStringArray,
+    yandex: queryNumberArray,
     // clientId: z.coerce.number().int().nonnegative(),
   })
   .partial();

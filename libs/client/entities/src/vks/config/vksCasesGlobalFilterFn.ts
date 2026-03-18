@@ -15,6 +15,8 @@ export function vksCasesGlobalFilterFn(
     operator,
     type,
     operatorSurvey,
+    caseType,
+    yandex,
   } = filterValue;
 
   const clientId = query && query?.match(/^Клиент:\[(\d+)\]/)?.[1];
@@ -54,6 +56,10 @@ export function vksCasesGlobalFilterFn(
     return false;
   }
 
+  if (caseType && !caseType.includes(row.original?.caseType || '')) {
+    return false;
+  }
+
   if (service && !service.includes(row.original?.serviceName || '')) {
     return false;
   }
@@ -85,6 +91,16 @@ export function vksCasesGlobalFilterFn(
       (grade.includes(0) && !row.original?.grade) ||
       (grade.includes(-1) && row.original?.isTechnical) ||
       grade.includes(row.original?.grade || 0)
+    )
+  ) {
+    return false;
+  }
+
+  if (
+    yandex &&
+    !(
+      (yandex.includes(1) && row.original?.operatorSurveySentToYandex) ||
+      (yandex.includes(0) && !row.original?.operatorSurveySentToYandex)
     )
   ) {
     return false;

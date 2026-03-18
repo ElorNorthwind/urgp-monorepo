@@ -170,47 +170,65 @@ const VksCaseInfoTab = (props: VksCaseInfoTabProps): JSX.Element | null => {
         </Tooltip>
       </div>
 
-      <div className="bg-muted-foreground/5 border-b border-r px-2 py-1 text-right font-bold">
-        Ссылки:
-      </div>
-      <div className="group col-span-3 flex items-start justify-start gap-2 truncate border-b p-1">
-        {entity?.operatorLink && (
-          <>
-            <a
-              className="peer/consult my-auto font-light hover:underline"
-              href={entity?.operatorLink}
-              target="_blank"
-            >
-              <span>Консультация</span>
-            </a>
-            <ExternalLink className="-ml-1 mt-1 size-4 shrink-0 flex-grow-0 opacity-0 peer-hover/consult:opacity-100" />
-          </>
-        )}
-        {entity?.operatorSurveyExtralinkUrl && (
-          <>
-            <a
-              className="peer/operator my-auto border-l pl-4 font-light hover:underline"
-              href={entity?.operatorSurveyExtralinkUrl}
-              target="_blank"
-            >
-              <span>Опрос оператора</span>
-            </a>
-            <ExternalLink className="-ml-1 mt-1 size-4 shrink-0 flex-grow-0 opacity-0 peer-hover/operator:opacity-100" />
-          </>
-        )}
-        {entity?.clientSurveyExtralinkUrl && (
-          <>
-            <a
-              className="peer/client my-auto border-l pl-4 font-light hover:underline"
-              href={entity?.clientSurveyExtralinkUrl}
-              target="_blank"
-            >
-              <span>Опрос клиента</span>
-            </a>
-            <ExternalLink className="-ml-1 mt-1 size-4 shrink-0 flex-grow-0 opacity-0 peer-hover/client:opacity-100" />
-          </>
-        )}
-      </div>
+      {(entity?.operatorLink ||
+        entity?.operatorSurveyExtralinkUrl ||
+        entity?.clientSurveyExtralinkUrl) && (
+        <>
+          <div className="bg-muted-foreground/5 border-b border-r px-2 py-1 text-right font-bold">
+            Ссылки:
+          </div>
+          <div className="group col-span-3 flex items-start justify-start gap-2 truncate border-b p-1">
+            {entity?.operatorLink && (
+              <>
+                <a
+                  className="peer/consult my-auto font-light hover:underline"
+                  href={entity?.operatorLink}
+                  target="_blank"
+                >
+                  <span>Консультация</span>
+                </a>
+                <ExternalLink className="-ml-1 mt-1 size-4 shrink-0 flex-grow-0 opacity-0 peer-hover/consult:opacity-100" />
+              </>
+            )}
+            {entity?.operatorSurveyExtralinkUrl && (
+              <>
+                <a
+                  className="peer/operator my-auto border-l pl-4 font-light hover:underline"
+                  href={entity?.operatorSurveyExtralinkUrl}
+                  target="_blank"
+                >
+                  <span>Опрос оператора</span>
+                </a>
+                <ExternalLink className="-ml-1 mt-1 size-4 shrink-0 flex-grow-0 opacity-0 peer-hover/operator:opacity-100" />
+              </>
+            )}
+            {entity?.clientSurveyExtralinkUrl && (
+              <>
+                <a
+                  className="peer/client my-auto border-l pl-4 font-light hover:underline"
+                  href={entity?.clientSurveyExtralinkUrl}
+                  target="_blank"
+                >
+                  <span>Опрос клиента</span>
+                </a>
+                <ExternalLink className="-ml-1 mt-1 size-4 shrink-0 flex-grow-0 opacity-0 peer-hover/client:opacity-100" />
+              </>
+            )}
+            {/* {entity?.teletribeSoundLink && (
+              <>
+                <a
+                  className="peer/client my-auto border-l pl-4 font-light hover:underline"
+                  href={entity?.teletribeSoundLink}
+                  target="_blank"
+                >
+                  <span>Запись горячей линии</span>
+                </a>
+                <ExternalLink className="-ml-1 mt-1 size-4 shrink-0 flex-grow-0 opacity-0 peer-hover/client:opacity-100" />
+              </>
+            )} */}
+          </div>
+        </>
+      )}
 
       <div className="bg-muted-foreground/5 border-b border-r px-2 py-1 text-right font-bold">
         Клиент:
