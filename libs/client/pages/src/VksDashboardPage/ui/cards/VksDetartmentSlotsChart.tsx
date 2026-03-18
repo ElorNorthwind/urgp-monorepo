@@ -148,6 +148,7 @@ const VksDepartmentSlotsChart = ({ className }: ChartProps): JSX.Element => {
                           status: ['обслужен', 'не явился по вызову'],
                           dateFrom: search.dateFrom,
                           dateTo: search.dateTo,
+                          caseType: [search?.caseType || 'ВКС'],
                         },
                       });
                       break;
@@ -159,6 +160,7 @@ const VksDepartmentSlotsChart = ({ className }: ChartProps): JSX.Element => {
                           status: ['забронировано'],
                           dateFrom: search.dateFrom,
                           dateTo: search.dateTo,
+                          caseType: [search?.caseType || 'ВКС'],
                         },
                       });
                       break;
@@ -170,6 +172,7 @@ const VksDepartmentSlotsChart = ({ className }: ChartProps): JSX.Element => {
                           status: ['пустой слот'],
                           dateFrom: search.dateFrom,
                           dateTo: search.dateTo,
+                          caseType: [search?.caseType || 'ВКС'],
                         },
                       });
                       break;

@@ -137,6 +137,7 @@ const VksDepartmentSurveyedChart = ({ className }: ChartProps): JSX.Element => {
                           operatorSurvey: [1],
                           dateFrom: search.dateFrom,
                           dateTo: search.dateTo,
+                          caseType: [search?.caseType || 'ВКС'],
                         },
                       });
                       break;
@@ -149,6 +150,7 @@ const VksDepartmentSurveyedChart = ({ className }: ChartProps): JSX.Element => {
                           status: ['обслужен'],
                           dateFrom: search.dateFrom,
                           dateTo: search.dateTo,
+                          caseType: [search?.caseType || 'ВКС'],
                         },
                       });
                       break;
@@ -167,6 +169,7 @@ const VksDepartmentSurveyedChart = ({ className }: ChartProps): JSX.Element => {
                           ],
                           dateFrom: search.dateFrom,
                           dateTo: search.dateTo,
+                          caseType: [search?.caseType || 'ВКС'],
                         },
                       });
                       break;

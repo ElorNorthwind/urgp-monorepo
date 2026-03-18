@@ -27,6 +27,7 @@ function VksUserLinkCell(
         dateFrom: search?.dateFrom,
         dateTo: search?.dateTo,
         department: search?.department,
+        caseType: [search?.caseType || 'ВКС'],
         operatorSurvey:
           rowData?.operator === 'Не заполнена анкета' ? [0] : undefined,
       }}

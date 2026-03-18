@@ -140,6 +140,7 @@ const VksServiceChart = ({ className }: ChartProps): JSX.Element => {
                       service: [data.service],
                       dateFrom: search.dateFrom,
                       dateTo: search.dateTo,
+                      caseType: [search?.caseType || 'ВКС'],
                     },
                   });
                 },

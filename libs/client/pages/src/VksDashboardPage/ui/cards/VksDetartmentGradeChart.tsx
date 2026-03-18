@@ -128,6 +128,7 @@ const VksDepartmentGradeChart = ({ className }: ChartProps): JSX.Element => {
                       dateFrom: search.dateFrom,
                       dateTo: search.dateTo,
                       grade: [1, 2, 3, 4, 5],
+                      caseType: [search?.caseType || 'ВКС'],
                     },
                   });
                 },

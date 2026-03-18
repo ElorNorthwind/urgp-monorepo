@@ -52,6 +52,7 @@ const VksStatusList = ({ className }: VksStatusListProps): JSX.Element => {
               dateFrom: search.dateFrom,
               dateTo: search.dateTo,
               department: search.department,
+              caseType: [search?.caseType || 'ВКС'],
             },
           });
         }}

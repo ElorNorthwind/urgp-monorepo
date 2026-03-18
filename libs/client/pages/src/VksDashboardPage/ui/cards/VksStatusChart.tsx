@@ -155,6 +155,7 @@ const VksStatusChart = ({ className }: ChartProps): JSX.Element => {
                         dateFrom: search.dateFrom,
                         dateTo: search.dateTo,
                         department: search.department,
+                        caseType: [search?.caseType || 'ВКС'],
                       },
                     });
                   }
