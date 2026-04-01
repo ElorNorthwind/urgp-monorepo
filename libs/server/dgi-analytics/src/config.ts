@@ -25,7 +25,10 @@ export const slimCasesUnauthorizedColumns = `
 "operatorSurveyConsultationType",
 "serviceFullName",
 "operatorSurveyDate",
-"clientSurveyDate"
+"clientSurveyDate",
+"caseType",
+"consultCount",
+"firstConsultAt"
 `;
 
 export const detailedCasesUnauthorizedColumns = `
@@ -98,5 +101,15 @@ null as "flsNumber",
 "clientSurveyConsultationReceived",
 "serviceFullName",
 "departmentFullName",
-"zamFullName"
+"zamFullName",
+"caseType",
+"consultCount",
+"firstConsultAt",
+"consultationDuration",
+"waitDuration",
+"holdDuration",
+"operatorSurveyQuestionType",
+"teletribeDisconnectDetails",
+"teletribeDisconnectInitiator",
+"teletribeSoundLink"
 `;
