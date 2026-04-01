@@ -4,9 +4,14 @@ import { RootState } from '../store';
 
 import { lsKeys } from '../../config/localStorageKeys';
 import { defaultVksCasesColumns } from '@urgp/client/entities';
+import { DialogFormState } from '@urgp/shared/entities';
 
 type VksState = {
   casesTableColumns: VisibilityState;
+  surveyForm: {
+    state: DialogFormState;
+    // values: CreateEquityOperationDto & { saved?: boolean };
+  };
 };
 
 const initialVksCasesTableColumns =
@@ -15,6 +20,9 @@ const initialVksCasesTableColumns =
 
 const initialState: VksState = {
   casesTableColumns: initialVksCasesTableColumns,
+  surveyForm: {
+    state: DialogFormState.close,
+  },
 };
 
 const vksSlice = createSlice({

@@ -27,5 +27,6 @@ export const formatVksCaseRowForExcel = (row: Row<VksCase>) => {
     'Комментарий к оценке': data?.gradeComment,
     'Источник оценки': gradeSourceLabel,
     'Ссылка оператора': data?.operatorLink,
+    'Направлен на яндекс': data?.operatorSurveySentToYandex ? 'да' : 'нет',
   };
 };

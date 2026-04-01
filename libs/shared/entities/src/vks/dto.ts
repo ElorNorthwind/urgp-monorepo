@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { AnketologSurveyTypes } from './config';
 import { addDays, format, subDays } from 'date-fns';
 import { report } from 'process';
+import { vksCaseDetailsSchema } from './types';
 
 // Параметры поиска на странице
 const queryNumberArray = z
@@ -170,3 +171,8 @@ export const hotlineRequestSchema = z
   })
   .default({});
 export type HotlineRequest = z.input<typeof hotlineRequestSchema>;
+
+// TO DO : нужны новые поля для хранения ручного отчета
+export const updateVksSurveySchema = vksCaseDetailsSchema.pick({
+  id: true,
+});

@@ -444,6 +444,7 @@ export class TeletribeService {
   public async cronUpdateTeletribeData(forced: boolean = false) {
     const isDev = this.configService.get<string>('NODE_ENV') === 'development';
     if (isDev && !forced) return;
+    await this.setAuthTokens(true);
     await this.insertHotlineReport().then(() => {
       this.logger.log(`Teletribe data updated (yesterday + today)`);
     });

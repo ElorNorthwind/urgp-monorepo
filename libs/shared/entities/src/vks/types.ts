@@ -254,7 +254,7 @@ export const vksCaseSchema = z.object({
 });
 export type VksCase = z.infer<typeof vksCaseSchema>;
 
-export const VksCaseDetailsSchema = vksCaseSchema.extend({
+export const vksCaseDetailsSchema = vksCaseSchema.extend({
   bookingId: z.coerce.number().int().nonnegative().nullable(),
   bookingDate: z.string().datetime().nullable(), // ISO 8601 date string
   bookingResource: z.string().nullable(),
@@ -315,7 +315,7 @@ export const VksCaseDetailsSchema = vksCaseSchema.extend({
   teletribeDisconnectInitiator: z.string().nullable(),
   teletribeSoundLink: z.string().nullable(),
 });
-export type VksCaseDetails = z.infer<typeof VksCaseDetailsSchema>;
+export type VksCaseDetails = z.infer<typeof vksCaseDetailsSchema>;
 
 export type vksUpdateQueryReturnValue = {
   qms: { clients: number; records: number };
