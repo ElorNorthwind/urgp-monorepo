@@ -63,7 +63,7 @@ export class EdoModule implements OnModuleInit {
     this.axios.axiosRef.interceptors.response.use(async function (response) {
       // автоматически перекодируем win1251 ответы
       const ctype = response.headers['content-type'];
-      if (ctype.includes('charset=windows-1251')) {
+      if ((ctype as string)?.includes('charset=windows-1251')) {
         response.data = iconv.decode(Buffer.from(response.data), 'win1251');
       } else {
         response.data = iconv.decode(Buffer.from(response.data), 'utf-8');

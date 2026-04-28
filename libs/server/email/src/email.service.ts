@@ -53,7 +53,7 @@ export class EmailService implements OnModuleInit {
       port,
       tls: true,
       // tls: true,
-      // tlsOptions: { rejectUnauthorized: false },
+      tlsOptions: { rejectUnauthorized: false },
       // authTimeout: 3000,
     });
 

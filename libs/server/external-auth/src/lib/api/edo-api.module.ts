@@ -92,7 +92,7 @@ export class EdoApiModule implements OnModuleInit {
       async function (response) {
         // автоматически рекодируем данные в UTF-8
         const ctype = response.headers['content-type'];
-        if (ctype.includes('charset=windows-1251')) {
+        if ((ctype as string)?.includes('charset=windows-1251')) {
           response.data = iconv.decode(Buffer.from(response.data), 'win1251');
         }
 
