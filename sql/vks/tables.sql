@@ -275,6 +275,8 @@ CREATE TABLE vks.cases
     teletribe_disconnect_initiator TEXT,
     teletribe_sound_link TEXT,
 
+    survey JSONB,
+
     PRIMARY KEY (id),
     CONSTRAINT unique_booking_code_date UNIQUE (booking_code, date)
 );

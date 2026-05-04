@@ -1,4 +1,12 @@
 import { z } from 'zod';
+import {
+  VksDgiSurveyConsultationTypeValues,
+  VksDgiSurveyInfoSourceValues,
+  VksDgiSurveyMoodValues,
+  VksDgiSurveyProblemValues,
+  VksDgiSurveyQuestionRelevanceValues,
+  VksDgiSurveyQuestionTypeValues,
+} from './config';
 
 export type AnketologSurveyResponse = {
   id: number;
@@ -516,3 +524,50 @@ export const teletribeClientSchema = z.object({
   type: z.literal('Телефонный звонок').default('Телефонный звонок'),
 });
 export type TeletribeClient = z.infer<typeof teletribeClientSchema>;
+
+const vksSurveyUserSchema = z.object({
+  id: z.coerce.number().int().nonnegative(),
+  fio: z.string(),
+});
+
+const vksSurveyDocumentSchema = z.object({
+  type: z.string().nullable(),
+  number: z.string().nullable(),
+  date: z.string().datetime().nullable(),
+  notes: z.string().nullable(),
+});
+
+const dgiVksSurveyBasicSchema = z.object({
+  // Заполнение анкеты
+  filledAt: z.string().datetime().nullable().optional(), // наверное нет смысла это передавать с клиента
+  filledBy: vksSurveyUserSchema.nullable().optional(), // наверное нет смысла это передавать с клиента
+  // Редактирование анкеты
+  updatedAt: z.string().datetime().nullable().optional(), // наверное нет смысла это передавать с клиента
+  updatedBy: vksSurveyUserSchema.nullable().optional(), // наверное нет смысла это передавать с клиента
+  // Проводивший консультация
+  operator: vksSurveyUserSchema,
+  type: z.enum(VksDgiSurveyConsultationTypeValues).nullable(),
+  relevance: z.enum(VksDgiSurveyQuestionRelevanceValues).nullable(),
+  department: z.string().nullable(), // TBD: добавить выгружаемый классификатор?
+  questionType: z.enum(VksDgiSurveyQuestionTypeValues).nullable(),
+  // questionClassificator: z.string().nullable(), // TBD: добавить выгружаемый классификатор?
+  summary: z.string().nullable(),
+  // isClient: z.coerce.boolean().nullable(),
+  // clientType: z.string().nullable(),
+  // clientNumber: z.string().nullable(),
+  address: z.string().nullable(),
+  docs: z.array(vksSurveyDocumentSchema).nullable(),
+  mood: z.enum(VksDgiSurveyMoodValues).nullable(),
+  needsAnswer: z.coerce.boolean().nullable(),
+  problems: z.array(z.enum(VksDgiSurveyProblemValues)).nullable(),
+  infoSource: z.enum(VksDgiSurveyInfoSourceValues).nullable(),
+  sentToYandex: z.coerce.boolean().nullable(),
+});
+
+export const dgiVksSurveyHousingSchema = dgiVksSurveyBasicSchema.extend({
+  questionClassificator: z.string().nullable(), // TBD: добавить выгружаемый классификатор?
+  isClient: z.coerce.boolean().nullable(),
+  clientType: z.string().nullable(),
+  clientNumber: z.string().nullable(),
+});
+export type DgiVksSurveyHousing = z.infer<typeof dgiVksSurveyHousingSchema>;
