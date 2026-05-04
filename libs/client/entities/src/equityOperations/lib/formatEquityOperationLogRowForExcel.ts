@@ -48,5 +48,6 @@ export const formatEquityOperationLogRowForExcel = (
     Статус: data?.statusName,
     Тип: data?.objectTypeName,
     Права: data?.egrnStatus,
+    Исполнитель: data?.operation?.createdBy?.fio ?? 'Не указан',
   };
 };
