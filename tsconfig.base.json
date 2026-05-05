@@ -15,6 +15,7 @@
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "@urgp/client/*": ["apps/client/src/*"],
