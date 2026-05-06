@@ -18,7 +18,7 @@ const baseQuery = fetchBaseQuery({
   credentials: 'include',
 });
 
-const baseQueryWithReauth = async (args, api, extraOptions) => {
+const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
   const state = api.getState() as RootState;
   const poseUser = state.auth.poseAsUser;
 
@@ -76,3 +76,5 @@ export const rtkApi = createApi({
     'vks-classificator',
   ],
 });
+
+export type RtkApiEndpoint = typeof rtkApi.endpoints;
