@@ -185,4 +185,25 @@ WHERE id = $1`;
     const result = await this.db.oneOrNone(sql, [userId]);
     return result.data ?? false;
   }
+
+  //   async readVksUsers(department?: string): Promise<NestedClassificatorInfo[]> {
+  //     const sql = `SELECT
+  // 	u.category as value,
+  // 	u.category as label,
+  // 	jsonb_agg(u) as items
+  // FROM (
+  // 	SELECT
+  // 		id as value,
+  // 		fio as label,
+  // 		fio as fullname,
+  // 		ARRAY[control_settings->>'department', fio] as tags,
+  // 		control_settings->>'department' as category
+  // 	FROM renovation.users
+  // 	WHERE control_data->'roles' ? 'vks'
+  //   ${department ? "AND control_settings->>'department' = ${department}" : ''}{}
+  // ) u
+  // GROUP BY u.category`;
+  //     const query = department ? this.pgp.as.format(sql, { department }) : sql;
+  //     return this.db.any(query);
+  //   }
 }

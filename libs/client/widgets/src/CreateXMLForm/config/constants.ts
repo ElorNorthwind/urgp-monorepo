@@ -26,6 +26,7 @@ export const RdTypeOptions = [
   },
   { value: RdType.BuildingToNonResidential, label: 'Перевод здания в нежилое' },
   { value: RdType.BuildingToResidential, label: 'Перевод здания в жилое' },
+  { value: RdType.BuildingsToResidential, label: 'Перевод зданий в жилые' },
   {
     value: RdType.PremisesToNonResidentialExclusion,
     label: 'Исключение объектов (помещения)',
