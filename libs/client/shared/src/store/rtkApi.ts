@@ -77,4 +77,4 @@ export const rtkApi = createApi({
   ],
 });
 
-export type RtkApiEndpoint = typeof rtkApi.endpoints;
+// export type RtkApiEndpoint = typeof rtkApi.endpoints;

@@ -1,4 +1,4 @@
-import type { RtkApiEndpoint } from '@urgp/client/shared';
+// import type { RtkApiEndpoint } from '@urgp/client/shared';
 
 import {
   NestedClassificatorInfo,
@@ -38,7 +38,7 @@ export type DgiSurveyTextElement = VksDgiSurveyElementCommon & {
 export type DgiSurveySingleSelectStringElement = VksDgiSurveyElementCommon & {
   type: 'singleSelectString';
   options: NestedClassificatorInfoString[];
-  serverOptionsQuery?: RtkApiEndpoint;
+  serverOptionsQuery?: any; //RtkApiEndpoint;
   defaultValue?: string;
   lockedValue?: string;
 };
@@ -46,14 +46,14 @@ export type DgiSurveySingleSelectStringElement = VksDgiSurveyElementCommon & {
 export type DgiSurveySingleSelectNumberElement = VksDgiSurveyElementCommon & {
   type: 'singleSelectNumber';
   options: NestedClassificatorInfo[];
-  serverOptionsQuery?: RtkApiEndpoint;
+  serverOptionsQuery?: any; //RtkApiEndpoint;
   defaultValue?: number;
   lockedValue?: number;
 };
 export type DgiSurveyMultiSelectStringElement = VksDgiSurveyElementCommon & {
   type: 'multiSelectString';
   options: NestedClassificatorInfoString[];
-  serverOptionsQuery?: RtkApiEndpoint;
+  serverOptionsQuery?: any; //RtkApiEndpoint;
   defaultValue?: string;
   lockedValue?: string;
 };
@@ -61,7 +61,7 @@ export type DgiSurveyMultiSelectStringElement = VksDgiSurveyElementCommon & {
 export type DgiSurveyMultiSelectNumberElement = VksDgiSurveyElementCommon & {
   type: 'multiSelectNumber';
   options: NestedClassificatorInfo[];
-  serverOptionsQuery?: RtkApiEndpoint;
+  serverOptionsQuery?: any; //RtkApiEndpoint;
   defaultValue?: number;
   lockedValue?: number;
 };
