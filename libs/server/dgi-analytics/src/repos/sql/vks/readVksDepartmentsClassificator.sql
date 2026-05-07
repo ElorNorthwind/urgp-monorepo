@@ -10,5 +10,6 @@ SELECT
 	) ORDER BY d.id) as items
 FROM vks.departments d
 LEFT JOIN vks.zams z on z.id = d.zam_id
+WHERE d.has_consultations = true
 GROUP BY d.zam_id, z.short_name
 ORDER BY d.zam_id, z.short_name;
