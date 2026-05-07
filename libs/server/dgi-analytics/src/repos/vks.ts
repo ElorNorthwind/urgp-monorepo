@@ -361,6 +361,10 @@ SET (
     return this.db.any(vks.readStatusClassificator);
   }
 
+  getUserClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.db.any(vks.readUserClassificator);
+  }
+
   getVksTimeline(departmentIds?: number[]): Promise<VksTimelinePoint[]> {
     const conditions =
       departmentIds && departmentIds.length > 0

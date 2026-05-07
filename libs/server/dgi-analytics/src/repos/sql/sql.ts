@@ -14,6 +14,7 @@ export const vks = {
     'sql/vks/readVksServiceTypeClassificator.sql',
   ),
   readStatusClassificator: sql('sql/vks/readVksStatusClassificator.sql'),
+  readUserClassificator: sql('sql/vks/readVksUserClassificator.sql'),
   readVksTimeline: sql('sql/vks/readVksTimeline.sql'),
   readVksStatusStats: sql('sql/vks/readVksStatusStats.sql'),
   readVksDepartmentStats: sql('sql/vks/readVksDepartmentStats.sql'),
