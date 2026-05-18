@@ -149,20 +149,30 @@ export const vkaSetBooleanFlagSchema = z.object({
 });
 export type VkaSetBooleanFlag = z.infer<typeof vkaSetBooleanFlagSchema>;
 
+const fromDate = z.preprocess(
+  (value) =>
+    value === undefined || value === null
+      ? format(subDays(new Date(), 1), 'dd.MM.yyyy')
+      : value,
+  z.string().regex(/\d{2}.\d{2}.\d{4}/, {
+    message: 'Некорректная дата. Нужен формат дд.мм.гггг',
+  }),
+);
+
+const toDate = z.preprocess(
+  (value) =>
+    value === undefined || value === null
+      ? format(addDays(new Date(), 1), 'dd.MM.yyyy')
+      : value,
+  z.string().regex(/\d{2}.\d{2}.\d{4}/, {
+    message: 'Некорректная дата. Нужен формат дд.мм.гггг',
+  }),
+);
+
 export const hotlineRequestSchema = z
   .object({
-    dateFrom: z
-      .string()
-      .regex(/\d{2}.\d{2}.\d{4}/, {
-        message: 'Некорректная дата. Нужен формат дд.мм.гггг',
-      })
-      .default(format(subDays(new Date(), 1), 'dd.MM.yyyy')),
-    dateTo: z
-      .string()
-      .regex(/\d{2}.\d{2}.\d{4}/, {
-        message: 'Некорректная дата. Нужен формат дд.мм.гггг',
-      })
-      .default(format(addDays(new Date(), 1), 'dd.MM.yyyy')),
+    dateFrom: fromDate,
+    dateTo: toDate,
     page: z.number().int().nonnegative().default(1),
     reportType: z
       .enum(['hotline', 'hotline_score', 'outbound'])
