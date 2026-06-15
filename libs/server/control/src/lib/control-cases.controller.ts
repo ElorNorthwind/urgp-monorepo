@@ -39,7 +39,7 @@ import {
 } from '@urgp/shared/entities';
 import { ControlCasesService } from './control-cases.service';
 import { ControlClassificatorsService } from './control-classificators.service';
-import { TelegramService } from '@urgp/server/telegram';
+// import { TelegramService } from '@urgp/server/telegram';
 import { differenceInDays } from 'date-fns';
 import { userInfo } from 'os';
 import { Message } from 'grammy/types';
@@ -50,7 +50,7 @@ export class ControlCasesController {
   constructor(
     private readonly controlCases: ControlCasesService,
     private readonly classificators: ControlClassificatorsService,
-    private readonly telegram: TelegramService,
+    // private readonly telegram: TelegramService,
   ) {}
 
   @Post()

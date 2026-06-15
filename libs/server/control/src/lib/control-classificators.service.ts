@@ -2,7 +2,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { DatabaseService } from '@urgp/server/database';
-import { TelegramService } from '@urgp/server/telegram';
+// import { TelegramService } from '@urgp/server/telegram';
 import {
   ApproveControlEntityDto,
   caseClassesValues,
@@ -58,44 +58,44 @@ type ApproveData = Omit<ApproveControlEntityDto, 'id'> & {
 export class ControlClassificatorsService {
   constructor(
     private readonly dbServise: DatabaseService,
-    private readonly telegram: TelegramService,
+    // private readonly telegram: TelegramService,
     // private readonly operations: ControlOperationsService,
     // private readonly cases: ControlCasesService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  @Cron('0 10 8,12,16 * * 1-5')
-  private async thriceADayStatusNotification() {
-    const dailySubscriptions =
-      await this.dbServise.db.renovationUsers.readSubscriptions(
-        NotificationPeriod.thrice,
-      );
-    dailySubscriptions.forEach((id, index) => {
-      setTimeout(() => this.telegram.sendUserStatus(id), index * 50);
-    });
-  }
+  // @Cron('0 10 8,12,16 * * 1-5')
+  // private async thriceADayStatusNotification() {
+  //   const dailySubscriptions =
+  //     await this.dbServise.db.renovationUsers.readSubscriptions(
+  //       NotificationPeriod.thrice,
+  //     );
+  //   dailySubscriptions.forEach((id, index) => {
+  //     setTimeout(() => this.telegram.sendUserStatus(id), index * 50);
+  //   });
+  // }
 
-  @Cron('0 15 8 * * 1-5')
-  private async dailyStatusNotification() {
-    const dailySubscriptions =
-      await this.dbServise.db.renovationUsers.readSubscriptions(
-        NotificationPeriod.daily,
-      );
-    dailySubscriptions.forEach((id, index) => {
-      setTimeout(() => this.telegram.sendUserStatus(id), index * 50);
-    });
-  }
+  // @Cron('0 15 8 * * 1-5')
+  // private async dailyStatusNotification() {
+  //   const dailySubscriptions =
+  //     await this.dbServise.db.renovationUsers.readSubscriptions(
+  //       NotificationPeriod.daily,
+  //     );
+  //   dailySubscriptions.forEach((id, index) => {
+  //     setTimeout(() => this.telegram.sendUserStatus(id), index * 50);
+  //   });
+  // }
 
-  @Cron('0 0 8 * * 1')
-  private async weellyStatusNotification() {
-    const weeklySubscriptions =
-      await this.dbServise.db.renovationUsers.readSubscriptions(
-        NotificationPeriod.weekly,
-      );
-    weeklySubscriptions.forEach((id, index) => {
-      setTimeout(() => this.telegram.sendUserStatus(id), index * 50);
-    });
-  }
+  // @Cron('0 0 8 * * 1')
+  // private async weellyStatusNotification() {
+  //   const weeklySubscriptions =
+  //     await this.dbServise.db.renovationUsers.readSubscriptions(
+  //       NotificationPeriod.weekly,
+  //     );
+  //   weeklySubscriptions.forEach((id, index) => {
+  //     setTimeout(() => this.telegram.sendUserStatus(id), index * 50);
+  //   });
+  // }
 
   public async getControlData(userId: number): Promise<UserControlData> {
     return this.dbServise.db.renovationUsers.getControlData(userId);

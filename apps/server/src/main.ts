@@ -27,9 +27,9 @@ async function bootstrap() {
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
   );
 
-  // Manually get TelegramService and launch bot
-  const telegramService = app.get(TelegramService);
-  await telegramService.launchBot();
+  // // Manually get TelegramService and launch bot
+  // const telegramService = app.get(TelegramService);
+  // await telegramService.launchBot();
 }
 
 bootstrap();

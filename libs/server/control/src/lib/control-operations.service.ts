@@ -17,14 +17,14 @@ import {
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
 import { ControlClassificatorsService } from './control-classificators.service';
-import { TelegramService } from '@urgp/server/telegram';
+// import { TelegramService } from '@urgp/server/telegram';
 import { endOfDay, format, isEqual } from 'date-fns';
 
 @Injectable()
 export class ControlOperationsService {
   constructor(
     private readonly dbServise: DatabaseService,
-    private readonly telegram: TelegramService,
+    // private readonly telegram: TelegramService,
     // private readonly controlCases: ControlCasesService,
     private readonly classificators: ControlClassificatorsService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
@@ -42,31 +42,31 @@ export class ControlOperationsService {
 
     const operation = await this.readFullOperationById(createdOperationId);
 
-    // Уведомления о поручении
-    if (
-      operation?.class === OperationClasses.dispatch &&
-      operation?.approveStatus === ApproveStatus.approved &&
-      operation?.controlTo?.id
-    ) {
-      this.telegram?.sendResolutionInfo(
-        operation?.controlTo?.id,
-        operation,
-        'new',
-      );
-    }
+    // // Уведомления о поручении
+    // if (
+    //   operation?.class === OperationClasses.dispatch &&
+    //   operation?.approveStatus === ApproveStatus.approved &&
+    //   operation?.controlTo?.id
+    // ) {
+    //   this.telegram?.sendResolutionInfo(
+    //     operation?.controlTo?.id,
+    //     operation,
+    //     'new',
+    //   );
+    // }
 
-    // Уведомления о проекте на согласование
-    if (
-      operation?.class === OperationClasses.stage &&
-      operation?.approveStatus === ApproveStatus.pending &&
-      operation?.approveTo?.id
-    ) {
-      this.telegram?.sendStageInfo(
-        operation?.approveTo?.id,
-        operation,
-        'pending',
-      );
-    }
+    // // Уведомления о проекте на согласование
+    // if (
+    //   operation?.class === OperationClasses.stage &&
+    //   operation?.approveStatus === ApproveStatus.pending &&
+    //   operation?.approveTo?.id
+    // ) {
+    //   this.telegram?.sendStageInfo(
+    //     operation?.approveTo?.id,
+    //     operation,
+    //     'pending',
+    //   );
+    // }
 
     return operation;
   }
@@ -124,22 +124,22 @@ export class ControlOperationsService {
 
     const operation = await this.readFullOperationById(updatedOperationId);
 
-    // Уведомления об изменении поручения
-    if (
-      operation?.class === OperationClasses.dispatch &&
-      operation?.approveStatus === ApproveStatus.approved &&
-      operation?.controlTo?.id &&
-      // dto?.dueDate &&
-      // oldOperation?.dueDate &&
-      // !isEqual(endOfDay(dto?.dueDate), endOfDay(oldOperation?.dueDate))
-      !isEqual(dto?.dueDate || '', oldOperation?.dueDate || '')
-    ) {
-      this.telegram?.sendResolutionInfo(
-        operation?.controlTo?.id,
-        operation,
-        'change',
-      );
-    }
+    // // Уведомления об изменении поручения
+    // if (
+    //   operation?.class === OperationClasses.dispatch &&
+    //   operation?.approveStatus === ApproveStatus.approved &&
+    //   operation?.controlTo?.id &&
+    //   // dto?.dueDate &&
+    //   // oldOperation?.dueDate &&
+    //   // !isEqual(endOfDay(dto?.dueDate), endOfDay(oldOperation?.dueDate))
+    //   !isEqual(dto?.dueDate || '', oldOperation?.dueDate || '')
+    // ) {
+    //   this.telegram?.sendResolutionInfo(
+    //     operation?.controlTo?.id,
+    //     operation,
+    //     'change',
+    //   );
+    // }
 
     return operation;
   }
@@ -184,27 +184,27 @@ export class ControlOperationsService {
       userId,
     );
 
-    // Уведомления о проекте на согласование
-    if (
-      operation?.class === OperationClasses.stage &&
-      operation?.approveStatus === ApproveStatus.pending &&
-      operation?.approveTo?.id
-    ) {
-      this.telegram?.sendStageInfo(
-        operation?.approveTo?.id,
-        operation,
-        'pending',
-      );
-    }
+    //   // Уведомления о проекте на согласование
+    //   if (
+    //     operation?.class === OperationClasses.stage &&
+    //     operation?.approveStatus === ApproveStatus.pending &&
+    //     operation?.approveTo?.id
+    //   ) {
+    //     this.telegram?.sendStageInfo(
+    //       operation?.approveTo?.id,
+    //       operation,
+    //       'pending',
+    //     );
+    //   }
 
-    // Уведомления об отказе в согласовании
-    if (
-      operation?.class === OperationClasses.stage &&
-      operation?.approveStatus === ApproveStatus.rejected &&
-      operation?.author?.id
-    ) {
-      this.telegram?.sendStageInfo(operation?.author?.id, operation, 'reject');
-    }
+    //   // Уведомления об отказе в согласовании
+    //   if (
+    //     operation?.class === OperationClasses.stage &&
+    //     operation?.approveStatus === ApproveStatus.rejected &&
+    //     operation?.author?.id
+    //   ) {
+    //     this.telegram?.sendStageInfo(operation?.author?.id, operation, 'reject');
+    //   }
 
     return operation;
   }

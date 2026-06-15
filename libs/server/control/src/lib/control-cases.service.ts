@@ -17,14 +17,14 @@ import {
 import { Cache } from 'cache-manager';
 import { ControlOperationsService } from './control-operations.service';
 import { defineAbility } from '@casl/ability';
-import { TelegramService } from '@urgp/server/telegram';
+// import { TelegramService } from '@urgp/server/telegram';
 
 @Injectable()
 export class ControlCasesService {
   constructor(
     private readonly dbServise: DatabaseService,
     private readonly operations: ControlOperationsService,
-    private readonly telegram: TelegramService,
+    // private readonly telegram: TelegramService,
     // private readonly classificators: ControlClassificatorsService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
@@ -55,17 +55,17 @@ export class ControlCasesService {
 
     const controlCase = await this.readFullCaseById(createdCaseId, authorId);
 
-    // Уведомления о поступлении заявки на согласование
-    if (
-      controlCase?.approveStatus === ApproveStatus.pending &&
-      controlCase?.approveTo?.id
-    ) {
-      this.telegram?.sendCaseProjectInfo(
-        controlCase?.approveTo?.id,
-        controlCase,
-        'pending',
-      );
-    }
+    // // Уведомления о поступлении заявки на согласование
+    // if (
+    //   controlCase?.approveStatus === ApproveStatus.pending &&
+    //   controlCase?.approveTo?.id
+    // ) {
+    //   this.telegram?.sendCaseProjectInfo(
+    //     controlCase?.approveTo?.id,
+    //     controlCase,
+    //     'pending',
+    //   );
+    // }
 
     return controlCase;
   }
@@ -188,29 +188,29 @@ export class ControlCasesService {
 
     const controlCase = await this.readFullCaseById(approvedCaseId, userId);
 
-    // Уведомления о поступлении заявки на согласование
-    if (
-      controlCase?.approveStatus === ApproveStatus.pending &&
-      controlCase?.approveTo?.id
-    ) {
-      this.telegram?.sendCaseProjectInfo(
-        controlCase?.approveTo?.id,
-        controlCase,
-        'pending',
-      );
-    }
+    // // Уведомления о поступлении заявки на согласование
+    // if (
+    //   controlCase?.approveStatus === ApproveStatus.pending &&
+    //   controlCase?.approveTo?.id
+    // ) {
+    //   this.telegram?.sendCaseProjectInfo(
+    //     controlCase?.approveTo?.id,
+    //     controlCase,
+    //     'pending',
+    //   );
+    // }
 
-    // Уведомления об отказе в согласовании заявки
-    if (
-      controlCase?.approveStatus === ApproveStatus.rejected &&
-      controlCase?.approveFrom?.id
-    ) {
-      this.telegram?.sendCaseProjectInfo(
-        controlCase?.approveFrom?.id,
-        controlCase,
-        'reject',
-      );
-    }
+    // // Уведомления об отказе в согласовании заявки
+    // if (
+    //   controlCase?.approveStatus === ApproveStatus.rejected &&
+    //   controlCase?.approveFrom?.id
+    // ) {
+    //   this.telegram?.sendCaseProjectInfo(
+    //     controlCase?.approveFrom?.id,
+    //     controlCase,
+    //     'reject',
+    //   );
+    // }
 
     return controlCase;
   }

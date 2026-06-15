@@ -63,7 +63,7 @@ import { TeletribeModule } from '@urgp/server/teletribe';
     DaDataModule,
     FiasModule,
     AddressModule,
-    TelegramModule,
+    // TelegramModule,
     EquityModule,
 
     SudirModule,
