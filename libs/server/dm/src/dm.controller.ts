@@ -24,6 +24,12 @@ export class DmController {
   }
 
   @UseGuards(AccessTokenGuard)
+  @Get('update/suspences')
+  GetSuspencesForUndoneDocumens(): Promise<number> {
+    return this.dm.updateSuspences();
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Get('update/all')
   GetAllResolutions(): Promise<number> {
     return this.dm.updateAllResolutions();

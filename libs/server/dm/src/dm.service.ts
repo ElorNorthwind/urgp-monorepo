@@ -14,6 +14,8 @@ import { DgiAnalyticsService } from '@urgp/server/dgi-analytics';
 import { getDmAllUndoneQuery } from './util/getDmAllUndoneQuery';
 import { Cron } from '@nestjs/schedule';
 import { getDmDocIdsQuery } from './util/getDmDocIdsQuery';
+import { getDmSuspencesQuery } from './util/getDmSuspencesQuery';
+import { formatDmSuspences } from './util/formatDmSuspences';
 
 @Injectable()
 export class DmService {
@@ -117,6 +119,34 @@ export class DmService {
     return resolutions?.length || 0;
   }
 
+  public async updateSuspences(): Promise<number> {
+    const docs = await this.analytics.db.dm.getSpdUndoneDocuments();
+
+    await this.executeCallback(async (connection) => {
+      const chunkSize = 900;
+      let i = 0;
+      while (i < docs.length) {
+        Logger.log(
+          'Executing DM update for suspences: ' + i + ' / ' + docs.length,
+        );
+        const chunk = docs.slice(i, i + chunkSize);
+
+        // Logger.debug(getDmSuspencesQuery(chunk.slice(0, 5)));
+
+        const resultChunk = await connection.execute(
+          getDmSuspencesQuery(chunk),
+        );
+        const formatedRows = formatDmSuspences(
+          resultChunk?.rows as unknown[][],
+        );
+        await this.analytics.db.dm.insertDmSuspences(formatedRows);
+        i += chunkSize;
+      }
+    });
+
+    return docs?.length || 0;
+  }
+
   public async updateAllResolutions(): Promise<number> {
     const documents = await this.analytics.db.dm.getAllDocuments();
 
@@ -154,6 +184,13 @@ export class DmService {
     let count = 0;
     count += (await this.addDmShortTermRecords()) || 0;
     count += (await this.updateAllResolutions()) || 0;
+    Logger.log('DM daily update finished');
+    return count;
+  }
+  @Cron('0 0 6 * * *')
+  public async updateDailySuspences(): Promise<number> {
+    Logger.log('DM daily suspences update started');
+    const count = await this.updateSuspences();
     Logger.log('DM daily update finished');
     return count;
   }

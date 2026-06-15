@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { DmRecord } from '@urgp/shared/entities';
+import { DmRecord, DmSuspence } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 
 const dmResultColumngs = [
@@ -12,6 +12,17 @@ const dmResultColumngs = [
   { name: 'fromFio' },
   { name: 'registrationDate', cast: 'timestamp with time zone' },
   { name: 'categoryId' },
+];
+
+const dmSuspenceColumngs = [
+  { name: 'documentId', cast: 'integer' },
+  { name: 'techStageId', cast: 'integer' },
+  { name: 'stageName' },
+  { name: 'startDate', cast: 'timestamp with time zone' },
+  { name: 'dueDate', cast: 'timestamp with time zone' },
+  { name: 'doneDate', cast: 'timestamp with time zone' },
+  { name: 'termValue', cast: 'integer' },
+  { name: 'termType' },
 ];
 
 // @Injectable()
@@ -58,6 +69,27 @@ ON CONFLICT (id) DO UPDATE SET
     return this.db.none(
       query,
       this.pgp.helpers.values(records, dmResultColumngs),
+    );
+  }
+
+  insertDmSuspences(records: DmSuspence[]): Promise<null> {
+    if (!records || records?.length === 0) return Promise.resolve(null);
+    const query = `
+WITH import_values(document_id, tech_stage_id, stage_name, start_date, due_date, done_date, term_value, term_type) AS (
+	VALUES
+	$1:raw
+)
+INSERT INTO dm.suspences(document_id, tech_stage_id, stage_name, start_date, due_date, done_date, term_value, term_type, updated_at)
+SELECT DISTINCT ON (v.document_id, v.tech_stage_id) v.document_id, v.tech_stage_id, v.stage_name, v.start_date, v.due_date, v.done_date, v.term_value, v.term_type, NOW()
+FROM import_values v
+ON CONFLICT (document_id, tech_stage_id) DO UPDATE
+SET start_date = excluded.start_date, 
+	due_date = excluded.due_date, 
+	done_date = excluded.done_date
+WHERE (dm.suspences.start_date, dm.suspences.due_date, dm.suspences.done_date) <> (excluded.start_date, excluded.due_date, excluded.done_date);`;
+    return this.db.none(
+      query,
+      this.pgp.helpers.values(records, dmSuspenceColumngs),
     );
   }
 
@@ -108,6 +140,14 @@ ON CONFLICT (id) DO UPDATE SET
   }
   getAllDocuments(): Promise<number[]> {
     const query = `SELECT id FROM dm.documents;`;
+    return this.db.manyOrNone(query)?.then((res) => res.map((r) => r.id));
+  }
+  getSpdUndoneDocuments(): Promise<number[]> {
+    const query = `SELECT d.id
+FROM dm.documents d
+LEFT JOIN dm.categories c ON d.category_id = c.id
+LEFT JOIN dm.resolutions r ON r.document_id = d.id
+WHERE c.category_group = 'SPD' AND d.reg_date AND r.done_date IS NULL`;
     return this.db.manyOrNone(query)?.then((res) => res.map((r) => r.id));
   }
 }

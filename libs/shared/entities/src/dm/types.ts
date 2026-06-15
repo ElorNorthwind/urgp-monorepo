@@ -9,3 +9,14 @@ export type DmRecord = {
   registrationDate: string | null;
   categoryId: number | null;
 };
+
+export type DmSuspence = {
+  documentId: number;
+  techStageId: number;
+  stageName: string | null;
+  startDate: string | null;
+  dueDate: string | null;
+  doneDate: string | null;
+  termValue: number | null;
+  termType: string | null;
+};
