@@ -143,7 +143,7 @@ export class DmService {
         i += chunkSize;
       }
     });
-
+    await this.analytics.db.dm.updateSuspensionControlDates();
     return docs?.length || 0;
   }
 

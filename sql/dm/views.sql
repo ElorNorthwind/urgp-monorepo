@@ -79,7 +79,7 @@ CREATE OR REPLACE VIEW dm.documents_dated_view  AS
 DROP VIEW IF EXISTS dm.spd_view CASCADE;
 CREATE OR REPLACE VIEW dm.spd_view  AS
 ----------------------------------------------------------------------
-    SELECT DISTINCT ON (d.reg_date, r.document_id)
+   SELECT DISTINCT ON (d.reg_date, r.document_id)
         r.id,
         r.document_id as "id_documents",
         d.reg_num,
@@ -92,7 +92,8 @@ CREATE OR REPLACE VIEW dm.spd_view  AS
         dep.display_name as "department",
         c.category_code as "id_rubr",
         c.category_name as "rubr_name",
-        z.full_name as "zam"
+        z.full_name as "zam",
+        r.due_date_with_suspensions as "kontr_data_with_suspensions"
     FROM dm.resolutions r
     LEFT JOIN dm.documents d ON r.document_id = d.id
     LEFT JOIN dm.categories c ON d.category_id = c.id
@@ -132,7 +133,8 @@ CREATE OR REPLACE VIEW dm.spd_dated_view  AS
         dep.display_name as "department",
         c.category_code as "id_rubr",
         c.category_name as "rubr_name",
-        z.full_name as "zam"
+        z.full_name as "zam",
+        r.due_date_with_suspensions as "kontr_data_with_suspensions"
     FROM dm.resolutions r
     LEFT JOIN dm.documents d ON r.document_id = d.id
     LEFT JOIN dm.categories c ON d.category_id = c.id
@@ -174,7 +176,8 @@ CREATE OR REPLACE VIEW dm.documents_combined_dated_view  AS
         c.category_code as "id_rubr",
         z.full_name as "zam",
         c.category_group as "category",
-        COALESCE(c.zapros, CASE WHEN c.category_group = 'EDO' THEN 'СЭДО ' || c.category_code || ' ' || c.category_name ELSE c.category_name END, c.category_name) as "zapros"
+        COALESCE(c.zapros, CASE WHEN c.category_group = 'EDO' THEN 'СЭДО ' || c.category_code || ' ' || c.category_name ELSE c.category_name END, c.category_name) as "zapros",
+        r.due_date_with_suspensions as "kontr_data_with_suspensions"
     FROM dm.resolutions r
     LEFT JOIN dm.documents d ON r.document_id = d.id
     LEFT JOIN dm.categories c ON d.category_id = c.id
@@ -189,4 +192,3 @@ CREATE OR REPLACE VIEW dm.documents_combined_dated_view  AS
     AND d.deleted_at IS NULL
     AND c.is_disabled IS DISTINCT FROM true
     ORDER BY control_date;
-

@@ -243,6 +243,8 @@ CREATE TABLE dm.resolutions
     document_id INTEGER REFERENCES dm.documents(id) ON DELETE SET NULL,
     resolution_text TEXT,
     control_date TIMESTAMP WITH TIME ZONE,
+    plan_due_date TIMESTAMP WITH TIME ZONE,
+    due_date_with_suspensions TIMESTAMP WITH TIME ZONE,
     done_date TIMESTAMP WITH TIME ZONE,
 
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -271,6 +273,7 @@ CREATE TABLE dm.calendar
     is_short BOOLEAN NOT NULL DEFAULT FALSE,
     weekday_legal INTEGER,
     week_number INTEGER GENERATED ALWAYS AS (CEILING( (DATE_PART( 'day', date ) - DATE_PART( 'dow', date )) / 7) + 1)::integer,
+    next_workday DATE,
     PRIMARY KEY (date)
 );
 
@@ -293,10 +296,7 @@ CREATE TABLE dm.suspences
     done_date DATE,
     term_value INTEGER NOT NULL DEFAULT 0,
     term_type VARCHAR(50) NOT NULL DEFAULT 'РД',
-
-    length INTEGER GENERATED ALWAYS AS (
-    COALESCE(UPPER(daterange(start_date, COALESCE(done_date, due_date), '(]')) - LOWER(daterange(start_date, COALESCE(done_date, due_date), '(]')),0)
-    ) STORED,
+    term INTEGER NOT NULL DEFAULT 0,
 
     PRIMARY KEY (document_id, tech_stage_id)
 );

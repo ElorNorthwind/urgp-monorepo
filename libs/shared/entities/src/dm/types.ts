@@ -8,6 +8,7 @@ export type DmRecord = {
   fromFio: string | null;
   registrationDate: string | null;
   categoryId: number | null;
+  planDueDate: string | null;
 };
 
 export type DmSuspence = {

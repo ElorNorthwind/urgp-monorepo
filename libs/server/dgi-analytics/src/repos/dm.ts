@@ -12,6 +12,7 @@ const dmResultColumngs = [
   { name: 'fromFio' },
   { name: 'registrationDate', cast: 'timestamp with time zone' },
   { name: 'categoryId' },
+  { name: 'planDueDate', cast: 'timestamp with time zone' },
 ];
 
 const dmSuspenceColumngs = [
@@ -37,7 +38,7 @@ export class DmRepository {
     // console.log(records);
 
     const query = `
-WITH import_values(resolution_id, resolution_text, control_date, done_date, document_id, reg_num, from_fio, reg_date, category_id) AS (
+WITH import_values(resolution_id, resolution_text, control_date, done_date, document_id, reg_num, from_fio, reg_date, category_id, plan_due_date) AS (
 	VALUES
 	$1:raw
 ), doc_insert AS (
@@ -56,14 +57,15 @@ WITH import_values(resolution_id, resolution_text, control_date, done_date, docu
     WHERE r.document_id = v.document_id 
       AND r.id <> v.resolution_id
 )
-INSERT INTO dm.resolutions(id, document_id, resolution_text, control_date, done_date)
-SELECT v.resolution_id, v.document_id, v.resolution_text, v.control_date, v.done_date
+INSERT INTO dm.resolutions(id, document_id, resolution_text, control_date, done_date, plan_due_date)
+SELECT DISTINCT ON (v.resolution_id) v.resolution_id, v.document_id, v.resolution_text, v.control_date, v.done_date, v.plan_due_date
 FROM import_values v
 ON CONFLICT (id) DO UPDATE SET
 	document_id = excluded.document_id,
 	resolution_text = excluded.resolution_text,
 	control_date = excluded.control_date,
-	done_date = excluded.done_date`;
+	done_date = excluded.done_date,
+  plan_due_date = excluded.plan_due_date`;
     // WHERE (dm.resolutions.document_id, dm.resolutions.resolution_text, dm.resolutions.control_date, dm.resolutions.done_date) <> (excluded.document_id, excluded.resolution_text, excluded.control_date, excluded.done_date);
     // `;
     return this.db.none(
@@ -147,7 +149,36 @@ WHERE (dm.suspences.start_date, dm.suspences.due_date, dm.suspences.done_date) <
 FROM dm.documents d
 LEFT JOIN dm.categories c ON d.category_id = c.id
 LEFT JOIN dm.resolutions r ON r.document_id = d.id
-WHERE c.category_group = 'SPD' AND d.reg_date AND r.done_date IS NULL`;
+WHERE c.category_group = 'SPD' AND r.done_date IS NULL`;
     return this.db.manyOrNone(query)?.then((res) => res.map((r) => r.id));
+  }
+
+  updateSuspensionControlDates(): Promise<null> {
+    const query = `WITH suspension_length AS (
+	SELECT 
+		document_id, 
+		COALESCE(SUM(term) FILTER (WHERE term_type = 'РД'), 0)::int as workdays, 
+		COALESCE(SUM(term) FILTER (WHERE term_type <> 'РД'), 0)::int as days
+	FROM dm.suspences
+	GROUP BY document_id
+), suspended_data AS (
+	SELECT r.document_id,
+	CASE WHEN c.department_id = 27 AND (r.done_date IS NULL OR cal.next_workday < r.done_date) THEN
+		GREATEST(cal.next_workday::timestamp with time zone, COALESCE(r.done_date, date_trunc('day', NOW()) + INTERVAL '1 day'))
+	ELSE
+		cal.next_workday::timestamp with time zone
+	END as "due_date"
+	FROM dm.resolutions r
+	LEFT JOIN suspension_length s ON s.document_id = r.document_id
+	LEFT JOIN dm.documents d ON r.document_id = d.id
+	LEFT JOIN dm.categories c ON d.category_id = c.id
+	LEFT JOIN dm.calendar cal ON cal.date = dm.add_business_days((COALESCE(r.control_date, r.plan_due_date) + make_interval(days => s.days))::date, s.workdays)
+	WHERE c.category_group = 'SPD' AND (r.done_date IS NULL OR r.due_date_with_suspensions IS NULL)
+)
+UPDATE dm.resolutions r
+SET due_date_with_suspensions = COALESCE(d.due_date, r.control_date, r.plan_due_date)
+FROM suspended_data d
+WHERE d.document_id = r.document_id;`;
+    return this.db.none(query);
   }
 }
