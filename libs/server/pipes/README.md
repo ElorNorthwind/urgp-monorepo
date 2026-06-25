@@ -1,7 +1,29 @@
-# pipes
+# server/pipes
 
-This library was generated with [Nx](https://nx.dev).
+Пользовательский NestJS-пайп валидации на основе Zod-схем.
 
-## Running unit tests
+## Обзор
 
-Run `nx test pipes` to execute the unit tests via [Jest](https://jestjs.io).
+Предоставляет переиспользуемый `ZodValidationPipe`, который валидирует данные запросов по Zod-схемам и выбрасывает `BadRequestException` при ошибке валидации.
+
+## Использование
+
+```typescript
+import { ZodValidationPipe } from '@urgp/server/pipes';
+
+@UsePipes(new ZodValidationPipe(mySchema))
+@Post()
+create(@Body() dto: MyDto) {}
+```
+
+## Основные экспорты
+
+- `ZodValidationPipe` — реализация `PipeTransform` для валидации по Zod-схемам
+
+## Зависимости
+
+- `zod` — библиотека валидации схем
+
+## Запуск тестов
+
+Выполните `nx test server/pipes` для запуска unit-тестов через [Jest](https://jestjs.io).

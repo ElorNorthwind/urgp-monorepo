@@ -1,7 +1,48 @@
-# rsm
+# server/fias
 
-This library was generated with [Nx](https://nx.dev).
+Интеграция с ФИАС (Федеральная информационная адресная система) с многоуровневым поиском.
 
-## Running unit tests
+## Обзор
 
-Run `nx test server/fias` to execute the unit tests via [Jest](https://jestjs.io).
+Валидирует и геокодирует адреса Москвы через публичный API ФИАС с несколькими стратегиями поиска (по частям, по строке, по сокращённому адресу, DaData) и оценкой уверенности.
+
+## Использование
+
+```typescript
+import { FiasModule } from '@urgp/server/fias';
+
+@Module({
+  imports: [FiasModule],
+})
+export class AppModule {}
+```
+
+## Основные экспорты
+
+- `FiasService` — валидация адресов со стратегиями поиска и оценкой уверенности (high/medium/low/none)
+- `FiasController` — эндпоинты поиска адресов
+
+## Зависимости
+
+- `@urgp/server/database` — отслеживание запросов
+- `@urgp/server/dadata` — запасной источник адресов
+- `@urgp/server/auth` — `AccessTokenGuard`
+
+## Конфигурация
+
+| Переменная | Описание |
+|----------|-------------|
+| `FIAS_KEY` | Токен API ФИАС |
+
+Базовый URL: `https://fias-public-service.nalog.ru/api/spas/v2.0`
+
+## Особенности
+
+- Многоуровневый поиск: по частям → по строке → по сокращённому адресу → DaData
+- Автоматическая повторная попытка при 503/504/429 с экспоненциальной задержкой
+- Извлечение кадастрового номера
+- Keep-alive агент (макс. 100 сокетов)
+
+## Запуск тестов
+
+Выполните `nx test server/fias` для запуска unit-тестов через [Jest](https://jestjs.io).

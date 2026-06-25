@@ -1,7 +1,37 @@
-# rsm
+# server/rsm
 
-This library was generated with [Nx](https://nx.dev).
+Интеграция с системой АИС РСМ (Реестр собственности Москвы).
 
-## Running unit tests
+## Обзор
 
-Run `nx test rsm` to execute the unit tests via [Jest](https://jestjs.io).
+Поиск по реестру собственности/зданий и данным БТИ (Бюро технической инвентаризации) с пагинацией на основе сессий и агрегацией результатов из нескольких запросов.
+
+## Использование
+
+```typescript
+import { RsmModule } from '@urgp/server/rsm';
+
+@Module({
+  imports: [RsmModule],
+})
+export class AppModule {}
+```
+
+## Основные экспорты
+
+- `RsmSearchService` — поиск по реестру с пагинацией (GetData, GetCount, GetAddData)
+- `RsmBtriService` — запросы к БТИ (информация о жилье, кадастровые данные)
+- `RsmController` — эндпоинты поиска
+
+## Зависимости
+
+- `@urgp/server/external-auth` — HTTP-клиент API РСМ (RsmApiModule)
+
+## Особенности
+
+- Управление сессиями на основе UUID для stateless-пагинации
+- Параллельный паттерн множественных запросов (данные + количество + дополнительные данные)
+
+## Запуск тестов
+
+Выполните `nx test server/rsm` для запуска unit-тестов через [Jest](https://jestjs.io).

@@ -1,7 +1,42 @@
-# rsm
+# server/address
 
-This library was generated with [Nx](https://nx.dev).
+Сервис валидации и разрешения адресов с использованием API ФИАС и DaData с пакетной обработкой через сессии.
 
-## Running unit tests
+## Обзор
 
-Run `nx test server/address` to execute the unit tests via [Jest](https://jestjs.io).
+Управляет сессиями валидации адресов, обрабатывающими списки адресов через ФИАС (Федеральная информационная адресная система) с DaData в качестве запасного варианта. Поддерживает конкурентные запросы с ограничением частоты, сравнение двух списков и отслеживание суточного расхода API.
+
+## Использование
+
+```typescript
+import { AddressModule } from '@urgp/server/address';
+
+@Module({
+  imports: [AddressModule],
+})
+export class AppModule {}
+```
+
+## Основные экспорты
+
+- `AddressService` — гидратация адресов через ФИАС с ограничением частоты (4 запроса/сек) и конкурентными запросами на основе RxJS
+- `AddressSessionsService` — управление жизненным циклом очереди сессий (running, done, error)
+- `AddressController` — REST-эндпоинты для создания/управления сессиями и отслеживания расхода API
+
+## Зависимости
+
+- `@urgp/server/fias` — поиск адресов через ФИАС
+- `@urgp/server/dadata` — запасной источник адресов DaData
+- `@urgp/server/database` — хранение данных сессий и отслеживание расхода API
+
+## Конфигурация
+
+| Переменная | Описание |
+|----------|-------------|
+| `FIAS_CONCURRENCY` | Лимит конкурентных запросов |
+| `FIAS_DB_STEP` | Размер пакета для запросов к БД |
+| `FIAS_TIMEOUT` | Таймаут запроса |
+
+## Запуск тестов
+
+Выполните `nx test server/address` для запуска unit-тестов через [Jest](https://jestjs.io).

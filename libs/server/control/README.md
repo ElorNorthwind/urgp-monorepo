@@ -1,7 +1,41 @@
-# rsm
+# server/control
 
-This library was generated with [Nx](https://nx.dev).
+Система управления обращениями и операциями с процессами согласования, диспетчеризацией задач и авторизацией на основе CASL.
 
-## Running unit tests
+## Обзор
 
-Run `nx test server/control` to execute the unit tests via [Jest](https://jestjs.io).
+Управляет сущностями системы контроля — обращениями, операциями, классификаторами — с автоматическим планированием напоминаний, созданием диспетчерских задач и ролевым управлением доступом через CASL.
+
+## Использование
+
+```typescript
+import { ControlModule } from '@urgp/server/control';
+
+@Module({
+  imports: [ControlModule],
+})
+export class AppModule {}
+```
+
+## Основные экспорты
+
+- `ControlCasesService` — CRUD обращений с автоматическими напоминаниями/диспетчеризацией и процессами согласования
+- `ControlOperationsService` — создание операций/диспетчерских задач, завершение, планирование напоминаний
+- `ControlClassificatorsService` — управление иерархией классификаторов и цепочками согласования
+- Контроллеры: `ControlCasesController`, `ControlOperationsController`, `ControlClassificatorsController`
+
+## Зависимости
+
+- `@urgp/server/database` — постоянное хранилище данных
+- `@urgp/server/telegram` — уведомления в Telegram (в настоящее время отключены)
+- `@nestjs/cache-manager` — кэширование классификаторов
+
+## Особенности
+
+- Авторизация через CASL с помощью `defineControlAbilityFor`
+- Инвалидация кэша после операций записи
+- `AccessTokenGuard` на всех эндпоинтах
+
+## Запуск тестов
+
+Выполните `nx test server/control` для запуска unit-тестов через [Jest](https://jestjs.io).

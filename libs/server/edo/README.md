@@ -1,7 +1,40 @@
-# edo
+# server/edo
 
-This library was generated with [Nx](https://nx.dev).
+Интеграция с системой электронного документооборота (СЭДО) Москвы.
 
-## Running unit tests
+## Обзор
 
-Run `nx test edo` to execute the unit tests via [Jest](https://jestjs.io).
+Загружает и парсит документы из mosedo.mos.ru с автоматической конвертацией кодировки Windows-1251, внедрением авторизационных данных через интерцепторы и структурированным маппингом полей документов.
+
+## Использование
+
+```typescript
+import { EdoModule } from '@urgp/server/edo';
+
+@Module({
+  imports: [EdoModule],
+})
+export class AppModule {}
+```
+
+## Основные экспорты
+
+- `EdoService` — загрузка и парсинг документов
+- `EdoRequestsService` — низкоуровневые HTTP-запросы с конвертацией кодировки
+- `EdoController` — эндпоинты получения документов
+
+## Зависимости
+
+- `@urgp/server/sudir` — аутентификация СУДИР для сессий СЭДО
+- `@nestjs/axios` — HTTP-клиент
+- `iconv-lite` — конвертация кодировки Windows-1251
+
+## Особенности
+
+- Axios-интерцепторы для автоматического внедрения авторизационных данных (DNSID, authCode)
+- Автоматическое определение и конвертация кодировки из Windows-1251
+- Маппинг полей документов через константы `edoDocCardFields`
+
+## Запуск тестов
+
+Выполните `nx test server/edo` для запуска unit-тестов через [Jest](https://jestjs.io).

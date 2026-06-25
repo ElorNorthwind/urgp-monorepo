@@ -1,7 +1,40 @@
-# database
+# server/database
 
-This library was generated with [Nx](https://nx.dev).
+Основной пул подключений PostgreSQL с паттерном репозиториев на основе pg-promise.
 
-## Running unit tests
+## Обзор
 
-Run `nx test database` to execute the unit tests via [Jest](https://jestjs.io).
+Синглтон-сервис, инициализирующий пул подключений pg-promise с типизированными расширениями-репозиториями для всех основных доменных сущностей.
+
+## Использование
+
+```typescript
+import { DatabaseModule, DatabaseService } from '@urgp/server/database';
+
+@Module({
+  imports: [DatabaseModule],
+})
+export class AppModule {}
+```
+
+## Основные экспорты
+
+- `DatabaseService` — пул подключений с доступом к репозиториям
+
+## Репозитории
+
+`users`, `cases`, `questions`, `streets`, `renovationUsers`, `controlCases`, `controlOperations`, `controlClassificators`, `address`, `equity`, `sudir`, `letters`
+
+## Конфигурация
+
+| Переменная | Описание | По умолчанию |
+|----------|-------------|---------|
+| `PG_HOST` | Хост базы данных | `localhost` |
+| `PG_PORT` | Порт базы данных | `5432` |
+| `PG_DATABASE` | Имя базы данных | — |
+| `PG_USER` | Пользователь БД | — |
+| `PG_PASSWORD` | Пароль БД | — |
+
+## Запуск тестов
+
+Выполните `nx test server/database` для запуска unit-тестов через [Jest](https://jestjs.io).
