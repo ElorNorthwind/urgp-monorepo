@@ -90,10 +90,12 @@ export type VksDgiSurveyElement =
   | DgiSurveyDocListElement;
 
 export type VksDgiSurveyConfig = {
+  name: string;
   elements: VksDgiSurveyElement[];
 };
 
 const housingConfig: VksDgiSurveyConfig = {
+  name: 'housing',
   elements: [
     {
       key: 'operator',
