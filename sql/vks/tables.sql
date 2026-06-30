@@ -330,8 +330,9 @@ CREATE TABLE vks.slot_schedule
     slot_length INTEGER DEFAULT 30,
     slots TIME[],
     slots_short TIME[],
-    slots_count_normal INTEGER GENERATED ALWAYS AS (ARRAY_LENGTH(slots, 1)) STORED,
-    slots_count_short INTEGER GENERATED ALWAYS AS (ARRAY_LENGTH(slots_short, 1)) STORED,
+    slots_per_time integer NOT NULL DEFAULT 1,
+    slots_count_normal integer GENERATED ALWAYS AS ((array_length(slots, 1) * COALESCE(slots_per_time, 1))) STORED,
+    slots_count_short integer GENERATED ALWAYS AS ((array_length(slots_short, 1) * COALESCE(slots_per_time, 1))) STORED,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 );
 
