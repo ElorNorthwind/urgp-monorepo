@@ -13,8 +13,8 @@ export class TeletribeController {
     // });
 
     // return this.teletribe.insertHotlineReport({
-    //   dateFrom: '28.05.2026',
-    //   dateTo: '09.06.2026',
+    //   dateFrom: '12.07.2026',
+    //   dateTo: '24.07.2026',
     // });
 
     return this.teletribe.insertHotlineReport();

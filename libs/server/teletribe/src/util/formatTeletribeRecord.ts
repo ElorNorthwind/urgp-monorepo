@@ -11,12 +11,14 @@ export function formatTeletribeRecord(
   r: RawTeletribeHotlineRecord,
 ): TeletribeRecord {
   let problems = [];
-  if (strToBool(r?.['PER_DAN'])) problems.push('Нужны персональные данные');
-  if (strToBool(r?.['VNE_COMP'])) problems.push('Вне компетенции');
-  if (strToBool(r?.['OBR_CALL'])) problems.push('Обратный звонок');
-  if (strToBool(r?.['PRICH'])) problems.push('Консультация прервана');
-  if (strToBool(r?.['SVO'])) problems.push('Участник СВО');
-  if (strToBool(r?.['FAMILY_SVO'])) problems.push('Член семьи СВО');
+  if (strToBool(r?.['PERS_DANNYE'])) problems.push('Нужны персональные данные');
+  if (strToBool(r?.['VOPROS_NE_V_KOMPETENCII']))
+    problems.push('Вне компетенции');
+  if (strToBool(r?.['OBRATNIY_ZVONOK'])) problems.push('Обратный звонок');
+  if (strToBool(r?.['DOSROCHNOE_PREKRASCHENIE']))
+    problems.push('Консультация прервана');
+  if (strToBool(r?.['UCHASTNIK_SVO'])) problems.push('Участник СВО');
+  if (strToBool(r?.['CHLEN_SEMYI_SVO'])) problems.push('Член семьи СВО');
 
   const duration =
     typeof r?.['SPEAKINGTIME_OP'] === 'number'
@@ -63,30 +65,30 @@ export function formatTeletribeRecord(
 
     booking_code: r?.['SESSION_ID'] || '0',
     phone: r?.['ABONENT'] || '',
-    teletribe_dst: r?.['DST'] || '01.01.2026',
+    teletribe_dst: r?.['LINE_CALL'] || 'неизвестно',
     date: r?.['CALL_DATE'] || '01.01.2026',
     time: `${r?.['CALL_TIME']}-${endTime}` || '00:00:00-00:00:00',
     consultation_duration: Number.isInteger(duration) ? duration : null,
     wait_duration: Number.isInteger(waitDuration) ? waitDuration : null,
     hold_count: Number.isInteger(holdCount) ? holdCount : null,
     hold_duration: Number.isInteger(holdDuration) ? holdDuration : null,
-    teletribe_user_login: r?.['OP_LOGIN'] || '',
-    operator_survey_fio: r?.['FIO_OP'] || '',
-    problem_summary: r?.['TEMA_VOPROSA'] || '',
-    operator_survey_is_client: strToBool(r?.['CLIENT_SKR']),
-    operator_survey_address: r?.['REG'] || '',
-    operator_survey_relation: r?.['MSC'] || '',
-    operator_survey_doc_type: r?.['QUEST'] || '',
-    operator_survey_doc_date: r?.['DATE_DOC'] || '',
-    operator_survey_doc_num: r?.['NUM_DOC'] || '',
-    operator_survey_department: r?.['UPR'] || '',
-    operator_survey_info_source: r?.['Q_111'] || '',
-    operator_survey_summary: r?.['OP_VOP'] || '',
-    operator_survey_question_type: r?.['HAR_VOP'] || '',
-    operator_survey_sent_to_yandex: strToBool(r?.['YANDEX']),
-    teletribe_disconnect_details: r?.['IF_DA'] || '',
+    teletribe_user_login: r?.['USER_LOGIN'] || '',
+    operator_survey_fio: r?.['OPERATOR_FIO'] || '',
+    problem_summary: r?.['TEMATICA'] || '',
+    operator_survey_is_client: strToBool(r?.['KLIENT']),
+    operator_survey_address: r?.['ADRES_REGISTRACII'] || '',
+    operator_survey_relation: r?.['OTNOSHENIYA_S_MOSKVOY'] || '',
+    operator_survey_doc_type: r?.['KAKOY_DOCUMENT'] || '',
+    operator_survey_doc_date: r?.['DATA_DOCUMENTA'] || '',
+    operator_survey_doc_num: r?.['NOMER_DOCUMENTA'] || '',
+    operator_survey_department: r?.['UPRAVLENIE'] || '',
+    operator_survey_info_source: r?.['OTKUDA_UZNALI'] || '',
+    operator_survey_summary: r?.['OPISANIE_VOPROSA'] || '',
+    operator_survey_question_type: r?.['HARAKTER_VOPROSA'] || '',
+    operator_survey_sent_to_yandex: strToBool(r?.['OTPRAVLEN_NA_YANDEX']),
+    teletribe_disconnect_details: r?.['ESLI_DA'] || '',
     teletribe_disconnect_initiator: r?.['FLG_CALL_DISCONNECTION'] || '',
-    teletribe_sound_link: (r?.['SOUND'] || '').match(/href=\\"(.*?)\\"/),
+    teletribe_sound_link: (r?.['SOUND_UUID'] || '').match(/href=\\"(.*?)\\"/),
     operator_survey_problems: problems,
     client_id: clientId,
   }) as TeletribeRecord;
