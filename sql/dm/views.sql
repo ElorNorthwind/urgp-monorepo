@@ -192,3 +192,41 @@ CREATE OR REPLACE VIEW dm.documents_combined_dated_view  AS
     AND d.deleted_at IS NULL
     AND c.is_disabled IS DISTINCT FROM true
     ORDER BY control_date;
+
+
+-- Представление СПД истекшими приостановками
+DROP VIEW IF EXISTS dm.spd_overdue_suspences CASCADE;
+CREATE OR REPLACE VIEW dm.spd_overdue_suspences  AS
+----------------------------------------------------------------------
+SELECT DISTINCT ON (d.reg_date, r.document_id) r.id,
+	r.document_id AS id_documents,
+	d.reg_num,
+	dep.display_name AS department,
+	c.category_name AS rubr_name,
+	z.full_name AS zam,
+	r.due_date_with_suspensions AS kontr_data_with_suspensions,
+	sus.last_start_date AS last_suspence_start,
+	sus.last_due_date AS last_suspence_due 
+FROM dm.resolutions r
+	LEFT JOIN dm.documents d ON r.document_id = d.id
+	LEFT JOIN dm.categories c ON d.category_id = c.id
+	LEFT JOIN dm.departments dep ON c.department_id = dep.id
+	LEFT JOIN dm.zams z ON dep.zam_id = z.id
+	LEFT JOIN (
+		SELECT 
+			document_id,
+			MAX(start_date) as last_start_date,
+			MAX(due_date) as last_due_date
+		FROM dm.suspences
+		WHERE done_date IS NULL AND due_date < CURRENT_DATE
+		GROUP BY document_id
+	) sus ON sus.document_id = r.document_id
+WHERE COALESCE(r.control_date, d.reg_date, r.done_date) >= '2025-01-01 00:00:00+03'::timestamp with time zone 
+  AND c.id IS NOT NULL 
+  AND c.category_group::text = 'SPD'::text 
+  AND r.deleted_at IS NULL 
+  AND d.deleted_at IS NULL 
+  AND c.is_disabled IS DISTINCT FROM true
+  AND sus.document_id IS NOT NULL
+  AND r.done_date IS NULL
+ORDER BY d.reg_date DESC;
