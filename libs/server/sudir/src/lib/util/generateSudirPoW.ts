@@ -5,15 +5,13 @@ export function generateSudirPoW(input: string) {
     '0123456789/+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const parts = input.split(':');
   const bits = parseInt(parts[1]);
-  const prefix = input;
+  const prefix = parts[0];
+
+  if (bits === 0) return prefix;
 
   // Calculate mask for remaining bits
   const fullBytes = Math.floor(bits / 8);
   const remainderBits = bits % 8;
-  let mask = 0;
-  for (let t = 1; t <= remainderBits; t++) {
-    mask |= 1 << (8 - t);
-  }
 
   // Counter initialization and increment logic
   let counter = [0];
@@ -38,9 +36,8 @@ export function generateSudirPoW(input: string) {
       }
     }
 
-    // Check remaining bits using mask
     if (isValid && remainderBits > 0) {
-      if ((hash[fullBytes] & mask) !== 0) {
+      if (hash[fullBytes] >> (8 - remainderBits) !== 0) {
         isValid = false;
       }
     }
