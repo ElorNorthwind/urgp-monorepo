@@ -17,36 +17,46 @@ export function generateSudirPoW(input: string): string {
 
   const prefixBuf = Buffer.from(prefix, 'utf8');
   const prefixLen = prefixBuf.length;
-  const maxDigits = 10; // safety limit as in original
+  const maxDigits = 10;
 
-  // Pre‑allocate buffer for prefix + counter
+  // Buffer for the full input (prefix + counter)
   const fullBuf = Buffer.alloc(prefixLen + maxDigits);
   prefixBuf.copy(fullBuf, 0);
 
-  // Counter digits, least‑significant first
+  // Pre-compute the SHA1 state for the prefix.
+  // On each iteration, we copy this state and only hash the counter bytes.
+  const baseHash = createHash('sha1').update(prefixBuf);
+
+  // Pre-allocate a zero-filled buffer for fast leading-byte comparison.
+  const zeroBuf = Buffer.alloc(fullBytes);
+
+  // Counter digits stored least-significant first (base-64)
   const counter = new Uint8Array(maxDigits);
   let counterLen = 1; // starts as "0"
 
   while (counterLen <= maxDigits) {
-    // Write current counter into the buffer (most‑significant first)
+    // Write the current counter (LSF -> MSF) into the buffer
     for (let i = 0; i < counterLen; i++) {
       const digitVal = counter[counterLen - 1 - i];
       fullBuf[prefixLen + i] = alphabetCodes[digitVal];
     }
 
-    const dataView = fullBuf.subarray(0, prefixLen + counterLen);
-    const hash = createHash('sha1').update(dataView).digest();
+    // Hash = SHA1(prefix + counter)
+    // Copy the prefix state and update it with ONLY the counter bytes.
+    const hash = baseHash.copy();
+    hash.update(fullBuf.subarray(prefixLen, prefixLen + counterLen));
+    const digest = hash.digest();
 
-    // Check leading zero bits
+    // Check leading zero bits using native C++ comparisons
     let isValid = true;
-    for (let i = 0; i < fullBytes; i++) {
-      if (hash[i] !== 0) {
+    if (fullBytes > 0) {
+      // compare() in native code is faster than a manual JS loop
+      if (digest.compare(zeroBuf, 0, fullBytes, 0, fullBytes) !== 0) {
         isValid = false;
-        break;
       }
     }
     if (isValid && remainderBits > 0) {
-      if (hash[fullBytes] >> (8 - remainderBits) !== 0) {
+      if (digest[fullBytes] >> (8 - remainderBits) !== 0) {
         isValid = false;
       }
     }
@@ -55,7 +65,7 @@ export function generateSudirPoW(input: string): string {
       return fullBuf.toString('utf8', 0, prefixLen + counterLen);
     }
 
-    // Increment counter in base‑64 (least‑significant first)
+    // Increment the base-64 counter (least-significant first)
     let i = 0;
     let carry = 1;
     while (i < counterLen) {
@@ -72,7 +82,6 @@ export function generateSudirPoW(input: string): string {
     }
 
     if (carry) {
-      // Add a new most‑significant digit (set to 1)
       if (counterLen < maxDigits) {
         counter[counterLen] = 1;
         counterLen++;
