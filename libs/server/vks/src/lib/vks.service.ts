@@ -15,6 +15,7 @@ import {
   OperatorSurveyResponse,
   QmsQuery,
   RawBookingRecord,
+  UpdateDgiVksSurveyHousingForm,
   vksUpdateQueryReturnValue,
   VksCase,
   VksCasesQuery,
@@ -48,16 +49,18 @@ import { formatSurvey } from './util/fotmatSurvey';
 import { Cron } from '@nestjs/schedule';
 import { format, min, parse, startOfYesterday } from 'date-fns';
 import { DgiAnalyticsService } from '@urgp/server/dgi-analytics';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class VksService {
+  private isUpdating: boolean;
   constructor(
     private readonly dbServise: DatabaseService,
     private readonly dgiAnalytics: DgiAnalyticsService,
     private readonly axios: HttpService,
     private configService: ConfigService,
-  ) {}
+  ) {
+    this.isUpdating = false;
+  }
 
   public async getVksCases(
     q: VksCasesQuery,
@@ -372,22 +375,32 @@ export class VksService {
   public async cronUpdateSurveyData(forced: boolean = false) {
     const isDev = this.configService.get<string>('NODE_ENV') === 'development';
     if (isDev && !forced) return;
+    if (this.isUpdating) {
+      Logger.log('Already updating');
+      return;
+    }
+    this.isUpdating = true;
     await this.updateSurveyData({
       dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
       dateTo: format(new Date(), 'dd.MM.yyyy'),
-    }).then(() => {
-      Logger.log(
-        `Survey data updated from ${format(startOfYesterday(), 'dd.MM.yyyy')} to ${format(new Date(), 'dd.MM.yyyy')}`,
-      );
-    });
-    this.addEmptyVksSlots({
-      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
-      dateTo: format(new Date(), 'dd.MM.yyyy'),
-    }).then(() => {
-      Logger.log(
-        `Empty slots added from ${format(startOfYesterday(), 'dd.MM.yyyy')} to ${format(new Date(), 'dd.MM.yyyy')}`,
-      );
-    });
+    })
+      .then(() => {
+        Logger.log(
+          `Survey data updated from ${format(startOfYesterday(), 'dd.MM.yyyy')} to ${format(new Date(), 'dd.MM.yyyy')}`,
+        );
+
+        this.addEmptyVksSlots({
+          dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
+          dateTo: format(new Date(), 'dd.MM.yyyy'),
+        }).then(() => {
+          Logger.log(
+            `Empty slots added from ${format(startOfYesterday(), 'dd.MM.yyyy')} to ${format(new Date(), 'dd.MM.yyyy')}`,
+          );
+        });
+      })
+      .finally(() => {
+        this.isUpdating = false;
+      });
   }
 
   public async ReadVksServiceTypeClassificator(): Promise<
@@ -400,6 +413,16 @@ export class VksService {
     NestedClassificatorInfo[]
   > {
     return this.dgiAnalytics.db.vks.getDepartmentsClassificator();
+  }
+
+  public async ReadVksUsersClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.dgiAnalytics.db.vks.getUserClassificator();
+  }
+
+  public async updateVksDgiSurvey(
+    _dto: UpdateDgiVksSurveyHousingForm,
+  ): Promise<void> {
+    // TODO: implement DGI survey update
   }
 
   public async ReadVksStatusClassificator(): Promise<

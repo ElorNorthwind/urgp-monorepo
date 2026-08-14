@@ -1,5 +1,10 @@
 import { getRouteApi, useLocation } from '@tanstack/react-router';
-import { ScrollArea, Separator, useVksAbility } from '@urgp/client/shared';
+import {
+  Button,
+  ScrollArea,
+  Separator,
+  useVksAbility,
+} from '@urgp/client/shared';
 import {
   VksCasesDateFilter,
   VksCasesResetFilter,
@@ -13,10 +18,15 @@ import { VksStatusChart } from './cards/VksStatusChart';
 import { VksTimelineChart } from './cards/VksTImeline';
 import { VksDepartmentSlotsChart } from './cards/VksDetartmentSlotsChart';
 import { VksDailySlotsChart } from './cards/VksDailySlotsChart';
+import { RefreshCw } from 'lucide-react';
+import { useLaunchVksUpdate } from '@urgp/client/entities';
+import { toast } from 'sonner';
 
 const VksDashboardPage = (): JSX.Element => {
   const pathname = useLocation().pathname;
   const search = getRouteApi(pathname).useSearch() as VksDashbordPageSearch;
+  const [launchUpdate, { isLoading: isMudationLoading }] = useLaunchVksUpdate();
+
   const i = useVksAbility();
 
   return (
@@ -56,6 +66,31 @@ const VksDashboardPage = (): JSX.Element => {
           )}
           {i.can('read', 'VksEmptySlots') && <VksDailySlotsChart />}
         </div>
+        {i.can('read', 'VksDepartmentReport') && (
+          <Button
+            disabled={isMudationLoading}
+            variant="outline"
+            role="button"
+            className="flex w-full gap-2"
+            onClick={(e) => {
+              e.preventDefault();
+              launchUpdate()
+                .unwrap()
+                .finally(() => {
+                  toast.success('Обновление запущено');
+                });
+              // TO DO: it's throwing on 304 response. Need to fix
+              // .catch((rejected: any) =>
+              //   toast.error('Не удалось запустить обновление', {
+              //     description: rejected.data?.message || 'Неизвестная ошибка',
+              //   }),
+              // );
+            }}
+          >
+            <RefreshCw className="size-4 flex-shrink-0" />
+            <span>Обновить данные</span>
+          </Button>
+        )}
       </div>
     </ScrollArea>
   );

@@ -6,9 +6,12 @@ export function generateSudirPoW(input: string): string {
   const alphabetCodes = Buffer.from(alphabet, 'ascii');
   const BASE = alphabet.length;
 
-  const parts = input.split(':');
+  // FIX: Extract the full prefix (everything up to and including the trailing colon)
+  const prefix = input.slice(0, input.lastIndexOf(':') + 1);
+
+  // Parse difficulty from the second segment
+  const parts = input.split(':'); // Re-split or keep a reference
   const bits = parseInt(parts[1], 10);
-  const prefix = parts[0];
 
   if (bits === 0) return prefix;
 
@@ -17,55 +20,43 @@ export function generateSudirPoW(input: string): string {
 
   const prefixBuf = Buffer.from(prefix, 'utf8');
   const prefixLen = prefixBuf.length;
-  const maxDigits = 10;
+  const maxDigits = Math.max(1, Math.ceil(bits / 6));
 
-  // Buffer for the full input (prefix + counter)
   const fullBuf = Buffer.alloc(prefixLen + maxDigits);
   prefixBuf.copy(fullBuf, 0);
 
-  // Pre-compute the SHA1 state for the prefix.
-  // On each iteration, we copy this state and only hash the counter bytes.
+  // Use the full prefix for the base hash state
   const baseHash = createHash('sha1').update(prefixBuf);
-
-  // Pre-allocate a zero-filled buffer for fast leading-byte comparison.
   const zeroBuf = Buffer.alloc(fullBytes);
 
-  // Counter digits stored least-significant first (base-64)
   const counter = new Uint8Array(maxDigits);
-  let counterLen = 1; // starts as "0"
+  let counterLen = 1;
 
-  while (counterLen <= maxDigits) {
-    // Write the current counter (LSF -> MSF) into the buffer
+  while (true) {
+    // Write counter digits (most‑significant first)
     for (let i = 0; i < counterLen; i++) {
-      const digitVal = counter[counterLen - 1 - i];
-      fullBuf[prefixLen + i] = alphabetCodes[digitVal];
+      fullBuf[prefixLen + i] = alphabetCodes[counter[counterLen - 1 - i]];
     }
 
-    // Hash = SHA1(prefix + counter)
-    // Copy the prefix state and update it with ONLY the counter bytes.
     const hash = baseHash.copy();
     hash.update(fullBuf.subarray(prefixLen, prefixLen + counterLen));
     const digest = hash.digest();
 
-    // Check leading zero bits using native C++ comparisons
-    let isValid = true;
-    if (fullBytes > 0) {
-      // compare() in native code is faster than a manual JS loop
-      if (digest.compare(zeroBuf, 0, fullBytes, 0, fullBytes) !== 0) {
-        isValid = false;
-      }
-    }
-    if (isValid && remainderBits > 0) {
-      if (digest[fullBytes] >> (8 - remainderBits) !== 0) {
-        isValid = false;
+    // Check leading zeros
+    if (
+      fullBytes === 0 ||
+      digest.compare(zeroBuf, 0, fullBytes, 0, fullBytes) === 0
+    ) {
+      if (
+        remainderBits === 0 ||
+        digest[fullBytes] >> (8 - remainderBits) === 0
+      ) {
+        // Return the full prefix + the found solution
+        return fullBuf.toString('utf8', 0, prefixLen + counterLen);
       }
     }
 
-    if (isValid) {
-      return fullBuf.toString('utf8', 0, prefixLen + counterLen);
-    }
-
-    // Increment the base-64 counter (least-significant first)
+    // Increment base‑64 counter (least‑significant first)
     let i = 0;
     let carry = 1;
     while (i < counterLen) {
@@ -90,6 +81,4 @@ export function generateSudirPoW(input: string): string {
       }
     }
   }
-
-  throw new Error('Proof of work not found');
 }

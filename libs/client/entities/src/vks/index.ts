@@ -6,3 +6,5 @@ export * from './lib/formatVksCaseRowForExcel';
 export * from './lib/formatVksUserStatsRowForExcel';
 export * from './ui/vksCaseCard/VksCaseCard';
 export * from './config/vksStyles';
+export * from './ui/vksSurveyForm/VksSurveyFormDialog';
+export * from './ui/vksSurveyForm/vksSurveyFormFieldArray';

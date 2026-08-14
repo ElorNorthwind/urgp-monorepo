@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { VksSurveyFormDialog } from '@urgp/client/entities';
 import { SidebarProvider, usePageMeta } from '@urgp/client/shared';
 import { VksNavbar } from '@urgp/client/widgets';
 
@@ -27,6 +28,7 @@ export const Route = createFileRoute('/vks')({
         <SidebarProvider cookieName="vks-sidebar" defaultOpen={false}>
           <VksNavbar />
           <Outlet />
+          <VksSurveyFormDialog />
         </SidebarProvider>
       </div>
     );

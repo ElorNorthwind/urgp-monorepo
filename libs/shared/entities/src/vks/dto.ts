@@ -2,7 +2,6 @@ import { z } from 'zod';
 import { AnketologSurveyTypes } from './config';
 import { addDays, format, subDays } from 'date-fns';
 import { report } from 'process';
-import { vksCaseDetailsSchema } from './types';
 
 // Параметры поиска на странице
 const queryNumberArray = z
@@ -182,7 +181,47 @@ export const hotlineRequestSchema = z
   .default({});
 export type HotlineRequest = z.input<typeof hotlineRequestSchema>;
 
-// TO DO : нужны новые поля для хранения ручного отчета
-export const updateVksSurveySchema = vksCaseDetailsSchema.pick({
-  id: true,
+export const updateDgiVksSurveyHousingFormSchema = z.object({
+  id: z.number().int().nonnegative(),
+  operator: z.number().int().nonnegative().nullable().optional(),
+  type: z.string().nullable().optional(),
+  relevance: z.string().nullable().optional(),
+  department: z.string().nullable().optional(),
+  questionType: z.string().nullable().optional(),
+  questionClassificator: z.string().nullable().optional(),
+  summary: z.string().nullable().optional(),
+  isClient: z.string().nullable().optional(),
+  clientType: z.string().nullable().optional(),
+  clientNumber: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
+  docs: z.any().nullable().optional(), // TODO: structure of doc object
+  mood: z.string().nullable().optional(),
+  needsAnswer: z.string().nullable().optional(),
+  problems: z.array(z.string()).nullable().optional(),
+  infoSource: z.string().nullable().optional(),
+  sentToYandex: z.string().nullable().optional(),
 });
+export type UpdateDgiVksSurveyHousingForm = z.infer<
+  typeof updateDgiVksSurveyHousingFormSchema
+>;
+
+export const emptyVksSurveyHousingForm: UpdateDgiVksSurveyHousingForm = {
+  id: 0,
+  operator: null,
+  type: null,
+  relevance: null,
+  department: null,
+  questionType: 'Частный',
+  questionClassificator: null,
+  summary: null,
+  isClient: null,
+  clientType: null,
+  clientNumber: null,
+  address: null,
+  docs: null,
+  mood: null,
+  needsAnswer: null,
+  problems: [],
+  infoSource: null,
+  sentToYandex: null,
+};

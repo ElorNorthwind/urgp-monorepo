@@ -2,6 +2,7 @@ import { rtkApi } from '@urgp/client/shared';
 import {
   NestedClassificatorInfo,
   NestedClassificatorInfoString,
+  UpdateDgiVksSurveyHousingForm,
   VkaSetBooleanFlag,
   VksCase,
   VksCaseDetails,
@@ -201,6 +202,36 @@ export const vksApi = rtkApi.injectEndpoints({
         { type: 'vks-case', id: arg.caseId },
       ],
     }),
+
+    getVksUsersClassificator: build.query<NestedClassificatorInfo[], void>({
+      query: () => ({
+        url: `/vks/classificators/users`,
+        method: 'GET',
+      }),
+      providesTags: ['vks-classificator'],
+    }),
+
+    updateVksDgiSurvey: build.mutation<void, UpdateDgiVksSurveyHousingForm>({
+      query: (dto) => ({
+        url: '/vks/cases/dgi-survey',
+        method: 'POST',
+        body: dto,
+      }),
+      invalidatesTags: (_result, _error, arg) => [
+        'vks-case',
+        { type: 'vks-case', id: arg.id },
+      ],
+    }),
+
+    launchVksUpdate: build.mutation<string, void>({
+      query: () => ({
+        url: `/vks/update`,
+        method: 'GET',
+        // validateStatus: (response: any) => {
+        //   return response.status >= 200 && response.status < 305;
+        // },
+      }),
+    }),
   }),
 
   overrideExisting: false,
@@ -228,4 +259,8 @@ export const {
 
   useUpdateIsTechnicalMutation: useUpdateIsTechnical,
   useUpdateIsSentToYandexMutation: useUpdateIsSentToYandex,
+
+  useGetVksUsersClassificatorQuery: useVksUsersClassificator,
+  useUpdateVksDgiSurveyMutation: useUpdateVksDgiSurvey,
+  useLaunchVksUpdateMutation: useLaunchVksUpdate,
 } = vksApi;

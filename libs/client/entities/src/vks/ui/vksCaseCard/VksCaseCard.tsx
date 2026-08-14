@@ -1,8 +1,10 @@
 import {
   Accordion,
+  Button,
   ScrollArea,
+  setSurveyFormCaseId,
+  setSurveyFormState,
   useAuth,
-  useIsMobile,
   useVksAbility,
 } from '@urgp/client/shared';
 import {
@@ -16,6 +18,9 @@ import {
   VksGradeDisqualifyToggle,
   VksSentToYandexToggle,
 } from '@urgp/client/features';
+import { VksSurveyFormDialog } from '../vksSurveyForm/VksSurveyFormDialog';
+import { ClipboardEdit } from 'lucide-react';
+import { useDispatch } from 'react-redux';
 
 type VksCaseCardProps = {
   caseId: number;
@@ -28,6 +33,8 @@ const VksCaseCard = (props: VksCaseCardProps): JSX.Element => {
   const { caseId, onNextRow, onPrevRow } = props;
   const user = useAuth();
   const isAuthorized = user?.id && user?.id !== 0 ? true : false;
+  const dispatch = useDispatch();
+  const i = useVksAbility();
 
   const { data: dataAuthorized } = useVksCaseDetails(caseId, {
     skip: !caseId || caseId === 0 || !isAuthorized,
@@ -38,6 +45,8 @@ const VksCaseCard = (props: VksCaseCardProps): JSX.Element => {
   });
 
   const data = isAuthorized ? dataAuthorized : dataPublic;
+
+  const canFillSurvey = i.can('update', 'VksCase');
 
   return (
     <>
@@ -69,6 +78,23 @@ const VksCaseCard = (props: VksCaseCardProps): JSX.Element => {
               accordionItemName="operator-info"
             />
           )}
+          {/* {canFillSurvey && data && (
+            <Button
+              variant="outline"
+              className="mt-4 w-full"
+              onClick={() => {
+                dispatch(setSurveyFormCaseId(data.id));
+                dispatch(
+                  setSurveyFormState(data.operatorSurveyId ? 'edit' : 'create'),
+                );
+              }}
+            >
+              <ClipboardEdit className="mr-2 size-4" />
+              {data?.operatorSurveyId
+                ? 'Редактировать анкету'
+                : 'Заполнить анкету'}
+            </Button>
+          )} */}
         </Accordion>
       </ScrollArea>
     </>

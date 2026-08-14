@@ -94,7 +94,7 @@ export type VksDgiSurveyConfig = {
   elements: VksDgiSurveyElement[];
 };
 
-const housingConfig: VksDgiSurveyConfig = {
+export const housingConfig: VksDgiSurveyConfig = {
   name: 'housing',
   elements: [
     {

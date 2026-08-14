@@ -23,6 +23,8 @@ import {
   QmsQuery,
   qmsQuerySchema,
   RequestWithUserData,
+  UpdateDgiVksSurveyHousingForm,
+  updateDgiVksSurveyHousingFormSchema,
   VkaSetBooleanFlag,
   vkaSetBooleanFlagSchema,
   VksCase,
@@ -114,6 +116,19 @@ export class VksController {
   }
 
   @UseGuards(AccessTokenGuard)
+  @Post('cases/dgi-survey')
+  updateVksDgiSurvey(
+    @Req() req: RequestWithUserData,
+    @Body(new ZodValidationPipe(updateDgiVksSurveyHousingFormSchema))
+    q: UpdateDgiVksSurveyHousingForm,
+  ): Promise<void> {
+    const i = defineVksAbilityFor(req.user);
+    if (i.cannot('update', 'VksCase'))
+      throw new BadRequestException('Нет прав на редактирование анкеты');
+    return this.vks.updateVksDgiSurvey(q);
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Post('cases/sent-to-yandex')
   setVksCaseIsSentToYandex(
     @Req() req: RequestWithUserData,
@@ -161,6 +176,13 @@ export class VksController {
   @Get('classificators/statuses')
   getVksStatusesClassificator(): Promise<NestedClassificatorInfoString[]> {
     return this.vks.ReadVksStatusClassificator();
+  }
+
+  @CacheTTL(1000 * 60 * 5)
+  @UseInterceptors(CacheInterceptor)
+  @Get('classificators/users')
+  getVksUsersClassificator(): Promise<NestedClassificatorInfo[]> {
+    return this.vks.ReadVksUsersClassificator();
   }
 
   @Get('charts/timeline')
@@ -251,7 +273,7 @@ export class VksController {
   getAnketologOperatorSurvey(): Promise<{ found: number; updated: number }> {
     return this.vks.GetAnketologSurvey({
       surveyId: AnketologSurveyTypes.operator,
-      // dateFrom: '01.01.2026',
+      // dateFrom: '23.07.2026',
       dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
       dateTo: format(new Date(), 'dd.MM.yyyy'),
     });
@@ -261,7 +283,7 @@ export class VksController {
   getAnketologClientSurvey(): Promise<{ found: number; updated: number }> {
     return this.vks.GetAnketologSurvey({
       surveyId: AnketologSurveyTypes.client,
-      // dateFrom: '01.01.2024',
+      // dateFrom: '23.07.2026',
       dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
       dateTo: format(new Date(), 'dd.MM.yyyy'),
     });

@@ -83,7 +83,7 @@ export class SudirService {
     const powTask = body?.getElementById('pow')?.getAttribute('value');
 
     const formData = new URLSearchParams();
-    formData.append('proofOfWork', await this.generateSudirPoW(powTask || ''));
+    // formData.append('proofOfWork', await this.generateSudirPoW(powTask || ''));
     formData.append('isDelayed', 'false');
     formData.append('login', login);
     formData.append('password', password);

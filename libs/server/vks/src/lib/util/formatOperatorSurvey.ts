@@ -23,6 +23,8 @@ export const operatorSurveyQuestions = {
 };
 
 export function formatOperatorSurvey(s: AnketologSurveyResponse): any {
+  console.log(s?.collector?.extralink_title);
+
   return transformEmptyToNull({
     id: s?.id,
     surveyId: s?.survey_id,
