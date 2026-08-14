@@ -775,4 +775,14 @@ export class RenovationController {
   deleteServerMessage(@Param('id') id: number): Promise<MessageServer> {
     return this.renovationSync.messageServerDelete(id);
   }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('dsa-credentials')
+  async getUserEmail(
+    @Req() req: RequestWithUserData,
+  ): Promise<{ email: string; token: string }> {
+    if (!req?.user?.id)
+      throw new UnauthorizedException('Нет данных о пользователе');
+    return this.renovation.getRenovationExternalSession(req.user.id);
+  }
 }

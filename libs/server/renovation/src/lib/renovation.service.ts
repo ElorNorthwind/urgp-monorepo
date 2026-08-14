@@ -2,6 +2,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from '@urgp/server/database';
 import { DsaDgiService } from '@urgp/server/dsa-dgi';
+import { HttpService } from '@nestjs/axios';
 import {
   CreateMessageDto,
   DeleteMessageDto,
@@ -47,12 +48,16 @@ import {
   RenovationNewBuildingDeviationTotals,
 } from '@urgp/shared/entities';
 import { Cache } from 'cache-manager';
+import { firstValueFrom, map, tap } from 'rxjs';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class RenovationService {
   constructor(
     private readonly dbServise: DsaDgiService,
     private readonly urgpDb: DatabaseService,
+    private readonly axios: HttpService,
+    private configService: ConfigService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
@@ -319,5 +324,40 @@ export class RenovationService {
     RenovationNewBuildingDeviationTotals[]
   > {
     return this.dbServise.db.renovation.getPlostDeviationTotals();
+  }
+
+  public async getUserEmailById(id: number): Promise<string> {
+    return this.dbServise.db.renovation.emailById(id);
+  }
+
+  public async getRenovationExternalSession(
+    id: number,
+  ): Promise<{ email: string; token: string }> {
+    const dsaApiToken = this.configService.get<string>(
+      'DSA_DGI_EXTERNAL_TOKEN',
+    );
+
+    const email = await this.getUserEmailById(id);
+    if (!email) {
+      throw new Error(`User with id ${id} not found in external system`);
+    }
+
+    const { token } = await firstValueFrom(
+      this.axios
+        .request({
+          method: 'POST',
+          url: `/token`,
+          data: { email },
+          headers: {
+            'Content-Type': 'application/json',
+            accepst: 'application/json',
+            Authorization: `Bearer ${dsaApiToken}`,
+          },
+        })
+
+        .pipe(map((res) => res.data)),
+    );
+
+    return { email, token };
   }
 }

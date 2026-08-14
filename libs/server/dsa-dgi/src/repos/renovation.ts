@@ -444,4 +444,12 @@ export class RenovationRepository {
   getPlostDeviationTotals(): Promise<RenovationNewBuildingDeviationTotals[]> {
     return this.db.any(renovation.plotsDeviationTotals);
   }
+
+  emailById(id: number): Promise<string> {
+    return this.db.one(
+      "SELECT id, COALESCE(email, login || '@mos.ru') as email FROM renovation.users u WHERE id = ${id}",
+      { id },
+      (row) => row.email,
+    );
+  }
 }

@@ -56,6 +56,13 @@ export const messagesApi = rtkApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+
+    getDsaCredentials: build.query<{ email: string; token: string }, number>({
+      query: () => ({
+        url: '/renovation/dsa-credentials/',
+        method: 'GET',
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -66,4 +73,5 @@ export const {
   useUpdateMessageMutation: useUpdateMessage,
   useDeleteMessageMutation: useDeleteMessage,
   useReadUnasweredMessagesQuery: useUnansweredMessages,
+  useGetDsaCredentialsQuery: useDsaCredentials,
 } = messagesApi;
