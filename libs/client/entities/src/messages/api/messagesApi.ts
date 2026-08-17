@@ -57,7 +57,7 @@ export const messagesApi = rtkApi.injectEndpoints({
       }),
     }),
 
-    getDsaCredentials: build.query<{ email: string; token: string }, number>({
+    getDsaCredentials: build.query<{ email: string; token: string }, void>({
       query: () => ({
         url: '/renovation/dsa-credentials/',
         method: 'GET',

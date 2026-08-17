@@ -133,7 +133,7 @@ const RenovationNavbar = (): JSX.Element => {
           </TooltipContent>
         </TooltipPortal>
       </Tooltip>
-      {user && user.id !== 0 && (
+      {/* {user && user.id !== 0 && (
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -155,7 +155,7 @@ const RenovationNavbar = (): JSX.Element => {
             </TooltipContent>
           </TooltipPortal>
         </Tooltip>
-      )}
+      )} */}
       {user &&
         user.id !== 0 &&
         (user.roles.includes('admin') ||

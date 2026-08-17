@@ -240,11 +240,11 @@ const ProblematicApartsTable = ({
                       </VStack>
                     </HStack>
                   </AccordionTrigger>
-                  {apart?.messages && apart.messages.length > 0 && (
+                  {/* {apart?.messages && apart.messages.length > 0 && (
                     <Badge className="border-background pointer-events-none absolute left-2 top-1 flex h-5 w-5 select-none place-content-center truncate px-1 text-xs font-light">
                       {apart.messages.length}
                     </Badge>
-                  )}
+                  )} */}
                   <AccordionContent className="flex place-content-center border-t p-0">
                     {referenceTerms.filter((term) => term.date).length > 0 ? (
                       <Table className="w-full">
