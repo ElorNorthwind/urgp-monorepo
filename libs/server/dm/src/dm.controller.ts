@@ -53,4 +53,18 @@ export class DmController {
 
     // return this.dm.updateSingleResolution(-787158072);
   }
+
+  @Get('update/manual')
+  async StartManualUpdate(): Promise<string> {
+    if (this.dm.getUpdateStatus())
+      return 'Обновление уже запущено. Дождитесь окончания...';
+    // not awaiting this
+    this.dm.updateManually();
+    return 'Обвновление успешно запущено';
+  }
+
+  @Get('update/status')
+  GetUpdateStatus(): boolean {
+    return this.dm.getUpdateStatus();
+  }
 }

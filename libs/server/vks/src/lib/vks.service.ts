@@ -466,4 +466,19 @@ export class VksService {
   ): Promise<VksUserStats[]> {
     return this.dgiAnalytics.db.vks.getVksUserStats(q);
   }
+
+  public async GetDmIsUpdating(): Promise<boolean> {
+    const baseUrl = `http://localhost:${this.configService.get<string>('DM_API_PORT') || '3001'}/dm-api`;
+    console.log(baseUrl + '/dm/update/status');
+    return await firstValueFrom(
+      this.axios.get(baseUrl + '/dm/update/status'),
+    ).then((r) => r.data);
+  }
+
+  public async LaunchDmUpdate(): Promise<string> {
+    const baseUrl = `http://localhost:${this.configService.get<string>('DM_API_PORT') || '3001'}/dm-api`;
+    return await firstValueFrom(
+      this.axios.get(baseUrl + '/dm/update/manual'),
+    ).then((r) => r.data);
+  }
 }

@@ -59,6 +59,7 @@ import { DgiAnalyticsModule } from '@urgp/server/dgi-analytics';
       inject: [ConfigService],
     },
   ],
+  // exports: [DmService],
 })
 // export class DmModule implements OnModuleDestroy {
 //   async onModuleDestroy() {

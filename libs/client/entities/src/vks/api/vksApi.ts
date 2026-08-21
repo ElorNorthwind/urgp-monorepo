@@ -232,6 +232,26 @@ export const vksApi = rtkApi.injectEndpoints({
         // },
       }),
     }),
+
+    launchDmUpdate: build.mutation<string, void>({
+      query: () => ({
+        url: `/vks/dm/update/manual`,
+        method: 'GET',
+        // validateStatus: (response: any) => {
+        //   return response.status >= 200 && response.status < 305;
+        // },
+      }),
+    }),
+
+    getDmUpdateStatus: build.query<boolean, void>({
+      query: () => ({
+        url: `/vks/dm/update/status`,
+        method: 'GET',
+        // validateStatus: (response: any) => {
+        //   return response.status >= 200 && response.status < 305;
+        // },
+      }),
+    }),
   }),
 
   overrideExisting: false,
@@ -263,4 +283,7 @@ export const {
   useGetVksUsersClassificatorQuery: useVksUsersClassificator,
   useUpdateVksDgiSurveyMutation: useUpdateVksDgiSurvey,
   useLaunchVksUpdateMutation: useLaunchVksUpdate,
+
+  useLaunchDmUpdateMutation: useLaunchDmUpdate,
+  useGetDmUpdateStatusQuery: useDmUpdateStatus,
 } = vksApi;

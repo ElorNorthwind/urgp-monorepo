@@ -19,11 +19,14 @@ import { formatDmSuspences } from './util/formatDmSuspences';
 
 @Injectable()
 export class DmService {
+  public isUpdating: boolean;
   constructor(
     private readonly analytics: DgiAnalyticsService,
     private configService: ConfigService,
     @Inject('ORACLE_DB_POOL') private readonly pool: oracledb.Pool,
-  ) {}
+  ) {
+    this.isUpdating = false;
+  }
 
   private async executeQuery(
     sql: string,
@@ -57,94 +60,123 @@ export class DmService {
   }
 
   public async addDmShortTermRecords(q?: DmDateRangeQuery): Promise<number> {
-    const categoryIds = await this.analytics.db.dm.getCategoryIds();
-    const query = getDmShortTermQuery(categoryIds, q);
-    Logger.log('Executing DM short-term Records query');
-    const result = await this.executeQuery(query);
-    const formatedRows = formatDmRows(result?.rows as unknown[][]);
-    await this.analytics.db.dm.insertDmData(formatedRows);
-    return formatedRows?.length || 0;
+    try {
+      if (this.isUpdating) return 0;
+      this.isUpdating = true;
+      const categoryIds = await this.analytics.db.dm.getCategoryIds();
+      const query = getDmShortTermQuery(categoryIds, q);
+      Logger.log('Executing DM short-term Records query');
+      const result = await this.executeQuery(query);
+      const formatedRows = formatDmRows(result?.rows as unknown[][]);
+      await this.analytics.db.dm.insertDmData(formatedRows);
+      return formatedRows?.length || 0;
+    } finally {
+      this.isUpdating = false;
+    }
   }
 
   public async addDmLongTermRecords(
     q: DmDateRangeQuery,
     group?: string,
   ): Promise<number> {
-    const categoryIds = await this.analytics.db.dm.getCategoryIds(group);
-    const range = dmDateRangeQuerySchema.required().parse(q);
-    let count = 0;
-    await this.executeCallback(async (connection) => {
-      const chunks = generateDateRanges(range.from, range.to, 10);
+    try {
+      if (this.isUpdating) return 0;
+      this.isUpdating = true;
+      const categoryIds = await this.analytics.db.dm.getCategoryIds(group);
+      const range = dmDateRangeQuerySchema.required().parse(q);
+      let count = 0;
+      await this.executeCallback(async (connection) => {
+        const chunks = generateDateRanges(range.from, range.to, 10);
 
-      for (const chunk of chunks) {
-        this.configService.get<string>('NODE_ENV') === 'development' &&
-          Logger.log(`${chunk.from} - ${chunk.to}`);
-        const found = await connection.execute(
-          getDmLongTermQuery(categoryIds, chunk),
-        );
-        await this.analytics.db.dm.insertDmData(
-          formatDmRows(found?.rows as unknown[][]),
-        );
-        count += found?.rows?.length || 0;
-      }
-    });
-    return count;
+        for (const chunk of chunks) {
+          this.configService.get<string>('NODE_ENV') === 'development' &&
+            Logger.log(`${chunk.from} - ${chunk.to}`);
+          const found = await connection.execute(
+            getDmLongTermQuery(categoryIds, chunk),
+          );
+          await this.analytics.db.dm.insertDmData(
+            formatDmRows(found?.rows as unknown[][]),
+          );
+          count += found?.rows?.length || 0;
+        }
+      });
+      return count;
+    } finally {
+      this.isUpdating = false;
+    }
   }
 
   public async addDmAllUndoneResolutions(): Promise<number> {
-    const categoryIds = await this.analytics.db.dm.getCategoryIds();
-    const query = getDmAllUndoneQuery(categoryIds);
-    const result = await this.executeQuery(query);
-    const formatedRows = formatDmRows(result?.rows as unknown[][]);
-    await this.analytics.db.dm.insertDmData(formatedRows);
-    return formatedRows?.length || 0;
+    try {
+      if (this.isUpdating) return 0;
+      this.isUpdating = true;
+      const categoryIds = await this.analytics.db.dm.getCategoryIds();
+      const query = getDmAllUndoneQuery(categoryIds);
+      const result = await this.executeQuery(query);
+      const formatedRows = formatDmRows(result?.rows as unknown[][]);
+      await this.analytics.db.dm.insertDmData(formatedRows);
+      return formatedRows?.length || 0;
+    } finally {
+      this.isUpdating = false;
+    }
   }
 
   public async updateActiveResolutions(): Promise<number> {
-    const resolutions = await this.analytics.db.dm.getActiveResolutions();
+    try {
+      if (this.isUpdating) return 0;
+      this.isUpdating = true;
+      const resolutions = await this.analytics.db.dm.getActiveResolutions();
 
-    await this.executeCallback(async (connection) => {
-      const chunkSize = 900;
-      let i = 0;
-      while (i < resolutions.length) {
-        Logger.log('Executing DM update for active resolutions, count: ' + i);
-        const chunk = resolutions.slice(i, i + chunkSize);
-        const resultChunk = await connection.execute(getDmIdsQuery(chunk));
-        const formatedRows = formatDmRows(resultChunk?.rows as unknown[][]);
-        await this.analytics.db.dm.insertDmData(formatedRows);
-        i += chunkSize;
-      }
-    });
+      await this.executeCallback(async (connection) => {
+        const chunkSize = 900;
+        let i = 0;
+        while (i < resolutions.length) {
+          Logger.log('Executing DM update for active resolutions, count: ' + i);
+          const chunk = resolutions.slice(i, i + chunkSize);
+          const resultChunk = await connection.execute(getDmIdsQuery(chunk));
+          const formatedRows = formatDmRows(resultChunk?.rows as unknown[][]);
+          await this.analytics.db.dm.insertDmData(formatedRows);
+          i += chunkSize;
+        }
+      });
 
-    return resolutions?.length || 0;
+      return resolutions?.length || 0;
+    } finally {
+      this.isUpdating = false;
+    }
   }
 
   public async updateSuspences(): Promise<number> {
-    const docs = await this.analytics.db.dm.getSpdUndoneDocuments();
+    try {
+      if (this.isUpdating) return 0;
+      this.isUpdating = true;
 
-    await this.executeCallback(async (connection) => {
-      const chunkSize = 900;
-      let i = 0;
-      while (i < docs.length) {
-        Logger.log(
-          'Executing DM update for suspences: ' + i + ' / ' + docs.length,
-        );
-        const chunk = docs.slice(i, i + chunkSize);
+      const docs = await this.analytics.db.dm.getSpdUndoneDocuments();
 
-        // Logger.debug(getDmSuspencesQuery(chunk.slice(0, 5)));
+      await this.executeCallback(async (connection) => {
+        const chunkSize = 900;
+        let i = 0;
+        while (i < docs.length) {
+          Logger.log(
+            'Executing DM update for suspences: ' + i + ' / ' + docs.length,
+          );
+          const chunk = docs.slice(i, i + chunkSize);
 
-        const resultChunk = await connection.execute(
-          getDmSuspencesQuery(chunk),
-        );
-        const formatedRows = formatDmSuspences(
-          resultChunk?.rows as unknown[][],
-        );
-        await this.analytics.db.dm.insertDmSuspences(formatedRows);
-        i += chunkSize;
-      }
-    });
-    await this.analytics.db.dm.updateSuspensionControlDates();
-    return docs?.length || 0;
+          const resultChunk = await connection.execute(
+            getDmSuspencesQuery(chunk),
+          );
+          const formatedRows = formatDmSuspences(
+            resultChunk?.rows as unknown[][],
+          );
+          await this.analytics.db.dm.insertDmSuspences(formatedRows);
+          i += chunkSize;
+        }
+      });
+      await this.analytics.db.dm.updateSuspensionControlDates();
+      return docs?.length || 0;
+    } finally {
+      this.isUpdating = false;
+    }
   }
 
   public async updateAllResolutions(): Promise<number> {
@@ -178,6 +210,17 @@ export class DmService {
 
     return result;
   }
+
+  public async updateManually() {
+    await this.addDmShortTermRecords();
+    await this.updateAllResolutions();
+    await this.updateSuspences();
+  }
+
+  public getUpdateStatus() {
+    return this.isUpdating;
+  }
+
   @Cron('0 0 5 * * *')
   public async updateDailyRecords(): Promise<number> {
     Logger.log('DM daily update started');

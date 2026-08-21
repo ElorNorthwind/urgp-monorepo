@@ -288,4 +288,16 @@ export class VksController {
       dateTo: format(new Date(), 'dd.MM.yyyy'),
     });
   }
+
+  @Get('dm/update/status')
+  getDmUpdateStatus(): Promise<boolean> {
+    console.log('ding');
+    return this.vks.GetDmIsUpdating();
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('dm/update/manual')
+  launchDmUpdate(): Promise<string> {
+    return this.vks.LaunchDmUpdate();
+  }
 }
