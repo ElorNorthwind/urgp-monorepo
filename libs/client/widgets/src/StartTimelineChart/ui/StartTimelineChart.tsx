@@ -26,8 +26,10 @@ import {
   BarChart,
   BarProps,
   CartesianGrid,
+  LabelProps,
   ReferenceLine,
   XAxis,
+  XAxisTickContentProps,
 } from 'recharts';
 
 const startTimelineChartConfig = {
@@ -86,7 +88,35 @@ const StartTimelineChart = ({
             <BarChart accessibilityLayer data={data}>
               <CartesianGrid vertical={false} />
               <XAxis
-                dataKey="label"
+                // dataKey="label"
+                dataKey={(val: any) => val.label + ' ' + val.year}
+                // label={(val: any) => val.label}
+                tick={({ x, y, fill, payload }: XAxisTickContentProps) => {
+                  return (
+                    <>
+                      <text
+                        x={x}
+                        y={y}
+                        dy={2}
+                        fill={fill}
+                        fontSize={12}
+                        textAnchor="middle"
+                      >
+                        {payload?.value?.split(' ')?.[0]}
+                      </text>
+                      <text
+                        x={x}
+                        y={y}
+                        dy={16}
+                        fill={fill}
+                        fontSize={10}
+                        textAnchor="middle"
+                      >
+                        {payload?.value?.split(' ')?.[1]}
+                      </text>
+                    </>
+                  );
+                }}
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
@@ -96,24 +126,17 @@ const StartTimelineChart = ({
                 config: startTimelineChartConfig,
                 cursor: true,
                 labelFormatter: (value, payload) => {
-                  return (
-                    <div className="text-lg font-bold">
-                      {value +
-                        ' ' +
-                        payload.find((entry: any) => {
-                          return entry.payload.label === value;
-                        })?.payload.year}
-                    </div>
-                  );
+                  return <div className="text-lg font-bold">{value}</div>;
                 },
               })}
 
               {/* <ChartLegend content={<ChartLegendContent />} /> */}
               <ReferenceLine
-                x={8}
+                x={data?.[8]?.label + ' ' + data?.[8]?.year}
                 stroke="hsl(var(--muted-foreground))"
                 strokeDasharray="3 3"
                 strokeWidth={1}
+                zIndex={0}
               />
               {renderRechartsStackedBar({
                 config: startTimelineChartConfig,
