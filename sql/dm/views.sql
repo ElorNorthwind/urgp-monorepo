@@ -170,7 +170,7 @@ CREATE OR REPLACE VIEW dm.documents_combined_dated_view  AS
         r.control_date as "kontr_data",
         r.done_date as "ispol_data",
         r.resolution_text as "resolution",
-        CASE WHEN r.is_original_given THEN 'да' ELSE 'нет' END as "original_peredan",
+        CASE WHEN r.is_original_given AND c.category_group <> 'SPD' THEN 'да' ELSE 'нет' END as "original_peredan",
         r.updated_at as "updated_at",
         dep.display_name as "department",
         c.category_code as "id_rubr",
