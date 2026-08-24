@@ -17,15 +17,12 @@ import { VksStatusChart } from './cards/VksStatusChart';
 import { VksTimelineChart } from './cards/VksTImeline';
 import { VksDepartmentSlotsChart } from './cards/VksDetartmentSlotsChart';
 import { VksDailySlotsChart } from './cards/VksDailySlotsChart';
-import { RefreshCw } from 'lucide-react';
-import { useLaunchVksUpdate } from '@urgp/client/entities';
-import { toast } from 'sonner';
 import { DmUpdateCard } from './cards/DmUpdateCard';
+import { VksUpdateCard } from './cards/VksUpdateCard';
 
 const VksDashboardPage = (): JSX.Element => {
   const pathname = useLocation().pathname;
   const search = getRouteApi(pathname).useSearch() as VksDashbordPageSearch;
-  const [launchUpdate, { isLoading: isMudationLoading }] = useLaunchVksUpdate();
 
   const i = useVksAbility();
 
@@ -67,31 +64,9 @@ const VksDashboardPage = (): JSX.Element => {
           {i.can('read', 'VksEmptySlots') && <VksDailySlotsChart />}
         </div>
         {i.can('read', 'VksDepartmentReport') && (
-          <div className="flex flex-row gap-6">
-            <Button
-              disabled={isMudationLoading}
-              variant="outline"
-              role="button"
-              className="flex w-full gap-2"
-              onClick={(e) => {
-                e.preventDefault();
-                launchUpdate()
-                  .unwrap()
-                  .finally(() => {
-                    toast.success('Обновление запущено');
-                  });
-                // TO DO: it's throwing on 304 response. Need to fix
-                // .catch((rejected: any) =>
-                //   toast.error('Не удалось запустить обновление', {
-                //     description: rejected.data?.message || 'Неизвестная ошибка',
-                //   }),
-                // );
-              }}
-            >
-              <RefreshCw className="size-4 flex-shrink-0" />
-              <span>Обновить данные по ВКС</span>
-            </Button>
-            <DmUpdateCard className="w-full" />
+          <div className="flex flex-row gap-6 *:w-full">
+            <VksUpdateCard />
+            <DmUpdateCard />
           </div>
         )}
       </div>

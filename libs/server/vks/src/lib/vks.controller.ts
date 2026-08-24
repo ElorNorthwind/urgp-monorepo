@@ -27,6 +27,7 @@ import {
   QmsQuery,
   qmsQuerySchema,
   RequestWithUserData,
+  UPDATE_STATES,
   UpdateDgiVksSurveyHousingForm,
   updateDgiVksSurveyHousingFormSchema,
   UpdateStatus,
@@ -57,6 +58,36 @@ import { Response } from 'express';
 export class VksController {
   constructor(private readonly vks: VksService) {}
 
+  @Post('update/manual')
+  async StartManualUpdate(): Promise<{ message: string }> {
+    if (this.vks.getStatus()?.state === UPDATE_STATES['RUNNING'])
+      return { message: 'Обновление уже запущено, дождитесь окончания...' };
+    try {
+      this.vks.startUpdate();
+      return { message: 'Обновление запущено' };
+    } catch (error) {
+      Logger.log('Ошибка при обновлении данных в документоконтроле', error);
+      return { message: 'Ошибка при обновлении данных' };
+    }
+  }
+
+  @Get('update/status')
+  GetUpdateStatus(): UpdateStatus {
+    return this.vks.getStatus();
+  }
+
+  @Sse('update/stream')
+  streamUpdateStatus(): Observable<MessageEvent> {
+    return this.vks.getStatusStream().pipe(
+      map(
+        (status) =>
+          ({
+            data: status,
+          }) as MessageEvent,
+      ),
+    );
+  }
+
   @UseGuards(AccessTokenGuard)
   @Post('update')
   async updateSurveyData(
@@ -68,16 +99,16 @@ export class VksController {
     return returnValue;
   }
 
-  @UseGuards(AccessTokenGuard)
-  @Get('update')
-  async updateSurveyDataDaily(): Promise<string> {
-    try {
-      this.vks.cronUpdateSurveyData(true);
-      return 'Daily update started';
-    } catch (e) {
-      return 'Failed to start daily update';
-    }
-  }
+  // @UseGuards(AccessTokenGuard)
+  // @Get('update')
+  // async updateSurveyDataDaily(): Promise<string> {
+  //   try {
+  //     this.vks.cronUpdateSurveyData(true);
+  //     return 'Daily update started';
+  //   } catch (e) {
+  //     return 'Failed to start daily update';
+  //   }
+  // }
 
   @UseGuards(AccessTokenGuard)
   @Get('cases/:id/details')

@@ -1,10 +1,12 @@
 import { HttpService } from '@nestjs/axios';
 import {
+  ConflictException,
   HttpException,
   HttpStatus,
   Inject,
   Injectable,
   Logger,
+  OnModuleInit,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '@urgp/server/database';
@@ -31,10 +33,12 @@ import {
   VksDailySlotStats,
   VksUserStats,
   UpdateStatus,
+  UPDATE_STATES,
 } from '@urgp/shared/entities';
 import { AxiosRequestConfig } from 'axios';
 import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
 import {
+  BehaviorSubject,
   Observable,
   concatMap,
   firstValueFrom,
@@ -55,15 +59,122 @@ import { DgiAnalyticsService } from '@urgp/server/dgi-analytics';
 import * as stream from 'stream';
 
 @Injectable()
-export class VksService {
-  private isUpdating: boolean;
+export class VksService implements OnModuleInit {
+  private statusSubject = new BehaviorSubject<UpdateStatus>({
+    name: 'vks',
+    state: UPDATE_STATES['IDLE'],
+    progress: 0,
+    message: 'Загрузка статуса...',
+  });
+  private currentUpdatePromise: Promise<void> | null = null;
+
   constructor(
     private readonly dbServise: DatabaseService,
     private readonly dgiAnalytics: DgiAnalyticsService,
     private readonly axios: HttpService,
     private configService: ConfigService,
-  ) {
-    this.isUpdating = false;
+  ) {}
+  async onModuleInit() {
+    try {
+      const savedStatus = await this.dgiAnalytics.db.dm.getUpdateStatus('vks');
+      if (savedStatus) {
+        this.setUpdateStatus({
+          ...savedStatus,
+          name: 'vks',
+          state: UPDATE_STATES['IDLE'],
+          progress: 0,
+          message: 'Сервер готов к запуску обновлений',
+        });
+      } else {
+        this.setUpdateStatus({
+          name: 'vks',
+          state: UPDATE_STATES['IDLE'],
+          progress: 0,
+          message: 'Сервер готов к запуску обновлений',
+        });
+      }
+    } catch (error) {
+      Logger.error('Faled to load DM update status from DB: ', error);
+      this.statusSubject.next({
+        name: 'vks',
+        state: UPDATE_STATES['IDLE'],
+        progress: 0,
+        message:
+          'Не удалось получить статус из базы данных, загружен стандартный',
+      });
+    }
+  }
+
+  private async setUpdateStatus(status: UpdateStatus): Promise<void> {
+    this.statusSubject.next(status);
+    await this.dgiAnalytics.db.dm.setUpdateStatus(status);
+  }
+
+  getStatusStream(): Observable<UpdateStatus> {
+    return this.statusSubject.asObservable();
+  }
+
+  getStatus(): UpdateStatus {
+    return this.statusSubject.getValue();
+  }
+
+  async startUpdate(): Promise<void> {
+    if (this.getStatus()?.state === 'running') {
+      throw new ConflictException('Обновление уже выполняется');
+    }
+
+    await this.setUpdateStatus({
+      ...this.getStatus(),
+      name: 'vks',
+      state: UPDATE_STATES['RUNNING'],
+      progress: 0,
+      message: 'Обновление запущено',
+      startedAt: new Date(),
+    });
+    this.currentUpdatePromise = this.performUpdate();
+
+    try {
+      await this.currentUpdatePromise;
+    } catch (error) {
+      await this.setUpdateStatus({
+        ...this.getStatus(),
+        name: 'vks',
+        state: UPDATE_STATES['FAILED'],
+        progress: this.getStatus()?.progress || 0,
+        message: 'При обновлении произошла ошибка',
+      });
+      throw error;
+    } finally {
+      this.currentUpdatePromise = null;
+    }
+  }
+
+  private async performUpdate() {
+    await this.setUpdateStatus({
+      ...this.getStatus(),
+      progress: 3,
+      message: 'Обновляем данные опросов',
+    });
+    await this.updateSurveyData({
+      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
+      dateTo: format(new Date(), 'dd.MM.yyyy'),
+    });
+    this.statusSubject.next({
+      ...this.getStatus(),
+      progress: 98,
+      message: 'Добавляем пустые слоты',
+    });
+    await this.addEmptyVksSlots({
+      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
+      dateTo: format(new Date(), 'dd.MM.yyyy'),
+    });
+    await this.setUpdateStatus({
+      ...this.getStatus(),
+      state: UPDATE_STATES['COMPLETED'],
+      progress: 100,
+      message: 'Обновление успешно завершено',
+      completetAt: new Date(),
+    });
   }
 
   public async getVksCases(
@@ -344,14 +455,31 @@ export class VksService {
   public async updateSurveyData(
     q: QmsQuery,
   ): Promise<vksUpdateQueryReturnValue> {
+    this.statusSubject.next({
+      ...this.getStatus(),
+      progress: 5,
+      message: 'Обновляем данные из QMS',
+    });
     const qms = await this.GetQmsReport({
       dateFrom: q.dateFrom,
       dateTo: q.dateTo,
+    });
+
+    this.statusSubject.next({
+      ...this.getStatus(),
+      progress: 30,
+      message: 'Обновляем Анкеты оператора (анкетолог)',
     });
     const operator = await this.GetAnketologSurvey({
       surveyId: AnketologSurveyTypes.operator,
       dateFrom: q.dateFrom,
       dateTo: q.dateTo,
+    });
+
+    this.statusSubject.next({
+      ...this.getStatus(),
+      progress: 80,
+      message: 'Обновляем Анкеты клиентов (анкетолог)',
     });
     const client = await this.GetAnketologSurvey({
       surveyId: AnketologSurveyTypes.client,
@@ -379,32 +507,7 @@ export class VksService {
   public async cronUpdateSurveyData(forced: boolean = false) {
     const isDev = this.configService.get<string>('NODE_ENV') === 'development';
     if (isDev && !forced) return;
-    if (this.isUpdating) {
-      Logger.log('Already updating');
-      return;
-    }
-    this.isUpdating = true;
-    await this.updateSurveyData({
-      dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
-      dateTo: format(new Date(), 'dd.MM.yyyy'),
-    })
-      .then(() => {
-        Logger.log(
-          `Survey data updated from ${format(startOfYesterday(), 'dd.MM.yyyy')} to ${format(new Date(), 'dd.MM.yyyy')}`,
-        );
-
-        this.addEmptyVksSlots({
-          dateFrom: format(startOfYesterday(), 'dd.MM.yyyy'),
-          dateTo: format(new Date(), 'dd.MM.yyyy'),
-        }).then(() => {
-          Logger.log(
-            `Empty slots added from ${format(startOfYesterday(), 'dd.MM.yyyy')} to ${format(new Date(), 'dd.MM.yyyy')}`,
-          );
-        });
-      })
-      .finally(() => {
-        this.isUpdating = false;
-      });
+    await this.startUpdate();
   }
 
   public async ReadVksServiceTypeClassificator(): Promise<

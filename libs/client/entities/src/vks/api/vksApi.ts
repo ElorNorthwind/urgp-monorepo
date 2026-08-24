@@ -225,14 +225,59 @@ export const vksApi = rtkApi.injectEndpoints({
       ],
     }),
 
-    launchVksUpdate: build.mutation<string, void>({
+    triggerVksUpdate: build.mutation<string, void>({
       query: () => ({
-        url: `/vks/update`,
-        method: 'GET',
-        // validateStatus: (response: any) => {
-        //   return response.status >= 200 && response.status < 305;
-        // },
+        url: `/vks/update/manual`,
+        method: 'POST',
       }),
+    }),
+
+    getVksUpdateStatus: build.query<UpdateStatus, void>({
+      query: () => ({
+        url: '/vks/update/status',
+        method: 'GET',
+      }),
+    }),
+
+    getVksUpdateStream: build.query<UpdateStatus, void>({
+      queryFn: () => ({
+        data: {
+          name: 'vks',
+          state: UPDATE_STATES['IDLE'],
+          progress: 0,
+          message: 'Соединение...',
+        },
+      }),
+      async onCacheEntryAdded(
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
+      ) {
+        const eventSource = new EventSource(
+          (import.meta.env?.['VITE_API_URL'] || 'http://localhost:8000/api') +
+            '/vks/update/stream',
+        );
+
+        eventSource.onmessage = (event) => {
+          try {
+            const status: UpdateStatus = JSON.parse(event.data);
+            updateCachedData((draft) => {
+              Object.assign(draft, status);
+            });
+          } catch (error) {
+            console.error('Не удалось получить SSE события с сервера: ', error);
+          }
+        };
+
+        eventSource.onerror = (error) => {
+          console.error('Ошибка с SSE событием: ', error);
+          updateCachedData((draft) => {
+            draft.message = 'Соединение потеряно, попытка подключения...';
+          });
+        };
+
+        await cacheEntryRemoved;
+        eventSource.close();
+      },
     }),
 
     triggerDmUpdate: build.mutation<{ message: string }, void>({
@@ -319,7 +364,10 @@ export const {
 
   useGetVksUsersClassificatorQuery: useVksUsersClassificator,
   useUpdateVksDgiSurveyMutation: useUpdateVksDgiSurvey,
-  useLaunchVksUpdateMutation: useLaunchVksUpdate,
+
+  useTriggerVksUpdateMutation: useTriggerVksUpdate,
+  useGetVksUpdateStatusQuery: useVksUpdateStatus,
+  useGetVksUpdateStreamQuery: useVksUpdateStream,
 
   useTriggerDmUpdateMutation: useTriggerDmUpdate,
   useGetDmUpdateStatusQuery: useDmUpdateStatus,

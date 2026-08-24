@@ -35,7 +35,6 @@ export class DmService implements OnModuleInit {
     progress: 0,
     message: 'Загрузка статуса...',
   });
-  // private isRunning = false;
   private currentUpdatePromise: Promise<void> | null = null;
   constructor(
     private readonly analytics: DgiAnalyticsService,
@@ -318,6 +317,8 @@ export class DmService implements OnModuleInit {
 
   @Cron('0 0 5 * * *')
   public async updateDailyRecords(): Promise<void> {
+    const isDev = this.configService.get<string>('NODE_ENV') === 'development';
+    if (isDev) return;
     Logger.log('DM daily update started');
     await this.startUpdate();
     Logger.log('DM daily update finished');
