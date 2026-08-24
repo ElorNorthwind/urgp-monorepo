@@ -1,6 +1,16 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import {
+  ConflictException,
+  Controller,
+  Get,
+  Logger,
+  Post,
+  Sse,
+  UseGuards,
+} from '@nestjs/common';
 import { AccessTokenGuard } from '@urgp/server/auth';
 import { DmService } from './dm.service';
+import { UPDATE_STATES, UpdateStatus } from '@urgp/shared/entities';
+import { Observable, map } from 'rxjs';
 
 @Controller('dm')
 export class DmController {
@@ -13,8 +23,8 @@ export class DmController {
 
   @UseGuards(AccessTokenGuard)
   @Get('update/daily')
-  UpdateDailyResolutions(): Promise<number> {
-    return this.dm.updateDailyRecords();
+  UpdateDailyResolutions(): Promise<void> {
+    return this.dm.startUpdate();
   }
 
   @UseGuards(AccessTokenGuard)
@@ -54,17 +64,33 @@ export class DmController {
     // return this.dm.updateSingleResolution(-787158072);
   }
 
-  @Get('update/manual')
-  async StartManualUpdate(): Promise<string> {
-    if (this.dm.getUpdateStatus())
-      return 'Обновление уже запущено. Дождитесь окончания...';
-    // not awaiting this
-    this.dm.updateManually();
-    return 'Обвновление успешно запущено';
+  @Post('update/manual')
+  async StartManualUpdate(): Promise<{ message: string }> {
+    if (this.dm.getStatus()?.state === UPDATE_STATES['RUNNING'])
+      return { message: 'Обновление уже запущено, дождитесь окончания...' };
+    try {
+      this.dm.startUpdate();
+      return { message: 'Обновление запущено' };
+    } catch (error) {
+      Logger.log('Ошибка при обновлении данных в документоконтроле', error);
+      return { message: 'Ошибка при обновлении данных' };
+    }
   }
 
   @Get('update/status')
-  GetUpdateStatus(): boolean {
-    return this.dm.getUpdateStatus();
+  GetUpdateStatus(): UpdateStatus {
+    return this.dm.getStatus();
+  }
+
+  @Sse('update/stream')
+  streamUpdateStatus(): Observable<MessageEvent> {
+    return this.dm.getStatusStream().pipe(
+      map(
+        (status) =>
+          ({
+            data: status,
+          }) as MessageEvent,
+      ),
+    );
   }
 }

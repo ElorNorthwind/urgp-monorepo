@@ -2,7 +2,9 @@ import { rtkApi } from '@urgp/client/shared';
 import {
   NestedClassificatorInfo,
   NestedClassificatorInfoString,
+  UPDATE_STATES,
   UpdateDgiVksSurveyHousingForm,
+  UpdateStatus,
   VkaSetBooleanFlag,
   VksCase,
   VksCaseDetails,
@@ -233,24 +235,59 @@ export const vksApi = rtkApi.injectEndpoints({
       }),
     }),
 
-    launchDmUpdate: build.mutation<string, void>({
+    triggerDmUpdate: build.mutation<{ message: string }, void>({
       query: () => ({
         url: `/vks/dm/update/manual`,
-        method: 'GET',
-        // validateStatus: (response: any) => {
-        //   return response.status >= 200 && response.status < 305;
-        // },
+        method: 'POST',
       }),
     }),
 
-    getDmUpdateStatus: build.query<boolean, void>({
+    getDmUpdateStatus: build.query<UpdateStatus, void>({
       query: () => ({
-        url: `/vks/dm/update/status`,
+        url: '/vks/dm/update/status',
         method: 'GET',
-        // validateStatus: (response: any) => {
-        //   return response.status >= 200 && response.status < 305;
-        // },
       }),
+    }),
+
+    getDmUpdateStream: build.query<UpdateStatus, void>({
+      queryFn: () => ({
+        data: {
+          name: 'dm',
+          state: UPDATE_STATES['IDLE'],
+          progress: 0,
+          message: 'Соединение...',
+        },
+      }),
+      async onCacheEntryAdded(
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
+      ) {
+        const eventSource = new EventSource(
+          (import.meta.env?.['VITE_API_URL'] || 'http://localhost:8000/api') +
+            '/vks/dm/update/stream',
+        );
+
+        eventSource.onmessage = (event) => {
+          try {
+            const status: UpdateStatus = JSON.parse(event.data);
+            updateCachedData((draft) => {
+              Object.assign(draft, status);
+            });
+          } catch (error) {
+            console.error('Не удалось получить SSE события с сервера: ', error);
+          }
+        };
+
+        eventSource.onerror = (error) => {
+          console.error('Ошибка с SSE событием: ', error);
+          updateCachedData((draft) => {
+            draft.message = 'Соединение потеряно, попытка подключения...';
+          });
+        };
+
+        await cacheEntryRemoved;
+        eventSource.close();
+      },
     }),
   }),
 
@@ -284,6 +321,7 @@ export const {
   useUpdateVksDgiSurveyMutation: useUpdateVksDgiSurvey,
   useLaunchVksUpdateMutation: useLaunchVksUpdate,
 
-  useLaunchDmUpdateMutation: useLaunchDmUpdate,
+  useTriggerDmUpdateMutation: useTriggerDmUpdate,
   useGetDmUpdateStatusQuery: useDmUpdateStatus,
+  useGetDmUpdateStreamQuery: useDmUpdateStream,
 } = vksApi;

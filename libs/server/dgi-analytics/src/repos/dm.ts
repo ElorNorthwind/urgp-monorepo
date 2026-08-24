@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { DmRecord, DmSuspence } from '@urgp/shared/entities';
+import { DmRecord, DmSuspence, UpdateStatus } from '@urgp/shared/entities';
 import { IDatabase, IMain } from 'pg-promise';
 
 const dmResultColumngs = [
@@ -180,5 +180,36 @@ SET due_date_with_suspensions = COALESCE(d.due_date, r.control_date, r.plan_due_
 FROM suspended_data d
 WHERE d.document_id = r.document_id;`;
     return this.db.none(query);
+  }
+
+  getUpdateStatus(name: string) {
+    const query = `SELECT name, state, progress, message, last_started_at as "startedAt", last_completed_at as "completedAt" FROM dm.updates WHERE name = $1`;
+    return this.db.oneOrNone(query, [name]);
+  }
+
+  setUpdateStatus(status: UpdateStatus) {
+    const query = `INSERT INTO dm.updates (name, state, progress, message, last_started_at, last_completed_at) 
+VALUES ($1, $2, $3, $4, $5, $6)
+ON CONFLICT (name) DO UPDATE SET 
+	state = excluded.state,
+	progress = excluded.progress,
+	message = excluded.message,
+	last_started_at = excluded.last_started_at,
+	last_completed_at = excluded.last_completed_at
+RETURNING 
+	name, 
+	state, 
+	progress, 
+	message, 
+	last_started_at as "startedAt", 
+	last_completed_at as "completedAt"`;
+    return this.db.one(query, [
+      status.name,
+      status.state,
+      status.progress,
+      status.message,
+      status.startedAt,
+      status.completetAt,
+    ]);
   }
 }

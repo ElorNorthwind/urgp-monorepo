@@ -12,28 +12,20 @@ import {
 } from '@urgp/client/widgets';
 import { VksDashbordPageSearch } from '@urgp/shared/entities';
 import { VksDepartmentGradeChart } from './cards/VksDetartmentGradeChart';
-import { VksDepartmentSurveyedChart } from './cards/VksDetartmentSurveyedChart';
 import { VksServiceChart } from './cards/VksServiceChart';
 import { VksStatusChart } from './cards/VksStatusChart';
 import { VksTimelineChart } from './cards/VksTImeline';
 import { VksDepartmentSlotsChart } from './cards/VksDetartmentSlotsChart';
 import { VksDailySlotsChart } from './cards/VksDailySlotsChart';
 import { RefreshCw } from 'lucide-react';
-import {
-  useDmUpdateStatus,
-  useLaunchDmUpdate,
-  useLaunchVksUpdate,
-} from '@urgp/client/entities';
+import { useLaunchVksUpdate } from '@urgp/client/entities';
 import { toast } from 'sonner';
+import { DmUpdateCard } from './cards/DmUpdateCard';
 
 const VksDashboardPage = (): JSX.Element => {
   const pathname = useLocation().pathname;
   const search = getRouteApi(pathname).useSearch() as VksDashbordPageSearch;
   const [launchUpdate, { isLoading: isMudationLoading }] = useLaunchVksUpdate();
-  const [launchDmUpdate, { isLoading: isDmMudationLoading }] =
-    useLaunchDmUpdate();
-  const { data: isDmUpdating, refetch: refetchDmUpdateStatus } =
-    useDmUpdateStatus();
 
   const i = useVksAbility();
 
@@ -99,25 +91,7 @@ const VksDashboardPage = (): JSX.Element => {
               <RefreshCw className="size-4 flex-shrink-0" />
               <span>Обновить данные по ВКС</span>
             </Button>
-            <Button
-              disabled={isDmMudationLoading || isDmUpdating}
-              variant="outline"
-              role="button"
-              className="flex w-full gap-2"
-              onClick={(e) => {
-                e.preventDefault();
-                launchDmUpdate()
-                  .unwrap()
-                  .finally(() => {
-                    refetchDmUpdateStatus();
-
-                    toast.success('Обновление запущено');
-                  });
-              }}
-            >
-              <RefreshCw className="size-4 flex-shrink-0" />
-              <span>Обновить данные Документоконтроля</span>
-            </Button>
+            <DmUpdateCard className="w-full" />
           </div>
         )}
       </div>

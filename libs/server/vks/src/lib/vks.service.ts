@@ -30,16 +30,19 @@ import {
   VkaSetBooleanFlag,
   VksDailySlotStats,
   VksUserStats,
+  UpdateStatus,
 } from '@urgp/shared/entities';
 import { AxiosRequestConfig } from 'axios';
 import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
 import {
+  Observable,
   concatMap,
   firstValueFrom,
   from,
   lastValueFrom,
   map,
   retry,
+  tap,
 } from 'rxjs';
 import * as XLSX from 'xlsx';
 import { ANKETOLOG_HTTP_OPTIONS, QMS_HTTP_OPTIONS } from '../config/constants';
@@ -49,6 +52,7 @@ import { formatSurvey } from './util/fotmatSurvey';
 import { Cron } from '@nestjs/schedule';
 import { format, min, parse, startOfYesterday } from 'date-fns';
 import { DgiAnalyticsService } from '@urgp/server/dgi-analytics';
+import * as stream from 'stream';
 
 @Injectable()
 export class VksService {
@@ -467,18 +471,28 @@ export class VksService {
     return this.dgiAnalytics.db.vks.getVksUserStats(q);
   }
 
-  public async GetDmIsUpdating(): Promise<boolean> {
+  public async GetDmUpdateStatus(): Promise<UpdateStatus> {
     const baseUrl = `http://localhost:${this.configService.get<string>('DM_API_PORT') || '3001'}/dm-api`;
-    console.log(baseUrl + '/dm/update/status');
     return await firstValueFrom(
       this.axios.get(baseUrl + '/dm/update/status'),
     ).then((r) => r.data);
   }
 
-  public async LaunchDmUpdate(): Promise<string> {
+  public async GetDmUpdateStream(): Promise<stream.Readable> {
+    const baseUrl = `http://localhost:${this.configService.get<string>('DM_API_PORT') || '3001'}/dm-api`;
+
+    const upstreamResponse = await lastValueFrom(
+      this.axios.get(baseUrl + '/dm/update/stream', { responseType: 'stream' }),
+    );
+
+    // 3. Extract the readable stream from the upstream response
+    return upstreamResponse.data as stream.Readable;
+  }
+
+  public async LaunchDmUpdate(): Promise<void> {
     const baseUrl = `http://localhost:${this.configService.get<string>('DM_API_PORT') || '3001'}/dm-api`;
     return await firstValueFrom(
-      this.axios.get(baseUrl + '/dm/update/manual'),
+      this.axios.post(baseUrl + '/dm/update/manual'),
     ).then((r) => r.data);
   }
 }

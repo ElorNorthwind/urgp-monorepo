@@ -3,6 +3,8 @@ import {
   Body,
   Controller,
   Get,
+  Headers,
+  HttpStatus,
   Logger,
   Param,
   ParseArrayPipe,
@@ -10,6 +12,8 @@ import {
   Post,
   Query,
   Req,
+  Res,
+  Sse,
   UseGuards,
   UseInterceptors,
   UsePipes,
@@ -25,6 +29,7 @@ import {
   RequestWithUserData,
   UpdateDgiVksSurveyHousingForm,
   updateDgiVksSurveyHousingFormSchema,
+  UpdateStatus,
   VkaSetBooleanFlag,
   vkaSetBooleanFlagSchema,
   VksCase,
@@ -45,6 +50,8 @@ import { VksService } from './vks.service';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { format, startOfYesterday } from 'date-fns';
 import { AnketologSurveyTypes } from 'libs/shared/entities/src/vks/config';
+import { Observable, map } from 'rxjs';
+import { Response } from 'express';
 
 @Controller('vks')
 export class VksController {
@@ -290,14 +297,62 @@ export class VksController {
   }
 
   @Get('dm/update/status')
-  getDmUpdateStatus(): Promise<boolean> {
-    console.log('ding');
-    return this.vks.GetDmIsUpdating();
+  getDmUpdateStatus(): Promise<UpdateStatus> {
+    return this.vks.GetDmUpdateStatus();
+  }
+
+  @Get('dm/update/stream')
+  async streamDmUpdateStatus(@Res() res: Response, @Headers() headers: any) {
+    // 1. Set SSE headers for the client
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    // If your client is on a different origin, you can still set CORS here:
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    try {
+      const upstreamStream = await this.vks.GetDmUpdateStream();
+
+      // 4. Pipe the stream to the client response
+      upstreamStream.on('data', (chunk) => {
+        res.write(chunk);
+      });
+
+      upstreamStream.on('end', () => {
+        res.end();
+        // Logger.log('Stream ended successfully');
+      });
+
+      upstreamStream.on('error', (err) => {
+        Logger.error('Upstream stream error:', err);
+        if (!res.headersSent) {
+          res.status(HttpStatus.BAD_GATEWAY).json({
+            message: 'Upstream service error',
+          });
+        } else {
+          res.end(); // close the connection if headers were already sent
+        }
+      });
+
+      // 5. Handle client disconnection – clean up the upstream stream
+      res.on('close', () => {
+        upstreamStream.destroy();
+        // Logger.log('Client disconnected, upstream stream destroyed');
+      });
+    } catch (error) {
+      Logger.error('Failed to connect to upstream:', error);
+      if (!res.headersSent) {
+        res.status(HttpStatus.BAD_GATEWAY).json({
+          message: 'Could not connect to the update service',
+        });
+      }
+    }
   }
 
   @UseGuards(AccessTokenGuard)
-  @Get('dm/update/manual')
-  launchDmUpdate(): Promise<string> {
+  @Post('dm/update/manual')
+  launchDmUpdate(): Promise<void> {
     return this.vks.LaunchDmUpdate();
   }
 }

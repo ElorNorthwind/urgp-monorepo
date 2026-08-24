@@ -12,3 +12,8 @@ CREATE TRIGGER resolution_updated_at_trigger
 BEFORE UPDATE ON dm.resolutions
 FOR EACH ROW
 EXECUTE FUNCTION dm.update_updated_at_column();
+
+CREATE TRIGGER updated_updated_at_trigger
+BEFORE UPDATE ON dm.updates
+FOR EACH ROW
+EXECUTE FUNCTION dm.update_updated_at_column();

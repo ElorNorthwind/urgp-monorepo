@@ -303,6 +303,21 @@ CREATE TABLE dm.suspences
 -- CREATE UNIQUE INDEX idx_dm_suspences 
 -- ON dm.suspences (document_id, tech_stage_id);
 
+
+-- Статус обновлений
+DROP TABLE IF EXISTS dm.updates CASCADE;
+CREATE TABLE dm.updates
+(
+    name VARCHAR(50) NOT NULL DEFAULT 'dm',
+    state VARCHAR(50) NOT NULL DEFAULT 'idle',
+    progress INTEGER NOT NULL DEFAULT 0,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
+    last_started_at TIMESTAMP WITHOUT TIME ZONE,
+	last_completed_at TIMESTAMP WITHOUT TIME ZONE,
+    message TEXT,
+    PRIMARY KEY (name)
+);
+
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA dm TO dgi_bi_writer;
 ALTER DEFAULT PRIVILEGES IN SCHEMA dm GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO dgi_bi_writer;
 
