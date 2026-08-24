@@ -209,7 +209,7 @@ RETURNING
       status.progress,
       status.message,
       status.startedAt,
-      status.completetAt,
+      status.completedAt,
     ]);
   }
 }

@@ -67,7 +67,7 @@ const DmUpdateCard = ({ className }: CardProps): JSX.Element | null => {
                 {dmStatus?.startedAt
                   ? 'Обновление запущено: ' +
                     format(dmStatus?.startedAt, 'dd.mm.yyyy HH:mm')
-                  : 'Дата запуска обновления не доступна'}
+                  : 'Дата запуска обновления недоступна'}
               </div>
             </div>
           </>
@@ -75,10 +75,10 @@ const DmUpdateCard = ({ className }: CardProps): JSX.Element | null => {
           <div className="text-muted-foreground flex flex-row gap-2">
             <Calendar className="size-5 flex-shrink-0" />
             <p>
-              {dmStatus?.completetAt
+              {dmStatus?.completedAt
                 ? 'Последнее обновление: ' +
-                  format(dmStatus?.completetAt, 'dd.mm.yyyy HH:mm')
-                : 'Дата последнего обновления не доступна'}
+                  format(dmStatus?.completedAt, 'dd.mm.yyyy HH:mm')
+                : 'Дата последнего обновления недоступна'}
             </p>
           </div>
         )}

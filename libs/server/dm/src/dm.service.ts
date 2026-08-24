@@ -141,7 +141,7 @@ export class DmService implements OnModuleInit {
       state: UPDATE_STATES['COMPLETED'],
       progress: 100,
       message: 'Обновление успешно завершено',
-      completetAt: new Date(),
+      completedAt: new Date(),
     });
   }
 

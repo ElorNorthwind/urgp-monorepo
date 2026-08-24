@@ -240,13 +240,17 @@ export const vksApi = rtkApi.injectEndpoints({
     }),
 
     getVksUpdateStream: build.query<UpdateStatus, void>({
-      queryFn: () => ({
-        data: {
-          name: 'vks',
-          state: UPDATE_STATES['IDLE'],
-          progress: 0,
-          message: 'Соединение...',
-        },
+      // queryFn: () => ({
+      //   data: {
+      //     name: 'vks',
+      //     state: UPDATE_STATES['IDLE'],
+      //     progress: 0,
+      //     message: 'Соединение...',
+      //   },
+      // }),
+      query: () => ({
+        url: '/vks/update/status',
+        method: 'GET',
       }),
       async onCacheEntryAdded(
         arg,
@@ -295,18 +299,24 @@ export const vksApi = rtkApi.injectEndpoints({
     }),
 
     getDmUpdateStream: build.query<UpdateStatus, void>({
-      queryFn: () => ({
-        data: {
-          name: 'dm',
-          state: UPDATE_STATES['IDLE'],
-          progress: 0,
-          message: 'Соединение...',
-        },
+      // queryFn: () => ({
+      //   data: {
+      //     name: 'dm',
+      //     state: UPDATE_STATES['IDLE'],
+      //     progress: 0,
+      //     message: 'Соединение...',
+      //   },
+      // }),
+      query: () => ({
+        url: '/vks/dm/update/status',
+        method: 'GET',
       }),
       async onCacheEntryAdded(
         arg,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
       ) {
+        // await cacheDataLoaded;
+
         const eventSource = new EventSource(
           (import.meta.env?.['VITE_API_URL'] || 'http://localhost:8000/api') +
             '/vks/dm/update/stream',

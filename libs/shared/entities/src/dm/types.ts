@@ -30,7 +30,7 @@ export const updateStatusSchema = z.object({
   progress: z.number().int().min(0).max(100),
   message: z.string().nullable().optional(),
   startedAt: z.string().datetime().or(z.date()).nullable().optional(),
-  completetAt: z.string().datetime().or(z.date()).nullable().optional(),
+  completedAt: z.string().datetime().or(z.date()).nullable().optional(),
 });
 
 export type UpdateStatus = z.infer<typeof updateStatusSchema>;

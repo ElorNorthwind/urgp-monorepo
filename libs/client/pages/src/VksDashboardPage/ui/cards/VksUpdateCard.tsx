@@ -72,7 +72,7 @@ const VksUpdateCard = ({ className }: CardProps): JSX.Element | null => {
                 {status?.startedAt
                   ? 'Обновление запущено: ' +
                     format(status?.startedAt, 'dd.mm.yyyy HH:mm')
-                  : 'Дата запуска обновления не доступна'}
+                  : 'Дата запуска обновления недоступна'}
               </div>
             </div>
           </>
@@ -80,10 +80,10 @@ const VksUpdateCard = ({ className }: CardProps): JSX.Element | null => {
           <div className="text-muted-foreground flex flex-row gap-2">
             <Calendar className="size-5 flex-shrink-0" />
             <p>
-              {status?.completetAt
+              {status?.completedAt
                 ? 'Последнее обновление: ' +
-                  format(status?.completetAt, 'dd.mm.yyyy HH:mm')
-                : 'Дата последнего обновления не доступна'}
+                  format(status?.completedAt, 'dd.mm.yyyy HH:mm')
+                : 'Дата последнего обновления недоступна'}
             </p>
           </div>
         )}
