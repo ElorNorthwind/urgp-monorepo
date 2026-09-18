@@ -117,6 +117,8 @@ export class SudirService {
     const code = thirdLocation.match(/code=([a-zA-Z\d\-\_]*)/)[1];
     const state = thirdLocation.match(/state=([a-zA-Z\d]*)/)[1];
 
+    // Logger.debug(`DNSID: ${DNSID} code: ${code} state: ${state}`);
+
     const backToEdo = await firstValueFrom(
       this.axios
         .request({
@@ -139,8 +141,10 @@ export class SudirService {
         })
         .pipe(map((response) => response?.headers)),
     );
+    const authCookie = backToEdo2?.['set-cookie']?.find((s) =>
+      s.startsWith('auth_token_s_'),
+    );
 
-    const authCookie = backToEdo2?.['set-cookie']?.[0];
     const authCode =
       authCookie?.match(/(auth_token_s_[a-zA-Z\d\%\=\-\_]*);/)?.[1] || null;
 
